@@ -2,6 +2,7 @@ package cn.odboy.config;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONFactory;
+import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.JSONWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.MurmurHash3;
@@ -171,8 +172,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
                 return null;
             }
             String str = new String(bytes, StandardCharsets.UTF_8);
-            return JSON.parseObject(str, clazz);
+            // 支持AutoType
+            return JSON.parseObject(str, clazz, JSONReader.Feature.SupportAutoType);
         }
-
     }
 }
