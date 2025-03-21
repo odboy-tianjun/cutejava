@@ -1,15 +1,17 @@
 package cn.odboy.modules.quartz.domain;
 
+import cn.odboy.base.MyObject;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
 @TableName("sys_quartz_log")
-public class QuartzLog implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class QuartzLog extends MyObject {
 
     @TableId(value = "log_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)

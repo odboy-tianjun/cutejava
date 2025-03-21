@@ -1,16 +1,18 @@
 package cn.odboy.modules.system.domain.dto;
 
+import cn.odboy.base.MyObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * 构建前端路由时用到
  */
 @Data
-public class MenuVo implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class MenuVo extends MyObject {
 
     @ApiModelProperty(value = "菜单名称")
     private String name;

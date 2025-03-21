@@ -11,13 +11,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @TableName("tool_local_storage")
-public class LocalStorage extends BaseEntity implements Serializable {
+public class LocalStorage extends BaseEntity {
 
     @TableId(value = "storage_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)

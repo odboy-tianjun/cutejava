@@ -1,10 +1,11 @@
 package cn.odboy.util;
 
+import cn.odboy.base.MyObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageResult<T> implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class PageResult<T> extends MyObject {
 
     private List<T> content;
 

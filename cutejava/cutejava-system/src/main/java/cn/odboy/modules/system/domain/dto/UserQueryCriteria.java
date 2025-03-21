@@ -1,16 +1,18 @@
 package cn.odboy.modules.system.domain.dto;
 
+import cn.odboy.base.MyObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Data
-public class UserQueryCriteria implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class UserQueryCriteria extends MyObject {
 
     @ApiModelProperty(value = "ID")
     private Long id;

@@ -1,19 +1,21 @@
 package cn.odboy.domain;
 
+import cn.odboy.base.MyObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
 /**
  * 七牛云对象存储配置类
  */
 @Data
 @TableName("tool_qiniu_config")
-public class QiniuConfig implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class QiniuConfig extends MyObject {
 
     @TableId("config_id")
     private Long id;

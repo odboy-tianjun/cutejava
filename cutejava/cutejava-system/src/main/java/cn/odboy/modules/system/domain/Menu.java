@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -19,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("sys_menu")
-public class Menu extends BaseEntity implements Serializable {
+public class Menu extends BaseEntity {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "menu_id", type = IdType.AUTO)

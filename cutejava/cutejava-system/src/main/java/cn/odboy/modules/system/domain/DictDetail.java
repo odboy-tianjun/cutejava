@@ -10,12 +10,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Getter
 @Setter
 @TableName("sys_dict_detail")
-public class DictDetail extends BaseEntity implements Serializable {
+public class DictDetail extends BaseEntity {
 
     @NotNull(groups = Update.class)
     @ApiModelProperty(value = "ID", hidden = true)

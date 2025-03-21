@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Scope("singleton")
 public class QuartzConfig {
-
     /**
      * 解决Job中注入Spring Bean为null的问题
      */

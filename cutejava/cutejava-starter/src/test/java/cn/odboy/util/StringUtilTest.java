@@ -6,11 +6,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static cn.odboy.util.StringUtil.getIp;
-import static cn.odboy.util.StringUtil.getWeekDay;
-import static cn.odboy.util.StringUtil.toCamelCase;
-import static cn.odboy.util.StringUtil.toCapitalizeCamelCase;
-import static cn.odboy.util.StringUtil.toUnderScoreCase;
+import static cn.odboy.util.StringUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

@@ -12,7 +12,6 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("sys_user")
-public class User extends BaseEntity implements Serializable {
+public class User extends BaseEntity {
 
     @NotNull(groups = Update.class)
     @TableId(value = "user_id", type = IdType.AUTO)

@@ -11,13 +11,12 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 
 @Getter
 @Setter
 @TableName("sys_quartz_job")
-public class QuartzJob extends BaseEntity implements Serializable {
+public class QuartzJob extends BaseEntity {
 
     public static final String JOB_KEY = "JOB_KEY";
 

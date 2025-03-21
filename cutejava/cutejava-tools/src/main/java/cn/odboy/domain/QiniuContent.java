@@ -1,10 +1,11 @@
 package cn.odboy.domain;
 
+import cn.odboy.base.MyObject;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -12,7 +13,8 @@ import java.sql.Timestamp;
  */
 @Data
 @TableName("tool_qiniu_content")
-public class QiniuContent implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class QiniuContent extends MyObject {
 
     @TableId(value = "content_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)
