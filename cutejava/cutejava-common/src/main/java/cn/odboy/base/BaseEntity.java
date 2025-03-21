@@ -4,20 +4,21 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 
 
 @Getter
 @Setter
-public class BaseEntity implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class BaseEntity extends MyObject {
 
     @CreatedBy
     @TableField(fill = FieldFill.INSERT)

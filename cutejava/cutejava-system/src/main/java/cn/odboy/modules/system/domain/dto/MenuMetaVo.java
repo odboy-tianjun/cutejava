@@ -1,14 +1,15 @@
 package cn.odboy.modules.system.domain.dto;
 
+import cn.odboy.base.MyObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 
 @Data
 @AllArgsConstructor
-public class MenuMetaVo implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class MenuMetaVo extends MyObject {
 
     @ApiModelProperty(value = "菜单标题")
     private String title;

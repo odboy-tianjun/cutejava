@@ -1,19 +1,21 @@
 package cn.odboy.domain;
 
+import cn.odboy.base.MyObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
 /**
  * 邮件配置类，数据存覆盖式存入数据存
  */
 @Data
 @TableName("tool_email_config")
-public class EmailConfig implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class EmailConfig extends MyObject {
 
     @TableId("config_id")
     private Long id;

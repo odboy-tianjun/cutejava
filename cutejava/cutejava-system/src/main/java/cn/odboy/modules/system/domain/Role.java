@@ -12,7 +12,6 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("sys_role")
-public class Role extends BaseEntity implements Serializable {
+public class Role extends BaseEntity {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "role_id", type = IdType.AUTO)

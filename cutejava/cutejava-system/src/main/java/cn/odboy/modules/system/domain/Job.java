@@ -10,14 +10,13 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Objects;
 
 
 @Getter
 @Setter
 @TableName("sys_job")
-public class Job extends BaseEntity implements Serializable {
+public class Job extends BaseEntity {
 
     @NotNull(groups = Update.class)
     @TableId(value = "job_id", type = IdType.AUTO)
