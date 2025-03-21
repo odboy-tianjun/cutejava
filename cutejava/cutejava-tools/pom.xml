@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cutejava</artifactId>
+        <groupId>cn.odboy</groupId>
+        <version>1.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cutejava-tools</artifactId>
+    <name>工具模块</name>
+
+    <properties>
+        <mail.version>1.4.7</mail.version>
+        <qiniu.version>7.9.3</qiniu.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.odboy</groupId>
+            <artifactId>cutejava-common</artifactId>
+            <version>1.3</version>
+        </dependency>
+
+        <!--邮件依赖-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${mail.version}</version>
+        </dependency>
+
+        <!--七牛云存储-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu.version}</version>
+        </dependency>
+    </dependencies>
+</project>
