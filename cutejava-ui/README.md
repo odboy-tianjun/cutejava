@@ -10,13 +10,13 @@
 
 ### 环境要求
 
-**推荐 node 版本：12-16**
+**推荐 node 版本：12-16 LTS**
 
 ### 安装依赖
 
 ``` bash
 # 安装依赖（依赖python）
-npm install --registry https://registry.npmmirror.com --save
+npm install --registry https://registry.npmmirror.com
 ```
 
 ### 启动服务

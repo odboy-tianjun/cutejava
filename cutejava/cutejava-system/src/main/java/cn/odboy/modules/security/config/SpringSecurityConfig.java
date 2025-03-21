@@ -35,7 +35,7 @@ public class SpringSecurityConfig {
     private final JwtAuthenticationEntryPoint authenticationErrorHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
-    private final SecurityProperties properties;
+    private final SecurityProperties securityProperties;
     private final OnlineUserService onlineUserService;
 
     @Bean
@@ -114,6 +114,6 @@ public class SpringSecurityConfig {
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, properties, onlineUserService);
+        return new TokenConfigurer(tokenProvider, securityProperties, onlineUserService);
     }
 }

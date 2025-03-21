@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(hidden = true)
 @SpringBootApplication
-@EnableTransactionManagement
 public class AppRun {
 
     public static void main(String[] args) {
