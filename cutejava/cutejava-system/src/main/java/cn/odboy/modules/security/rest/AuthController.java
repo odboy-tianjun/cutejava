@@ -9,7 +9,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.modules.security.config.CaptchaConfig;
 import cn.odboy.modules.security.config.LoginProperties;
 import cn.odboy.modules.security.config.SecurityProperties;
-import cn.odboy.modules.security.config.enums.LoginCodeEnum;
+import cn.odboy.modules.security.constant.LoginCodeEnum;
 import cn.odboy.modules.security.security.TokenProvider;
 import cn.odboy.modules.security.service.OnlineUserService;
 import cn.odboy.modules.security.service.UserDetailsServiceImpl;

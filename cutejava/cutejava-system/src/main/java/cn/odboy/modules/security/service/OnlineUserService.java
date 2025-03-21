@@ -1,5 +1,6 @@
 package cn.odboy.modules.security.service;
 
+import cn.odboy.base.PageResult;
 import cn.odboy.modules.security.config.SecurityProperties;
 import cn.odboy.modules.security.security.TokenProvider;
 import cn.odboy.modules.security.service.dto.JwtUserDto;

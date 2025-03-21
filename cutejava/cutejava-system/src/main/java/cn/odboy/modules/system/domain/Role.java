@@ -1,6 +1,6 @@
 package cn.odboy.modules.system.domain;
 
-import cn.odboy.base.BaseEntity;
+import cn.odboy.base.MyEntity;
 import cn.odboy.constant.DataScopeEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -21,7 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("sys_role")
-public class Role extends BaseEntity {
+public class Role extends MyEntity {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "role_id", type = IdType.AUTO)

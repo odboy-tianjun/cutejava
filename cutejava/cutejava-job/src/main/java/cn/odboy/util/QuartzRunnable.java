@@ -1,6 +1,6 @@
 package cn.odboy.util;
 
-import cn.odboy.util.SpringBeanHolder;
+import cn.odboy.context.SpringBeanHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;

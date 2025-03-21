@@ -27,14 +27,14 @@ public class EmailController {
         return new ResponseEntity<>(emailService.find(), HttpStatus.OK);
     }
 
-    @PutMapping
+    @PostMapping(value = "/modify")
     @ApiOperation("配置邮件")
     public ResponseEntity<Object> updateEmailConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
         emailService.config(emailConfig, emailService.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(value = "/send")
     @ApiOperation("发送邮件")
     public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailDto emailDto) {
         emailService.send(emailDto, emailService.find());

@@ -17,10 +17,11 @@ import java.util.Set;
 public interface UserMapper extends BaseMapper<User> {
 
     Long countAll(@Param("criteria") UserQueryCriteria criteria);
+    Long countAll(@Param("criteria") UserQueryCriteria criteria, Page<User> page);
 
     List<User> findAll(@Param("criteria") UserQueryCriteria criteria);
 
-    IPage<User> findAll(@Param("criteria") UserQueryCriteria criteria, Page<Object> page);
+    IPage<User> findAll(@Param("criteria") UserQueryCriteria criteria, Page<User> page);
 
     User findByUsername(@Param("username") String username);
 

@@ -2,7 +2,7 @@ package cn.odboy.service;
 
 import cn.odboy.domain.LocalStorage;
 import cn.odboy.domain.dto.LocalStorageQueryCriteria;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;

@@ -7,7 +7,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.mapper.QiniuContentMapper;
 import cn.odboy.service.QiniuContentService;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.QiNiuUtil;
 import com.alibaba.fastjson2.JSON;

@@ -11,13 +11,13 @@ const api = {
     // 修改头像
     updateAvatarApi: baseUrl + '/api/users/updateAvatar',
     // 上传文件到七牛云
-    qiNiuUploadApi: baseUrl + '/api/qiNiuContent',
+    qiNiuUploadApi: baseUrl + '/api/qiNiuContent/upload',
     // Sql 监控
     sqlApi: baseUrl + '/druid/index.html',
     // swagger
     swaggerApi: baseUrl + '/doc.html',
     // 文件上传
-    fileUploadApi: baseUrl + '/api/localStorage',
+    fileUploadApi: baseUrl + '/api/localStorage/upload',
     // baseUrl，
     baseApi: baseUrl
   }

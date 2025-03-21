@@ -5,7 +5,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.modules.system.domain.Dept;
 import cn.odboy.modules.system.domain.dto.DeptQueryCriteria;
 import cn.odboy.modules.system.service.DeptService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,9 +37,9 @@ public class DeptController {
     }
 
     @ApiOperation("查询部门")
-    @GetMapping
+    @PostMapping(value = "/query")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<PageResult<Dept>> queryDept(DeptQueryCriteria criteria) throws Exception {
+    public ResponseEntity<PageResult<Dept>> queryDept(@Validated @RequestBody DeptQueryCriteria criteria) throws Exception {
         List<Dept> depts = deptService.queryAll(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }
@@ -67,7 +67,7 @@ public class DeptController {
     }
 
     @ApiOperation("新增部门")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<Object> createDept(@Validated @RequestBody Dept resources) {
         if (resources.getId() != null) {
@@ -78,7 +78,7 @@ public class DeptController {
     }
 
     @ApiOperation("修改部门")
-    @PutMapping
+    @PostMapping(value = "/modify")
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Object> updateDept(@Validated(Dept.Update.class) @RequestBody Dept resources) {
         deptService.update(resources);
@@ -86,7 +86,7 @@ public class DeptController {
     }
 
     @ApiOperation("删除部门")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @PreAuthorize("@el.check('dept:del')")
     public ResponseEntity<Object> deleteDept(@RequestBody Set<Long> ids) {
         Set<Dept> depts = new HashSet<>();

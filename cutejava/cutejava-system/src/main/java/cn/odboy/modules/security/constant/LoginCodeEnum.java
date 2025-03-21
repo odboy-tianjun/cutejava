@@ -1,4 +1,4 @@
-package cn.odboy.modules.security.config.enums;
+package cn.odboy.modules.security.constant;
 
 /**
  * 验证码配置枚举

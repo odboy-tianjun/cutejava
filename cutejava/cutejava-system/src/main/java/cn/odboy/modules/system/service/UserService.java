@@ -2,7 +2,7 @@ package cn.odboy.modules.system.service;
 
 import cn.odboy.modules.system.domain.User;
 import cn.odboy.modules.system.domain.dto.UserQueryCriteria;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,7 +92,7 @@ public interface UserService extends IService<User> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<User> queryAll(UserQueryCriteria criteria, Page<Object> page);
+    PageResult<User> queryAll(UserQueryCriteria criteria, Page<User> page);
 
     /**
      * 查询全部不分页

@@ -1,11 +1,12 @@
 package cn.odboy.rest;
 
+import cn.odboy.base.PageArgs;
 import cn.odboy.domain.LocalStorage;
 import cn.odboy.domain.dto.LocalStorageQueryCriteria;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.service.LocalStorageService;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,12 +29,12 @@ public class LocalStorageController {
 
     private final LocalStorageService localStorageService;
 
-    @GetMapping
+    @PostMapping(value = "/query")
     @ApiOperation("查询文件")
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<PageResult<LocalStorage>> queryFile(LocalStorageQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(localStorageService.queryAll(criteria, page), HttpStatus.OK);
+    public ResponseEntity<PageResult<LocalStorage>> queryFile(@Validated @RequestBody PageArgs<LocalStorageQueryCriteria> criteria) {
+        Page<Object> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        return new ResponseEntity<>(localStorageService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
@@ -43,7 +44,7 @@ public class LocalStorageController {
         localStorageService.download(localStorageService.queryAll(criteria), response);
     }
 
-    @PostMapping
+    @PostMapping(value = "/upload")
     @ApiOperation("上传文件")
     @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Object> createFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
@@ -63,7 +64,7 @@ public class LocalStorageController {
         return new ResponseEntity<>(localStorage, HttpStatus.OK);
     }
 
-    @PutMapping
+    @PostMapping(value = "/modify")
     @ApiOperation("修改文件")
     @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Object> updateFile(@Validated @RequestBody LocalStorage resources) {
@@ -71,7 +72,7 @@ public class LocalStorageController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @ApiOperation("多选删除")
     public ResponseEntity<Object> deleteFile(@RequestBody Long[] ids) {
         localStorageService.deleteAll(ids);

@@ -1,11 +1,12 @@
 package cn.odboy.rest;
 
+import cn.odboy.base.PageArgs;
 import cn.odboy.domain.QiniuConfig;
 import cn.odboy.domain.QiniuContent;
 import cn.odboy.domain.dto.QiniuQueryCriteria;
 import cn.odboy.service.QiNiuConfigService;
 import cn.odboy.service.QiniuContentService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +42,7 @@ public class QiniuController {
     }
 
     @ApiOperation("配置七牛云存储")
-    @PutMapping(value = "/config")
+    @PostMapping(value = "/config")
     public ResponseEntity<Object> updateQiNiuConfig(@Validated @RequestBody QiniuConfig qiniuConfig) {
         qiNiuConfigService.saveConfig(qiniuConfig);
         qiNiuConfigService.updateType(qiniuConfig.getType());
@@ -55,14 +56,14 @@ public class QiniuController {
     }
 
     @ApiOperation("查询文件")
-    @GetMapping
-    public ResponseEntity<PageResult<QiniuContent>> queryQiNiu(QiniuQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(qiniuContentService.queryAll(criteria, page), HttpStatus.OK);
+    @PostMapping(value = "/query")
+    public ResponseEntity<PageResult<QiniuContent>> queryQiNiu(@Validated @RequestBody PageArgs<QiniuQueryCriteria> criteria) {
+        Page<Object> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        return new ResponseEntity<>(qiniuContentService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
     }
 
     @ApiOperation("上传文件")
-    @PostMapping
+    @PostMapping(value = "/upload")
     public ResponseEntity<Object> uploadQiNiu(@RequestParam MultipartFile file) {
         QiniuContent qiniuContent = qiniuContentService.upload(file, qiNiuConfigService.getConfig());
         Map<String, Object> map = new HashMap<>(3);
@@ -88,14 +89,14 @@ public class QiniuController {
     }
 
     @ApiOperation("删除文件")
-    @DeleteMapping(value = "/{id}")
+    @PostMapping(value = "/{id}")
     public ResponseEntity<Object> deleteQiNiu(@PathVariable Long id) {
         qiniuContentService.delete(qiniuContentService.getById(id), qiNiuConfigService.getConfig());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("删除多张图片")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     public ResponseEntity<Object> deleteAllQiNiu(@RequestBody Long[] ids) {
         qiniuContentService.deleteAll(ids, qiNiuConfigService.getConfig());
         return new ResponseEntity<>(HttpStatus.OK);

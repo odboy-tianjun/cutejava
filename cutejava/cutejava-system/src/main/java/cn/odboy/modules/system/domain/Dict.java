@@ -1,6 +1,6 @@
 package cn.odboy.modules.system.domain;
 
-import cn.odboy.base.BaseEntity;
+import cn.odboy.base.MyEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @TableName("sys_dict")
-public class Dict extends BaseEntity {
+public class Dict extends MyEntity {
 
     @NotNull(groups = Update.class)
     @ApiModelProperty(value = "ID", hidden = true)

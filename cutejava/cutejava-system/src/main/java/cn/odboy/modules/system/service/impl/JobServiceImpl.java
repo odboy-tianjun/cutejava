@@ -9,7 +9,7 @@ import cn.odboy.modules.system.mapper.JobMapper;
 import cn.odboy.modules.system.mapper.UserMapper;
 import cn.odboy.modules.system.service.JobService;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

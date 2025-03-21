@@ -1,10 +1,11 @@
 package cn.odboy.modules.system.rest;
 
+import cn.odboy.base.PageArgs;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.modules.system.domain.Dict;
 import cn.odboy.modules.system.domain.dto.DictQueryCriteria;
 import cn.odboy.modules.system.service.DictService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,15 +45,15 @@ public class DictController {
     }
 
     @ApiOperation("查询字典")
-    @GetMapping
+    @PostMapping(value = "/query")
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<PageResult<Dict>> queryDict(DictQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(dictService.queryAll(criteria, page), HttpStatus.OK);
+    public ResponseEntity<PageResult<Dict>> queryDict(@Validated @RequestBody PageArgs<DictQueryCriteria> criteria) {
+        Page<Object> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        return new ResponseEntity<>(dictService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
     }
 
     @ApiOperation("新增字典")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Object> createDict(@Validated @RequestBody Dict resources) {
         if (resources.getId() != null) {
@@ -63,7 +64,7 @@ public class DictController {
     }
 
     @ApiOperation("修改字典")
-    @PutMapping
+    @PostMapping(value = "modify")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDict(@Validated(Dict.Update.class) @RequestBody Dict resources) {
         dictService.update(resources);
@@ -71,7 +72,7 @@ public class DictController {
     }
 
     @ApiOperation("删除字典")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Object> deleteDict(@RequestBody Set<Long> ids) {
         dictService.delete(ids);

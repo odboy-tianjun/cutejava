@@ -1,6 +1,7 @@
 package cn.odboy.modules.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.PageArgs;
 import cn.odboy.config.properties.RsaProperties;
 import cn.odboy.constant.CodeEnum;
 import cn.odboy.exception.BadRequestException;
@@ -10,7 +11,7 @@ import cn.odboy.modules.system.domain.User;
 import cn.odboy.modules.system.domain.dto.UserPassVo;
 import cn.odboy.modules.system.domain.dto.UserQueryCriteria;
 import cn.odboy.modules.system.service.*;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RsaUtil;
 import cn.odboy.util.SecurityUtil;
@@ -56,36 +57,38 @@ public class UserController {
     }
 
     @ApiOperation("查询用户")
-    @GetMapping
+    @PostMapping(value = "/query")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<PageResult<User>> queryUser(UserQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
-            criteria.getDeptIds().add(criteria.getDeptId());
+    public ResponseEntity<PageResult<User>> queryUser(@Validated @RequestBody PageArgs<UserQueryCriteria> criteria) {
+        Page<User> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        UserQueryCriteria args = criteria.getArgs();
+
+        if (!ObjectUtils.isEmpty(args.getDeptId())) {
+            args.getDeptIds().add(args.getDeptId());
             // 先查找是否存在子节点
-            List<Dept> data = deptService.findByPid(criteria.getDeptId());
+            List<Dept> data = deptService.findByPid(args.getDeptId());
             // 然后把子节点的ID都加入到集合中
-            criteria.getDeptIds().addAll(deptService.getDeptChildren(data));
+            args.getDeptIds().addAll(deptService.getDeptChildren(data));
         }
         // 数据权限
         List<Long> dataScopes = dataService.getDeptIds(userService.findByName(SecurityUtil.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
-        if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
+        if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集
-            criteria.getDeptIds().retainAll(dataScopes);
-            if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-                return new ResponseEntity<>(userService.queryAll(criteria, page), HttpStatus.OK);
+            args.getDeptIds().retainAll(dataScopes);
+            if (!CollectionUtil.isEmpty(args.getDeptIds())) {
+                return new ResponseEntity<>(userService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
             }
         } else {
             // 否则取并集
-            criteria.getDeptIds().addAll(dataScopes);
-            return new ResponseEntity<>(userService.queryAll(criteria, page), HttpStatus.OK);
+            args.getDeptIds().addAll(dataScopes);
+            return new ResponseEntity<>(userService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
         }
         return new ResponseEntity<>(PageUtil.noData(), HttpStatus.OK);
     }
 
     @ApiOperation("新增用户")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('user:add')")
     public ResponseEntity<Object> createUser(@Validated @RequestBody User resources) {
         checkLevel(resources);
@@ -96,7 +99,7 @@ public class UserController {
     }
 
     @ApiOperation("修改用户")
-    @PutMapping
+    @PostMapping(value = "/modify")
     @PreAuthorize("@el.check('user:edit')")
     public ResponseEntity<Object> updateUser(@Validated(User.Update.class) @RequestBody User resources) throws Exception {
         checkLevel(resources);
@@ -105,7 +108,7 @@ public class UserController {
     }
 
     @ApiOperation("修改用户：个人中心")
-    @PutMapping(value = "center")
+    @PostMapping(value = "center")
     public ResponseEntity<Object> centerUser(@Validated(User.Update.class) @RequestBody User resources) {
         if (!resources.getId().equals(SecurityUtil.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
@@ -115,7 +118,7 @@ public class UserController {
     }
 
     @ApiOperation("删除用户")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> deleteUser(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
@@ -146,7 +149,7 @@ public class UserController {
     }
 
     @ApiOperation("重置密码")
-    @PutMapping(value = "/resetPwd")
+    @PostMapping(value = "/resetPwd")
     public ResponseEntity<Object> resetPwd(@RequestBody Set<Long> ids) {
         String pwd = passwordEncoder.encode("123456");
         userService.resetPwd(ids, pwd);

@@ -2,6 +2,7 @@ package cn.odboy.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.PageResult;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
@@ -51,9 +52,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public PageResult<Role> queryAll(RoleQueryCriteria criteria, Page<Object> page) {
-        criteria.setOffset(page.offset());
-        List<Role> roles = roleMapper.findAll(criteria);
+    public PageResult<Role> queryAll(RoleQueryCriteria criteria, Page<Role> page) {
+        List<Role> roles = roleMapper.findAll(criteria, page);
         Long total = roleMapper.countAll(criteria);
         return PageUtil.toPage(roles, total);
     }

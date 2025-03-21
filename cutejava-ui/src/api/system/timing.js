@@ -2,39 +2,39 @@ import request from '@/utils/request'
 
 export function add(data) {
   return request({
-    url: 'api/jobs',
+    url: 'api/jobs/save',
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/jobs',
-    method: 'delete',
+    url: 'api/jobs/remove',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/jobs',
-    method: 'put',
-    data
+    url: 'api/jobs/modify',
+    method: 'post',
+    data: data
   })
 }
 
 export function updateIsPause(id) {
   return request({
     url: 'api/jobs/' + id,
-    method: 'put'
+    method: 'post'
   })
 }
 
 export function execution(id) {
   return request({
     url: 'api/jobs/exec/' + id,
-    method: 'put'
+    method: 'post'
   })
 }
 

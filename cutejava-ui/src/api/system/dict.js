@@ -9,25 +9,25 @@ export function getDicts() {
 
 export function add(data) {
   return request({
-    url: 'api/dict',
+    url: 'api/dict/save',
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/dict/',
-    method: 'delete',
+    url: 'api/dict/remove',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dict',
-    method: 'put',
-    data
+    url: 'api/dict/modify',
+    method: 'post',
+    data: data
   })
 }
 

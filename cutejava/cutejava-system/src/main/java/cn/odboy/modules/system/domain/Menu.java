@@ -1,6 +1,6 @@
 package cn.odboy.modules.system.domain;
 
-import cn.odboy.base.BaseEntity;
+import cn.odboy.base.MyEntity;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -18,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("sys_menu")
-public class Menu extends BaseEntity {
+public class Menu extends MyEntity {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "menu_id", type = IdType.AUTO)

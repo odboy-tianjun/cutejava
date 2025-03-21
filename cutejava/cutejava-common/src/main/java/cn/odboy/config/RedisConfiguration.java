@@ -39,7 +39,10 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     /**
      * 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
      */
-    private static final String[] WHITELIST_STR = {"cn.odboy"};
+    private static final String[] WHITELIST_STR = {
+            "org.springframework",
+            "cn.odboy"
+    };
 
     /**
      * 设置 redis 数据默认过期时间，默认2小时

@@ -15,7 +15,7 @@ export default {
       // 页码
       page: 1,
       // 每页数据条数
-      size: 10,
+      pageSize: 10,
       // 总数据条数
       total: 0,
       // 请求数据的url
@@ -82,7 +82,7 @@ export default {
       })
       return {
         page: this.page,
-        size: this.size,
+        pageSize: this.pageSize,
         ...this.query,
         ...this.params
       }
@@ -95,15 +95,15 @@ export default {
     // 改变每页显示数
     sizeChange(e) {
       this.page = 1
-      this.size = e
+      this.pageSize = e
       this.init()
     },
     // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
-    dleChangePage(size) {
-      if (size === undefined) {
-        size = 1
+    dleChangePage(pageSize) {
+      if (pageSize === undefined) {
+        pageSize = 1
       }
-      if (this.data.length === size && this.page !== 0) {
+      if (this.data.length === pageSize && this.page !== 0) {
         this.page = this.page - 1
       }
     },

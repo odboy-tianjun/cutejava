@@ -1,10 +1,11 @@
 package cn.odboy.modules.system.rest;
 
+import cn.odboy.base.PageArgs;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.modules.system.domain.DictDetail;
 import cn.odboy.modules.system.domain.dto.DictDetailQueryCriteria;
 import cn.odboy.modules.system.service.DictDetailService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,16 +30,16 @@ public class DictDetailController {
     private static final String ENTITY_NAME = "dictDetail";
 
     @ApiOperation("查询字典详情")
-    @GetMapping
-    public ResponseEntity<PageResult<DictDetail>> queryDictDetail(DictDetailQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(dictDetailService.queryAll(criteria, page), HttpStatus.OK);
+    @PostMapping(value = "/query")
+    public ResponseEntity<PageResult<DictDetail>> queryDictDetail(@Validated @RequestBody PageArgs<DictDetailQueryCriteria> criteria) {
+        Page<Object> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        return new ResponseEntity<>(dictDetailService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
     }
 
     @ApiOperation("查询多个字典详情")
-    @GetMapping(value = "/map")
-    public ResponseEntity<Object> getDictDetailMaps(@RequestParam String dictName) {
-        String[] names = dictName.split("[,，]");
+    @PostMapping(value = "/map")
+    public ResponseEntity<Object> getDictDetailMaps(@Validated @RequestBody PageArgs<DictDetailQueryCriteria> criteria) {
+        String[] names = criteria.getArgs().getDictName().split("[,，]");
         Map<String, List<DictDetail>> dictMap = new HashMap<>(16);
         for (String name : names) {
             dictMap.put(name, dictDetailService.getDictByName(name));
@@ -47,7 +48,7 @@ public class DictDetailController {
     }
 
     @ApiOperation("新增字典详情")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Object> createDictDetail(@Validated @RequestBody DictDetail resources) {
         if (resources.getId() != null) {
@@ -58,7 +59,7 @@ public class DictDetailController {
     }
 
     @ApiOperation("修改字典详情")
-    @PutMapping
+    @PostMapping(value = "/modify")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDictDetail(@Validated(DictDetail.Update.class) @RequestBody DictDetail resources) {
         dictDetailService.update(resources);
@@ -66,7 +67,7 @@ public class DictDetailController {
     }
 
     @ApiOperation("删除字典详情")
-    @DeleteMapping(value = "/{id}")
+    @PostMapping(value = "/{id}")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Object> deleteDictDetail(@PathVariable Long id) {
         dictDetailService.delete(id);

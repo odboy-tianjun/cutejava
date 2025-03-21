@@ -1,5 +1,6 @@
 package cn.odboy.modules.system.service.impl;
 
+import cn.odboy.base.PageResult;
 import cn.odboy.config.properties.FileProperties;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.exception.BadRequestException;
@@ -43,8 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final OnlineUserService onlineUserService;
 
     @Override
-    public PageResult<User> queryAll(UserQueryCriteria criteria, Page<Object> page) {
-        criteria.setOffset(page.offset());
+    public PageResult<User> queryAll(UserQueryCriteria criteria, Page<User> page) {
         List<User> users = userMapper.findAll(criteria);
         Long total = userMapper.countAll(criteria);
         return PageUtil.toPage(users, total);

@@ -6,7 +6,7 @@ import cn.odboy.modules.system.domain.Menu;
 import cn.odboy.modules.system.domain.dto.MenuQueryCriteria;
 import cn.odboy.modules.system.domain.dto.MenuVo;
 import cn.odboy.modules.system.service.MenuService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.SecurityUtil;
 import io.swagger.annotations.Api;
@@ -66,7 +66,7 @@ public class MenuController {
         return new ResponseEntity<>(ids, HttpStatus.OK);
     }
 
-    @GetMapping
+    @PostMapping(value = "/query")
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<PageResult<Menu>> queryMenu(MenuQueryCriteria criteria) throws Exception {
@@ -98,7 +98,7 @@ public class MenuController {
     }
 
     @ApiOperation("新增菜单")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('menu:add')")
     public ResponseEntity<Object> createMenu(@Validated @RequestBody Menu resources) {
         if (resources.getId() != null) {
@@ -109,7 +109,7 @@ public class MenuController {
     }
 
     @ApiOperation("修改菜单")
-    @PutMapping
+    @PostMapping(value = "/modify")
     @PreAuthorize("@el.check('menu:edit')")
     public ResponseEntity<Object> updateMenu(@Validated(Menu.Update.class) @RequestBody Menu resources) {
         menuService.update(resources);
@@ -117,7 +117,7 @@ public class MenuController {
     }
 
     @ApiOperation("删除菜单")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @PreAuthorize("@el.check('menu:del')")
     public ResponseEntity<Object> deleteMenu(@RequestBody Set<Long> ids) {
         Set<Menu> menuSet = new HashSet<>();

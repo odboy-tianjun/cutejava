@@ -2,9 +2,9 @@ import request from '@/utils/request'
 
 export function getDepts(params) {
   return request({
-    url: 'api/dept',
-    method: 'get',
-    params
+    url: 'api/dept/query',
+    method: 'post',
+    data: params
   })
 }
 
@@ -14,31 +14,31 @@ export function getDeptSuperior(ids, exclude) {
   return request({
     url: 'api/dept/superior?exclude=' + exclude,
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/dept',
+    url: 'api/dept/save',
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/dept',
-    method: 'delete',
+    url: 'api/dept/remove',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dept',
-    method: 'put',
-    data
+    url: 'api/dept/modify',
+    method: 'post',
+    data: data
   })
 }
 

@@ -1,7 +1,7 @@
 <!--分页-->
 <template>
   <el-pagination
-    :page-size.sync="page.size"
+    :page-size.sync="page.pageSize"
     :total="page.total"
     :current-page.sync="page.page"
     style="margin-top: 8px;"

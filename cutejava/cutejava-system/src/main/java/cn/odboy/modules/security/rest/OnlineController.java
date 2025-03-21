@@ -3,7 +3,7 @@ package cn.odboy.modules.security.rest;
 import cn.odboy.modules.security.service.OnlineUserService;
 import cn.odboy.modules.security.service.dto.OnlineUserDto;
 import cn.odboy.util.EncryptUtil;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class OnlineController {
     }
 
     @ApiOperation("踢出用户")
-    @DeleteMapping
+    @PostMapping(value = "/kickUser")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Object> deleteOnlineUser(@RequestBody Set<String> keys) throws Exception {
         for (String token : keys) {

@@ -1,6 +1,5 @@
-package cn.odboy.util;
+package cn.odboy.base;
 
-import cn.odboy.base.MyObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 分页结果封装类
+ * 分页结果
  */
 @Data
 @NoArgsConstructor

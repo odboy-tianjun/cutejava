@@ -10,8 +10,8 @@ export function get() {
 export function update(data) {
   return request({
     url: 'api/qiNiuContent/config',
-    data,
-    method: 'put'
+    method: 'post',
+    data: data
   })
 }
 
@@ -31,8 +31,8 @@ export function sync() {
 
 export function del(ids) {
   return request({
-    url: 'api/qiNiuContent',
-    method: 'delete',
+    url: 'api/qiNiuContent/remove',
+    method: 'post',
     data: ids
   })
 }

@@ -2,7 +2,7 @@ package cn.odboy.domain;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.odboy.base.BaseEntity;
+import cn.odboy.base.MyEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @TableName("tool_local_storage")
-public class LocalStorage extends BaseEntity {
+public class LocalStorage extends MyEntity {
 
     @TableId(value = "storage_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)

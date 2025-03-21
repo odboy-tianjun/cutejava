@@ -3,7 +3,7 @@ package cn.odboy.service;
 import cn.odboy.domain.QiniuConfig;
 import cn.odboy.domain.QiniuContent;
 import cn.odboy.domain.dto.QiniuQueryCriteria;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;

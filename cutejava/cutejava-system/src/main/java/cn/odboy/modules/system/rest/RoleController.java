@@ -1,11 +1,12 @@
 package cn.odboy.modules.system.rest;
 
 import cn.hutool.core.lang.Dict;
+import cn.odboy.base.PageArgs;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.modules.system.domain.Role;
 import cn.odboy.modules.system.domain.dto.RoleQueryCriteria;
 import cn.odboy.modules.system.service.RoleService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.SecurityUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -36,7 +37,7 @@ public class RoleController {
     private static final String ENTITY_NAME = "role";
 
     @ApiOperation("获取单个role")
-    @GetMapping(value = "/{id}")
+    @PostMapping(value = "/{id}")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<Role> findRoleById(@PathVariable Long id) {
         return new ResponseEntity<>(roleService.findById(id), HttpStatus.OK);
@@ -50,28 +51,28 @@ public class RoleController {
     }
 
     @ApiOperation("返回全部的角色")
-    @GetMapping(value = "/all")
+    @PostMapping(value = "/all")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<Role>> queryAllRole() {
         return new ResponseEntity<>(roleService.queryAll(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
-    @GetMapping
+    @PostMapping(value = "/query")
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<PageResult<Role>> queryRole(RoleQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(roleService.queryAll(criteria, page), HttpStatus.OK);
+    public ResponseEntity<PageResult<Role>> queryRole(@Validated @RequestBody PageArgs<RoleQueryCriteria> criteria) {
+        Page<Role> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        return new ResponseEntity<>(roleService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
-    @GetMapping(value = "/level")
+    @PostMapping(value = "/level")
     public ResponseEntity<Object> getRoleLevel() {
         return new ResponseEntity<>(Dict.create().set("level", getLevels(null)), HttpStatus.OK);
     }
 
     @ApiOperation("新增角色")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('roles:add')")
     public ResponseEntity<Object> createRole(@Validated @RequestBody Role resources) {
         if (resources.getId() != null) {
@@ -83,7 +84,7 @@ public class RoleController {
     }
 
     @ApiOperation("修改角色")
-    @PutMapping
+    @PostMapping(value = "/modify")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRole(@Validated(Role.Update.class) @RequestBody Role resources) {
         getLevels(resources.getLevel());
@@ -92,7 +93,7 @@ public class RoleController {
     }
 
     @ApiOperation("修改角色菜单")
-    @PutMapping(value = "/menu")
+    @PostMapping(value = "/menu")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRoleMenu(@RequestBody Role resources) {
         Role role = roleService.getById(resources.getId());
@@ -102,7 +103,7 @@ public class RoleController {
     }
 
     @ApiOperation("删除角色")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @PreAuthorize("@el.check('roles:del')")
     public ResponseEntity<Object> deleteRole(@RequestBody Set<Long> ids) {
         for (Long id : ids) {

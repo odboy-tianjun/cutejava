@@ -2,25 +2,25 @@ import request from '@/utils/request'
 
 export function add(data) {
   return request({
-    url: 'api/localStorage',
+    url: 'api/localStorage/save',
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/localStorage/',
-    method: 'delete',
+    url: 'api/localStorage/remove',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/localStorage',
-    method: 'put',
-    data
+    url: 'api/localStorage/modify',
+    method: 'post',
+    data: data
   })
 }
 

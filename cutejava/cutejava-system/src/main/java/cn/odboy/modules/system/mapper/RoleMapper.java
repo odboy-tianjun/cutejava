@@ -3,6 +3,7 @@ package cn.odboy.modules.system.mapper;
 import cn.odboy.modules.system.domain.Role;
 import cn.odboy.modules.system.domain.dto.RoleQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -17,6 +18,7 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     Long countAll(@Param("criteria") RoleQueryCriteria criteria);
 
+    List<Role> findAll(@Param("criteria") RoleQueryCriteria criteria, IPage<Role> page);
     List<Role> findAll(@Param("criteria") RoleQueryCriteria criteria);
 
     Role findById(@Param("roleId") Long roleId);

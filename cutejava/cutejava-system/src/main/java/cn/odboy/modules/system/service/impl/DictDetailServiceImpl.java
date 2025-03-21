@@ -8,7 +8,7 @@ import cn.odboy.modules.system.domain.dto.DictDetailQueryCriteria;
 import cn.odboy.modules.system.mapper.DictDetailMapper;
 import cn.odboy.modules.system.mapper.DictMapper;
 import cn.odboy.modules.system.service.DictDetailService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

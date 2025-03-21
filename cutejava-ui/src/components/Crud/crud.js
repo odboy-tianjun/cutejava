@@ -89,7 +89,7 @@ function CRUD(options) {
       // 页码
       page: 1,
       // 每页数据条数
-      size: 10,
+      pageSize: 10,
       // 总数据条数
       total: 0
     },
@@ -347,9 +347,11 @@ function CRUD(options) {
       })
       return {
         page: crud.page.page,
-        size: crud.page.size,
-        ...crud.query,
-        ...crud.params
+        pageSize: crud.page.pageSize,
+        args: {
+          ...crud.query,
+          ...crud.params
+        }
       }
     },
     // 当前页改变
@@ -359,7 +361,7 @@ function CRUD(options) {
     },
     // 每页条数改变
     sizeChangeHandler(e) {
-      crud.page.size = e
+      crud.page.pageSize = e
       crud.page.page = 1
       crud.refresh()
     },

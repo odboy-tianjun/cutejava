@@ -2,7 +2,7 @@ package cn.odboy.modules.system.service;
 
 import cn.odboy.modules.system.domain.Job;
 import cn.odboy.modules.system.domain.dto.JobQueryCriteria;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 

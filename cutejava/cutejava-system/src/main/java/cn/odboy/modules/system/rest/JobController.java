@@ -1,10 +1,11 @@
 package cn.odboy.modules.system.rest;
 
+import cn.odboy.base.PageArgs;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.modules.system.domain.Job;
 import cn.odboy.modules.system.domain.dto.JobQueryCriteria;
 import cn.odboy.modules.system.service.JobService;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,15 +38,15 @@ public class JobController {
     }
 
     @ApiOperation("查询岗位")
-    @GetMapping
+    @PostMapping(value = "/query")
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<PageResult<Job>> queryJob(JobQueryCriteria criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(jobService.queryAll(criteria, page), HttpStatus.OK);
+    public ResponseEntity<PageResult<Job>> queryJob(@Validated @RequestBody PageArgs<JobQueryCriteria> criteria) {
+        Page<Object> page = new Page<>(criteria.getPage(), criteria.getPageSize());
+        return new ResponseEntity<>(jobService.queryAll(criteria.getArgs(), page), HttpStatus.OK);
     }
 
     @ApiOperation("新增岗位")
-    @PostMapping
+    @PostMapping(value = "/save")
     @PreAuthorize("@el.check('job:add')")
     public ResponseEntity<Object> createJob(@Validated @RequestBody Job resources) {
         if (resources.getId() != null) {
@@ -56,7 +57,7 @@ public class JobController {
     }
 
     @ApiOperation("修改岗位")
-    @PutMapping
+    @PostMapping(value = "/modify")
     @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources) {
         jobService.update(resources);
@@ -64,7 +65,7 @@ public class JobController {
     }
 
     @ApiOperation("删除岗位")
-    @DeleteMapping
+    @PostMapping(value = "/remove")
     @PreAuthorize("@el.check('job:del')")
     public ResponseEntity<Object> deleteJob(@RequestBody Set<Long> ids) {
         // 验证是否被用户关联

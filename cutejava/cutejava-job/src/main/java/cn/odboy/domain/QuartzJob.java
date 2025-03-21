@@ -1,6 +1,6 @@
 package cn.odboy.domain;
 
-import cn.odboy.base.BaseEntity;
+import cn.odboy.base.MyEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @TableName("sys_quartz_job")
-public class QuartzJob extends BaseEntity {
+public class QuartzJob extends MyEntity {
 
     public static final String JOB_KEY = "JOB_KEY";
 

@@ -2,50 +2,54 @@ import request from '@/utils/request'
 
 export function get(dictName) {
   const params = {
-    dictName,
-    page: 0,
-    size: 9999
+    page: 1,
+    pageSize: 9999,
+    args: {
+      dictName: dictName
+    }
   }
   return request({
-    url: 'api/dictDetail',
-    method: 'get',
-    params
+    url: 'api/dictDetail/query',
+    method: 'post',
+    data: params
   })
 }
 
 export function getDictMap(dictName) {
   const params = {
-    dictName,
-    page: 0,
-    size: 9999
+    page: 1,
+    pageSize: 9999,
+    args: {
+      dictName: dictName
+    }
   }
   return request({
     url: 'api/dictDetail/map',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/dictDetail',
+    url: 'api/dictDetail/save',
     method: 'post',
-    data
+    data: data
   })
 }
 
 export function del(id) {
   return request({
     url: 'api/dictDetail/' + id,
-    method: 'delete'
+    method: 'post'
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dictDetail',
-    method: 'put',
-    data
+    url: 'api/dictDetail/modify',
+    method: 'post',
+    data: data
   })
 }
 
