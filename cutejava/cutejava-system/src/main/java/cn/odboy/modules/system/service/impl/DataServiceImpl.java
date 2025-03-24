@@ -3,9 +3,9 @@ package cn.odboy.modules.system.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.constant.DataScopeEnum;
-import cn.odboy.modules.system.domain.Dept;
-import cn.odboy.modules.system.domain.Role;
-import cn.odboy.modules.system.domain.User;
+import cn.odboy.model.system.domain.Dept;
+import cn.odboy.model.system.domain.Role;
+import cn.odboy.model.system.domain.User;
 import cn.odboy.modules.system.service.DataService;
 import cn.odboy.modules.system.service.DeptService;
 import cn.odboy.modules.system.service.RoleService;
@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class DataServiceImpl implements DataService {
-
     private final RedisUtil redisUtil;
     private final RoleService roleService;
     private final DeptService deptService;

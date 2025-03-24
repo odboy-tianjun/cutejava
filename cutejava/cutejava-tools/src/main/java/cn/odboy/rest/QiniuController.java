@@ -1,11 +1,11 @@
 package cn.odboy.rest;
 
-import cn.odboy.domain.QiniuConfig;
-import cn.odboy.domain.QiniuContent;
-import cn.odboy.domain.dto.QiniuQueryCriteria;
+import cn.odboy.base.PageResult;
+import cn.odboy.model.tools.domain.QiniuConfig;
+import cn.odboy.model.tools.domain.QiniuContent;
+import cn.odboy.model.tools.dto.QiniuQueryCriteria;
 import cn.odboy.service.QiNiuConfigService;
 import cn.odboy.service.QiniuContentService;
-import cn.odboy.util.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

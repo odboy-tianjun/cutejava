@@ -6,9 +6,9 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.constant.DataScopeEnum;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.modules.system.domain.Dept;
-import cn.odboy.modules.system.domain.User;
-import cn.odboy.modules.system.domain.dto.DeptQueryCriteria;
+import cn.odboy.model.system.domain.Dept;
+import cn.odboy.model.system.domain.User;
+import cn.odboy.model.system.dto.DeptQueryCriteria;
 import cn.odboy.modules.system.mapper.DeptMapper;
 import cn.odboy.modules.system.mapper.RoleMapper;
 import cn.odboy.modules.system.mapper.UserMapper;
@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
-
     private final DeptMapper deptMapper;
     private final UserMapper userMapper;
     private final RedisUtil redisUtil;

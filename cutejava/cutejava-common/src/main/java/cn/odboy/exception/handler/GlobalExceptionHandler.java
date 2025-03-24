@@ -3,7 +3,7 @@ package cn.odboy.exception.handler;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.exception.EntityNotFoundException;
-import cn.odboy.util.ThrowableUtil;
+import cn.odboy.exception.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

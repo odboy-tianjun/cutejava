@@ -1,15 +1,15 @@
 package cn.odboy.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.PageResult;
 import cn.odboy.constant.CacheKey;
-import cn.odboy.modules.system.domain.Dict;
-import cn.odboy.modules.system.domain.DictDetail;
-import cn.odboy.modules.system.domain.dto.DictQueryCriteria;
+import cn.odboy.model.system.domain.Dict;
+import cn.odboy.model.system.domain.DictDetail;
+import cn.odboy.model.system.dto.DictQueryCriteria;
 import cn.odboy.modules.system.mapper.DictDetailMapper;
 import cn.odboy.modules.system.mapper.DictMapper;
 import cn.odboy.modules.system.service.DictService;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;

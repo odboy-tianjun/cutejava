@@ -1,7 +1,7 @@
 package cn.odboy.rest;
 
-import cn.odboy.domain.EmailConfig;
-import cn.odboy.domain.dto.EmailDto;
+import cn.odboy.model.tools.domain.EmailConfig;
+import cn.odboy.model.tools.dto.EmailDto;
 import cn.odboy.service.EmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

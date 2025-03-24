@@ -1,7 +1,7 @@
 package cn.odboy.mapper;
 
-import cn.odboy.domain.dto.QuartzJobQueryCriteria;
-import cn.odboy.domain.QuartzJob;
+import cn.odboy.model.job.domain.QuartzJob;
+import cn.odboy.model.job.dto.QuartzJobQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

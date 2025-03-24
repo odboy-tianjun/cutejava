@@ -1,14 +1,14 @@
 package cn.odboy.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.odboy.config.properties.FileProperties;
-import cn.odboy.domain.LocalStorage;
-import cn.odboy.domain.dto.LocalStorageQueryCriteria;
+import cn.odboy.base.PageResult;
+import cn.odboy.properties.FileProperties;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.mapper.LocalStorageMapper;
+import cn.odboy.model.tools.domain.LocalStorage;
+import cn.odboy.model.tools.dto.LocalStorageQueryCriteria;
 import cn.odboy.service.LocalStorageService;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

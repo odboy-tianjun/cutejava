@@ -1,20 +1,20 @@
 package cn.odboy.modules.security.rest;
 
 import cn.hutool.core.util.IdUtil;
-import cn.odboy.annotation.rest.AnonymousDeleteMapping;
-import cn.odboy.annotation.rest.AnonymousGetMapping;
-import cn.odboy.annotation.rest.AnonymousPostMapping;
-import cn.odboy.config.properties.RsaProperties;
+import cn.odboy.annotation.AnonymousDeleteMapping;
+import cn.odboy.annotation.AnonymousGetMapping;
+import cn.odboy.annotation.AnonymousPostMapping;
+import cn.odboy.properties.RsaProperties;
 import cn.odboy.exception.BadRequestException;
+import cn.odboy.model.system.dto.AuthUserDto;
+import cn.odboy.model.system.dto.JwtUserDto;
 import cn.odboy.modules.security.config.CaptchaConfig;
 import cn.odboy.modules.security.config.LoginProperties;
 import cn.odboy.modules.security.config.SecurityProperties;
-import cn.odboy.modules.security.config.enums.LoginCodeEnum;
-import cn.odboy.modules.security.security.TokenProvider;
-import cn.odboy.modules.security.service.OnlineUserService;
-import cn.odboy.modules.security.service.UserDetailsServiceImpl;
-import cn.odboy.modules.security.service.dto.AuthUserDto;
-import cn.odboy.modules.security.service.dto.JwtUserDto;
+import cn.odboy.modules.security.constant.LoginCodeEnum;
+import cn.odboy.modules.security.context.TokenProvider;
+import cn.odboy.modules.security.service.impl.OnlineUserServiceImpl;
+import cn.odboy.modules.security.context.UserDetailsHelper;
 import cn.odboy.util.RedisUtil;
 import cn.odboy.util.RsaUtil;
 import cn.odboy.util.SecurityUtil;
@@ -53,12 +53,12 @@ import java.util.concurrent.TimeUnit;
 public class AuthController {
     private final SecurityProperties properties;
     private final RedisUtil redisUtil;
-    private final OnlineUserService onlineUserService;
+    private final OnlineUserServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
     private final CaptchaConfig captchaConfig;
     private final LoginProperties loginProperties;
     private final PasswordEncoder passwordEncoder;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsHelper userDetailsService;
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")

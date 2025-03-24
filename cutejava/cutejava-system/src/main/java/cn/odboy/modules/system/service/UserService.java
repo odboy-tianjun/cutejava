@@ -1,8 +1,8 @@
 package cn.odboy.modules.system.service;
 
-import cn.odboy.modules.system.domain.User;
-import cn.odboy.modules.system.domain.dto.UserQueryCriteria;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
+import cn.odboy.model.system.domain.User;
+import cn.odboy.model.system.dto.UserQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
