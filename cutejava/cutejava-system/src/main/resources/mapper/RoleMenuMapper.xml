@@ -11,8 +11,7 @@
     </insert>
 
     <delete id="deleteByRoleId">
-        delete
-        from sys_roles_menus
+        delete from sys_roles_menus
         where role_id = #{roleId}
     </delete>
 
@@ -25,8 +24,7 @@
     </delete>
 
     <delete id="deleteByMenuId">
-        delete
-        from sys_roles_menus
+        delete from sys_roles_menus
         where menu_id = #{menuId}
     </delete>
 </mapper>
