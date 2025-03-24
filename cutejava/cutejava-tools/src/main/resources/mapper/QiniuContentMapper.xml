@@ -19,6 +19,6 @@
                 AND update_time BETWEEN #{criteria.createTime[0]} AND #{criteria.createTime[1]}
             </if>
         </where>
-        ORDER BY content_id DESC
+        ORDER BY id DESC
     </select>
 </mapper>

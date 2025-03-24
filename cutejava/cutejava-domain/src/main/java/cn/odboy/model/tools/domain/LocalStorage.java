@@ -17,7 +17,7 @@ import lombok.Setter;
 @TableName("tool_local_storage")
 public class LocalStorage extends MyEntity {
 
-    @TableId(value = "storage_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 

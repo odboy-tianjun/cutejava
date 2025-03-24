@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = false)
 public class QiniuContent extends MyObject {
 
-    @TableId(value = "content_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 
