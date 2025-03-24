@@ -1,11 +1,11 @@
 package cn.odboy.modules.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.modules.system.domain.Dept;
-import cn.odboy.modules.system.domain.dto.DeptQueryCriteria;
+import cn.odboy.model.system.domain.Dept;
+import cn.odboy.model.system.dto.DeptQueryCriteria;
 import cn.odboy.modules.system.service.DeptService;
-import cn.odboy.util.PageResult;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

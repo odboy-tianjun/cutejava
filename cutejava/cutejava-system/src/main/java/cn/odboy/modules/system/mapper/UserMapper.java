@@ -1,7 +1,7 @@
 package cn.odboy.modules.system.mapper;
 
-import cn.odboy.modules.system.domain.User;
-import cn.odboy.modules.system.domain.dto.UserQueryCriteria;
+import cn.odboy.model.system.domain.User;
+import cn.odboy.model.system.dto.UserQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

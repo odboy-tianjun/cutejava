@@ -2,7 +2,7 @@ package cn.odboy.modules.system.rest;
 
 import cn.odboy.constant.CodeBiEnum;
 import cn.odboy.constant.CodeEnum;
-import cn.odboy.domain.dto.EmailDto;
+import cn.odboy.model.tools.dto.EmailDto;
 import cn.odboy.modules.system.service.VerifyService;
 import cn.odboy.service.EmailService;
 import io.swagger.annotations.Api;

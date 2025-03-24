@@ -6,8 +6,8 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import cn.odboy.domain.dto.EmailDto;
 import cn.odboy.exception.BadRequestException;
+import cn.odboy.model.tools.dto.EmailDto;
 import cn.odboy.modules.system.service.VerifyService;
 import cn.odboy.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class VerifyServiceImpl implements VerifyService {
         } else {
             content = template.render(Dict.create().set("code", oldCode));
         }
-        emailDto = new EmailDto(Collections.singletonList(email), "ELADMIN后台管理系统", content);
+        emailDto = new EmailDto(Collections.singletonList(email), "CuteJava后台管理系统", content);
         return emailDto;
     }
 

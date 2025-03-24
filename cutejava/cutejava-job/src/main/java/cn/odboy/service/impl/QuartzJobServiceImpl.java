@@ -2,12 +2,13 @@ package cn.odboy.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.domain.dto.QuartzJobQueryCriteria;
+import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.mapper.QuartzJobMapper;
 import cn.odboy.mapper.QuartzLogMapper;
-import cn.odboy.domain.QuartzJob;
-import cn.odboy.domain.QuartzLog;
+import cn.odboy.model.job.domain.QuartzJob;
+import cn.odboy.model.job.domain.QuartzLog;
+import cn.odboy.model.job.dto.QuartzJobQueryCriteria;
 import cn.odboy.service.QuartzJobService;
 import cn.odboy.util.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

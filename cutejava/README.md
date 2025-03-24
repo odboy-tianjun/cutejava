@@ -1,4 +1,4 @@
-<h1 style="text-align: center">ELADMIN 后台管理系统</h1>
+<h1 style="text-align: center">CuteJava 后台管理系统</h1>
 
 #### 项目简介
 

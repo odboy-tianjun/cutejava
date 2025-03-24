@@ -1,6 +1,6 @@
 package cn.odboy.service;
 
-import cn.odboy.domain.QiniuConfig;
+import cn.odboy.model.tools.domain.QiniuConfig;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 

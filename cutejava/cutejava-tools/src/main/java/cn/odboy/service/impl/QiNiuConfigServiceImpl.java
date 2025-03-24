@@ -1,8 +1,8 @@
 package cn.odboy.service.impl;
 
-import cn.odboy.domain.QiniuConfig;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.mapper.QiniuConfigMapper;
+import cn.odboy.model.tools.domain.QiniuConfig;
 import cn.odboy.service.QiNiuConfigService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;

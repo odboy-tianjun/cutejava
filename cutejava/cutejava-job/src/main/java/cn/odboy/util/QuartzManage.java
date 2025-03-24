@@ -1,7 +1,7 @@
 package cn.odboy.util;
 
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.domain.QuartzJob;
+import cn.odboy.model.job.domain.QuartzJob;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Date;
-
-import static org.quartz.TriggerBuilder.newTrigger;
 
 @Slf4j
 @Component

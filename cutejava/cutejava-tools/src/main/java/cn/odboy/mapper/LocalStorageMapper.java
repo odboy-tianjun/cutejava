@@ -1,7 +1,7 @@
 package cn.odboy.mapper;
 
-import cn.odboy.domain.LocalStorage;
-import cn.odboy.domain.dto.LocalStorageQueryCriteria;
+import cn.odboy.model.tools.domain.LocalStorage;
+import cn.odboy.model.tools.dto.LocalStorageQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

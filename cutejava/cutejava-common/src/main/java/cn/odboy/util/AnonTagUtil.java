@@ -1,6 +1,6 @@
 package cn.odboy.util;
 
-import cn.odboy.annotation.rest.AnonymousAccess;
+import cn.odboy.annotation.AnonymousAccess;
 import cn.odboy.constant.RequestMethodEnum;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMethod;

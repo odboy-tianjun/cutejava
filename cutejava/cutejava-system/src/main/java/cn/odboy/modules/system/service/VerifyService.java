@@ -1,6 +1,7 @@
 package cn.odboy.modules.system.service;
 
-import cn.odboy.domain.dto.EmailDto;
+
+import cn.odboy.model.tools.dto.EmailDto;
 
 public interface VerifyService {
     /**

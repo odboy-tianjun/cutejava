@@ -1,5 +1,6 @@
 package cn.odboy.util;
 
+import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.Collections;

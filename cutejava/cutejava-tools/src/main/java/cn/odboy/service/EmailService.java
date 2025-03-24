@@ -1,7 +1,7 @@
 package cn.odboy.service;
 
-import cn.odboy.domain.EmailConfig;
-import cn.odboy.domain.dto.EmailDto;
+import cn.odboy.model.tools.domain.EmailConfig;
+import cn.odboy.model.tools.dto.EmailDto;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 

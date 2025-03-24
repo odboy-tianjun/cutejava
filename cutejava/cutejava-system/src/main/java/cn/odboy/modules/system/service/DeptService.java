@@ -1,7 +1,7 @@
 package cn.odboy.modules.system.service;
 
-import cn.odboy.modules.system.domain.Dept;
-import cn.odboy.modules.system.domain.dto.DeptQueryCriteria;
+import cn.odboy.model.system.domain.Dept;
+import cn.odboy.model.system.dto.DeptQueryCriteria;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletResponse;

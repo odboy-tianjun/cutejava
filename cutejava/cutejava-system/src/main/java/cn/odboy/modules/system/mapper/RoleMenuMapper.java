@@ -1,6 +1,6 @@
 package cn.odboy.modules.system.mapper;
 
-import cn.odboy.modules.system.domain.Menu;
+import cn.odboy.model.system.domain.Menu;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

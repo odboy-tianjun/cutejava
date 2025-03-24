@@ -1,13 +1,13 @@
 package cn.odboy.service.impl;
 
-import cn.odboy.domain.QiniuConfig;
-import cn.odboy.domain.QiniuContent;
-import cn.odboy.domain.dto.QiniuQueryCriteria;
+import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.mapper.QiniuContentMapper;
+import cn.odboy.model.tools.domain.QiniuConfig;
+import cn.odboy.model.tools.domain.QiniuContent;
+import cn.odboy.model.tools.dto.QiniuQueryCriteria;
 import cn.odboy.service.QiniuContentService;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.QiNiuUtil;
 import com.alibaba.fastjson2.JSON;
@@ -73,11 +73,11 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
                 key = QiNiuUtil.getKey(key);
             }
             Response response = uploadManager.put(file.getBytes(), key, upToken);
-            //解析上传成功的结果
+            // 解析上传成功的结果
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
             QiniuContent content = qiniuContentMapper.findByKey(FileUtil.getFileNameNoEx(putRet.key));
             if (content == null) {
-                //存入数据库
+                // 存入数据库
                 QiniuContent qiniuContent = new QiniuContent();
                 qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
                 qiniuContent.setBucket(qiniuConfig.getBucket());

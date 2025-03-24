@@ -1,7 +1,7 @@
 package cn.odboy.config;
 
 import cn.odboy.mapper.QuartzJobMapper;
-import cn.odboy.domain.QuartzJob;
+import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.util.QuartzManage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

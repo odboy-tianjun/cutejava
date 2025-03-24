@@ -1,7 +1,7 @@
 package cn.odboy.modules.security.config;
 
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.modules.security.config.enums.LoginCodeEnum;
+import cn.odboy.modules.security.constant.LoginCodeEnum;
 import cn.odboy.util.StringUtil;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;

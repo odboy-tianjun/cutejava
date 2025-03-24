@@ -1,15 +1,16 @@
 package cn.odboy.modules.system.service.impl;
 
-import cn.odboy.config.properties.FileProperties;
+import cn.odboy.base.PageResult;
+import cn.odboy.modules.security.service.OnlineUserService;
+import cn.odboy.modules.security.service.UserCacheService;
+import cn.odboy.properties.FileProperties;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
-import cn.odboy.modules.security.service.OnlineUserService;
-import cn.odboy.modules.security.service.UserCacheManager;
-import cn.odboy.modules.system.domain.Job;
-import cn.odboy.modules.system.domain.Role;
-import cn.odboy.modules.system.domain.User;
-import cn.odboy.modules.system.domain.dto.UserQueryCriteria;
+import cn.odboy.model.system.domain.Job;
+import cn.odboy.model.system.domain.Role;
+import cn.odboy.model.system.domain.User;
+import cn.odboy.model.system.dto.UserQueryCriteria;
 import cn.odboy.modules.system.mapper.UserJobMapper;
 import cn.odboy.modules.system.mapper.UserMapper;
 import cn.odboy.modules.system.mapper.UserRoleMapper;
@@ -39,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserRoleMapper userRoleMapper;
     private final FileProperties properties;
     private final RedisUtil redisUtil;
-    private final UserCacheManager userCacheManager;
+    private final UserCacheService userCacheService;
     private final OnlineUserService onlineUserService;
 
     @Override
@@ -272,6 +273,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param username /
      */
     private void flushCache(String username) {
-        userCacheManager.cleanUserCache(username);
+        userCacheService.cleanUserCache(username);
     }
 }

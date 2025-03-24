@@ -4,16 +4,14 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import cn.odboy.domain.dto.EmailDto;
+import cn.odboy.context.SpringBeanHolder;
+import cn.odboy.exception.util.ThrowableUtil;
 import cn.odboy.mapper.QuartzLogMapper;
-import cn.odboy.domain.QuartzJob;
-import cn.odboy.domain.QuartzLog;
-import cn.odboy.service.QuartzJobService;
+import cn.odboy.model.job.domain.QuartzJob;
+import cn.odboy.model.job.domain.QuartzLog;
+import cn.odboy.model.tools.dto.EmailDto;
 import cn.odboy.service.EmailService;
-import cn.odboy.util.RedisUtil;
-import cn.odboy.util.SpringBeanHolder;
-import cn.odboy.util.StringUtil;
-import cn.odboy.util.ThrowableUtil;
+import cn.odboy.service.QuartzJobService;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +25,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 public class ExecutionJob extends QuartzJobBean {
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     // 此处仅供参考，可根据任务执行情况自定义线程池参数
     private final ThreadPoolTaskExecutor executor = SpringBeanHolder.getBean("taskAsync");
 

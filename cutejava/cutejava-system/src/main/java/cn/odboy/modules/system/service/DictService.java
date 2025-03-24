@@ -1,8 +1,8 @@
 package cn.odboy.modules.system.service;
 
-import cn.odboy.modules.system.domain.Dict;
-import cn.odboy.modules.system.domain.dto.DictQueryCriteria;
-import cn.odboy.util.PageResult;
+import cn.odboy.base.PageResult;
+import cn.odboy.model.system.domain.Dict;
+import cn.odboy.model.system.dto.DictQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 

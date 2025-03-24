@@ -1,11 +1,11 @@
 package cn.odboy.modules.system.rest;
 
 import cn.hutool.core.lang.Dict;
+import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.modules.system.domain.Role;
-import cn.odboy.modules.system.domain.dto.RoleQueryCriteria;
+import cn.odboy.model.system.domain.Role;
+import cn.odboy.model.system.dto.RoleQueryCriteria;
 import cn.odboy.modules.system.service.RoleService;
-import cn.odboy.util.PageResult;
 import cn.odboy.util.SecurityUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;

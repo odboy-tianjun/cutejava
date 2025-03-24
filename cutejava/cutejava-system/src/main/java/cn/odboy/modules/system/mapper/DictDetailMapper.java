@@ -1,7 +1,7 @@
 package cn.odboy.modules.system.mapper;
 
-import cn.odboy.modules.system.domain.DictDetail;
-import cn.odboy.modules.system.domain.dto.DictDetailQueryCriteria;
+import cn.odboy.model.system.domain.DictDetail;
+import cn.odboy.model.system.dto.DictDetailQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

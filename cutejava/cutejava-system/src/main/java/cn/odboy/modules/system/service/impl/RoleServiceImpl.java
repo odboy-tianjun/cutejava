@@ -2,21 +2,25 @@ package cn.odboy.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.PageResult;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
-import cn.odboy.modules.security.service.UserCacheManager;
-import cn.odboy.modules.security.service.dto.AuthorityDto;
-import cn.odboy.modules.system.domain.Menu;
-import cn.odboy.modules.system.domain.Role;
-import cn.odboy.modules.system.domain.User;
-import cn.odboy.modules.system.domain.dto.RoleQueryCriteria;
+import cn.odboy.model.system.domain.Menu;
+import cn.odboy.model.system.domain.Role;
+import cn.odboy.model.system.domain.User;
+import cn.odboy.model.system.dto.AuthorityDto;
+import cn.odboy.model.system.dto.RoleQueryCriteria;
+import cn.odboy.modules.security.service.UserCacheService;
 import cn.odboy.modules.system.mapper.RoleDeptMapper;
 import cn.odboy.modules.system.mapper.RoleMapper;
 import cn.odboy.modules.system.mapper.RoleMenuMapper;
 import cn.odboy.modules.system.mapper.UserMapper;
 import cn.odboy.modules.system.service.RoleService;
-import cn.odboy.util.*;
+import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
+import cn.odboy.util.RedisUtil;
+import cn.odboy.util.StringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +36,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
-
     private final RoleMapper roleMapper;
     private final RoleDeptMapper roleDeptMapper;
     private final RoleMenuMapper roleMenuMapper;
     private final RedisUtil redisUtil;
     private final UserMapper userMapper;
-    private final UserCacheManager userCacheManager;
+    private final UserCacheService userCacheService;
 
     @Override
     public List<Role> queryAll() {
@@ -213,7 +216,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void delCaches(Long id, List<User> users) {
         users = CollectionUtil.isEmpty(users) ? userMapper.findByRoleId(id) : users;
         if (CollectionUtil.isNotEmpty(users)) {
-            users.forEach(item -> userCacheManager.cleanUserCache(item.getUsername()));
+            users.forEach(item -> userCacheService.cleanUserCache(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
             redisUtil.delByKeys(CacheKey.DATA_USER, userIds);
             redisUtil.delByKeys(CacheKey.MENU_USER, userIds);

@@ -2,10 +2,10 @@ package cn.odboy.service.impl;
 
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
-import cn.odboy.domain.EmailConfig;
-import cn.odboy.domain.dto.EmailDto;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.mapper.EmailConfigMapper;
+import cn.odboy.model.tools.domain.EmailConfig;
+import cn.odboy.model.tools.dto.EmailDto;
 import cn.odboy.service.EmailService;
 import cn.odboy.util.EncryptUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

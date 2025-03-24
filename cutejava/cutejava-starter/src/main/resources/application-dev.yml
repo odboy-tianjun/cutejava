@@ -3,6 +3,21 @@ server:
   http2:
     # 启用 HTTP/2 支持，提升传输效率
     enabled: true
+  undertow:
+    threads:
+      # 工作线程数，默认设置为io-threads * 8。如果你的应用程序有很多同步阻塞操作，可以适当增加这个值
+      worker: 4
+      # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+      # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+      io: 2
+    # 设置为true以使用直接内存（堆外内存）来存储缓冲区。这可以减少垃圾回收的开销。
+    direct-buffers: true
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+    # 每块buffer的空间大小,越小的空间被利用越充分
+    buffer-size: 1024
+    accesslog:
+      # 关闭日志
+      enabled: false
   compression:
     # 启用 GZIP 压缩，减少传输数据量
     enabled: true

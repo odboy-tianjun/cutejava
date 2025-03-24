@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.odboy</groupId>
-            <artifactId>cutejava-common</artifactId>
+            <artifactId>cutejava-domain</artifactId>
             <version>1.3.0</version>
         </dependency>
 

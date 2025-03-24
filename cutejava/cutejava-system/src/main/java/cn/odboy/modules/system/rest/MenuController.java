@@ -1,12 +1,12 @@
 package cn.odboy.modules.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.modules.system.domain.Menu;
-import cn.odboy.modules.system.domain.dto.MenuQueryCriteria;
-import cn.odboy.modules.system.domain.dto.MenuVo;
+import cn.odboy.model.system.domain.Menu;
+import cn.odboy.model.system.dto.MenuQueryCriteria;
+import cn.odboy.model.system.dto.MenuVo;
 import cn.odboy.modules.system.service.MenuService;
-import cn.odboy.util.PageResult;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.SecurityUtil;
 import io.swagger.annotations.Api;

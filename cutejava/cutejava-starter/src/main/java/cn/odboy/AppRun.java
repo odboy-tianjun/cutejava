@@ -1,33 +1,26 @@
 package cn.odboy;
 
-import cn.odboy.annotation.rest.AnonymousGetMapping;
-import cn.odboy.util.SpringBeanHolder;
+import cn.odboy.annotation.AnonymousGetMapping;
+import cn.odboy.context.BootApplication;
+import cn.odboy.context.SpringBeanHolder;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.UnknownHostException;
 
 @Slf4j
 @RestController
 @Api(hidden = true)
 @SpringBootApplication
-public class AppRun {
+public class AppRun extends BootApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException {
         SpringApplication springApplication = new SpringApplication(AppRun.class);
-        springApplication.run(args);
-        log.info("---------------------------------------------");
-        log.info("Local: {}", "http://localhost:8000");
-        log.info("Swagger: {}", "http://localhost:8000/doc.html");
-        log.info("---------------------------------------------");
-    }
-
-    @Bean
-    public SpringBeanHolder springContextHolder() {
-        return new SpringBeanHolder();
+        inited(springApplication.run(args));
     }
 
     /**

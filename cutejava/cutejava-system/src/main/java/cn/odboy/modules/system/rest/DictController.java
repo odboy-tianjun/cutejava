@@ -1,10 +1,10 @@
 package cn.odboy.modules.system.rest;
 
+import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.modules.system.domain.Dict;
-import cn.odboy.modules.system.domain.dto.DictQueryCriteria;
+import cn.odboy.model.system.domain.Dict;
+import cn.odboy.model.system.dto.DictQueryCriteria;
 import cn.odboy.modules.system.service.DictService;
-import cn.odboy.util.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

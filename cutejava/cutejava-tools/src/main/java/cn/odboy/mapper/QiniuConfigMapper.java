@@ -1,6 +1,6 @@
 package cn.odboy.mapper;
 
-import cn.odboy.domain.QiniuConfig;
+import cn.odboy.model.tools.domain.QiniuConfig;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
