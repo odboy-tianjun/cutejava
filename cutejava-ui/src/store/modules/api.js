@@ -2,10 +2,6 @@
 const baseUrl = process.env.VUE_APP_BASE_API === '/' ? '' : process.env.VUE_APP_BASE_API
 const api = {
   state: {
-    // 部署包上传
-    deployUploadApi: baseUrl + '/api/deploy/upload',
-    // SQL脚本上传
-    databaseUploadApi: baseUrl + '/api/database/upload',
     // 图片上传
     imagesUploadApi: baseUrl + '/api/localStorage/pictures',
     // 修改头像
@@ -14,6 +10,8 @@ const api = {
     qiNiuUploadApi: baseUrl + '/api/qiNiuContent',
     // Sql 监控
     sqlApi: baseUrl + '/druid/index.html',
+    // websocket
+    websocketApi: baseUrl + '/webSocket/{sid}',
     // swagger
     swaggerApi: baseUrl + '/doc.html',
     // 文件上传
