@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.odboy.modules.system.mapper.DictDetailMapper">
     <resultMap id="BaseResultMap" type="cn.odboy.model.system.domain.DictDetail">
-        <id column="detail_id" property="id" jdbcType="BIGINT"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="label" property="label" jdbcType="VARCHAR"/>
         <result column="value" property="value" jdbcType="VARCHAR"/>
         <result column="dict_sort" property="dictSort" jdbcType="INTEGER"/>
@@ -12,24 +12,21 @@
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <!-- 一对一关联 -->
         <association property="dict" javaType="cn.odboy.model.system.domain.Dict">
-            <id column="dict_id" property="id" jdbcType="BIGINT"/>
+            <id column="id" property="id" jdbcType="BIGINT"/>
             <result column="name" property="name" jdbcType="VARCHAR"/>
         </association>
     </resultMap>
 
     <sql id="Base_Column_List">
-        dd
-        .
-        detail_id
-        , dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
-        d.dict_id, d.name
+        dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
+        d.id as dict_id, d.name
     </sql>
 
     <select id="findAll" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from sys_dict_detail dd, sys_dict d
-        where dd.dict_id = d.dict_id
+        where dd.dict_id = d.id
         <if test="criteria.dictName != null and criteria.dictName != ''">
             and d.name = #{criteria.dictName}
         </if>
@@ -43,7 +40,7 @@
         select
         <include refid="Base_Column_List"/>
         from sys_dict_detail dd, sys_dict d
-        where dd.dict_id = d.dict_id
+        where dd.dict_id = d.id
         <if test="name != null and name != ''">
             and d.name = #{name}
         </if>
