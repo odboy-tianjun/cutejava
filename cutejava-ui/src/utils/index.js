@@ -282,28 +282,6 @@ export function debounce(func, wait, immediate) {
 }
 
 /**
- * This is just a simple version of deep copy
- * Has a lot of edge cases bug
- * If you want to use a perfect deep copy, use lodash's _.cloneDeep
- * @param {Object} source
- * @returns {Object}
- */
-export function deepClone(source) {
-  if (!source && typeof source !== 'object') {
-    throw new Error('error arguments', 'deepClone')
-  }
-  const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
-    if (source[keys] && typeof source[keys] === 'object') {
-      targetObj[keys] = deepClone(source[keys])
-    } else {
-      targetObj[keys] = source[keys]
-    }
-  })
-  return targetObj
-}
-
-/**
  * @param {Array} arr
  * @returns {Array}
  */
@@ -386,3 +364,12 @@ export function downloadFile(obj, name, suffix) {
   link.click()
   document.body.removeChild(link)
 }
+
+// 数组去重
+export const uniqueArrays = (arr) => [...new Set(arr)]
+
+// 获取变量类型
+export const type = (value) => Object.prototype.toString.call(value).slice(8, -1).toLowerCase()
+
+// 深拷贝对象
+export const deepClone = (obj) => JSON.parse(JSON.stringify(obj))
