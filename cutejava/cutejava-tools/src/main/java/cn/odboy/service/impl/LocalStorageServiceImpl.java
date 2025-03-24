@@ -47,7 +47,8 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LocalStorage create(String name, MultipartFile multipartFile) {
-        FileUtil.checkSize(properties.getMaxSize(), multipartFile.getSize());
+        long size = multipartFile.getSize();
+        FileUtil.checkSize(properties.getMaxSize(), size);
         String suffix = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, properties.getPath().getPath() + type + File.separator);
@@ -62,7 +63,7 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
                     suffix,
                     file.getPath(),
                     type,
-                    FileUtil.getSize(multipartFile.getSize())
+                    FileUtil.getSize(size)
             );
             save(localStorage);
             return localStorage;
