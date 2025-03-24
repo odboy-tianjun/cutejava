@@ -13,6 +13,6 @@
                 )
             </if>
         </where>
-        order by d.dict_id desc
+        order by d.id desc
     </select>
 </mapper>

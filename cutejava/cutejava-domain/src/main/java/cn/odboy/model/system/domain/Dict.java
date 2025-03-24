@@ -19,7 +19,7 @@ public class Dict extends MyEntity {
 
     @NotNull(groups = Update.class)
     @ApiModelProperty(value = "ID", hidden = true)
-    @TableId(value = "dict_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @NotBlank
