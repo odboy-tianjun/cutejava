@@ -48,10 +48,8 @@ public class OnlineUserServiceImpl implements OnlineUserService {
     @Override
     public PageResult<OnlineUserDto> getAll(String username, Pageable pageable) {
         List<OnlineUserDto> onlineUserDtos = getAll(username);
-        return PageUtil.toPage(
-                PageUtil.paging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserDtos),
-                onlineUserDtos.size()
-        );
+        List<OnlineUserDto> paging = PageUtil.paging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserDtos);
+        return PageUtil.toPage(paging, onlineUserDtos.size());
     }
 
     @Override
