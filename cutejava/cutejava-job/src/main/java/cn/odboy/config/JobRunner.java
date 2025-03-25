@@ -26,7 +26,7 @@ public class JobRunner implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        List<QuartzJob> quartzJobs = quartzJobMapper.selectActiveJob();
+        List<QuartzJob> quartzJobs = quartzJobMapper.findActiveQuartzJobs();
         quartzJobs.forEach(quartzManage::addJob);
         log.info("Timing task injection complete");
     }
