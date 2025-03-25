@@ -64,7 +64,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         }
         // 数据权限
         criteria.setIds(SecurityUtil.getCurrentUserDataScope());
-        List<Dept> list = deptMapper.selectByPage(criteria);
+        List<Dept> list = deptMapper.findDeptListByPage(criteria);
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
         if (StringUtil.isBlank(dataScopeType)) {
             return deduplication(list);
@@ -85,12 +85,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public List<Dept> findByPid(long pid) {
-        return deptMapper.selectByPid(pid);
+        return deptMapper.findDeptListByPid(pid);
     }
 
     @Override
     public Set<Dept> findByRoleId(Long id) {
-        return deptMapper.selectByRoleId(id);
+        return deptMapper.findDeptSetByRoleId(id);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public Set<Dept> getDeleteDepts(List<Dept> menuList, Set<Dept> deptSet) {
         for (Dept dept : menuList) {
             deptSet.add(dept);
-            List<Dept> depts = deptMapper.selectByPid(dept.getId());
+            List<Dept> depts = deptMapper.findDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(depts)) {
                 getDeleteDepts(depts, deptSet);
             }
@@ -163,7 +163,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
                     if (dept != null && dept.getEnabled()) {
-                        List<Dept> depts = deptMapper.selectByPid(dept.getId());
+                        List<Dept> depts = deptMapper.findDeptListByPid(dept.getId());
                         if (CollUtil.isNotEmpty(depts)) {
                             list.addAll(getDeptChildren(depts));
                         }
@@ -177,10 +177,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public List<Dept> getSuperior(Dept dept, List<Dept> depts) {
         if (dept.getPid() == null) {
-            depts.addAll(deptMapper.selectByPidIsNull());
+            depts.addAll(deptMapper.findDeptListByPidIsNull());
             return depts;
         }
-        depts.addAll(deptMapper.selectByPid(dept.getPid()));
+        depts.addAll(deptMapper.findDeptListByPid(dept.getPid()));
         return getSuperior(findById(dept.getPid()), depts);
     }
 
@@ -233,8 +233,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     private void updateSubCnt(Long deptId) {
         if (deptId != null) {
-            int count = deptMapper.countByPid(deptId);
-            deptMapper.updateSubCntById(count, deptId);
+            int count = deptMapper.countDeptByPid(deptId);
+            deptMapper.updateDeptSubCountById(count, deptId);
         }
     }
 
