@@ -14,5 +14,5 @@ import java.util.List;
 public interface QuartzJobMapper extends BaseMapper<QuartzJob> {
     IPage<QuartzJob> findQuartzJob(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
     List<QuartzJob> findQuartzJob(@Param("criteria") QuartzJobQueryCriteria criteria);
-    List<QuartzJob> findActiveQuartzJobs();
+    List<QuartzJob> findActiveQuartzJob();
 }
