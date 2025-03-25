@@ -85,12 +85,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public List<Dept> findByPid(long pid) {
-        return deptMapper.findByPid(pid);
+        return deptMapper.selectByPid(pid);
     }
 
     @Override
     public Set<Dept> findByRoleId(Long id) {
-        return deptMapper.findByRoleId(id);
+        return deptMapper.selectByRoleId(id);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public Set<Dept> getDeleteDepts(List<Dept> menuList, Set<Dept> deptSet) {
         for (Dept dept : menuList) {
             deptSet.add(dept);
-            List<Dept> depts = deptMapper.findByPid(dept.getId());
+            List<Dept> depts = deptMapper.selectByPid(dept.getId());
             if (CollUtil.isNotEmpty(depts)) {
                 getDeleteDepts(depts, deptSet);
             }
@@ -163,7 +163,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
                     if (dept != null && dept.getEnabled()) {
-                        List<Dept> depts = deptMapper.findByPid(dept.getId());
+                        List<Dept> depts = deptMapper.selectByPid(dept.getId());
                         if (CollUtil.isNotEmpty(depts)) {
                             list.addAll(getDeptChildren(depts));
                         }
@@ -177,10 +177,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public List<Dept> getSuperior(Dept dept, List<Dept> depts) {
         if (dept.getPid() == null) {
-            depts.addAll(deptMapper.findByPidIsNull());
+            depts.addAll(deptMapper.selectByPidIsNull());
             return depts;
         }
-        depts.addAll(deptMapper.findByPid(dept.getPid()));
+        depts.addAll(deptMapper.selectByPid(dept.getPid()));
         return getSuperior(findById(dept.getPid()), depts);
     }
 
