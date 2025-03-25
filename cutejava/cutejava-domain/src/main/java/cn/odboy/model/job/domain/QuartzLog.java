@@ -13,9 +13,9 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = false)
 public class QuartzLog extends MyObject {
 
-    @TableId(value = "log_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)
-    private Long logId;
+    private Long id;
 
     @ApiModelProperty(value = "任务名称", hidden = true)
     private String jobName;

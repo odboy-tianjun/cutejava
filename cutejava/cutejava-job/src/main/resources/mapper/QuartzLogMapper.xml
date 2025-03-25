@@ -16,7 +16,7 @@
                 AND create_time BETWEEN #{criteria.createTime[0]} AND #{criteria.createTime[1]}
             </if>
         </where>
-        ORDER BY log_id DESC
+        ORDER BY id DESC
     </select>
 
 </mapper>
