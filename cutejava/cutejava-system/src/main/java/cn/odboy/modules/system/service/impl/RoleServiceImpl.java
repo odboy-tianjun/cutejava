@@ -45,19 +45,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<Role> queryAll() {
-        return roleMapper.selectByPage();
+        return roleMapper.findAllRoles();
     }
 
     @Override
     public List<Role> queryAll(RoleQueryCriteria criteria) {
-        return roleMapper.selectByPage(criteria);
+        return roleMapper.findRoles(criteria);
     }
 
     @Override
     public PageResult<Role> queryAll(RoleQueryCriteria criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
-        List<Role> roles = roleMapper.selectByPage(criteria);
-        Long total = roleMapper.countByCriteria(criteria);
+        List<Role> roles = roleMapper.findRoles(criteria);
+        Long total = roleMapper.countRoles(criteria);
         return PageUtil.toPage(roles, total);
     }
 
@@ -75,7 +75,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(Role resources) {
-        if (roleMapper.selectByName(resources.getName()) != null) {
+        if (roleMapper.findRoleByName(resources.getName()) != null) {
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
         save(resources);
@@ -89,7 +89,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public void update(Role resources) {
         Role role = getById(resources.getId());
-        Role role1 = roleMapper.selectByName(resources.getName());
+        Role role1 = roleMapper.findRoleByName(resources.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
@@ -141,7 +141,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         String key = CacheKey.ROLE_USER + userId;
         List<Role> roles = redisUtil.getList(key, Role.class);
         if (CollUtil.isEmpty(roles)) {
-            roles = roleMapper.selectByUserId(userId);
+            roles = roleMapper.findRolesByUserId(userId);
             redisUtil.set(key, roles, 1, TimeUnit.DAYS);
         }
         return roles;
@@ -171,7 +171,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 return permissions.stream().map(AuthorityDto::new)
                         .collect(Collectors.toList());
             }
-            List<Role> roles = roleMapper.selectByUserId(user.getId());
+            List<Role> roles = roleMapper.findRolesByUserId(user.getId());
             permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                     .map(Menu::getPermission)
                     .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
@@ -205,7 +205,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<Role> findByMenuId(Long menuId) {
-        return roleMapper.selectByMenuId(menuId);
+        return roleMapper.findRolesByMenuId(menuId);
     }
 
     /**

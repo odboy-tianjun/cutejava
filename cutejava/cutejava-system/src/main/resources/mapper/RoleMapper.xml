@@ -21,14 +21,11 @@
             <result column="dept_name" property="name"/>
         </collection>
     </resultMap>
-
-
-    <select id="queryAll" resultType="cn.odboy.model.system.domain.Role">
+    <select id="findAllRoles" resultType="cn.odboy.model.system.domain.Role">
         select role_id as id, name, level
         from sys_role order by level
     </select>
-
-    <select id="findAll" resultMap="BaseResultMap">
+    <select id="findRoles" resultMap="BaseResultMap">
         select role.*,
         dept.dept_id as dept_id, dept.name as dept_name,
         menu.menu_id as menu_id, menu.title as menu_title, menu.permission as menu_permission
@@ -60,8 +57,7 @@
         left join sys_dept dept on dept.dept_id = srd.dept_id
         order by role.role_level
     </select>
-
-    <select id="countAll" resultType="java.lang.Long">
+    <select id="countRoles" resultType="java.lang.Long">
         select count(*)
         from sys_role role
         <where>
@@ -76,13 +72,11 @@
             </if>
         </where>
     </select>
-
-    <select id="findByName" resultType="cn.odboy.model.system.domain.Role">
+    <select id="findRoleByName" resultType="cn.odboy.model.system.domain.Role">
         select role_id as id from sys_role
         where name = #{name}
     </select>
-
-    <select id="findById" resultMap="BaseResultMap">
+    <select id="findRoleById" resultMap="BaseResultMap">
         select
         role.role_id as role_role_id, role.name as role_name, role.data_scope as role_data_scope,
         role.level as role_level, role.description as role_description, role.create_by as role_create_by,
@@ -96,8 +90,7 @@
         left join sys_dept dept on dept.dept_id = srd.dept_id
         where role.role_id = #{roleId}
     </select>
-
-    <select id="findByUserId" resultMap="BaseResultMap">
+    <select id="findRolesByUserId" resultMap="BaseResultMap">
         SELECT
         role.role_id as role_role_id, role.name as role_name, role.data_scope as role_data_scope,
         role.level as role_level, role.description as role_description, role.create_by as role_create_by,
@@ -112,8 +105,7 @@
         left join sys_users_roles ur on role.role_id = ur.role_id
         WHERE role.role_id = ur.role_id AND ur.user_id = #{userId}
     </select>
-
-    <select id="countByDepts" resultType="int">
+    <select id="countRolesByDeptIds" resultType="int">
         select count(*)
         from sys_role r, sys_roles_depts d
         where r.role_id = d.role_id
@@ -121,5 +113,8 @@
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
             #{deptId}
         </foreach>
+    </select>
+    <select id="findRolesByMenuId" resultType="cn.odboy.model.system.domain.Role">
+        SELECT role.role_id as id FROM sys_role role, sys_roles_menus rm WHERE role.role_id = rm.role_id AND rm.menu_id = #{menuId}
     </select>
 </mapper>

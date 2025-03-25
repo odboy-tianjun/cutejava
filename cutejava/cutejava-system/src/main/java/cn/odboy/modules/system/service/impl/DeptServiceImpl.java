@@ -226,7 +226,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (userMapper.countByDepts(deptIds) > 0) {
             throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
         }
-        if (roleMapper.countByDeptIds(deptIds) > 0) {
+        if (roleMapper.countRolesByDeptIds(deptIds) > 0) {
             throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
         }
     }
