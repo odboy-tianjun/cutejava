@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.odboy.mapper.QiniuContentMapper">
-    <select id="findByKey" resultType="cn.odboy.model.tools.domain.QiniuContent">
+    <select id="selectByName" resultType="cn.odboy.model.tools.domain.QiniuContent">
         SELECT *
         FROM tool_qiniu_content
         WHERE name = #{name}
     </select>
 
-    <select id="findAll" resultType="cn.odboy.model.tools.domain.QiniuContent">
+    <select id="selectByPage" resultType="cn.odboy.model.tools.domain.QiniuContent">
         SELECT
         *
         FROM tool_qiniu_content
