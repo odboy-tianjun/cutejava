@@ -8,12 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 @Mapper
 public interface DictMapper extends BaseMapper<Dict> {
-
-    IPage<Dict> selectByPage(@Param("criteria") DictQueryCriteria criteria, Page<Object> page);
-
-    List<Dict> selectByPage(@Param("criteria") DictQueryCriteria criteria);
+    IPage<Dict> findDictPage(@Param("criteria") DictQueryCriteria criteria, Page<Object> page);
 }

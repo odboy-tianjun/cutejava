@@ -7,7 +7,7 @@
         WHERE name = #{name}
     </select>
 
-    <select id="findQiniuContent" resultType="cn.odboy.model.tools.domain.QiniuContent">
+    <select id="findQiniuContentPage" resultType="cn.odboy.model.tools.domain.QiniuContent">
         SELECT
         *
         FROM tool_qiniu_content

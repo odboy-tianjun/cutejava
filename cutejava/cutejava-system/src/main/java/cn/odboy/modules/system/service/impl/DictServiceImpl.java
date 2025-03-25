@@ -32,13 +32,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     public PageResult<Dict> queryAll(DictQueryCriteria criteria, Page<Object> page) {
-        IPage<Dict> dicts = dictMapper.selectByPage(criteria, page);
+        IPage<Dict> dicts = dictMapper.findDictPage(criteria, page);
         return PageUtil.toPage(dicts);
     }
 
     @Override
     public List<Dict> queryAll(DictQueryCriteria criteria) {
-        return dictMapper.selectByPage(criteria);
+        return dictMapper.findDictPage(criteria, PageUtil.getCount(dictMapper)).getRecords();
     }
 
     @Override
@@ -62,12 +62,12 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         // 清理缓存
-        List<Dict> dicts = dictMapper.selectBatchIds(ids);
+        List<Dict> dicts = dictMapper.selectByIds(ids);
         for (Dict dict : dicts) {
             delCaches(dict);
         }
         // 删除字典
-        dictMapper.deleteBatchIds(ids);
+        dictMapper.deleteByIds(ids);
         // 删除字典详情
         dictDetailMapper.deleteDictDetailsByDictIds(ids);
     }

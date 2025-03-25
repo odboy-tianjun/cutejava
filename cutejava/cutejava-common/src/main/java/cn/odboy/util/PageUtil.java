@@ -1,7 +1,9 @@
 package cn.odboy.util;
 
 import cn.odboy.base.PageResult;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,5 +54,9 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
      */
     public static <T> PageResult<T> toPage(List<T> list, long totalElements) {
         return new PageResult<>(list, totalElements);
+    }
+
+    public static Page<Object> getCount(BaseMapper<?> baseMapper) {
+        return new Page<>(1, baseMapper.selectCount(null));
     }
 }
