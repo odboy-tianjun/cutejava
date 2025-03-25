@@ -14,10 +14,9 @@ import java.util.Set;
 
 @Mapper
 public interface DictDetailMapper extends BaseMapper<DictDetail> {
+    List<DictDetail> findDictDetailByDictName(@Param("name") String name);
 
-    List<DictDetail> selectByDictName(@Param("name") String name);
+    IPage<DictDetail> findDictDetail(@Param("criteria") DictDetailQueryCriteria criteria, Page<Object> page);
 
-    IPage<DictDetail> selectByPage(@Param("criteria") DictDetailQueryCriteria criteria, Page<Object> page);
-
-    void deleteBatchByDictIds(@Param("dictIds") Set<Long> dictIds);
+    void deleteDictDetailsByDictIds(@Param("dictIds") Set<Long> dictIds);
 }

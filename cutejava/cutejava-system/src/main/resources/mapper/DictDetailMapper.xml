@@ -17,7 +17,18 @@
         </association>
     </resultMap>
 
-    <select id="selectByPage" resultMap="BaseResultMap">
+    <select id="findDictDetailByDictName" resultMap="BaseResultMap">
+        select
+        dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
+        d.id as dict_id, d.name
+        from sys_dict_detail dd, sys_dict d
+        where dd.dict_id = d.id
+        <if test="name != null and name != ''">
+            and d.name = #{name}
+        </if>
+        order by dd.dict_sort
+    </select>
+    <select id="findDictDetail" resultMap="BaseResultMap">
         select
         dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
         d.id as dict_id, d.name
@@ -31,20 +42,7 @@
         </if>
         order by dd.dict_sort, dd.dict_id desc
     </select>
-
-    <select id="selectByDictName" resultMap="BaseResultMap">
-        select
-        dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
-        d.id as dict_id, d.name
-        from sys_dict_detail dd, sys_dict d
-        where dd.dict_id = d.id
-        <if test="name != null and name != ''">
-            and d.name = #{name}
-        </if>
-        order by dd.dict_sort
-    </select>
-
-    <delete id="deleteBatchByDictIds">
+    <delete id="deleteDictDetailsByDictIds">
         delete from sys_dict_detail
         where dict_id in
         <foreach collection="dictIds" item="item" index="index" open="(" separator="," close=")">
