@@ -14,6 +14,5 @@ import java.util.List;
 @Mapper
 public interface QiniuContentMapper extends BaseMapper<QiniuContent> {
     QiniuContent findQiniuContentByName(@Param("name") String name);
-    IPage<QiniuContent> findQiniuContent(@Param("criteria") QiniuQueryCriteria criteria, Page<Object> page);
-    List<QiniuContent> findQiniuContent(@Param("criteria") QiniuQueryCriteria criteria);
+    IPage<QiniuContent> findQiniuContentPage(@Param("criteria") QiniuQueryCriteria criteria, Page<Object> page);
 }
