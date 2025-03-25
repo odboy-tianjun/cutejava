@@ -47,12 +47,12 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
 
     @Override
     public PageResult<QiniuContent> queryAll(QiniuQueryCriteria criteria, Page<Object> page) {
-        return PageUtil.toPage(qiniuContentMapper.selectByPage(criteria, page));
+        return PageUtil.toPage(qiniuContentMapper.findQiniuContent(criteria, page));
     }
 
     @Override
     public List<QiniuContent> queryAll(QiniuQueryCriteria criteria) {
-        return qiniuContentMapper.selectByPage(criteria);
+        return qiniuContentMapper.findQiniuContent(criteria);
     }
 
     @Override
@@ -69,13 +69,13 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
         try {
             String key = file.getOriginalFilename();
-            if (qiniuContentMapper.selectByName(key) != null) {
+            if (qiniuContentMapper.findQiniuContentByName(key) != null) {
                 key = QiNiuUtil.getKey(key);
             }
             Response response = uploadManager.put(file.getBytes(), key, upToken);
             // 解析上传成功的结果
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
-            QiniuContent content = qiniuContentMapper.selectByName(FileUtil.getFileNameNoEx(putRet.key));
+            QiniuContent content = qiniuContentMapper.findQiniuContentByName(FileUtil.getFileNameNoEx(putRet.key));
             if (content == null) {
                 // 存入数据库
                 QiniuContent qiniuContent = new QiniuContent();
@@ -147,7 +147,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
             QiniuContent qiniuContent;
             FileInfo[] items = fileListIterator.next();
             for (FileInfo item : items) {
-                if (qiniuContentMapper.selectByName(FileUtil.getFileNameNoEx(item.key)) == null) {
+                if (qiniuContentMapper.findQiniuContentByName(FileUtil.getFileNameNoEx(item.key)) == null) {
                     qiniuContent = new QiniuContent();
                     qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(String.valueOf(item.fsize))));
                     qiniuContent.setSuffix(FileUtil.getExtensionName(item.key));

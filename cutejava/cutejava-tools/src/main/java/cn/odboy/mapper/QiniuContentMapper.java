@@ -13,10 +13,7 @@ import java.util.List;
 
 @Mapper
 public interface QiniuContentMapper extends BaseMapper<QiniuContent> {
-
-    QiniuContent selectByName(@Param("name") String name);
-
-    IPage<QiniuContent> selectByPage(@Param("criteria") QiniuQueryCriteria criteria, Page<Object> page);
-
-    List<QiniuContent> selectByPage(QiniuQueryCriteria criteria);
+    QiniuContent findQiniuContentByName(@Param("name") String name);
+    IPage<QiniuContent> findQiniuContent(@Param("criteria") QiniuQueryCriteria criteria, Page<Object> page);
+    List<QiniuContent> findQiniuContent(@Param("criteria") QiniuQueryCriteria criteria);
 }
