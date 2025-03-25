@@ -14,13 +14,9 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <sql id="BaseResultMap">
-        dept_id, name, pid, sub_count, create_time, update_time, create_by, update_by, enabled, dept_sort
-    </sql>
-
     <select id="findAll" resultMap="BaseResultMap">
         select
-        <include refid="BaseResultMap"/>
+        dept_id, name, pid, sub_count, create_time, update_time, create_by, update_by, enabled, dept_sort
         from sys_dept
         <where>
             <if test="criteria.ids != null and criteria.ids.size() > 0">
@@ -50,14 +46,14 @@
 
     <select id="findByPid" resultMap="BaseResultMap">
         select
-        <include refid="BaseResultMap"/>
+            dept_id, name, pid, sub_count, create_time, update_time, create_by, update_by, enabled, dept_sort
         from sys_dept
         where pid = #{pid}
     </select>
 
     <select id="findByPidIsNull" resultMap="BaseResultMap">
         select
-        <include refid="BaseResultMap"/>
+            dept_id, name, pid, sub_count, create_time, update_time, create_by, update_by, enabled, dept_sort
         from sys_dept
         where pid is null
     </select>

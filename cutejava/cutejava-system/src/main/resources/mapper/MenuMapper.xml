@@ -22,13 +22,9 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
-    </sql>
-
     <select id="findAll" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
         from sys_menu
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
@@ -63,7 +59,7 @@
 
     <select id="findByPidOrderByMenuSort" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+            menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
         from sys_menu
         WHERE pid = #{pid}
         ORDER BY menu_sort
@@ -71,7 +67,7 @@
 
     <select id="findByPidIsNullOrderByMenuSort" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+            menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
         from sys_menu
         where pid is null
         order by menu_sort
