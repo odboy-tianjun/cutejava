@@ -2,6 +2,7 @@ package cn.odboy.config;
 
 import cn.odboy.mapper.QuartzJobMapper;
 import cn.odboy.model.job.domain.QuartzJob;
+import cn.odboy.service.QuartzJobService;
 import cn.odboy.util.QuartzManage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobRunner implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(JobRunner.class);
-    private final QuartzJobMapper quartzJobMapper;
+    private final QuartzJobService quartzJobService;
     private final QuartzManage quartzManage;
 
     /**
@@ -26,7 +27,7 @@ public class JobRunner implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        List<QuartzJob> quartzJobs = quartzJobMapper.selectActiveJob();
+        List<QuartzJob> quartzJobs = quartzJobService.listActiveJob();
         quartzJobs.forEach(quartzManage::addJob);
         log.info("Timing task injection complete");
     }

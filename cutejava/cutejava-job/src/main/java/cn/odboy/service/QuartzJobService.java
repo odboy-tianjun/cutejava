@@ -109,4 +109,5 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @throws InterruptedException /
      */
     void executionSubJob(String[] tasks) throws InterruptedException;
+    List<QuartzJob> listActiveJob();
 }
