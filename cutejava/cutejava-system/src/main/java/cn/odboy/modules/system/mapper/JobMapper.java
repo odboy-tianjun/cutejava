@@ -13,11 +13,6 @@ import java.util.List;
 
 @Mapper
 public interface JobMapper extends BaseMapper<Job> {
-
-    @Select("select id from sys_job where name = #{name}")
-    Job selectByName(@Param("name") String name);
-
-    List<Job> selectByPage(@Param("criteria") JobQueryCriteria criteria);
-
-    IPage<Job> selectByPage(@Param("criteria") JobQueryCriteria criteria, Page<Object> page);
+    Job findJobByName(@Param("name") String name);
+    IPage<Job> findJobPage(@Param("criteria") JobQueryCriteria criteria, Page<Object> page);
 }
