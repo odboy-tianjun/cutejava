@@ -16,6 +16,4 @@ public interface QuartzJobMapper extends BaseMapper<QuartzJob> {
     IPage<QuartzJob> selectByPage(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
 
     List<QuartzJob> selectByPage(@Param("criteria") QuartzJobQueryCriteria criteria);
-
-    List<QuartzJob> selectActiveJob();
 }

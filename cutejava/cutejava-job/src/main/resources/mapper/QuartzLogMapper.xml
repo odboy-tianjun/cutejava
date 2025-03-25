@@ -18,5 +18,4 @@
         </where>
         ORDER BY id DESC
     </select>
-
 </mapper>
