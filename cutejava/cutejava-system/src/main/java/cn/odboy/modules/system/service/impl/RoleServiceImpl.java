@@ -45,19 +45,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<Role> queryAll() {
-        return roleMapper.queryAll();
+        return roleMapper.selectByPage();
     }
 
     @Override
     public List<Role> queryAll(RoleQueryCriteria criteria) {
-        return roleMapper.findAll(criteria);
+        return roleMapper.selectByPage(criteria);
     }
 
     @Override
     public PageResult<Role> queryAll(RoleQueryCriteria criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
-        List<Role> roles = roleMapper.findAll(criteria);
-        Long total = roleMapper.countAll(criteria);
+        List<Role> roles = roleMapper.selectByPage(criteria);
+        Long total = roleMapper.countByCriteria(criteria);
         return PageUtil.toPage(roles, total);
     }
 
@@ -66,7 +66,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         String key = CacheKey.ROLE_ID + id;
         Role role = redisUtil.get(key, Role.class);
         if (role == null) {
-            role = roleMapper.findById(id);
+            role = roleMapper.selectById(id);
             redisUtil.set(key, role, 1, TimeUnit.DAYS);
         }
         return role;
@@ -75,13 +75,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(Role resources) {
-        if (roleMapper.findByName(resources.getName()) != null) {
+        if (roleMapper.selectByName(resources.getName()) != null) {
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
         save(resources);
         // 判断是否有部门数据，若有，则需创建关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            roleDeptMapper.insertData(resources.getId(), resources.getDepts());
+            roleDeptMapper.insertBatchByRoleId(resources.getId(), resources.getDepts());
         }
     }
 
@@ -89,7 +89,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public void update(Role resources) {
         Role role = getById(resources.getId());
-        Role role1 = roleMapper.findByName(resources.getName());
+        Role role1 = roleMapper.selectByName(resources.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
@@ -104,7 +104,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleDeptMapper.deleteByRoleId(resources.getId());
         // 判断是否有部门数据，若有，则需更新关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            roleDeptMapper.insertData(resources.getId(), resources.getDepts());
+            roleDeptMapper.insertBatchByRoleId(resources.getId(), resources.getDepts());
         }
         // 更新相关缓存
         delCaches(role.getId(), null);
@@ -132,7 +132,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         }
         removeBatchByIds(ids);
         // 删除角色部门关联数据、角色菜单关联数据
-        roleDeptMapper.deleteByRoleIds(ids);
+        roleDeptMapper.deleteBatchByRoleIds(ids);
         roleMenuMapper.deleteByRoleIds(ids);
     }
 
@@ -141,7 +141,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         String key = CacheKey.ROLE_USER + userId;
         List<Role> roles = redisUtil.getList(key, Role.class);
         if (CollUtil.isEmpty(roles)) {
-            roles = roleMapper.findByUserId(userId);
+            roles = roleMapper.selectByUserId(userId);
             redisUtil.set(key, roles, 1, TimeUnit.DAYS);
         }
         return roles;
@@ -171,7 +171,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 return permissions.stream().map(AuthorityDto::new)
                         .collect(Collectors.toList());
             }
-            List<Role> roles = roleMapper.findByUserId(user.getId());
+            List<Role> roles = roleMapper.selectByUserId(user.getId());
             permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                     .map(Menu::getPermission)
                     .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
@@ -205,7 +205,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<Role> findByMenuId(Long menuId) {
-        return roleMapper.findByMenuId(menuId);
+        return roleMapper.selectByMenuId(menuId);
     }
 
     /**

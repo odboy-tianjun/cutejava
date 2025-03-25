@@ -64,7 +64,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         }
         // 数据权限
         criteria.setIds(SecurityUtil.getCurrentUserDataScope());
-        List<Dept> list = deptMapper.selectAll(criteria);
+        List<Dept> list = deptMapper.selectByPage(criteria);
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
         if (StringUtil.isBlank(dataScopeType)) {
             return deduplication(list);
@@ -226,7 +226,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (userMapper.countByDepts(deptIds) > 0) {
             throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
         }
-        if (roleMapper.countByDepts(deptIds) > 0) {
+        if (roleMapper.countByDeptIds(deptIds) > 0) {
             throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
         }
     }
