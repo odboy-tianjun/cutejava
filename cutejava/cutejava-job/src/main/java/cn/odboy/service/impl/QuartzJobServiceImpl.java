@@ -33,22 +33,22 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     public PageResult<QuartzJob> queryAll(QuartzJobQueryCriteria criteria, Page<Object> page) {
-        return PageUtil.toPage(quartzJobMapper.selectByPage(criteria, page));
+        return PageUtil.toPage(quartzJobMapper.findQuartzJob(criteria, page));
     }
 
     @Override
     public PageResult<QuartzLog> queryAllLog(QuartzJobQueryCriteria criteria, Page<Object> page) {
-        return PageUtil.toPage(quartzLogMapper.selectByPage(criteria, page));
+        return PageUtil.toPage(quartzLogMapper.findQuartzLog(criteria, page));
     }
 
     @Override
     public List<QuartzJob> queryAll(QuartzJobQueryCriteria criteria) {
-        return quartzJobMapper.selectByPage(criteria);
+        return quartzJobMapper.findQuartzJob(criteria);
     }
 
     @Override
     public List<QuartzLog> queryAllLog(QuartzJobQueryCriteria criteria) {
-        return quartzLogMapper.selectByPage(criteria);
+        return quartzLogMapper.findQuartzLog(criteria);
     }
 
     @Override
