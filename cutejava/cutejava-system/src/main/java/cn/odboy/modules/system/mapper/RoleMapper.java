@@ -12,14 +12,12 @@ import java.util.Set;
 
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
-    List<Role> selectByPage();
-    Long countByCriteria(@Param("criteria") RoleQueryCriteria criteria);
-    List<Role> selectByPage(@Param("criteria") RoleQueryCriteria criteria);
-    Role selectById(@Param("roleId") Long roleId);
-    Role selectByName(@Param("name") String name);
-    List<Role> selectByUserId(@Param("userId") Long userId);
-    int countByDeptIds(@Param("deptIds") Set<Long> deptIds);
-    @Select("SELECT role.role_id as id FROM sys_role role, sys_roles_menus rm WHERE role.role_id = rm.role_id AND rm.menu_id = #{menuId}")
-    List<Role> selectByMenuId(@Param("menuId") Long menuId);
-
+    List<Role> findAllRoles();
+    Long countRoles(@Param("criteria") RoleQueryCriteria criteria);
+    List<Role> findRoles(@Param("criteria") RoleQueryCriteria criteria);
+    Role findRoleById(@Param("roleId") Long roleId);
+    Role findRoleByName(@Param("name") String name);
+    List<Role> findRolesByUserId(@Param("userId") Long userId);
+    int countRolesByDeptIds(@Param("deptIds") Set<Long> deptIds);
+    List<Role> findRolesByMenuId(@Param("menuId") Long menuId);
 }
