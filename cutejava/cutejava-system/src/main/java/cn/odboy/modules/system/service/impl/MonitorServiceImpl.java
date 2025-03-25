@@ -26,7 +26,6 @@ import java.util.*;
 @Slf4j
 @Service
 public class MonitorServiceImpl implements MonitorService {
-
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override

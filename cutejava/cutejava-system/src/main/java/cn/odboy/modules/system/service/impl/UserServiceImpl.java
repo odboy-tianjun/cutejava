@@ -34,11 +34,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
     private final UserMapper userMapper;
     private final UserJobMapper userJobMapper;
     private final UserRoleMapper userRoleMapper;
-    private final FileProperties properties;
+    private final FileProperties fileProperties;
     private final RedisUtil redisUtil;
     private final UserCacheService userCacheService;
     private final OnlineUserService onlineUserService;
@@ -207,7 +206,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public Map<String, String> updateAvatar(MultipartFile multipartFile) {
         // 文件大小验证
-        FileUtil.checkSize(properties.getAvatarMaxSize(), multipartFile.getSize());
+        FileUtil.checkSize(fileProperties.getAvatarMaxSize(), multipartFile.getSize());
         // 验证文件上传的格式
         String image = "gif jpg png jpeg";
         String fileType = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
@@ -216,7 +215,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         User user = userMapper.findByUsername(SecurityUtil.getCurrentUsername());
         String oldPath = user.getAvatarPath();
-        File file = FileUtil.upload(multipartFile, properties.getPath().getAvatar());
+        File file = FileUtil.upload(multipartFile, fileProperties.getPath().getAvatar());
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
         user.setAvatarName(file.getName());
         saveOrUpdate(user);

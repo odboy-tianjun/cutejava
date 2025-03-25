@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
     private final DeptMapper deptMapper;
     private final UserMapper userMapper;
-    private final RedisUtil redisUtil;
     private final RoleMapper roleMapper;
+    private final RedisUtil redisUtil;
 
     @Override
     public List<Dept> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {

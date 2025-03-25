@@ -39,9 +39,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     private final RoleMapper roleMapper;
     private final RoleDeptMapper roleDeptMapper;
     private final RoleMenuMapper roleMenuMapper;
-    private final RedisUtil redisUtil;
     private final UserMapper userMapper;
     private final UserCacheService userCacheService;
+    private final RedisUtil redisUtil;
 
     @Override
     public List<Role> queryAll() {
