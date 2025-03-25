@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobRunner implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(JobRunner.class);
-    private final QuartzJobService quartzJobService;
+    private final QuartzJobMapper quartzJobMapper;
     private final QuartzManage quartzManage;
 
     /**
@@ -27,7 +27,7 @@ public class JobRunner implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        List<QuartzJob> quartzJobs = quartzJobService.listActiveJob();
+        List<QuartzJob> quartzJobs = quartzJobMapper.selectActiveJob();
         quartzJobs.forEach(quartzManage::addJob);
         log.info("Timing task injection complete");
     }
