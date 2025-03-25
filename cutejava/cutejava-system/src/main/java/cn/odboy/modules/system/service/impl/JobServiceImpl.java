@@ -32,12 +32,12 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     public PageResult<Job> queryAll(JobQueryCriteria criteria, Page<Object> page) {
-        return PageUtil.toPage(jobMapper.selectByPage(criteria, page));
+        return PageUtil.toPage(jobMapper.findJobPage(criteria, page));
     }
 
     @Override
     public List<Job> queryAll(JobQueryCriteria criteria) {
-        return jobMapper.selectByPage(criteria);
+        return jobMapper.findJobPage(criteria, PageUtil.getCount(jobMapper)).getRecords();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(Job resources) {
-        Job job = jobMapper.selectByName(resources.getName());
+        Job job = jobMapper.findJobByName(resources.getName());
         if (job != null) {
             throw new EntityExistException(Job.class, "name", resources.getName());
         }
@@ -65,7 +65,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Transactional(rollbackFor = Exception.class)
     public void update(Job resources) {
         Job job = getById(resources.getId());
-        Job old = jobMapper.selectByName(resources.getName());
+        Job old = jobMapper.findJobByName(resources.getName());
         if (old != null && !old.getId().equals(resources.getId())) {
             throw new EntityExistException(Job.class, "name", resources.getName());
         }
