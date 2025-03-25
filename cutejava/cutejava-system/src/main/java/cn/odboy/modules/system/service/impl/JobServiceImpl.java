@@ -26,10 +26,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobService {
-
     private final JobMapper jobMapper;
-    private final RedisUtil redisUtil;
     private final UserMapper userMapper;
+    private final RedisUtil redisUtil;
 
     @Override
     public PageResult<Job> queryAll(JobQueryCriteria criteria, Page<Object> page) {

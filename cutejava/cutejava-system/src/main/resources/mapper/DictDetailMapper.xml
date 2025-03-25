@@ -17,8 +17,7 @@
         </association>
     </resultMap>
 
-
-    <select id="findAll" resultMap="BaseResultMap">
+    <select id="selectByPage" resultMap="BaseResultMap">
         select
         dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
         d.id as dict_id, d.name
@@ -33,7 +32,7 @@
         order by dd.dict_sort, dd.dict_id desc
     </select>
 
-    <select id="findByDictName" resultMap="BaseResultMap">
+    <select id="selectByDictName" resultMap="BaseResultMap">
         select
         dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
         d.id as dict_id, d.name
@@ -45,7 +44,7 @@
         order by dd.dict_sort
     </select>
 
-    <delete id="deleteByDictBatchIds">
+    <delete id="deleteBatchByDictIds">
         delete from sys_dict_detail
         where dict_id in
         <foreach collection="dictIds" item="item" index="index" open="(" separator="," close=")">

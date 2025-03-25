@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
-
     private final MenuMapper menuMapper;
     private final RoleMenuMapper roleMenuMapper;
     private final UserMapper userMapper;

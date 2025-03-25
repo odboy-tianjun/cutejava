@@ -23,14 +23,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDetail> implements DictDetailService {
-
     private final DictMapper dictMapper;
     private final DictDetailMapper dictDetailMapper;
     private final RedisUtil redisUtil;
 
     @Override
     public PageResult<DictDetail> queryAll(DictDetailQueryCriteria criteria, Page<Object> page) {
-        return PageUtil.toPage(dictDetailMapper.findAll(criteria, page));
+        return PageUtil.toPage(dictDetailMapper.selectByPage(criteria, page));
     }
 
     @Override
@@ -58,7 +57,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
         String key = CacheKey.DICT_NAME + name;
         List<DictDetail> dictDetails = redisUtil.getList(key, DictDetail.class);
         if (CollUtil.isEmpty(dictDetails)) {
-            dictDetails = dictDetailMapper.findByDictName(name);
+            dictDetails = dictDetailMapper.selectByDictName(name);
             redisUtil.set(key, dictDetails, 1, TimeUnit.DAYS);
         }
         return dictDetails;

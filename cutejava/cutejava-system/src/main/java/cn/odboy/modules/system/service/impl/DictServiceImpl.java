@@ -26,11 +26,9 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
-
     private final DictMapper dictMapper;
-    private final RedisUtil redisUtil;
-    private final DictDetailMapper deleteDetail;
     private final DictDetailMapper dictDetailMapper;
+    private final RedisUtil redisUtil;
 
     @Override
     public PageResult<Dict> queryAll(DictQueryCriteria criteria, Page<Object> page) {
@@ -71,14 +69,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         // 删除字典
         dictMapper.deleteBatchIds(ids);
         // 删除字典详情
-        deleteDetail.deleteByDictBatchIds(ids);
+        dictDetailMapper.deleteBatchByDictIds(ids);
     }
 
     @Override
     public void download(List<Dict> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dict dict : dicts) {
-            List<DictDetail> dictDetails = dictDetailMapper.findByDictName(dict.getName());
+            List<DictDetail> dictDetails = dictDetailMapper.selectByDictName(dict.getName());
             if (CollectionUtil.isNotEmpty(dictDetails)) {
                 for (DictDetail dictDetail : dictDetails) {
                     Map<String, Object> map = new LinkedHashMap<>();

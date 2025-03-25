@@ -20,10 +20,10 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class VerifyServiceImpl implements VerifyService {
+    private final RedisUtil redisUtil;
 
     @Value("${code.expiration}")
     private Long expiration;
-    private final RedisUtil redisUtil;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
