@@ -13,7 +13,7 @@ import java.util.Set;
 @Mapper
 public interface DeptMapper extends BaseMapper<Dept> {
 
-    List<Dept> findAll(@Param("criteria") DeptQueryCriteria criteria);
+    List<Dept> selectAll(@Param("criteria") DeptQueryCriteria criteria);
 
     List<Dept> selectByPid(@Param("pid") Long pid);
 
