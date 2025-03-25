@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface QuartzLogMapper extends BaseMapper<QuartzLog> {
 
-    IPage<QuartzLog> findAll(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
+    IPage<QuartzLog> selectByPage(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
 
-    List<QuartzLog> findAll(@Param("criteria") QuartzJobQueryCriteria criteria);
+    List<QuartzLog> selectByPage(@Param("criteria") QuartzJobQueryCriteria criteria);
 }
