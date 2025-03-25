@@ -12,23 +12,14 @@ import java.util.Set;
 
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
-
-    List<Role> queryAll();
-
-    Long countAll(@Param("criteria") RoleQueryCriteria criteria);
-
-    List<Role> findAll(@Param("criteria") RoleQueryCriteria criteria);
-
-    Role findById(@Param("roleId") Long roleId);
-
-    Role findByName(@Param("name") String name);
-
-    List<Role> findByUserId(@Param("userId") Long userId);
-
-    int countByDepts(@Param("deptIds") Set<Long> deptIds);
-
-    @Select("SELECT role.role_id as id FROM sys_role role, sys_roles_menus rm " +
-            "WHERE role.role_id = rm.role_id AND rm.menu_id = #{menuId}")
-    List<Role> findByMenuId(@Param("menuId") Long menuId);
+    List<Role> selectByPage();
+    Long countByCriteria(@Param("criteria") RoleQueryCriteria criteria);
+    List<Role> selectByPage(@Param("criteria") RoleQueryCriteria criteria);
+    Role selectById(@Param("roleId") Long roleId);
+    Role selectByName(@Param("name") String name);
+    List<Role> selectByUserId(@Param("userId") Long userId);
+    int countByDeptIds(@Param("deptIds") Set<Long> deptIds);
+    @Select("SELECT role.role_id as id FROM sys_role role, sys_roles_menus rm WHERE role.role_id = rm.role_id AND rm.menu_id = #{menuId}")
+    List<Role> selectByMenuId(@Param("menuId") Long menuId);
 
 }

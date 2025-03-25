@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface DictMapper extends BaseMapper<Dict> {
 
-    IPage<Dict> findAll(@Param("criteria") DictQueryCriteria criteria, Page<Object> page);
+    IPage<Dict> selectByPage(@Param("criteria") DictQueryCriteria criteria, Page<Object> page);
 
-    List<Dict> findAll(@Param("criteria") DictQueryCriteria criteria);
+    List<Dict> selectByPage(@Param("criteria") DictQueryCriteria criteria);
 }

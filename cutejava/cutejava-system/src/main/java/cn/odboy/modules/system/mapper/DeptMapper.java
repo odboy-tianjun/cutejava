@@ -13,7 +13,7 @@ import java.util.Set;
 @Mapper
 public interface DeptMapper extends BaseMapper<Dept> {
 
-    List<Dept> selectAll(@Param("criteria") DeptQueryCriteria criteria);
+    List<Dept> selectByPage(@Param("criteria") DeptQueryCriteria criteria);
 
     List<Dept> selectByPid(@Param("pid") Long pid);
     @Select("select count(*) from sys_dept where pid = #{pid}")

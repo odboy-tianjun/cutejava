@@ -32,13 +32,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     public PageResult<Dict> queryAll(DictQueryCriteria criteria, Page<Object> page) {
-        IPage<Dict> dicts = dictMapper.findAll(criteria, page);
+        IPage<Dict> dicts = dictMapper.selectByPage(criteria, page);
         return PageUtil.toPage(dicts);
     }
 
     @Override
     public List<Dict> queryAll(DictQueryCriteria criteria) {
-        return dictMapper.findAll(criteria);
+        return dictMapper.selectByPage(criteria);
     }
 
     @Override
