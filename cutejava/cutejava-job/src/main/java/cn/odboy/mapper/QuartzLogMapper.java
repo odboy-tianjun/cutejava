@@ -8,11 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 
 @Mapper
 public interface QuartzLogMapper extends BaseMapper<QuartzLog> {
-    IPage<QuartzLog> findQuartzLog(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
-    List<QuartzLog> findQuartzLog(@Param("criteria") QuartzJobQueryCriteria criteria);
+    IPage<QuartzLog> findQuartzLogPage(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
 }

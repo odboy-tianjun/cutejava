@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.odboy.mapper.QuartzJobMapper">
-    <select id="findQuartzJob" resultType="cn.odboy.model.job.domain.QuartzJob">
+    <select id="findQuartzJobPage" resultType="cn.odboy.model.job.domain.QuartzJob">
         SELECT
         *
         FROM sys_quartz_job
