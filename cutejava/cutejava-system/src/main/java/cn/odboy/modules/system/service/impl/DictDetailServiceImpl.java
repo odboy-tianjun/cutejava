@@ -29,7 +29,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
 
     @Override
     public PageResult<DictDetail> queryAll(DictDetailQueryCriteria criteria, Page<Object> page) {
-        return PageUtil.toPage(dictDetailMapper.selectByPage(criteria, page));
+        return PageUtil.toPage(dictDetailMapper.findDictDetail(criteria, page));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
         String key = CacheKey.DICT_NAME + name;
         List<DictDetail> dictDetails = redisUtil.getList(key, DictDetail.class);
         if (CollUtil.isEmpty(dictDetails)) {
-            dictDetails = dictDetailMapper.selectByDictName(name);
+            dictDetails = dictDetailMapper.findDictDetailByDictName(name);
             redisUtil.set(key, dictDetails, 1, TimeUnit.DAYS);
         }
         return dictDetails;
