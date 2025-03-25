@@ -12,8 +12,6 @@ import java.util.List;
 
 @Mapper
 public interface LocalStorageMapper extends BaseMapper<LocalStorage> {
-
-    IPage<LocalStorage> findAll(@Param("criteria") LocalStorageQueryCriteria criteria, Page<Object> page);
-
-    List<LocalStorage> findAll(@Param("criteria") LocalStorageQueryCriteria criteria);
+    IPage<LocalStorage> selectByPage(@Param("criteria") LocalStorageQueryCriteria criteria, Page<Object> page);
+    List<LocalStorage> selectByPage(@Param("criteria") LocalStorageQueryCriteria criteria);
 }
