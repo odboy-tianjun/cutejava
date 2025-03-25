@@ -15,11 +15,11 @@ public interface DeptMapper extends BaseMapper<Dept> {
 
     List<Dept> findAll(@Param("criteria") DeptQueryCriteria criteria);
 
-    List<Dept> findByPid(@Param("pid") Long pid);
+    List<Dept> selectByPid(@Param("pid") Long pid);
 
-    List<Dept> findByPidIsNull();
+    List<Dept> selectByPidIsNull();
 
-    Set<Dept> findByRoleId(@Param("roleId") Long roleId);
+    Set<Dept> selectByRoleId(@Param("roleId") Long roleId);
 
     @Select("select count(*) from sys_dept where pid = #{pid}")
     int countByPid(@Param("pid") Long pid);
