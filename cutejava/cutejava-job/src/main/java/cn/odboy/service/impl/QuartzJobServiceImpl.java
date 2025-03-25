@@ -135,11 +135,6 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     }
 
     @Override
-    public List<QuartzJob> listActiveJob() {
-        return lambdaQuery().eq(QuartzJob::getIsPause, 0).list();
-    }
-
-    @Override
     public void download(List<QuartzJob> quartzJobs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzJob quartzJob : quartzJobs) {
