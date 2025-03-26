@@ -69,8 +69,14 @@ spring:
       # 检测连接是否有效
       validation-query: SELECT 1
       # 配置监控统计
-      webStatFilter:
+      web-stat-filter:
         enabled: true
+        url-pattern: /*
+        # 开启session统计功能
+        session-stat-enable: true
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        # 缺省sessionStatMaxCount是1000个
+        session-stat-max-count: 1000
       stat-view-servlet:
         enabled: true
         url-pattern: /druid/*
@@ -85,6 +91,7 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+      aop-patterns: "cn.odboy.mapper.*,cn.odboy.service.*,cn.odboy.*.mapper.*,cn.odboy.*.service.*"
   redis:
     database: ${REDIS_DB:1}
     host: ${REDIS_HOST:127.0.0.1}
