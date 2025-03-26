@@ -18,8 +18,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     Long countAll(@Param("criteria") UserQueryCriteria criteria);
 
-    List<User> findAll(@Param("criteria") UserQueryCriteria criteria);
-
     IPage<User> findAll(@Param("criteria") UserQueryCriteria criteria, Page<Object> page);
 
     User findByUsername(@Param("username") String username);
