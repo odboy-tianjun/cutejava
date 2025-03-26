@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class DateUtilsTest {
+public class DateUtilTest {
     @Test
     public void test1() {
         long l = System.currentTimeMillis() / 1000;
