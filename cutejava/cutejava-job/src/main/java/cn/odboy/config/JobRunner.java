@@ -4,18 +4,17 @@ import cn.odboy.mapper.QuartzJobMapper;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.util.QuartzManage;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JobRunner implements ApplicationRunner {
-    private static final Logger log = LoggerFactory.getLogger(JobRunner.class);
     private final QuartzJobMapper quartzJobMapper;
     private final QuartzManage quartzManage;
 

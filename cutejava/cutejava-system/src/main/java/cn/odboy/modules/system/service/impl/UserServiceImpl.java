@@ -1,9 +1,6 @@
 package cn.odboy.modules.system.service.impl;
 
 import cn.odboy.base.PageResult;
-import cn.odboy.modules.security.service.OnlineUserService;
-import cn.odboy.modules.security.service.UserCacheService;
-import cn.odboy.properties.FileProperties;
 import cn.odboy.constant.CacheKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
@@ -11,10 +8,13 @@ import cn.odboy.model.system.domain.Job;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.UserQueryCriteria;
+import cn.odboy.modules.security.service.OnlineUserService;
+import cn.odboy.modules.security.service.UserCacheService;
 import cn.odboy.modules.system.mapper.UserJobMapper;
 import cn.odboy.modules.system.mapper.UserMapper;
 import cn.odboy.modules.system.mapper.UserRoleMapper;
 import cn.odboy.modules.system.service.UserService;
+import cn.odboy.properties.FileProperties;
 import cn.odboy.util.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

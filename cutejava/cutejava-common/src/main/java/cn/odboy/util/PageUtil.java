@@ -18,7 +18,7 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
      */
     public static <T> List<T> paging(int page, int size, List<T> list) {
         int fromIndex = (page - 1) * size;
-        int toIndex =  (page - 1) * size + size;
+        int toIndex = (page - 1) * size + size;
         if (fromIndex > list.size()) {
             return Collections.emptyList();
         } else if (toIndex >= list.size()) {

@@ -2,7 +2,6 @@ package cn.odboy.modules.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.PageResult;
-import cn.odboy.properties.RsaProperties;
 import cn.odboy.constant.CodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
@@ -11,6 +10,7 @@ import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.UserPassVo;
 import cn.odboy.model.system.dto.UserQueryCriteria;
 import cn.odboy.modules.system.service.*;
+import cn.odboy.properties.RsaProperties;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RsaUtil;
 import cn.odboy.util.SecurityUtil;
