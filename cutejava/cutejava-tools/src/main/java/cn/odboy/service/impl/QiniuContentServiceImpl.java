@@ -52,7 +52,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
 
     @Override
     public List<QiniuContent> queryAll(QiniuQueryCriteria criteria) {
-        return qiniuContentMapper.findQiniuContentPage(criteria,PageUtil.getCount(qiniuContentMapper)).getRecords();
+        return qiniuContentMapper.findQiniuContentPage(criteria, PageUtil.getCount(qiniuContentMapper)).getRecords();
     }
 
     @Override

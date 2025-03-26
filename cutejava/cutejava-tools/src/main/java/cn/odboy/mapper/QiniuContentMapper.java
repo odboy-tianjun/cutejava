@@ -8,11 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 
 @Mapper
 public interface QiniuContentMapper extends BaseMapper<QiniuContent> {
     QiniuContent findQiniuContentByName(@Param("name") String name);
+
     IPage<QiniuContent> findQiniuContentPage(@Param("criteria") QiniuQueryCriteria criteria, Page<Object> page);
 }

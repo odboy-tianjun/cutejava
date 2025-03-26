@@ -19,6 +19,7 @@ public interface UserCacheService {
      */
     @Async
     void addUserCache(String userName, JwtUserDto user);
+
     /**
      * 清理用户缓存信息
      * 用户信息变更时

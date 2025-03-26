@@ -14,7 +14,9 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
     <update id="updateDeptSubCountById">
-        update sys_dept set sub_count = #{count} where dept_id = #{id}
+        update sys_dept
+        set sub_count = #{count}
+        where dept_id = #{id}
     </update>
 
     <select id="findDept" resultMap="BaseResultMap">
@@ -58,39 +60,54 @@
     </select>
 
     <select id="findDeptByPid" resultMap="BaseResultMap">
-        select
-            dept_id, name, pid, sub_count, create_time, update_time, create_by, update_by, enabled, dept_sort
+        select dept_id,
+               name,
+               pid,
+               sub_count,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               enabled,
+               dept_sort
         from sys_dept
         where pid = #{pid}
     </select>
 
     <select id="findDeptByPidIsNull" resultMap="BaseResultMap">
-        select
-            dept_id, name, pid, sub_count, create_time, update_time, create_by, update_by, enabled, dept_sort
+        select dept_id,
+               name,
+               pid,
+               sub_count,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               enabled,
+               dept_sort
         from sys_dept
         where pid is null
     </select>
 
     <select id="findDeptByRoleId" resultType="cn.odboy.model.system.domain.Dept">
-        SELECT
-            d.dept_id AS id,
-            d.NAME,
-            d.pid,
-            d.sub_count,
-            d.create_time,
-            d.update_time,
-            d.create_by,
-            d.update_by,
-            d.enabled,
-            d.dept_sort
-        FROM
-            sys_dept d,
-            sys_roles_depts rd
-        WHERE
-            d.dept_id = rd.dept_id
+        SELECT d.dept_id AS id,
+               d.NAME,
+               d.pid,
+               d.sub_count,
+               d.create_time,
+               d.update_time,
+               d.create_by,
+               d.update_by,
+               d.enabled,
+               d.dept_sort
+        FROM sys_dept d,
+             sys_roles_depts rd
+        WHERE d.dept_id = rd.dept_id
           AND rd.role_id = #{roleId}
     </select>
     <select id="countDeptByPid" resultType="java.lang.Integer">
-        select count(*) from sys_dept where pid = #{pid}
+        select count(*)
+        from sys_dept
+        where pid = #{pid}
     </select>
 </mapper>

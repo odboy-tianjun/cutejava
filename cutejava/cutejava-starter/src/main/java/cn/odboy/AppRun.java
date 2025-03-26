@@ -2,12 +2,10 @@ package cn.odboy;
 
 import cn.odboy.annotation.AnonymousGetMapping;
 import cn.odboy.context.BootApplication;
-import cn.odboy.context.SpringBeanHolder;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.UnknownHostException;

@@ -16,6 +16,8 @@
         ORDER BY id DESC
     </select>
     <select id="findActiveQuartzJob" resultType="cn.odboy.model.job.domain.QuartzJob">
-        SELECT * FROM sys_quartz_job WHERE is_pause = 0
+        SELECT *
+        FROM sys_quartz_job
+        WHERE is_pause = 0
     </select>
 </mapper>

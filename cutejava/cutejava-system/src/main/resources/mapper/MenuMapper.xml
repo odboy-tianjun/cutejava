@@ -24,14 +24,15 @@
 
     <select id="findAll" resultMap="BaseResultMap">
         select
-        menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
+        menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count,
+        i_frame, create_by, update_by, create_time, update_time
         from sys_menu
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
                 and (
-                    title like concat('%',#{criteria.blurry},'%')
-                    or name like concat('%',#{criteria.blurry},'%')
-                    or permission like concat('%',#{criteria.blurry},'%')
+                title like concat('%',#{criteria.blurry},'%')
+                or name like concat('%',#{criteria.blurry},'%')
+                or permission like concat('%',#{criteria.blurry},'%')
                 )
             </if>
             <if test="criteria.pidIsNull != null">
@@ -58,16 +59,48 @@
     </select>
 
     <select id="findByPidOrderByMenuSort" resultMap="BaseResultMap">
-        SELECT
-            menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
+        SELECT menu_id,
+               title,
+               name,
+               menu_sort,
+               component,
+               path,
+               type,
+               permission,
+               icon,
+               cache,
+               hidden,
+               pid,
+               sub_count,
+               i_frame,
+               create_by,
+               update_by,
+               create_time,
+               update_time
         from sys_menu
         WHERE pid = #{pid}
         ORDER BY menu_sort
     </select>
 
     <select id="findByPidIsNullOrderByMenuSort" resultMap="BaseResultMap">
-        SELECT
-            menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count, i_frame, create_by, update_by, create_time, update_time
+        SELECT menu_id,
+               title,
+               name,
+               menu_sort,
+               component,
+               path,
+               type,
+               permission,
+               icon,
+               cache,
+               hidden,
+               pid,
+               sub_count,
+               i_frame,
+               create_by,
+               update_by,
+               create_time,
+               update_time
         from sys_menu
         where pid is null
         order by menu_sort
