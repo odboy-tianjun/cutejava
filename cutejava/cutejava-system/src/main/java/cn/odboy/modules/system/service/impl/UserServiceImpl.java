@@ -45,14 +45,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public PageResult<User> queryAll(UserQueryCriteria criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
-        List<User> users = userMapper.findAll(criteria);
+        List<User> users = userMapper.findAll(criteria, PageUtil.getCount(userMapper)).getRecords();
         Long total = userMapper.countAll(criteria);
         return PageUtil.toPage(users, total);
     }
 
     @Override
     public List<User> queryAll(UserQueryCriteria criteria) {
-        return userMapper.findAll(criteria);
+        return userMapper.findAll(criteria, PageUtil.getCount(userMapper)).getRecords();
     }
 
     @Override
