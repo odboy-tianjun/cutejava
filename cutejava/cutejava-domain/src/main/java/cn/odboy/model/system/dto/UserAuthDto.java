@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class AuthUserDto {
+public class UserAuthDto {
 
     @NotBlank
     @ApiModelProperty(value = "用户名")

@@ -1,8 +1,8 @@
 package cn.odboy.application.core.rest;
 
-import cn.odboy.application.core.service.OnlineUserService;
+import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
-import cn.odboy.model.system.dto.OnlineUserDto;
+import cn.odboy.model.system.dto.UserOnlineDto;
 import cn.odboy.util.DESEncryptUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,20 +23,20 @@ import java.util.Set;
 @RequestMapping("/auth/online")
 @Api(tags = "系统：在线用户管理")
 public class OnlineController {
-    private final OnlineUserService onlineUserService;
+    private final UserOnlineService userOnlineService;
 
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<PageResult<OnlineUserDto>> queryOnlineUser(String username, Pageable pageable) {
-        return new ResponseEntity<>(onlineUserService.queryOnlineUserPage(username, pageable), HttpStatus.OK);
+    public ResponseEntity<PageResult<UserOnlineDto>> queryOnlineUser(String username, Pageable pageable) {
+        return new ResponseEntity<>(userOnlineService.queryOnlineUserPage(username, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        onlineUserService.downloadExcel(onlineUserService.selectOnlineUserByUsername(username), response);
+        userOnlineService.downloadExcel(userOnlineService.selectOnlineUserByUsername(username), response);
     }
 
     @ApiOperation("踢出用户")
@@ -46,7 +46,7 @@ public class OnlineController {
         for (String token : keys) {
             // 解密Key
             token = DESEncryptUtil.desDecrypt(token);
-            onlineUserService.logoutByToken(token);
+            userOnlineService.logoutByToken(token);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
