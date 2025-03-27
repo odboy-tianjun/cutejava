@@ -1,0 +1,77 @@
+package cn.odboy.application.tools.service;
+
+import cn.odboy.base.PageResult;
+import cn.odboy.model.tools.domain.QiniuContent;
+import cn.odboy.model.tools.dto.QiniuQueryCriteria;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+
+public interface QiniuContentService extends IService<QiniuContent> {
+
+    /**
+     * 分页查询
+     *
+     * @param criteria 条件
+     * @param page     分页参数
+     * @return /
+     */
+    PageResult<QiniuContent> queryQiniuContentPage(QiniuQueryCriteria criteria, Page<Object> page);
+
+    /**
+     * 查询全部
+     *
+     * @param criteria 条件
+     * @return /
+     */
+    List<QiniuContent> selectQiniuContentByCriteria(QiniuQueryCriteria criteria);
+
+    /**
+     * 上传文件
+     *
+     * @param file 文件
+     * @return QiniuContent
+     */
+    QiniuContent uploadFile(MultipartFile file);
+
+    /**
+     * 下载文件
+     *
+     * @param content 文件信息
+     * @return String
+     */
+    String download(QiniuContent content);
+
+    /**
+     * 删除文件
+     *
+     * @param content 文件
+     */
+    void delete(QiniuContent content);
+
+    /**
+     * 同步数据
+     */
+    void synchronize();
+
+    /**
+     * 删除文件
+     *
+     * @param ids 文件ID数组
+     */
+    void deleteFileByIds(Long[] ids);
+
+    /**
+     * 导出数据
+     *
+     * @param queryAll /
+     * @param response /
+     * @throws IOException /
+     */
+    void downloadExcel(List<QiniuContent> queryAll, HttpServletResponse response) throws IOException;
+}

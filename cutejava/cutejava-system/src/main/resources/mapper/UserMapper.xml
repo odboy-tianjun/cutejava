@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.odboy.modules.system.mapper.UserMapper">
+<mapper namespace="cn.odboy.application.system.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="cn.odboy.model.system.domain.User">
         <id column="user_user_id" property="id"/>
         <result column="user_dept_id" property="deptId"/>
@@ -34,8 +34,35 @@
             <result column="role_data_scope" property="dataScope"/>
         </collection>
     </resultMap>
-
-    <select id="findAll" resultMap="BaseResultMap">
+    <select id="getUserCountByCriteria" resultType="java.lang.Long">
+        select count(*)
+        from sys_user u
+        <where>
+            <if test="criteria.id != null">
+                and u.user_id = #{criteria.id}
+            </if>
+            <if test="criteria.enabled != null">
+                and u.enabled = #{criteria.enabled}
+            </if>
+            <if test="criteria.deptIds != null and criteria.deptIds.size() != 0">
+                and u.dept_id in
+                <foreach collection="criteria.deptIds" item="deptId" open="(" separator="," close=")">
+                    #{deptId}
+                </foreach>
+            </if>
+            <if test="criteria.blurry != null and criteria.blurry != ''">
+                and (
+                u.username like concat('%', #{criteria.blurry}, '%')
+                or u.nick_name like concat('%', #{criteria.blurry}, '%')
+                or u.email like concat('%', #{criteria.blurry}, '%')
+                )
+            </if>
+            <if test="criteria.createTime != null and criteria.createTime.size() != 0">
+                and u.create_time between #{criteria.createTime[0]} and #{criteria.createTime[1]}
+            </if>
+        </where>
+    </select>
+    <select id="queryUserPage" resultMap="BaseResultMap">
         select u.*,
         j.id as job_id, j.name as job_name,
         r.role_id as role_id, r.name as role_name, r.level as role_level, r.data_scope as role_data_scope
@@ -84,37 +111,7 @@
         left join sys_role r on sur.role_id = r.role_id
         order by u.user_user_id desc
     </select>
-
-    <select id="countAll" resultType="java.lang.Long">
-        select count(*)
-        from sys_user u
-        <where>
-            <if test="criteria.id != null">
-                and u.user_id = #{criteria.id}
-            </if>
-            <if test="criteria.enabled != null">
-                and u.enabled = #{criteria.enabled}
-            </if>
-            <if test="criteria.deptIds != null and criteria.deptIds.size() != 0">
-                and u.dept_id in
-                <foreach collection="criteria.deptIds" item="deptId" open="(" separator="," close=")">
-                    #{deptId}
-                </foreach>
-            </if>
-            <if test="criteria.blurry != null and criteria.blurry != ''">
-                and (
-                u.username like concat('%', #{criteria.blurry}, '%')
-                or u.nick_name like concat('%', #{criteria.blurry}, '%')
-                or u.email like concat('%', #{criteria.blurry}, '%')
-                )
-            </if>
-            <if test="criteria.createTime != null and criteria.createTime.size() != 0">
-                and u.create_time between #{criteria.createTime[0]} and #{criteria.createTime[1]}
-            </if>
-        </where>
-    </select>
-
-    <select id="findByUsername" resultMap="BaseResultMap">
+    <select id="getUserByUsername" resultMap="BaseResultMap">
         select u.password          user_password,
                u.is_admin          user_is_admin,
                u.user_id        as user_user_id,
@@ -138,20 +135,28 @@
                  left join sys_dept d on u.dept_id = d.dept_id
         where u.username = #{username}
     </select>
-
-    <select id="findByEmail" resultType="cn.odboy.model.system.domain.User">
+    <select id="getUserByEmail" resultType="cn.odboy.model.system.domain.User">
         select user_id as id, username
         from sys_user
         where email = #{email}
     </select>
-
-    <select id="findByPhone" resultType="cn.odboy.model.system.domain.User">
+    <select id="getUserByPhone" resultType="cn.odboy.model.system.domain.User">
         select user_id as id, username
         from sys_user
         where phone = #{phone}
     </select>
-
-    <select id="findByRoleId" resultType="cn.odboy.model.system.domain.User">
+    <update id="updatePasswordByUsername">
+        update sys_user
+        set password       = #{password},
+            pwd_reset_time = #{lastPasswordResetTime}
+        where username = #{username}
+    </update>
+    <update id="updateEmailByUsername">
+        update sys_user
+        set email = #{email}
+        where username = #{username}
+    </update>
+    <select id="selectUserByRoleId" resultType="cn.odboy.model.system.domain.User">
         SELECT u.user_id as id, u.username
         FROM sys_user u,
              sys_users_roles r
@@ -159,8 +164,7 @@
           AND r.role_id = #{roleId}
         group by u.user_id
     </select>
-
-    <select id="findByRoleDeptId" resultType="cn.odboy.model.system.domain.User">
+    <select id="selectUserByRoleDeptId" resultType="cn.odboy.model.system.domain.User">
         SELECT u.*
         FROM sys_user u,
              sys_users_roles r,
@@ -170,8 +174,7 @@
           AND d.dept_id = #{deptId}
         group by u.user_id
     </select>
-
-    <select id="findByMenuId" resultType="cn.odboy.model.system.domain.User">
+    <select id="selectUserByMenuId" resultType="cn.odboy.model.system.domain.User">
         SELECT u.user_id as id, u.username
         FROM sys_user u,
              sys_users_roles ur,
@@ -181,33 +184,29 @@
           AND rm.menu_id = #{menuId}
         group by u.user_id
     </select>
-
-    <select id="countByJobs" resultType="int">
+    <select id="getCountByJobs" resultType="int">
         SELECT count(*) FROM sys_user u, sys_users_jobs j
         WHERE u.user_id = j.user_id AND j.job_id IN
         <foreach collection="jobIds" item="jobId" open="(" separator="," close=")">
             #{jobId}
         </foreach>
     </select>
-
-    <select id="countByDepts" resultType="int">
+    <select id="getCountByDepts" resultType="int">
         SELECT count(*) FROM sys_user u
         WHERE u.dept_id IN
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
             #{deptId}
         </foreach>
     </select>
-
-    <select id="countByRoles" resultType="int">
+    <select id="getCountByRoles" resultType="int">
         SELECT count(*) FROM sys_user u, sys_users_roles r
         WHERE u.user_id = r.user_id AND r.role_id in
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>
     </select>
-
-    <update id="resetPwd">
-        update sys_user set password = #{pwd}
+    <update id="resetPasswordByUserIds">
+        update sys_user set password = #{password}
         where user_id in
         <foreach collection="userIds" item="id" open="(" separator="," close=")">
             #{id}

@@ -39,6 +39,6 @@ public class StringUtilTest {
 
     @Test
     public void testGetIP() {
-        assertEquals("127.0.0.1", getIp(new MockHttpServletRequest()));
+        assertEquals("127.0.0.1", BrowserUtil.getIp(new MockHttpServletRequest()));
     }
 }

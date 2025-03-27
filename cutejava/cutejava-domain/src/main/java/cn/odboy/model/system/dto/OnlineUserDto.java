@@ -1,9 +1,7 @@
 package cn.odboy.model.system.dto;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,10 +9,7 @@ import java.util.Date;
  * 在线用户
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class OnlineUserDto {
-
     @ApiModelProperty(value = "Token编号")
     private String uid;
 

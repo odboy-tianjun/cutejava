@@ -16,14 +16,14 @@ public class FileUtilTest {
 
     @Test
     public void testGetExtensionName() {
-        assertEquals("foo", getExtensionName("foo"));
-        assertEquals("exe", getExtensionName("bar.exe"));
+        assertEquals("foo", getSuffix("foo"));
+        assertEquals("exe", getSuffix("bar.exe"));
     }
 
     @Test
     public void testGetFileNameNoEx() {
-        assertEquals("foo", getFileNameNoEx("foo"));
-        assertEquals("bar", getFileNameNoEx("bar.txt"));
+        assertEquals("foo", getPrefix("foo"));
+        assertEquals("bar", getPrefix("bar.txt"));
     }
 
     @Test

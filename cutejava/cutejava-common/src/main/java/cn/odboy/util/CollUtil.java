@@ -36,63 +36,6 @@ import java.util.stream.Collectors;
  * @date 2022-11-09
  */
 public class CollUtil extends cn.hutool.core.collection.CollUtil {
-    /**
-     * 连接器
-     */
-    private static final Joiner JOINER = Joiner.on(",").skipNulls();
-    /**
-     * 分割器
-     */
-    private static final Splitter SPLITTER = Splitter.on(",").trimResults().omitEmptyStrings();
-
-    public static String join(Object[] parts) {
-        return JOINER.join(parts);
-    }
-
-    public static String join(Iterable<?> parts) {
-        return JOINER.join(parts);
-    }
-
-    public static String join(Iterator<?> parts) {
-        return JOINER.join(parts);
-    }
-
-    public static List<String> splitToList(String parts) {
-        return SPLITTER.splitToList(parts);
-    }
-
-    /**
-     * 分几份
-     *
-     * @param parts /
-     * @param size  /
-     * @param <T>   /
-     * @return /
-     */
-    public static <T> List<List<T>> splitToSize(List<T> parts, int size) {
-        return Lists.partition(parts, size);
-    }
-
-    /**
-     * 一份几个
-     *
-     * @param parts    /
-     * @param groupNum /
-     * @param <T>      /
-     * @return /
-     */
-    public static <T> List<List<T>> splitToSegment(List<T> parts, int groupNum) {
-        List<List<T>> result = new ArrayList<>(1);
-        int i = 0;
-        for (; i < parts.size() / groupNum; i++) {
-            result.add(parts.subList(i * groupNum, (i + 1) * groupNum));
-        }
-        if (parts.size() % groupNum != 0) {
-            result.add(parts.subList(i * groupNum, i * groupNum + parts.size() % groupNum));
-        }
-        return result;
-    }
-
     private static <T, K> Predicate<T> distinctPredicate(Function<? super T, ? extends K> keyMapper) {
         Map<Object, Boolean> map = new HashMap<>();
         return (t) -> null == map.putIfAbsent(keyMapper.apply(t), true);

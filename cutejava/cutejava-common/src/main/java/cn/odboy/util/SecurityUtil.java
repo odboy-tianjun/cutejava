@@ -26,20 +26,14 @@ import java.util.Objects;
 @Slf4j
 @Component
 public class SecurityUtil {
-
-    public static String header;
-
-    public static String tokenStartWith;
-
-    @Value("${jwt.header}")
-    public void setHeader(String header) {
-        SecurityUtil.header = header;
-    }
-
-    @Value("${jwt.token-start-with}")
-    public void setTokenStartWith(String tokenStartWith) {
-        SecurityUtil.tokenStartWith = tokenStartWith;
-    }
+    /**
+     * 请求头名称
+     */
+    public static final String HEADER = "Authorization";
+    /**
+     * Token前缀
+     */
+    public static final String TOKEN_PREFIX = "Bearer";
 
     /**
      * 获取当前登录的用户
@@ -123,10 +117,10 @@ public class SecurityUtil {
     public static String getToken() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
                 .getRequestAttributes())).getRequest();
-        String bearerToken = request.getHeader(header);
-        if (bearerToken != null && bearerToken.startsWith(tokenStartWith)) {
+        String bearerToken = request.getHeader(HEADER);
+        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
             // 去掉令牌前缀
-            return bearerToken.replace(tokenStartWith, "");
+            return bearerToken.replace(TOKEN_PREFIX, "");
         } else {
             log.debug("非法Token：{}", bearerToken);
         }

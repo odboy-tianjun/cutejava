@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.odboy.modules.system.mapper.DeptMapper">
+<mapper namespace="cn.odboy.application.system.mapper.DeptMapper">
     <resultMap id="BaseResultMap" type="cn.odboy.model.system.domain.Dept">
         <id column="dept_id" property="id"/>
         <result column="dept_sort" property="deptSort"/>
@@ -13,13 +13,7 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
-    <update id="updateDeptSubCountById">
-        update sys_dept
-        set sub_count = #{count}
-        where dept_id = #{id}
-    </update>
-
-    <select id="findDept" resultMap="BaseResultMap">
+    <select id="selectDeptByCriteria" resultMap="BaseResultMap">
         SELECT
         dept_id,
         `name`,
@@ -58,8 +52,7 @@
         </where>
         ORDER BY dept_sort
     </select>
-
-    <select id="findDeptByPid" resultMap="BaseResultMap">
+    <select id="selectDeptByPid" resultMap="BaseResultMap">
         select dept_id,
                name,
                pid,
@@ -73,8 +66,12 @@
         from sys_dept
         where pid = #{pid}
     </select>
-
-    <select id="findDeptByPidIsNull" resultMap="BaseResultMap">
+    <select id="getDeptCountByPid" resultType="java.lang.Integer">
+        select count(*)
+        from sys_dept
+        where pid = #{pid}
+    </select>
+    <select id="selectDeptByPidIsNull" resultMap="BaseResultMap">
         select dept_id,
                name,
                pid,
@@ -88,8 +85,7 @@
         from sys_dept
         where pid is null
     </select>
-
-    <select id="findDeptByRoleId" resultType="cn.odboy.model.system.domain.Dept">
+    <select id="selectDeptByRoleId" resultType="cn.odboy.model.system.domain.Dept">
         SELECT d.dept_id AS id,
                d.NAME,
                d.pid,
@@ -105,9 +101,9 @@
         WHERE d.dept_id = rd.dept_id
           AND rd.role_id = #{roleId}
     </select>
-    <select id="countDeptByPid" resultType="java.lang.Integer">
-        select count(*)
-        from sys_dept
-        where pid = #{pid}
-    </select>
+    <update id="updateSubCountById">
+        update sys_dept
+        set sub_count = #{count}
+        where dept_id = #{id}
+    </update>
 </mapper>

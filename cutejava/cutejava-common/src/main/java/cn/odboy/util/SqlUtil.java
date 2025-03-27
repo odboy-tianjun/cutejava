@@ -118,8 +118,8 @@ public class SqlUtil {
         return false;
     }
 
-    public static String executeFile(String jdbcUrl, String userName, String password, File sqlFile) {
-        Connection connection = getConnection(jdbcUrl, userName, password);
+    public static String executeFile(String jdbcUrl, String username, String password, File sqlFile) {
+        Connection connection = getConnection(jdbcUrl, username, password);
         try {
             batchExecute(connection, readSqlList(sqlFile));
         } catch (Exception e) {
