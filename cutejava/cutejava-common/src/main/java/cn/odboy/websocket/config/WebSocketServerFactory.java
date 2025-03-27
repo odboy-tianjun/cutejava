@@ -1,4 +1,4 @@
-package cn.odboy.websocket;
+package cn.odboy.websocket.config;
 
 import io.undertow.server.DefaultByteBufferPool;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
