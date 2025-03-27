@@ -13,6 +13,7 @@
 <script>
 import MyWebSocket from '@/utils/websocket'
 import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -23,21 +24,24 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'websocketApi'
+      'websocketApi',
+      'user'
     ])
   },
   // mounted() {},
-  // destroyed() {
-  //   if (this.client) {
-  //     this.client.close()
-  //   }
-  // },
+  destroyed() {
+    if (this.client) {
+      this.client.close()
+    }
+  },
   methods: {
     onConnectClick() {
+      // 获取mapGetters中的值
+      // console.error('userInfo', this.user)
       const that = this
-      that.client = new MyWebSocket(that, that.websocketApi.replaceAll('{sid}', '101314'))
+      that.client = new MyWebSocket(that, that.websocketApi.replaceAll('{sid}', that.user.username))
       that.client.connect(function(event) {
-        console.error('=============== MyWebSocket:event', event)
+        console.info('=============== MyWebSocket:event', event)
       }, function(msgEvent) {
         console.info('=============== MyWebSocket:msgEvent', msgEvent)
         that.responseTxt = that.responseTxt + msgEvent.data + ''
@@ -73,6 +77,7 @@ export default {
   color: #333;
   cursor: pointer;
 }
+
 #btn:active {
   background-color: #ddd;
   color: #666;
