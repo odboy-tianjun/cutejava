@@ -1,9 +1,9 @@
 package cn.odboy.exception.handler;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.exception.EntityNotFoundException;
-import cn.odboy.exception.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiError> handleException(Throwable e) {
         // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
+        log.error(ExceptionUtil.stacktraceToString(e));
         return buildResponseEntity(ApiError.error(e.getMessage()));
     }
 
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<ApiError> badRequestException(BadRequestException e) {
         // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
+        log.error(ExceptionUtil.stacktraceToString(e));
         return buildResponseEntity(ApiError.error(e.getStatus(), e.getMessage()));
     }
 
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = EntityExistException.class)
     public ResponseEntity<ApiError> entityExistException(EntityExistException e) {
         // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
+        log.error(ExceptionUtil.stacktraceToString(e));
         return buildResponseEntity(ApiError.error(e.getMessage()));
     }
 
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ApiError> entityNotFoundException(EntityNotFoundException e) {
         // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
+        log.error(ExceptionUtil.stacktraceToString(e));
         return buildResponseEntity(ApiError.error(NOT_FOUND.value(), e.getMessage()));
     }
 
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
+        log.error(ExceptionUtil.stacktraceToString(e));
         ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
         String message = objectError.getDefaultMessage();
         if (objectError instanceof FieldError) {

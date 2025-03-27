@@ -1,5 +1,6 @@
 package cn.odboy.application.job.util;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
@@ -8,7 +9,6 @@ import cn.odboy.application.job.mapper.QuartzLogMapper;
 import cn.odboy.application.job.service.QuartzJobService;
 import cn.odboy.application.tools.service.EmailService;
 import cn.odboy.context.SpringBeanHolder;
-import cn.odboy.exception.util.ThrowableUtil;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
 import cn.odboy.model.tools.dto.EmailDto;
@@ -79,7 +79,7 @@ public class ExecutionJob extends QuartzJobBean {
             quartzLog.setTime(times);
             // 任务状态 0：成功 1：失败
             quartzLog.setIsSuccess(false);
-            quartzLog.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+            quartzLog.setExceptionDetail(ExceptionUtil.stacktraceToString(e));
             // 任务如果失败了则暂停
             if (quartzJob.getPauseAfterFailure() != null && quartzJob.getPauseAfterFailure()) {
                 quartzJob.setIsPause(false);
@@ -90,7 +90,7 @@ public class ExecutionJob extends QuartzJobBean {
                 EmailService emailService = SpringBeanHolder.getBean(EmailService.class);
                 // 邮箱报警
                 if (StringUtil.isNoneBlank(quartzJob.getEmail())) {
-                    EmailDto emailDto = taskAlarm(quartzJob, ThrowableUtil.getStackTrace(e));
+                    EmailDto emailDto = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
                     emailService.sendEmail(emailDto);
                 }
             }
