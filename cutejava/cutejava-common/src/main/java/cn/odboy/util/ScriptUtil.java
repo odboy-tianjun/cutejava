@@ -64,17 +64,15 @@ public class ScriptUtil {
                 });
                 newContext.setBindings(engineScope, ScriptContext.ENGINE_SCOPE);
             }
-            if (script.contains(FUNCTION_TAG)) {
-                // 由ScriptEngines实现的接口, 其方法允许调用以前已执行的脚本中的过程
-                Invocable inv = (Invocable) engine;
-                // 调用全局函数, 并传入参数
-                inv.invokeFunction("hello", "测试");
-            }
+//            if (script.contains(FUNCTION_TAG)) {
+//                // 由ScriptEngines实现的接口, 其方法允许调用以前已执行的脚本中的过程
+//                Invocable inv = (Invocable) engine;
+//                // 调用全局函数, 并传入参数
+//                inv.invokeFunction("hello", "测试");
+//            }
             // 执行脚本, 注意这里指定新的执行作用域上下文
             return engine.eval(script, newContext);
         } catch (ScriptException e) {
-            throw new ScriptRuntimeException(e);
-        } catch (NoSuchMethodException e) {
             throw new ScriptRuntimeException(e);
         }
     }

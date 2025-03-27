@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.odboy.modules.system.mapper.DictDetailMapper">
+<mapper namespace="cn.odboy.application.system.mapper.DictDetailMapper">
     <resultMap id="BaseResultMap" type="cn.odboy.model.system.domain.DictDetail">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="label" property="label" jdbcType="VARCHAR"/>
@@ -16,8 +16,7 @@
             <result column="name" property="name" jdbcType="VARCHAR"/>
         </association>
     </resultMap>
-
-    <select id="findDictDetailByDictName" resultMap="BaseResultMap">
+    <select id="selectDictDetailByDictName" resultMap="BaseResultMap">
         select
         dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
         d.id as dict_id, d.name
@@ -28,7 +27,7 @@
         </if>
         order by dd.dict_sort
     </select>
-    <select id="findDictDetail" resultMap="BaseResultMap">
+    <select id="queryDictDetail" resultMap="BaseResultMap">
         select
         dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
         d.id as dict_id, d.name

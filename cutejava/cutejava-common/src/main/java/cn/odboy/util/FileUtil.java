@@ -4,6 +4,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
@@ -61,21 +62,17 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      */
     private static final DecimalFormat DF = new DecimalFormat("0.00");
 
-    public static final String IMAGE = "图片";
-    public static final String TXT = "文档";
-    public static final String MUSIC = "音乐";
-    public static final String VIDEO = "视频";
-    public static final String OTHER = "其他";
-
+    public static void main(String[] args) {
+    }
 
     /**
-     * MultipartFile转File
+     * MultipartFile转File -> ok
      */
     public static File toFile(MultipartFile multipartFile) {
         // 获取文件名
         String fileName = multipartFile.getOriginalFilename();
         // 获取文件后缀
-        String prefix = "." + getExtensionName(fileName);
+        String prefix = "." + getSuffix(fileName);
         File file = null;
         try {
             // 用uuid作为文件名，防止生成的临时文件重复
@@ -83,39 +80,13 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             // MultipartFile to File
             multipartFile.transferTo(file);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("保存临时文件失败", e);
         }
         return file;
     }
 
     /**
-     * 获取文件扩展名，不带 .
-     */
-    public static String getExtensionName(String filename) {
-        if ((filename != null) && (!filename.isEmpty())) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length() - 1))) {
-                return filename.substring(dot + 1);
-            }
-        }
-        return filename;
-    }
-
-    /**
-     * Java文件操作 获取不带扩展名的文件名
-     */
-    public static String getFileNameNoEx(String filename) {
-        if ((filename != null) && (!filename.isEmpty())) {
-            int dot = filename.lastIndexOf('.');
-            if (dot > -1) {
-                return filename.substring(0, dot);
-            }
-        }
-        return filename;
-    }
-
-    /**
-     * 文件大小转换
+     * 文件大小转换 -> ok
      */
     public static String getSize(long size) {
         String resultSize;
@@ -135,9 +106,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * inputStream 转 File
+     * inputStream 转 File -> ok
      */
-    static File inputStreamToFile(InputStream ins, String name) {
+    public static File inputStreamToFile(InputStream ins, String name) {
         File file = new File(SYS_TEM_DIR + name);
         if (file.exists()) {
             return file;
@@ -161,14 +132,14 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 将文件名解析成文件的上传路径
+     * 将文件名解析成文件的上传路径 -> ok
      */
     public static File upload(MultipartFile file, String filePath) {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmssS");
         // 过滤非法文件名
-        String name = getFileNameNoEx(verifyFilename(file.getOriginalFilename()));
-        String suffix = getExtensionName(file.getOriginalFilename());
+        String name = getPrefix(verifyFilename(file.getOriginalFilename()));
+        String suffix = getSuffix(file.getOriginalFilename());
         String nowStr = "-" + format.format(date);
         try {
             String fileName = name + nowStr + "." + suffix;
@@ -178,20 +149,20 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 if (!dest.getParentFile().mkdirs()) {
-                    System.out.println("was not successful.");
+                    log.error("创建目录失败, {}", dest.getParentFile().getAbsolutePath());
                 }
             }
             // 文件写入
             file.transferTo(dest);
             return dest;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("文件上传失败", e);
         }
         return null;
     }
 
     /**
-     * 导出excel
+     * 导出excel -> ok
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
         String tempPath = SYS_TEM_DIR + IdUtil.fastSimpleUUID() + ".xlsx";
@@ -233,24 +204,30 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         IoUtil.close(out);
     }
 
+    /**
+     * 获取文件类型 -> ok
+     */
     public static String getFileType(String type) {
         String documents = "txt doc pdf ppt pps xlsx xls docx";
-        String music = "mp3 wav wma mpa ram ra aac aif m4a";
+        String voice = "mp3 wav wma mpa ram ra aac aif m4a";
         String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
         String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
         if (image.contains(type)) {
-            return IMAGE;
+            return FileTypeEnum.IMAGE.getCode();
         } else if (documents.contains(type)) {
-            return TXT;
-        } else if (music.contains(type)) {
-            return MUSIC;
+            return FileTypeEnum.DOC.getCode();
+        } else if (voice.contains(type)) {
+            return FileTypeEnum.VOICE.getCode();
         } else if (video.contains(type)) {
-            return VIDEO;
+            return FileTypeEnum.VIDEO.getCode();
         } else {
-            return OTHER;
+            return FileTypeEnum.OTHER.getCode();
         }
     }
 
+    /**
+     * 检查文件大小是否超出最大值 -> ok
+     */
     public static void checkSize(long maxSize, long size) {
         // 1M
         int len = 1024 * 1024;
@@ -260,7 +237,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 判断两个文件是否相同
+     * 判断两个文件是否相同 -> ok
      */
     public static boolean check(File file1, File file2) {
         String img1Md5 = getMd5(file1);
@@ -272,23 +249,22 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 判断两个文件是否相同
+     * 判断两个文件是否相同 -> ok
      */
     public static boolean check(String file1Md5, String file2Md5) {
         return file1Md5.equals(file2Md5);
     }
 
+    /**
+     * 获取文件字节数组 -> ok
+     */
     private static byte[] getByte(File file) {
-        // 得到文件长度
         byte[] b = new byte[(int) file.length()];
         InputStream in = null;
         try {
             in = Files.newInputStream(file.toPath());
-            try {
-                System.out.println(in.read(b));
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
+            // 忽略read值
+            int read = in.read(b);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
@@ -298,6 +274,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         return b;
     }
 
+    /**
+     * 获取文件MD5值 -> ok
+     */
     private static String getMd5(byte[] bytes) {
         // 16进制字符
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -315,7 +294,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             }
             return new String(str);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("获取文件MD5值失败", e);
         }
         return null;
     }
@@ -337,7 +316,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             IOUtils.copy(fis, response.getOutputStream());
             response.flushBuffer();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("下载文件失败", e);
         } finally {
             if (fis != null) {
                 try {
@@ -346,7 +325,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                         file.deleteOnExit();
                     }
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    log.error("关闭IO流失败", e);
                 }
             }
         }

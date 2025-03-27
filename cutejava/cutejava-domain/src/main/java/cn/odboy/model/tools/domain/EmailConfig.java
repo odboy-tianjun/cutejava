@@ -34,7 +34,7 @@ public class EmailConfig extends MyObject {
 
     @NotBlank
     @ApiModelProperty(value = "密码")
-    private String pass;
+    private String password;
 
     @NotBlank
     @ApiModelProperty(value = "收件人")
