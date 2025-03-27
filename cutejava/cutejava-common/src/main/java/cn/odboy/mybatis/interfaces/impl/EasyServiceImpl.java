@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021-2025 Tian Jun
+ *  Copyright 2021-2025 Odboy
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class EasyServiceImpl<M extends EasyMapper<T>, T> extends ServiceImpl<M, 
      * @param resources /
      */
     public <G> int quickSave(G resources) {
-        return this.getBaseMapper().insert(BeanUtil.copyProperties(resources, this.getEntityClass()));
+        return getBaseMapper().insert(BeanUtil.copyProperties(resources, this.getEntityClass()));
     }
 
     /**
@@ -59,7 +59,7 @@ public class EasyServiceImpl<M extends EasyMapper<T>, T> extends ServiceImpl<M, 
      * @param resources /
      */
     public <G> int quickSaveBatch(List<G> resources) {
-        return this.getBaseMapper().insertBatchSomeColumn(BeanUtil.copyToList(resources, this.getEntityClass()));
+        return getBaseMapper().insertBatchSomeColumn(BeanUtil.copyToList(resources, this.getEntityClass()));
     }
 
     /**
@@ -68,7 +68,7 @@ public class EasyServiceImpl<M extends EasyMapper<T>, T> extends ServiceImpl<M, 
      * @param resources /
      */
     public <G> int quickModifyById(G resources) {
-        return this.getBaseMapper().updateById(BeanUtil.copyProperties(resources, this.getEntityClass()));
+        return getBaseMapper().updateById(BeanUtil.copyProperties(resources, this.getEntityClass()));
     }
 
     /**
