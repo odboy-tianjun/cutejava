@@ -14,9 +14,8 @@ import cn.odboy.model.job.domain.QuartzLog;
 import cn.odboy.model.tools.dto.EmailDto;
 import cn.odboy.util.RedisUtil;
 import cn.odboy.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -26,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+@Slf4j
 public class ExecutionJob extends QuartzJobBean {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 此处仅供参考，可根据任务执行情况自定义线程池参数
      */
@@ -55,6 +54,7 @@ public class ExecutionJob extends QuartzJobBean {
             // 执行任务
             QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
             Future<?> future = executor.submit(task);
+            // 忽略任务执行结果
             future.get();
             long times = System.currentTimeMillis() - startTime;
             quartzLog.setTime(times);
@@ -63,7 +63,7 @@ public class ExecutionJob extends QuartzJobBean {
             }
             // 任务状态
             quartzLog.setIsSuccess(true);
-            logger.info("任务执行成功，任务名称：{}, 执行时间：{}毫秒", quartzJob.getJobName(), times);
+            log.info("任务执行成功，任务名称：{}, 执行时间：{}毫秒", quartzJob.getJobName(), times);
             // 判断是否存在子任务
             if (StringUtil.isNotBlank(quartzJob.getSubTask())) {
                 String[] tasks = quartzJob.getSubTask().split("[,，]");
@@ -74,7 +74,7 @@ public class ExecutionJob extends QuartzJobBean {
             if (StringUtil.isNotBlank(uuid)) {
                 redisUtil.set(uuid, false);
             }
-            logger.error("任务执行失败，任务名称：{}", quartzJob.getJobName());
+            log.error("任务执行失败，任务名称：{}", quartzJob.getJobName(), e);
             long times = System.currentTimeMillis() - startTime;
             quartzLog.setTime(times);
             // 任务状态 0：成功 1：失败
