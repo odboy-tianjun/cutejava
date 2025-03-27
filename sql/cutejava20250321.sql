@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 27/03/2025 19:08:22
+ Date: 27/03/2025 21:19:58
 */
 
 SET NAMES utf8mb4;
@@ -274,7 +274,8 @@ CREATE TABLE `sys_dept`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`dept_id`) USING BTREE,
   INDEX `idx_pid`(`pid`) USING BTREE,
-  INDEX `idx_enabled`(`enabled`) USING BTREE
+  INDEX `idx_enabled`(`enabled`) USING BTREE,
+  INDEX `idx_sys_dept_dept_id`(`dept_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -390,7 +391,8 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`menu_id`) USING BTREE,
   UNIQUE INDEX `uniq_name`(`name`) USING BTREE,
   UNIQUE INDEX `uniq_title`(`title`) USING BTREE,
-  INDEX `idx_pid`(`pid`) USING BTREE
+  INDEX `idx_pid`(`pid`) USING BTREE,
+  INDEX `idx_sys_menu_menu_id`(`menu_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -507,6 +509,11 @@ CREATE TABLE `sys_quartz_log`  (
 -- ----------------------------
 -- Records of sys_quartz_log
 -- ----------------------------
+INSERT INTO `sys_quartz_log` VALUES (171, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, 7, NULL, '2025-03-27 19:20:12');
+INSERT INTO `sys_quartz_log` VALUES (172, 'Test', '0/5 * * * * ?', b'0', '任务告警测试', 'run', NULL, 2, 'org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named \'Test\' available\r\n	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:874)\r\n	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1358)\r\n	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309)\r\n	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)\r\n	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1168)\r\n	at cn.odboy.context.SpringBeanHolder.getBean(SpringBeanHolder.java:44)\r\n	at cn.odboy.application.job.util.QuartzRunnable.<init>(QuartzRunnable.java:21)\r\n	at cn.odboy.application.job.util.ExecutionJob.executeInternal(ExecutionJob.java:55)\r\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\r\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\r\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\r\n', '2025-03-27 19:20:14');
+INSERT INTO `sys_quartz_log` VALUES (173, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, 1, NULL, '2025-03-27 19:20:14');
+INSERT INTO `sys_quartz_log` VALUES (174, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', 1, NULL, '2025-03-27 19:20:15');
+INSERT INTO `sys_quartz_log` VALUES (175, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', 1, NULL, '2025-03-27 19:20:19');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -524,7 +531,8 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`role_id`) USING BTREE,
   UNIQUE INDEX `uniq_name`(`name`) USING BTREE,
-  INDEX `idx_level`(`level`) USING BTREE
+  INDEX `idx_level`(`level`) USING BTREE,
+  INDEX `idx_sys_role_level`(`level`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -543,7 +551,8 @@ CREATE TABLE `sys_roles_depts`  (
   `dept_id` bigint(0) NOT NULL COMMENT '部门ID',
   PRIMARY KEY (`role_id`, `dept_id`) USING BTREE,
   INDEX `idx_role_id`(`role_id`) USING BTREE,
-  INDEX `idx_dept_id`(`dept_id`) USING BTREE
+  INDEX `idx_dept_id`(`dept_id`) USING BTREE,
+  INDEX `idx_sys_roles_depts_role_dept`(`role_id`, `dept_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色部门关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -559,31 +568,28 @@ CREATE TABLE `sys_roles_menus`  (
   `role_id` bigint(0) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`menu_id`, `role_id`) USING BTREE,
   INDEX `idx_menu_id`(`menu_id`) USING BTREE,
-  INDEX `idx_role_id`(`role_id`) USING BTREE
+  INDEX `idx_role_id`(`role_id`) USING BTREE,
+  INDEX `idx_sys_roles_menus_role_menu`(`role_id`, `menu_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色菜单关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_roles_menus
 -- ----------------------------
 INSERT INTO `sys_roles_menus` VALUES (1, 1);
-INSERT INTO `sys_roles_menus` VALUES (1, 2);
 INSERT INTO `sys_roles_menus` VALUES (2, 1);
-INSERT INTO `sys_roles_menus` VALUES (2, 2);
 INSERT INTO `sys_roles_menus` VALUES (3, 1);
 INSERT INTO `sys_roles_menus` VALUES (5, 1);
 INSERT INTO `sys_roles_menus` VALUES (6, 1);
-INSERT INTO `sys_roles_menus` VALUES (6, 2);
 INSERT INTO `sys_roles_menus` VALUES (9, 1);
-INSERT INTO `sys_roles_menus` VALUES (9, 2);
 INSERT INTO `sys_roles_menus` VALUES (10, 1);
 INSERT INTO `sys_roles_menus` VALUES (10, 2);
 INSERT INTO `sys_roles_menus` VALUES (11, 1);
 INSERT INTO `sys_roles_menus` VALUES (11, 2);
 INSERT INTO `sys_roles_menus` VALUES (14, 1);
-INSERT INTO `sys_roles_menus` VALUES (14, 2);
 INSERT INTO `sys_roles_menus` VALUES (15, 1);
 INSERT INTO `sys_roles_menus` VALUES (15, 2);
 INSERT INTO `sys_roles_menus` VALUES (18, 1);
+INSERT INTO `sys_roles_menus` VALUES (18, 2);
 INSERT INTO `sys_roles_menus` VALUES (21, 1);
 INSERT INTO `sys_roles_menus` VALUES (21, 2);
 INSERT INTO `sys_roles_menus` VALUES (22, 1);
@@ -627,18 +633,27 @@ INSERT INTO `sys_roles_menus` VALUES (73, 1);
 INSERT INTO `sys_roles_menus` VALUES (74, 1);
 INSERT INTO `sys_roles_menus` VALUES (75, 1);
 INSERT INTO `sys_roles_menus` VALUES (77, 1);
+INSERT INTO `sys_roles_menus` VALUES (77, 2);
 INSERT INTO `sys_roles_menus` VALUES (78, 1);
+INSERT INTO `sys_roles_menus` VALUES (78, 2);
 INSERT INTO `sys_roles_menus` VALUES (79, 1);
+INSERT INTO `sys_roles_menus` VALUES (79, 2);
 INSERT INTO `sys_roles_menus` VALUES (80, 1);
 INSERT INTO `sys_roles_menus` VALUES (80, 2);
 INSERT INTO `sys_roles_menus` VALUES (83, 1);
 INSERT INTO `sys_roles_menus` VALUES (83, 2);
 INSERT INTO `sys_roles_menus` VALUES (117, 1);
+INSERT INTO `sys_roles_menus` VALUES (117, 2);
 INSERT INTO `sys_roles_menus` VALUES (118, 1);
+INSERT INTO `sys_roles_menus` VALUES (118, 2);
 INSERT INTO `sys_roles_menus` VALUES (119, 1);
+INSERT INTO `sys_roles_menus` VALUES (119, 2);
 INSERT INTO `sys_roles_menus` VALUES (120, 1);
+INSERT INTO `sys_roles_menus` VALUES (120, 2);
 INSERT INTO `sys_roles_menus` VALUES (121, 1);
+INSERT INTO `sys_roles_menus` VALUES (121, 2);
 INSERT INTO `sys_roles_menus` VALUES (122, 1);
+INSERT INTO `sys_roles_menus` VALUES (122, 2);
 
 -- ----------------------------
 -- Table structure for sys_user
