@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorityDto implements GrantedAuthority {
+public class RoleCodeDto implements GrantedAuthority {
 
     @ApiModelProperty(value = "角色名")
     private String authority;

@@ -1,7 +1,7 @@
 package cn.odboy.application.core.context;
 
 import cn.odboy.application.core.config.SecurityProperties;
-import cn.odboy.application.core.service.impl.OnlineUserServiceImpl;
+import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +13,7 @@ public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFi
 
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
-    private final OnlineUserServiceImpl onlineUserService;
+    private final UserOnlineServiceImpl onlineUserService;
 
     @Override
     public void configure(HttpSecurity http) {

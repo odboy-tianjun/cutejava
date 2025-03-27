@@ -6,8 +6,8 @@ import cn.odboy.application.system.service.RoleService;
 import cn.odboy.application.system.service.UserService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.dto.AuthorityDto;
-import cn.odboy.model.system.dto.JwtUserDto;
+import cn.odboy.model.system.dto.RoleCodeDto;
+import cn.odboy.model.system.dto.UserJwtDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,9 +25,9 @@ public class UserDetailsHelper implements UserDetailsService {
     private final UserCacheService userCacheService;
 
     @Override
-    public JwtUserDto loadUserByUsername(String username) {
-        JwtUserDto jwtUserDto = userCacheService.getUserCacheByUsername(username);
-        if (jwtUserDto == null) {
+    public UserJwtDto loadUserByUsername(String username) {
+        UserJwtDto userJwtDto = userCacheService.getUserCacheByUsername(username);
+        if (userJwtDto == null) {
             User user = userService.getUserByUsername(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");
@@ -36,13 +36,13 @@ public class UserDetailsHelper implements UserDetailsService {
                     throw new BadRequestException("账号未激活！");
                 }
                 // 获取用户的权限
-                List<AuthorityDto> authorities = roleService.buildPermissions(user);
+                List<RoleCodeDto> authorities = roleService.buildPermissions(user);
                 // 初始化JwtUserDto
-                jwtUserDto = new JwtUserDto(user, dataService.selectDeptIdByUserIdWithDeptId(user), authorities);
+                userJwtDto = new UserJwtDto(user, dataService.selectDeptIdByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
-                userCacheService.addUserCache(username, jwtUserDto);
+                userCacheService.addUserCache(username, userJwtDto);
             }
         }
-        return jwtUserDto;
+        return userJwtDto;
     }
 }

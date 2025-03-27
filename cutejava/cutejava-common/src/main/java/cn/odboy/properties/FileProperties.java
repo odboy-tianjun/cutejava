@@ -1,6 +1,6 @@
 package cn.odboy.properties;
 
-import cn.odboy.constant.SystemConstant;
+import cn.odboy.constant.SystemConst;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +28,9 @@ public class FileProperties {
 
     public ElPath getPath() {
         String os = System.getProperty("os.name");
-        if (os.toLowerCase().startsWith(SystemConstant.WIN)) {
+        if (os.toLowerCase().startsWith(SystemConst.WIN)) {
             return windows;
-        } else if (os.toLowerCase().startsWith(SystemConstant.MAC)) {
+        } else if (os.toLowerCase().startsWith(SystemConst.MAC)) {
             return mac;
         }
         return linux;

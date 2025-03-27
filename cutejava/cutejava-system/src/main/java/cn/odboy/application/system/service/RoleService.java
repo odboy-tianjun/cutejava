@@ -3,7 +3,7 @@ package cn.odboy.application.system.service;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.dto.AuthorityDto;
+import cn.odboy.model.system.dto.RoleCodeDto;
 import cn.odboy.model.system.dto.RoleQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -98,7 +98,7 @@ public interface RoleService extends IService<Role> {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<AuthorityDto> buildPermissions(User user);
+    List<RoleCodeDto> buildPermissions(User user);
 
     /**
      * 导出数据

@@ -10,14 +10,15 @@ import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.constant.LoginCodeEnum;
 import cn.odboy.application.core.context.TokenProvider;
 import cn.odboy.application.core.context.UserDetailsHelper;
-import cn.odboy.application.core.service.impl.OnlineUserServiceImpl;
+import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
+import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.model.system.dto.AuthUserDto;
-import cn.odboy.model.system.dto.JwtUserDto;
+import cn.odboy.model.system.dto.UserAuthDto;
+import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.properties.RsaProperties;
-import cn.odboy.util.RedisUtil;
 import cn.odboy.util.RSAEncryptUtil;
+import cn.odboy.util.RedisUtil;
 import cn.odboy.util.SecurityUtil;
 import cn.odboy.util.StringUtil;
 import com.wf.captcha.base.Captcha;
@@ -54,7 +55,7 @@ import java.util.concurrent.TimeUnit;
 public class AuthController {
     private final SecurityProperties properties;
     private final RedisUtil redisUtil;
-    private final OnlineUserServiceImpl onlineUserService;
+    private final UserOnlineServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
     private final CaptchaConfig captchaConfig;
     private final LoginProperties loginProperties;
@@ -63,7 +64,7 @@ public class AuthController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
+    public ResponseEntity<Object> login(@Validated @RequestBody UserAuthDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密
         String password = RSAEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
         // 查询验证码
@@ -77,7 +78,7 @@ public class AuthController {
             throw new BadRequestException("验证码错误");
         }
         // 获取用户信息
-        JwtUserDto jwtUser = userDetailsService.loadUserByUsername(authUser.getUsername());
+        UserJwtDto jwtUser = userDetailsService.loadUserByUsername(authUser.getUsername());
         // 验证用户密码
         if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
             throw new BadRequestException("登录密码错误");
@@ -87,8 +88,8 @@ public class AuthController {
         // 生成令牌
         String token = tokenProvider.createToken(jwtUser);
         // 返回 token 与 用户信息
-        Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
-            put("token", properties.getTokenStartWith() + token);
+        Map<String, Object> authInfo = new HashMap<>(2) {{
+            put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
             put("user", jwtUser);
         }};
         if (loginProperties.isSingleLogin()) {
@@ -104,7 +105,7 @@ public class AuthController {
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
     public ResponseEntity<UserDetails> getUserInfo() {
-        JwtUserDto jwtUser = (JwtUserDto) SecurityUtil.getCurrentUser();
+        UserJwtDto jwtUser = (UserJwtDto) SecurityUtil.getCurrentUser();
         return ResponseEntity.ok(jwtUser);
     }
 

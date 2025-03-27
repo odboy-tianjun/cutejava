@@ -4,7 +4,7 @@ import cn.odboy.application.core.context.JwtAccessDeniedHandler;
 import cn.odboy.application.core.context.JwtAuthenticationEntryPoint;
 import cn.odboy.application.core.context.TokenConfigurer;
 import cn.odboy.application.core.context.TokenProvider;
-import cn.odboy.application.core.service.impl.OnlineUserServiceImpl;
+import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.RequestMethodEnum;
 import cn.odboy.util.AnonTagUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class SpringSecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
     private final SecurityProperties securityProperties;
-    private final OnlineUserServiceImpl onlineUserService;
+    private final UserOnlineServiceImpl onlineUserService;
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {

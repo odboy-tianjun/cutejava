@@ -2,8 +2,10 @@ package cn.odboy.application.core.context;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.application.core.config.SecurityProperties;
-import cn.odboy.application.core.service.impl.OnlineUserServiceImpl;
-import cn.odboy.model.system.dto.OnlineUserDto;
+import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
+import cn.odboy.constant.SystemConst;
+import cn.odboy.model.system.dto.UserOnlineDto;
+import cn.odboy.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,14 +24,14 @@ public class TokenFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
-    private final OnlineUserServiceImpl onlineUserService;
+    private final UserOnlineServiceImpl onlineUserService;
 
     /**
      * @param tokenProvider     Token
      * @param properties        JWT
      * @param onlineUserService 用户在线
      */
-    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserServiceImpl onlineUserService) {
+    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, UserOnlineServiceImpl onlineUserService) {
         this.properties = properties;
         this.onlineUserService = onlineUserService;
         this.tokenProvider = tokenProvider;
@@ -43,9 +45,9 @@ public class TokenFilter extends GenericFilterBean {
         if (StrUtil.isNotBlank(token)) {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
-            OnlineUserDto onlineUserDto = onlineUserService.getOnlineUserByKey(loginKey);
+            UserOnlineDto userOnlineDto = onlineUserService.getOnlineUserByKey(loginKey);
             // 判断用户在线信息是否为空
-            if (onlineUserDto != null) {
+            if (userOnlineDto != null) {
                 // Token 续期判断
                 tokenProvider.checkRenewal(token);
                 // 获取认证信息，设置上下文
@@ -63,10 +65,10 @@ public class TokenFilter extends GenericFilterBean {
      * @return /
      */
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(properties.getHeader());
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(properties.getTokenStartWith())) {
+        String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
             // 去掉令牌前缀
-            return bearerToken.replace(properties.getTokenStartWith(), "");
+            return bearerToken.replace(SystemConst.TOKEN_PREFIX + " ", "");
         } else {
             log.debug("非法Token：{}", bearerToken);
         }

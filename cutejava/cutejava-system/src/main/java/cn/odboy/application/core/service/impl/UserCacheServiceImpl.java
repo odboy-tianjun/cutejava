@@ -3,7 +3,7 @@ package cn.odboy.application.core.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import cn.odboy.application.core.config.LoginProperties;
 import cn.odboy.application.core.service.UserCacheService;
-import cn.odboy.model.system.dto.JwtUserDto;
+import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.util.RedisUtil;
 import cn.odboy.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -19,19 +19,19 @@ public class UserCacheServiceImpl implements UserCacheService {
     private RedisUtil redisUtil;
 
     @Override
-    public JwtUserDto getUserCacheByUsername(String username) {
+    public UserJwtDto getUserCacheByUsername(String username) {
         // 转小写
         username = StringUtil.lowerCase(username);
         if (StringUtil.isNotEmpty(username)) {
             // 获取数据
-            return redisUtil.get(LoginProperties.cacheKey + username, JwtUserDto.class);
+            return redisUtil.get(LoginProperties.cacheKey + username, UserJwtDto.class);
         }
         return null;
     }
 
 
     @Override
-    public void addUserCache(String userName, JwtUserDto user) {
+    public void addUserCache(String userName, UserJwtDto user) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
         if (StringUtil.isNotEmpty(userName)) {

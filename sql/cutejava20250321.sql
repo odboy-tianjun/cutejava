@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 24/03/2025 21:16:20
+ Date: 27/03/2025 19:08:22
 */
 
 SET NAMES utf8mb4;
@@ -391,7 +391,7 @@ CREATE TABLE `sys_menu`  (
   UNIQUE INDEX `uniq_name`(`name`) USING BTREE,
   UNIQUE INDEX `uniq_title`(`title`) USING BTREE,
   INDEX `idx_pid`(`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 117 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -491,7 +491,7 @@ INSERT INTO `sys_quartz_job` VALUES (6, 'testTask', '0/5 * * * * ?', b'1', '测�
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_quartz_log`;
 CREATE TABLE `sys_quartz_log`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `bean_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'Bean名称',
   `cron_expression` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'cron 表达式',
   `is_success` bit(1) NULL DEFAULT NULL COMMENT '是否执行成功',
@@ -501,7 +501,7 @@ CREATE TABLE `sys_quartz_log`  (
   `time` bigint(0) NULL DEFAULT NULL COMMENT '执行耗时',
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '异常详情',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`log_id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 171 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -533,7 +533,6 @@ CREATE TABLE `sys_role`  (
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '666', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2020-08-06 16:10:24');
 INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '本级', NULL, 'admin', '2018-11-23 13:09:06', '2020-09-05 10:45:12');
 INSERT INTO `sys_role` VALUES (3, 'd666', 3, NULL, '全部', 'admin', 'admin', NULL, NULL);
-INSERT INTO `sys_role` VALUES (4, '666', 3, NULL, '全部', 'admin', 'admin', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_roles_depts
@@ -717,7 +716,7 @@ CREATE TABLE `tool_email_config`  (
   `config_id` bigint(0) NOT NULL COMMENT 'ID',
   `from_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '收件人',
   `host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮件服务器SMTP地址',
-  `pass` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
   `port` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '端口',
   `user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发件者用户名',
   PRIMARY KEY (`config_id`) USING BTREE
@@ -744,7 +743,7 @@ CREATE TABLE `tool_local_storage`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '本地存储' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '本地存储' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tool_local_storage

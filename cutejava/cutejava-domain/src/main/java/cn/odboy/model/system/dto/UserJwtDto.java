@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class JwtUserDto implements UserDetails {
+public class UserJwtDto implements UserDetails {
 
     @ApiModelProperty(value = "用户")
     private final User user;
@@ -22,10 +22,10 @@ public class JwtUserDto implements UserDetails {
     private final List<Long> dataScopes;
 
     @ApiModelProperty(value = "角色")
-    private final List<AuthorityDto> authorities;
+    private final List<RoleCodeDto> authorities;
 
     public Set<String> getRoles() {
-        return authorities.stream().map(AuthorityDto::getAuthority).collect(Collectors.toSet());
+        return authorities.stream().map(RoleCodeDto::getAuthority).collect(Collectors.toSet());
     }
 
     @Override
@@ -40,20 +40,20 @@ public class JwtUserDto implements UserDetails {
         return user.getUsername();
     }
 
-    @JSONField(serialize = false)
     @Override
+    @JSONField(serialize = false)
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @JSONField(serialize = false)
     @Override
+    @JSONField(serialize = false)
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @JSONField(serialize = false)
     @Override
+    @JSONField(serialize = false)
     public boolean isCredentialsNonExpired() {
         return true;
     }

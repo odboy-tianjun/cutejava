@@ -1,6 +1,8 @@
 package cn.odboy.server;
 
+import cn.odboy.constant.SystemConst;
 import cn.odboy.util.AnonTagUtil;
+import cn.odboy.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +40,6 @@ public class SwaggerConfig {
     @Value("${server.servlet.context-path:}")
     private String apiPath;
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
     @Value("${swagger.enabled}")
     private Boolean enabled;
 
@@ -72,7 +71,7 @@ public class SwaggerConfig {
     private List<SecurityScheme> securitySchemes() {
         //设置请求头信息
         List<SecurityScheme> securitySchemes = new ArrayList<>();
-        ApiKey apiKey = new ApiKey(tokenHeader, tokenHeader, "header");
+        ApiKey apiKey = new ApiKey(SystemConst.HEADER_NAME, SystemConst.HEADER_NAME, "header");
         securitySchemes.add(apiKey);
         return securitySchemes;
     }
@@ -101,7 +100,7 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        securityReferences.add(new SecurityReference(tokenHeader, authorizationScopes));
+        securityReferences.add(new SecurityReference(SystemConst.HEADER_NAME, authorizationScopes));
         return securityReferences;
     }
 

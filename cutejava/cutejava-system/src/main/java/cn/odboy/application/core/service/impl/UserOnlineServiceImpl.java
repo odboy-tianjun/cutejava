@@ -2,11 +2,11 @@ package cn.odboy.application.core.service.impl;
 
 import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.context.TokenProvider;
-import cn.odboy.application.core.service.OnlineUserService;
+import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
-import cn.odboy.model.system.dto.JwtUserDto;
-import cn.odboy.model.system.dto.OnlineUserDto;
+import cn.odboy.model.system.dto.UserJwtDto;
+import cn.odboy.model.system.dto.UserOnlineDto;
 import cn.odboy.util.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,52 +23,52 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class OnlineUserServiceImpl implements OnlineUserService {
+public class UserOnlineServiceImpl implements UserOnlineService {
     private final SecurityProperties properties;
     private final TokenProvider tokenProvider;
     private final RedisUtil redisUtil;
 
     @Override
-    public void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request) {
-        String dept = jwtUserDto.getUser().getDept().getName();
+    public void save(UserJwtDto userJwtDto, String token, HttpServletRequest request) {
+        String dept = userJwtDto.getUser().getDept().getName();
         String ip = BrowserUtil.getIp(request);
         String id = tokenProvider.getId(token);
         String version = BrowserUtil.getVersion(request);
         String address = IPUtil.getCityInfo(ip);
-        OnlineUserDto onlineUserDto = null;
+        UserOnlineDto userOnlineDto = null;
         try {
-            onlineUserDto = new OnlineUserDto();
-            onlineUserDto.setUid(id);
-            onlineUserDto.setUserName(jwtUserDto.getUsername());
-            onlineUserDto.setNickName(jwtUserDto.getUser().getNickName());
-            onlineUserDto.setDept(dept);
-            onlineUserDto.setBrowser(version);
-            onlineUserDto.setIp(ip);
-            onlineUserDto.setAddress(address);
-            onlineUserDto.setKey(DESEncryptUtil.desEncrypt(token));
-            onlineUserDto.setLoginTime(new Date());
+            userOnlineDto = new UserOnlineDto();
+            userOnlineDto.setUid(id);
+            userOnlineDto.setUserName(userJwtDto.getUsername());
+            userOnlineDto.setNickName(userJwtDto.getUser().getNickName());
+            userOnlineDto.setDept(dept);
+            userOnlineDto.setBrowser(version);
+            userOnlineDto.setIp(ip);
+            userOnlineDto.setAddress(address);
+            userOnlineDto.setKey(DESEncryptUtil.desEncrypt(token));
+            userOnlineDto.setLoginTime(new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         String loginKey = tokenProvider.loginKey(token);
-        redisUtil.set(loginKey, onlineUserDto, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
+        redisUtil.set(loginKey, userOnlineDto, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public PageResult<OnlineUserDto> queryOnlineUserPage(String username, Pageable pageable) {
-        List<OnlineUserDto> onlineUserList = selectOnlineUserByUsername(username);
-        List<OnlineUserDto> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
+    public PageResult<UserOnlineDto> queryOnlineUserPage(String username, Pageable pageable) {
+        List<UserOnlineDto> onlineUserList = selectOnlineUserByUsername(username);
+        List<UserOnlineDto> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
         return PageUtil.toPage(paging, onlineUserList.size());
     }
 
     @Override
-    public List<OnlineUserDto> selectOnlineUserByUsername(String username) {
+    public List<UserOnlineDto> selectOnlineUserByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisUtil.scan(loginKey + "*");
         Collections.reverse(keys);
-        List<OnlineUserDto> onlineUserList = new ArrayList<>();
+        List<UserOnlineDto> onlineUserList = new ArrayList<>();
         for (String key : keys) {
-            onlineUserList.add(redisUtil.get(key, OnlineUserDto.class));
+            onlineUserList.add(redisUtil.get(key, UserOnlineDto.class));
         }
         onlineUserList.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUserList;
@@ -81,9 +81,9 @@ public class OnlineUserServiceImpl implements OnlineUserService {
     }
 
     @Override
-    public void downloadExcel(List<OnlineUserDto> all, HttpServletResponse response) throws IOException {
+    public void downloadExcel(List<UserOnlineDto> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (OnlineUserDto user : all) {
+        for (UserOnlineDto user : all) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", user.getUserName());
             map.put("部门", user.getDept());
@@ -97,8 +97,8 @@ public class OnlineUserServiceImpl implements OnlineUserService {
     }
 
     @Override
-    public OnlineUserDto getOnlineUserByKey(String key) {
-        return redisUtil.get(key, OnlineUserDto.class);
+    public UserOnlineDto getOnlineUserByKey(String key) {
+        return redisUtil.get(key, UserOnlineDto.class);
     }
 
     @Override

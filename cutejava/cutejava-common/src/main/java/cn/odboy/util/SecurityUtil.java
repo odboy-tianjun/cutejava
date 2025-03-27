@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.odboy.constant.DataScopeEnum;
+import cn.odboy.constant.SystemConst;
 import cn.odboy.context.SpringBeanHolder;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
@@ -26,15 +27,6 @@ import java.util.Objects;
 @Slf4j
 @Component
 public class SecurityUtil {
-    /**
-     * 请求头名称
-     */
-    public static final String HEADER = "Authorization";
-    /**
-     * Token前缀
-     */
-    public static final String TOKEN_PREFIX = "Bearer";
-
     /**
      * 获取当前登录的用户
      *
@@ -117,10 +109,10 @@ public class SecurityUtil {
     public static String getToken() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
                 .getRequestAttributes())).getRequest();
-        String bearerToken = request.getHeader(HEADER);
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
+        String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
+        if (bearerToken != null && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
             // 去掉令牌前缀
-            return bearerToken.replace(TOKEN_PREFIX, "");
+            return bearerToken.replace(SystemConst.TOKEN_PREFIX, "");
         } else {
             log.debug("非法Token：{}", bearerToken);
         }

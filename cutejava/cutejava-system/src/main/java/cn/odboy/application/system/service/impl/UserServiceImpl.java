@@ -1,6 +1,6 @@
 package cn.odboy.application.system.service.impl;
 
-import cn.odboy.application.core.service.OnlineUserService;
+import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.application.core.service.UserCacheService;
 import cn.odboy.application.system.mapper.UserJobMapper;
 import cn.odboy.application.system.mapper.UserMapper;
@@ -40,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final FileProperties fileProperties;
     private final RedisUtil redisUtil;
     private final UserCacheService userCacheService;
-    private final OnlineUserService onlineUserService;
+    private final UserOnlineService userOnlineService;
 
     @Override
     public PageResult<User> queryUserPage(UserQueryCriteria criteria, Page<Object> page) {
@@ -116,7 +116,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 如果用户被禁用，则清除用户登录信息
         if (!resources.getEnabled()) {
-            onlineUserService.kickOutByUsername(resources.getUsername());
+            userOnlineService.kickOutByUsername(resources.getUsername());
         }
         user.setDeptId(resources.getDept().getId());
         user.setUsername(resources.getUsername());
@@ -191,7 +191,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 清除缓存
             flushCache(user.getUsername());
             // 强制退出
-            onlineUserService.kickOutByUsername(user.getUsername());
+            userOnlineService.kickOutByUsername(user.getUsername());
         });
         // 重置密码
         userMapper.resetPasswordByUserIds(ids, password);

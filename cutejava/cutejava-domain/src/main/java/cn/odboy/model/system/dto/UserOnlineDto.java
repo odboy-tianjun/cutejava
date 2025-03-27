@@ -9,7 +9,7 @@ import java.util.Date;
  * 在线用户
  */
 @Data
-public class OnlineUserDto {
+public class UserOnlineDto {
     @ApiModelProperty(value = "Token编号")
     private String uid;
 

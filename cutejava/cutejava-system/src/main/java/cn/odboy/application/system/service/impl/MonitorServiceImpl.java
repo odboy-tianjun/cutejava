@@ -3,9 +3,9 @@ package cn.odboy.application.system.service.impl;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
 import cn.odboy.application.system.service.MonitorService;
-import cn.odboy.constant.SystemConstant;
+import cn.odboy.constant.SystemConst;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.IPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
@@ -65,7 +65,7 @@ public class MonitorServiceImpl implements MonitorService {
         long available = 0, total = 0;
         for (OSFileStore fs : fsArray) {
             // windows 需要将所有磁盘分区累加，linux 和 mac 直接累加会出现磁盘重复的问题，待修复
-            if (osName.toLowerCase().startsWith(SystemConstant.WIN)) {
+            if (osName.toLowerCase().startsWith(SystemConst.WIN)) {
                 available += fs.getUsableSpace();
                 total += fs.getTotalSpace();
             } else {
@@ -178,7 +178,7 @@ public class MonitorServiceImpl implements MonitorService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        systemInfo.put("ip", StringUtil.getLocalIp());
+        systemInfo.put("ip", IPUtil.getLocalIp());
         return systemInfo;
     }
 }

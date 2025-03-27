@@ -1,8 +1,8 @@
 package cn.odboy.application.core.service;
 
 import cn.odboy.base.PageResult;
-import cn.odboy.model.system.dto.JwtUserDto;
-import cn.odboy.model.system.dto.OnlineUserDto;
+import cn.odboy.model.system.dto.UserJwtDto;
+import cn.odboy.model.system.dto.UserOnlineDto;
 import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,15 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public interface OnlineUserService {
+public interface UserOnlineService {
     /**
      * 保存在线用户信息
      *
-     * @param jwtUserDto /
+     * @param userJwtDto /
      * @param token      /
      * @param request    /
      */
-    void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request);
+    void save(UserJwtDto userJwtDto, String token, HttpServletRequest request);
 
     /**
      * 查询全部数据
@@ -27,7 +27,7 @@ public interface OnlineUserService {
      * @param pageable /
      * @return /
      */
-    PageResult<OnlineUserDto> queryOnlineUserPage(String username, Pageable pageable);
+    PageResult<UserOnlineDto> queryOnlineUserPage(String username, Pageable pageable);
 
     /**
      * 查询全部数据，不分页
@@ -35,7 +35,7 @@ public interface OnlineUserService {
      * @param username /
      * @return /
      */
-    List<OnlineUserDto> selectOnlineUserByUsername(String username);
+    List<UserOnlineDto> selectOnlineUserByUsername(String username);
 
     /**
      * 退出登录
@@ -51,7 +51,7 @@ public interface OnlineUserService {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<OnlineUserDto> all, HttpServletResponse response) throws IOException;
+    void downloadExcel(List<UserOnlineDto> all, HttpServletResponse response) throws IOException;
 
     /**
      * 查询用户
@@ -59,7 +59,7 @@ public interface OnlineUserService {
      * @param key /
      * @return /
      */
-    OnlineUserDto getOnlineUserByKey(String key);
+    UserOnlineDto getOnlineUserByKey(String key);
 
     /**
      * 根据用户名强退用户

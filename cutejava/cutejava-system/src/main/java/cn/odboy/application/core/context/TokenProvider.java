@@ -4,9 +4,11 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.odboy.application.core.config.SecurityProperties;
+import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
-import cn.odboy.model.system.dto.JwtUserDto;
+import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.util.RedisUtil;
+import cn.odboy.util.SecurityUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -57,7 +59,7 @@ public class TokenProvider implements InitializingBean {
      * @param user /
      * @return /
      */
-    public String createToken(JwtUserDto user) {
+    public String createToken(UserJwtDto user) {
         // 设置参数
         Map<String, Object> claims = new HashMap<>(6);
         // 设置用户ID
@@ -106,8 +108,8 @@ public class TokenProvider implements InitializingBean {
     }
 
     public String getToken(HttpServletRequest request) {
-        final String requestHeader = request.getHeader(properties.getHeader());
-        if (requestHeader != null && requestHeader.startsWith(properties.getTokenStartWith())) {
+        final String requestHeader = request.getHeader(SystemConst.HEADER_NAME);
+        if (requestHeader != null && requestHeader.startsWith(SystemConst.TOKEN_PREFIX)) {
             return requestHeader.substring(7);
         }
         return null;
