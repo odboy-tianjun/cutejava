@@ -7,13 +7,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 匿名标记工具
  */
-public class AnonTagUtil {
+public final class AnonTagUtil {
 
     /**
      * 获取匿名标记的URL
@@ -21,10 +26,10 @@ public class AnonTagUtil {
      * @param applicationContext /
      * @return /
      */
-    public static Map<String, Set<String>> getAnonymousUrl(ApplicationContext applicationContext) {
+    public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
         RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
-        Map<String, Set<String>> anonymousUrls = new HashMap<>(8);
+        Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
         // 获取匿名标记
         Set<String> get = new HashSet<>();
         Set<String> post = new HashSet<>();
@@ -77,7 +82,7 @@ public class AnonTagUtil {
      * @param applicationContext /
      * @return /
      */
-    public static Set<String> getAllAnonymousUrl(ApplicationContext applicationContext) {
+    public static Set<String> getAllAnonymousUrl(final ApplicationContext applicationContext) {
         Set<String> allUrl = new HashSet<>();
         Map<String, Set<String>> anonymousUrls = getAnonymousUrl(applicationContext);
         for (String key : anonymousUrls.keySet()) {

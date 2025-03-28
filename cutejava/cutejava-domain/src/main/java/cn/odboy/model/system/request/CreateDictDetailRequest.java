@@ -4,7 +4,6 @@ import cn.odboy.base.MyObject;
 import cn.odboy.model.system.domain.Dict;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

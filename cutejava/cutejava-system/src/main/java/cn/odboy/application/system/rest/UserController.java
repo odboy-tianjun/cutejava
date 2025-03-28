@@ -9,16 +9,16 @@ import cn.odboy.application.tools.service.CaptchaService;
 import cn.odboy.base.MyMetaOption;
 import cn.odboy.base.PageResult;
 import cn.odboy.constant.CodeEnum;
+import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.response.UserPassVo;
 import cn.odboy.model.system.request.UserQueryCriteria;
+import cn.odboy.model.system.response.UserPassVo;
 import cn.odboy.properties.RsaProperties;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RsaEncryptUtil;
-import cn.odboy.util.SecurityUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -31,12 +31,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Api(tags = "系统：用户管理")
@@ -71,7 +82,7 @@ public class UserController {
             criteria.getDeptIds().addAll(deptService.selectChildDeptIdByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = dataService.selectDeptIdByUserIdWithDeptId(userService.getUserByUsername(SecurityUtil.getCurrentUsername()));
+        List<Long> dataScopes = dataService.selectDeptIdByUserIdWithDeptId(userService.getUserByUsername(SecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集
@@ -110,7 +121,7 @@ public class UserController {
     @ApiOperation("修改用户：个人中心")
     @PutMapping(value = "center")
     public ResponseEntity<Object> centerUser(@Validated(User.Update.class) @RequestBody User resources) {
-        if (!resources.getId().equals(SecurityUtil.getCurrentUserId())) {
+        if (!resources.getId().equals(SecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
         userService.updateCenterInfoById(resources);
@@ -122,7 +133,7 @@ public class UserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> deleteUser(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(roleService.selectRoleByUsersId(SecurityUtil.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(roleService.selectRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(roleService.selectRoleByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足，不能删除：" + userService.getUserById(id).getUsername());
@@ -137,7 +148,7 @@ public class UserController {
     public ResponseEntity<Object> updateUserPassword(@RequestBody UserPassVo passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
-        User user = userService.getUserByUsername(SecurityUtil.getCurrentUsername());
+        User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
         }
@@ -166,7 +177,7 @@ public class UserController {
     @PostMapping(value = "/updateEmail/{code}")
     public ResponseEntity<Object> updateUserEmail(@PathVariable String code, @RequestBody User resources) throws Exception {
         String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, resources.getPassword());
-        User user = userService.getUserByUsername(SecurityUtil.getCurrentUsername());
+        User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
@@ -181,7 +192,7 @@ public class UserController {
      * @param resources /
      */
     private void checkLevel(User resources) {
-        Integer currentLevel = Collections.min(roleService.selectRoleByUsersId(SecurityUtil.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
+        Integer currentLevel = Collections.min(roleService.selectRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
         Integer optLevel = roleService.getDeptLevelByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");

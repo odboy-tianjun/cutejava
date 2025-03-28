@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -46,7 +45,7 @@ public class QuartzJob extends MyEntity {
     @ApiModelProperty(value = "cron表达式")
     private String cronExpression;
 
-    @ApiModelProperty(value = "状态，暂时或启动")
+    @ApiModelProperty(value = "状态：暂停或启动")
     private Boolean isPause = false;
 
     @ApiModelProperty(value = "负责人")

@@ -1,11 +1,11 @@
 package cn.odboy.util;
 
+import cn.odboy.exception.BadRequestException;
 import cn.odboy.mybatis.constant.DataTypeEnum;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,7 +19,7 @@ import java.sql.Statement;
 import java.util.List;
 
 @Slf4j
-public class SqlUtil {
+public final class SqlUtil {
     /**
      * 获取数据源
      *
@@ -34,12 +34,12 @@ public class SqlUtil {
         try {
             className = DriverManager.getDriver(jdbcUrl.trim()).getClass().getName();
         } catch (SQLException e) {
-            throw new RuntimeException("Get class name error: =" + jdbcUrl);
+            throw new BadRequestException("Get class name error: =" + jdbcUrl);
         }
         if (StringUtils.isEmpty(className)) {
             DataTypeEnum dataTypeEnum = DataTypeEnum.urlOf(jdbcUrl);
             if (null == dataTypeEnum) {
-                throw new RuntimeException("Not supported data type: jdbcUrl=" + jdbcUrl);
+                throw new BadRequestException("Not supported data type: jdbcUrl=" + jdbcUrl);
             }
             druidDataSource.setDriverClassName(dataTypeEnum.getDriver());
         } else {
@@ -67,7 +67,7 @@ public class SqlUtil {
             }
         } catch (Exception e) {
             log.error("create connection error, jdbcUrl: {}", jdbcUrl);
-            throw new RuntimeException("create connection error, jdbcUrl: " + jdbcUrl);
+            throw new BadRequestException("create connection error, jdbcUrl: " + jdbcUrl);
         } finally {
             CloseUtil.close(connection);
         }

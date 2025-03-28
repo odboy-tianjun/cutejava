@@ -21,7 +21,7 @@ package cn.odboy.util;
  * @author odboy
  * @date 2025-01-13
  */
-public class LogFmtUtil {
+public final class LogFmtUtil {
     /**
      * 替换字符串中的占位符 {} 为传入的参数
      *

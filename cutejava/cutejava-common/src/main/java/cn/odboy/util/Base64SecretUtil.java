@@ -17,7 +17,6 @@ package cn.odboy.util;
 
 import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.util.IdUtil;
-
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -26,7 +25,7 @@ import java.nio.charset.StandardCharsets;
  * @author odboy
  * @date 2022-11-16
  */
-public class Base64SecretUtil {
+public final class Base64SecretUtil {
     private Base64SecretUtil() {
     }
 

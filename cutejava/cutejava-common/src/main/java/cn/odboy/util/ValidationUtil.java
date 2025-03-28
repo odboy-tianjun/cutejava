@@ -27,7 +27,7 @@ import java.util.Set;
  * @author odboy
  * @date 2025-01-15
  */
-public class ValidationUtil {
+public final class ValidationUtil {
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     public static <T> void validate(T object) {

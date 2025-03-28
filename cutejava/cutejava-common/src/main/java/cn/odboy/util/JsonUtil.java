@@ -17,7 +17,6 @@ package cn.odboy.util;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author odboy
  * @date 2024-10-01
  */
-public class JsonUtil {
+public final class JsonUtil {
     public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> kClass, Class<V> vClass) {
         return JSON.parseObject(jsonStr, new TypeReference<Map<K, V>>() {
         });

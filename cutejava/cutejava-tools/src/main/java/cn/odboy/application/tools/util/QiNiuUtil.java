@@ -2,14 +2,13 @@ package cn.odboy.application.tools.util;
 
 import cn.odboy.util.FileUtil;
 import com.qiniu.storage.Region;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * 七牛云存储工具类
  */
-public class QiNiuUtil {
+public final class QiNiuUtil {
 
     private static final String HUAD = "华东";
 

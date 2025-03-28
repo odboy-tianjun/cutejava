@@ -13,14 +13,14 @@ import cn.odboy.application.core.service.impl.UserDetailsServiceImpl;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
+import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.model.system.response.UserInfoVo;
 import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.model.system.request.UserLoginRequest;
+import cn.odboy.model.system.response.UserInfoVo;
 import cn.odboy.properties.RsaProperties;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.RsaEncryptUtil;
-import cn.odboy.util.RedisUtil;
-import cn.odboy.util.SecurityUtil;
 import cn.odboy.util.StringUtil;
 import com.wf.captcha.base.Captcha;
 import io.swagger.annotations.Api;
@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +52,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Api(tags = "系统：系统授权接口")
 public class AuthController {
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
     private final UserOnlineServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
     private final CaptchaConfig captchaConfig;
@@ -67,9 +66,9 @@ public class AuthController {
         // 密码解密
         String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, loginRequest.getPassword());
         // 查询验证码
-        String code = redisUtil.get(loginRequest.getUuid(), String.class);
+        String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
-        redisUtil.del(loginRequest.getUuid());
+        redisHelper.del(loginRequest.getUuid());
         if (StringUtil.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
@@ -104,7 +103,7 @@ public class AuthController {
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
     public ResponseEntity<UserInfoVo> getUserInfo() {
-        UserJwtDto jwtUser = (UserJwtDto) SecurityUtil.getCurrentUser();
+        UserJwtDto jwtUser = (UserJwtDto) SecurityHelper.getCurrentUser();
         UserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, UserInfoVo.class);
         return ResponseEntity.ok(userInfoVo);
     }
@@ -121,7 +120,7 @@ public class AuthController {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存
-        redisUtil.set(uuid, captchaValue, captchaConfig.getExpiration(), TimeUnit.MINUTES);
+        redisHelper.set(uuid, captchaValue, captchaConfig.getExpiration(), TimeUnit.MINUTES);
         // 验证码信息
         Map<String, Object> imgResult = new HashMap<String, Object>(2) {{
             put("img", captcha.toBase64());

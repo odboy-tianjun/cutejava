@@ -1,5 +1,6 @@
 package cn.odboy.mybatis.constant;
 
+import cn.odboy.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -94,10 +95,10 @@ public enum DataTypeEnum {
                 try {
                     Class<?> aClass = Class.forName(dataTypeEnum.getDriver());
                     if (null == aClass) {
-                        throw new RuntimeException("Unable to get driver instance for jdbcUrl: " + jdbcUrl);
+                        throw new BadRequestException("Unable to get driver instance for jdbcUrl: " + jdbcUrl);
                     }
                 } catch (ClassNotFoundException e) {
-                    throw new RuntimeException("Unable to get driver instance: " + jdbcUrl);
+                    throw new BadRequestException("Unable to get driver instance: " + jdbcUrl);
                 }
                 return dataTypeEnum;
             }

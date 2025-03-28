@@ -2,7 +2,6 @@ package cn.odboy.model.system.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.util.Date;
 
 /**

@@ -9,28 +9,31 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.domain.DictDetail;
-import cn.odboy.model.system.request.DictQueryCriteria;
 import cn.odboy.model.system.request.CreateDictRequest;
+import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
-import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
     private final DictMapper dictMapper;
     private final DictDetailMapper dictDetailMapper;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     @Override
     public PageResult<Dict> queryDictPage(DictQueryCriteria criteria, Page<Object> page) {
@@ -103,6 +106,6 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     }
 
     public void delCaches(Dict dict) {
-        redisUtil.del(SystemRedisKey.DICT_NAME + dict.getName());
+        redisHelper.del(SystemRedisKey.DICT_NAME + dict.getName());
     }
 }

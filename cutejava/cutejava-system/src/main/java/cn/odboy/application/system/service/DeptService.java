@@ -2,10 +2,9 @@ package cn.odboy.application.system.service;
 
 import cn.odboy.base.BaseResult;
 import cn.odboy.model.system.domain.Dept;
-import cn.odboy.model.system.request.DeptQueryCriteria;
 import cn.odboy.model.system.request.CreateDeptRequest;
+import cn.odboy.model.system.request.DeptQueryCriteria;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;

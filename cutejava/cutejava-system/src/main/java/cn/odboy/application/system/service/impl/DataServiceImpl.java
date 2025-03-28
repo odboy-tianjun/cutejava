@@ -9,11 +9,14 @@ import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.util.RedisUtil;
+import cn.odboy.redis.RedisHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class DataServiceImpl implements DataService {
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
     private final RoleService roleService;
     private final DeptService deptService;
 
@@ -35,7 +38,7 @@ public class DataServiceImpl implements DataService {
     @Override
     public List<Long> selectDeptIdByUserIdWithDeptId(User user) {
         String key = SystemRedisKey.DATA_USER + user.getId();
-        List<Long> ids = redisUtil.getList(key, Long.class);
+        List<Long> ids = redisHelper.getList(key, Long.class);
         if (CollUtil.isEmpty(ids)) {
             Set<Long> deptIds = new HashSet<>();
             // 查询用户角色
@@ -55,7 +58,7 @@ public class DataServiceImpl implements DataService {
                 }
             }
             ids = new ArrayList<>(deptIds);
-            redisUtil.set(key, ids, 1, TimeUnit.DAYS);
+            redisHelper.set(key, ids, 1, TimeUnit.DAYS);
         }
         return ids;
     }

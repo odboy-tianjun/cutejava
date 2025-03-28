@@ -17,7 +17,6 @@ package cn.odboy.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.odboy.base.MyEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
  * @author odboy
  * @date 2024-10-01
  */
-public class ListUtil {
+public final class ListUtil {
     /**
      * 根据对象T的属性去重
      *

@@ -1,4 +1,4 @@
-package cn.odboy.util;
+package cn.odboy.redis;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
@@ -7,22 +7,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.ConvertingCursor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
-public class RedisUtil {
-    private static final Logger log = LoggerFactory.getLogger(RedisUtil.class);
+public class RedisHelper {
+    private static final Logger log = LoggerFactory.getLogger(RedisHelper.class);
 
     private RedisTemplate<Object, Object> redisTemplate;
 
-    public RedisUtil(RedisTemplate<Object, Object> redisTemplate) {
+    public RedisHelper(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.redisTemplate.setKeySerializer(new StringRedisSerializer());
         this.redisTemplate.setHashKeySerializer(new StringRedisSerializer());

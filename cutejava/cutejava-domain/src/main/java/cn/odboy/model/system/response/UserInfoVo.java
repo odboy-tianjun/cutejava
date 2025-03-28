@@ -4,7 +4,6 @@ import cn.odboy.base.MyObject;
 import cn.odboy.model.system.dto.RoleCodeDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

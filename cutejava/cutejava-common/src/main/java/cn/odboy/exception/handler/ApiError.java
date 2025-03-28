@@ -4,7 +4,7 @@ import lombok.Data;
 
 
 @Data
-public class ApiError {
+public final class ApiError {
 
     private Integer status = 400;
     private Long timestamp;
@@ -14,13 +14,13 @@ public class ApiError {
         timestamp = System.currentTimeMillis();
     }
 
-    public static ApiError error(String message) {
+    public static ApiError error(final String message) {
         ApiError apiError = new ApiError();
         apiError.setMessage(message);
         return apiError;
     }
 
-    public static ApiError error(Integer status, String message) {
+    public static ApiError error(final Integer status, final String message) {
         ApiError apiError = new ApiError();
         apiError.setStatus(status);
         apiError.setMessage(message);

@@ -2,11 +2,10 @@ package cn.odboy.application.system.service;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Job;
-import cn.odboy.model.system.request.JobQueryCriteria;
 import cn.odboy.model.system.request.CreateJobRequest;
+import cn.odboy.model.system.request.JobQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;

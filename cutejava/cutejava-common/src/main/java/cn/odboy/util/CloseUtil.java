@@ -5,7 +5,7 @@ import java.io.Closeable;
 /**
  * 用于关闭各种连接，缺啥补啥
  */
-public class CloseUtil {
+public final class CloseUtil {
 
     public static void close(Closeable closeable) {
         if (null != closeable) {

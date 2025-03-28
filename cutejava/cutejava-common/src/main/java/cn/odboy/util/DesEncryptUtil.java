@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * DES加密
  */
-public class DesEncryptUtil {
+public final class DesEncryptUtil {
 
     private static final String STR_PARAM = "Passw0rd";
     private static final IvParameterSpec IV = new IvParameterSpec(STR_PARAM.getBytes(StandardCharsets.UTF_8));

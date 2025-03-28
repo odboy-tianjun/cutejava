@@ -15,22 +15,27 @@ import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.response.MenuMetaVo;
 import cn.odboy.model.system.request.MenuQueryCriteria;
+import cn.odboy.model.system.response.MenuMetaVo;
 import cn.odboy.model.system.response.MenuVo;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.RedisUtil;
 import cn.odboy.util.StringUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -42,7 +47,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     private final RoleMenuMapper roleMenuMapper;
     private final UserMapper userMapper;
     private final RoleService roleService;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     private static final String YES_STR = "是";
     private static final String NO_STR = "否";
@@ -72,10 +77,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public Menu getMenuById(long id) {
         String key = SystemRedisKey.MENU_ID + id;
-        Menu menu = redisUtil.get(key, Menu.class);
+        Menu menu = redisHelper.get(key, Menu.class);
         if (menu == null) {
             menu = getById(id);
-            redisUtil.set(key, menu, 1, TimeUnit.DAYS);
+            redisHelper.set(key, menu, 1, TimeUnit.DAYS);
         }
         return menu;
     }
@@ -89,12 +94,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<Menu> selectMenuByUserId(Long currentUserId) {
         String key = SystemRedisKey.MENU_USER + currentUserId;
-        List<Menu> menus = redisUtil.getList(key, Menu.class);
+        List<Menu> menus = redisHelper.getList(key, Menu.class);
         if (CollUtil.isEmpty(menus)) {
             List<Role> roles = roleService.selectRoleByUsersId(currentUserId);
             Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
             menus = new ArrayList<>(menuMapper.selectMenuByRoleIdsAndType(roleIds, 2));
-            redisUtil.set(key, menus, 1, TimeUnit.DAYS);
+            redisHelper.set(key, menus, 1, TimeUnit.DAYS);
         }
         return menus;
     }
@@ -321,11 +326,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      */
     public void delCaches(Long id) {
         List<User> users = userMapper.selectUserByMenuId(id);
-        redisUtil.del(SystemRedisKey.MENU_ID + id);
-        redisUtil.delByKeys(SystemRedisKey.MENU_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
+        redisHelper.del(SystemRedisKey.MENU_ID + id);
+        redisHelper.delByKeys(SystemRedisKey.MENU_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
         // 清除 Role 缓存
         List<Role> roles = roleService.selectRoleByMenuId(id);
-        redisUtil.delByKeys(SystemRedisKey.ROLE_ID, roles.stream().map(Role::getId).collect(Collectors.toSet()));
+        redisHelper.delByKeys(SystemRedisKey.ROLE_ID, roles.stream().map(Role::getId).collect(Collectors.toSet()));
     }
 
     /**

@@ -1,11 +1,10 @@
-package cn.odboy.util;
+package cn.odboy.context;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.odboy.constant.DataScopeEnum;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.context.SpringBeanHolder;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +23,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Component
-public class SecurityUtil {
+public class SecurityHelper {
     /**
      * 获取当前登录的用户
      *

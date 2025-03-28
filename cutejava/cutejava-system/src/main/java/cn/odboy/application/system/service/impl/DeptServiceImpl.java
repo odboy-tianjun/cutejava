@@ -11,21 +11,29 @@ import cn.odboy.application.system.service.DeptService;
 import cn.odboy.base.BaseResult;
 import cn.odboy.constant.DataScopeEnum;
 import cn.odboy.constant.SystemRedisKey;
+import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.request.DeptQueryCriteria;
 import cn.odboy.model.system.request.CreateDeptRequest;
-import cn.odboy.util.*;
+import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.redis.RedisHelper;
+import cn.odboy.util.ClassUtil;
+import cn.odboy.util.FileUtil;
+import cn.odboy.util.StringUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -35,11 +43,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     private final DeptMapper deptMapper;
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     @Override
     public List<Dept> selectDeptByCriteria(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
-        String dataScopeType = SecurityUtil.getDataScopeType();
+        String dataScopeType = SecurityHelper.getDataScopeType();
         if (isQuery) {
             if (dataScopeType.equals(DataScopeEnum.ALL.getValue())) {
                 criteria.setPidIsNull(true);
@@ -63,7 +71,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             }
         }
         // 数据权限
-        criteria.setIds(SecurityUtil.getCurrentUserDataScope());
+        criteria.setIds(SecurityHelper.getCurrentUserDataScope());
         List<Dept> list = deptMapper.selectDeptByCriteria(criteria);
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
         if (StringUtil.isBlank(dataScopeType)) {
@@ -75,10 +83,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public Dept getDeptById(Long id) {
         String key = SystemRedisKey.DEPT_ID + id;
-        Dept dept = redisUtil.get(key, Dept.class);
+        Dept dept = redisHelper.get(key, Dept.class);
         if (dept == null) {
             dept = deptMapper.selectById(id);
-            redisUtil.set(key, dept, 1, TimeUnit.DAYS);
+            redisHelper.set(key, dept, 1, TimeUnit.DAYS);
         }
         return dept;
     }
@@ -274,7 +282,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public void delCaches(Long id) {
         List<User> users = userMapper.selectUserByRoleDeptId(id);
         // 删除数据权限
-        redisUtil.delByKeys(SystemRedisKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
-        redisUtil.del(SystemRedisKey.DEPT_ID + id);
+        redisHelper.delByKeys(SystemRedisKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
+        redisHelper.del(SystemRedisKey.DEPT_ID + id);
     }
 }
