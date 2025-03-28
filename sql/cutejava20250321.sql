@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 28/03/2025 10:06:35
+ Date: 28/03/2025 19:11:17
 */
 
 SET NAMES utf8mb4;
@@ -276,18 +276,19 @@ CREATE TABLE `sys_dept`  (
   INDEX `idx_pid`(`pid`) USING BTREE,
   INDEX `idx_enabled`(`enabled`) USING BTREE,
   INDEX `idx_sys_dept_dept_id`(`dept_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (2, 7, 1, '研发部', 3, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_dept` VALUES (2, 7, 2, '研发部', 3, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (5, 7, 0, '运维部', 4, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (6, 8, 0, '测试部', 6, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (7, NULL, 2, '华南分部', 0, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (8, NULL, 2, '华北分部', 1, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (15, 8, 0, 'UI部门', 7, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (17, 2, 0, '研发一组', 999, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_dept` VALUES (18, 2, 0, 'asdasdasd', 999, b'1', 'admin', 'admin', '2025-03-28 14:56:05', '2025-03-28 14:56:05');
 
 -- ----------------------------
 -- Table structure for sys_dict
@@ -302,7 +303,7 @@ CREATE TABLE `sys_dict`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dict
@@ -327,7 +328,7 @@ CREATE TABLE `sys_dict_detail`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_dict_id`(`dict_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典详情' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典详情' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dict_detail
@@ -355,7 +356,7 @@ CREATE TABLE `sys_job`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_name`(`name`) USING BTREE,
   INDEX `idx_enabled`(`enabled`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '岗位' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '岗位' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_job
@@ -393,7 +394,7 @@ CREATE TABLE `sys_menu`  (
   UNIQUE INDEX `uniq_title`(`title`) USING BTREE,
   INDEX `idx_pid`(`pid`) USING BTREE,
   INDEX `idx_sys_menu_menu_id`(`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 126 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -404,10 +405,10 @@ INSERT INTO `sys_menu` VALUES (3, 1, 3, 1, '角色管理', 'Role', 'system/role/
 INSERT INTO `sys_menu` VALUES (5, 1, 3, 1, '菜单管理', 'Menu', 'system/menu/index', 5, 'menu', 'menu', b'0', b'0', b'0', 'menu:list', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (6, NULL, 3, 0, '系统监控', NULL, NULL, 10, 'monitor', 'monitor', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (9, 6, 0, 1, 'SQL监控', 'Sql', 'monitor/sql/index', 18, 'sqlMonitor', 'druid', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (10, NULL, 11, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (10, NULL, 12, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (11, 10, 0, 1, '图标库', 'Icons', 'components/icons/index', 51, 'icon', 'icon', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (14, 36, 0, 1, '邮件工具', 'Email', 'tools/email/index', 35, 'email', 'email', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (15, 10, 0, 1, '富文本', 'Editor', 'components/Editor', 52, 'fwb', 'tinymce', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (15, 10, 0, 1, '富文本', 'Editor', 'components/base/Editor', 52, 'fwb', 'tinymce', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'tools/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (21, NULL, 2, 0, '多级菜单', NULL, '', 900, 'menu', 'nested', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (22, 21, 2, 0, '二级菜单1', NULL, '', 999, 'menu', 'menu1', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
@@ -415,8 +416,8 @@ INSERT INTO `sys_menu` VALUES (23, 21, 0, 1, '二级菜单2', NULL, 'nested/menu
 INSERT INTO `sys_menu` VALUES (24, 22, 0, 1, '三级菜单1', 'Test', 'nested/menu1/menu1-1', 999, 'menu', 'menu1-1', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (27, 22, 0, 1, '三级菜单2', NULL, 'nested/menu1/menu1-2', 999, 'menu', 'menu1-2', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (28, 1, 3, 1, '任务调度', 'Timing', 'system/timing/index', 999, 'timing', 'timing', b'0', b'0', b'0', 'timing:list', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (33, 10, 0, 1, 'Markdown', 'Markdown', 'components/MarkDown', 53, 'markdown', 'markdown', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (34, 10, 0, 1, 'Yaml编辑器', 'YamlEdit', 'components/YamlEdit', 54, 'dev', 'yaml', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (33, 10, 0, 1, 'Markdown', 'Markdown', 'components/base/MarkDown', 53, 'markdown', 'markdown', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (34, 10, 0, 1, 'Yaml编辑器', 'YamlEdit', 'components/base/YamlEdit', 54, 'dev', 'yaml', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (35, 1, 3, 1, '部门管理', 'Dept', 'system/dept/index', 6, 'dept', 'dept', b'0', b'0', b'0', 'dept:list', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (36, NULL, 2, 0, '系统工具', NULL, '', 30, 'sys-tools', 'sys-tools', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (37, 1, 3, 1, '岗位管理', 'Job', 'system/job/index', 7, 'Steve-Jobs', 'job', b'0', b'0', b'0', 'job:list', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
@@ -447,13 +448,14 @@ INSERT INTO `sys_menu` VALUES (77, 18, 0, 2, '上传文件', NULL, '', 2, '', ''
 INSERT INTO `sys_menu` VALUES (78, 18, 0, 2, '文件编辑', NULL, '', 3, '', '', b'0', b'0', b'0', 'storage:edit', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (79, 18, 0, 2, '文件删除', NULL, '', 4, '', '', b'0', b'0', b'0', 'storage:del', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (80, 6, 0, 1, '服务监控', 'ServerMonitor', 'monitor/server/index', 14, 'codeConsole', 'server', b'0', b'0', b'0', 'monitor:list', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (83, 10, 0, 1, '图表库', 'Echarts', 'components/Echarts', 50, 'chart', 'echarts', b'0', b'1', b'0', '', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (117, 10, 0, 1, '一键复制', 'clipboardDemo', 'components/ClipboardDemo', 999, 'menu', 'clipboardDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (118, 10, 0, 1, 'Java代码编辑器', 'javaCodemirror', 'components/CodemirrorDemo', 999, 'menu', 'javaCodemirror', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (119, 10, 0, 1, '数字滚动', 'countToDemo', 'components/CountToDemo', 999, 'menu', 'countToDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (120, 10, 0, 1, '拖拽表格', 'dragTableDemo', 'components/DragTableDemo', 999, 'menu', 'dragTableDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (121, 10, 0, 1, '分割面板', 'splitPaneDemo', 'components/SplitPaneDemo', 999, 'menu', 'splitPaneDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (122, 10, 0, 1, 'WebSocket', 'webSocketDemo', 'components/WebSocketDemo', 999, 'menu', 'webSocketDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (83, 10, 0, 1, '图表库', 'Echarts', 'components/base/Echarts', 50, 'chart', 'echarts', b'0', b'1', b'0', '', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (117, 10, 0, 1, '一键复制', 'clipboardDemo', 'components/base/ClipboardDemo', 999, 'menu', 'clipboardDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (118, 10, 0, 1, 'Java代码编辑器', 'javaCodemirror', 'components/base/CodemirrorDemo', 999, 'menu', 'javaCodemirror', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (119, 10, 0, 1, '数字滚动', 'countToDemo', 'components/base/CountToDemo', 999, 'menu', 'countToDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (120, 10, 0, 1, '拖拽表格', 'dragTableDemo', 'components/base/DragTableDemo', 999, 'menu', 'dragTableDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (121, 10, 0, 1, '分割面板', 'splitPaneDemo', 'components/base/SplitPaneDemo', 999, 'menu', 'splitPaneDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (122, 10, 0, 1, 'WebSocket', 'webSocketDemo', 'components/base/WebSocketDemo', 999, 'menu', 'webSocketDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_menu` VALUES (125, 10, 0, 1, '业务组件Demo', 'DemoShow', 'components/business/DemoShow', 999, 'menu', 'bussinessDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-03-28 11:28:35', '2025-03-28 11:28:35');
 
 -- ----------------------------
 -- Table structure for sys_quartz_job
@@ -504,16 +506,11 @@ CREATE TABLE `sys_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '异常详情',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 171 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_quartz_log
 -- ----------------------------
-INSERT INTO `sys_quartz_log` VALUES (171, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, 7, NULL, '2025-03-27 19:20:12');
-INSERT INTO `sys_quartz_log` VALUES (172, 'Test', '0/5 * * * * ?', b'0', '任务告警测试', 'run', NULL, 2, 'org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named \'Test\' available\r\n	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:874)\r\n	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1358)\r\n	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309)\r\n	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)\r\n	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1168)\r\n	at cn.odboy.context.SpringBeanHolder.getBean(SpringBeanHolder.java:44)\r\n	at cn.odboy.application.job.util.QuartzRunnable.<init>(QuartzRunnable.java:21)\r\n	at cn.odboy.application.job.util.ExecutionJob.executeInternal(ExecutionJob.java:55)\r\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\r\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\r\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\r\n', '2025-03-27 19:20:14');
-INSERT INTO `sys_quartz_log` VALUES (173, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, 1, NULL, '2025-03-27 19:20:14');
-INSERT INTO `sys_quartz_log` VALUES (174, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', 1, NULL, '2025-03-27 19:20:15');
-INSERT INTO `sys_quartz_log` VALUES (175, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', 1, NULL, '2025-03-27 19:20:19');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -533,14 +530,14 @@ CREATE TABLE `sys_role`  (
   UNIQUE INDEX `uniq_name`(`name`) USING BTREE,
   INDEX `idx_level`(`level`) USING BTREE,
   INDEX `idx_sys_role_level`(`level`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '666', '全部', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '本级', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_role` VALUES (3, 'd666', 3, NULL, '全部', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_role` VALUES (7, 'test', 3, 'testtesttesttesttesttesttesttesttest', '全部', 'admin', 'admin', '2025-03-28 16:09:42', '2025-03-28 16:09:42');
 
 -- ----------------------------
 -- Table structure for sys_roles_depts
@@ -654,6 +651,7 @@ INSERT INTO `sys_roles_menus` VALUES (121, 1);
 INSERT INTO `sys_roles_menus` VALUES (121, 2);
 INSERT INTO `sys_roles_menus` VALUES (122, 1);
 INSERT INTO `sys_roles_menus` VALUES (122, 2);
+INSERT INTO `sys_roles_menus` VALUES (125, 1);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -681,13 +679,14 @@ CREATE TABLE `sys_user`  (
   UNIQUE INDEX `uniq_email`(`email`) USING BTREE,
   UNIQUE INDEX `uniq_username`(`username`) USING BTREE,
   INDEX `idx_dept_id`(`dept_id`) USING BTREE,
-  INDEX `idx_enabled`(`enabled`) USING BTREE
+  INDEX `idx_enabled`(`enabled`) USING BTREE,
+  INDEX `uniq_phone`(`phone`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 2, 'admin', '管理员', '男', '18888888888', '1943815081@qq.com', 'avatar-20250322121058526.png', 'C:\\cutejava\\avatar\\avatar-20250322121058526.png', '$2a$10$Egp1/gvFlt7zhlXVfEFw4OfWQCGPw0ClmMcc6FjTnvXNRVf9zdMRa', b'1', b'1', 'admin', 'admin', '2020-05-03 16:38:31', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_user` VALUES (1, 2, 'admin', '管理员', '男', '18888888888', '1943815081@qq.com', '', '', '$2a$10$Egp1/gvFlt7zhlXVfEFw4OfWQCGPw0ClmMcc6FjTnvXNRVf9zdMRa', b'1', b'1', 'admin', 'admin', '2020-05-03 16:38:31', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 
 -- ----------------------------
 -- Table structure for sys_users_jobs
@@ -763,7 +762,6 @@ CREATE TABLE `tool_local_storage`  (
 -- ----------------------------
 -- Records of tool_local_storage
 -- ----------------------------
-INSERT INTO `tool_local_storage` VALUES (10, '接口命名规范-20250324081642813.jpg', '接口命名规范.jpg', 'jpg', 'C:\\cutejava\\file\\图片\\接口命名规范-20250324081642813.jpg', '图片', '39.38KB   ', 'admin', 'admin', '2025-03-24 20:16:43', '2025-03-24 20:16:43');
 
 -- ----------------------------
 -- Table structure for tool_qiniu_config
