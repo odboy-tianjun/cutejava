@@ -6,7 +6,7 @@ import cn.odboy.context.SpringBeanHolder;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
-import cn.odboy.model.job.dto.QuartzJobQueryCriteria;
+import cn.odboy.model.job.request.QuartzJobQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

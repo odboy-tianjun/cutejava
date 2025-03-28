@@ -5,7 +5,8 @@ import cn.odboy.application.system.service.RoleService;
 import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Role;
-import cn.odboy.model.system.dto.RoleQueryCriteria;
+import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.model.system.request.CreateRoleRequest;
 import cn.odboy.util.SecurityUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -30,10 +31,7 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：角色管理")
 @RequestMapping("/api/roles")
 public class RoleController {
-
     private final RoleService roleService;
-
-    private static final String ENTITY_NAME = "role";
 
     @ApiOperation("获取单个role")
     @GetMapping(value = "/{id}")
@@ -73,10 +71,7 @@ public class RoleController {
     @ApiOperation("新增角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:add')")
-    public ResponseEntity<Object> createRole(@Validated @RequestBody Role resources) {
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
-        }
+    public ResponseEntity<Object> createRole(@Validated @RequestBody CreateRoleRequest resources) {
         getLevels(resources.getLevel());
         roleService.createRole(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);

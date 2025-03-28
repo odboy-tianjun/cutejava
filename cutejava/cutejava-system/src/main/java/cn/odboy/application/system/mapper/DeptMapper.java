@@ -1,7 +1,7 @@
 package cn.odboy.application.system.mapper;
 
 import cn.odboy.model.system.domain.Dept;
-import cn.odboy.model.system.dto.DeptQueryCriteria;
+import cn.odboy.model.system.request.DeptQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

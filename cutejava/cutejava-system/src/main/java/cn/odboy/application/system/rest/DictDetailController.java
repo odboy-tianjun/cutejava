@@ -2,9 +2,9 @@ package cn.odboy.application.system.rest;
 
 import cn.odboy.application.system.service.DictDetailService;
 import cn.odboy.base.PageResult;
-import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.DictDetail;
-import cn.odboy.model.system.dto.DictDetailQueryCriteria;
+import cn.odboy.model.system.request.DictDetailQueryCriteria;
+import cn.odboy.model.system.request.CreateDictDetailRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,9 +24,7 @@ import java.util.Map;
 @Api(tags = "系统：字典详情管理")
 @RequestMapping("/api/dictDetail")
 public class DictDetailController {
-
     private final DictDetailService dictDetailService;
-    private static final String ENTITY_NAME = "dictDetail";
 
     @ApiOperation("查询字典详情")
     @GetMapping
@@ -49,10 +47,7 @@ public class DictDetailController {
     @ApiOperation("新增字典详情")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Object> createDictDetail(@Validated @RequestBody DictDetail resources) {
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
-        }
+    public ResponseEntity<Object> createDictDetail(@Validated @RequestBody CreateDictDetailRequest resources) {
         dictDetailService.saveDictDetail(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

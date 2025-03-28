@@ -1,23 +1,24 @@
 package cn.odboy.application.core.rest;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.odboy.annotation.AnonymousDeleteMapping;
 import cn.odboy.annotation.AnonymousGetMapping;
 import cn.odboy.annotation.AnonymousPostMapping;
 import cn.odboy.application.core.config.CaptchaConfig;
 import cn.odboy.application.core.config.LoginProperties;
-import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.constant.LoginCodeEnum;
 import cn.odboy.application.core.context.TokenProvider;
-import cn.odboy.application.core.context.UserDetailsHelper;
+import cn.odboy.application.core.service.impl.UserDetailsServiceImpl;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.model.system.dto.UserAuthDto;
+import cn.odboy.model.system.response.UserInfoVo;
 import cn.odboy.model.system.dto.UserJwtDto;
+import cn.odboy.model.system.request.UserLoginRequest;
 import cn.odboy.properties.RsaProperties;
-import cn.odboy.util.RSAEncryptUtil;
+import cn.odboy.util.RsaEncryptUtil;
 import cn.odboy.util.RedisUtil;
 import cn.odboy.util.SecurityUtil;
 import cn.odboy.util.StringUtil;
@@ -31,7 +32,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,32 +53,31 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Api(tags = "系统：系统授权接口")
 public class AuthController {
-    private final SecurityProperties properties;
     private final RedisUtil redisUtil;
     private final UserOnlineServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
     private final CaptchaConfig captchaConfig;
     private final LoginProperties loginProperties;
     private final PasswordEncoder passwordEncoder;
-    private final UserDetailsHelper userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody UserAuthDto authUser, HttpServletRequest request) throws Exception {
+    public ResponseEntity<Object> login(@Validated @RequestBody UserLoginRequest loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = RSAEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, loginRequest.getPassword());
         // 查询验证码
-        String code = redisUtil.get(authUser.getUuid(), String.class);
+        String code = redisUtil.get(loginRequest.getUuid(), String.class);
         // 清除验证码
-        redisUtil.del(authUser.getUuid());
+        redisUtil.del(loginRequest.getUuid());
         if (StringUtil.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
-        if (StringUtil.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+        if (StringUtil.isBlank(loginRequest.getCode()) || !loginRequest.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
         // 获取用户信息
-        UserJwtDto jwtUser = userDetailsService.loadUserByUsername(authUser.getUsername());
+        UserJwtDto jwtUser = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         // 验证用户密码
         if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
             throw new BadRequestException("登录密码错误");
@@ -90,11 +89,11 @@ public class AuthController {
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<>(2) {{
             put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
-            put("user", jwtUser);
+            put("user", BeanUtil.copyProperties(jwtUser, UserInfoVo.class));
         }};
         if (loginProperties.isSingleLogin()) {
             // 踢掉之前已经登录的token
-            onlineUserService.kickOutByUsername(authUser.getUsername());
+            onlineUserService.kickOutByUsername(loginRequest.getUsername());
         }
         // 保存在线信息
         onlineUserService.save(jwtUser, token, request);
@@ -104,9 +103,10 @@ public class AuthController {
 
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
-    public ResponseEntity<UserDetails> getUserInfo() {
+    public ResponseEntity<UserInfoVo> getUserInfo() {
         UserJwtDto jwtUser = (UserJwtDto) SecurityUtil.getCurrentUser();
-        return ResponseEntity.ok(jwtUser);
+        UserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, UserInfoVo.class);
+        return ResponseEntity.ok(userInfoVo);
     }
 
     @ApiOperation("获取验证码")
@@ -117,7 +117,7 @@ public class AuthController {
         String uuid = SystemRedisKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
         //当验证码类型为 arithmetic时且长度 >= 2 时，captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
-        if (captcha.getCharType() - 1 == LoginCodeEnum.ARITHMETIC.ordinal() && captchaValue.contains(".")) {
+        if (captcha.getCharType() - 1 == LoginCodeEnum.ARITHMETIC.ordinal() && captchaValue.contains(SystemConst.SYMBOL_DOT)) {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存

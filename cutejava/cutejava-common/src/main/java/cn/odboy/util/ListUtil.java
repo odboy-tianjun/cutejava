@@ -50,7 +50,8 @@ public class ListUtil {
      */
     public static void main(String[] args) {
         List<MyEntity> entities = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        int total = 50;
+        for (int i = 0; i < total; i++) {
             MyEntity entity = new MyEntity();
             if (i % 2 == 0) {
                 entity.setCreateBy("odboy");

@@ -109,10 +109,7 @@ public class CmdGenHelper {
         // 5.2.Controller策略配置
         // 开启生成@RestController控制器
         fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder.controllerBuilder().enableRestStyle());
-        // 如果不需要生成Controller
-        // fastAutoGenerator.templateConfig(templateConfig -> templateConfig.controller(""));
-        // 5.3.Service策略配置
-        // 格式化service接口和实现类的文件名称, 去掉默认的ServiceName前面的I
+        // 如果不需要生成Controller，fastAutoGenerator.templateConfig(templateConfig -> templateConfig.controller(""))。5.3.Service策略配置：格式化service接口和实现类的文件名称, 去掉默认的ServiceName前面的I
         fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder
                 .serviceBuilder()
                 .formatServiceFileName("%sService")

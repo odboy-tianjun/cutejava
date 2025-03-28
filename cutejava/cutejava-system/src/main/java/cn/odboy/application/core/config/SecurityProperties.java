@@ -1,6 +1,5 @@
 package cn.odboy.application.core.config;
 
-import cn.odboy.util.SecurityUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

@@ -34,7 +34,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
         String ip = BrowserUtil.getIp(request);
         String id = tokenProvider.getId(token);
         String version = BrowserUtil.getVersion(request);
-        String address = IPUtil.getCityInfo(ip);
+        String address = IpUtil.getCityInfo(ip);
         UserOnlineDto userOnlineDto = null;
         try {
             userOnlineDto = new UserOnlineDto();
@@ -45,7 +45,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
             userOnlineDto.setBrowser(version);
             userOnlineDto.setIp(ip);
             userOnlineDto.setAddress(address);
-            userOnlineDto.setKey(DESEncryptUtil.desEncrypt(token));
+            userOnlineDto.setKey(DesEncryptUtil.desEncrypt(token));
             userOnlineDto.setLoginTime(new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);

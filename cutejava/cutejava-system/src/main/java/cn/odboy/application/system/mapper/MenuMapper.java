@@ -1,7 +1,7 @@
 package cn.odboy.application.system.mapper;
 
 import cn.odboy.model.system.domain.Menu;
-import cn.odboy.model.system.dto.MenuQueryCriteria;
+import cn.odboy.model.system.request.MenuQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,7 +25,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     Menu getMenuByComponentName(@Param("name") String name);
 
-    int getMenuCountByPid(@Param("pid") Long pid);
+    Integer getMenuCountByPid(@Param("pid") Long pid);
 
     void updateSubCntById(@Param("count") int count, @Param("menuId") Long menuId);
 }

@@ -5,7 +5,6 @@ import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.model.system.dto.UserOnlineDto;
-import cn.odboy.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

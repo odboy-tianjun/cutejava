@@ -1,7 +1,7 @@
 package cn.odboy.application.system.mapper;
 
 import cn.odboy.model.system.domain.Role;
-import cn.odboy.model.system.dto.RoleQueryCriteria;
+import cn.odboy.model.system.request.RoleQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

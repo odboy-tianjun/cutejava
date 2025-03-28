@@ -8,7 +8,6 @@ import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.util.RedisUtil;
-import cn.odboy.util.SecurityUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

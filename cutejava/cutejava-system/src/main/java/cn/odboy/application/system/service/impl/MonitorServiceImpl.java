@@ -5,7 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.odboy.application.system.service.MonitorService;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.IPUtil;
+import cn.odboy.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
@@ -178,7 +178,7 @@ public class MonitorServiceImpl implements MonitorService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        systemInfo.put("ip", IPUtil.getLocalIp());
+        systemInfo.put("ip", IpUtil.getLocalIp());
         return systemInfo;
     }
 }

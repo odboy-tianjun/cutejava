@@ -65,5 +65,17 @@ export function updateEmail(form) {
   })
 }
 
-export default { add, edit, del, resetPwd }
+export function queryUserMetaPage(query) {
+  return request({
+    url: 'api/users/queryUserMetaPage',
+    method: 'post',
+    data: {
+      page: 1,
+      pageSize: 50,
+      blurry: query
+    }
+  })
+}
+
+export default { add, edit, del, resetPwd, queryUserMetaPage }
 

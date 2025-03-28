@@ -2,13 +2,13 @@ package cn.odboy.application.system.service;
 
 import cn.odboy.base.BaseResult;
 import cn.odboy.model.system.domain.Dept;
-import cn.odboy.model.system.dto.DeptQueryCriteria;
+import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.model.system.request.CreateDeptRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface DeptService extends IService<Dept> {
@@ -36,7 +36,7 @@ public interface DeptService extends IService<Dept> {
      *
      * @param resources /
      */
-    void createDept(Dept resources);
+    void createDept(CreateDeptRequest resources);
 
     /**
      * 编辑

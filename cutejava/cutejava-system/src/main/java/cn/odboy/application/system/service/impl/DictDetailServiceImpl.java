@@ -1,5 +1,6 @@
 package cn.odboy.application.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.application.system.mapper.DictDetailMapper;
 import cn.odboy.application.system.mapper.DictMapper;
@@ -8,7 +9,8 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.domain.DictDetail;
-import cn.odboy.model.system.dto.DictDetailQueryCriteria;
+import cn.odboy.model.system.request.DictDetailQueryCriteria;
+import cn.odboy.model.system.request.CreateDictDetailRequest;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,11 +36,12 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveDictDetail(DictDetail resources) {
-        resources.setDictId(resources.getDict().getId());
-        save(resources);
+    public void saveDictDetail(CreateDictDetailRequest resources) {
+        DictDetail dictDetail = BeanUtil.copyProperties(resources, DictDetail.class);
+        dictDetail.setDictId(resources.getDict().getId());
+        save(dictDetail);
         // 清理缓存
-        delCaches(resources);
+        delCaches(dictDetail);
     }
 
     @Override

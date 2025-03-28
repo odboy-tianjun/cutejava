@@ -25,7 +25,7 @@
 import store from '@/store'
 import { validEmail } from '@/utils/validate'
 import { updateEmail } from '@/api/system/user'
-import { resetEmail } from '@/api/system/code'
+import { sendCaptcha } from '@/api/system/code'
 export default {
   props: {
     email: {
@@ -71,7 +71,7 @@ export default {
         this.codeLoading = true
         this.buttonName = '验证码发送中'
         const _this = this
-        resetEmail(this.form.email).then(res => {
+        sendCaptcha(this.form.email).then(res => {
           this.$message({
             showClose: true,
             message: '发送成功，验证码有效期5分钟',

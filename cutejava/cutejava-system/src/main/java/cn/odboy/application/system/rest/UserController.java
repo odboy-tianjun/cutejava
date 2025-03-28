@@ -1,19 +1,25 @@
 package cn.odboy.application.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.application.system.service.*;
+import cn.odboy.application.system.service.DataService;
+import cn.odboy.application.system.service.DeptService;
+import cn.odboy.application.system.service.RoleService;
+import cn.odboy.application.system.service.UserService;
+import cn.odboy.application.tools.service.CaptchaService;
+import cn.odboy.base.MyMetaOption;
 import cn.odboy.base.PageResult;
 import cn.odboy.constant.CodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.dto.UserPassVo;
-import cn.odboy.model.system.dto.UserQueryCriteria;
+import cn.odboy.model.system.response.UserPassVo;
+import cn.odboy.model.system.request.UserQueryCriteria;
 import cn.odboy.properties.RsaProperties;
 import cn.odboy.util.PageUtil;
-import cn.odboy.util.RSAEncryptUtil;
+import cn.odboy.util.RsaEncryptUtil;
 import cn.odboy.util.SecurityUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,9 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Api(tags = "系统：用户管理")
@@ -40,13 +44,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final DataService dataService;
     private final DeptService deptService;
     private final RoleService roleService;
-    private final VerifyService verificationCodeService;
+    private final CaptchaService verificationCodeService;
 
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
@@ -132,8 +135,8 @@ public class UserController {
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
     public ResponseEntity<Object> updateUserPassword(@RequestBody UserPassVo passVo) throws Exception {
-        String oldPass = RSAEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
-        String newPass = RSAEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
+        String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
+        String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
         User user = userService.getUserByUsername(SecurityUtil.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
@@ -162,12 +165,12 @@ public class UserController {
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/updateEmail/{code}")
     public ResponseEntity<Object> updateUserEmail(@PathVariable String code, @RequestBody User resources) throws Exception {
-        String password = RSAEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, resources.getPassword());
+        String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, resources.getPassword());
         User user = userService.getUserByUsername(SecurityUtil.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
-        verificationCodeService.validateEmailCode(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey(), resources.getEmail(), code);
+        verificationCodeService.checkCode(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey(), resources.getEmail(), code);
         userService.updateEmailByUsername(user.getUsername(), resources.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -183,5 +186,34 @@ public class UserController {
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
         }
+    }
+
+    @ApiOperation("查询用户基础数据")
+    @PostMapping(value = "/queryUserMetaPage")
+    @PreAuthorize("@el.check('user:list')")
+    public ResponseEntity<List<MyMetaOption>> queryUserMetaPage(@Validated @RequestBody UserQueryCriteria criteria) {
+        int maxPageSize = 50;
+        return new ResponseEntity<>(userService.page(new Page<>(criteria.getPage(), maxPageSize), new LambdaQueryWrapper<User>()
+                .and(c -> {
+                    c.eq(User::getPhone, criteria.getBlurry());
+                    c.or();
+                    c.eq(User::getEmail, criteria.getBlurry());
+                    c.or();
+                    c.like(User::getUsername, criteria.getBlurry());
+                    c.or();
+                    c.like(User::getNickName, criteria.getBlurry());
+                })
+        ).getRecords().stream().map(m -> {
+            Map<String, Object> ext = new HashMap<>(1);
+            ext.put("id", m.getId());
+            ext.put("deptId", m.getDeptId());
+            ext.put("email", m.getEmail());
+            ext.put("phone", m.getPhone());
+            return MyMetaOption.builder()
+                    .label(m.getNickName())
+                    .value(m.getUsername())
+                    .ext(ext)
+                    .build();
+        }).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

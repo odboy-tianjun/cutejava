@@ -16,6 +16,4 @@ public class LoginProperties {
      * 账号单用户 登录
      */
     private boolean singleLogin = false;
-
-    public static final String cacheKey = "user_login_cache:";
 }

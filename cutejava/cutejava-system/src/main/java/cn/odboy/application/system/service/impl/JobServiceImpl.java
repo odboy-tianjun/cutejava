@@ -1,5 +1,6 @@
 package cn.odboy.application.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.odboy.application.system.mapper.JobMapper;
 import cn.odboy.application.system.mapper.UserMapper;
 import cn.odboy.application.system.service.JobService;
@@ -8,7 +9,8 @@ import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Job;
-import cn.odboy.model.system.dto.JobQueryCriteria;
+import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.CreateJobRequest;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
@@ -53,12 +55,12 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveJob(Job resources) {
+    public void createJob(CreateJobRequest resources) {
         Job job = jobMapper.getJobByName(resources.getName());
         if (job != null) {
             throw new EntityExistException(Job.class, "name", resources.getName());
         }
-        save(resources);
+        save(BeanUtil.copyProperties(resources, Job.class));
     }
 
     @Override

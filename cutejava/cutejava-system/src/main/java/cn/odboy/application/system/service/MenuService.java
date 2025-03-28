@@ -1,8 +1,8 @@
 package cn.odboy.application.system.service;
 
 import cn.odboy.model.system.domain.Menu;
-import cn.odboy.model.system.dto.MenuQueryCriteria;
-import cn.odboy.model.system.dto.MenuVo;
+import cn.odboy.model.system.request.MenuQueryCriteria;
+import cn.odboy.model.system.response.MenuVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletResponse;

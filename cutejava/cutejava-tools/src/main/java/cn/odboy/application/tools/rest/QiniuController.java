@@ -5,7 +5,7 @@ import cn.odboy.application.tools.service.QiniuContentService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.tools.domain.QiniuConfig;
 import cn.odboy.model.tools.domain.QiniuContent;
-import cn.odboy.model.tools.dto.QiniuQueryCriteria;
+import cn.odboy.model.tools.request.QiniuQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,6 @@ import java.util.Map;
 @RequestMapping("/api/qiNiuContent")
 @Api(tags = "工具：七牛云存储管理")
 public class QiniuController {
-
     private final QiniuContentService qiniuContentService;
     private final QiNiuConfigService qiNiuConfigService;
 
@@ -90,7 +89,7 @@ public class QiniuController {
     @ApiOperation("删除文件")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deleteQiNiu(@PathVariable Long id) {
-        qiniuContentService.delete(qiniuContentService.getById(id));
+        qiniuContentService.deleteFileById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

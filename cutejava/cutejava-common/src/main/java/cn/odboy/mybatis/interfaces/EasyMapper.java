@@ -89,11 +89,11 @@ public interface EasyMapper<E> extends BaseMapper<E> {
         Map<String, Object> result = new ConcurrentHashMap<>(1);
         List<E> list = this.selectList(wrapper);
         if (CollUtil.isEmpty(list)) {
-            return new HashMap<>();
+            return new HashMap<>(3);
         }
         E tempObj = list.stream().findFirst().orElse(null);
         if (tempObj == null) {
-            return new HashMap<>();
+            return new HashMap<>(3);
         }
         Field[] fields = ReflectUtil.getFields(tempObj.getClass());
         for (E e : list) {

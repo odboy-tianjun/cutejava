@@ -56,4 +56,9 @@ public interface SystemRedisKey {
      * 登录验证码
      */
     String CAPTCHA_LOGIN = "captcha::login:";
+
+    /**
+     * 用户信息
+     */
+    String USER_INFO = "user::info:";
 }

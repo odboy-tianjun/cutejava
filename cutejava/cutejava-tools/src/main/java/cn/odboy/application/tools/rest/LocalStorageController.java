@@ -5,7 +5,7 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.LocalStorage;
-import cn.odboy.model.tools.dto.LocalStorageQueryCriteria;
+import cn.odboy.model.tools.request.LocalStorageQueryCriteria;
 import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -26,7 +26,6 @@ import java.io.IOException;
 @Api(tags = "工具：本地存储管理")
 @RequestMapping("/api/localStorage")
 public class LocalStorageController {
-
     private final LocalStorageService localStorageService;
 
     @GetMapping

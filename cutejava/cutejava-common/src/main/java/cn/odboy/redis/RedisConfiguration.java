@@ -181,8 +181,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
                 return null;
             }
             String str = new String(bytes, StandardCharsets.UTF_8);
-            // 支持AutoType
-            return JSON.parseObject(str, clazz, JSONReader.Feature.SupportAutoType);
+            // 移除对 SupportAutoType 的使用
+            return JSON.parseObject(str, clazz);
         }
     }
 }

@@ -110,10 +110,11 @@ public class MybatisHelper {
         if (fieldVal instanceof List) {
             List<Object> between = new ArrayList<>((List<?>) fieldVal);
             if (CollectionUtil.isNotEmpty(between)) {
-                if (between.size() >= 2) {
+                int minSize = 2;
+                if (between.size() >= minSize) {
                     queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
                 } else {
-                    throw new BadRequestException("BETWEEN类型的对象列表长度必须 >= 2");
+                    throw new BadRequestException("BETWEEN类型的对象列表长度必须 >= " + minSize);
                 }
             }
         } else {
@@ -215,16 +216,9 @@ public class MybatisHelper {
 
     public static void main(String[] args) {
         QueryWrapper<TestDomain> query = new QueryWrapper<TestDomain>();
-        //query.or();
         query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
-        //query.like("a",1);
-        //query.or();
-        //query.like("b",2);
-        //query.and(wrapper->wrapper.eq("c",1));
         query.eq("id", 1);
         query.orderByDesc("id");
-//        query.apply("left join student t1 on t1.id = t1.id");
-//        query.last("left join student t1 on t1.id = t1.id");
         System.err.println("getSqlSelect=================================");
         System.err.println(query.getSqlSelect());
         System.err.println("getSqlSegment=================================");
