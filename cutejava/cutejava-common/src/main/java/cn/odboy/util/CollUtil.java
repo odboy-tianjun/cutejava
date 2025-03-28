@@ -17,11 +17,15 @@ package cn.odboy.util;
 
 import cn.odboy.base.MyMetaOption;
 import com.alibaba.fastjson2.JSON;
-
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -32,7 +36,7 @@ import java.util.stream.Collectors;
  * @author odboy
  * @date 2022-11-09
  */
-public class CollUtil extends cn.hutool.core.collection.CollUtil {
+public final class CollUtil extends cn.hutool.core.collection.CollUtil {
     private static <T, K> Predicate<T> distinctPredicate(Function<? super T, ? extends K> keyMapper) {
         Map<Object, Boolean> map = new HashMap<>(3);
         return (t) -> null == map.putIfAbsent(keyMapper.apply(t), true);

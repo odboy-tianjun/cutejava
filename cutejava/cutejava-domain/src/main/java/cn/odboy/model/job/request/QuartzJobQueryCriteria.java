@@ -2,7 +2,6 @@ package cn.odboy.model.job.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.sql.Timestamp;
 import java.util.List;
 

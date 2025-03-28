@@ -3,7 +3,6 @@ package cn.odboy.util;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,7 +11,7 @@ import java.net.UnknownHostException;
  * 浏览器 相关
  */
 @Slf4j
-public class BrowserUtil {
+public final class BrowserUtil {
     private static final String UNKNOWN = "unknown";
 
     /**

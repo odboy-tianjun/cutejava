@@ -7,16 +7,26 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.model.system.dto.UserOnlineDto;
-import cn.odboy.util.*;
+import cn.odboy.redis.RedisHelper;
+import cn.odboy.util.BrowserUtil;
+import cn.odboy.util.DesEncryptUtil;
+import cn.odboy.util.FileUtil;
+import cn.odboy.util.IpUtil;
+import cn.odboy.util.PageUtil;
+import cn.odboy.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -26,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class UserOnlineServiceImpl implements UserOnlineService {
     private final SecurityProperties properties;
     private final TokenProvider tokenProvider;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     @Override
     public void save(UserJwtDto userJwtDto, String token, HttpServletRequest request) {
@@ -51,7 +61,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
             log.error(e.getMessage(), e);
         }
         String loginKey = tokenProvider.loginKey(token);
-        redisUtil.set(loginKey, userOnlineDto, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
+        redisHelper.set(loginKey, userOnlineDto, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -64,11 +74,11 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     @Override
     public List<UserOnlineDto> selectOnlineUserByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
-        List<String> keys = redisUtil.scan(loginKey + "*");
+        List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
         List<UserOnlineDto> onlineUserList = new ArrayList<>();
         for (String key : keys) {
-            onlineUserList.add(redisUtil.get(key, UserOnlineDto.class));
+            onlineUserList.add(redisHelper.get(key, UserOnlineDto.class));
         }
         onlineUserList.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUserList;
@@ -77,7 +87,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     @Override
     public void logoutByToken(String token) {
         String loginKey = tokenProvider.loginKey(token);
-        redisUtil.del(loginKey);
+        redisHelper.del(loginKey);
     }
 
     @Override
@@ -98,12 +108,12 @@ public class UserOnlineServiceImpl implements UserOnlineService {
 
     @Override
     public UserOnlineDto getOnlineUserByKey(String key) {
-        return redisUtil.get(key, UserOnlineDto.class);
+        return redisHelper.get(key, UserOnlineDto.class);
     }
 
     @Override
     public void kickOutByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + username + "*";
-        redisUtil.scanDel(loginKey);
+        redisHelper.scanDel(loginKey);
     }
 }

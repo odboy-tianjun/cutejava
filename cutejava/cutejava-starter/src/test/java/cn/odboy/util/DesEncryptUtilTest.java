@@ -2,7 +2,6 @@ package cn.odboy.util;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-
 import static cn.odboy.util.DesEncryptUtil.desDecrypt;
 import static cn.odboy.util.DesEncryptUtil.desEncrypt;
 import static org.junit.jupiter.api.Assertions.assertEquals;

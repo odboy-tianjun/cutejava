@@ -8,6 +8,7 @@ import cn.odboy.application.system.mapper.UserRoleMapper;
 import cn.odboy.application.system.service.UserService;
 import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
+import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Job;
@@ -15,19 +16,28 @@ import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.request.UserQueryCriteria;
 import cn.odboy.properties.FileProperties;
-import cn.odboy.util.*;
+import cn.odboy.redis.RedisHelper;
+import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
+import cn.odboy.util.StringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -38,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserJobMapper userJobMapper;
     private final UserRoleMapper userRoleMapper;
     private final FileProperties fileProperties;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
     private final UserCacheService userCacheService;
     private final UserOnlineService userOnlineService;
 
@@ -59,10 +69,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public User getUserById(long id) {
         String key = SystemRedisKey.USER_ID + id;
-        User user = redisUtil.get(key, User.class);
+        User user = redisHelper.get(key, User.class);
         if (user == null) {
             user = getById(id);
-            redisUtil.set(key, user, 1, TimeUnit.DAYS);
+            redisHelper.set(key, user, 1, TimeUnit.DAYS);
         }
         return user;
     }
@@ -105,14 +115,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 如果用户的角色改变
         if (!resources.getRoles().equals(user.getRoles())) {
-            redisUtil.del(SystemRedisKey.DATA_USER + resources.getId());
-            redisUtil.del(SystemRedisKey.MENU_USER + resources.getId());
-            redisUtil.del(SystemRedisKey.ROLE_AUTH + resources.getId());
-            redisUtil.del(SystemRedisKey.ROLE_USER + resources.getId());
+            redisHelper.del(SystemRedisKey.DATA_USER + resources.getId());
+            redisHelper.del(SystemRedisKey.MENU_USER + resources.getId());
+            redisHelper.del(SystemRedisKey.ROLE_AUTH + resources.getId());
+            redisHelper.del(SystemRedisKey.ROLE_USER + resources.getId());
         }
         // 修改部门会影响 数据权限
         if (!Objects.equals(resources.getDept(), user.getDept())) {
-            redisUtil.del(SystemRedisKey.DATA_USER + resources.getId());
+            redisHelper.del(SystemRedisKey.DATA_USER + resources.getId());
         }
         // 如果用户被禁用，则清除用户登录信息
         if (!resources.getEnabled()) {
@@ -208,7 +218,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (fileType != null && !image.contains(fileType)) {
             throw new BadRequestException("文件格式错误！, 仅支持 " + image + " 格式");
         }
-        User user = userMapper.getUserByUsername(SecurityUtil.getCurrentUsername());
+        User user = userMapper.getUserByUsername(SecurityHelper.getCurrentUsername());
         String oldPath = user.getAvatarPath();
         File file = FileUtil.upload(multipartFile, fileProperties.getPath().getAvatar());
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
@@ -257,7 +267,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param id /
      */
     public void delCaches(Long id, String username) {
-        redisUtil.del(SystemRedisKey.USER_ID + id);
+        redisHelper.del(SystemRedisKey.USER_ID + id);
         flushCache(username);
     }
 

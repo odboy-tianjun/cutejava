@@ -4,14 +4,13 @@ import cn.odboy.base.PageResult;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
  * 分页工具
  */
-public class PageUtil extends cn.hutool.core.util.PageUtil {
+public final class PageUtil extends cn.hutool.core.util.PageUtil {
 
     /**
      * List 分页

@@ -9,18 +9,17 @@ import cn.hutool.extra.template.TemplateUtil;
 import cn.odboy.application.tools.service.CaptchaService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.dto.EmailDto;
-import cn.odboy.util.RedisUtil;
+import cn.odboy.redis.RedisHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
 public class CaptchaServiceImpl implements CaptchaService {
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
     @Value("${code.expiration}")
     private Long expiration;
 
@@ -33,11 +32,11 @@ public class CaptchaServiceImpl implements CaptchaService {
         // 如果不存在有效的验证码，就创建一个新的
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("email.ftl");
-        String oldCode = redisUtil.get(redisKey, String.class);
+        String oldCode = redisHelper.get(redisKey, String.class);
         if (oldCode == null) {
             String code = RandomUtil.randomNumbers(6);
             // 存入缓存
-            if (!redisUtil.set(redisKey, code, expiration)) {
+            if (!redisHelper.set(redisKey, code, expiration)) {
                 throw new BadRequestException("服务异常，请联系网站负责人");
             }
             // 存在就再次发送原来的验证码
@@ -51,11 +50,11 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     @Override
     public void checkCode(String key, String email, String code) {
-        String value = redisUtil.get(key + email, String.class);
+        String value = redisHelper.get(key + email, String.class);
         if (value == null || !value.equals(code)) {
             throw new BadRequestException("无效验证码");
         } else {
-            redisUtil.del(key);
+            redisHelper.del(key);
         }
     }
 }

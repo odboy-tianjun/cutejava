@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 

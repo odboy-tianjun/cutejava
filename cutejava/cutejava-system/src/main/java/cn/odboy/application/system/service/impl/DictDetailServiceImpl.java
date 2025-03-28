@@ -9,16 +9,15 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.domain.DictDetail;
-import cn.odboy.model.system.request.DictDetailQueryCriteria;
 import cn.odboy.model.system.request.CreateDictDetailRequest;
+import cn.odboy.model.system.request.DictDetailQueryCriteria;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.PageUtil;
-import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDetail> implements DictDetailService {
     private final DictMapper dictMapper;
     private final DictDetailMapper dictDetailMapper;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     @Override
     public PageResult<DictDetail> queryDictDetailPage(DictDetailQueryCriteria criteria, Page<Object> page) {
@@ -58,10 +57,10 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     @Override
     public List<DictDetail> selectDictDetailByName(String name) {
         String key = SystemRedisKey.DICT_NAME + name;
-        List<DictDetail> dictDetails = redisUtil.getList(key, DictDetail.class);
+        List<DictDetail> dictDetails = redisHelper.getList(key, DictDetail.class);
         if (CollUtil.isEmpty(dictDetails)) {
             dictDetails = dictDetailMapper.selectDictDetailByDictName(name);
-            redisUtil.set(key, dictDetails, 1, TimeUnit.DAYS);
+            redisHelper.set(key, dictDetails, 1, TimeUnit.DAYS);
         }
         return dictDetails;
     }
@@ -77,6 +76,6 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
 
     public void delCaches(DictDetail dictDetail) {
         Dict dict = dictMapper.selectById(dictDetail.getDictId());
-        redisUtil.del(SystemRedisKey.DICT_NAME + dict.getName());
+        redisHelper.del(SystemRedisKey.DICT_NAME + dict.getName());
     }
 }

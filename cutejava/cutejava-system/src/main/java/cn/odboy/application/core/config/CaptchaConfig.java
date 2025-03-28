@@ -3,13 +3,16 @@ package cn.odboy.application.core.config;
 import cn.odboy.application.core.constant.LoginCodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.StringUtil;
-import com.wf.captcha.*;
+import com.wf.captcha.ArithmeticCaptcha;
+import com.wf.captcha.ChineseCaptcha;
+import com.wf.captcha.ChineseGifCaptcha;
+import com.wf.captcha.GifCaptcha;
+import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
 import java.awt.*;
 
 /**

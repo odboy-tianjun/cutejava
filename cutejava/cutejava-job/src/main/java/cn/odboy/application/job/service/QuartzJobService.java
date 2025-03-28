@@ -3,10 +3,10 @@ package cn.odboy.application.job.service;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
+import cn.odboy.model.job.request.UpdateQuartzJobRequest;
 import cn.odboy.model.job.request.QuartzJobQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -61,7 +61,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      *
      * @param resources /
      */
-    void updateJob(QuartzJob resources);
+    void updateJob(UpdateQuartzJobRequest resources);
 
     /**
      * 删除任务

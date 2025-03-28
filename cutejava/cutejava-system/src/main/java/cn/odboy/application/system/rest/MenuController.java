@@ -3,12 +3,12 @@ package cn.odboy.application.system.rest;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.application.system.service.MenuService;
 import cn.odboy.base.PageResult;
+import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.request.MenuQueryCriteria;
 import cn.odboy.model.system.response.MenuVo;
 import cn.odboy.util.PageUtil;
-import cn.odboy.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -42,7 +52,7 @@ public class MenuController {
     @GetMapping(value = "/build")
     @ApiOperation("获取前端所需菜单")
     public ResponseEntity<List<MenuVo>> buildMenus() {
-        List<Menu> menuList = menuService.selectMenuByUserId(SecurityUtil.getCurrentUserId());
+        List<Menu> menuList = menuService.selectMenuByUserId(SecurityHelper.getCurrentUserId());
         List<Menu> menus = menuService.buildTree(menuList);
         return new ResponseEntity<>(menuService.buildMenus(menus), HttpStatus.OK);
     }

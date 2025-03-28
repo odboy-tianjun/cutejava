@@ -2,7 +2,6 @@ package cn.odboy;
 
 
 import cn.odboy.mybatis.util.CmdGenHelper;
-
 import java.util.List;
 
 /**

@@ -11,11 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -25,14 +28,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static cn.odboy.constant.SystemConst.*;
+import static cn.odboy.constant.SystemConst.SYMBOL_ADD;
+import static cn.odboy.constant.SystemConst.SYMBOL_AT;
+import static cn.odboy.constant.SystemConst.SYMBOL_EQUAL;
+import static cn.odboy.constant.SystemConst.SYMBOL_SUBTRACT;
 
 /**
  * File工具类，扩展 hutool 工具包
  */
 @Slf4j
-public class FileUtil extends cn.hutool.core.io.FileUtil {
+public final class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 系统临时目录

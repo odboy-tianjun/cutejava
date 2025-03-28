@@ -6,6 +6,7 @@ import cn.odboy.context.SpringBeanHolder;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
+import cn.odboy.model.job.request.UpdateQuartzJobRequest;
 import cn.odboy.model.job.request.QuartzJobQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -16,8 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
@@ -79,7 +86,7 @@ public class QuartzJobController {
     @ApiOperation("修改定时任务")
     @PutMapping
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> updateQuartzJob(@Validated(QuartzJob.Update.class) @RequestBody QuartzJob resources) {
+    public ResponseEntity<Object> updateQuartzJob(@Validated(QuartzJob.Update.class) @RequestBody UpdateQuartzJobRequest resources) {
         // 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
         checkBean(resources.getBeanName());
         quartzJobService.updateJob(resources);

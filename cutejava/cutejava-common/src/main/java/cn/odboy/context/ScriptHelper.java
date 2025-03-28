@@ -13,13 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.util;
+package cn.odboy.context;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.script.ScriptRuntimeException;
+import cn.odboy.exception.BadRequestException;
 import org.springframework.stereotype.Component;
-
-import javax.script.*;
+import javax.script.Bindings;
+import javax.script.Invocable;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +39,7 @@ import java.util.Set;
  * @date 2023-12-05
  */
 @Component
-public class ScriptUtil {
+public class ScriptHelper {
     private static final String FUNCTION_TAG = "function";
     private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 
@@ -44,7 +50,7 @@ public class ScriptUtil {
     public Object evalObj(String script, Object compareObj) {
         try {
             if (script.contains(FUNCTION_TAG)) {
-                throw new RuntimeException("script格式异常");
+                throw new BadRequestException("script格式异常");
             }
             // 构建一个不同的脚本上下文
             ScriptContext newContext = new SimpleScriptContext();
@@ -55,7 +61,7 @@ public class ScriptUtil {
                 Set<Map.Entry<String, Object>> entries = filedNameValueMap.entrySet();
                 long count = entries.stream().filter(f -> f.getValue() != null).count();
                 if (count == 0) {
-                    throw new RuntimeException("比较对象中没有有效值");
+                    throw new BadRequestException("比较对象中没有有效值");
                 }
                 Bindings engineScope = engine.createBindings();
                 entries.forEach(f -> {
@@ -79,7 +85,7 @@ public class ScriptUtil {
      */
     public Object evalFunction(String script, String functionName, Object... args) {
         if (!script.contains(FUNCTION_TAG)) {
-            throw new RuntimeException("script格式异常");
+            throw new BadRequestException("script格式异常");
         }
         try {
             // 执行脚本

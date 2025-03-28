@@ -1,7 +1,6 @@
 package cn.odboy.util;
 
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,7 +8,7 @@ import java.util.Date;
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  */
 @Slf4j
-public class StringUtil extends org.apache.commons.lang3.StringUtils {
+public final class StringUtil extends org.apache.commons.lang3.StringUtils {
 
     private static final char SEPARATOR = '_';
 

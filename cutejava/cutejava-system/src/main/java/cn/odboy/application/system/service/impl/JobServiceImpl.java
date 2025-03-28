@@ -9,20 +9,23 @@ import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Job;
-import cn.odboy.model.system.request.JobQueryCriteria;
 import cn.odboy.model.system.request.CreateJobRequest;
+import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
-import cn.odboy.util.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -30,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobService {
     private final JobMapper jobMapper;
     private final UserMapper userMapper;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     @Override
     public PageResult<Job> queryJobPage(JobQueryCriteria criteria, Page<Object> page) {
@@ -45,10 +48,10 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Override
     public Job getJobById(Long id) {
         String key = SystemRedisKey.JOB_ID + id;
-        Job job = redisUtil.get(key, Job.class);
+        Job job = redisHelper.get(key, Job.class);
         if (job == null) {
             job = getById(id);
-            redisUtil.set(key, job, 1, TimeUnit.DAYS);
+            redisHelper.set(key, job, 1, TimeUnit.DAYS);
         }
         return job;
     }
@@ -106,6 +109,6 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     }
 
     public void delCaches(Long id) {
-        redisUtil.del(SystemRedisKey.JOB_ID + id);
+        redisHelper.del(SystemRedisKey.JOB_ID + id);
     }
 }

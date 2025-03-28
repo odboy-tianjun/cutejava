@@ -3,7 +3,6 @@ package cn.odboy.model.system.request;
 import cn.odboy.base.MyObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

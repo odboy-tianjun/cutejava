@@ -4,7 +4,6 @@ import cn.odboy.base.MyObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import java.util.List;
 
 /**

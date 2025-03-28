@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 /**
  * 计算类
  */
-public class BigDecimalUtil {
+public final class BigDecimalUtil {
 
     /**
      * 将对象转换为 BigDecimal

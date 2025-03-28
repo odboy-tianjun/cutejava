@@ -3,7 +3,6 @@ package cn.odboy.model.system.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.sql.Timestamp;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package cn.odboy.application.job.util;
+package cn.odboy.application.job.context;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.extra.template.Template;
@@ -12,13 +12,12 @@ import cn.odboy.context.SpringBeanHolder;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
 import cn.odboy.model.tools.dto.EmailDto;
-import cn.odboy.util.RedisUtil;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ExecutionJob extends QuartzJobBean {
         // 获取spring bean
         QuartzLogMapper quartzLogMapper = SpringBeanHolder.getBean(QuartzLogMapper.class);
         QuartzJobService quartzJobService = SpringBeanHolder.getBean(QuartzJobService.class);
-        RedisUtil redisUtil = SpringBeanHolder.getBean(RedisUtil.class);
+        RedisHelper redisHelper = SpringBeanHolder.getBean(RedisHelper.class);
 
         String uuid = quartzJob.getUuid();
 
@@ -59,7 +58,7 @@ public class ExecutionJob extends QuartzJobBean {
             long times = System.currentTimeMillis() - startTime;
             quartzLog.setTime(times);
             if (StringUtil.isNotBlank(uuid)) {
-                redisUtil.set(uuid, true);
+                redisHelper.set(uuid, true);
             }
             // 任务状态
             quartzLog.setIsSuccess(true);
@@ -72,7 +71,7 @@ public class ExecutionJob extends QuartzJobBean {
             }
         } catch (Exception e) {
             if (StringUtil.isNotBlank(uuid)) {
-                redisUtil.set(uuid, false);
+                redisHelper.set(uuid, false);
             }
             log.error("任务执行失败，任务名称：{}", quartzJob.getJobName(), e);
             long times = System.currentTimeMillis() - startTime;

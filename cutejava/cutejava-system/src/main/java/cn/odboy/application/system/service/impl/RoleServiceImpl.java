@@ -17,21 +17,26 @@ import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.RoleCodeDto;
-import cn.odboy.model.system.request.RoleQueryCriteria;
 import cn.odboy.model.system.request.CreateRoleRequest;
+import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
-import cn.odboy.util.RedisUtil;
 import cn.odboy.util.StringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -43,7 +48,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     private final RoleMenuMapper roleMenuMapper;
     private final UserMapper userMapper;
     private final UserCacheService userCacheService;
-    private final RedisUtil redisUtil;
+    private final RedisHelper redisHelper;
 
     @Override
     public List<Role> selectRole() {
@@ -66,10 +71,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public Role getRoleById(long id) {
         String key = SystemRedisKey.ROLE_ID + id;
-        Role role = redisUtil.get(key, Role.class);
+        Role role = redisHelper.get(key, Role.class);
         if (role == null) {
             role = roleMapper.selectById(id);
-            redisUtil.set(key, role, 1, TimeUnit.DAYS);
+            redisHelper.set(key, role, 1, TimeUnit.DAYS);
         }
         return role;
     }
@@ -141,10 +146,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<Role> selectRoleByUsersId(Long userId) {
         String key = SystemRedisKey.ROLE_USER + userId;
-        List<Role> roles = redisUtil.getList(key, Role.class);
+        List<Role> roles = redisHelper.getList(key, Role.class);
         if (CollUtil.isEmpty(roles)) {
             roles = roleMapper.selectRoleByUserId(userId);
-            redisUtil.set(key, roles, 1, TimeUnit.DAYS);
+            redisHelper.set(key, roles, 1, TimeUnit.DAYS);
         }
         return roles;
     }
@@ -164,7 +169,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<RoleCodeDto> buildPermissions(User user) {
         String key = SystemRedisKey.ROLE_AUTH + user.getId();
-        List<RoleCodeDto> authorityList = redisUtil.getList(key, RoleCodeDto.class);
+        List<RoleCodeDto> authorityList = redisHelper.getList(key, RoleCodeDto.class);
         if (CollUtil.isEmpty(authorityList)) {
             Set<String> permissions = new HashSet<>();
             // 如果是管理员直接返回
@@ -179,7 +184,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                     .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
             authorityList = permissions.stream().map(RoleCodeDto::new)
                     .collect(Collectors.toList());
-            redisUtil.set(key, authorityList, 1, TimeUnit.HOURS);
+            redisHelper.set(key, authorityList, 1, TimeUnit.HOURS);
         }
         return authorityList;
     }
@@ -220,11 +225,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheService.cleanUserCacheByUsername(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
-            redisUtil.delByKeys(SystemRedisKey.DATA_USER, userIds);
-            redisUtil.delByKeys(SystemRedisKey.MENU_USER, userIds);
-            redisUtil.delByKeys(SystemRedisKey.ROLE_AUTH, userIds);
-            redisUtil.delByKeys(SystemRedisKey.ROLE_USER, userIds);
+            redisHelper.delByKeys(SystemRedisKey.DATA_USER, userIds);
+            redisHelper.delByKeys(SystemRedisKey.MENU_USER, userIds);
+            redisHelper.delByKeys(SystemRedisKey.ROLE_AUTH, userIds);
+            redisHelper.delByKeys(SystemRedisKey.ROLE_USER, userIds);
         }
-        redisUtil.del(SystemRedisKey.ROLE_ID + id);
+        redisHelper.del(SystemRedisKey.ROLE_ID + id);
     }
 }
