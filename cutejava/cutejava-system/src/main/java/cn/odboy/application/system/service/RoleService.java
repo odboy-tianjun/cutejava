@@ -4,7 +4,8 @@ import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.RoleCodeDto;
-import cn.odboy.model.system.dto.RoleQueryCriteria;
+import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.model.system.request.CreateRoleRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -53,7 +54,7 @@ public interface RoleService extends IService<Role> {
      *
      * @param resources /
      */
-    void createRole(Role resources);
+    void createRole(CreateRoleRequest resources);
 
     /**
      * 编辑

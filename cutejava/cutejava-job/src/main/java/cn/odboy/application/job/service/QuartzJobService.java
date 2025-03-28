@@ -3,7 +3,7 @@ package cn.odboy.application.job.service;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
-import cn.odboy.model.job.dto.QuartzJobQueryCriteria;
+import cn.odboy.model.job.request.QuartzJobQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 

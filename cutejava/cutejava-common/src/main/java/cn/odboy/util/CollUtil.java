@@ -17,9 +17,6 @@ package cn.odboy.util;
 
 import cn.odboy.base.MyMetaOption;
 import com.alibaba.fastjson2.JSON;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -37,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class CollUtil extends cn.hutool.core.collection.CollUtil {
     private static <T, K> Predicate<T> distinctPredicate(Function<? super T, ? extends K> keyMapper) {
-        Map<Object, Boolean> map = new HashMap<>();
+        Map<Object, Boolean> map = new HashMap<>(3);
         return (t) -> null == map.putIfAbsent(keyMapper.apply(t), true);
     }
 

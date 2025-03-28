@@ -1,8 +1,8 @@
 package cn.odboy.base;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,16 +32,12 @@ public class MyEntity extends MyObject {
 
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    //    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    //    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
 
     /* 分组校验 */

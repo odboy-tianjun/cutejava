@@ -1,8 +1,8 @@
 package cn.odboy.application.core.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.odboy.application.core.config.LoginProperties;
 import cn.odboy.application.core.service.UserCacheService;
+import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.util.RedisUtil;
 import cn.odboy.util.StringUtil;
@@ -24,7 +24,7 @@ public class UserCacheServiceImpl implements UserCacheService {
         username = StringUtil.lowerCase(username);
         if (StringUtil.isNotEmpty(username)) {
             // 获取数据
-            return redisUtil.get(LoginProperties.cacheKey + username, UserJwtDto.class);
+            return redisUtil.get(SystemRedisKey.USER_INFO + username, UserJwtDto.class);
         }
         return null;
     }
@@ -37,7 +37,7 @@ public class UserCacheServiceImpl implements UserCacheService {
         if (StringUtil.isNotEmpty(userName)) {
             // 添加数据, 避免数据同时过期（2小时左右）
             long time = 7200 + RandomUtil.randomInt(900, 1800);
-            redisUtil.set(LoginProperties.cacheKey + userName, user, time);
+            redisUtil.set(SystemRedisKey.USER_INFO + userName, user, time);
         }
     }
 
@@ -48,7 +48,7 @@ public class UserCacheServiceImpl implements UserCacheService {
         userName = StringUtil.lowerCase(userName);
         if (StringUtil.isNotEmpty(userName)) {
             // 清除数据
-            redisUtil.del(LoginProperties.cacheKey + userName);
+            redisUtil.del(SystemRedisKey.USER_INFO + userName);
         }
     }
 }

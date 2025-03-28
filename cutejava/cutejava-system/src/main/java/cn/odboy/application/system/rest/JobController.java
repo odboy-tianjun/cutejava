@@ -2,9 +2,9 @@ package cn.odboy.application.system.rest;
 
 import cn.odboy.application.system.service.JobService;
 import cn.odboy.base.PageResult;
-import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Job;
-import cn.odboy.model.system.dto.JobQueryCriteria;
+import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.CreateJobRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,9 +25,7 @@ import java.util.Set;
 @Api(tags = "系统：岗位管理")
 @RequestMapping("/api/job")
 public class JobController {
-
     private final JobService jobService;
-    private static final String ENTITY_NAME = "job";
 
     @ApiOperation("导出岗位数据")
     @GetMapping(value = "/download")
@@ -47,11 +45,8 @@ public class JobController {
     @ApiOperation("新增岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:add')")
-    public ResponseEntity<Object> createJob(@Validated @RequestBody Job resources) {
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
-        }
-        jobService.saveJob(resources);
+    public ResponseEntity<Object> createJob(@Validated @RequestBody CreateJobRequest resources) {
+        jobService.createJob(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

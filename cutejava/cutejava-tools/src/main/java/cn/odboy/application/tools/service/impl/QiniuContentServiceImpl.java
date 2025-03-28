@@ -8,7 +8,7 @@ import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.QiniuConfig;
 import cn.odboy.model.tools.domain.QiniuContent;
-import cn.odboy.model.tools.dto.QiniuQueryCriteria;
+import cn.odboy.model.tools.request.QiniuQueryCriteria;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import com.alibaba.fastjson2.JSON;
@@ -114,18 +114,22 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(QiniuContent content) {
+    public void deleteFileById(Long id) {
         QiniuConfig qiniuConfig = qiNiuConfigService.getConfig();
+        QiniuContent qiniuContent = qiniuContentMapper.selectById(id);
+        if (qiniuContent == null) {
+            throw new BadRequestException("文件不存在");
+        }
         // 构造一个带指定Zone对象的配置类
         Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
-            bucketManager.delete(content.getBucket(), content.getKey() + "." + content.getSuffix());
+            bucketManager.delete(qiniuContent.getBucket(), qiniuContent.getKey() + "." + qiniuContent.getSuffix());
         } catch (QiniuException ex) {
             log.error("七牛云删除文件失败", ex);
         } finally {
-            removeById(content);
+            removeById(qiniuContent);
         }
     }
 
@@ -175,7 +179,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
         for (Long id : ids) {
             QiniuContent qiniuContent = getById(id);
             if (qiniuContent != null) {
-                delete(qiniuContent);
+                deleteFileById(id);
             }
         }
     }

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function resetEmail(data) {
+export function sendCaptcha(data) {
   return request({
-    url: 'api/code/resetEmail?email=' + data,
+    url: 'api/code/sendCaptcha?email=' + data,
     method: 'post'
   })
 }

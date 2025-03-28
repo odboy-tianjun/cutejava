@@ -2,9 +2,9 @@ package cn.odboy.application.system.rest;
 
 import cn.odboy.application.system.service.DeptService;
 import cn.odboy.base.PageResult;
-import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
-import cn.odboy.model.system.dto.DeptQueryCriteria;
+import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.model.system.request.CreateDeptRequest;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,9 +24,7 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class DeptController {
-
     private final DeptService deptService;
-    private static final String ENTITY_NAME = "dept";
 
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
@@ -68,10 +66,7 @@ public class DeptController {
     @ApiOperation("新增部门")
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<Object> createDept(@Validated @RequestBody Dept resources) {
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
-        }
+    public ResponseEntity<Object> createDept(@Validated @RequestBody CreateDeptRequest resources) {
         deptService.createDept(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

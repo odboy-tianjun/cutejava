@@ -15,7 +15,7 @@
       label-width="80px"
     >
       <el-form-item
-        label="名称"
+        label="职位名称"
         prop="name"
       >
         <el-input
@@ -24,7 +24,7 @@
         />
       </el-form-item>
       <el-form-item
-        label="排序"
+        label="职位排序"
         prop="jobSort"
       >
         <el-input-number

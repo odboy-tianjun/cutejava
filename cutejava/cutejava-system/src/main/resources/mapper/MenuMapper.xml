@@ -111,11 +111,11 @@
         FROM sys_menu
         WHERE name = #{name}
     </select>
-    <update id="getMenuCountByPid">
+    <select id="getMenuCountByPid">
         SELECT count(*)
         FROM sys_menu
         WHERE pid = #{pid}
-    </update>
+    </select>
     <update id="updateSubCntById">
         update sys_menu
         set sub_count = #{count}

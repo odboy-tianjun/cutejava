@@ -1,5 +1,6 @@
 package cn.odboy.application.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.application.system.mapper.DictDetailMapper;
 import cn.odboy.application.system.mapper.DictMapper;
@@ -8,7 +9,8 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.domain.DictDetail;
-import cn.odboy.model.system.dto.DictQueryCriteria;
+import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.model.system.request.CreateDictRequest;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
@@ -43,8 +45,8 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveDict(Dict resources) {
-        save(resources);
+    public void saveDict(CreateDictRequest resources) {
+        save(BeanUtil.copyProperties(resources, Dict.class));
     }
 
     @Override

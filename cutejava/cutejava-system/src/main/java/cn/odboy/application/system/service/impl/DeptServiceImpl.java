@@ -1,5 +1,6 @@
 package cn.odboy.application.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -8,12 +9,13 @@ import cn.odboy.application.system.mapper.RoleMapper;
 import cn.odboy.application.system.mapper.UserMapper;
 import cn.odboy.application.system.service.DeptService;
 import cn.odboy.base.BaseResult;
-import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.constant.DataScopeEnum;
+import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.dto.DeptQueryCriteria;
+import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.model.system.request.CreateDeptRequest;
 import cn.odboy.util.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -93,8 +95,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createDept(Dept resources) {
-        save(resources);
+    public void createDept(CreateDeptRequest resources) {
+        save(BeanUtil.copyProperties(resources, Dept.class));
         // 清理缓存
         updateSubCnt(resources.getPid());
         // 清理自定义角色权限的DataScope缓存

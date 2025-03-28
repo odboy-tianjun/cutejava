@@ -6,7 +6,7 @@ import cn.odboy.application.tools.service.LocalStorageService;
 import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.LocalStorage;
-import cn.odboy.model.tools.dto.LocalStorageQueryCriteria;
+import cn.odboy.model.tools.request.LocalStorageQueryCriteria;
 import cn.odboy.properties.FileProperties;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;

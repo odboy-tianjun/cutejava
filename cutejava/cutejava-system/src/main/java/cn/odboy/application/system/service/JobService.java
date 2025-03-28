@@ -2,7 +2,8 @@ package cn.odboy.application.system.service;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Job;
-import cn.odboy.model.system.dto.JobQueryCriteria;
+import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.CreateJobRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -27,7 +28,7 @@ public interface JobService extends IService<Job> {
      *
      * @param resources /
      */
-    void saveJob(Job resources);
+    void createJob(CreateJobRequest resources);
 
     /**
      * 编辑

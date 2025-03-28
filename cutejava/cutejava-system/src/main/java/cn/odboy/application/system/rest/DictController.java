@@ -2,9 +2,9 @@ package cn.odboy.application.system.rest;
 
 import cn.odboy.application.system.service.DictService;
 import cn.odboy.base.PageResult;
-import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dict;
-import cn.odboy.model.system.dto.DictQueryCriteria;
+import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.model.system.request.CreateDictRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,9 +25,7 @@ import java.util.Set;
 @Api(tags = "系统：字典管理")
 @RequestMapping("/api/dict")
 public class DictController {
-
     private final DictService dictService;
-    private static final String ENTITY_NAME = "dict";
 
     @ApiOperation("导出字典数据")
     @GetMapping(value = "/download")
@@ -54,10 +52,7 @@ public class DictController {
     @ApiOperation("新增字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Object> createDict(@Validated @RequestBody Dict resources) {
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
-        }
+    public ResponseEntity<Object> createDict(@Validated @RequestBody CreateDictRequest resources) {
         dictService.saveDict(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -63,10 +63,10 @@ public class AsyncExecutor implements AsyncConfigurer {
 
     /**
      * 自定义线程池，用法，注入到类中使用
-     * private ThreadPoolTaskExecutor taskExecutor;
      */
     @Bean("taskAsync")
     public ThreadPoolTaskExecutor taskAsync() {
+        // 用法 private ThreadPoolTaskExecutor taskExecutor
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(AsyncExecutor.corePoolSize);
         executor.setMaxPoolSize(AsyncExecutor.maxPoolSize);

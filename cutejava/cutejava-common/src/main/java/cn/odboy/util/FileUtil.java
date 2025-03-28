@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.odboy.constant.FileTypeEnum;
+import cn.odboy.constant.SystemConst;
 import cn.odboy.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
@@ -24,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static cn.odboy.constant.SystemConst.*;
 
 /**
  * File工具类，扩展 hutool 工具包
@@ -175,8 +178,10 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                 if (value instanceof String) {
                     String strValue = (String) value;
                     // 检查并处理以特殊字符开头的值
-                    if (strValue.startsWith("=") || strValue.startsWith("+") || strValue.startsWith("-") || strValue.startsWith("@")) {
-                        strValue = "'" + strValue; // 添加单引号前缀
+                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD)
+                            || strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(SYMBOL_AT)) {
+                        // 添加单引号前缀
+                        strValue = "'" + strValue;
                     }
                     sanitizedMap.put(key, strValue);
                 } else {
@@ -346,7 +351,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
         // 不允许文件名超过255（在Mac和Linux中）或260（在Windows中）个字符
         int maxFileNameLength = 255;
-        if (System.getProperty("os.name").startsWith("Windows")) {
+        if (System.getProperty(SystemConst.PROPERTY_OS_NAME).startsWith(SystemConst.OS_NAME_WINDOWS)) {
             maxFileNameLength = 260;
         }
         if (fileName.length() > maxFileNameLength) {

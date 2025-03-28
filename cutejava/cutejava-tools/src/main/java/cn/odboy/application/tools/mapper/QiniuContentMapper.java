@@ -1,7 +1,7 @@
 package cn.odboy.application.tools.mapper;
 
 import cn.odboy.model.tools.domain.QiniuContent;
-import cn.odboy.model.tools.dto.QiniuQueryCriteria;
+import cn.odboy.model.tools.request.QiniuQueryCriteria;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

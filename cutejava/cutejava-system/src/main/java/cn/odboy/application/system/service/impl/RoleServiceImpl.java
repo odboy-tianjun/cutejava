@@ -1,5 +1,6 @@
 package cn.odboy.application.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.application.core.service.UserCacheService;
@@ -16,7 +17,8 @@ import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.RoleCodeDto;
-import cn.odboy.model.system.dto.RoleQueryCriteria;
+import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.model.system.request.CreateRoleRequest;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
@@ -74,11 +76,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createRole(Role resources) {
+    public void createRole(CreateRoleRequest resources) {
         if (roleMapper.getRoleByName(resources.getName()) != null) {
-            throw new EntityExistException(Role.class, "username", resources.getName());
+            throw new EntityExistException(Role.class, "name", resources.getName());
         }
-        save(resources);
+        save(BeanUtil.copyProperties(resources, Role.class));
         // 判断是否有部门数据，若有，则需创建关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
             roleDeptMapper.insertBatchByRoleId(resources.getId(), resources.getDepts());
@@ -91,7 +93,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         Role role = getById(resources.getId());
         Role role1 = roleMapper.getRoleByName(resources.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
-            throw new EntityExistException(Role.class, "username", resources.getName());
+            throw new EntityExistException(Role.class, "name", resources.getName());
         }
         role.setName(resources.getName());
         role.setDescription(resources.getDescription());

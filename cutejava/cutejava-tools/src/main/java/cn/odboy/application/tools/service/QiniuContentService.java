@@ -2,7 +2,7 @@ package cn.odboy.application.tools.service;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.model.tools.domain.QiniuContent;
-import cn.odboy.model.tools.dto.QiniuQueryCriteria;
+import cn.odboy.model.tools.request.QiniuQueryCriteria;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,13 +48,6 @@ public interface QiniuContentService extends IService<QiniuContent> {
     String download(QiniuContent content);
 
     /**
-     * 删除文件
-     *
-     * @param content 文件
-     */
-    void delete(QiniuContent content);
-
-    /**
      * 同步数据
      */
     void synchronize();
@@ -74,4 +67,11 @@ public interface QiniuContentService extends IService<QiniuContent> {
      * @throws IOException /
      */
     void downloadExcel(List<QiniuContent> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 删除文件
+     *
+     * @param id 文件id
+     */
+    void deleteFileById(Long id);
 }

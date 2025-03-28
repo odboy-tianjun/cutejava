@@ -2,27 +2,7 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--侧边部门数据-->
-      <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
-        <div class="head-container">
-          <el-input
-            v-model="deptName"
-            clearable
-            size="small"
-            placeholder="输入部门名称搜索"
-            prefix-icon="el-icon-search"
-            class="filter-item"
-            @input="getDeptDatas"
-          />
-        </div>
-        <el-tree
-          :data="deptDatas"
-          :load="getDeptDatas"
-          :props="defaultProps"
-          :expand-on-click-node="false"
-          lazy
-          @node-click="handleNodeClick"
-        />
-      </el-col>
+      <cute-dept-tree @node-click="handleNodeClick" />
       <!--用户数据-->
       <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
         <!--工具栏-->
@@ -216,12 +196,13 @@ import Treeselect from '@riophae/vue-treeselect'
 import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
+import CuteDeptTree from '@/views/components/business/CuteDeptTree'
 let userRoles = []
 let userJobs = []
 const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], jobs: [], dept: { id: null }, phone: null }
 export default {
   name: 'User',
-  components: { Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
+  components: { CuteDeptTree, Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
   cruds() {
     return CRUD({ title: '用户', url: 'api/users', crudMethod: { ...crudUser }})
   },
@@ -241,9 +222,8 @@ export default {
     }
     return {
       height: document.documentElement.clientHeight - 180 + 'px;',
-      deptName: '', depts: [], deptDatas: [], jobs: [], level: 3, roles: [],
+      deptName: '', depts: [], jobs: [], level: 3, roles: [],
       jobDatas: [], roleDatas: [], // 多选时使用
-      defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
       permission: {
         add: ['admin', 'user:add'],
         edit: ['admin', 'user:edit'],
@@ -386,25 +366,14 @@ export default {
       console.log(this.jobDatas)
       return true
     },
-    // 获取左侧部门数据
-    getDeptDatas(node, resolve) {
-      const params = {}
-      if (typeof node !== 'object') {
-        if (node) {
-          params['name'] = node
-        }
-      } else if (node.level !== 0) {
-        params['pid'] = node.data.id
+    // 切换部门
+    handleNodeClick(data) {
+      if (data.pid === 0) {
+        this.query.deptId = null
+      } else {
+        this.query.deptId = data.id
       }
-      setTimeout(() => {
-        getDepts(params).then(res => {
-          if (resolve) {
-            resolve(res.content)
-          } else {
-            this.deptDatas = res.content
-          }
-        })
-      }, 100)
+      this.crud.toQuery()
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {
@@ -448,15 +417,6 @@ export default {
           }, 200)
         })
       }
-    },
-    // 切换部门
-    handleNodeClick(data) {
-      if (data.pid === 0) {
-        this.query.deptId = null
-      } else {
-        this.query.deptId = data.id
-      }
-      this.crud.toQuery()
     },
     // 改变状态
     changeEnabled(data, val) {

@@ -2,7 +2,8 @@ package cn.odboy.application.system.service;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Dict;
-import cn.odboy.model.system.dto.DictQueryCriteria;
+import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.model.system.request.CreateDictRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -36,7 +37,7 @@ public interface DictService extends IService<Dict> {
      *
      * @param resources /
      */
-    void saveDict(Dict resources);
+    void saveDict(CreateDictRequest resources);
 
     /**
      * 编辑

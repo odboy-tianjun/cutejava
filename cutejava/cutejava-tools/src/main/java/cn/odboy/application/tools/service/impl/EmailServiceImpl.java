@@ -3,11 +3,13 @@ package cn.odboy.application.tools.service.impl;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import cn.odboy.application.tools.mapper.EmailConfigMapper;
+import cn.odboy.application.tools.service.CaptchaService;
 import cn.odboy.application.tools.service.EmailService;
+import cn.odboy.constant.CodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.EmailConfig;
 import cn.odboy.model.tools.dto.EmailDto;
-import cn.odboy.util.DESEncryptUtil;
+import cn.odboy.util.DesEncryptUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -23,6 +25,8 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     @Lazy
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private CaptchaService captchaService;
 
     @Override
     @CachePut(key = "'config'")
@@ -31,7 +35,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
         EmailConfig localConfig = emailService.getEmailConfig();
         if (!emailConfig.getPassword().equals(localConfig.getPassword())) {
             // 对称加密
-            emailConfig.setPassword(DESEncryptUtil.desEncrypt(emailConfig.getPassword()));
+            emailConfig.setPassword(DesEncryptUtil.desEncrypt(emailConfig.getPassword()));
         }
         emailConfig.setId(1L);
         saveOrUpdate(emailConfig);
@@ -61,7 +65,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
         account.setAuth(true);
         try {
             // 对称解密
-            account.setPass(DESEncryptUtil.desDecrypt(emailConfig.getPassword()));
+            account.setPass(DesEncryptUtil.desDecrypt(emailConfig.getPassword()));
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -88,5 +92,10 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
             log.error("邮件发送失败", e);
             throw new BadRequestException("邮件发送失败");
         }
+    }
+
+    @Override
+    public void sendCaptcha(String email, String key) {
+        emailService.sendEmail(captchaService.renderCode(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey()));
     }
 }

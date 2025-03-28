@@ -3,7 +3,7 @@ package cn.odboy.application.core.rest;
 import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.dto.UserOnlineDto;
-import cn.odboy.util.DESEncryptUtil;
+import cn.odboy.util.DesEncryptUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class OnlineController {
     public ResponseEntity<Object> deleteOnlineUser(@RequestBody Set<String> keys) throws Exception {
         for (String token : keys) {
             // 解密Key
-            token = DESEncryptUtil.desDecrypt(token);
+            token = DesEncryptUtil.desDecrypt(token);
             userOnlineService.logoutByToken(token);
         }
         return new ResponseEntity<>(HttpStatus.OK);

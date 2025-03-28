@@ -2,7 +2,6 @@ package cn.odboy.server;
 
 import cn.odboy.constant.SystemConst;
 import cn.odboy.util.AnonTagUtil;
-import cn.odboy.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,7 +84,7 @@ public class SwaggerConfig {
 
     private SecurityContext getContextByPath() {
         Set<String> urls = AnonTagUtil.getAllAnonymousUrl(applicationContext);
-        urls = urls.stream().filter(url -> !url.equals("/")).collect(Collectors.toSet());
+        urls = urls.stream().filter(url -> !"/".equals(url)).collect(Collectors.toSet());
         String regExp = "^(?!" + apiPath + String.join("|" + apiPath, urls) + ").*$";
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())

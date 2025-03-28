@@ -10,7 +10,7 @@ import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
-import cn.odboy.model.job.dto.QuartzJobQueryCriteria;
+import cn.odboy.model.job.request.QuartzJobQueryCriteria;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RedisUtil;
