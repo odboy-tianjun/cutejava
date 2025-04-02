@@ -13,39 +13,49 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.monitor;
+package cn.odboy.monitor.controller;
 
 import cn.odboy.annotation.AnonymousGetMapping;
+import cn.odboy.monitor.service.HealthCheckPointService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 健康检查接口
- *
- * @author odboy
- * @date 2022-01-06
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/health")
+@RequestMapping("/healthCheck")
 @Api(tags = "系统：健康检查接口")
 public class HealthCheckController {
+    @Autowired
+    private HealthCheckPointService healthCheckPointService;
+
     /**
-     * 健康检查
+     * 就绪检查
      */
-    @AnonymousGetMapping(value = "/check")
-    public ResponseEntity<?> doCheck() {
-        return ResponseEntity.ok().build();
+    @AnonymousGetMapping(value = "/readiness")
+    public ResponseEntity<?> doReadiness() {
+        return healthCheckPointService.doReadiness();
     }
 
     /**
-     * 访问首页提示
+     * 存活检查
      */
-    @AnonymousGetMapping("/")
-    public String index() {
-        return "success";
+    @AnonymousGetMapping(value = "/liveness")
+    public ResponseEntity<?> doLiveness() {
+        return healthCheckPointService.doLiveness();
     }
+
+//    /**
+//     * 访问首页提示
+//     */
+//    @AnonymousGetMapping("/")
+//    public String index() {
+//        return "success";
+//    }
 }
