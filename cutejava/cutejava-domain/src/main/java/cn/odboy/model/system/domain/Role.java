@@ -2,6 +2,7 @@ package cn.odboy.model.system.domain;
 
 import cn.odboy.base.MyEntity;
 import cn.odboy.constant.DataScopeEnum;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -50,6 +51,7 @@ public class Role extends MyEntity {
     private Integer level = 3;
 
     @ApiModelProperty(value = "描述")
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String description;
 
     @Override
