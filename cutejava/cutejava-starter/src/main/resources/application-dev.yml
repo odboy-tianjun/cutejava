@@ -58,11 +58,11 @@ spring:
       username: root
       password: 123456
       # 初始连接数，建议设置为与最小空闲连接数相同
-      initial-size: 20
+      initial-size: 2
       # 最小空闲连接数，保持足够的空闲连接以应对请求
-      min-idle: 20
+      min-idle: 2
       # 最大连接数，根据并发需求适当增加
-      max-active: 50
+      max-active: 8
       # 获取连接超时时间（毫秒），调整以满足响应时间要求
       max-wait: 3000
       # 启用KeepAlive机制，保持长连接
