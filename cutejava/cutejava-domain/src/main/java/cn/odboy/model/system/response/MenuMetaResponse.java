@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class MenuMetaVo extends MyObject {
+public class MenuMetaResponse extends MyObject {
 
     @ApiModelProperty(value = "菜单标题")
     private String title;

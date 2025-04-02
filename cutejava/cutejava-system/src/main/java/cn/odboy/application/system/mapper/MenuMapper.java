@@ -1,7 +1,7 @@
 package cn.odboy.application.system.mapper;
 
 import cn.odboy.model.system.domain.Menu;
-import cn.odboy.model.system.request.MenuQueryCriteria;
+import cn.odboy.model.system.request.QueryMenuRequest;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +12,7 @@ import java.util.Set;
 @Mapper
 public interface MenuMapper extends BaseMapper<Menu> {
 
-    List<Menu> selectMenuByCriteria(@Param("criteria") MenuQueryCriteria criteria);
+    List<Menu> selectMenuByCriteria(@Param("criteria") QueryMenuRequest criteria);
 
     LinkedHashSet<Menu> selectMenuByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
 

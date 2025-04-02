@@ -1,7 +1,7 @@
 package cn.odboy.application.job.mapper;
 
 import cn.odboy.model.job.domain.QuartzJob;
-import cn.odboy.model.job.request.QuartzJobQueryCriteria;
+import cn.odboy.model.job.request.QueryQuartzJobRequest;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper
 public interface QuartzJobMapper extends BaseMapper<QuartzJob> {
-    IPage<QuartzJob> queryQuartzJobPage(@Param("criteria") QuartzJobQueryCriteria criteria, Page<Object> page);
+    IPage<QuartzJob> queryQuartzJobPage(@Param("criteria") QueryQuartzJobRequest criteria, Page<Object> page);
 
     List<QuartzJob> selectActiveQuartzJob();
 }

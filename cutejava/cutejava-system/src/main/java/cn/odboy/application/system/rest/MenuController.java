@@ -6,8 +6,8 @@ import cn.odboy.base.PageResult;
 import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Menu;
-import cn.odboy.model.system.request.MenuQueryCriteria;
-import cn.odboy.model.system.response.MenuVo;
+import cn.odboy.model.system.request.QueryMenuRequest;
+import cn.odboy.model.system.response.MenuResponse;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,13 +45,13 @@ public class MenuController {
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
-    public void exportMenu(HttpServletResponse response, MenuQueryCriteria criteria) throws Exception {
+    public void exportMenu(HttpServletResponse response, QueryMenuRequest criteria) throws Exception {
         menuService.downloadExcel(menuService.selectMenuByCriteria(criteria, false), response);
     }
 
     @GetMapping(value = "/build")
     @ApiOperation("获取前端所需菜单")
-    public ResponseEntity<List<MenuVo>> buildMenus() {
+    public ResponseEntity<List<MenuResponse>> buildMenus() {
         List<Menu> menuList = menuService.selectMenuByUserId(SecurityHelper.getCurrentUserId());
         List<Menu> menus = menuService.buildTree(menuList);
         return new ResponseEntity<>(menuService.buildMenus(menus), HttpStatus.OK);
@@ -79,7 +79,7 @@ public class MenuController {
     @GetMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<PageResult<Menu>> queryMenu(MenuQueryCriteria criteria) throws Exception {
+    public ResponseEntity<PageResult<Menu>> queryMenu(QueryMenuRequest criteria) throws Exception {
         List<Menu> menuList = menuService.selectMenuByCriteria(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(menuList), HttpStatus.OK);
     }

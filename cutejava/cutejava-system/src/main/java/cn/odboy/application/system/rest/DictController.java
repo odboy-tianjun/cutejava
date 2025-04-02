@@ -4,7 +4,7 @@ import cn.odboy.application.system.service.DictService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.request.CreateDictRequest;
-import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.model.system.request.QueryDictRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ public class DictController {
     @ApiOperation("导出字典数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
-    public void exportDict(HttpServletResponse response, DictQueryCriteria criteria) throws IOException {
+    public void exportDict(HttpServletResponse response, QueryDictRequest criteria) throws IOException {
         dictService.downloadExcel(dictService.selectDictByCriteria(criteria), response);
     }
 
@@ -43,13 +43,13 @@ public class DictController {
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<Dict>> queryAllDict() {
-        return new ResponseEntity<>(dictService.selectDictByCriteria(new DictQueryCriteria()), HttpStatus.OK);
+        return new ResponseEntity<>(dictService.selectDictByCriteria(new QueryDictRequest()), HttpStatus.OK);
     }
 
     @ApiOperation("查询字典")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<PageResult<Dict>> queryDict(DictQueryCriteria criteria) {
+    public ResponseEntity<PageResult<Dict>> queryDict(QueryDictRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(dictService.queryDictPage(criteria, page), HttpStatus.OK);
     }

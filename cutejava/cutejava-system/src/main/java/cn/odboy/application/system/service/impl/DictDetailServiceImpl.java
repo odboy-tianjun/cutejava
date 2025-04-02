@@ -10,7 +10,7 @@ import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.domain.DictDetail;
 import cn.odboy.model.system.request.CreateDictDetailRequest;
-import cn.odboy.model.system.request.DictDetailQueryCriteria;
+import cn.odboy.model.system.request.QueryDictDetailRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.PageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,7 +29,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<DictDetail> queryDictDetailPage(DictDetailQueryCriteria criteria, Page<Object> page) {
+    public PageResult<DictDetail> queryDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page) {
         return PageUtil.toPage(dictDetailMapper.queryDictDetail(criteria, page));
     }
 

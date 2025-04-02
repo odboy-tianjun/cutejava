@@ -11,7 +11,7 @@ import cn.odboy.application.tools.service.EmailService;
 import cn.odboy.context.SpringBeanHolder;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
-import cn.odboy.model.tools.dto.EmailDto;
+import cn.odboy.model.tools.request.SendEmailRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -89,8 +89,8 @@ public class ExecutionJob extends QuartzJobBean {
                 EmailService emailService = SpringBeanHolder.getBean(EmailService.class);
                 // 邮箱报警
                 if (StringUtil.isNoneBlank(quartzJob.getEmail())) {
-                    EmailDto emailDto = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
-                    emailService.sendEmail(emailDto);
+                    SendEmailRequest sendEmailRequest = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
+                    emailService.sendEmail(sendEmailRequest);
                 }
             }
         } finally {
@@ -98,17 +98,17 @@ public class ExecutionJob extends QuartzJobBean {
         }
     }
 
-    private EmailDto taskAlarm(QuartzJob quartzJob, String msg) {
-        EmailDto emailDto = new EmailDto();
-        emailDto.setSubject("定时任务【" + quartzJob.getJobName() + "】执行失败，请尽快处理！");
+    private SendEmailRequest taskAlarm(QuartzJob quartzJob, String msg) {
+        SendEmailRequest sendEmailRequest = new SendEmailRequest();
+        sendEmailRequest.setSubject("定时任务【" + quartzJob.getJobName() + "】执行失败，请尽快处理！");
         Map<String, Object> data = new HashMap<>(16);
         data.put("task", quartzJob);
         data.put("msg", msg);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("taskAlarm.ftl");
-        emailDto.setContent(template.render(data));
+        sendEmailRequest.setContent(template.render(data));
         List<String> emails = Arrays.asList(quartzJob.getEmail().split("[,，]"));
-        emailDto.setTos(emails);
-        return emailDto;
+        sendEmailRequest.setTos(emails);
+        return sendEmailRequest;
     }
 }

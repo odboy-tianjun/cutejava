@@ -6,7 +6,7 @@ import cn.odboy.application.tools.service.LocalStorageService;
 import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.LocalStorage;
-import cn.odboy.model.tools.request.LocalStorageQueryCriteria;
+import cn.odboy.model.tools.request.QueryLocalStorageRequest;
 import cn.odboy.properties.FileProperties;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -34,12 +34,12 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
     private final FileProperties properties;
 
     @Override
-    public PageResult<LocalStorage> queryLocalStoragePage(LocalStorageQueryCriteria criteria, Page<Object> page) {
+    public PageResult<LocalStorage> queryLocalStoragePage(QueryLocalStorageRequest criteria, Page<Object> page) {
         return PageUtil.toPage(localStorageMapper.queryLocalStoragePage(criteria, page));
     }
 
     @Override
-    public List<LocalStorage> selectLocalStorageByCriteria(LocalStorageQueryCriteria criteria) {
+    public List<LocalStorage> selectLocalStorageByCriteria(QueryLocalStorageRequest criteria) {
         return localStorageMapper.queryLocalStoragePage(criteria, PageUtil.getCount(localStorageMapper)).getRecords();
     }
 

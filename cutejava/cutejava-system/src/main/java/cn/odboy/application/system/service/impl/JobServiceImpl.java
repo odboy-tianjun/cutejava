@@ -10,7 +10,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Job;
 import cn.odboy.model.system.request.CreateJobRequest;
-import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.QueryJobRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -36,12 +36,12 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<Job> queryJobPage(JobQueryCriteria criteria, Page<Object> page) {
+    public PageResult<Job> queryJobPage(QueryJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(jobMapper.queryJobPage(criteria, page));
     }
 
     @Override
-    public List<Job> selectJobByCriteria(JobQueryCriteria criteria) {
+    public List<Job> selectJobByCriteria(QueryJobRequest criteria) {
         return jobMapper.queryJobPage(criteria, PageUtil.getCount(jobMapper)).getRecords();
     }
 

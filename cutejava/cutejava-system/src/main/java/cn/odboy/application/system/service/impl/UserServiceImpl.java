@@ -14,7 +14,7 @@ import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Job;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.request.UserQueryCriteria;
+import cn.odboy.model.system.request.QueryUserRequest;
 import cn.odboy.properties.FileProperties;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
@@ -53,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserOnlineService userOnlineService;
 
     @Override
-    public PageResult<User> queryUserPage(UserQueryCriteria criteria, Page<Object> page) {
+    public PageResult<User> queryUserPage(QueryUserRequest criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<User> users = userMapper.queryUserPage(criteria, PageUtil.getCount(userMapper)).getRecords();
         Long total = userMapper.getUserCountByCriteria(criteria);
@@ -61,7 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<User> selectUserByCriteria(UserQueryCriteria criteria) {
+    public List<User> selectUserByCriteria(QueryUserRequest criteria) {
         return userMapper.queryUserPage(criteria, PageUtil.getCount(userMapper)).getRecords();
     }
 

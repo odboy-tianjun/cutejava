@@ -1,7 +1,7 @@
 package cn.odboy.application.tools.service;
 
 import cn.odboy.model.tools.domain.EmailConfig;
-import cn.odboy.model.tools.dto.EmailDto;
+import cn.odboy.model.tools.request.SendEmailRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
@@ -26,9 +26,9 @@ public interface EmailService extends IService<EmailConfig> {
     /**
      * 发送邮件
      *
-     * @param emailDto 邮件发送的内容
+     * @param sendEmailRequest 邮件发送的内容
      */
-    void sendEmail(EmailDto emailDto);
+    void sendEmail(SendEmailRequest sendEmailRequest);
 
     /**
      * 发送邮件验证码

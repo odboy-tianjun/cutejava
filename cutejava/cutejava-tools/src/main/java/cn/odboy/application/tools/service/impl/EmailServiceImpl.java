@@ -8,7 +8,7 @@ import cn.odboy.application.tools.service.EmailService;
 import cn.odboy.constant.CodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.EmailConfig;
-import cn.odboy.model.tools.dto.EmailDto;
+import cn.odboy.model.tools.request.SendEmailRequest;
 import cn.odboy.util.DesEncryptUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void sendEmail(EmailDto emailDto) {
+    public void sendEmail(SendEmailRequest sendEmailRequest) {
         EmailConfig emailConfig = emailService.getEmailConfig();
         if (emailConfig.getId() == null) {
             throw new BadRequestException("请先配置，再操作");
@@ -76,13 +76,13 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
         account.setStarttlsEnable(true);
         // 解决jdk8之后默认禁用部分tls协议，导致邮件发送失败的问题
         account.setSslProtocols("TLSv1 TLSv1.1 TLSv1.2");
-        String content = emailDto.getContent();
+        String content = sendEmailRequest.getContent();
         // 发送
         try {
-            int size = emailDto.getTos().size();
+            int size = sendEmailRequest.getTos().size();
             Mail.create(account)
-                    .setTos(emailDto.getTos().toArray(new String[size]))
-                    .setTitle(emailDto.getSubject())
+                    .setTos(sendEmailRequest.getTos().toArray(new String[size]))
+                    .setTitle(sendEmailRequest.getSubject())
                     .setContent(content)
                     .setHtml(true)
                     // 关闭session

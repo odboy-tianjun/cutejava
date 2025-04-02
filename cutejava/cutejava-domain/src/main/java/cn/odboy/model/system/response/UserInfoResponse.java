@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UserInfoVo extends MyObject {
-    private SimpleUserVo user;
+public class UserInfoResponse extends MyObject {
+    private SimpleUserResponse user;
     private List<Long> dataScopes;
     private List<RoleCodeDto> authorities;
 

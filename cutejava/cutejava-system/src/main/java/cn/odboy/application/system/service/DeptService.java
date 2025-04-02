@@ -3,7 +3,7 @@ package cn.odboy.application.system.service;
 import cn.odboy.base.BaseResult;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.request.CreateDeptRequest;
-import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.model.system.request.QueryDeptRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public interface DeptService extends IService<Dept> {
      * @return /
      * @throws Exception /
      */
-    List<Dept> selectDeptByCriteria(DeptQueryCriteria criteria, Boolean isQuery) throws Exception;
+    List<Dept> selectDeptByCriteria(QueryDeptRequest criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询

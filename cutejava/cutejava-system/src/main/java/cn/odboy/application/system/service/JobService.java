@@ -3,7 +3,7 @@ package cn.odboy.application.system.service;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Job;
 import cn.odboy.model.system.request.CreateJobRequest;
-import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.QueryJobRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +50,7 @@ public interface JobService extends IService<Job> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<Job> queryJobPage(JobQueryCriteria criteria, Page<Object> page);
+    PageResult<Job> queryJobPage(QueryJobRequest criteria, Page<Object> page);
 
     /**
      * 查询全部数据
@@ -58,7 +58,7 @@ public interface JobService extends IService<Job> {
      * @param criteria /
      * @return /
      */
-    List<Job> selectJobByCriteria(JobQueryCriteria criteria);
+    List<Job> selectJobByCriteria(QueryJobRequest criteria);
 
     /**
      * 导出数据

@@ -7,7 +7,7 @@ import java.util.List;
 
 
 @Data
-public class MenuQueryCriteria {
+public class QueryMenuRequest {
 
     @ApiModelProperty(value = "模糊查询")
     private String blurry;

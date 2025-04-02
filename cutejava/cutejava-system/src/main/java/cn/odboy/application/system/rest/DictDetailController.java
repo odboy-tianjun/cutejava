@@ -4,7 +4,7 @@ import cn.odboy.application.system.service.DictDetailService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.DictDetail;
 import cn.odboy.model.system.request.CreateDictDetailRequest;
-import cn.odboy.model.system.request.DictDetailQueryCriteria;
+import cn.odboy.model.system.request.QueryDictDetailRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ public class DictDetailController {
 
     @ApiOperation("查询字典详情")
     @GetMapping
-    public ResponseEntity<PageResult<DictDetail>> queryDictDetail(DictDetailQueryCriteria criteria) {
+    public ResponseEntity<PageResult<DictDetail>> queryDictDetail(QueryDictDetailRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(dictDetailService.queryDictDetailPage(criteria, page), HttpStatus.OK);
     }

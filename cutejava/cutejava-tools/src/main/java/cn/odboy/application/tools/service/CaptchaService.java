@@ -1,7 +1,7 @@
 package cn.odboy.application.tools.service;
 
 
-import cn.odboy.model.tools.dto.EmailDto;
+import cn.odboy.model.tools.request.SendEmailRequest;
 
 public interface CaptchaService {
     /**
@@ -11,7 +11,7 @@ public interface CaptchaService {
      * @param key   /
      * @return /
      */
-    EmailDto renderCode(String email, String key);
+    SendEmailRequest renderCode(String email, String key);
 
 
     /**

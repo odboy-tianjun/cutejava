@@ -1,4 +1,4 @@
-package cn.odboy.model.tools.dto;
+package cn.odboy.model.tools.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailDto {
+public class SendEmailRequest {
 
     @NotEmpty
     @ApiModelProperty(value = "收件人")

@@ -15,9 +15,9 @@ import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.request.MenuQueryCriteria;
-import cn.odboy.model.system.response.MenuMetaVo;
-import cn.odboy.model.system.response.MenuVo;
+import cn.odboy.model.system.request.QueryMenuRequest;
+import cn.odboy.model.system.response.MenuMetaResponse;
+import cn.odboy.model.system.response.MenuResponse;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
@@ -53,7 +53,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     private static final String NO_STR = "否";
 
     @Override
-    public List<Menu> selectMenuByCriteria(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
+    public List<Menu> selectMenuByCriteria(QueryMenuRequest criteria, Boolean isQuery) throws Exception {
         if (Boolean.TRUE.equals(isQuery)) {
             criteria.setPidIsNull(true);
             List<Field> fields = ClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
@@ -252,43 +252,43 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<MenuVo> buildMenus(List<Menu> menus) {
-        List<MenuVo> list = new LinkedList<>();
+    public List<MenuResponse> buildMenus(List<Menu> menus) {
+        List<MenuResponse> list = new LinkedList<>();
         menus.forEach(menu -> {
                     if (menu != null) {
                         List<Menu> menuList = menu.getChildren();
-                        MenuVo menuVo = new MenuVo();
-                        menuVo.setName(ObjectUtil.isNotEmpty(menu.getComponentName()) ? menu.getComponentName() : menu.getTitle());
+                        MenuResponse menuResponse = new MenuResponse();
+                        menuResponse.setName(ObjectUtil.isNotEmpty(menu.getComponentName()) ? menu.getComponentName() : menu.getTitle());
                         // 一级目录需要加斜杠，不然会报警告
-                        menuVo.setPath(menu.getPid() == null ? "/" + menu.getPath() : menu.getPath());
-                        menuVo.setHidden(menu.getHidden());
+                        menuResponse.setPath(menu.getPid() == null ? "/" + menu.getPath() : menu.getPath());
+                        menuResponse.setHidden(menu.getHidden());
                         // 如果不是外链
                         if (!menu.getIFrame()) {
                             if (menu.getPid() == null) {
-                                menuVo.setComponent(StringUtil.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
+                                menuResponse.setComponent(StringUtil.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
                                 // 如果不是一级菜单，并且菜单类型为目录，则代表是多级菜单
                             } else if (menu.getType() == 0) {
-                                menuVo.setComponent(StringUtil.isEmpty(menu.getComponent()) ? "ParentView" : menu.getComponent());
+                                menuResponse.setComponent(StringUtil.isEmpty(menu.getComponent()) ? "ParentView" : menu.getComponent());
                             } else if (StringUtil.isNoneBlank(menu.getComponent())) {
-                                menuVo.setComponent(menu.getComponent());
+                                menuResponse.setComponent(menu.getComponent());
                             }
                         }
-                        menuVo.setMeta(new MenuMetaVo(menu.getTitle(), menu.getIcon(), !menu.getCache()));
+                        menuResponse.setMeta(new MenuMetaResponse(menu.getTitle(), menu.getIcon(), !menu.getCache()));
                         if (CollectionUtil.isNotEmpty(menuList)) {
-                            menuVo.setAlwaysShow(true);
-                            menuVo.setRedirect("noredirect");
-                            menuVo.setChildren(buildMenus(menuList));
+                            menuResponse.setAlwaysShow(true);
+                            menuResponse.setRedirect("noredirect");
+                            menuResponse.setChildren(buildMenus(menuList));
                             // 处理是一级菜单并且没有子菜单的情况
                         } else if (menu.getPid() == null) {
-                            MenuVo menuVo1 = getMenuVo(menu, menuVo);
-                            menuVo.setName(null);
-                            menuVo.setMeta(null);
-                            menuVo.setComponent("Layout");
-                            List<MenuVo> list1 = new ArrayList<>();
-                            list1.add(menuVo1);
-                            menuVo.setChildren(list1);
+                            MenuResponse menuResponse1 = getMenuVo(menu, menuResponse);
+                            menuResponse.setName(null);
+                            menuResponse.setMeta(null);
+                            menuResponse.setComponent("Layout");
+                            List<MenuResponse> list1 = new ArrayList<>();
+                            list1.add(menuResponse1);
+                            menuResponse.setChildren(list1);
                         }
-                        list.add(menuVo);
+                        list.add(menuResponse);
                     }
                 }
         );
@@ -334,23 +334,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     /**
-     * 获取 MenuVo
+     * 获取 MenuResponse
      *
      * @param menu   /
-     * @param menuVo /
+     * @param menuResponse /
      * @return /
      */
-    private static MenuVo getMenuVo(Menu menu, MenuVo menuVo) {
-        MenuVo menuVo1 = new MenuVo();
-        menuVo1.setMeta(menuVo.getMeta());
+    private static MenuResponse getMenuVo(Menu menu, MenuResponse menuResponse) {
+        MenuResponse menuResponse1 = new MenuResponse();
+        menuResponse1.setMeta(menuResponse.getMeta());
         // 非外链
         if (!menu.getIFrame()) {
-            menuVo1.setPath("index");
-            menuVo1.setName(menuVo.getName());
-            menuVo1.setComponent(menuVo.getComponent());
+            menuResponse1.setPath("index");
+            menuResponse1.setName(menuResponse.getName());
+            menuResponse1.setComponent(menuResponse.getComponent());
         } else {
-            menuVo1.setPath(menu.getPath());
+            menuResponse1.setPath(menu.getPath());
         }
-        return menuVo1;
+        return menuResponse1;
     }
 }

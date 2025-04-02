@@ -2,7 +2,7 @@ package cn.odboy.application.tools.rest;
 
 import cn.odboy.application.tools.service.EmailService;
 import cn.odboy.model.tools.domain.EmailConfig;
-import cn.odboy.model.tools.dto.EmailDto;
+import cn.odboy.model.tools.request.SendEmailRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +41,8 @@ public class EmailController {
 
     @PostMapping
     @ApiOperation("发送邮件")
-    public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailDto emailDto) {
-        emailService.sendEmail(emailDto);
+    public ResponseEntity<Object> sendEmail(@Validated @RequestBody SendEmailRequest sendEmailRequest) {
+        emailService.sendEmail(sendEmailRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

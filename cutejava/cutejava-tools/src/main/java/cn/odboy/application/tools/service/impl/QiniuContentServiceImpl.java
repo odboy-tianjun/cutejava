@@ -8,7 +8,7 @@ import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.QiniuConfig;
 import cn.odboy.model.tools.domain.QiniuContent;
-import cn.odboy.model.tools.request.QiniuQueryCriteria;
+import cn.odboy.model.tools.request.QueryQiniuRequest;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import com.alibaba.fastjson2.JSON;
@@ -46,12 +46,12 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
     private Long maxSize;
 
     @Override
-    public PageResult<QiniuContent> queryQiniuContentPage(QiniuQueryCriteria criteria, Page<Object> page) {
+    public PageResult<QiniuContent> queryQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page) {
         return PageUtil.toPage(qiniuContentMapper.queryQiniuContentPage(criteria, page));
     }
 
     @Override
-    public List<QiniuContent> selectQiniuContentByCriteria(QiniuQueryCriteria criteria) {
+    public List<QiniuContent> selectQiniuContentByCriteria(QueryQiniuRequest criteria) {
         return qiniuContentMapper.queryQiniuContentPage(criteria, PageUtil.getCount(qiniuContentMapper)).getRecords();
     }
 

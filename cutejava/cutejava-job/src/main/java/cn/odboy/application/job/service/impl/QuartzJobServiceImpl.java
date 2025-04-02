@@ -12,7 +12,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
 import cn.odboy.model.job.request.UpdateQuartzJobRequest;
-import cn.odboy.model.job.request.QuartzJobQueryCriteria;
+import cn.odboy.model.job.request.QueryQuartzJobRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -42,22 +42,22 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<QuartzJob> queryJobPage(QuartzJobQueryCriteria criteria, Page<Object> page) {
+    public PageResult<QuartzJob> queryJobPage(QueryQuartzJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(quartzJobMapper.queryQuartzJobPage(criteria, page));
     }
 
     @Override
-    public PageResult<QuartzLog> queryLogPage(QuartzJobQueryCriteria criteria, Page<Object> page) {
+    public PageResult<QuartzLog> queryLogPage(QueryQuartzJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(quartzLogMapper.queryQuartzLogPage(criteria, page));
     }
 
     @Override
-    public List<QuartzJob> selectJobByCriteria(QuartzJobQueryCriteria criteria) {
+    public List<QuartzJob> selectJobByCriteria(QueryQuartzJobRequest criteria) {
         return quartzJobMapper.queryQuartzJobPage(criteria, PageUtil.getCount(quartzJobMapper)).getRecords();
     }
 
     @Override
-    public List<QuartzLog> selectLogByCriteria(QuartzJobQueryCriteria criteria) {
+    public List<QuartzLog> selectLogByCriteria(QueryQuartzJobRequest criteria) {
         return quartzLogMapper.queryQuartzLogPage(criteria, PageUtil.getCount(quartzLogMapper)).getRecords();
     }
 

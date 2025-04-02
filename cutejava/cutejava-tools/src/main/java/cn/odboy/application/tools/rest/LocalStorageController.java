@@ -5,7 +5,7 @@ import cn.odboy.base.PageResult;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.LocalStorage;
-import cn.odboy.model.tools.request.LocalStorageQueryCriteria;
+import cn.odboy.model.tools.request.QueryLocalStorageRequest;
 import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -37,7 +37,7 @@ public class LocalStorageController {
     @GetMapping
     @ApiOperation("查询文件")
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<PageResult<LocalStorage>> queryFile(LocalStorageQueryCriteria criteria) {
+    public ResponseEntity<PageResult<LocalStorage>> queryFile(QueryLocalStorageRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(localStorageService.queryLocalStoragePage(criteria, page), HttpStatus.OK);
     }
@@ -45,7 +45,7 @@ public class LocalStorageController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
-    public void exportFile(HttpServletResponse response, LocalStorageQueryCriteria criteria) throws IOException {
+    public void exportFile(HttpServletResponse response, QueryLocalStorageRequest criteria) throws IOException {
         localStorageService.downloadExcel(localStorageService.selectLocalStorageByCriteria(criteria), response);
     }
 
