@@ -1,4 +1,4 @@
-package cn.odboy.application.job.config;
+package cn.odboy.application.job.context;
 
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.spi.TriggerFiredBundle;

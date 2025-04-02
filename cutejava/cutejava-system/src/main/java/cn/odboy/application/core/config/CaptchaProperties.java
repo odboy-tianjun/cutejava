@@ -21,8 +21,7 @@ import java.awt.*;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "login.code")
-public class CaptchaConfig {
-
+public class CaptchaProperties {
     /**
      * 验证码配置
      */

@@ -1,9 +1,6 @@
-package cn.odboy.application.core.config;
+package cn.odboy.application.core.context;
 
-import cn.odboy.application.core.context.JwtAccessDeniedHandler;
-import cn.odboy.application.core.context.JwtAuthenticationEntryPoint;
-import cn.odboy.application.core.context.TokenConfigurer;
-import cn.odboy.application.core.context.TokenProvider;
+import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.RequestMethodEnum;
 import cn.odboy.util.AnonTagUtil;
