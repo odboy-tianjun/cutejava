@@ -2,7 +2,7 @@ package cn.odboy.application.core.service;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.dto.UserJwtDto;
-import cn.odboy.model.system.dto.UserOnlineDto;
+import cn.odboy.model.system.response.UserOnlineResponse;
 import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +26,7 @@ public interface UserOnlineService {
      * @param pageable /
      * @return /
      */
-    PageResult<UserOnlineDto> queryOnlineUserPage(String username, Pageable pageable);
+    PageResult<UserOnlineResponse> queryOnlineUserPage(String username, Pageable pageable);
 
     /**
      * 查询全部数据，不分页
@@ -34,7 +34,7 @@ public interface UserOnlineService {
      * @param username /
      * @return /
      */
-    List<UserOnlineDto> selectOnlineUserByUsername(String username);
+    List<UserOnlineResponse> selectOnlineUserByUsername(String username);
 
     /**
      * 退出登录
@@ -50,7 +50,7 @@ public interface UserOnlineService {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<UserOnlineDto> all, HttpServletResponse response) throws IOException;
+    void downloadExcel(List<UserOnlineResponse> all, HttpServletResponse response) throws IOException;
 
     /**
      * 查询用户
@@ -58,7 +58,7 @@ public interface UserOnlineService {
      * @param key /
      * @return /
      */
-    UserOnlineDto getOnlineUserByKey(String key);
+    UserOnlineResponse getOnlineUserByKey(String key);
 
     /**
      * 根据用户名强退用户

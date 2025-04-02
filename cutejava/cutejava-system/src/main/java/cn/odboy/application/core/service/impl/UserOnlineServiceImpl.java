@@ -6,7 +6,7 @@ import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.dto.UserJwtDto;
-import cn.odboy.model.system.dto.UserOnlineDto;
+import cn.odboy.model.system.response.UserOnlineResponse;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.BrowserUtil;
 import cn.odboy.util.DesEncryptUtil;
@@ -45,40 +45,40 @@ public class UserOnlineServiceImpl implements UserOnlineService {
         String id = tokenProvider.getId(token);
         String version = BrowserUtil.getVersion(request);
         String address = IpUtil.getCityInfo(ip);
-        UserOnlineDto userOnlineDto = null;
+        UserOnlineResponse userOnlineResponse = null;
         try {
-            userOnlineDto = new UserOnlineDto();
-            userOnlineDto.setUid(id);
-            userOnlineDto.setUserName(userJwtDto.getUsername());
-            userOnlineDto.setNickName(userJwtDto.getUser().getNickName());
-            userOnlineDto.setDept(dept);
-            userOnlineDto.setBrowser(version);
-            userOnlineDto.setIp(ip);
-            userOnlineDto.setAddress(address);
-            userOnlineDto.setKey(DesEncryptUtil.desEncrypt(token));
-            userOnlineDto.setLoginTime(new Date());
+            userOnlineResponse = new UserOnlineResponse();
+            userOnlineResponse.setUid(id);
+            userOnlineResponse.setUserName(userJwtDto.getUsername());
+            userOnlineResponse.setNickName(userJwtDto.getUser().getNickName());
+            userOnlineResponse.setDept(dept);
+            userOnlineResponse.setBrowser(version);
+            userOnlineResponse.setIp(ip);
+            userOnlineResponse.setAddress(address);
+            userOnlineResponse.setKey(DesEncryptUtil.desEncrypt(token));
+            userOnlineResponse.setLoginTime(new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         String loginKey = tokenProvider.loginKey(token);
-        redisHelper.set(loginKey, userOnlineDto, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
+        redisHelper.set(loginKey, userOnlineResponse, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public PageResult<UserOnlineDto> queryOnlineUserPage(String username, Pageable pageable) {
-        List<UserOnlineDto> onlineUserList = selectOnlineUserByUsername(username);
-        List<UserOnlineDto> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
+    public PageResult<UserOnlineResponse> queryOnlineUserPage(String username, Pageable pageable) {
+        List<UserOnlineResponse> onlineUserList = selectOnlineUserByUsername(username);
+        List<UserOnlineResponse> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
         return PageUtil.toPage(paging, onlineUserList.size());
     }
 
     @Override
-    public List<UserOnlineDto> selectOnlineUserByUsername(String username) {
+    public List<UserOnlineResponse> selectOnlineUserByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
-        List<UserOnlineDto> onlineUserList = new ArrayList<>();
+        List<UserOnlineResponse> onlineUserList = new ArrayList<>();
         for (String key : keys) {
-            onlineUserList.add(redisHelper.get(key, UserOnlineDto.class));
+            onlineUserList.add(redisHelper.get(key, UserOnlineResponse.class));
         }
         onlineUserList.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUserList;
@@ -91,9 +91,9 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public void downloadExcel(List<UserOnlineDto> all, HttpServletResponse response) throws IOException {
+    public void downloadExcel(List<UserOnlineResponse> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (UserOnlineDto user : all) {
+        for (UserOnlineResponse user : all) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", user.getUserName());
             map.put("部门", user.getDept());
@@ -107,8 +107,8 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public UserOnlineDto getOnlineUserByKey(String key) {
-        return redisHelper.get(key, UserOnlineDto.class);
+    public UserOnlineResponse getOnlineUserByKey(String key) {
+        return redisHelper.get(key, UserOnlineResponse.class);
     }
 
     @Override
