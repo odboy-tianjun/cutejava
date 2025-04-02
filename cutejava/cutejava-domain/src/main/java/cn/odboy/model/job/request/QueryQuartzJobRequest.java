@@ -1,4 +1,4 @@
-package cn.odboy.model.tools.request;
+package cn.odboy.model.job.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -7,10 +7,13 @@ import java.util.List;
 
 
 @Data
-public class QiniuQueryCriteria {
+public class QueryQuartzJobRequest {
 
-    @ApiModelProperty(value = "名称查询")
-    private String key;
+    @ApiModelProperty(value = "定时任务名称")
+    private String jobName;
+
+    @ApiModelProperty(value = "是否成功")
+    private Boolean isSuccess;
 
     @ApiModelProperty(value = "创建时间")
     private List<Timestamp> createTime;

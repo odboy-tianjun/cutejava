@@ -18,7 +18,7 @@ import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.RoleCodeDto;
 import cn.odboy.model.system.request.CreateRoleRequest;
-import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.model.system.request.QueryRoleRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -56,12 +56,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public List<Role> selectRoleByCriteria(RoleQueryCriteria criteria) {
+    public List<Role> selectRoleByCriteria(QueryRoleRequest criteria) {
         return roleMapper.selectRoleByCriteria(criteria);
     }
 
     @Override
-    public PageResult<Role> queryRolePage(RoleQueryCriteria criteria, Page<Object> page) {
+    public PageResult<Role> queryRolePage(QueryRoleRequest criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<Role> roles = roleMapper.selectRoleByCriteria(criteria);
         Long total = roleMapper.getRoleCountByCriteria(criteria);

@@ -8,7 +8,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.odboy.application.tools.service.CaptchaService;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.model.tools.dto.EmailDto;
+import cn.odboy.model.tools.request.SendEmailRequest;
 import cn.odboy.redis.RedisHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +25,8 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public EmailDto renderCode(String email, String key) {
-        EmailDto emailDto;
+    public SendEmailRequest renderCode(String email, String key) {
+        SendEmailRequest sendEmailRequest;
         String content;
         String redisKey = key + email;
         // 如果不存在有效的验证码，就创建一个新的
@@ -44,8 +44,8 @@ public class CaptchaServiceImpl implements CaptchaService {
         } else {
             content = template.render(Dict.create().set("code", oldCode));
         }
-        emailDto = new EmailDto(Collections.singletonList(email), "CuteJava后台管理系统", content);
-        return emailDto;
+        sendEmailRequest = new SendEmailRequest(Collections.singletonList(email), "CuteJava后台管理系统", content);
+        return sendEmailRequest;
     }
 
     @Override

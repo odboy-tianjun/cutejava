@@ -5,7 +5,7 @@ import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.dto.RoleCodeDto;
 import cn.odboy.model.system.request.CreateRoleRequest;
-import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.model.system.request.QueryRoleRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ public interface RoleService extends IService<Role> {
      * @param criteria 条件
      * @return /
      */
-    List<Role> selectRoleByCriteria(RoleQueryCriteria criteria);
+    List<Role> selectRoleByCriteria(QueryRoleRequest criteria);
 
     /**
      * 待条件分页查询
@@ -38,7 +38,7 @@ public interface RoleService extends IService<Role> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<Role> queryRolePage(RoleQueryCriteria criteria, Page<Object> page);
+    PageResult<Role> queryRolePage(QueryRoleRequest criteria, Page<Object> page);
 
     /**
      * 根据ID查询

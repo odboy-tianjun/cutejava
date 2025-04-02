@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class MenuVo extends MyObject {
+public class MenuResponse extends MyObject {
 
     @ApiModelProperty(value = "菜单名称")
     private String name;
@@ -32,8 +32,8 @@ public class MenuVo extends MyObject {
     private Boolean alwaysShow;
 
     @ApiModelProperty(value = "元数据")
-    private MenuMetaVo meta;
+    private MenuMetaResponse meta;
 
     @ApiModelProperty(value = "子路由")
-    private List<MenuVo> children;
+    private List<MenuResponse> children;
 }

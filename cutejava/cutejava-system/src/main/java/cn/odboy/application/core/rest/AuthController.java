@@ -17,7 +17,7 @@ import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.dto.UserJwtDto;
 import cn.odboy.model.system.request.UserLoginRequest;
-import cn.odboy.model.system.response.UserInfoVo;
+import cn.odboy.model.system.response.UserInfoResponse;
 import cn.odboy.properties.RsaProperties;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.RsaEncryptUtil;
@@ -88,7 +88,7 @@ public class AuthController {
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<>(2) {{
             put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
-            put("user", BeanUtil.copyProperties(jwtUser, UserInfoVo.class));
+            put("user", BeanUtil.copyProperties(jwtUser, UserInfoResponse.class));
         }};
         if (loginProperties.isSingleLogin()) {
             // 踢掉之前已经登录的token
@@ -102,10 +102,10 @@ public class AuthController {
 
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
-    public ResponseEntity<UserInfoVo> getUserInfo() {
+    public ResponseEntity<UserInfoResponse> getUserInfo() {
         UserJwtDto jwtUser = (UserJwtDto) SecurityHelper.getCurrentUser();
-        UserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, UserInfoVo.class);
-        return ResponseEntity.ok(userInfoVo);
+        UserInfoResponse userInfoResponse = BeanUtil.copyProperties(jwtUser, UserInfoResponse.class);
+        return ResponseEntity.ok(userInfoResponse);
     }
 
     @ApiOperation("获取验证码")

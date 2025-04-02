@@ -16,7 +16,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.request.CreateDeptRequest;
-import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.model.system.request.QueryDeptRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
@@ -46,7 +46,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     private final RedisHelper redisHelper;
 
     @Override
-    public List<Dept> selectDeptByCriteria(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
+    public List<Dept> selectDeptByCriteria(QueryDeptRequest criteria, Boolean isQuery) throws Exception {
         String dataScopeType = SecurityHelper.getDataScopeType();
         if (isQuery) {
             if (dataScopeType.equals(DataScopeEnum.ALL.getValue())) {

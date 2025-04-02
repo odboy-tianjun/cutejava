@@ -14,8 +14,8 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.request.UserQueryCriteria;
-import cn.odboy.model.system.response.UserPassVo;
+import cn.odboy.model.system.request.QueryUserRequest;
+import cn.odboy.model.system.response.UserPassResponse;
 import cn.odboy.properties.RsaProperties;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RsaEncryptUtil;
@@ -65,14 +65,14 @@ public class UserController {
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
-    public void exportUser(HttpServletResponse response, UserQueryCriteria criteria) throws IOException {
+    public void exportUser(HttpServletResponse response, QueryUserRequest criteria) throws IOException {
         userService.downloadExcel(userService.selectUserByCriteria(criteria), response);
     }
 
     @ApiOperation("查询用户")
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<PageResult<User>> queryUser(UserQueryCriteria criteria) {
+    public ResponseEntity<PageResult<User>> queryUser(QueryUserRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
@@ -145,7 +145,7 @@ public class UserController {
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
-    public ResponseEntity<Object> updateUserPassword(@RequestBody UserPassVo passVo) throws Exception {
+    public ResponseEntity<Object> updateUserPassword(@RequestBody UserPassResponse passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
         User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());
@@ -202,7 +202,7 @@ public class UserController {
     @ApiOperation("查询用户基础数据")
     @PostMapping(value = "/queryUserMetaPage")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<List<MyMetaOption>> queryUserMetaPage(@Validated @RequestBody UserQueryCriteria criteria) {
+    public ResponseEntity<List<MyMetaOption>> queryUserMetaPage(@Validated @RequestBody QueryUserRequest criteria) {
         int maxPageSize = 50;
         return new ResponseEntity<>(userService.page(new Page<>(criteria.getPage(), maxPageSize), new LambdaQueryWrapper<User>()
                 .and(c -> {

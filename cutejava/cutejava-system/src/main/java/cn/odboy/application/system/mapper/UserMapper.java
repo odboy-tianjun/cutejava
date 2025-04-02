@@ -1,7 +1,7 @@
 package cn.odboy.application.system.mapper;
 
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.request.UserQueryCriteria;
+import cn.odboy.model.system.request.QueryUserRequest;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,9 +14,9 @@ import java.util.Set;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    Long getUserCountByCriteria(@Param("criteria") UserQueryCriteria criteria);
+    Long getUserCountByCriteria(@Param("criteria") QueryUserRequest criteria);
 
-    IPage<User> queryUserPage(@Param("criteria") UserQueryCriteria criteria, Page<Object> page);
+    IPage<User> queryUserPage(@Param("criteria") QueryUserRequest criteria, Page<Object> page);
 
     User getUserByUsername(@Param("username") String username);
 

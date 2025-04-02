@@ -5,7 +5,7 @@ import cn.odboy.application.tools.service.QiniuContentService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.tools.domain.QiniuConfig;
 import cn.odboy.model.tools.domain.QiniuContent;
-import cn.odboy.model.tools.request.QiniuQueryCriteria;
+import cn.odboy.model.tools.request.QueryQiniuRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,13 +56,13 @@ public class QiniuController {
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    public void exportQiNiu(HttpServletResponse response, QiniuQueryCriteria criteria) throws IOException {
+    public void exportQiNiu(HttpServletResponse response, QueryQiniuRequest criteria) throws IOException {
         qiniuContentService.downloadExcel(qiniuContentService.selectQiniuContentByCriteria(criteria), response);
     }
 
     @ApiOperation("查询文件")
     @GetMapping
-    public ResponseEntity<PageResult<QiniuContent>> queryQiNiu(QiniuQueryCriteria criteria) {
+    public ResponseEntity<PageResult<QiniuContent>> queryQiNiu(QueryQiniuRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(qiniuContentService.queryQiniuContentPage(criteria, page), HttpStatus.OK);
     }

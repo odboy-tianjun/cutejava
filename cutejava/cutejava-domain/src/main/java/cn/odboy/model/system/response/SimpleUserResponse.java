@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SimpleUserVo extends MyObject {
+public class SimpleUserResponse extends MyObject {
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
     @ApiModelProperty(value = "用户角色")

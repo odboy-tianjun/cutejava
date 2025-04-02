@@ -3,7 +3,7 @@ package cn.odboy.application.system.service;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.request.CreateDictRequest;
-import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.model.system.request.QueryDictRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ public interface DictService extends IService<Dict> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<Dict> queryDictPage(DictQueryCriteria criteria, Page<Object> page);
+    PageResult<Dict> queryDictPage(QueryDictRequest criteria, Page<Object> page);
 
     /**
      * 查询全部数据
@@ -29,7 +29,7 @@ public interface DictService extends IService<Dict> {
      * @param criteria /
      * @return /
      */
-    List<Dict> selectDictByCriteria(DictQueryCriteria criteria);
+    List<Dict> selectDictByCriteria(QueryDictRequest criteria);
 
     /**
      * 创建

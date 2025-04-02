@@ -7,10 +7,10 @@ import java.util.List;
 
 
 @Data
-public class LocalStorageQueryCriteria {
+public class QueryQiniuRequest {
 
-    @ApiModelProperty(value = "模糊查询")
-    private String blurry;
+    @ApiModelProperty(value = "名称查询")
+    private String key;
 
     @ApiModelProperty(value = "创建时间")
     private List<Timestamp> createTime;

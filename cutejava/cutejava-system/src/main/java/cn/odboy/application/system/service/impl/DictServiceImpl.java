@@ -10,7 +10,7 @@ import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.domain.Dict;
 import cn.odboy.model.system.domain.DictDetail;
 import cn.odboy.model.system.request.CreateDictRequest;
-import cn.odboy.model.system.request.DictQueryCriteria;
+import cn.odboy.model.system.request.QueryDictRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -36,13 +36,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<Dict> queryDictPage(DictQueryCriteria criteria, Page<Object> page) {
+    public PageResult<Dict> queryDictPage(QueryDictRequest criteria, Page<Object> page) {
         IPage<Dict> dicts = dictMapper.queryDictPage(criteria, page);
         return PageUtil.toPage(dicts);
     }
 
     @Override
-    public List<Dict> selectDictByCriteria(DictQueryCriteria criteria) {
+    public List<Dict> selectDictByCriteria(QueryDictRequest criteria) {
         return dictMapper.queryDictPage(criteria, PageUtil.getCount(dictMapper)).getRecords();
     }
 

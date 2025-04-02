@@ -4,7 +4,7 @@ import cn.odboy.application.system.service.DeptService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.request.CreateDeptRequest;
-import cn.odboy.model.system.request.DeptQueryCriteria;
+import cn.odboy.model.system.request.QueryDeptRequest;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,14 +39,14 @@ public class DeptController {
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
-    public void exportDept(HttpServletResponse response, DeptQueryCriteria criteria) throws Exception {
+    public void exportDept(HttpServletResponse response, QueryDeptRequest criteria) throws Exception {
         deptService.downloadExcel(deptService.selectDeptByCriteria(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<PageResult<Dept>> queryDept(DeptQueryCriteria criteria) throws Exception {
+    public ResponseEntity<PageResult<Dept>> queryDept(QueryDeptRequest criteria) throws Exception {
         List<Dept> depts = deptService.selectDeptByCriteria(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }

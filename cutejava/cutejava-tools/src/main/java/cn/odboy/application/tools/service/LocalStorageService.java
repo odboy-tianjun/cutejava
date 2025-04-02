@@ -2,7 +2,7 @@ package cn.odboy.application.tools.service;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.model.tools.domain.LocalStorage;
-import cn.odboy.model.tools.request.LocalStorageQueryCriteria;
+import cn.odboy.model.tools.request.QueryLocalStorageRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +20,7 @@ public interface LocalStorageService extends IService<LocalStorage> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<LocalStorage> queryLocalStoragePage(LocalStorageQueryCriteria criteria, Page<Object> page);
+    PageResult<LocalStorage> queryLocalStoragePage(QueryLocalStorageRequest criteria, Page<Object> page);
 
     /**
      * 查询全部数据
@@ -28,7 +28,7 @@ public interface LocalStorageService extends IService<LocalStorage> {
      * @param criteria 条件
      * @return /
      */
-    List<LocalStorage> selectLocalStorageByCriteria(LocalStorageQueryCriteria criteria);
+    List<LocalStorage> selectLocalStorageByCriteria(QueryLocalStorageRequest criteria);
 
     /**
      * 上传

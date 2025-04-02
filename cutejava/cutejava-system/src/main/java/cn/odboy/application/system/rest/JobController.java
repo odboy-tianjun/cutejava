@@ -4,7 +4,7 @@ import cn.odboy.application.system.service.JobService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.system.domain.Job;
 import cn.odboy.model.system.request.CreateJobRequest;
-import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.QueryJobRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,14 +35,14 @@ public class JobController {
     @ApiOperation("导出岗位数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('job:list')")
-    public void exportJob(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
+    public void exportJob(HttpServletResponse response, QueryJobRequest criteria) throws IOException {
         jobService.downloadExcel(jobService.selectJobByCriteria(criteria), response);
     }
 
     @ApiOperation("查询岗位")
     @GetMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<PageResult<Job>> queryJob(JobQueryCriteria criteria) {
+    public ResponseEntity<PageResult<Job>> queryJob(QueryJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(jobService.queryJobPage(criteria, page), HttpStatus.OK);
     }

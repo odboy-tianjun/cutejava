@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class DeptQueryCriteria {
+public class QueryDeptRequest {
 
     @ApiModelProperty(value = "部门id集合")
     private List<Long> ids;

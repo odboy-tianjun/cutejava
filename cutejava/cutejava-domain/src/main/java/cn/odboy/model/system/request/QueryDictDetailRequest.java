@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DictDetailQueryCriteria {
+public class QueryDictDetailRequest {
 
     @ApiModelProperty(value = "标签")
     private String label;

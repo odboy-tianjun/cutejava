@@ -1,8 +1,8 @@
 package cn.odboy.application.system.service;
 
 import cn.odboy.model.system.domain.Menu;
-import cn.odboy.model.system.request.MenuQueryCriteria;
-import cn.odboy.model.system.response.MenuVo;
+import cn.odboy.model.system.request.QueryMenuRequest;
+import cn.odboy.model.system.response.MenuResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public interface MenuService extends IService<Menu> {
      * @return /
      * @throws Exception /
      */
-    List<Menu> selectMenuByCriteria(MenuQueryCriteria criteria, Boolean isQuery) throws Exception;
+    List<Menu> selectMenuByCriteria(QueryMenuRequest criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -66,7 +66,7 @@ public interface MenuService extends IService<Menu> {
      * @param menus /
      * @return /
      */
-    List<MenuVo> buildMenus(List<Menu> menus);
+    List<MenuResponse> buildMenus(List<Menu> menus);
 
     /**
      * 删除

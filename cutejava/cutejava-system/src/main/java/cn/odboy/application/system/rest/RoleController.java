@@ -7,7 +7,7 @@ import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.request.CreateRoleRequest;
-import cn.odboy.model.system.request.RoleQueryCriteria;
+import cn.odboy.model.system.request.QueryRoleRequest;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +49,7 @@ public class RoleController {
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
-    public void exportRole(HttpServletResponse response, RoleQueryCriteria criteria) throws IOException {
+    public void exportRole(HttpServletResponse response, QueryRoleRequest criteria) throws IOException {
         roleService.downloadExcel(roleService.selectRoleByCriteria(criteria), response);
     }
 
@@ -63,7 +63,7 @@ public class RoleController {
     @ApiOperation("查询角色")
     @GetMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<PageResult<Role>> queryRole(RoleQueryCriteria criteria) {
+    public ResponseEntity<PageResult<Role>> queryRole(QueryRoleRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(roleService.queryRolePage(criteria, page), HttpStatus.OK);
     }

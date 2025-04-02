@@ -1,7 +1,7 @@
 package cn.odboy.application.system.mapper;
 
 import cn.odboy.model.system.domain.Job;
-import cn.odboy.model.system.request.JobQueryCriteria;
+import cn.odboy.model.system.request.QueryJobRequest;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Param;
 public interface JobMapper extends BaseMapper<Job> {
     Job getJobByName(@Param("name") String name);
 
-    IPage<Job> queryJobPage(@Param("criteria") JobQueryCriteria criteria, Page<Object> page);
+    IPage<Job> queryJobPage(@Param("criteria") QueryJobRequest criteria, Page<Object> page);
 }
