@@ -2,7 +2,7 @@ package cn.odboy.application.core.rest;
 
 import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
-import cn.odboy.model.system.dto.UserOnlineDto;
+import cn.odboy.model.system.response.UserOnlineResponse;
 import cn.odboy.util.DesEncryptUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,7 @@ public class OnlineController {
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<PageResult<UserOnlineDto>> queryOnlineUser(String username, Pageable pageable) {
+    public ResponseEntity<PageResult<UserOnlineResponse>> queryOnlineUser(String username, Pageable pageable) {
         return new ResponseEntity<>(userOnlineService.queryOnlineUserPage(username, pageable), HttpStatus.OK);
     }
 
