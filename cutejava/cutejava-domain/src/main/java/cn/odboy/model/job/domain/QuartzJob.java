@@ -1,6 +1,7 @@
 package cn.odboy.model.job.domain;
 
 import cn.odboy.base.MyEntity;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -62,5 +63,6 @@ public class QuartzJob extends MyEntity {
 
     @NotBlank
     @ApiModelProperty(value = "备注")
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String description;
 }

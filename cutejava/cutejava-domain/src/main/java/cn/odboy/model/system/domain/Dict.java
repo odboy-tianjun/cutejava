@@ -1,7 +1,9 @@
 package cn.odboy.model.system.domain;
 
 import cn.odboy.base.MyEntity;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,5 +28,6 @@ public class Dict extends MyEntity {
     private String name;
 
     @ApiModelProperty(value = "描述")
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String description;
 }
