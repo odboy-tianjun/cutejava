@@ -31,7 +31,7 @@ public class QuartzManage {
     public void addJob(QuartzJob quartzJob) {
         try {
             // 构建job信息
-            JobDetail jobDetail = JobBuilder.newJob(ExecutionJob.class).
+            JobDetail jobDetail = JobBuilder.newJob(ExecutionJobBean.class).
                     withIdentity(JOB_NAME + quartzJob.getId()).build();
 
             // 通过触发器名和cron 表达式创建 Trigger

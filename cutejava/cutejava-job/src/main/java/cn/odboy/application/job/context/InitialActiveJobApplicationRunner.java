@@ -1,6 +1,5 @@
-package cn.odboy.application.job.config;
+package cn.odboy.application.job.context;
 
-import cn.odboy.application.job.context.QuartzManage;
 import cn.odboy.application.job.mapper.QuartzJobMapper;
 import cn.odboy.model.job.domain.QuartzJob;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JobRunner implements ApplicationRunner {
+public class InitialActiveJobApplicationRunner implements ApplicationRunner {
     private final QuartzJobMapper quartzJobMapper;
     private final QuartzManage quartzManage;
 

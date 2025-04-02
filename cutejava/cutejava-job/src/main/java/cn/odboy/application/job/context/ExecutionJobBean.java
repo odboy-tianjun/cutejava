@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 @Slf4j
-public class ExecutionJob extends QuartzJobBean {
+public class ExecutionJobBean extends QuartzJobBean {
     /**
      * 此处仅供参考，可根据任务执行情况自定义线程池参数
      */

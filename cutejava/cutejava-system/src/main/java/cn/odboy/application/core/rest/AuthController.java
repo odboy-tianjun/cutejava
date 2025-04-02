@@ -5,7 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.odboy.annotation.AnonymousDeleteMapping;
 import cn.odboy.annotation.AnonymousGetMapping;
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.application.core.config.CaptchaConfig;
+import cn.odboy.application.core.config.CaptchaProperties;
 import cn.odboy.application.core.config.LoginProperties;
 import cn.odboy.application.core.constant.LoginCodeEnum;
 import cn.odboy.application.core.context.TokenProvider;
@@ -55,7 +55,7 @@ public class AuthController {
     private final RedisHelper redisHelper;
     private final UserOnlineServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
-    private final CaptchaConfig captchaConfig;
+    private final CaptchaProperties captchaProperties;
     private final LoginProperties loginProperties;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
@@ -112,7 +112,7 @@ public class AuthController {
     @AnonymousGetMapping(value = "/code")
     public ResponseEntity<Object> getCode() {
         // 获取运算的结果
-        Captcha captcha = captchaConfig.getCaptcha();
+        Captcha captcha = captchaProperties.getCaptcha();
         String uuid = SystemRedisKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
         //当验证码类型为 arithmetic时且长度 >= 2 时，captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
@@ -120,7 +120,7 @@ public class AuthController {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存
-        redisHelper.set(uuid, captchaValue, captchaConfig.getExpiration(), TimeUnit.MINUTES);
+        redisHelper.set(uuid, captchaValue, captchaProperties.getExpiration(), TimeUnit.MINUTES);
         // 验证码信息
         Map<String, Object> imgResult = new HashMap<String, Object>(2) {{
             put("img", captcha.toBase64());
