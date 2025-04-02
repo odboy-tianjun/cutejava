@@ -15,7 +15,7 @@ import cn.odboy.model.system.domain.Dept;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.request.QueryUserRequest;
-import cn.odboy.model.system.response.UserPassResponse;
+import cn.odboy.model.system.response.UpdateUserPasswordResponse;
 import cn.odboy.properties.RsaProperties;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RsaEncryptUtil;
@@ -145,7 +145,7 @@ public class UserController {
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
-    public ResponseEntity<Object> updateUserPassword(@RequestBody UserPassResponse passVo) throws Exception {
+    public ResponseEntity<Object> updateUserPassword(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
         User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());

@@ -6,7 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
-import cn.odboy.model.system.dto.UserJwtDto;
+import cn.odboy.model.system.model.UserJwtModel;
 import cn.odboy.redis.RedisHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -61,7 +61,7 @@ public class TokenProvider implements InitializingBean {
      * @param user /
      * @return /
      */
-    public String createToken(UserJwtDto user) {
+    public String createToken(UserJwtModel user) {
         // 设置参数
         Map<String, Object> claims = new HashMap<>(6);
         // 设置用户ID

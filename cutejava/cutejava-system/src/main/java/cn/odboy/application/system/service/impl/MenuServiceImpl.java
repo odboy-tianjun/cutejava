@@ -16,7 +16,7 @@ import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.request.QueryMenuRequest;
-import cn.odboy.model.system.response.MenuMetaResponse;
+import cn.odboy.model.system.model.MenuMetaModel;
 import cn.odboy.model.system.response.MenuResponse;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.ClassUtil;
@@ -273,7 +273,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                                 menuResponse.setComponent(menu.getComponent());
                             }
                         }
-                        menuResponse.setMeta(new MenuMetaResponse(menu.getTitle(), menu.getIcon(), !menu.getCache()));
+                        menuResponse.setMeta(new MenuMetaModel(menu.getTitle(), menu.getIcon(), !menu.getCache()));
                         if (CollectionUtil.isNotEmpty(menuList)) {
                             menuResponse.setAlwaysShow(true);
                             menuResponse.setRedirect("noredirect");

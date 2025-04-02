@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.model.system.response.UserOnlineResponse;
+import cn.odboy.model.system.model.UserOnlineModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,9 +43,9 @@ public class TokenFilter extends GenericFilterBean {
         if (StrUtil.isNotBlank(token)) {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
-            UserOnlineResponse userOnlineResponse = onlineUserService.getOnlineUserByKey(loginKey);
+            UserOnlineModel userOnlineModel = onlineUserService.getOnlineUserByKey(loginKey);
             // 判断用户在线信息是否为空
-            if (userOnlineResponse != null) {
+            if (userOnlineModel != null) {
                 // Token 续期判断
                 tokenProvider.checkRenewal(token);
                 // 获取认证信息，设置上下文

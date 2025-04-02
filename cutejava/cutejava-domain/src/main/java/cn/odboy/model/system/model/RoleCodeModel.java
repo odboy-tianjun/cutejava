@@ -1,4 +1,4 @@
-package cn.odboy.model.system.dto;
+package cn.odboy.model.system.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleCodeDto implements GrantedAuthority {
+public class RoleCodeModel implements GrantedAuthority {
 
     @ApiModelProperty(value = "角色名")
     private String authority;

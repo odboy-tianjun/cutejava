@@ -1,8 +1,8 @@
 package cn.odboy.application.core.service;
 
 import cn.odboy.base.PageResult;
-import cn.odboy.model.system.dto.UserJwtDto;
-import cn.odboy.model.system.response.UserOnlineResponse;
+import cn.odboy.model.system.model.UserJwtModel;
+import cn.odboy.model.system.model.UserOnlineModel;
 import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,11 +13,11 @@ public interface UserOnlineService {
     /**
      * 保存在线用户信息
      *
-     * @param userJwtDto /
+     * @param userJwtModel /
      * @param token      /
      * @param request    /
      */
-    void save(UserJwtDto userJwtDto, String token, HttpServletRequest request);
+    void save(UserJwtModel userJwtModel, String token, HttpServletRequest request);
 
     /**
      * 查询全部数据
@@ -26,7 +26,7 @@ public interface UserOnlineService {
      * @param pageable /
      * @return /
      */
-    PageResult<UserOnlineResponse> queryOnlineUserPage(String username, Pageable pageable);
+    PageResult<UserOnlineModel> queryOnlineUserPage(String username, Pageable pageable);
 
     /**
      * 查询全部数据，不分页
@@ -34,7 +34,7 @@ public interface UserOnlineService {
      * @param username /
      * @return /
      */
-    List<UserOnlineResponse> selectOnlineUserByUsername(String username);
+    List<UserOnlineModel> selectOnlineUserByUsername(String username);
 
     /**
      * 退出登录
@@ -50,7 +50,7 @@ public interface UserOnlineService {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<UserOnlineResponse> all, HttpServletResponse response) throws IOException;
+    void downloadExcel(List<UserOnlineModel> all, HttpServletResponse response) throws IOException;
 
     /**
      * 查询用户
@@ -58,7 +58,7 @@ public interface UserOnlineService {
      * @param key /
      * @return /
      */
-    UserOnlineResponse getOnlineUserByKey(String key);
+    UserOnlineModel getOnlineUserByKey(String key);
 
     /**
      * 根据用户名强退用户

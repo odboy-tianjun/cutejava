@@ -1,4 +1,4 @@
-package cn.odboy.model.system.response;
+package cn.odboy.model.system.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.Date;
  * 在线用户
  */
 @Data
-public class UserOnlineResponse {
+public class UserOnlineModel {
     @ApiModelProperty(value = "Token编号")
     private String uid;
 

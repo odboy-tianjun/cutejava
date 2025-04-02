@@ -1,6 +1,7 @@
 package cn.odboy.model.system.response;
 
 import cn.odboy.base.MyObject;
+import cn.odboy.model.system.model.MenuMetaModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +33,7 @@ public class MenuResponse extends MyObject {
     private Boolean alwaysShow;
 
     @ApiModelProperty(value = "元数据")
-    private MenuMetaResponse meta;
+    private MenuMetaModel meta;
 
     @ApiModelProperty(value = "子路由")
     private List<MenuResponse> children;
