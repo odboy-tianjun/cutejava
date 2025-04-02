@@ -1,4 +1,4 @@
-package cn.odboy.model.system.dto;
+package cn.odboy.model.system.model;
 
 import cn.odboy.model.system.domain.User;
 import com.alibaba.fastjson2.annotation.JSONField;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class UserJwtDto implements UserDetails {
+public class UserJwtModel implements UserDetails {
 
     @ApiModelProperty(value = "用户")
     private final User user;
@@ -21,10 +21,10 @@ public class UserJwtDto implements UserDetails {
     private final List<Long> dataScopes;
 
     @ApiModelProperty(value = "角色")
-    private final List<RoleCodeDto> authorities;
+    private final List<RoleCodeModel> authorities;
 
     public Set<String> getRoles() {
-        return authorities.stream().map(RoleCodeDto::getAuthority).collect(Collectors.toSet());
+        return authorities.stream().map(RoleCodeModel::getAuthority).collect(Collectors.toSet());
     }
 
     @Override

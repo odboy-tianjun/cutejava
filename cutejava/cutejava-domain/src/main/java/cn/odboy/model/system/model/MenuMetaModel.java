@@ -1,4 +1,4 @@
-package cn.odboy.model.system.response;
+package cn.odboy.model.system.model;
 
 import cn.odboy.base.MyObject;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class MenuMetaResponse extends MyObject {
+public class MenuMetaModel extends MyObject {
 
     @ApiModelProperty(value = "菜单标题")
     private String title;

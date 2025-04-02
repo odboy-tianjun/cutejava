@@ -6,8 +6,8 @@ import cn.odboy.application.system.service.RoleService;
 import cn.odboy.application.system.service.UserService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.dto.RoleCodeDto;
-import cn.odboy.model.system.dto.UserJwtDto;
+import cn.odboy.model.system.model.UserJwtModel;
+import cn.odboy.model.system.model.RoleCodeModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,9 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserCacheService userCacheService;
 
     @Override
-    public UserJwtDto loadUserByUsername(String username) {
-        UserJwtDto userJwtDto = userCacheService.getUserCacheByUsername(username);
-        if (userJwtDto == null) {
+    public UserJwtModel loadUserByUsername(String username) {
+        UserJwtModel userJwtModel = userCacheService.getUserCacheByUsername(username);
+        if (userJwtModel == null) {
             User user = userService.getUserByUsername(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");
@@ -35,13 +35,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     throw new BadRequestException("账号未激活！");
                 }
                 // 获取用户的权限
-                List<RoleCodeDto> authorities = roleService.buildPermissions(user);
+                List<RoleCodeModel> authorities = roleService.buildPermissions(user);
                 // 初始化JwtUserDto
-                userJwtDto = new UserJwtDto(user, dataService.selectDeptIdByUserIdWithDeptId(user), authorities);
+                userJwtModel = new UserJwtModel(user, dataService.selectDeptIdByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
-                userCacheService.addUserCache(username, userJwtDto);
+                userCacheService.addUserCache(username, userJwtModel);
             }
         }
-        return userJwtDto;
+        return userJwtModel;
     }
 }

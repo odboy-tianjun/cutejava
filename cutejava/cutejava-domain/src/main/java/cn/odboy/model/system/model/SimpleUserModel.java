@@ -1,4 +1,4 @@
-package cn.odboy.model.system.response;
+package cn.odboy.model.system.model;
 
 import cn.odboy.base.MyObject;
 import cn.odboy.model.system.domain.Dept;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SimpleUserResponse extends MyObject {
+public class SimpleUserModel extends MyObject {
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
     @ApiModelProperty(value = "用户角色")
