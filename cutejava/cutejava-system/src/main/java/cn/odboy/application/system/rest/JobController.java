@@ -13,10 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,7 +46,7 @@ public class JobController {
     }
 
     @ApiOperation("新增岗位")
-    @PostMapping
+    @PostMapping(value = "/createJob")
     @PreAuthorize("@el.check('job:add')")
     public ResponseEntity<Object> createJob(@Validated @RequestBody CreateJobRequest resources) {
         jobService.createJob(resources);
@@ -56,7 +54,7 @@ public class JobController {
     }
 
     @ApiOperation("修改岗位")
-    @PutMapping
+    @PostMapping(value = "/updateJob")
     @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources) {
         jobService.updateJobById(resources);
@@ -64,7 +62,7 @@ public class JobController {
     }
 
     @ApiOperation("删除岗位")
-    @DeleteMapping
+    @PostMapping(value = "/deleteJob")
     @PreAuthorize("@el.check('job:del')")
     public ResponseEntity<Object> deleteJob(@RequestBody Set<Long> ids) {
         // 验证是否被用户关联

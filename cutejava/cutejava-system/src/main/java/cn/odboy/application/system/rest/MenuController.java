@@ -16,10 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,7 +47,7 @@ public class MenuController {
         menuService.downloadExcel(menuService.selectMenuByCriteria(criteria, false), response);
     }
 
-    @GetMapping(value = "/build")
+    @PostMapping(value = "/buildMenus")
     @ApiOperation("获取前端所需菜单")
     public ResponseEntity<List<MenuResponse>> buildMenus() {
         List<Menu> menuList = menuService.selectMenuByUserId(SecurityHelper.getCurrentUserId());
@@ -58,16 +56,16 @@ public class MenuController {
     }
 
     @ApiOperation("返回全部的菜单")
-    @GetMapping(value = "/lazy")
+    @PostMapping(value = "/queryAllMenu")
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<List<Menu>> queryAllMenu(@RequestParam Long pid) {
         return new ResponseEntity<>(menuService.selectMenuByPid(pid), HttpStatus.OK);
     }
 
     @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
-    @GetMapping(value = "/child")
+    @PostMapping(value = "/queryChildMenu")
     @PreAuthorize("@el.check('menu:list','roles:list')")
-    public ResponseEntity<Object> childMenu(@RequestParam Long id) {
+    public ResponseEntity<Object> queryChildMenu(@RequestParam Long id) {
         Set<Menu> menuSet = new HashSet<>();
         List<Menu> menuList = menuService.selectMenuByPid(id);
         menuSet.add(menuService.getById(id));
@@ -85,9 +83,9 @@ public class MenuController {
     }
 
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")
-    @PostMapping("/superior")
+    @PostMapping("/queryMenuSuperior")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<List<Menu>> getMenuSuperior(@RequestBody List<Long> ids) {
+    public ResponseEntity<List<Menu>> queryMenuSuperior(@RequestBody List<Long> ids) {
         Set<Menu> menus = new LinkedHashSet<>();
         if (CollectionUtil.isNotEmpty(ids)) {
             for (Long id : ids) {
@@ -108,7 +106,7 @@ public class MenuController {
     }
 
     @ApiOperation("新增菜单")
-    @PostMapping
+    @PostMapping(value = "/createMenu")
     @PreAuthorize("@el.check('menu:add')")
     public ResponseEntity<Object> createMenu(@Validated @RequestBody Menu resources) {
         if (resources.getId() != null) {
@@ -119,7 +117,7 @@ public class MenuController {
     }
 
     @ApiOperation("修改菜单")
-    @PutMapping
+    @PostMapping(value = "/updateMenu")
     @PreAuthorize("@el.check('menu:edit')")
     public ResponseEntity<Object> updateMenu(@Validated(Menu.Update.class) @RequestBody Menu resources) {
         menuService.updateMenuById(resources);
@@ -127,7 +125,7 @@ public class MenuController {
     }
 
     @ApiOperation("删除菜单")
-    @DeleteMapping
+    @PostMapping(value = "/deleteMenu")
     @PreAuthorize("@el.check('menu:del')")
     public ResponseEntity<Object> deleteMenu(@RequestBody Set<Long> ids) {
         Set<Menu> menuSet = new HashSet<>();

@@ -1,15 +1,22 @@
 import request from '@/utils/request'
 
-export function sendCaptcha(data) {
+export function sendResetEmailCaptcha(data) {
   return request({
-    url: 'api/code/sendCaptcha?email=' + data,
+    url: 'api/code/sendResetEmailCaptcha?email=' + data,
     method: 'post'
   })
 }
 
-export function updatePass(pass) {
+export function sendResetPasswordCaptcha(data) {
   return request({
-    url: 'api/users/updatePass/' + pass,
-    method: 'get'
+    url: 'api/code/sendResetPasswordCaptcha?email=' + data,
+    method: 'post'
+  })
+}
+
+export function validatedCaptcha(email, code, codeBi) {
+  return request({
+    url: `api/code/validatedCaptcha?email=${email}&code=${code}&codeBi=${codeBi}`,
+    method: 'post'
   })
 }

@@ -1,17 +1,17 @@
 import request from '@/utils/request'
 
-export function get() {
+export function queryQiNiuConfig() {
   return request({
-    url: 'api/qiNiuContent/config',
-    method: 'get'
+    url: 'api/qiNiuContent/queryQiNiuConfig',
+    method: 'post'
   })
 }
 
 export function update(data) {
   return request({
-    url: 'api/qiNiuContent/config',
-    data,
-    method: 'put'
+    url: 'api/qiNiuContent/updateQiNiuConfig',
+    method: 'post',
+    data
   })
 }
 

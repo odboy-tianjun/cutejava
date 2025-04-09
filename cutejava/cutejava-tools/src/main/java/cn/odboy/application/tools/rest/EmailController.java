@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,23 +22,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/email")
 @Api(tags = "工具：邮件管理")
 public class EmailController {
-
     private final EmailService emailService;
 
-    @GetMapping
+    @ApiOperation("查询配置")
+    @PostMapping(value = "/queryEmailConfig")
     public ResponseEntity<EmailConfig> queryEmailConfig() {
         return new ResponseEntity<>(emailService.getEmailConfig(), HttpStatus.OK);
     }
 
-    @PutMapping
     @ApiOperation("配置邮件")
+    @PostMapping(value = "/updateEmailConfig")
     public ResponseEntity<Object> updateEmailConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
         emailService.updateEmailConfigOnPassChange(emailConfig);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping
     @ApiOperation("发送邮件")
+    @PostMapping(value = "/sendEmail")
     public ResponseEntity<Object> sendEmail(@Validated @RequestBody SendEmailRequest sendEmailRequest) {
         emailService.sendEmail(sendEmailRequest);
         return new ResponseEntity<>(HttpStatus.OK);

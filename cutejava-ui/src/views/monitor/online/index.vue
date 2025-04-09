@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { del } from '@/api/monitor/online'
+import { kickOutUser } from '@/api/monitor/online'
 import CRUD, { presenter, header, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -102,7 +102,7 @@ export default {
         })
       } else ids.push(key)
       this.delLoading = true
-      del(ids).then(() => {
+      kickOutUser(ids).then(() => {
         this.delLoading = false
         if (this.$refs[index]) {
           this.$refs[index].doClose()

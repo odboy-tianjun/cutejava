@@ -13,10 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +50,7 @@ public class DeptController {
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @PostMapping("/superior")
+    @PostMapping("/getDeptSuperior")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<Dept> deptSet = new LinkedHashSet<>();
@@ -74,7 +72,7 @@ public class DeptController {
     }
 
     @ApiOperation("新增部门")
-    @PostMapping
+    @PostMapping(value = "/createDept")
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<Object> createDept(@Validated @RequestBody CreateDeptRequest resources) {
         deptService.createDept(resources);
@@ -82,7 +80,7 @@ public class DeptController {
     }
 
     @ApiOperation("修改部门")
-    @PutMapping
+    @PostMapping(value = "/updateDept")
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Object> updateDept(@Validated(Dept.Update.class) @RequestBody Dept resources) {
         deptService.updateDept(resources);
@@ -90,7 +88,7 @@ public class DeptController {
     }
 
     @ApiOperation("删除部门")
-    @DeleteMapping
+    @PostMapping(value = "/deleteDept")
     @PreAuthorize("@el.check('dept:del')")
     public ResponseEntity<Object> deleteDept(@RequestBody Set<Long> ids) {
         Set<Dept> depts = new HashSet<>();

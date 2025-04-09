@@ -55,6 +55,7 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
             throw new BadRequestException("上传失败");
         }
         try {
+            String formatSize = FileUtil.getSize(size);
             name = StringUtil.isBlank(name) ? FileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
             LocalStorage localStorage = new LocalStorage(
                     file.getName(),
@@ -62,7 +63,7 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
                     suffix,
                     file.getPath(),
                     type,
-                    FileUtil.getSize(size)
+                    formatSize
             );
             save(localStorage);
             return localStorage;

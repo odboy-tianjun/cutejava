@@ -24,18 +24,18 @@ export function edit(data) {
   })
 }
 
-export function updateIsPause(id) {
+export function switchJobPauseStatus(id) {
   return request({
-    url: 'api/jobs/' + id,
-    method: 'put'
+    url: 'api/jobs/switchJobPauseStatus/' + id,
+    method: 'post'
   })
 }
 
-export function execution(id) {
+export function executionQuartzJob(id) {
   return request({
-    url: 'api/jobs/exec/' + id,
-    method: 'put'
+    url: 'api/jobs/executionQuartzJob/' + id,
+    method: 'post'
   })
 }
 
-export default { del, updateIsPause, execution, add, edit }
+export default { add, edit, del, switchJobPauseStatus, executionQuartzJob }

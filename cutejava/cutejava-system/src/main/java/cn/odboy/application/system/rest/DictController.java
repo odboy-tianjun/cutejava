@@ -13,10 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +38,7 @@ public class DictController {
     }
 
     @ApiOperation("查询字典")
-    @GetMapping(value = "/all")
+    @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<Dict>> queryAllDict() {
         return new ResponseEntity<>(dictService.selectDictByCriteria(new QueryDictRequest()), HttpStatus.OK);
@@ -55,7 +53,7 @@ public class DictController {
     }
 
     @ApiOperation("新增字典")
-    @PostMapping
+    @PostMapping(value = "/createDict")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Object> createDict(@Validated @RequestBody CreateDictRequest resources) {
         dictService.saveDict(resources);
@@ -63,7 +61,7 @@ public class DictController {
     }
 
     @ApiOperation("修改字典")
-    @PutMapping
+    @PostMapping(value = "/updateDict")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDict(@Validated(Dict.Update.class) @RequestBody Dict resources) {
         dictService.updateDictById(resources);
@@ -71,7 +69,7 @@ public class DictController {
     }
 
     @ApiOperation("删除字典")
-    @DeleteMapping
+    @PostMapping(value = "/deleteDict")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Object> deleteDict(@RequestBody Set<Long> ids) {
         dictService.deleteDictByIds(ids);

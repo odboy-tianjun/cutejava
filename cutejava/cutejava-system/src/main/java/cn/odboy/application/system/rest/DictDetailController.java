@@ -41,7 +41,7 @@ public class DictDetailController {
     }
 
     @ApiOperation("查询多个字典详情")
-    @GetMapping(value = "/map")
+    @GetMapping(value = "/getDictDetailMaps")
     public ResponseEntity<Object> getDictDetailMaps(@RequestParam String dictName) {
         String[] names = dictName.split("[,，]");
         Map<String, List<DictDetail>> dictMap = new HashMap<>(16);

@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,23 +28,23 @@ public class CaptchaController {
      *
      * @param email 邮件地址
      */
-    @PostMapping(value = "/sendCaptcha")
     @ApiOperation("重置邮箱，发送验证码")
-    public ResponseEntity<Object> resetEmail(@RequestParam String email) {
+    @PostMapping(value = "/sendResetEmailCaptcha")
+    public ResponseEntity<Object> sendResetEmailCaptcha(@RequestParam String email) {
         emailService.sendCaptcha(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/resetPass")
     @ApiOperation("重置密码，发送验证码")
-    public ResponseEntity<Object> resetPass(@RequestParam String email) {
+    @PostMapping(value = "/sendResetPasswordCaptcha")
+    public ResponseEntity<Object> sendResetPasswordCaptcha(@RequestParam String email) {
         emailService.sendCaptcha(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/validated")
     @ApiOperation("验证码验证")
-    public ResponseEntity<Object> validated(@RequestParam String email, @RequestParam String code, @RequestParam Integer codeBi) {
+    @PostMapping(value = "/validatedCaptcha")
+    public ResponseEntity<Object> validatedCaptcha(@RequestParam String email, @RequestParam String code, @RequestParam Integer codeBi) {
         CodeBiEnum biEnum = CodeBiEnum.find(codeBi);
         switch (Objects.requireNonNull(biEnum)) {
             case ONE:

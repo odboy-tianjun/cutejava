@@ -16,20 +16,20 @@ export function login(username, password, code, uuid) {
 export function getInfo() {
   return request({
     url: 'auth/info',
-    method: 'get'
+    method: 'post'
   })
 }
 
 export function getCodeImg() {
   return request({
     url: 'auth/code',
-    method: 'get'
+    method: 'post'
   })
 }
 
 export function logout() {
   return request({
     url: 'auth/logout',
-    method: 'delete'
+    method: 'post'
   })
 }

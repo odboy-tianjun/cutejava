@@ -20,7 +20,7 @@ export function getDictMap(dictName) {
     size: 9999
   }
   return request({
-    url: 'api/dictDetail/map',
+    url: 'api/dictDetail/getDictDetailMaps',
     method: 'get',
     params
   })

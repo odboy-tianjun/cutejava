@@ -1,7 +1,6 @@
 package cn.odboy.application.core.context;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.model.system.model.UserOnlineModel;
@@ -19,18 +18,14 @@ import java.io.IOException;
 
 @Slf4j
 public class TokenFilter extends GenericFilterBean {
-
     private final TokenProvider tokenProvider;
-    private final SecurityProperties properties;
     private final UserOnlineServiceImpl onlineUserService;
 
     /**
      * @param tokenProvider     Token
-     * @param properties        JWT
      * @param onlineUserService 用户在线
      */
-    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, UserOnlineServiceImpl onlineUserService) {
-        this.properties = properties;
+    public TokenFilter(TokenProvider tokenProvider, UserOnlineServiceImpl onlineUserService) {
         this.onlineUserService = onlineUserService;
         this.tokenProvider = tokenProvider;
     }
