@@ -93,7 +93,7 @@ public class AuthController {
             onlineUserService.kickOutByUsername(loginRequest.getUsername());
         }
         // 保存在线信息
-        onlineUserService.save(jwtUser, token, request);
+        onlineUserService.saveUserJwtModelByToken(jwtUser, token, request);
         // 返回登录信息
         return ResponseEntity.ok(authInfo);
     }

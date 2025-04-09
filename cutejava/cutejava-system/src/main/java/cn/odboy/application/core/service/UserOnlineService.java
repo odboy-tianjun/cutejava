@@ -17,7 +17,7 @@ public interface UserOnlineService {
      * @param token        /
      * @param request      /
      */
-    void save(UserJwtModel userJwtModel, String token, HttpServletRequest request);
+    void saveUserJwtModelByToken(UserJwtModel userJwtModel, String token, HttpServletRequest request);
 
     /**
      * 查询全部数据
@@ -26,7 +26,7 @@ public interface UserOnlineService {
      * @param pageable /
      * @return /
      */
-    PageResult<UserOnlineModel> queryOnlineUserPage(String username, Pageable pageable);
+    PageResult<UserOnlineModel> describeUserOnlineModelPage(String username, Pageable pageable);
 
     /**
      * 查询全部数据，不分页
@@ -34,7 +34,7 @@ public interface UserOnlineService {
      * @param username /
      * @return /
      */
-    List<UserOnlineModel> selectOnlineUserByUsername(String username);
+    List<UserOnlineModel> describeUserOnlineModelListByUsername(String username);
 
     /**
      * 退出登录
@@ -50,7 +50,7 @@ public interface UserOnlineService {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<UserOnlineModel> all, HttpServletResponse response) throws IOException;
+    void downloadUserOnlineModelExcel(List<UserOnlineModel> all, HttpServletResponse response) throws IOException;
 
     /**
      * 查询用户
@@ -58,7 +58,7 @@ public interface UserOnlineService {
      * @param key /
      * @return /
      */
-    UserOnlineModel getOnlineUserByKey(String key);
+    UserOnlineModel describeUserOnlineModelByKey(String key);
 
     /**
      * 根据用户名强退用户

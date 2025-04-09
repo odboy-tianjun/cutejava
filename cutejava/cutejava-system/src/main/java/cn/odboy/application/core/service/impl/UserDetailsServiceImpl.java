@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserJwtModel loadUserByUsername(String username) {
-        UserJwtModel userJwtModel = userCacheService.getUserCacheByUsername(username);
+        UserJwtModel userJwtModel = userCacheService.describeUserJwtModelByUsername(username);
         if (userJwtModel == null) {
             User user = userService.getUserByUsername(username);
             if (user == null) {
@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 // 初始化JwtUserDto
                 userJwtModel = new UserJwtModel(user, dataService.selectDeptIdByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
-                userCacheService.addUserCache(username, userJwtModel);
+                userCacheService.cacheUserJwtModelByUserName(username, userJwtModel);
             }
         }
         return userJwtModel;

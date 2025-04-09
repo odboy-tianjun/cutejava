@@ -223,7 +223,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void delCaches(Long id, List<User> users) {
         users = CollectionUtil.isEmpty(users) ? userMapper.queryUserListByRoleId(id) : users;
         if (CollectionUtil.isNotEmpty(users)) {
-            users.forEach(item -> userCacheService.cleanUserCacheByUsername(item.getUsername()));
+            users.forEach(item -> userCacheService.cleanUserJwtModelCacheByUsername(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
             redisHelper.delByKeys(SystemRedisKey.DATA_USER, userIds);
             redisHelper.delByKeys(SystemRedisKey.MENU_USER, userIds);
