@@ -209,7 +209,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, String> modifyUserAvatarFile(MultipartFile multipartFile) {
+    public Map<String, String> modifyUserAvatar(MultipartFile multipartFile) {
         // 文件大小验证
         FileUtil.checkSize(fileProperties.getAvatarMaxSize(), multipartFile.getSize());
         // 验证文件上传的格式
