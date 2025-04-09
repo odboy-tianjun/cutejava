@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserJwtModel loadUserByUsername(String username) {
         UserJwtModel userJwtModel = userCacheService.describeUserJwtModelByUsername(username);
         if (userJwtModel == null) {
-            User user = userService.getUserByUsername(username);
+            User user = userService.describeUserByUsername(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");
             } else {

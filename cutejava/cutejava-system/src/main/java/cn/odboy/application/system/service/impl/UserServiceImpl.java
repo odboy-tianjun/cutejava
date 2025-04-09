@@ -53,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserOnlineService userOnlineService;
 
     @Override
-    public PageResult<User> queryUserPage(QueryUserRequest criteria, Page<Object> page) {
+    public PageResult<User> describeUserPage(QueryUserRequest criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<User> users = userMapper.queryUserPageByArgs(criteria, PageUtil.getCount(userMapper)).getRecords();
         Long total = userMapper.getUserCountByArgs(criteria);
@@ -61,13 +61,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<User> selectUserByCriteria(QueryUserRequest criteria) {
+    public List<User> describeUserList(QueryUserRequest criteria) {
         return userMapper.queryUserPageByArgs(criteria, PageUtil.getCount(userMapper)).getRecords();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User getUserById(long id) {
+    public User describeUserById(long id) {
         String key = SystemRedisKey.USER_ID + id;
         User user = redisHelper.get(key, User.class);
         if (user == null) {
@@ -99,7 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUserById(User resources) {
+    public void modifyUserById(User resources) {
         User user = getById(resources.getId());
         User user1 = userMapper.getUserByUsername(resources.getUsername());
         User user2 = userMapper.getUserByEmail(resources.getEmail());
@@ -151,7 +151,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateCenterInfoById(User resources) {
+    public void modifyUserCenterInfoById(User resources) {
         User user = getById(resources.getId());
         User user1 = userMapper.getUserByPhone(resources.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
@@ -181,20 +181,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User describeUserByUsername(String username) {
         return userMapper.getUserByUsername(username);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updatePasswordByUsername(String username, String pass) {
+    public void modifyUserPasswordByUsername(String username, String pass) {
         userMapper.updatePasswordByUsername(username, pass, new Date());
         flushCache(username);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void resetPasswordByIds(Set<Long> ids, String password) {
+    public void resetUserPasswordByIds(Set<Long> ids, String password) {
         List<User> users = userMapper.selectByIds(ids);
         // 清除缓存
         users.forEach(user -> {
@@ -209,7 +209,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, String> updateAvatarFile(MultipartFile multipartFile) {
+    public Map<String, String> modifyUserAvatarFile(MultipartFile multipartFile) {
         // 文件大小验证
         FileUtil.checkSize(fileProperties.getAvatarMaxSize(), multipartFile.getSize());
         // 验证文件上传的格式
@@ -236,13 +236,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateEmailByUsername(String username, String email) {
+    public void modifyUserEmailByUsername(String username, String email) {
         userMapper.updateEmailByUsername(username, email);
         flushCache(username);
     }
 
     @Override
-    public void downloadExcel(List<User> users, HttpServletResponse response) throws IOException {
+    public void downloadUserExcel(List<User> users, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (User user : users) {
             List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());

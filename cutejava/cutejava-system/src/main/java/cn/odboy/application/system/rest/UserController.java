@@ -64,7 +64,7 @@ public class UserController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
     public void exportUser(HttpServletResponse response, QueryUserRequest criteria) throws IOException {
-        userService.downloadExcel(userService.selectUserByCriteria(criteria), response);
+        userService.downloadUserExcel(userService.describeUserList(criteria), response);
     }
 
     @ApiOperation("查询用户")
@@ -80,18 +80,18 @@ public class UserController {
             criteria.getDeptIds().addAll(deptService.describeChildDeptIdListByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = dataService.describeDeptIdListByUserIdWithDeptId(userService.getUserByUsername(SecurityHelper.getCurrentUsername()));
+        List<Long> dataScopes = dataService.describeDeptIdListByUserIdWithDeptId(userService.describeUserByUsername(SecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集
             criteria.getDeptIds().retainAll(dataScopes);
             if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-                return new ResponseEntity<>(userService.queryUserPage(criteria, page), HttpStatus.OK);
+                return new ResponseEntity<>(userService.describeUserPage(criteria, page), HttpStatus.OK);
             }
         } else {
             // 否则取并集
             criteria.getDeptIds().addAll(dataScopes);
-            return new ResponseEntity<>(userService.queryUserPage(criteria, page), HttpStatus.OK);
+            return new ResponseEntity<>(userService.describeUserPage(criteria, page), HttpStatus.OK);
         }
         return new ResponseEntity<>(PageUtil.noData(), HttpStatus.OK);
     }
@@ -112,7 +112,7 @@ public class UserController {
     @PreAuthorize("@el.check('user:edit')")
     public ResponseEntity<Object> updateUser(@Validated(User.Update.class) @RequestBody User resources) throws Exception {
         checkLevel(resources);
-        userService.updateUserById(resources);
+        userService.modifyUserById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -122,7 +122,7 @@ public class UserController {
         if (!resources.getId().equals(SecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
-        userService.updateCenterInfoById(resources);
+        userService.modifyUserCenterInfoById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -134,7 +134,7 @@ public class UserController {
             Integer currentLevel = Collections.min(roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(roleService.describeRoleListByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足，不能删除：" + userService.getUserById(id).getUsername());
+                throw new BadRequestException("角色权限不足，不能删除：" + userService.describeUserById(id).getUsername());
             }
         }
         userService.deleteUserByIds(ids);
@@ -146,14 +146,14 @@ public class UserController {
     public ResponseEntity<Object> updatePassword(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
-        User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());
+        User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
         }
         if (passwordEncoder.matches(newPass, user.getPassword())) {
             throw new BadRequestException("新密码不能与旧密码相同");
         }
-        userService.updatePasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
+        userService.modifyUserPasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -161,26 +161,26 @@ public class UserController {
     @PostMapping(value = "/resetPwd")
     public ResponseEntity<Object> resetPwd(@RequestBody Set<Long> ids) {
         String defaultPwd = passwordEncoder.encode("123456");
-        userService.resetPasswordByIds(ids, defaultPwd);
+        userService.resetUserPasswordByIds(ids, defaultPwd);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("修改头像")
     @PostMapping(value = "/updateAvatar")
     public ResponseEntity<Object> updateUserAvatar(@RequestParam MultipartFile avatar) {
-        return new ResponseEntity<>(userService.updateAvatarFile(avatar), HttpStatus.OK);
+        return new ResponseEntity<>(userService.modifyUserAvatarFile(avatar), HttpStatus.OK);
     }
 
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/updateEmail/{code}")
     public ResponseEntity<Object> updateUserEmail(@PathVariable String code, @RequestBody User resources) throws Exception {
         String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, resources.getPassword());
-        User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());
+        User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
         verificationCodeService.checkCodeAvailable(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey(), resources.getEmail(), code);
-        userService.updateEmailByUsername(user.getUsername(), resources.getEmail());
+        userService.modifyUserEmailByUsername(user.getUsername(), resources.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
