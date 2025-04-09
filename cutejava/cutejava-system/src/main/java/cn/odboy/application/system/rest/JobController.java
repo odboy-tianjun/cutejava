@@ -34,7 +34,7 @@ public class JobController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('job:list')")
     public void exportJob(HttpServletResponse response, QueryJobRequest criteria) throws IOException {
-        jobService.downloadExcel(jobService.selectJobByCriteria(criteria), response);
+        jobService.downloadJobExcel(jobService.describeJobList(criteria), response);
     }
 
     @ApiOperation("查询岗位")
@@ -42,7 +42,7 @@ public class JobController {
     @PreAuthorize("@el.check('job:list','user:list')")
     public ResponseEntity<PageResult<Job>> queryJob(QueryJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(jobService.queryJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.describeJobPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增岗位")
@@ -57,7 +57,7 @@ public class JobController {
     @PostMapping(value = "/updateJob")
     @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources) {
-        jobService.updateJobById(resources);
+        jobService.modifyJobById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

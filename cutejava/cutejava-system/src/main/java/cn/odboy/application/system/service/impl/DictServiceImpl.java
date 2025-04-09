@@ -36,25 +36,25 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<Dict> queryDictPage(QueryDictRequest criteria, Page<Object> page) {
+    public PageResult<Dict> describeDictPage(QueryDictRequest criteria, Page<Object> page) {
         IPage<Dict> dicts = dictMapper.queryDictPageByArgs(criteria, page);
         return PageUtil.toPage(dicts);
     }
 
     @Override
-    public List<Dict> selectDictByCriteria(QueryDictRequest criteria) {
+    public List<Dict> describeDictList(QueryDictRequest criteria) {
         return dictMapper.queryDictPageByArgs(criteria, PageUtil.getCount(dictMapper)).getRecords();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveDict(CreateDictRequest resources) {
+    public void createDict(CreateDictRequest resources) {
         save(BeanUtil.copyProperties(resources, Dict.class));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateDictById(Dict resources) {
+    public void modifyDictById(Dict resources) {
         // 清理缓存
         delCaches(resources);
         Dict dict = getById(resources.getId());
@@ -78,7 +78,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     }
 
     @Override
-    public void downloadExcel(List<Dict> dicts, HttpServletResponse response) throws IOException {
+    public void downloadDictExcel(List<Dict> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dict dict : dicts) {
             List<DictDetail> dictDetails = dictDetailMapper.queryDictDetailListByDictName(dict.getName());

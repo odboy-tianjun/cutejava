@@ -20,7 +20,7 @@ public interface JobService extends IService<Job> {
      * @param id /
      * @return /
      */
-    Job getJobById(Long id);
+    Job describeJobById(Long id);
 
     /**
      * 创建
@@ -34,7 +34,7 @@ public interface JobService extends IService<Job> {
      *
      * @param resources /
      */
-    void updateJobById(Job resources);
+    void modifyJobById(Job resources);
 
     /**
      * 删除
@@ -50,7 +50,7 @@ public interface JobService extends IService<Job> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<Job> queryJobPage(QueryJobRequest criteria, Page<Object> page);
+    PageResult<Job> describeJobPage(QueryJobRequest criteria, Page<Object> page);
 
     /**
      * 查询全部数据
@@ -58,7 +58,7 @@ public interface JobService extends IService<Job> {
      * @param criteria /
      * @return /
      */
-    List<Job> selectJobByCriteria(QueryJobRequest criteria);
+    List<Job> describeJobList(QueryJobRequest criteria);
 
     /**
      * 导出数据
@@ -67,7 +67,7 @@ public interface JobService extends IService<Job> {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<Job> jobs, HttpServletResponse response) throws IOException;
+    void downloadJobExcel(List<Job> jobs, HttpServletResponse response) throws IOException;
 
     /**
      * 验证是否被用户关联
