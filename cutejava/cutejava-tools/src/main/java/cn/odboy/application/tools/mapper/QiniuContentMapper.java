@@ -12,6 +12,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface QiniuContentMapper extends BaseMapper<QiniuContent> {
     QiniuContent getQiniuContentByName(@Param("name") String name);
-
-    IPage<QiniuContent> queryQiniuContentPage(@Param("criteria") QueryQiniuRequest criteria, Page<Object> page);
+    IPage<QiniuContent> queryQiniuContentPageByArgs(@Param("criteria") QueryQiniuRequest criteria, Page<Object> page);
 }

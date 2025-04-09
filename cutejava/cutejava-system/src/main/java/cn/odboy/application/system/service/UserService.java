@@ -27,7 +27,7 @@ public interface UserService extends IService<User> {
      *
      * @param resources /
      */
-    void saveUser(User resources);
+    void createUser(User resources);
 
     /**
      * 编辑用户
