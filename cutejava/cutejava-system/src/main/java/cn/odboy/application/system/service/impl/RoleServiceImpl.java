@@ -52,19 +52,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<Role> selectRole() {
-        return roleMapper.selectRole();
+        return roleMapper.queryRoleList();
     }
 
     @Override
     public List<Role> selectRoleByCriteria(QueryRoleRequest criteria) {
-        return roleMapper.selectRoleByCriteria(criteria);
+        return roleMapper.queryRoleListByArgs(criteria);
     }
 
     @Override
     public PageResult<Role> queryRolePage(QueryRoleRequest criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
-        List<Role> roles = roleMapper.selectRoleByCriteria(criteria);
-        Long total = roleMapper.getRoleCountByCriteria(criteria);
+        List<Role> roles = roleMapper.queryRoleListByArgs(criteria);
+        Long total = roleMapper.getRoleCountByArgs(criteria);
         return PageUtil.toPage(roles, total);
     }
 
@@ -148,7 +148,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         String key = SystemRedisKey.ROLE_USER + userId;
         List<Role> roles = redisHelper.getList(key, Role.class);
         if (CollUtil.isEmpty(roles)) {
-            roles = roleMapper.selectRoleByUserId(userId);
+            roles = roleMapper.queryRoleListByUserId(userId);
             redisHelper.set(key, roles, 1, TimeUnit.DAYS);
         }
         return roles;
@@ -178,7 +178,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 return permissions.stream().map(RoleCodeModel::new)
                         .collect(Collectors.toList());
             }
-            List<Role> roles = roleMapper.selectRoleByUserId(user.getId());
+            List<Role> roles = roleMapper.queryRoleListByUserId(user.getId());
             permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                     .map(Menu::getPermission)
                     .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
@@ -212,7 +212,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public List<Role> selectRoleByMenuId(Long menuId) {
-        return roleMapper.selectRoleByMenuId(menuId);
+        return roleMapper.queryRoleListByMenuId(menuId);
     }
 
     /**
