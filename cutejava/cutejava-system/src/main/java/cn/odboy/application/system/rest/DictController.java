@@ -34,14 +34,14 @@ public class DictController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
     public void exportDict(HttpServletResponse response, QueryDictRequest criteria) throws IOException {
-        dictService.downloadExcel(dictService.selectDictByCriteria(criteria), response);
+        dictService.downloadDictExcel(dictService.describeDictList(criteria), response);
     }
 
     @ApiOperation("查询字典")
     @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<Dict>> queryAllDict() {
-        return new ResponseEntity<>(dictService.selectDictByCriteria(new QueryDictRequest()), HttpStatus.OK);
+        return new ResponseEntity<>(dictService.describeDictList(new QueryDictRequest()), HttpStatus.OK);
     }
 
     @ApiOperation("查询字典")
@@ -49,14 +49,14 @@ public class DictController {
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<PageResult<Dict>> queryDict(QueryDictRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(dictService.queryDictPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(dictService.describeDictPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增字典")
     @PostMapping(value = "/createDict")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Object> createDict(@Validated @RequestBody CreateDictRequest resources) {
-        dictService.saveDict(resources);
+        dictService.createDict(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -64,7 +64,7 @@ public class DictController {
     @PostMapping(value = "/updateDict")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDict(@Validated(Dict.Update.class) @RequestBody Dict resources) {
-        dictService.updateDictById(resources);
+        dictService.modifyDictById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

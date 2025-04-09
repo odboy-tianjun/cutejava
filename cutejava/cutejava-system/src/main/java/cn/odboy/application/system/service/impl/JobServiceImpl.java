@@ -36,17 +36,17 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<Job> queryJobPage(QueryJobRequest criteria, Page<Object> page) {
+    public PageResult<Job> describeJobPage(QueryJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(jobMapper.queryJobPageByArgs(criteria, page));
     }
 
     @Override
-    public List<Job> selectJobByCriteria(QueryJobRequest criteria) {
+    public List<Job> describeJobList(QueryJobRequest criteria) {
         return jobMapper.queryJobPageByArgs(criteria, PageUtil.getCount(jobMapper)).getRecords();
     }
 
     @Override
-    public Job getJobById(Long id) {
+    public Job describeJobById(Long id) {
         String key = SystemRedisKey.JOB_ID + id;
         Job job = redisHelper.get(key, Job.class);
         if (job == null) {
@@ -68,7 +68,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateJobById(Job resources) {
+    public void modifyJobById(Job resources) {
         Job job = getById(resources.getId());
         Job old = jobMapper.getJobByName(resources.getName());
         if (old != null && !old.getId().equals(resources.getId())) {
@@ -89,7 +89,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     }
 
     @Override
-    public void downloadExcel(List<Job> jobs, HttpServletResponse response) throws IOException {
+    public void downloadJobExcel(List<Job> jobs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Job job : jobs) {
             Map<String, Object> map = new LinkedHashMap<>();

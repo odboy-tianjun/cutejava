@@ -21,7 +21,7 @@ public interface DictService extends IService<Dict> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<Dict> queryDictPage(QueryDictRequest criteria, Page<Object> page);
+    PageResult<Dict> describeDictPage(QueryDictRequest criteria, Page<Object> page);
 
     /**
      * 查询全部数据
@@ -29,21 +29,21 @@ public interface DictService extends IService<Dict> {
      * @param criteria /
      * @return /
      */
-    List<Dict> selectDictByCriteria(QueryDictRequest criteria);
+    List<Dict> describeDictList(QueryDictRequest criteria);
 
     /**
      * 创建
      *
      * @param resources /
      */
-    void saveDict(CreateDictRequest resources);
+    void createDict(CreateDictRequest resources);
 
     /**
      * 编辑
      *
      * @param resources /
      */
-    void updateDictById(Dict resources);
+    void modifyDictById(Dict resources);
 
     /**
      * 删除
@@ -59,5 +59,5 @@ public interface DictService extends IService<Dict> {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<Dict> queryAll, HttpServletResponse response) throws IOException;
+    void downloadDictExcel(List<Dict> queryAll, HttpServletResponse response) throws IOException;
 }
