@@ -25,7 +25,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public SendEmailRequest renderCode(String email, String key) {
+    public SendEmailRequest renderCodeTemplate(String email, String key) {
         SendEmailRequest sendEmailRequest;
         String content;
         String redisKey = key + email;
@@ -49,7 +49,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     }
 
     @Override
-    public void checkCode(String key, String email, String code) {
+    public void checkCodeAvailable(String key, String email, String code) {
         String value = redisHelper.get(key + email, String.class);
         if (value == null || !value.equals(code)) {
             throw new BadRequestException("无效验证码");

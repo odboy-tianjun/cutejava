@@ -14,14 +14,14 @@ public interface EmailService extends IService<EmailConfig> {
      * @return /
      * @throws Exception /
      */
-    void updateEmailConfigOnPassChange(EmailConfig emailConfig) throws Exception;
+    void modifyEmailConfigOnPassChange(EmailConfig emailConfig) throws Exception;
 
     /**
      * 查询配置
      *
      * @return EmailConfig 邮件配置
      */
-    EmailConfig getEmailConfig();
+    EmailConfig describeEmailConfig();
 
     /**
      * 发送邮件
@@ -36,5 +36,5 @@ public interface EmailService extends IService<EmailConfig> {
      * @param email 邮箱地址
      * @param key   类型
      */
-    void sendCaptcha(String email, String key);
+    void sendEmailCaptcha(String email, String key);
 }

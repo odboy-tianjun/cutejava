@@ -31,14 +31,14 @@ public class CaptchaController {
     @ApiOperation("重置邮箱，发送验证码")
     @PostMapping(value = "/sendResetEmailCaptcha")
     public ResponseEntity<Object> sendResetEmailCaptcha(@RequestParam String email) {
-        emailService.sendCaptcha(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
+        emailService.sendEmailCaptcha(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("重置密码，发送验证码")
     @PostMapping(value = "/sendResetPasswordCaptcha")
     public ResponseEntity<Object> sendResetPasswordCaptcha(@RequestParam String email) {
-        emailService.sendCaptcha(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
+        emailService.sendEmailCaptcha(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -48,10 +48,10 @@ public class CaptchaController {
         CodeBiEnum biEnum = CodeBiEnum.find(codeBi);
         switch (Objects.requireNonNull(biEnum)) {
             case ONE:
-                captchaService.checkCode(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey(), email, code);
+                captchaService.checkCodeAvailable(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey(), email, code);
                 break;
             case TWO:
-                captchaService.checkCode(CodeEnum.EMAIL_RESET_PWD_CODE.getKey(), email, code);
+                captchaService.checkCodeAvailable(CodeEnum.EMAIL_RESET_PWD_CODE.getKey(), email, code);
                 break;
             default:
                 break;

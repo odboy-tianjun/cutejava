@@ -31,8 +31,8 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     @Override
     @CachePut(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
-    public void updateEmailConfigOnPassChange(EmailConfig emailConfig) throws Exception {
-        EmailConfig localConfig = emailService.getEmailConfig();
+    public void modifyEmailConfigOnPassChange(EmailConfig emailConfig) throws Exception {
+        EmailConfig localConfig = emailService.describeEmailConfig();
         if (!emailConfig.getPassword().equals(localConfig.getPassword())) {
             // 对称加密
             emailConfig.setPassword(DesEncryptUtil.desEncrypt(emailConfig.getPassword()));
@@ -43,7 +43,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
 
     @Override
     @Cacheable(key = "'config'")
-    public EmailConfig getEmailConfig() {
+    public EmailConfig describeEmailConfig() {
         EmailConfig emailConfig = getById(1L);
         return emailConfig == null ? new EmailConfig() : emailConfig;
     }
@@ -51,7 +51,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendEmail(SendEmailRequest sendEmailRequest) {
-        EmailConfig emailConfig = emailService.getEmailConfig();
+        EmailConfig emailConfig = emailService.describeEmailConfig();
         if (emailConfig.getId() == null) {
             throw new BadRequestException("请先配置，再操作");
         }
@@ -95,7 +95,7 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     }
 
     @Override
-    public void sendCaptcha(String email, String key) {
-        emailService.sendEmail(captchaService.renderCode(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey()));
+    public void sendEmailCaptcha(String email, String key) {
+        emailService.sendEmail(captchaService.renderCodeTemplate(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey()));
     }
 }

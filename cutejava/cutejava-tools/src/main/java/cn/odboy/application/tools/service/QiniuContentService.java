@@ -20,7 +20,7 @@ public interface QiniuContentService extends IService<QiniuContent> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<QiniuContent> queryQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page);
+    PageResult<QiniuContent> describeQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page);
 
     /**
      * 查询全部
@@ -28,7 +28,7 @@ public interface QiniuContentService extends IService<QiniuContent> {
      * @param criteria 条件
      * @return /
      */
-    List<QiniuContent> selectQiniuContentByCriteria(QueryQiniuRequest criteria);
+    List<QiniuContent> describeQiniuContentList(QueryQiniuRequest criteria);
 
     /**
      * 上传文件
@@ -39,12 +39,12 @@ public interface QiniuContentService extends IService<QiniuContent> {
     QiniuContent uploadFile(MultipartFile file);
 
     /**
-     * 下载文件
+     * 创建文件预览链接
      *
      * @param content 文件信息
      * @return String
      */
-    String download(QiniuContent content);
+    String createFilePreviewUrl(QiniuContent content);
 
     /**
      * 同步数据
