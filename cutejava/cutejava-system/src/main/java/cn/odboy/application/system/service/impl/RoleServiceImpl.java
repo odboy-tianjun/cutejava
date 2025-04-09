@@ -124,7 +124,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleMenuMapper.deleteByRoleId(role.getId());
         // 判断是否为空
         if (CollUtil.isNotEmpty(role.getMenus())) {
-            roleMenuMapper.insertData(role.getId(), role.getMenus());
+            roleMenuMapper.insertBatchWithRoleId(role.getMenus(), role.getId());
         }
         // 更新缓存
         delCaches(role.getId(), users);
