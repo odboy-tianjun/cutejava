@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface DictMapper extends BaseMapper<Dict> {
-    IPage<Dict> queryDictPage(@Param("criteria") QueryDictRequest criteria, Page<Object> page);
+    IPage<Dict> queryDictPageByArgs(@Param("criteria") QueryDictRequest criteria, Page<Object> page);
 }
