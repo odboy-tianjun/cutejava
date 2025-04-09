@@ -72,7 +72,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         }
         // 数据权限
         criteria.setIds(SecurityHelper.getCurrentUserDataScope());
-        List<Dept> list = deptMapper.selectDeptByCriteria(criteria);
+        List<Dept> list = deptMapper.queryDeptListByArgs(criteria);
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
         if (StringUtil.isBlank(dataScopeType)) {
             return deduplication(list);
@@ -93,12 +93,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public List<Dept> selectDeptByPid(long pid) {
-        return deptMapper.selectDeptByPid(pid);
+        return deptMapper.queryDeptListByPid(pid);
     }
 
     @Override
     public Set<Dept> selectDeptByRoleId(Long id) {
-        return deptMapper.selectDeptByRoleId(id);
+        return deptMapper.queryDeptSetByRoleId(id);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public Set<Dept> selectRelationDept(List<Dept> menuList, Set<Dept> deptSet) {
         for (Dept dept : menuList) {
             deptSet.add(dept);
-            List<Dept> deptList = deptMapper.selectDeptByPid(dept.getId());
+            List<Dept> deptList = deptMapper.queryDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(deptList)) {
                 selectRelationDept(deptList, deptSet);
             }
@@ -171,7 +171,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
                     if (dept != null && dept.getEnabled()) {
-                        List<Dept> deptList1 = deptMapper.selectDeptByPid(dept.getId());
+                        List<Dept> deptList1 = deptMapper.queryDeptListByPid(dept.getId());
                         if (CollUtil.isNotEmpty(deptList1)) {
                             list.addAll(selectChildDeptIdByDeptIds(deptList1));
                         }
@@ -185,10 +185,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public List<Dept> selectSuperiorDeptByPid(Dept dept, List<Dept> deptList) {
         if (dept.getPid() == null) {
-            deptList.addAll(deptMapper.selectDeptByPidIsNull());
+            deptList.addAll(deptMapper.queryDeptListByPidIsNull());
             return deptList;
         }
-        deptList.addAll(deptMapper.selectDeptByPid(dept.getPid()));
+        deptList.addAll(deptMapper.queryDeptListByPid(dept.getPid()));
         return selectSuperiorDeptByPid(getDeptById(dept.getPid()), deptList);
     }
 

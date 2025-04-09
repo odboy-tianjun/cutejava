@@ -10,15 +10,15 @@ import java.util.Set;
 
 @Mapper
 public interface DeptMapper extends BaseMapper<Dept> {
-    List<Dept> selectDeptByCriteria(@Param("criteria") QueryDeptRequest criteria);
+    List<Dept> queryDeptListByArgs(@Param("criteria") QueryDeptRequest criteria);
 
-    List<Dept> selectDeptByPid(@Param("pid") Long pid);
+    List<Dept> queryDeptListByPid(@Param("pid") Long pid);
 
     int getDeptCountByPid(@Param("pid") Long pid);
 
-    List<Dept> selectDeptByPidIsNull();
+    List<Dept> queryDeptListByPidIsNull();
 
-    Set<Dept> selectDeptByRoleId(@Param("roleId") Long roleId);
+    Set<Dept> queryDeptSetByRoleId(@Param("roleId") Long roleId);
 
     void updateSubCountById(@Param("count") Integer count, @Param("id") Long id);
 }

@@ -13,7 +13,7 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
-    <select id="selectDeptByCriteria" resultMap="BaseResultMap">
+    <select id="queryDeptListByArgs" resultMap="BaseResultMap">
         SELECT
         dept_id,
         `name`,
@@ -52,7 +52,7 @@
         </where>
         ORDER BY dept_sort
     </select>
-    <select id="selectDeptByPid" resultMap="BaseResultMap">
+    <select id="queryDeptListByPid" resultMap="BaseResultMap">
         select dept_id,
                name,
                pid,
@@ -71,7 +71,7 @@
         from sys_dept
         where pid = #{pid}
     </select>
-    <select id="selectDeptByPidIsNull" resultMap="BaseResultMap">
+    <select id="queryDeptListByPidIsNull" resultMap="BaseResultMap">
         select dept_id,
                name,
                pid,
@@ -85,7 +85,7 @@
         from sys_dept
         where pid is null
     </select>
-    <select id="selectDeptByRoleId" resultType="cn.odboy.model.system.domain.Dept">
+    <select id="queryDeptSetByRoleId" resultType="cn.odboy.model.system.domain.Dept">
         SELECT d.dept_id AS id,
                d.NAME,
                d.pid,
