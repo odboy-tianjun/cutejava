@@ -39,7 +39,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     private final RedisHelper redisHelper;
 
     @Override
-    public void save(UserJwtModel userJwtModel, String token, HttpServletRequest request) {
+    public void saveUserJwtModelByToken(UserJwtModel userJwtModel, String token, HttpServletRequest request) {
         String dept = userJwtModel.getUser().getDept().getName();
         String ip = BrowserUtil.getIp(request);
         String id = tokenProvider.getId(token);
@@ -65,14 +65,14 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public PageResult<UserOnlineModel> queryOnlineUserPage(String username, Pageable pageable) {
-        List<UserOnlineModel> onlineUserList = selectOnlineUserByUsername(username);
+    public PageResult<UserOnlineModel> describeUserOnlineModelPage(String username, Pageable pageable) {
+        List<UserOnlineModel> onlineUserList = describeUserOnlineModelListByUsername(username);
         List<UserOnlineModel> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
         return PageUtil.toPage(paging, onlineUserList.size());
     }
 
     @Override
-    public List<UserOnlineModel> selectOnlineUserByUsername(String username) {
+    public List<UserOnlineModel> describeUserOnlineModelListByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
@@ -91,7 +91,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public void downloadExcel(List<UserOnlineModel> all, HttpServletResponse response) throws IOException {
+    public void downloadUserOnlineModelExcel(List<UserOnlineModel> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (UserOnlineModel user : all) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -107,7 +107,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public UserOnlineModel getOnlineUserByKey(String key) {
+    public UserOnlineModel describeUserOnlineModelByKey(String key) {
         return redisHelper.get(key, UserOnlineModel.class);
     }
 

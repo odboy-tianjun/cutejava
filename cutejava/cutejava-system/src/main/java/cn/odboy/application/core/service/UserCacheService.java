@@ -10,7 +10,7 @@ public interface UserCacheService {
      * @param username 用户名
      * @return UserJwtModel
      */
-    UserJwtModel getUserCacheByUsername(String username);
+    UserJwtModel describeUserJwtModelByUsername(String username);
 
     /**
      * 添加缓存到Redis
@@ -18,7 +18,7 @@ public interface UserCacheService {
      * @param userName 用户名
      */
     @Async
-    void addUserCache(String userName, UserJwtModel user);
+    void cacheUserJwtModelByUserName(String userName, UserJwtModel user);
 
     /**
      * 清理用户缓存信息
@@ -27,5 +27,5 @@ public interface UserCacheService {
      * @param userName 用户名
      */
     @Async
-    void cleanUserCacheByUsername(String userName);
+    void cleanUserJwtModelCacheByUsername(String userName);
 }

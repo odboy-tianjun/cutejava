@@ -18,7 +18,7 @@ public class UserCacheServiceImpl implements UserCacheService {
     private RedisHelper redisHelper;
 
     @Override
-    public UserJwtModel getUserCacheByUsername(String username) {
+    public UserJwtModel describeUserJwtModelByUsername(String username) {
         // 转小写
         username = StringUtil.lowerCase(username);
         if (StringUtil.isNotEmpty(username)) {
@@ -30,7 +30,7 @@ public class UserCacheServiceImpl implements UserCacheService {
 
 
     @Override
-    public void addUserCache(String userName, UserJwtModel user) {
+    public void cacheUserJwtModelByUserName(String userName, UserJwtModel user) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
         if (StringUtil.isNotEmpty(userName)) {
@@ -42,7 +42,7 @@ public class UserCacheServiceImpl implements UserCacheService {
 
 
     @Override
-    public void cleanUserCacheByUsername(String userName) {
+    public void cleanUserJwtModelCacheByUsername(String userName) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
         if (StringUtil.isNotEmpty(userName)) {

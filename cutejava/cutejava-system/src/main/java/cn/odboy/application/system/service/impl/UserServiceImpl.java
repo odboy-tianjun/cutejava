@@ -277,6 +277,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param username /
      */
     private void flushCache(String username) {
-        userCacheService.cleanUserCacheByUsername(username);
+        userCacheService.cleanUserJwtModelCacheByUsername(username);
     }
 }
