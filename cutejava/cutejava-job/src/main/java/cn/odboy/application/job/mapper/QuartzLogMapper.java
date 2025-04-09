@@ -11,5 +11,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface QuartzLogMapper extends BaseMapper<QuartzLog> {
-    IPage<QuartzLog> queryQuartzLogPage(@Param("criteria") QueryQuartzJobRequest criteria, Page<Object> page);
+    IPage<QuartzLog> queryQuartzLogPageByArgs(@Param("criteria") QueryQuartzJobRequest criteria, Page<Object> page);
 }
