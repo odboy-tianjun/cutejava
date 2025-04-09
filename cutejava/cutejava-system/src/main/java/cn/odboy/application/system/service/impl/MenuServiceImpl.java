@@ -325,7 +325,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      * @param id 菜单ID
      */
     public void delCaches(Long id) {
-        List<User> users = userMapper.selectUserByMenuId(id);
+        List<User> users = userMapper.queryUserListByMenuId(id);
         redisHelper.del(SystemRedisKey.MENU_ID + id);
         redisHelper.delByKeys(SystemRedisKey.MENU_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
         // 清除 Role 缓存
