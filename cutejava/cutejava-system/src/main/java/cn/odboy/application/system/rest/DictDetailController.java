@@ -37,7 +37,7 @@ public class DictDetailController {
     @GetMapping
     public ResponseEntity<PageResult<DictDetail>> queryDictDetail(QueryDictDetailRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(dictDetailService.queryDictDetailPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(dictDetailService.describeDictDetailPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("查询多个字典详情")
@@ -46,7 +46,7 @@ public class DictDetailController {
         String[] names = dictName.split("[,，]");
         Map<String, List<DictDetail>> dictMap = new HashMap<>(16);
         for (String name : names) {
-            dictMap.put(name, dictDetailService.selectDictDetailByName(name));
+            dictMap.put(name, dictDetailService.describeDictDetailListByName(name));
         }
         return new ResponseEntity<>(dictMap, HttpStatus.OK);
     }
@@ -63,7 +63,7 @@ public class DictDetailController {
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDictDetail(@Validated(DictDetail.Update.class) @RequestBody DictDetail resources) {
-        dictDetailService.updateDictDetailById(resources);
+        dictDetailService.modifyDictDetailById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

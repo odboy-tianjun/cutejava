@@ -23,7 +23,7 @@ public interface DictDetailService extends IService<DictDetail> {
      *
      * @param resources /
      */
-    void updateDictDetailById(DictDetail resources);
+    void modifyDictDetailById(DictDetail resources);
 
     /**
      * 删除
@@ -39,7 +39,7 @@ public interface DictDetailService extends IService<DictDetail> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<DictDetail> queryDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page);
+    PageResult<DictDetail> describeDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page);
 
     /**
      * 根据字典名称获取字典详情
@@ -47,5 +47,5 @@ public interface DictDetailService extends IService<DictDetail> {
      * @param name 字典名称
      * @return /
      */
-    List<DictDetail> selectDictDetailByName(String name);
+    List<DictDetail> describeDictDetailListByName(String name);
 }

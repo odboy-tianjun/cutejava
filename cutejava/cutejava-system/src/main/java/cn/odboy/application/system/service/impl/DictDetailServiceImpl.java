@@ -29,7 +29,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<DictDetail> queryDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page) {
+    public PageResult<DictDetail> describeDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page) {
         return PageUtil.toPage(dictDetailMapper.queryDictDetailPageByArgs(criteria, page));
     }
 
@@ -45,7 +45,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateDictDetailById(DictDetail resources) {
+    public void modifyDictDetailById(DictDetail resources) {
         DictDetail dictDetail = getById(resources.getId());
         resources.setId(dictDetail.getId());
         // 更新数据
@@ -55,7 +55,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     }
 
     @Override
-    public List<DictDetail> selectDictDetailByName(String name) {
+    public List<DictDetail> describeDictDetailListByName(String name) {
         String key = SystemRedisKey.DICT_NAME + name;
         List<DictDetail> dictDetails = redisHelper.getList(key, DictDetail.class);
         if (CollUtil.isEmpty(dictDetails)) {
