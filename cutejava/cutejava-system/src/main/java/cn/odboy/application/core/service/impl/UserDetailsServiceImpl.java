@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 // 获取用户的权限
                 List<RoleCodeModel> authorities = roleService.buildPermissions(user);
                 // 初始化JwtUserDto
-                userJwtModel = new UserJwtModel(user, dataService.selectDeptIdByUserIdWithDeptId(user), authorities);
+                userJwtModel = new UserJwtModel(user, dataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
                 userCacheService.cacheUserJwtModelByUserName(username, userJwtModel);
             }

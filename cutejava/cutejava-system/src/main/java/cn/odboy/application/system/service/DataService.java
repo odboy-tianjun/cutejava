@@ -15,5 +15,5 @@ public interface DataService {
      * @param user /
      * @return /
      */
-    List<Long> selectDeptIdByUserIdWithDeptId(User user);
+    List<Long> describeDeptIdListByUserIdWithDeptId(User user);
 }
