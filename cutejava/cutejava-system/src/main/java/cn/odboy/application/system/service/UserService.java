@@ -20,7 +20,7 @@ public interface UserService extends IService<User> {
      * @param id ID
      * @return /
      */
-    User getUserById(long id);
+    User describeUserById(long id);
 
     /**
      * 新增用户
@@ -35,7 +35,7 @@ public interface UserService extends IService<User> {
      * @param resources /
      * @throws Exception /
      */
-    void updateUserById(User resources) throws Exception;
+    void modifyUserById(User resources) throws Exception;
 
     /**
      * 删除用户
@@ -50,7 +50,7 @@ public interface UserService extends IService<User> {
      * @param username /
      * @return /
      */
-    User getUserByUsername(String username);
+    User describeUserByUsername(String username);
 
     /**
      * 修改密码
@@ -58,7 +58,7 @@ public interface UserService extends IService<User> {
      * @param username        用户名
      * @param encryptPassword 密码
      */
-    void updatePasswordByUsername(String username, String encryptPassword);
+    void modifyUserPasswordByUsername(String username, String encryptPassword);
 
     /**
      * 修改头像
@@ -66,7 +66,7 @@ public interface UserService extends IService<User> {
      * @param file 文件
      * @return /
      */
-    Map<String, String> updateAvatarFile(MultipartFile file);
+    Map<String, String> modifyUserAvatarFile(MultipartFile file);
 
     /**
      * 修改邮箱
@@ -74,7 +74,7 @@ public interface UserService extends IService<User> {
      * @param username 用户名
      * @param email    邮箱
      */
-    void updateEmailByUsername(String username, String email);
+    void modifyUserEmailByUsername(String username, String email);
 
     /**
      * 查询全部
@@ -83,7 +83,7 @@ public interface UserService extends IService<User> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<User> queryUserPage(QueryUserRequest criteria, Page<Object> page);
+    PageResult<User> describeUserPage(QueryUserRequest criteria, Page<Object> page);
 
     /**
      * 查询全部不分页
@@ -91,7 +91,7 @@ public interface UserService extends IService<User> {
      * @param criteria 条件
      * @return /
      */
-    List<User> selectUserByCriteria(QueryUserRequest criteria);
+    List<User> describeUserList(QueryUserRequest criteria);
 
     /**
      * 导出数据
@@ -100,14 +100,14 @@ public interface UserService extends IService<User> {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<User> queryAll, HttpServletResponse response) throws IOException;
+    void downloadUserExcel(List<User> queryAll, HttpServletResponse response) throws IOException;
 
     /**
      * 用户自助修改资料
      *
      * @param resources /
      */
-    void updateCenterInfoById(User resources);
+    void modifyUserCenterInfoById(User resources);
 
     /**
      * 重置密码
@@ -115,5 +115,5 @@ public interface UserService extends IService<User> {
      * @param ids      用户id
      * @param password 密码
      */
-    void resetPasswordByIds(Set<Long> ids, String password);
+    void resetUserPasswordByIds(Set<Long> ids, String password);
 }
