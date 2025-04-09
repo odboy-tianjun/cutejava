@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Param;
 public interface JobMapper extends BaseMapper<Job> {
     Job getJobByName(@Param("name") String name);
 
-    IPage<Job> queryJobPage(@Param("criteria") QueryJobRequest criteria, Page<Object> page);
+    IPage<Job> queryJobPageByArgs(@Param("criteria") QueryJobRequest criteria, Page<Object> page);
 }

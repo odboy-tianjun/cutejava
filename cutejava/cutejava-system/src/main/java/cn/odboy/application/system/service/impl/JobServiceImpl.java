@@ -37,12 +37,12 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     public PageResult<Job> queryJobPage(QueryJobRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(jobMapper.queryJobPage(criteria, page));
+        return PageUtil.toPage(jobMapper.queryJobPageByArgs(criteria, page));
     }
 
     @Override
     public List<Job> selectJobByCriteria(QueryJobRequest criteria) {
-        return jobMapper.queryJobPage(criteria, PageUtil.getCount(jobMapper)).getRecords();
+        return jobMapper.queryJobPageByArgs(criteria, PageUtil.getCount(jobMapper)).getRecords();
     }
 
     @Override
