@@ -15,7 +15,7 @@
         </where>
         ORDER BY id DESC
     </select>
-    <select id="queryActiveQuartzJob" resultType="cn.odboy.model.job.domain.QuartzJob">
+    <select id="queryActiveQuartzJobList" resultType="cn.odboy.model.job.domain.QuartzJob">
         SELECT *
         FROM sys_quartz_job
         WHERE is_pause = 0
