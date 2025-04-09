@@ -20,7 +20,7 @@ public interface DeptService extends IService<Dept> {
      * @return /
      * @throws Exception /
      */
-    List<Dept> selectDeptByCriteria(QueryDeptRequest criteria, Boolean isQuery) throws Exception;
+    List<Dept> describeDeptList(QueryDeptRequest criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -28,7 +28,7 @@ public interface DeptService extends IService<Dept> {
      * @param id /
      * @return /
      */
-    Dept getDeptById(Long id);
+    Dept describeDeptById(Long id);
 
     /**
      * 创建
@@ -42,7 +42,7 @@ public interface DeptService extends IService<Dept> {
      *
      * @param resources /
      */
-    void updateDept(Dept resources);
+    void modifyDept(Dept resources);
 
     /**
      * 删除
@@ -57,7 +57,7 @@ public interface DeptService extends IService<Dept> {
      * @param pid /
      * @return /
      */
-    List<Dept> selectDeptByPid(long pid);
+    List<Dept> describeDeptListByPid(long pid);
 
     /**
      * 根据角色ID查询
@@ -65,7 +65,7 @@ public interface DeptService extends IService<Dept> {
      * @param id /
      * @return /
      */
-    Set<Dept> selectDeptByRoleId(Long id);
+    Set<Dept> describeDeptByRoleId(Long id);
 
     /**
      * 导出数据
@@ -74,7 +74,7 @@ public interface DeptService extends IService<Dept> {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<Dept> depts, HttpServletResponse response) throws IOException;
+    void downloadDeptExcel(List<Dept> depts, HttpServletResponse response) throws IOException;
 
     /**
      * 获取部门下所有关联的部门
@@ -83,7 +83,7 @@ public interface DeptService extends IService<Dept> {
      * @param depts    /
      * @return /
      */
-    Set<Dept> selectRelationDept(List<Dept> deptList, Set<Dept> depts);
+    Set<Dept> describeRelationDeptSet(List<Dept> deptList, Set<Dept> depts);
 
     /**
      * 根据ID获取同级与上级数据
@@ -92,7 +92,7 @@ public interface DeptService extends IService<Dept> {
      * @param depts /
      * @return /
      */
-    List<Dept> selectSuperiorDeptByPid(Dept dept, List<Dept> depts);
+    List<Dept> describeSuperiorDeptListByPid(Dept dept, List<Dept> depts);
 
     /**
      * 构建树形数据
@@ -100,7 +100,7 @@ public interface DeptService extends IService<Dept> {
      * @param depts /
      * @return /
      */
-    BaseResult<Object> buildTree(List<Dept> depts);
+    BaseResult<Object> buildDeptTree(List<Dept> depts);
 
     /**
      * 获取
@@ -108,7 +108,7 @@ public interface DeptService extends IService<Dept> {
      * @param deptList 、
      * @return 、
      */
-    List<Long> selectChildDeptIdByDeptIds(List<Dept> deptList);
+    List<Long> describeChildDeptIdListByDeptIds(List<Dept> deptList);
 
     /**
      * 验证是否被角色或用户关联

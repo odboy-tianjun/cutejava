@@ -46,7 +46,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     private final RedisHelper redisHelper;
 
     @Override
-    public List<Dept> selectDeptByCriteria(QueryDeptRequest criteria, Boolean isQuery) throws Exception {
+    public List<Dept> describeDeptList(QueryDeptRequest criteria, Boolean isQuery) throws Exception {
         String dataScopeType = SecurityHelper.getDataScopeType();
         if (isQuery) {
             if (dataScopeType.equals(DataScopeEnum.ALL.getValue())) {
@@ -81,7 +81,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public Dept getDeptById(Long id) {
+    public Dept describeDeptById(Long id) {
         String key = SystemRedisKey.DEPT_ID + id;
         Dept dept = redisHelper.get(key, Dept.class);
         if (dept == null) {
@@ -92,12 +92,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public List<Dept> selectDeptByPid(long pid) {
+    public List<Dept> describeDeptListByPid(long pid) {
         return deptMapper.queryDeptListByPid(pid);
     }
 
     @Override
-    public Set<Dept> selectDeptByRoleId(Long id) {
+    public Set<Dept> describeDeptByRoleId(Long id) {
         return deptMapper.queryDeptSetByRoleId(id);
     }
 
@@ -113,9 +113,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateDept(Dept resources) {
+    public void modifyDept(Dept resources) {
         // 旧的部门
-        Long oldPid = getDeptById(resources.getId()).getPid();
+        Long oldPid = describeDeptById(resources.getId()).getPid();
         Long newPid = resources.getPid();
         if (resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
@@ -142,7 +142,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public void downloadExcel(List<Dept> deptList, HttpServletResponse response) throws IOException {
+    public void downloadDeptExcel(List<Dept> deptList, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dept dept : deptList) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -155,25 +155,25 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public Set<Dept> selectRelationDept(List<Dept> menuList, Set<Dept> deptSet) {
+    public Set<Dept> describeRelationDeptSet(List<Dept> menuList, Set<Dept> deptSet) {
         for (Dept dept : menuList) {
             deptSet.add(dept);
             List<Dept> deptList = deptMapper.queryDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(deptList)) {
-                selectRelationDept(deptList, deptSet);
+                describeRelationDeptSet(deptList, deptSet);
             }
         }
         return deptSet;
     }
 
     @Override
-    public List<Long> selectChildDeptIdByDeptIds(List<Dept> deptList) {
+    public List<Long> describeChildDeptIdListByDeptIds(List<Dept> deptList) {
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
                     if (dept != null && dept.getEnabled()) {
                         List<Dept> deptList1 = deptMapper.queryDeptListByPid(dept.getId());
                         if (CollUtil.isNotEmpty(deptList1)) {
-                            list.addAll(selectChildDeptIdByDeptIds(deptList1));
+                            list.addAll(describeChildDeptIdListByDeptIds(deptList1));
                         }
                         list.add(dept.getId());
                     }
@@ -183,17 +183,17 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public List<Dept> selectSuperiorDeptByPid(Dept dept, List<Dept> deptList) {
+    public List<Dept> describeSuperiorDeptListByPid(Dept dept, List<Dept> deptList) {
         if (dept.getPid() == null) {
             deptList.addAll(deptMapper.queryDeptListByPidIsNull());
             return deptList;
         }
         deptList.addAll(deptMapper.queryDeptListByPid(dept.getPid()));
-        return selectSuperiorDeptByPid(getDeptById(dept.getPid()), deptList);
+        return describeSuperiorDeptListByPid(describeDeptById(dept.getPid()), deptList);
     }
 
     @Override
-    public BaseResult<Object> buildTree(List<Dept> deptList) {
+    public BaseResult<Object> buildDeptTree(List<Dept> deptList) {
         Set<Dept> trees = new LinkedHashSet<>();
         Set<Dept> deptSet = new LinkedHashSet<>();
         List<String> deptNames = deptList.stream().map(Dept::getName).collect(Collectors.toList());
@@ -214,7 +214,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             }
             if (isChild) {
                 deptSet.add(dept);
-            } else if (dept.getPid() != null && !deptNames.contains(getDeptById(dept.getPid()).getName())) {
+            } else if (dept.getPid() != null && !deptNames.contains(describeDeptById(dept.getPid()).getName())) {
                 deptSet.add(dept);
             }
         }
@@ -242,11 +242,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public void traverseDeptByIdWithPids(Set<Long> ids, Set<Dept> depts) {
         for (Long id : ids) {
             // 根部门
-            depts.add(getDeptById(id));
+            depts.add(describeDeptById(id));
             // 子部门
-            List<Dept> deptList = selectDeptByPid(id);
+            List<Dept> deptList = describeDeptListByPid(id);
             if (CollectionUtil.isNotEmpty(deptList)) {
-                depts = selectRelationDept(deptList, depts);
+                depts = describeRelationDeptSet(deptList, depts);
             }
         }
     }

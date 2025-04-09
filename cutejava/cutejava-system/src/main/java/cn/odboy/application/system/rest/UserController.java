@@ -75,12 +75,12 @@ public class UserController {
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
             // 先查找是否存在子节点
-            List<Dept> data = deptService.selectDeptByPid(criteria.getDeptId());
+            List<Dept> data = deptService.describeDeptListByPid(criteria.getDeptId());
             // 然后把子节点的ID都加入到集合中
-            criteria.getDeptIds().addAll(deptService.selectChildDeptIdByDeptIds(data));
+            criteria.getDeptIds().addAll(deptService.describeChildDeptIdListByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = dataService.selectDeptIdByUserIdWithDeptId(userService.getUserByUsername(SecurityHelper.getCurrentUsername()));
+        List<Long> dataScopes = dataService.describeDeptIdListByUserIdWithDeptId(userService.getUserByUsername(SecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集

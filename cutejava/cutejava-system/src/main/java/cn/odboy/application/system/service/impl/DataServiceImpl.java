@@ -36,7 +36,7 @@ public class DataServiceImpl implements DataService {
      * @return /
      */
     @Override
-    public List<Long> selectDeptIdByUserIdWithDeptId(User user) {
+    public List<Long> describeDeptIdListByUserIdWithDeptId(User user) {
         String key = SystemRedisKey.DATA_USER + user.getId();
         List<Long> ids = redisHelper.getList(key, Long.class);
         if (CollUtil.isEmpty(ids)) {
@@ -71,12 +71,12 @@ public class DataServiceImpl implements DataService {
      * @return 数据权限ID
      */
     public Set<Long> getCustomize(Set<Long> deptIds, Role role) {
-        Set<Dept> deptList = deptService.selectDeptByRoleId(role.getId());
+        Set<Dept> deptList = deptService.describeDeptByRoleId(role.getId());
         for (Dept dept : deptList) {
             deptIds.add(dept.getId());
-            List<Dept> deptChildren = deptService.selectDeptByPid(dept.getId());
+            List<Dept> deptChildren = deptService.describeDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(deptChildren)) {
-                deptIds.addAll(deptService.selectChildDeptIdByDeptIds(deptChildren));
+                deptIds.addAll(deptService.describeChildDeptIdListByDeptIds(deptChildren));
             }
         }
         return deptIds;

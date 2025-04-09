@@ -38,14 +38,14 @@ public class DeptController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, QueryDeptRequest criteria) throws Exception {
-        deptService.downloadExcel(deptService.selectDeptByCriteria(criteria, false), response);
+        deptService.downloadDeptExcel(deptService.describeDeptList(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<PageResult<Dept>> queryDept(QueryDeptRequest criteria) throws Exception {
-        List<Dept> depts = deptService.selectDeptByCriteria(criteria, true);
+        List<Dept> depts = deptService.describeDeptList(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }
 
@@ -55,8 +55,8 @@ public class DeptController {
     public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<Dept> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
-            Dept dept = deptService.getDeptById(id);
-            List<Dept> depts = deptService.selectSuperiorDeptByPid(dept, new ArrayList<>());
+            Dept dept = deptService.describeDeptById(id);
+            List<Dept> depts = deptService.describeSuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
                 for (Dept data : depts) {
                     if (data.getId().equals(dept.getPid())) {
@@ -68,7 +68,7 @@ public class DeptController {
             }
             deptSet.addAll(depts);
         }
-        return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptSet)), HttpStatus.OK);
+        return new ResponseEntity<>(deptService.buildDeptTree(new ArrayList<>(deptSet)), HttpStatus.OK);
     }
 
     @ApiOperation("新增部门")
@@ -83,7 +83,7 @@ public class DeptController {
     @PostMapping(value = "/updateDept")
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Object> updateDept(@Validated(Dept.Update.class) @RequestBody Dept resources) {
-        deptService.updateDept(resources);
+        deptService.modifyDept(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
