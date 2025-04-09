@@ -88,7 +88,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         save(BeanUtil.copyProperties(resources, Role.class));
         // 判断是否有部门数据，若有，则需创建关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            roleDeptMapper.insertBatchWithRoleId(resources.getId(), resources.getDepts());
+            roleDeptMapper.insertBatchWithRoleId(resources.getDepts(), resources.getId());
         }
     }
 
@@ -111,7 +111,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleDeptMapper.deleteByRoleId(resources.getId());
         // 判断是否有部门数据，若有，则需更新关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            roleDeptMapper.insertBatchWithRoleId(resources.getId(), resources.getDepts());
+            roleDeptMapper.insertBatchWithRoleId(resources.getDepts(), resources.getId());
         }
         // 更新相关缓存
         delCaches(role.getId(), null);

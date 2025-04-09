@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Mapper
 public interface RoleDeptMapper {
-    void insertBatchWithRoleId(@Param("roleId") Long roleId, @Param("depts") Set<Dept> depts);
+    void insertBatchWithRoleId(@Param("depts") Set<Dept> depts, @Param("roleId") Long roleId);
     void deleteByRoleId(@Param("roleId") Long roleId);
     void deleteByRoleIds(@Param("roleIds") Set<Long> roleIds);
 }
