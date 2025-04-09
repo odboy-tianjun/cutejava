@@ -37,13 +37,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     public PageResult<Dict> queryDictPage(QueryDictRequest criteria, Page<Object> page) {
-        IPage<Dict> dicts = dictMapper.queryDictPage(criteria, page);
+        IPage<Dict> dicts = dictMapper.queryDictPageByArgs(criteria, page);
         return PageUtil.toPage(dicts);
     }
 
     @Override
     public List<Dict> selectDictByCriteria(QueryDictRequest criteria) {
-        return dictMapper.queryDictPage(criteria, PageUtil.getCount(dictMapper)).getRecords();
+        return dictMapper.queryDictPageByArgs(criteria, PageUtil.getCount(dictMapper)).getRecords();
     }
 
     @Override
@@ -74,14 +74,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         // 删除字典
         dictMapper.deleteByIds(ids);
         // 删除字典详情
-        dictDetailMapper.deleteDictDetailsByDictIds(ids);
+        dictDetailMapper.deleteDictDetailByDictIds(ids);
     }
 
     @Override
     public void downloadExcel(List<Dict> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dict dict : dicts) {
-            List<DictDetail> dictDetails = dictDetailMapper.selectDictDetailByDictName(dict.getName());
+            List<DictDetail> dictDetails = dictDetailMapper.queryDictDetailListByDictName(dict.getName());
             if (CollectionUtil.isNotEmpty(dictDetails)) {
                 for (DictDetail dictDetail : dictDetails) {
                     Map<String, Object> map = new LinkedHashMap<>();

@@ -30,7 +30,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
 
     @Override
     public PageResult<DictDetail> queryDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(dictDetailMapper.queryDictDetail(criteria, page));
+        return PageUtil.toPage(dictDetailMapper.queryDictDetailPageByArgs(criteria, page));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
         String key = SystemRedisKey.DICT_NAME + name;
         List<DictDetail> dictDetails = redisHelper.getList(key, DictDetail.class);
         if (CollUtil.isEmpty(dictDetails)) {
-            dictDetails = dictDetailMapper.selectDictDetailByDictName(name);
+            dictDetails = dictDetailMapper.queryDictDetailListByDictName(name);
             redisHelper.set(key, dictDetails, 1, TimeUnit.DAYS);
         }
         return dictDetails;
