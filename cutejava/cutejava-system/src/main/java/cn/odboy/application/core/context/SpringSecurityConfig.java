@@ -110,6 +110,6 @@ public class SpringSecurityConfig {
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, securityProperties, onlineUserService);
+        return new TokenConfigurer(tokenProvider, onlineUserService);
     }
 }

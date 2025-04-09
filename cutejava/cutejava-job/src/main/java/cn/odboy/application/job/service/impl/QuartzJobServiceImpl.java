@@ -43,7 +43,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     public PageResult<QuartzJob> queryJobPage(QueryQuartzJobRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(quartzJobMapper.queryQuartzJobPage(criteria, page));
+        return PageUtil.toPage(quartzJobMapper.queryQuartzJobPageByArgs(criteria, page));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     public List<QuartzJob> selectJobByCriteria(QueryQuartzJobRequest criteria) {
-        return quartzJobMapper.queryQuartzJobPage(criteria, PageUtil.getCount(quartzJobMapper)).getRecords();
+        return quartzJobMapper.queryQuartzJobPageByArgs(criteria, PageUtil.getCount(quartzJobMapper)).getRecords();
     }
 
     @Override

@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface LocalStorageMapper extends BaseMapper<LocalStorage> {
-    IPage<LocalStorage> queryLocalStoragePage(@Param("criteria") QueryLocalStorageRequest criteria, Page<Object> page);
+    IPage<LocalStorage> queryLocalStoragePageByArgs(@Param("criteria") QueryLocalStorageRequest criteria, Page<Object> page);
 }

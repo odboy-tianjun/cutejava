@@ -47,12 +47,12 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
 
     @Override
     public PageResult<QiniuContent> queryQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(qiniuContentMapper.queryQiniuContentPage(criteria, page));
+        return PageUtil.toPage(qiniuContentMapper.queryQiniuContentPageByArgs(criteria, page));
     }
 
     @Override
     public List<QiniuContent> selectQiniuContentByCriteria(QueryQiniuRequest criteria) {
-        return qiniuContentMapper.queryQiniuContentPage(criteria, PageUtil.getCount(qiniuContentMapper)).getRecords();
+        return qiniuContentMapper.queryQiniuContentPageByArgs(criteria, PageUtil.getCount(qiniuContentMapper)).getRecords();
     }
 
     @Override
