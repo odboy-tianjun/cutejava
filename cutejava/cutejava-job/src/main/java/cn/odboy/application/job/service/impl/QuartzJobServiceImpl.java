@@ -42,22 +42,22 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     private final RedisHelper redisHelper;
 
     @Override
-    public PageResult<QuartzJob> queryJobPage(QueryQuartzJobRequest criteria, Page<Object> page) {
+    public PageResult<QuartzJob> describeQuartzJobPage(QueryQuartzJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(quartzJobMapper.queryQuartzJobPageByArgs(criteria, page));
     }
 
     @Override
-    public PageResult<QuartzLog> queryLogPage(QueryQuartzJobRequest criteria, Page<Object> page) {
+    public PageResult<QuartzLog> describeQuartzLogPage(QueryQuartzJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(quartzLogMapper.queryQuartzLogPageByArgs(criteria, page));
     }
 
     @Override
-    public List<QuartzJob> selectJobByCriteria(QueryQuartzJobRequest criteria) {
+    public List<QuartzJob> describeQuartzJobList(QueryQuartzJobRequest criteria) {
         return quartzJobMapper.queryQuartzJobPageByArgs(criteria, PageUtil.getCount(quartzJobMapper)).getRecords();
     }
 
     @Override
-    public List<QuartzLog> selectLogByCriteria(QueryQuartzJobRequest criteria) {
+    public List<QuartzLog> describeQuartzLogList(QueryQuartzJobRequest criteria) {
         return quartzLogMapper.queryQuartzLogPageByArgs(criteria, PageUtil.getCount(quartzLogMapper)).getRecords();
     }
 
@@ -73,7 +73,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateJob(UpdateQuartzJobRequest resources) {
+    public void modifyQuartzJobResumeCron(UpdateQuartzJobRequest resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
@@ -90,7 +90,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void switchJobPauseStatus(QuartzJob quartzJob) {
+    public void switchQuartzJobStatus(QuartzJob quartzJob) {
         // 置换暂停状态
         if (quartzJob.getIsPause()) {
             quartzManage.resumeJob(quartzJob);
@@ -103,7 +103,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     }
 
     @Override
-    public void executionJob(QuartzJob quartzJob) {
+    public void startQuartzJob(QuartzJob quartzJob) {
         quartzManage.runJobNow(quartzJob);
     }
 
@@ -119,7 +119,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void executionSubJob(String[] tasks) throws InterruptedException {
+    public void startSubQuartJob(String[] tasks) throws InterruptedException {
         for (String id : tasks) {
             if (StrUtil.isBlank(id)) {
                 // 如果是手动清除子任务id，会出现id为空字符串的问题
@@ -130,7 +130,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
             String uuid = IdUtil.simpleUUID();
             quartzJob.setUuid(uuid);
             // 执行任务
-            executionJob(quartzJob);
+            startQuartzJob(quartzJob);
             // 获取执行状态，如果执行失败则停止后面的子任务执行
             Boolean result = redisHelper.get(uuid, Boolean.class);
             while (result == null) {
@@ -146,7 +146,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     }
 
     @Override
-    public void downloadJobExcel(List<QuartzJob> quartzJobs, HttpServletResponse response) throws IOException {
+    public void downloadQuartzJobExcel(List<QuartzJob> quartzJobs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzJob quartzJob : quartzJobs) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -164,7 +164,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     }
 
     @Override
-    public void downloadLogExcel(List<QuartzLog> queryAllLog, HttpServletResponse response) throws IOException {
+    public void downloadQuartzLogExcel(List<QuartzLog> queryAllLog, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzLog quartzLog : queryAllLog) {
             Map<String, Object> map = new LinkedHashMap<>();
