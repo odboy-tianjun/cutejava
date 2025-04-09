@@ -23,6 +23,6 @@ public class MonitorController {
     @ApiOperation("查询服务监控")
     @PreAuthorize("@el.check('monitor:list')")
     public ResponseEntity<Object> queryMonitor() {
-        return new ResponseEntity<>(serverService.getServerInfo(), HttpStatus.OK);
+        return new ResponseEntity<>(serverService.describeServerMonitorInfo(), HttpStatus.OK);
     }
 }

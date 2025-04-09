@@ -32,7 +32,7 @@ public class MonitorServiceImpl implements MonitorService {
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
-    public Map<String, Object> getServerInfo() {
+    public Map<String, Object> describeServerMonitorInfo() {
         Map<String, Object> resultMap = new LinkedHashMap<>(8);
         try {
             SystemInfo si = new SystemInfo();

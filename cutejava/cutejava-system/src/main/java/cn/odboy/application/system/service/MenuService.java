@@ -19,7 +19,7 @@ public interface MenuService extends IService<Menu> {
      * @return /
      * @throws Exception /
      */
-    List<Menu> selectMenuByCriteria(QueryMenuRequest criteria, Boolean isQuery) throws Exception;
+    List<Menu> describeMenuList(QueryMenuRequest criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -27,21 +27,21 @@ public interface MenuService extends IService<Menu> {
      * @param id /
      * @return /
      */
-    Menu getMenuById(long id);
+    Menu describeMenuById(long id);
 
     /**
      * 创建
      *
      * @param resources /
      */
-    void saveMenu(Menu resources);
+    void createMenu(Menu resources);
 
     /**
      * 编辑
      *
      * @param resources /
      */
-    void updateMenuById(Menu resources);
+    void modifyMenuById(Menu resources);
 
     /**
      * 获取所有子节点，包含自身ID
@@ -50,7 +50,7 @@ public interface MenuService extends IService<Menu> {
      * @param menuSet  /
      * @return /
      */
-    Set<Menu> selectChildMenus(List<Menu> menuList, Set<Menu> menuSet);
+    Set<Menu> describeChildMenuSet(List<Menu> menuList, Set<Menu> menuSet);
 
     /**
      * 构建菜单树
@@ -58,7 +58,7 @@ public interface MenuService extends IService<Menu> {
      * @param menus 原始数据
      * @return /
      */
-    List<Menu> buildTree(List<Menu> menus);
+    List<Menu> buildMenuTree(List<Menu> menus);
 
     /**
      * 构建菜单树
@@ -66,7 +66,7 @@ public interface MenuService extends IService<Menu> {
      * @param menus /
      * @return /
      */
-    List<MenuResponse> buildMenus(List<Menu> menus);
+    List<MenuResponse> buildMenuResponse(List<Menu> menus);
 
     /**
      * 删除
@@ -82,7 +82,7 @@ public interface MenuService extends IService<Menu> {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<Menu> menus, HttpServletResponse response) throws IOException;
+    void downloadMenuExcel(List<Menu> menus, HttpServletResponse response) throws IOException;
 
     /**
      * 懒加载菜单数据
@@ -90,7 +90,7 @@ public interface MenuService extends IService<Menu> {
      * @param pid /
      * @return /
      */
-    List<Menu> selectMenuByPid(Long pid);
+    List<Menu> describeMenuListByPid(Long pid);
 
     /**
      * 根据ID获取同级与上级数据
@@ -99,7 +99,7 @@ public interface MenuService extends IService<Menu> {
      * @param objects /
      * @return /
      */
-    List<Menu> selectSuperiorMenu(Menu menu, List<Menu> objects);
+    List<Menu> describeSuperiorMenuList(Menu menu, List<Menu> objects);
 
     /**
      * 根据当前用户获取菜单
@@ -107,5 +107,5 @@ public interface MenuService extends IService<Menu> {
      * @param currentUserId /
      * @return /
      */
-    List<Menu> selectMenuByUserId(Long currentUserId);
+    List<Menu> describeMenuListByUserId(Long currentUserId);
 }

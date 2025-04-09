@@ -42,7 +42,7 @@ public class DataServiceImpl implements DataService {
         if (CollUtil.isEmpty(ids)) {
             Set<Long> deptIds = new HashSet<>();
             // 查询用户角色
-            List<Role> roleList = roleService.selectRoleByUsersId(user.getId());
+            List<Role> roleList = roleService.describeRoleListByUsersId(user.getId());
             // 获取对应的部门ID
             for (Role role : roleList) {
                 DataScopeEnum dataScopeEnum = DataScopeEnum.find(role.getDataScope());

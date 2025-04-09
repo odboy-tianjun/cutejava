@@ -21,7 +21,7 @@ public interface RoleService extends IService<Role> {
      *
      * @return /
      */
-    List<Role> selectRole();
+    List<Role> describeRoleList();
 
     /**
      * 查询全部
@@ -29,7 +29,7 @@ public interface RoleService extends IService<Role> {
      * @param criteria 条件
      * @return /
      */
-    List<Role> selectRoleByCriteria(QueryRoleRequest criteria);
+    List<Role> describeRoleList(QueryRoleRequest criteria);
 
     /**
      * 待条件分页查询
@@ -38,7 +38,7 @@ public interface RoleService extends IService<Role> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<Role> queryRolePage(QueryRoleRequest criteria, Page<Object> page);
+    PageResult<Role> describeRolePage(QueryRoleRequest criteria, Page<Object> page);
 
     /**
      * 根据ID查询
@@ -46,7 +46,7 @@ public interface RoleService extends IService<Role> {
      * @param id /
      * @return /
      */
-    Role getRoleById(long id);
+    Role describeRoleById(long id);
 
     /**
      * 创建
@@ -60,14 +60,14 @@ public interface RoleService extends IService<Role> {
      *
      * @param resources /
      */
-    void updateRoleById(Role resources);
+    void modifyRoleById(Role resources);
 
     /**
      * 修改绑定的菜单
      *
      * @param resources /
      */
-    void updateMenuById(Role resources);
+    void modifyBindMenuById(Role resources);
 
     /**
      * 删除
@@ -82,7 +82,7 @@ public interface RoleService extends IService<Role> {
      * @param userId 用户ID
      * @return /
      */
-    List<Role> selectRoleByUsersId(Long userId);
+    List<Role> describeRoleListByUsersId(Long userId);
 
     /**
      * 根据角色查询角色级别
@@ -90,7 +90,7 @@ public interface RoleService extends IService<Role> {
      * @param roles /
      * @return /
      */
-    Integer getDeptLevelByRoles(Set<Role> roles);
+    Integer describeDeptLevelByRoles(Set<Role> roles);
 
     /**
      * 获取用户权限信息
@@ -98,7 +98,7 @@ public interface RoleService extends IService<Role> {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<RoleCodeModel> buildPermissions(User user);
+    List<RoleCodeModel> buildUserRolePermissions(User user);
 
     /**
      * 导出数据
@@ -107,7 +107,7 @@ public interface RoleService extends IService<Role> {
      * @param response /
      * @throws IOException /
      */
-    void downloadExcel(List<Role> roles, HttpServletResponse response) throws IOException;
+    void downloadRoleExcel(List<Role> roles, HttpServletResponse response) throws IOException;
 
     /**
      * 验证是否被用户关联
@@ -122,5 +122,5 @@ public interface RoleService extends IService<Role> {
      * @param menuId /
      * @return /
      */
-    List<Role> selectRoleByMenuId(Long menuId);
+    List<Role> describeRoleListByMenuId(Long menuId);
 }

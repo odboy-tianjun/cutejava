@@ -5,9 +5,9 @@ import java.util.Map;
 public interface MonitorService {
 
     /**
-     * 查询数据分页
+     * 查询服务器监控信息
      *
      * @return Map<String, Object>
      */
-    Map<String, Object> getServerInfo();
+    Map<String, Object> describeServerMonitorInfo();
 }
