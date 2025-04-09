@@ -92,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         save(resources);
         // 保存用户岗位
-        userJobMapper.insertData(resources.getId(), resources.getJobs());
+        userJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
         // 保存用户角色
         userRoleMapper.insertData(resources.getId(), resources.getRoles());
     }
@@ -143,7 +143,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         delCaches(user.getId(), user.getUsername());
         // 更新用户岗位
         userJobMapper.deleteByUserId(resources.getId());
-        userJobMapper.insertData(resources.getId(), resources.getJobs());
+        userJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
         // 更新用户角色
         userRoleMapper.deleteByUserId(resources.getId());
         userRoleMapper.insertData(resources.getId(), resources.getRoles());
