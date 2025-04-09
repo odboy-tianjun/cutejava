@@ -44,21 +44,21 @@ public class QuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<PageResult<QuartzJob>> queryQuartzJob(QueryQuartzJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(quartzJobService.queryJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(quartzJobService.describeQuartzJobPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出任务数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJob(HttpServletResponse response, QueryQuartzJobRequest criteria) throws IOException {
-        quartzJobService.downloadJobExcel(quartzJobService.selectJobByCriteria(criteria), response);
+        quartzJobService.downloadQuartzJobExcel(quartzJobService.describeQuartzJobList(criteria), response);
     }
 
     @ApiOperation("导出日志数据")
     @GetMapping(value = "/logs/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJobLog(HttpServletResponse response, QueryQuartzJobRequest criteria) throws IOException {
-        quartzJobService.downloadLogExcel(quartzJobService.selectLogByCriteria(criteria), response);
+        quartzJobService.downloadQuartzLogExcel(quartzJobService.describeQuartzLogList(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")
@@ -66,7 +66,7 @@ public class QuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<PageResult<QuartzLog>> queryQuartzJobLog(QueryQuartzJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(quartzJobService.queryLogPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(quartzJobService.describeQuartzLogPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增定时任务")
@@ -88,7 +88,7 @@ public class QuartzJobController {
     public ResponseEntity<Object> updateQuartzJob(@Validated(QuartzJob.Update.class) @RequestBody UpdateQuartzJobRequest resources) {
         // 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
         checkBean(resources.getBeanName());
-        quartzJobService.updateJob(resources);
+        quartzJobService.modifyQuartzJobResumeCron(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -96,7 +96,7 @@ public class QuartzJobController {
     @PostMapping(value = "/switchJobPauseStatus/{id}")
     @PreAuthorize("@el.check('timing:edit')")
     public ResponseEntity<Object> switchJobPauseStatus(@PathVariable Long id) {
-        quartzJobService.switchJobPauseStatus(quartzJobService.getById(id));
+        quartzJobService.switchQuartzJobStatus(quartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -104,7 +104,7 @@ public class QuartzJobController {
     @PostMapping(value = "/executionQuartzJob/{id}")
     @PreAuthorize("@el.check('timing:edit')")
     public ResponseEntity<Object> executionQuartzJob(@PathVariable Long id) {
-        quartzJobService.executionJob(quartzJobService.getById(id));
+        quartzJobService.startQuartzJob(quartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

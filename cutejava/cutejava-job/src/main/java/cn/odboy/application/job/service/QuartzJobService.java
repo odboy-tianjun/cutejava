@@ -22,7 +22,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<QuartzJob> queryJobPage(QueryQuartzJobRequest criteria, Page<Object> page);
+    PageResult<QuartzJob> describeQuartzJobPage(QueryQuartzJobRequest criteria, Page<Object> page);
 
     /**
      * 查询全部
@@ -30,7 +30,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param criteria 条件
      * @return /
      */
-    List<QuartzJob> selectJobByCriteria(QueryQuartzJobRequest criteria);
+    List<QuartzJob> describeQuartzJobList(QueryQuartzJobRequest criteria);
 
     /**
      * 分页查询日志
@@ -39,7 +39,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param page     分页参数
      * @return /
      */
-    PageResult<QuartzLog> queryLogPage(QueryQuartzJobRequest criteria, Page<Object> page);
+    PageResult<QuartzLog> describeQuartzLogPage(QueryQuartzJobRequest criteria, Page<Object> page);
 
     /**
      * 查询全部
@@ -47,7 +47,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param criteria 条件
      * @return /
      */
-    List<QuartzLog> selectLogByCriteria(QueryQuartzJobRequest criteria);
+    List<QuartzLog> describeQuartzLogList(QueryQuartzJobRequest criteria);
 
     /**
      * 创建
@@ -57,11 +57,11 @@ public interface QuartzJobService extends IService<QuartzJob> {
     void createJob(QuartzJob resources);
 
     /**
-     * 编辑
+     * 修改任务并重新调度
      *
      * @param resources /
      */
-    void updateJob(UpdateQuartzJobRequest resources);
+    void modifyQuartzJobResumeCron(UpdateQuartzJobRequest resources);
 
     /**
      * 删除任务
@@ -75,14 +75,14 @@ public interface QuartzJobService extends IService<QuartzJob> {
      *
      * @param quartzJob /
      */
-    void switchJobPauseStatus(QuartzJob quartzJob);
+    void switchQuartzJobStatus(QuartzJob quartzJob);
 
     /**
      * 立即执行定时任务
      *
      * @param quartzJob /
      */
-    void executionJob(QuartzJob quartzJob);
+    void startQuartzJob(QuartzJob quartzJob);
 
     /**
      * 导出定时任务
@@ -91,7 +91,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param response /
      * @throws IOException /
      */
-    void downloadJobExcel(List<QuartzJob> queryAll, HttpServletResponse response) throws IOException;
+    void downloadQuartzJobExcel(List<QuartzJob> queryAll, HttpServletResponse response) throws IOException;
 
     /**
      * 导出定时任务日志
@@ -100,7 +100,7 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param response    /
      * @throws IOException /
      */
-    void downloadLogExcel(List<QuartzLog> queryAllLog, HttpServletResponse response) throws IOException;
+    void downloadQuartzLogExcel(List<QuartzLog> queryAllLog, HttpServletResponse response) throws IOException;
 
     /**
      * 执行子任务
@@ -108,5 +108,5 @@ public interface QuartzJobService extends IService<QuartzJob> {
      * @param tasks /
      * @throws InterruptedException /
      */
-    void executionSubJob(String[] tasks) throws InterruptedException;
+    void startSubQuartJob(String[] tasks) throws InterruptedException;
 }

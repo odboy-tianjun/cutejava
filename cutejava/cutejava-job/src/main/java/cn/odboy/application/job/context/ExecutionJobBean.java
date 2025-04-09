@@ -67,7 +67,7 @@ public class ExecutionJobBean extends QuartzJobBean {
             if (StringUtil.isNotBlank(quartzJob.getSubTask())) {
                 String[] tasks = quartzJob.getSubTask().split("[,，]");
                 // 执行子任务
-                quartzJobService.executionSubJob(tasks);
+                quartzJobService.startSubQuartJob(tasks);
             }
         } catch (Exception e) {
             if (StringUtil.isNotBlank(uuid)) {
@@ -83,7 +83,7 @@ public class ExecutionJobBean extends QuartzJobBean {
             if (quartzJob.getPauseAfterFailure() != null && quartzJob.getPauseAfterFailure()) {
                 quartzJob.setIsPause(false);
                 // 更新状态
-                quartzJobService.switchJobPauseStatus(quartzJob);
+                quartzJobService.switchQuartzJobStatus(quartzJob);
             }
             if (quartzJob.getEmail() != null) {
                 EmailService emailService = SpringBeanHolder.getBean(EmailService.class);
