@@ -16,11 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,9 +38,9 @@ public class RoleController {
     private final RoleService roleService;
 
     @ApiOperation("获取单个role")
-    @GetMapping(value = "/{id}")
+    @PostMapping(value = "/getRoleById/{id}")
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<Role> findRoleById(@PathVariable Long id) {
+    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
         return new ResponseEntity<>(roleService.getRoleById(id), HttpStatus.OK);
     }
 
@@ -54,7 +52,7 @@ public class RoleController {
     }
 
     @ApiOperation("返回全部的角色")
-    @GetMapping(value = "/all")
+    @PostMapping(value = "/queryAllRole")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<Role>> queryAllRole() {
         return new ResponseEntity<>(roleService.selectRole(), HttpStatus.OK);
@@ -69,13 +67,13 @@ public class RoleController {
     }
 
     @ApiOperation("获取用户级别")
-    @GetMapping(value = "/level")
+    @PostMapping(value = "/getRoleLevel")
     public ResponseEntity<Object> getRoleLevel() {
         return new ResponseEntity<>(Dict.create().set("level", getLevels(null)), HttpStatus.OK);
     }
 
     @ApiOperation("新增角色")
-    @PostMapping
+    @PostMapping(value = "/createRole")
     @PreAuthorize("@el.check('roles:add')")
     public ResponseEntity<Object> createRole(@Validated @RequestBody CreateRoleRequest resources) {
         getLevels(resources.getLevel());
@@ -84,7 +82,7 @@ public class RoleController {
     }
 
     @ApiOperation("修改角色")
-    @PutMapping
+    @PostMapping(value = "/updateRole")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRole(@Validated(Role.Update.class) @RequestBody Role resources) {
         getLevels(resources.getLevel());
@@ -93,7 +91,7 @@ public class RoleController {
     }
 
     @ApiOperation("修改角色菜单")
-    @PutMapping(value = "/menu")
+    @PostMapping(value = "/updateRoleMenu")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRoleMenu(@RequestBody Role resources) {
         Role role = roleService.getById(resources.getId());
@@ -103,7 +101,7 @@ public class RoleController {
     }
 
     @ApiOperation("删除角色")
-    @DeleteMapping
+    @PostMapping(value = "/deleteRole")
     @PreAuthorize("@el.check('roles:del')")
     public ResponseEntity<Object> deleteRole(@RequestBody Set<Long> ids) {
         for (Long id : ids) {

@@ -2,8 +2,8 @@ import request from '@/utils/request'
 
 export function getMenusTree(pid) {
   return request({
-    url: 'api/menus/lazy?pid=' + pid,
-    method: 'get'
+    url: 'api/menus/queryAllMenu?pid=' + pid,
+    method: 'post'
   })
 }
 
@@ -18,7 +18,7 @@ export function getMenus(params) {
 export function getMenuSuperior(ids) {
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/menus/superior',
+    url: 'api/menus/queryMenuSuperior',
     method: 'post',
     data
   })
@@ -26,21 +26,21 @@ export function getMenuSuperior(ids) {
 
 export function getChild(id) {
   return request({
-    url: 'api/menus/child?id=' + id,
-    method: 'get'
+    url: 'api/menus/queryChildMenu?id=' + id,
+    method: 'post'
   })
 }
 
 export function buildMenus() {
   return request({
-    url: 'api/menus/build',
-    method: 'get'
+    url: 'api/menus/buildMenus',
+    method: 'post'
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/menus',
+    url: 'api/menus/createMenu',
     method: 'post',
     data
   })
@@ -48,16 +48,16 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/menus',
-    method: 'delete',
+    url: 'api/menus/deleteMenu',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/menus',
-    method: 'put',
+    url: 'api/menus/updateMenu',
+    method: 'post',
     data
   })
 }

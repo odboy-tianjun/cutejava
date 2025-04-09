@@ -36,7 +36,6 @@ import java.util.Set;
 @RequestMapping("/api/jobs")
 @Api(tags = "系统:定时任务管理")
 public class QuartzJobController {
-
     private static final String ENTITY_NAME = "quartzJob";
     private final QuartzJobService quartzJobService;
 
@@ -94,15 +93,15 @@ public class QuartzJobController {
     }
 
     @ApiOperation("更改定时任务状态")
-    @PutMapping(value = "/{id}")
+    @PostMapping(value = "/switchJobPauseStatus/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> updateQuartzJobStatus(@PathVariable Long id) {
+    public ResponseEntity<Object> switchJobPauseStatus(@PathVariable Long id) {
         quartzJobService.switchJobPauseStatus(quartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("执行定时任务")
-    @PutMapping(value = "/exec/{id}")
+    @PostMapping(value = "/executionQuartzJob/{id}")
     @PreAuthorize("@el.check('timing:edit')")
     public ResponseEntity<Object> executionQuartzJob(@PathVariable Long id) {
         quartzJobService.executionJob(quartzJobService.getById(id));

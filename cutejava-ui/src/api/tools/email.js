@@ -1,24 +1,24 @@
 import request from '@/utils/request'
 
-export function get() {
+export function queryEmailConfig() {
   return request({
-    url: 'api/email',
-    method: 'get'
-  })
-}
-
-export function update(data) {
-  return request({
-    url: 'api/email',
-    data,
-    method: 'put'
-  })
-}
-
-export function send(data) {
-  return request({
-    url: 'api/email',
-    data,
+    url: 'api/email/queryEmailConfig',
     method: 'post'
+  })
+}
+
+export function updateEmailConfig(data) {
+  return request({
+    url: 'api/email/updateEmailConfig',
+    method: 'post',
+    data
+  })
+}
+
+export function sendEmail(data) {
+  return request({
+    url: 'api/email/sendEmail',
+    method: 'post',
+    data
   })
 }

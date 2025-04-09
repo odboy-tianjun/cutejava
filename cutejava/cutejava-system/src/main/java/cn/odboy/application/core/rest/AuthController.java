@@ -2,8 +2,6 @@ package cn.odboy.application.core.rest;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.odboy.annotation.AnonymousDeleteMapping;
-import cn.odboy.annotation.AnonymousGetMapping;
 import cn.odboy.annotation.AnonymousPostMapping;
 import cn.odboy.application.core.config.CaptchaProperties;
 import cn.odboy.application.core.config.LoginProperties;
@@ -34,7 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -101,7 +99,7 @@ public class AuthController {
     }
 
     @ApiOperation("获取用户信息")
-    @GetMapping(value = "/info")
+    @PostMapping(value = "/info")
     public ResponseEntity<UserInfoResponse> getUserInfo() {
         UserJwtModel jwtUser = (UserJwtModel) SecurityHelper.getCurrentUser();
         UserInfoResponse userInfoResponse = BeanUtil.copyProperties(jwtUser, UserInfoResponse.class);
@@ -109,7 +107,7 @@ public class AuthController {
     }
 
     @ApiOperation("获取验证码")
-    @AnonymousGetMapping(value = "/code")
+    @AnonymousPostMapping(value = "/code")
     public ResponseEntity<Object> getCode() {
         // 获取运算的结果
         Captcha captcha = captchaProperties.getCaptcha();
@@ -130,7 +128,7 @@ public class AuthController {
     }
 
     @ApiOperation("退出登录")
-    @AnonymousDeleteMapping(value = "/logout")
+    @AnonymousPostMapping(value = "/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         String token = tokenProvider.getToken(request);
         onlineUserService.logoutByToken(token);

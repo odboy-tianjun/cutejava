@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function getDicts() {
   return request({
-    url: 'api/dict/all',
-    method: 'get'
+    url: 'api/dict/queryAllDict',
+    method: 'post'
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/dict',
+    url: 'api/dict/createDict',
     method: 'post',
     data
   })
@@ -17,16 +17,16 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/dict/',
-    method: 'delete',
+    url: 'api/dict/deleteDict',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dict',
-    method: 'put',
+    url: 'api/dict/updateDict',
+    method: 'post',
     data
   })
 }

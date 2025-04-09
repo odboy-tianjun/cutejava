@@ -34,8 +34,8 @@ import java.io.IOException;
 public class LocalStorageController {
     private final LocalStorageService localStorageService;
 
-    @GetMapping
     @ApiOperation("查询文件")
+    @GetMapping
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity<PageResult<LocalStorage>> queryFile(QueryLocalStorageRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
@@ -49,8 +49,8 @@ public class LocalStorageController {
         localStorageService.downloadExcel(localStorageService.selectLocalStorageByCriteria(criteria), response);
     }
 
-    @PostMapping
     @ApiOperation("上传文件")
+    @PostMapping
     @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Object> createFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
         localStorageService.uploadFile(name, file);
@@ -69,16 +69,16 @@ public class LocalStorageController {
         return new ResponseEntity<>(localStorage, HttpStatus.OK);
     }
 
-    @PutMapping
     @ApiOperation("修改文件")
+    @PutMapping
     @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Object> updateFile(@Validated @RequestBody LocalStorage resources) {
         localStorageService.updateLocalStorageById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
     @ApiOperation("多选删除")
+    @DeleteMapping
     public ResponseEntity<Object> deleteFile(@RequestBody Long[] ids) {
         localStorageService.deleteFileByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);

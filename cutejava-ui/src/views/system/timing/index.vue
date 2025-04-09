@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import crudJob from '@/api/system/timing'
+import crudJob from '@/api/quartzjob/timing'
 import Log from './log'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
@@ -163,7 +163,7 @@ export default {
   methods: {
     // 执行
     execute(id) {
-      crudJob.execution(id).then(res => {
+      crudJob.executionQuartzJob(id).then(res => {
         this.crud.notify('执行成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
       }).catch(err => {
         console.log(err.response.data.message)
@@ -174,7 +174,7 @@ export default {
       if (status === '恢复') {
         this.updateParams(id)
       }
-      crudJob.updateIsPause(id).then(res => {
+      crudJob.switchJobPauseStatus(id).then(res => {
         this.crud.toQuery()
         this.crud.notify(status + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
       }).catch(err => {

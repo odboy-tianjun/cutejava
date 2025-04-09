@@ -12,7 +12,7 @@ export function getDeptSuperior(ids, exclude) {
   exclude = exclude !== undefined ? exclude : false
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/dept/superior?exclude=' + exclude,
+    url: 'api/dept/getDeptSuperior?exclude=' + exclude,
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function getDeptSuperior(ids, exclude) {
 
 export function add(data) {
   return request({
-    url: 'api/dept',
+    url: 'api/dept/createDept',
     method: 'post',
     data
   })
@@ -28,16 +28,16 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/dept',
-    method: 'delete',
+    url: 'api/dept/deleteDept',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dept',
-    method: 'put',
+    url: 'api/dept/updateDept',
+    method: 'post',
     data
   })
 }

@@ -31,11 +31,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,7 +97,7 @@ public class UserController {
     }
 
     @ApiOperation("新增用户")
-    @PostMapping
+    @PostMapping(value = "/createUser")
     @PreAuthorize("@el.check('user:add')")
     public ResponseEntity<Object> createUser(@Validated @RequestBody User resources) {
         checkLevel(resources);
@@ -110,7 +108,7 @@ public class UserController {
     }
 
     @ApiOperation("修改用户")
-    @PutMapping
+    @PostMapping(value = "/updateUser")
     @PreAuthorize("@el.check('user:edit')")
     public ResponseEntity<Object> updateUser(@Validated(User.Update.class) @RequestBody User resources) throws Exception {
         checkLevel(resources);
@@ -119,8 +117,8 @@ public class UserController {
     }
 
     @ApiOperation("修改用户：个人中心")
-    @PutMapping(value = "center")
-    public ResponseEntity<Object> centerUser(@Validated(User.Update.class) @RequestBody User resources) {
+    @PostMapping(value = "updateCenterInfo")
+    public ResponseEntity<Object> updateCenterInfo(@Validated(User.Update.class) @RequestBody User resources) {
         if (!resources.getId().equals(SecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
@@ -129,7 +127,7 @@ public class UserController {
     }
 
     @ApiOperation("删除用户")
-    @DeleteMapping
+    @PostMapping(value = "/deleteUser")
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> deleteUser(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
@@ -144,8 +142,8 @@ public class UserController {
     }
 
     @ApiOperation("修改密码")
-    @PostMapping(value = "/updatePass")
-    public ResponseEntity<Object> updateUserPassword(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
+    @PostMapping(value = "/updatePassword")
+    public ResponseEntity<Object> updatePassword(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
         User user = userService.getUserByUsername(SecurityHelper.getCurrentUsername());
@@ -160,7 +158,7 @@ public class UserController {
     }
 
     @ApiOperation("重置密码")
-    @PutMapping(value = "/resetPwd")
+    @PostMapping(value = "/resetPwd")
     public ResponseEntity<Object> resetPwd(@RequestBody Set<Long> ids) {
         String defaultPwd = passwordEncoder.encode("123456");
         userService.resetPasswordByIds(ids, defaultPwd);

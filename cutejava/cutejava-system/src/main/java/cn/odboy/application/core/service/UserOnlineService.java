@@ -14,8 +14,8 @@ public interface UserOnlineService {
      * 保存在线用户信息
      *
      * @param userJwtModel /
-     * @param token      /
-     * @param request    /
+     * @param token        /
+     * @param request      /
      */
     void save(UserJwtModel userJwtModel, String token, HttpServletRequest request);
 

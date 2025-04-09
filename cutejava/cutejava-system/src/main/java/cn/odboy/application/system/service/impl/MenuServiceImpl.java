@@ -15,8 +15,8 @@ import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.request.QueryMenuRequest;
 import cn.odboy.model.system.model.MenuMetaModel;
+import cn.odboy.model.system.request.QueryMenuRequest;
 import cn.odboy.model.system.response.MenuResponse;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.ClassUtil;
@@ -336,7 +336,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     /**
      * 获取 MenuResponse
      *
-     * @param menu   /
+     * @param menu         /
      * @param menuResponse /
      * @return /
      */
