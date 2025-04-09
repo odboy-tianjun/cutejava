@@ -12,13 +12,13 @@ import java.util.Set;
 @Mapper
 public interface MenuMapper extends BaseMapper<Menu> {
 
-    List<Menu> selectMenuByCriteria(@Param("criteria") QueryMenuRequest criteria);
+    List<Menu> queryMenuListByArgs(@Param("criteria") QueryMenuRequest criteria);
 
-    LinkedHashSet<Menu> selectMenuByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
+    LinkedHashSet<Menu> queryMenuSetByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
 
-    List<Menu> selectMenuByPidIsNullOrderByMenuSort();
+    List<Menu> queryMenuListByPidIsNullOrderByMenuSort();
 
-    List<Menu> selectMenuByPidOrderByMenuSort(@Param("pid") Long pid);
+    List<Menu> queryMenuListByPidOrderByMenuSort(@Param("pid") Long pid);
 
     Menu getMenuByTitle(@Param("title") String title);
 
@@ -26,5 +26,5 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     Integer getMenuCountByPid(@Param("pid") Long pid);
 
-    void updateSubCntById(@Param("count") int count, @Param("menuId") Long menuId);
+    void updateSubCntByMenuId(@Param("count") int count, @Param("menuId") Long menuId);
 }

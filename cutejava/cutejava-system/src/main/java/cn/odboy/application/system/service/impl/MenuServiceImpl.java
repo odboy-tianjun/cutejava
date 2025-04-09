@@ -71,7 +71,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 }
             }
         }
-        return menuMapper.selectMenuByCriteria(criteria);
+        return menuMapper.queryMenuListByArgs(criteria);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (CollUtil.isEmpty(menus)) {
             List<Role> roles = roleService.selectRoleByUsersId(currentUserId);
             Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
-            menus = new ArrayList<>(menuMapper.selectMenuByRoleIdsAndType(roleIds, 2));
+            menus = new ArrayList<>(menuMapper.queryMenuSetByRoleIdsAndType(roleIds, 2));
             redisHelper.set(key, menus, 1, TimeUnit.DAYS);
         }
         return menus;
@@ -186,7 +186,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public Set<Menu> selectChildMenus(List<Menu> menuList, Set<Menu> menuSet) {
         for (Menu menu : menuList) {
             menuSet.add(menu);
-            List<Menu> menus = menuMapper.selectMenuByPidOrderByMenuSort(menu.getId());
+            List<Menu> menus = menuMapper.queryMenuListByPidOrderByMenuSort(menu.getId());
             if (CollUtil.isNotEmpty(menus)) {
                 selectChildMenus(menus, menuSet);
             }
@@ -210,9 +210,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public List<Menu> selectMenuByPid(Long pid) {
         List<Menu> menus;
         if (pid != null && !pid.equals(0L)) {
-            menus = menuMapper.selectMenuByPidOrderByMenuSort(pid);
+            menus = menuMapper.queryMenuListByPidOrderByMenuSort(pid);
         } else {
-            menus = menuMapper.selectMenuByPidIsNullOrderByMenuSort();
+            menus = menuMapper.queryMenuListByPidIsNullOrderByMenuSort();
         }
         return menus;
     }
@@ -220,10 +220,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<Menu> selectSuperiorMenu(Menu menu, List<Menu> menus) {
         if (menu.getPid() == null) {
-            menus.addAll(menuMapper.selectMenuByPidIsNullOrderByMenuSort());
+            menus.addAll(menuMapper.queryMenuListByPidIsNullOrderByMenuSort());
             return menus;
         }
-        menus.addAll(menuMapper.selectMenuByPidOrderByMenuSort(menu.getPid()));
+        menus.addAll(menuMapper.queryMenuListByPidOrderByMenuSort(menu.getPid()));
         return selectSuperiorMenu(getMenuById(menu.getPid()), menus);
     }
 
@@ -315,7 +315,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     private void updateSubCnt(Long menuId) {
         if (menuId != null) {
             int count = menuMapper.getMenuCountByPid(menuId);
-            menuMapper.updateSubCntById(count, menuId);
+            menuMapper.updateSubCntByMenuId(count, menuId);
         }
     }
 
