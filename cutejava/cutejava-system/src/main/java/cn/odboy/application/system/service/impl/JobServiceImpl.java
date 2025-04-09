@@ -103,7 +103,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     public void verifyBindRelationByIds(Set<Long> ids) {
-        if (userMapper.getCountByJobs(ids) > 0) {
+        if (userMapper.getCountByJobIds(ids) > 0) {
             throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
         }
     }

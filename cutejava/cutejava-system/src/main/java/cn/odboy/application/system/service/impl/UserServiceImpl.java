@@ -55,14 +55,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public PageResult<User> queryUserPage(QueryUserRequest criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
-        List<User> users = userMapper.queryUserPage(criteria, PageUtil.getCount(userMapper)).getRecords();
-        Long total = userMapper.getUserCountByCriteria(criteria);
+        List<User> users = userMapper.queryUserPageByArgs(criteria, PageUtil.getCount(userMapper)).getRecords();
+        Long total = userMapper.getUserCountByArgs(criteria);
         return PageUtil.toPage(users, total);
     }
 
     @Override
     public List<User> selectUserByCriteria(QueryUserRequest criteria) {
-        return userMapper.queryUserPage(criteria, PageUtil.getCount(userMapper)).getRecords();
+        return userMapper.queryUserPageByArgs(criteria, PageUtil.getCount(userMapper)).getRecords();
     }
 
     @Override
@@ -204,7 +204,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userOnlineService.kickOutByUsername(user.getUsername());
         });
         // 重置密码
-        userMapper.resetPasswordByUserIds(ids, password);
+        userMapper.updatePasswordByUserIds(password, ids);
     }
 
     @Override

@@ -14,9 +14,9 @@ import java.util.Set;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    Long getUserCountByCriteria(@Param("criteria") QueryUserRequest criteria);
+    Long getUserCountByArgs(@Param("criteria") QueryUserRequest criteria);
 
-    IPage<User> queryUserPage(@Param("criteria") QueryUserRequest criteria, Page<Object> page);
+    IPage<User> queryUserPageByArgs(@Param("criteria") QueryUserRequest criteria, Page<Object> page);
 
     User getUserByUsername(@Param("username") String username);
 
@@ -28,17 +28,17 @@ public interface UserMapper extends BaseMapper<User> {
 
     void updateEmailByUsername(@Param("username") String username, @Param("email") String email);
 
-    List<User> selectUserByRoleId(@Param("roleId") Long roleId);
+    List<User> queryUserListByRoleId(@Param("roleId") Long roleId);
 
-    List<User> selectUserByRoleDeptId(@Param("deptId") Long deptId);
+    List<User> queryUserListByDeptId(@Param("deptId") Long deptId);
 
-    List<User> selectUserByMenuId(@Param("menuId") Long menuId);
+    List<User> queryUserListByMenuId(@Param("menuId") Long menuId);
 
-    int getCountByJobs(@Param("jobIds") Set<Long> jobIds);
+    int getCountByJobIds(@Param("jobIds") Set<Long> jobIds);
 
-    int getCountByDepts(@Param("deptIds") Set<Long> deptIds);
+    int getCountByDeptIds(@Param("deptIds") Set<Long> deptIds);
 
-    int getCountByRoles(@Param("roleIds") Set<Long> roleIds);
+    int getCountByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
-    void resetPasswordByUserIds(@Param("userIds") Set<Long> userIds, @Param("pwd") String password);
+    void updatePasswordByUserIds(@Param("pwd") String password, @Param("userIds") Set<Long> userIds);
 }

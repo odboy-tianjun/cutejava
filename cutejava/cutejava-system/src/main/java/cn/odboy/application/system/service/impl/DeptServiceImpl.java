@@ -230,7 +230,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public void verifyBindRelationByIds(Set<Dept> deptSet) {
         Set<Long> deptIds = deptSet.stream().map(Dept::getId).collect(Collectors.toSet());
-        if (userMapper.getCountByDepts(deptIds) > 0) {
+        if (userMapper.getCountByDeptIds(deptIds) > 0) {
             throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
         }
         if (roleMapper.getRoleCountByDeptIds(deptIds) > 0) {
@@ -280,7 +280,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
      * @param id /
      */
     public void delCaches(Long id) {
-        List<User> users = userMapper.selectUserByRoleDeptId(id);
+        List<User> users = userMapper.queryUserListByDeptId(id);
         // 删除数据权限
         redisHelper.delByKeys(SystemRedisKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
         redisHelper.del(SystemRedisKey.DEPT_ID + id);

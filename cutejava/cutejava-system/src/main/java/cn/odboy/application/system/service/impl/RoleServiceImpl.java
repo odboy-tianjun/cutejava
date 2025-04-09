@@ -119,7 +119,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public void updateMenuById(Role role) {
-        List<User> users = userMapper.selectUserByRoleId(role.getId());
+        List<User> users = userMapper.queryUserListByRoleId(role.getId());
         // 更新菜单
         roleMenuMapper.deleteByRoleId(role.getId());
         // 判断是否为空
@@ -205,7 +205,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public void verifyBindRelationByIds(Set<Long> ids) {
-        if (userMapper.getCountByRoles(ids) > 0) {
+        if (userMapper.getCountByRoleIds(ids) > 0) {
             throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
         }
     }
@@ -221,7 +221,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      * @param id /
      */
     public void delCaches(Long id, List<User> users) {
-        users = CollectionUtil.isEmpty(users) ? userMapper.selectUserByRoleId(id) : users;
+        users = CollectionUtil.isEmpty(users) ? userMapper.queryUserListByRoleId(id) : users;
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheService.cleanUserCacheByUsername(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
