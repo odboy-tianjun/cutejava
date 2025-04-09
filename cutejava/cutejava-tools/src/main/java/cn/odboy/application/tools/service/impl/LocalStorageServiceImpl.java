@@ -34,12 +34,12 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
     private final FileProperties properties;
 
     @Override
-    public PageResult<LocalStorage> queryLocalStoragePage(QueryLocalStorageRequest criteria, Page<Object> page) {
+    public PageResult<LocalStorage> describeLocalStoragePage(QueryLocalStorageRequest criteria, Page<Object> page) {
         return PageUtil.toPage(localStorageMapper.queryLocalStoragePageByArgs(criteria, page));
     }
 
     @Override
-    public List<LocalStorage> selectLocalStorageByCriteria(QueryLocalStorageRequest criteria) {
+    public List<LocalStorage> describeLocalStorageList(QueryLocalStorageRequest criteria) {
         return localStorageMapper.queryLocalStoragePageByArgs(criteria, PageUtil.getCount(localStorageMapper)).getRecords();
     }
 
@@ -75,7 +75,7 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateLocalStorageById(LocalStorage resources) {
+    public void modifyLocalStorageById(LocalStorage resources) {
         LocalStorage localStorage = getById(resources.getId());
         localStorage.copy(resources);
         saveOrUpdate(localStorage);

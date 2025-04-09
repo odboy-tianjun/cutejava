@@ -11,7 +11,7 @@ public interface CaptchaService {
      * @param key   /
      * @return /
      */
-    SendEmailRequest renderCode(String email, String key);
+    SendEmailRequest renderCodeTemplate(String email, String key);
 
 
     /**
@@ -20,5 +20,5 @@ public interface CaptchaService {
      * @param code /
      * @param key  /
      */
-    void checkCode(String key, String email, String code);
+    void checkCodeAvailable(String key, String email, String code);
 }

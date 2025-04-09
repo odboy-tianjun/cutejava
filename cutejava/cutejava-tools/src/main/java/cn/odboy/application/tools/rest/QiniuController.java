@@ -43,28 +43,28 @@ public class QiniuController {
     @ApiOperation("查询七牛云存储配置")
     @PostMapping(value = "/queryQiNiuConfig")
     public ResponseEntity<QiniuConfig> queryQiNiuConfig() {
-        return new ResponseEntity<>(qiNiuConfigService.getConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(qiNiuConfigService.describeQiniuConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置七牛云存储")
     @PostMapping(value = "/updateQiNiuConfig")
     public ResponseEntity<Object> updateQiNiuConfig(@Validated @RequestBody QiniuConfig qiniuConfig) {
-        qiNiuConfigService.saveConfig(qiniuConfig);
-        qiNiuConfigService.updateType(qiniuConfig.getType());
+        qiNiuConfigService.saveQiniuConfig(qiniuConfig);
+        qiNiuConfigService.modifyQiniuConfigType(qiniuConfig.getType());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     public void exportQiNiu(HttpServletResponse response, QueryQiniuRequest criteria) throws IOException {
-        qiniuContentService.downloadExcel(qiniuContentService.selectQiniuContentByCriteria(criteria), response);
+        qiniuContentService.downloadExcel(qiniuContentService.describeQiniuContentList(criteria), response);
     }
 
     @ApiOperation("查询文件")
     @GetMapping
     public ResponseEntity<PageResult<QiniuContent>> queryQiNiu(QueryQiniuRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(qiniuContentService.queryQiniuContentPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(qiniuContentService.describeQiniuContentPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("上传文件")
@@ -89,7 +89,7 @@ public class QiniuController {
     @GetMapping(value = "/download/{id}")
     public ResponseEntity<Object> downloadQiNiu(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>(1);
-        map.put("url", qiniuContentService.download(qiniuContentService.getById(id)));
+        map.put("url", qiniuContentService.createFilePreviewUrl(qiniuContentService.getById(id)));
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 

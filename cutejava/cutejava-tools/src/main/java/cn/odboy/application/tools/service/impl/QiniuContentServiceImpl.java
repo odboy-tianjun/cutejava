@@ -46,12 +46,12 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
     private Long maxSize;
 
     @Override
-    public PageResult<QiniuContent> queryQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page) {
+    public PageResult<QiniuContent> describeQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page) {
         return PageUtil.toPage(qiniuContentMapper.queryQiniuContentPageByArgs(criteria, page));
     }
 
     @Override
-    public List<QiniuContent> selectQiniuContentByCriteria(QueryQiniuRequest criteria) {
+    public List<QiniuContent> describeQiniuContentList(QueryQiniuRequest criteria) {
         return qiniuContentMapper.queryQiniuContentPageByArgs(criteria, PageUtil.getCount(qiniuContentMapper)).getRecords();
     }
 
@@ -59,7 +59,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
     @Transactional(rollbackFor = Exception.class)
     public QiniuContent uploadFile(MultipartFile file) {
         FileUtil.checkSize(maxSize, file.getSize());
-        QiniuConfig qiniuConfig = qiNiuConfigService.getConfig();
+        QiniuConfig qiniuConfig = qiNiuConfigService.describeQiniuConfig();
         if (qiniuConfig.getId() == null) {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
@@ -96,8 +96,8 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
     }
 
     @Override
-    public String download(QiniuContent content) {
-        QiniuConfig qiniuConfig = qiNiuConfigService.getConfig();
+    public String createFilePreviewUrl(QiniuContent content) {
+        QiniuConfig qiniuConfig = qiNiuConfigService.describeQiniuConfig();
         String finalUrl;
         String type = "公开";
         if (type.equals(content.getType())) {
@@ -114,7 +114,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteFileById(Long id) {
-        QiniuConfig qiniuConfig = qiNiuConfigService.getConfig();
+        QiniuConfig qiniuConfig = qiNiuConfigService.describeQiniuConfig();
         QiniuContent qiniuContent = qiniuContentMapper.selectById(id);
         if (qiniuContent == null) {
             throw new BadRequestException("文件不存在");
@@ -135,7 +135,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void synchronize() {
-        QiniuConfig qiniuConfig = qiNiuConfigService.getConfig();
+        QiniuConfig qiniuConfig = qiNiuConfigService.describeQiniuConfig();
         if (qiniuConfig.getId() == null) {
             throw new BadRequestException("请先添加相应配置，再操作");
         }

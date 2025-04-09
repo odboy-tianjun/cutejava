@@ -39,14 +39,14 @@ public class LocalStorageController {
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity<PageResult<LocalStorage>> queryFile(QueryLocalStorageRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(localStorageService.queryLocalStoragePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(localStorageService.describeLocalStoragePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
     public void exportFile(HttpServletResponse response, QueryLocalStorageRequest criteria) throws IOException {
-        localStorageService.downloadExcel(localStorageService.selectLocalStorageByCriteria(criteria), response);
+        localStorageService.downloadExcel(localStorageService.describeLocalStorageList(criteria), response);
     }
 
     @ApiOperation("上传文件")
@@ -73,7 +73,7 @@ public class LocalStorageController {
     @PutMapping
     @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Object> updateFile(@Validated @RequestBody LocalStorage resources) {
-        localStorageService.updateLocalStorageById(resources);
+        localStorageService.modifyLocalStorageById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
