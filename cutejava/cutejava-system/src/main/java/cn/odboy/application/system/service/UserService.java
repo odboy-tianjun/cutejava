@@ -66,7 +66,7 @@ public interface UserService extends IService<User> {
      * @param file 文件
      * @return /
      */
-    Map<String, String> modifyUserAvatarFile(MultipartFile file);
+    Map<String, String> modifyUserAvatar(MultipartFile file);
 
     /**
      * 修改邮箱
