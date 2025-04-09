@@ -131,8 +131,8 @@ public class UserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> deleteUser(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(roleService.selectRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
-            Integer optLevel = Collections.min(roleService.selectRoleByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
+            Integer optLevel = Collections.min(roleService.describeRoleListByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足，不能删除：" + userService.getUserById(id).getUsername());
             }
@@ -190,8 +190,8 @@ public class UserController {
      * @param resources /
      */
     private void checkLevel(User resources) {
-        Integer currentLevel = Collections.min(roleService.selectRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
-        Integer optLevel = roleService.getDeptLevelByRoles(resources.getRoles());
+        Integer currentLevel = Collections.min(roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
+        Integer optLevel = roleService.describeDeptLevelByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
         }

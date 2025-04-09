@@ -41,21 +41,21 @@ public class RoleController {
     @PostMapping(value = "/getRoleById/{id}")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
-        return new ResponseEntity<>(roleService.getRoleById(id), HttpStatus.OK);
+        return new ResponseEntity<>(roleService.describeRoleById(id), HttpStatus.OK);
     }
 
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, QueryRoleRequest criteria) throws IOException {
-        roleService.downloadExcel(roleService.selectRoleByCriteria(criteria), response);
+        roleService.downloadRoleExcel(roleService.describeRoleList(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")
     @PostMapping(value = "/queryAllRole")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<Role>> queryAllRole() {
-        return new ResponseEntity<>(roleService.selectRole(), HttpStatus.OK);
+        return new ResponseEntity<>(roleService.describeRoleList(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
@@ -63,20 +63,20 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<PageResult<Role>> queryRole(QueryRoleRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(roleService.queryRolePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(roleService.describeRolePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
     @PostMapping(value = "/getRoleLevel")
     public ResponseEntity<Object> getRoleLevel() {
-        return new ResponseEntity<>(Dict.create().set("level", getLevels(null)), HttpStatus.OK);
+        return new ResponseEntity<>(Dict.create().set("level", checkRoleLevels(null)), HttpStatus.OK);
     }
 
     @ApiOperation("新增角色")
     @PostMapping(value = "/createRole")
     @PreAuthorize("@el.check('roles:add')")
     public ResponseEntity<Object> createRole(@Validated @RequestBody CreateRoleRequest resources) {
-        getLevels(resources.getLevel());
+        checkRoleLevels(resources.getLevel());
         roleService.createRole(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -85,8 +85,8 @@ public class RoleController {
     @PostMapping(value = "/updateRole")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRole(@Validated(Role.Update.class) @RequestBody Role resources) {
-        getLevels(resources.getLevel());
-        roleService.updateRoleById(resources);
+        checkRoleLevels(resources.getLevel());
+        roleService.modifyRoleById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -95,8 +95,8 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRoleMenu(@RequestBody Role resources) {
         Role role = roleService.getById(resources.getId());
-        getLevels(role.getLevel());
-        roleService.updateMenuById(resources);
+        checkRoleLevels(role.getLevel());
+        roleService.modifyBindMenuById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -106,7 +106,7 @@ public class RoleController {
     public ResponseEntity<Object> deleteRole(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
             Role role = roleService.getById(id);
-            getLevels(role.getLevel());
+            checkRoleLevels(role.getLevel());
         }
         // 验证是否被用户关联
         roleService.verifyBindRelationByIds(ids);
@@ -115,12 +115,12 @@ public class RoleController {
     }
 
     /**
-     * 获取用户的角色级别
+     * 检查用户的角色级别
      *
      * @return /
      */
-    private int getLevels(Integer level) {
-        List<Integer> levels = roleService.selectRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
+    private int checkRoleLevels(Integer level) {
+        List<Integer> levels = roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

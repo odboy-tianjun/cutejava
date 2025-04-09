@@ -51,17 +51,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     private final RedisHelper redisHelper;
 
     @Override
-    public List<Role> selectRole() {
+    public List<Role> describeRoleList() {
         return roleMapper.queryRoleList();
     }
 
     @Override
-    public List<Role> selectRoleByCriteria(QueryRoleRequest criteria) {
+    public List<Role> describeRoleList(QueryRoleRequest criteria) {
         return roleMapper.queryRoleListByArgs(criteria);
     }
 
     @Override
-    public PageResult<Role> queryRolePage(QueryRoleRequest criteria, Page<Object> page) {
+    public PageResult<Role> describeRolePage(QueryRoleRequest criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<Role> roles = roleMapper.queryRoleListByArgs(criteria);
         Long total = roleMapper.getRoleCountByArgs(criteria);
@@ -69,7 +69,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public Role getRoleById(long id) {
+    public Role describeRoleById(long id) {
         String key = SystemRedisKey.ROLE_ID + id;
         Role role = redisHelper.get(key, Role.class);
         if (role == null) {
@@ -94,7 +94,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateRoleById(Role resources) {
+    public void modifyRoleById(Role resources) {
         Role role = getById(resources.getId());
         Role role1 = roleMapper.getRoleByName(resources.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
@@ -118,7 +118,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public void updateMenuById(Role role) {
+    public void modifyBindMenuById(Role role) {
         List<User> users = userMapper.queryUserListByRoleId(role.getId());
         // 更新菜单
         roleMenuMapper.deleteByRoleId(role.getId());
@@ -144,7 +144,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public List<Role> selectRoleByUsersId(Long userId) {
+    public List<Role> describeRoleListByUsersId(Long userId) {
         String key = SystemRedisKey.ROLE_USER + userId;
         List<Role> roles = redisHelper.getList(key, Role.class);
         if (CollUtil.isEmpty(roles)) {
@@ -155,19 +155,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public Integer getDeptLevelByRoles(Set<Role> roles) {
+    public Integer describeDeptLevelByRoles(Set<Role> roles) {
         if (CollUtil.isEmpty(roles)) {
             return Integer.MAX_VALUE;
         }
         Set<Role> roleSet = new HashSet<>();
         for (Role role : roles) {
-            roleSet.add(getRoleById(role.getId()));
+            roleSet.add(describeRoleById(role.getId()));
         }
         return Collections.min(roleSet.stream().map(Role::getLevel).collect(Collectors.toList()));
     }
 
     @Override
-    public List<RoleCodeModel> buildPermissions(User user) {
+    public List<RoleCodeModel> buildUserRolePermissions(User user) {
         String key = SystemRedisKey.ROLE_AUTH + user.getId();
         List<RoleCodeModel> authorityList = redisHelper.getList(key, RoleCodeModel.class);
         if (CollUtil.isEmpty(authorityList)) {
@@ -190,7 +190,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public void downloadExcel(List<Role> roles, HttpServletResponse response) throws IOException {
+    public void downloadRoleExcel(List<Role> roles, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Role role : roles) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -211,7 +211,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public List<Role> selectRoleByMenuId(Long menuId) {
+    public List<Role> describeRoleListByMenuId(Long menuId) {
         return roleMapper.queryRoleListByMenuId(menuId);
     }
 

@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     throw new BadRequestException("账号未激活！");
                 }
                 // 获取用户的权限
-                List<RoleCodeModel> authorities = roleService.buildPermissions(user);
+                List<RoleCodeModel> authorities = roleService.buildUserRolePermissions(user);
                 // 初始化JwtUserDto
                 userJwtModel = new UserJwtModel(user, dataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
