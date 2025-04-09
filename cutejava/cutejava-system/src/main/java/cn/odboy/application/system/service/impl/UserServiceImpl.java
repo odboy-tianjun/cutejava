@@ -94,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 保存用户岗位
         userJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
         // 保存用户角色
-        userRoleMapper.insertData(resources.getId(), resources.getRoles());
+        userRoleMapper.insertBatchWithUserId(resources.getRoles(), resources.getId());
     }
 
     @Override
@@ -146,7 +146,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
         // 更新用户角色
         userRoleMapper.deleteByUserId(resources.getId());
-        userRoleMapper.insertData(resources.getId(), resources.getRoles());
+        userRoleMapper.insertBatchWithUserId(resources.getRoles(), resources.getId());
     }
 
     @Override
