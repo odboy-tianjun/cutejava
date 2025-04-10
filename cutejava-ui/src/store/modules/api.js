@@ -3,9 +3,9 @@ const baseUrl = process.env.VUE_APP_BASE_API === '/' ? '' : process.env.VUE_APP_
 const api = {
   state: {
     // 图片上传
-    imagesUploadApi: baseUrl + '/api/localStorage/pictures',
+    imagesUploadApi: baseUrl + '/api/localStorage/uploadPicture',
     // 修改头像
-    updateAvatarApi: baseUrl + '/api/users/updateAvatar',
+    updateAvatarApi: baseUrl + '/api/users/modifyUserAvatar',
     // 上传文件到七牛云
     qiNiuUploadApi: baseUrl + '/api/qiNiuContent',
     // Sql 监控
@@ -15,7 +15,7 @@ const api = {
     // swagger
     swaggerApi: baseUrl + '/doc.html',
     // 文件上传
-    fileUploadApi: baseUrl + '/api/localStorage',
+    fileUploadApi: baseUrl + '/api/localStorage/uploadFile',
     // baseUrl，
     baseApi: baseUrl
   }

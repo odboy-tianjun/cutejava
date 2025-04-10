@@ -30,7 +30,7 @@ public interface DictDetailService extends IService<DictDetail> {
      *
      * @param id /
      */
-    void deleteDictDetailById(Long id);
+    void removeDictDetailById(Long id);
 
     /**
      * 分页查询

@@ -13,11 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +32,7 @@ public class DictDetailController {
 
     @ApiOperation("查询字典详情")
     @GetMapping
-    public ResponseEntity<PageResult<DictDetail>> queryDictDetail(QueryDictDetailRequest criteria) {
+    public ResponseEntity<PageResult<DictDetail>> describeDictDetailPage(QueryDictDetailRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(dictDetailService.describeDictDetailPage(criteria, page), HttpStatus.OK);
     }
@@ -52,26 +49,26 @@ public class DictDetailController {
     }
 
     @ApiOperation("新增字典详情")
-    @PostMapping
+    @PostMapping(value = "/saveDictDetail")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Object> createDictDetail(@Validated @RequestBody CreateDictDetailRequest resources) {
+    public ResponseEntity<Object> saveDictDetail(@Validated @RequestBody CreateDictDetailRequest resources) {
         dictDetailService.saveDictDetail(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改字典详情")
-    @PutMapping
+    @PostMapping(value = "/modifyDictDetailById")
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<Object> updateDictDetail(@Validated(DictDetail.Update.class) @RequestBody DictDetail resources) {
+    public ResponseEntity<Object> modifyDictDetailById(@Validated(DictDetail.Update.class) @RequestBody DictDetail resources) {
         dictDetailService.modifyDictDetailById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("删除字典详情")
-    @DeleteMapping(value = "/{id}")
+    @PostMapping(value = "/removeDictDetailById")
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<Object> deleteDictDetail(@PathVariable Long id) {
-        dictDetailService.deleteDictDetailById(id);
+    public ResponseEntity<Object> removeDictDetailById(@RequestBody DictDetail args) {
+        dictDetailService.removeDictDetailById(args.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

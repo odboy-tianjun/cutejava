@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function add(data) {
   return request({
-    url: 'api/localStorage',
+    url: 'api/localStorage/uploadFile',
     method: 'post',
     data
   })
@@ -10,16 +10,16 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/localStorage/',
-    method: 'delete',
+    url: 'api/localStorage/removeFileByIds',
+    method: 'post',
     data: ids
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/localStorage',
-    method: 'put',
+    url: 'api/localStorage/modifyLocalStorageById',
+    method: 'post',
     data
   })
 }

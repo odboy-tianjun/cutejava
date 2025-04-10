@@ -13,22 +13,22 @@ export function get(dictName) {
   })
 }
 
-export function getDictMap(dictName) {
-  const params = {
-    dictName,
-    page: 0,
-    size: 9999
-  }
-  return request({
-    url: 'api/dictDetail/getDictDetailMaps',
-    method: 'get',
-    params
-  })
-}
+// export function getDictMap(dictName) {
+//   const params = {
+//     dictName,
+//     page: 0,
+//     size: 9999
+//   }
+//   return request({
+//     url: 'api/dictDetail/getDictDetailMaps',
+//     method: 'get',
+//     params
+//   })
+// }
 
 export function add(data) {
   return request({
-    url: 'api/dictDetail',
+    url: 'api/dictDetail/saveDictDetail',
     method: 'post',
     data
   })
@@ -36,15 +36,16 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'api/dictDetail/' + id,
-    method: 'delete'
+    url: 'api/dictDetail/removeDictDetailById',
+    method: 'post',
+    data: { id: id }
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dictDetail',
-    method: 'put',
+    url: 'api/dictDetail/modifyDictDetailById',
+    method: 'post',
     data
   })
 }

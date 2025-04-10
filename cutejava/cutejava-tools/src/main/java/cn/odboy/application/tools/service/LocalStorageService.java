@@ -51,7 +51,7 @@ public interface LocalStorageService extends IService<LocalStorage> {
      *
      * @param ids /
      */
-    void deleteFileByIds(Long[] ids);
+    void removeFileByIds(Long[] ids);
 
     /**
      * 导出数据

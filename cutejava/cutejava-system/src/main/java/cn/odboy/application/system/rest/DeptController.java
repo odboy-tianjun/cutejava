@@ -44,15 +44,15 @@ public class DeptController {
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<PageResult<Dept>> queryDept(QueryDeptRequest criteria) throws Exception {
+    public ResponseEntity<PageResult<Dept>> describeDeptPage(QueryDeptRequest criteria) throws Exception {
         List<Dept> depts = deptService.describeDeptList(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @PostMapping("/getDeptSuperior")
+    @PostMapping("/describeDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
+    public ResponseEntity<Object> describeDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<Dept> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             Dept dept = deptService.describeDeptById(id);
@@ -72,31 +72,31 @@ public class DeptController {
     }
 
     @ApiOperation("新增部门")
-    @PostMapping(value = "/createDept")
+    @PostMapping(value = "/saveDept")
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<Object> createDept(@Validated @RequestBody CreateDeptRequest resources) {
-        deptService.createDept(resources);
+    public ResponseEntity<Object> saveDept(@Validated @RequestBody CreateDeptRequest resources) {
+        deptService.saveDept(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改部门")
-    @PostMapping(value = "/updateDept")
+    @PostMapping(value = "/modifyDept")
     @PreAuthorize("@el.check('dept:edit')")
-    public ResponseEntity<Object> updateDept(@Validated(Dept.Update.class) @RequestBody Dept resources) {
+    public ResponseEntity<Object> modifyDept(@Validated(Dept.Update.class) @RequestBody Dept resources) {
         deptService.modifyDept(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("删除部门")
-    @PostMapping(value = "/deleteDept")
+    @PostMapping(value = "/removeDeptByIds")
     @PreAuthorize("@el.check('dept:del')")
-    public ResponseEntity<Object> deleteDept(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Object> removeDeptByIds(@RequestBody Set<Long> ids) {
         Set<Dept> depts = new HashSet<>();
         // 获取部门，和其所有子部门
         deptService.traverseDeptByIdWithPids(ids, depts);
         // 验证是否被角色或用户关联
         deptService.verifyBindRelationByIds(depts);
-        deptService.deleteDeptByIds(depts);
+        deptService.removeDeptByIds(depts);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

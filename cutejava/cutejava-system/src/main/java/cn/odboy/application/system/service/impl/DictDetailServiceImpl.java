@@ -67,7 +67,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteDictDetailById(Long id) {
+    public void removeDictDetailById(Long id) {
         DictDetail dictDetail = getById(id);
         removeById(id);
         // 清理缓存

@@ -31,20 +31,20 @@ public class CaptchaController {
     @ApiOperation("重置邮箱，发送验证码")
     @PostMapping(value = "/sendResetEmailCaptcha")
     public ResponseEntity<Object> sendResetEmailCaptcha(@RequestParam String email) {
-        emailService.sendEmailCaptcha(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
+        emailService.sendEmail(captchaService.renderCodeTemplate(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("重置密码，发送验证码")
     @PostMapping(value = "/sendResetPasswordCaptcha")
     public ResponseEntity<Object> sendResetPasswordCaptcha(@RequestParam String email) {
-        emailService.sendEmailCaptcha(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
+        emailService.sendEmail(captchaService.renderCodeTemplate(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("验证码验证")
-    @PostMapping(value = "/validatedCaptcha")
-    public ResponseEntity<Object> validatedCaptcha(@RequestParam String email, @RequestParam String code, @RequestParam Integer codeBi) {
+    @PostMapping(value = "/checkCodeAvailable")
+    public ResponseEntity<Object> checkCodeAvailable(@RequestParam String email, @RequestParam String code, @RequestParam Integer codeBi) {
         CodeBiEnum biEnum = CodeBiEnum.find(codeBi);
         switch (Objects.requireNonNull(biEnum)) {
             case ONE:

@@ -79,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createUser(User resources) {
+    public void saveUser(User resources) {
         resources.setDeptId(resources.getDept().getId());
         if (userMapper.getUserByUsername(resources.getUsername()) != null) {
             throw new EntityExistException(User.class, "username", resources.getUsername());
@@ -167,7 +167,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteUserByIds(Set<Long> ids) {
+    public void removeUserByIds(Set<Long> ids) {
         for (Long id : ids) {
             // 清理缓存
             User user = getById(id);

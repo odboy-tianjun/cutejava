@@ -18,7 +18,7 @@ public interface UserCacheService {
      * @param userName 用户名
      */
     @Async
-    void cacheUserJwtModelByUserName(String userName, UserJwtModel user);
+    void saveUserJwtModelByUserName(String userName, UserJwtModel user);
 
     /**
      * 清理用户缓存信息

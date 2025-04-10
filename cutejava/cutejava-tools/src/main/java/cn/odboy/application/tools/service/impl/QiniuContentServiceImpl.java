@@ -113,7 +113,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteFileById(Long id) {
+    public void removeFileById(Long id) {
         QiniuConfig qiniuConfig = qiNiuConfigService.describeQiniuConfig();
         QiniuContent qiniuContent = qiniuContentMapper.selectById(id);
         if (qiniuContent == null) {
@@ -174,11 +174,11 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteFileByIds(Long[] ids) {
+    public void removeFileByIds(Long[] ids) {
         for (Long id : ids) {
             QiniuContent qiniuContent = getById(id);
             if (qiniuContent != null) {
-                deleteFileById(id);
+                removeFileById(id);
             }
         }
     }

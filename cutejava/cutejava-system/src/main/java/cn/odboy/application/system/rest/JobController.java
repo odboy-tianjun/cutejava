@@ -46,28 +46,28 @@ public class JobController {
     }
 
     @ApiOperation("新增岗位")
-    @PostMapping(value = "/createJob")
+    @PostMapping(value = "/saveJob")
     @PreAuthorize("@el.check('job:add')")
-    public ResponseEntity<Object> createJob(@Validated @RequestBody CreateJobRequest resources) {
-        jobService.createJob(resources);
+    public ResponseEntity<Object> saveJob(@Validated @RequestBody CreateJobRequest resources) {
+        jobService.saveJob(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改岗位")
-    @PostMapping(value = "/updateJob")
+    @PostMapping(value = "/modifyJobById")
     @PreAuthorize("@el.check('job:edit')")
-    public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources) {
+    public ResponseEntity<Object> modifyJobById(@Validated(Job.Update.class) @RequestBody Job resources) {
         jobService.modifyJobById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("删除岗位")
-    @PostMapping(value = "/deleteJob")
+    @PostMapping(value = "/removeJobByIds")
     @PreAuthorize("@el.check('job:del')")
-    public ResponseEntity<Object> deleteJob(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Object> removeJobByIds(@RequestBody Set<Long> ids) {
         // 验证是否被用户关联
         jobService.verifyBindRelationByIds(ids);
-        jobService.deleteJobByIds(ids);
+        jobService.removeJobByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

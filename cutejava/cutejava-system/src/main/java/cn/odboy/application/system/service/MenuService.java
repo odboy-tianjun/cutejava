@@ -34,7 +34,7 @@ public interface MenuService extends IService<Menu> {
      *
      * @param resources /
      */
-    void createMenu(Menu resources);
+    void saveMenu(Menu resources);
 
     /**
      * 编辑
@@ -73,7 +73,7 @@ public interface MenuService extends IService<Menu> {
      *
      * @param menuSet /
      */
-    void deleteMenuByIds(Set<Menu> menuSet);
+    void removeMenuByIds(Set<Menu> menuSet);
 
     /**
      * 导出

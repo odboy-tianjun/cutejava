@@ -3,7 +3,7 @@ import { encrypt } from '@/utils/rsaEncrypt'
 
 export function add(data) {
   return request({
-    url: 'api/users/createUser',
+    url: 'api/users/saveUser',
     method: 'post',
     data
   })
@@ -11,7 +11,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/users/deleteUser',
+    url: 'api/users/removeUserByIds',
     method: 'post',
     data: ids
   })
@@ -19,7 +19,7 @@ export function del(ids) {
 
 export function resetPwd(ids) {
   return request({
-    url: 'api/users/resetPwd',
+    url: 'api/users/resetUserPasswordByIds',
     method: 'post',
     data: ids
   })
@@ -27,7 +27,7 @@ export function resetPwd(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/users/updateUser',
+    url: 'api/users/modifyUserById',
     method: 'post',
     data
   })
@@ -35,7 +35,7 @@ export function edit(data) {
 
 export function editUser(data) {
   return request({
-    url: 'api/users/updateCenterInfo',
+    url: 'api/users/modifyUserCenterInfoById',
     method: 'post',
     data
   })
@@ -47,7 +47,7 @@ export function updatePass(user) {
     newPass: encrypt(user.newPass)
   }
   return request({
-    url: 'api/users/updatePassword/',
+    url: 'api/users/modifyUserPasswordByUsername',
     method: 'post',
     data
   })
@@ -59,7 +59,7 @@ export function updateEmail(form) {
     email: form.email
   }
   return request({
-    url: 'api/users/updateEmail/' + form.code,
+    url: 'api/users/modifyUserEmailByUsername/' + form.code,
     method: 'post',
     data
   })
@@ -67,7 +67,7 @@ export function updateEmail(form) {
 
 export function queryUserMetaPage(query) {
   return request({
-    url: 'api/users/queryUserMetaPage',
+    url: 'api/users/describeUserMetadataOptions',
     method: 'post',
     data: {
       page: 1,

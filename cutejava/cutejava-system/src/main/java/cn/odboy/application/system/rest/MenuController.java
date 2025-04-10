@@ -56,16 +56,16 @@ public class MenuController {
     }
 
     @ApiOperation("返回全部的菜单")
-    @PostMapping(value = "/queryAllMenu")
+    @PostMapping(value = "/describeMenuListByPid")
     @PreAuthorize("@el.check('menu:list','roles:list')")
-    public ResponseEntity<List<Menu>> queryAllMenu(@RequestParam Long pid) {
+    public ResponseEntity<List<Menu>> describeMenuListByPid(@RequestParam Long pid) {
         return new ResponseEntity<>(menuService.describeMenuListByPid(pid), HttpStatus.OK);
     }
 
     @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
-    @PostMapping(value = "/queryChildMenu")
+    @PostMapping(value = "/describeChildMenuSet")
     @PreAuthorize("@el.check('menu:list','roles:list')")
-    public ResponseEntity<Object> queryChildMenu(@RequestParam Long id) {
+    public ResponseEntity<Object> describeChildMenuSet(@RequestParam Long id) {
         Set<Menu> menuSet = new HashSet<>();
         List<Menu> menuList = menuService.describeMenuListByPid(id);
         menuSet.add(menuService.getById(id));
@@ -83,9 +83,9 @@ public class MenuController {
     }
 
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")
-    @PostMapping("/queryMenuSuperior")
+    @PostMapping("/describeMenuSuperior")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<List<Menu>> queryMenuSuperior(@RequestBody List<Long> ids) {
+    public ResponseEntity<List<Menu>> describeMenuSuperior(@RequestBody List<Long> ids) {
         Set<Menu> menus = new LinkedHashSet<>();
         if (CollectionUtil.isNotEmpty(ids)) {
             for (Long id : ids) {
@@ -106,35 +106,35 @@ public class MenuController {
     }
 
     @ApiOperation("新增菜单")
-    @PostMapping(value = "/createMenu")
+    @PostMapping(value = "/saveMenu")
     @PreAuthorize("@el.check('menu:add')")
-    public ResponseEntity<Object> createMenu(@Validated @RequestBody Menu resources) {
+    public ResponseEntity<Object> saveMenu(@Validated @RequestBody Menu resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
-        menuService.createMenu(resources);
+        menuService.saveMenu(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改菜单")
-    @PostMapping(value = "/updateMenu")
+    @PostMapping(value = "/modifyMenuById")
     @PreAuthorize("@el.check('menu:edit')")
-    public ResponseEntity<Object> updateMenu(@Validated(Menu.Update.class) @RequestBody Menu resources) {
+    public ResponseEntity<Object> modifyMenuById(@Validated(Menu.Update.class) @RequestBody Menu resources) {
         menuService.modifyMenuById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("删除菜单")
-    @PostMapping(value = "/deleteMenu")
+    @PostMapping(value = "/removeMenuByIds")
     @PreAuthorize("@el.check('menu:del')")
-    public ResponseEntity<Object> deleteMenu(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Object> removeMenuByIds(@RequestBody Set<Long> ids) {
         Set<Menu> menuSet = new HashSet<>();
         for (Long id : ids) {
             List<Menu> menuList = menuService.describeMenuListByPid(id);
             menuSet.add(menuService.getById(id));
             menuSet = menuService.describeChildMenuSet(menuList, menuSet);
         }
-        menuService.deleteMenuByIds(menuSet);
+        menuService.removeMenuByIds(menuSet);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

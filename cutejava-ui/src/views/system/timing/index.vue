@@ -163,7 +163,7 @@ export default {
   methods: {
     // 执行
     execute(id) {
-      crudJob.executionQuartzJob(id).then(res => {
+      crudJob.startQuartzJob(id).then(res => {
         this.crud.notify('执行成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
       }).catch(err => {
         console.log(err.response.data.message)
@@ -174,7 +174,7 @@ export default {
       if (status === '恢复') {
         this.updateParams(id)
       }
-      crudJob.switchJobPauseStatus(id).then(res => {
+      crudJob.switchQuartzJobStatus(id).then(res => {
         this.crud.toQuery()
         this.crud.notify(status + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
       }).catch(err => {

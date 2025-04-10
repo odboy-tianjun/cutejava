@@ -14,9 +14,9 @@ export function sendResetPasswordCaptcha(data) {
   })
 }
 
-export function validatedCaptcha(email, code, codeBi) {
+export function checkCodeAvailable(email, code, codeBi) {
   return request({
-    url: `api/code/validatedCaptcha?email=${email}&code=${code}&codeBi=${codeBi}`,
+    url: `api/code/checkCodeAvailable?email=${email}&code=${code}&codeBi=${codeBi}`,
     method: 'post'
   })
 }

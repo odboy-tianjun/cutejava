@@ -48,7 +48,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createDict(CreateDictRequest resources) {
+    public void saveDict(CreateDictRequest resources) {
         save(BeanUtil.copyProperties(resources, Dict.class));
     }
 
@@ -65,7 +65,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteDictByIds(Set<Long> ids) {
+    public void removeDictByIds(Set<Long> ids) {
         // 清理缓存
         List<Dict> dicts = dictMapper.selectByIds(ids);
         for (Dict dict : dicts) {

@@ -141,7 +141,7 @@ export default {
     getDeptDatas(tree, treeNode, resolve) {
       const params = { pid: tree.id }
       setTimeout(() => {
-        crudDept.getDepts(params).then(res => {
+        crudDept.describeDeptList(params).then(res => {
           resolve(res.content)
         })
       }, 100)
@@ -161,7 +161,7 @@ export default {
       }
     },
     getSupDepts(id) {
-      crudDept.getDeptSuperior(id, true).then(res => {
+      crudDept.describeDeptSuperiorTree(id, true).then(res => {
         const data = res.content
         this.buildDepts(data)
         this.depts = data
@@ -178,7 +178,7 @@ export default {
       })
     },
     getDepts() {
-      crudDept.getDepts({ enabled: true }).then(res => {
+      crudDept.describeDeptList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -190,7 +190,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        crudDept.describeDeptList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null

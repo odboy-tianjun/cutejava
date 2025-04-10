@@ -53,7 +53,7 @@ public interface RoleService extends IService<Role> {
      *
      * @param resources /
      */
-    void createRole(CreateRoleRequest resources);
+    void saveRole(CreateRoleRequest resources);
 
     /**
      * 编辑
@@ -74,7 +74,7 @@ public interface RoleService extends IService<Role> {
      *
      * @param ids /
      */
-    void deleteRoleByIds(Set<Long> ids);
+    void removeRoleByIds(Set<Long> ids);
 
     /**
      * 根据用户ID查询

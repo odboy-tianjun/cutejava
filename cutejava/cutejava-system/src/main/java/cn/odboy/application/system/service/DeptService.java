@@ -35,7 +35,7 @@ public interface DeptService extends IService<Dept> {
      *
      * @param resources /
      */
-    void createDept(CreateDeptRequest resources);
+    void saveDept(CreateDeptRequest resources);
 
     /**
      * 编辑
@@ -49,7 +49,7 @@ public interface DeptService extends IService<Dept> {
      *
      * @param depts /
      */
-    void deleteDeptByIds(Set<Dept> depts);
+    void removeDeptByIds(Set<Dept> depts);
 
     /**
      * 根据PID查询

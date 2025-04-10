@@ -138,7 +138,7 @@
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/polar'
-import { initData } from '@/api/data'
+import { initDataByPost } from '@/api/data'
 export default {
   name: 'ServerMonitor',
   components: {
@@ -148,7 +148,7 @@ export default {
     return {
       show: false,
       monitor: null,
-      url: 'api/monitor',
+      url: 'api/monitor/describeServerMonitorInfo',
       data: {},
       cpuInfo: {
         tooltip: {
@@ -231,7 +231,7 @@ export default {
   },
   methods: {
     init() {
-      initData(this.url, {}).then(data => {
+      initDataByPost(this.url, {}).then(data => {
         this.data = data
         this.show = true
         if (this.cpuInfo.xAxis.data.length >= 8) {

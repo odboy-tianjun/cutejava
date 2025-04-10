@@ -93,17 +93,17 @@ public class QuartzJobController {
     }
 
     @ApiOperation("更改定时任务状态")
-    @PostMapping(value = "/switchJobPauseStatus/{id}")
+    @PostMapping(value = "/switchQuartzJobStatus/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> switchJobPauseStatus(@PathVariable Long id) {
+    public ResponseEntity<Object> switchQuartzJobStatus(@PathVariable Long id) {
         quartzJobService.switchQuartzJobStatus(quartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("执行定时任务")
-    @PostMapping(value = "/executionQuartzJob/{id}")
+    @PostMapping(value = "/startQuartzJob/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> executionQuartzJob(@PathVariable Long id) {
+    public ResponseEntity<Object> startQuartzJob(@PathVariable Long id) {
         quartzJobService.startQuartzJob(quartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -111,8 +111,8 @@ public class QuartzJobController {
     @ApiOperation("删除定时任务")
     @DeleteMapping
     @PreAuthorize("@el.check('timing:del')")
-    public ResponseEntity<Object> deleteQuartzJob(@RequestBody Set<Long> ids) {
-        quartzJobService.deleteJobByIds(ids);
+    public ResponseEntity<Object> removeJobByIds(@RequestBody Set<Long> ids) {
+        quartzJobService.removeJobByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

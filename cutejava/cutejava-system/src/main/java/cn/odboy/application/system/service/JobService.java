@@ -27,7 +27,7 @@ public interface JobService extends IService<Job> {
      *
      * @param resources /
      */
-    void createJob(CreateJobRequest resources);
+    void saveJob(CreateJobRequest resources);
 
     /**
      * 编辑
@@ -41,7 +41,7 @@ public interface JobService extends IService<Job> {
      *
      * @param ids /
      */
-    void deleteJobByIds(Set<Long> ids);
+    void removeJobByIds(Set<Long> ids);
 
     /**
      * 分页查询

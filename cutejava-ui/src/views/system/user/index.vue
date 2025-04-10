@@ -183,8 +183,8 @@
 <script>
 import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
-import { getDepts, getDeptSuperior } from '@/api/system/dept'
-import { getAll, getLevel } from '@/api/system/role'
+import { describeDeptList, describeDeptSuperiorTree } from '@/api/system/dept'
+import { describeRoleList, getLevel } from '@/api/system/role'
 import { getAllJob } from '@/api/system/job'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
@@ -376,7 +376,7 @@ export default {
       this.crud.toQuery()
     },
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
+      describeDeptList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -386,7 +386,7 @@ export default {
       })
     },
     getSupDepts(deptId) {
-      getDeptSuperior(deptId).then(res => {
+      describeDeptSuperiorTree(deptId).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -405,7 +405,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        describeDeptList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
@@ -436,7 +436,7 @@ export default {
     },
     // 获取弹窗内角色数据
     getRoles() {
-      getAll().then(res => {
+      describeRoleList().then(res => {
         this.roles = res
       }).catch(() => { })
     },

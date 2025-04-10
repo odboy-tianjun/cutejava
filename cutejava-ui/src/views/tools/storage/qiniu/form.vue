@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { queryQiNiuConfig, update } from '@/api/tools/qiniu'
+import { describeQiniuConfig, modifyQiniuConfig } from '@/api/tools/qiniu'
 export default {
   data() {
     return {
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     init() {
-      queryQiNiuConfig().then(res => {
+      describeQiniuConfig().then(res => {
         this.form = res
       })
     },
@@ -71,7 +71,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          update(this.form).then(res => {
+          modifyQiniuConfig(this.form).then(res => {
             this.$notify({
               title: '修改成功',
               type: 'success',

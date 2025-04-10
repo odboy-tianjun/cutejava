@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { queryEmailConfig, updateEmailConfig } from '@/api/tools/email'
+import { describeEmailConfig, modifyEmailConfig } from '@/api/tools/email'
 export default {
   name: 'Config',
   data() {
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     init() {
-      queryEmailConfig().then(res => {
+      describeEmailConfig().then(res => {
         this.form = res
       })
     },
@@ -66,7 +66,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          updateEmailConfig(this.form).then(res => {
+          modifyEmailConfig(this.form).then(res => {
             this.$notify({
               title: '修改成功',
               type: 'success',

@@ -5,7 +5,7 @@
       <el-input v-model="query.jobName" clearable size="small" placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
       <date-range-picker v-model="query.createTime" class="date-item" />
       <el-select v-model="query.isSuccess" placeholder="日志状态" clearable size="small" class="filter-item" style="width: 110px" @change="toQuery">
-        <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+        <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.displayName" :value="item.key" />
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 导出 -->
@@ -61,14 +61,16 @@ import crud from '@/mixins/crud'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
   components: { DateRangePicker },
+  // Mixins 是一种包含多个组件选项的对象。可以将 mixin 作为组件的一个选项引入，从而在该组件中“混入”这个对象的选项。通过这种方式，mixins 可以帮助你实现功能复用，减少重复代码。
+  // 这里混入了crud，也就是说当前页面可以使用crud中的属性和方法
   mixins: [crud],
   data() {
     return {
       title: '任务日志',
       errorInfo: '', errorDialog: false,
       enabledTypeOptions: [
-        { key: 'true', display_name: '成功' },
-        { key: 'false', display_name: '失败' }
+        { key: 'true', displayName: '成功' },
+        { key: 'false', displayName: '失败' }
       ]
     }
   },
