@@ -36,7 +36,7 @@ public interface DictService extends IService<Dict> {
      *
      * @param resources /
      */
-    void createDict(CreateDictRequest resources);
+    void saveDict(CreateDictRequest resources);
 
     /**
      * 编辑
@@ -50,7 +50,7 @@ public interface DictService extends IService<Dict> {
      *
      * @param ids /
      */
-    void deleteDictByIds(Set<Long> ids);
+    void removeDictByIds(Set<Long> ids);
 
     /**
      * 导出数据

@@ -30,7 +30,7 @@ public class UserCacheServiceImpl implements UserCacheService {
 
 
     @Override
-    public void cacheUserJwtModelByUserName(String userName, UserJwtModel user) {
+    public void saveUserJwtModelByUserName(String userName, UserJwtModel user) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
         if (StringUtil.isNotEmpty(userName)) {

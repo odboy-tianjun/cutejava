@@ -27,7 +27,7 @@ public interface UserService extends IService<User> {
      *
      * @param resources /
      */
-    void createUser(User resources);
+    void saveUser(User resources);
 
     /**
      * 编辑用户
@@ -42,7 +42,7 @@ public interface UserService extends IService<User> {
      *
      * @param ids /
      */
-    void deleteUserByIds(Set<Long> ids);
+    void removeUserByIds(Set<Long> ids);
 
     /**
      * 根据用户名查询

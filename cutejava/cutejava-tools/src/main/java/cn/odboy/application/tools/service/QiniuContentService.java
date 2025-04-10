@@ -56,7 +56,7 @@ public interface QiniuContentService extends IService<QiniuContent> {
      *
      * @param ids 文件ID数组
      */
-    void deleteFileByIds(Long[] ids);
+    void removeFileByIds(Long[] ids);
 
     /**
      * 导出数据
@@ -72,5 +72,5 @@ public interface QiniuContentService extends IService<QiniuContent> {
      *
      * @param id 文件id
      */
-    void deleteFileById(Long id);
+    void removeFileById(Long id);
 }

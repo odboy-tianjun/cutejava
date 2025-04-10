@@ -25,14 +25,14 @@ public class EmailController {
     private final EmailService emailService;
 
     @ApiOperation("查询配置")
-    @PostMapping(value = "/queryEmailConfig")
-    public ResponseEntity<EmailConfig> queryEmailConfig() {
+    @PostMapping(value = "/describeEmailConfig")
+    public ResponseEntity<EmailConfig> describeEmailConfig() {
         return new ResponseEntity<>(emailService.describeEmailConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置邮件")
-    @PostMapping(value = "/updateEmailConfig")
-    public ResponseEntity<Object> updateEmailConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
+    @PostMapping(value = "/modifyEmailConfig")
+    public ResponseEntity<Object> modifyEmailConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
         emailService.modifyEmailConfigOnPassChange(emailConfig);
         return new ResponseEntity<>(HttpStatus.OK);
     }

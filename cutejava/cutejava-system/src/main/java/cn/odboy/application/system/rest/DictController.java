@@ -53,26 +53,26 @@ public class DictController {
     }
 
     @ApiOperation("新增字典")
-    @PostMapping(value = "/createDict")
+    @PostMapping(value = "/saveDict")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Object> createDict(@Validated @RequestBody CreateDictRequest resources) {
-        dictService.createDict(resources);
+    public ResponseEntity<Object> saveDict(@Validated @RequestBody CreateDictRequest resources) {
+        dictService.saveDict(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改字典")
-    @PostMapping(value = "/updateDict")
+    @PostMapping(value = "/modifyDictById")
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<Object> updateDict(@Validated(Dict.Update.class) @RequestBody Dict resources) {
+    public ResponseEntity<Object> modifyDictById(@Validated(Dict.Update.class) @RequestBody Dict resources) {
         dictService.modifyDictById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("删除字典")
-    @PostMapping(value = "/deleteDict")
+    @PostMapping(value = "/removeDictByIds")
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<Object> deleteDict(@RequestBody Set<Long> ids) {
-        dictService.deleteDictByIds(ids);
+    public ResponseEntity<Object> removeDictByIds(@RequestBody Set<Long> ids) {
+        dictService.removeDictByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

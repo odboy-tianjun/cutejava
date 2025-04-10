@@ -11,8 +11,8 @@ import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.job.domain.QuartzJob;
 import cn.odboy.model.job.domain.QuartzLog;
-import cn.odboy.model.job.request.UpdateQuartzJobRequest;
 import cn.odboy.model.job.request.QueryQuartzJobRequest;
+import cn.odboy.model.job.request.UpdateQuartzJobRequest;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -109,7 +109,7 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteJobByIds(Set<Long> ids) {
+    public void removeJobByIds(Set<Long> ids) {
         for (Long id : ids) {
             QuartzJob quartzJob = getById(id);
             quartzManage.deleteJob(quartzJob);
@@ -126,6 +126,10 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
                 continue;
             }
             QuartzJob quartzJob = getById(Long.parseLong(id));
+            if (quartzJob == null) {
+                // 防止子任务不存在
+                continue;
+            }
             // 执行任务
             String uuid = IdUtil.simpleUUID();
             quartzJob.setUuid(uuid);

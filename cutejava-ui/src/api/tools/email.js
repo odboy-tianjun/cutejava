@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
-export function queryEmailConfig() {
+export function describeEmailConfig() {
   return request({
-    url: 'api/email/queryEmailConfig',
+    url: 'api/email/describeEmailConfig',
     method: 'post'
   })
 }
 
-export function updateEmailConfig(data) {
+export function modifyEmailConfig(data) {
   return request({
-    url: 'api/email/updateEmailConfig',
+    url: 'api/email/modifyEmailConfig',
     method: 'post',
     data
   })

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getMenusTree(pid) {
+export function describeMenuListByPid(pid) {
   return request({
-    url: 'api/menus/queryAllMenu?pid=' + pid,
+    url: 'api/menus/describeMenuListByPid?pid=' + pid,
     method: 'post'
   })
 }
@@ -15,18 +15,18 @@ export function getMenus(params) {
   })
 }
 
-export function getMenuSuperior(ids) {
+export function describeMenuSuperior(ids) {
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/menus/queryMenuSuperior',
+    url: 'api/menus/describeMenuSuperior',
     method: 'post',
     data
   })
 }
 
-export function getChild(id) {
+export function describeChildMenuSet(id) {
   return request({
-    url: 'api/menus/queryChildMenu?id=' + id,
+    url: 'api/menus/describeChildMenuSet?id=' + id,
     method: 'post'
   })
 }
@@ -40,7 +40,7 @@ export function buildMenus() {
 
 export function add(data) {
   return request({
-    url: 'api/menus/createMenu',
+    url: 'api/menus/saveMenu',
     method: 'post',
     data
   })
@@ -48,7 +48,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/menus/deleteMenu',
+    url: 'api/menus/removeMenuByIds',
     method: 'post',
     data: ids
   })
@@ -56,10 +56,10 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/menus/updateMenu',
+    url: 'api/menus/modifyMenuById',
     method: 'post',
     data
   })
 }
 
-export default { add, edit, del, getMenusTree, getMenuSuperior, getMenus, getChild }
+export default { add, edit, del, describeMenuListByPid, describeMenuSuperior, getMenus, describeChildMenuSet }

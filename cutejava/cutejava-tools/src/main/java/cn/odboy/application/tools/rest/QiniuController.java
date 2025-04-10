@@ -41,14 +41,14 @@ public class QiniuController {
     private final QiNiuConfigService qiNiuConfigService;
 
     @ApiOperation("查询七牛云存储配置")
-    @PostMapping(value = "/queryQiNiuConfig")
-    public ResponseEntity<QiniuConfig> queryQiNiuConfig() {
+    @PostMapping(value = "/describeQiniuConfig")
+    public ResponseEntity<QiniuConfig> describeQiniuConfig() {
         return new ResponseEntity<>(qiNiuConfigService.describeQiniuConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置七牛云存储")
-    @PostMapping(value = "/updateQiNiuConfig")
-    public ResponseEntity<Object> updateQiNiuConfig(@Validated @RequestBody QiniuConfig qiniuConfig) {
+    @PostMapping(value = "/modifyQiniuConfig")
+    public ResponseEntity<Object> modifyQiniuConfig(@Validated @RequestBody QiniuConfig qiniuConfig) {
         qiNiuConfigService.saveQiniuConfig(qiniuConfig);
         qiNiuConfigService.modifyQiniuConfigType(qiniuConfig.getType());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -86,8 +86,8 @@ public class QiniuController {
     }
 
     @ApiOperation("下载文件")
-    @GetMapping(value = "/download/{id}")
-    public ResponseEntity<Object> downloadQiNiu(@PathVariable Long id) {
+    @GetMapping(value = "/createFilePreviewUrl/{id}")
+    public ResponseEntity<Object> createFilePreviewUrl(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>(1);
         map.put("url", qiniuContentService.createFilePreviewUrl(qiniuContentService.getById(id)));
         return new ResponseEntity<>(map, HttpStatus.OK);
@@ -96,14 +96,14 @@ public class QiniuController {
     @ApiOperation("删除文件")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deleteQiNiu(@PathVariable Long id) {
-        qiniuContentService.deleteFileById(id);
+        qiniuContentService.removeFileById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("删除多张图片")
     @DeleteMapping
     public ResponseEntity<Object> deleteAllQiNiu(@RequestBody Long[] ids) {
-        qiniuContentService.deleteFileByIds(ids);
+        qiniuContentService.removeFileByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

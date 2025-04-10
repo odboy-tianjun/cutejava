@@ -155,7 +155,7 @@ export default {
       this.downloadLoading = true
       // 先打开一个空的新窗口，再请求
       this.newWin = window.open()
-      crudQiNiu.download(id).then(res => {
+      crudQiNiu.createFilePreviewUrl(id).then(res => {
         this.downloadLoading = false
         this.url = res.url
       }).catch(err => {

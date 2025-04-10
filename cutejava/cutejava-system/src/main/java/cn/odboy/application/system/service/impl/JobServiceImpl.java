@@ -58,7 +58,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createJob(CreateJobRequest resources) {
+    public void saveJob(CreateJobRequest resources) {
         Job job = jobMapper.getJobByName(resources.getName());
         if (job != null) {
             throw new EntityExistException(Job.class, "name", resources.getName());
@@ -82,7 +82,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteJobByIds(Set<Long> ids) {
+    public void removeJobByIds(Set<Long> ids) {
         removeBatchByIds(ids);
         // 删除缓存
         ids.forEach(this::delCaches);

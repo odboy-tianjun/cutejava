@@ -63,7 +63,7 @@ public class UserController {
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
-    public void exportUser(HttpServletResponse response, QueryUserRequest criteria) throws IOException {
+    public void downloadUserExcel(HttpServletResponse response, QueryUserRequest criteria) throws IOException {
         userService.downloadUserExcel(userService.describeUserList(criteria), response);
     }
 
@@ -97,28 +97,28 @@ public class UserController {
     }
 
     @ApiOperation("新增用户")
-    @PostMapping(value = "/createUser")
+    @PostMapping(value = "/saveUser")
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity<Object> createUser(@Validated @RequestBody User resources) {
+    public ResponseEntity<Object> saveUser(@Validated @RequestBody User resources) {
         checkLevel(resources);
         // 默认密码 123456
         resources.setPassword(passwordEncoder.encode("123456"));
-        userService.createUser(resources);
+        userService.saveUser(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改用户")
-    @PostMapping(value = "/updateUser")
+    @PostMapping(value = "/modifyUserById")
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity<Object> updateUser(@Validated(User.Update.class) @RequestBody User resources) throws Exception {
+    public ResponseEntity<Object> modifyUserById(@Validated(User.Update.class) @RequestBody User resources) throws Exception {
         checkLevel(resources);
         userService.modifyUserById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("修改用户：个人中心")
-    @PostMapping(value = "updateCenterInfo")
-    public ResponseEntity<Object> updateCenterInfo(@Validated(User.Update.class) @RequestBody User resources) {
+    @PostMapping(value = "modifyUserCenterInfoById")
+    public ResponseEntity<Object> modifyUserCenterInfoById(@Validated(User.Update.class) @RequestBody User resources) {
         if (!resources.getId().equals(SecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
@@ -127,9 +127,9 @@ public class UserController {
     }
 
     @ApiOperation("删除用户")
-    @PostMapping(value = "/deleteUser")
+    @PostMapping(value = "/removeUserByIds")
     @PreAuthorize("@el.check('user:del')")
-    public ResponseEntity<Object> deleteUser(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
             Integer currentLevel = Collections.min(roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(roleService.describeRoleListByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
@@ -137,13 +137,13 @@ public class UserController {
                 throw new BadRequestException("角色权限不足，不能删除：" + userService.describeUserById(id).getUsername());
             }
         }
-        userService.deleteUserByIds(ids);
+        userService.removeUserByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("修改密码")
-    @PostMapping(value = "/updatePassword")
-    public ResponseEntity<Object> updatePassword(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
+    @PostMapping(value = "/modifyUserPasswordByUsername")
+    public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
         User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
@@ -158,22 +158,22 @@ public class UserController {
     }
 
     @ApiOperation("重置密码")
-    @PostMapping(value = "/resetPwd")
-    public ResponseEntity<Object> resetPwd(@RequestBody Set<Long> ids) {
+    @PostMapping(value = "/resetUserPasswordByIds")
+    public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
         String defaultPwd = passwordEncoder.encode("123456");
         userService.resetUserPasswordByIds(ids, defaultPwd);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("修改头像")
-    @PostMapping(value = "/updateAvatar")
-    public ResponseEntity<Object> updateUserAvatar(@RequestParam MultipartFile avatar) {
+    @PostMapping(value = "/modifyUserAvatar")
+    public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
         return new ResponseEntity<>(userService.modifyUserAvatar(avatar), HttpStatus.OK);
     }
 
     @ApiOperation("修改邮箱")
-    @PostMapping(value = "/updateEmail/{code}")
-    public ResponseEntity<Object> updateUserEmail(@PathVariable String code, @RequestBody User resources) throws Exception {
+    @PostMapping(value = "/modifyUserEmailByUsername/{code}")
+    public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody User resources) throws Exception {
         String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, resources.getPassword());
         User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -198,9 +198,9 @@ public class UserController {
     }
 
     @ApiOperation("查询用户基础数据")
-    @PostMapping(value = "/queryUserMetaPage")
+    @PostMapping(value = "/describeUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<List<MyMetaOption>> queryUserMetaPage(@Validated @RequestBody QueryUserRequest criteria) {
+    public ResponseEntity<List<MyMetaOption>> queryUserMetadataOptions(@Validated @RequestBody QueryUserRequest criteria) {
         int maxPageSize = 50;
         return new ResponseEntity<>(userService.page(new Page<>(criteria.getPage(), maxPageSize), new LambdaQueryWrapper<User>()
                 .and(c -> {

@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
-export function getDicts() {
-  return request({
-    url: 'api/dict/queryAllDict',
-    method: 'post'
-  })
-}
+// export function getDicts() {
+//   return request({
+//     url: 'api/dict/queryAllDict',
+//     method: 'post'
+//   })
+// }
 
 export function add(data) {
   return request({
-    url: 'api/dict/createDict',
+    url: 'api/dict/saveDict',
     method: 'post',
     data
   })
@@ -17,7 +17,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/dict/deleteDict',
+    url: 'api/dict/removeDictByIds',
     method: 'post',
     data: ids
   })
@@ -25,7 +25,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/dict/updateDict',
+    url: 'api/dict/modifyDictById',
     method: 'post',
     data
   })

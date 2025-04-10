@@ -5,7 +5,6 @@ import cn.hutool.extra.mail.MailAccount;
 import cn.odboy.application.tools.mapper.EmailConfigMapper;
 import cn.odboy.application.tools.service.CaptchaService;
 import cn.odboy.application.tools.service.EmailService;
-import cn.odboy.constant.CodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.EmailConfig;
 import cn.odboy.model.tools.request.SendEmailRequest;
@@ -92,10 +91,5 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
             log.error("邮件发送失败", e);
             throw new BadRequestException("邮件发送失败");
         }
-    }
-
-    @Override
-    public void sendEmailCaptcha(String email, String key) {
-        emailService.sendEmail(captchaService.renderCodeTemplate(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey()));
     }
 }

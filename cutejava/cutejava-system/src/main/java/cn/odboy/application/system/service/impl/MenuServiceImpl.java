@@ -106,7 +106,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createMenu(Menu resources) {
+    public void saveMenu(Menu resources) {
         if (menuMapper.getMenuByTitle(resources.getTitle()) != null) {
             throw new EntityExistException(Menu.class, "title", resources.getTitle());
         }
@@ -196,7 +196,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteMenuByIds(Set<Menu> menuSet) {
+    public void removeMenuByIds(Set<Menu> menuSet) {
         for (Menu menu : menuSet) {
             // 清理缓存
             delCaches(menu.getId());

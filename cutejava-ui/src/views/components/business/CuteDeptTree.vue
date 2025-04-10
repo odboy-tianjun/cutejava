@@ -24,7 +24,7 @@
 
 <script>
 
-import { getDepts } from '@/api/system/dept'
+import { describeDeptList } from '@/api/system/dept'
 
 export default {
   name: 'CuteDeptTree',
@@ -60,7 +60,7 @@ export default {
         params['pid'] = node.data.id
       }
       setTimeout(() => {
-        getDepts(params).then(res => {
+        describeDeptList(params).then(res => {
           if (resolve) {
             resolve(res.content)
           } else {

@@ -81,7 +81,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createRole(CreateRoleRequest resources) {
+    public void saveRole(CreateRoleRequest resources) {
         if (roleMapper.getRoleByName(resources.getName()) != null) {
             throw new EntityExistException(Role.class, "name", resources.getName());
         }
@@ -132,7 +132,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteRoleByIds(Set<Long> ids) {
+    public void removeRoleByIds(Set<Long> ids) {
         for (Long id : ids) {
             // 更新相关缓存
             delCaches(id, null);

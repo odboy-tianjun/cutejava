@@ -103,7 +103,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createDept(CreateDeptRequest resources) {
+    public void saveDept(CreateDeptRequest resources) {
         save(BeanUtil.copyProperties(resources, Dept.class));
         // 清理缓存
         updateSubCnt(resources.getPid());
@@ -132,7 +132,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteDeptByIds(Set<Dept> deptSet) {
+    public void removeDeptByIds(Set<Dept> deptSet) {
         for (Dept dept : deptSet) {
             // 清理缓存
             delCaches(dept.getId());

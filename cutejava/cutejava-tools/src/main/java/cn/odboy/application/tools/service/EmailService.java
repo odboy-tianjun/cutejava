@@ -29,12 +29,4 @@ public interface EmailService extends IService<EmailConfig> {
      * @param sendEmailRequest 邮件发送的内容
      */
     void sendEmail(SendEmailRequest sendEmailRequest);
-
-    /**
-     * 发送邮件验证码
-     *
-     * @param email 邮箱地址
-     * @param key   类型
-     */
-    void sendEmailCaptcha(String email, String key);
 }

@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 // 初始化JwtUserDto
                 userJwtModel = new UserJwtModel(user, dataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
-                userCacheService.cacheUserJwtModelByUserName(username, userJwtModel);
+                userCacheService.saveUserJwtModelByUserName(username, userJwtModel);
             }
         }
         return userJwtModel;

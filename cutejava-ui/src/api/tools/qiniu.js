@@ -1,23 +1,23 @@
 import request from '@/utils/request'
 
-export function queryQiNiuConfig() {
+export function describeQiniuConfig() {
   return request({
-    url: 'api/qiNiuContent/queryQiNiuConfig',
+    url: 'api/qiNiuContent/describeQiniuConfig',
     method: 'post'
   })
 }
 
-export function update(data) {
+export function modifyQiniuConfig(data) {
   return request({
-    url: 'api/qiNiuContent/updateQiNiuConfig',
+    url: 'api/qiNiuContent/modifyQiniuConfig',
     method: 'post',
     data
   })
 }
 
-export function download(id) {
+export function createFilePreviewUrl(id) {
   return request({
-    url: 'api/qiNiuContent/download/' + id,
+    url: 'api/qiNiuContent/createFilePreviewUrl/' + id,
     method: 'get'
   })
 }
@@ -36,5 +36,4 @@ export function del(ids) {
     data: ids
   })
 }
-
-export default { del, download, sync }
+export default { del, createFilePreviewUrl, sync }
