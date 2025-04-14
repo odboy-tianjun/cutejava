@@ -7,6 +7,7 @@ import cn.odboy.application.system.mapper.UserMapper;
 import cn.odboy.application.system.mapper.UserRoleMapper;
 import cn.odboy.application.system.service.UserService;
 import cn.odboy.base.PageResult;
+import cn.odboy.config.AppProperties;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
@@ -15,7 +16,6 @@ import cn.odboy.model.system.domain.Job;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.request.QueryUserRequest;
-import cn.odboy.properties.FileProperties;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
@@ -47,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserMapper userMapper;
     private final UserJobMapper userJobMapper;
     private final UserRoleMapper userRoleMapper;
-    private final FileProperties fileProperties;
+    private final AppProperties properties;
     private final RedisHelper redisHelper;
     private final UserCacheService userCacheService;
     private final UserOnlineService userOnlineService;
@@ -211,7 +211,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public Map<String, String> modifyUserAvatar(MultipartFile multipartFile) {
         // 文件大小验证
-        FileUtil.checkSize(fileProperties.getAvatarMaxSize(), multipartFile.getSize());
+        FileUtil.checkSize(properties.getFile().getAvatarMaxSize(), multipartFile.getSize());
         // 验证文件上传的格式
         String image = "gif jpg png jpeg";
         String fileType = FileUtil.getSuffix(multipartFile.getOriginalFilename());
@@ -220,7 +220,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         User user = userMapper.getUserByUsername(SecurityHelper.getCurrentUsername());
         String oldPath = user.getAvatarPath();
-        File file = FileUtil.upload(multipartFile, fileProperties.getPath().getAvatar());
+        File file = FileUtil.upload(multipartFile, properties.getFile().getPath().getAvatar());
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
         user.setAvatarName(file.getName());
         saveOrUpdate(user);

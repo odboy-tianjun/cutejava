@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 28/03/2025 19:11:17
+ Date: 11/04/2025 14:45:16
 */
 
 SET NAMES utf8mb4;
@@ -281,14 +281,13 @@ CREATE TABLE `sys_dept`  (
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (2, 7, 2, '研发部', 3, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_dept` VALUES (2, 7, 1, '研发部', 3, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (5, 7, 0, '运维部', 4, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (6, 8, 0, '测试部', 6, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (7, NULL, 2, '华南分部', 0, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (8, NULL, 2, '华北分部', 1, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (15, 8, 0, 'UI部门', 7, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_dept` VALUES (17, 2, 0, '研发一组', 999, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_dept` VALUES (18, 2, 0, 'asdasdasd', 999, b'1', 'admin', 'admin', '2025-03-28 14:56:05', '2025-03-28 14:56:05');
 
 -- ----------------------------
 -- Table structure for sys_dict
@@ -303,7 +302,7 @@ CREATE TABLE `sys_dict`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dict
@@ -455,7 +454,7 @@ INSERT INTO `sys_menu` VALUES (119, 10, 0, 1, '数字滚动', 'countToDemo', 'co
 INSERT INTO `sys_menu` VALUES (120, 10, 0, 1, '拖拽表格', 'dragTableDemo', 'components/base/DragTableDemo', 999, 'menu', 'dragTableDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (121, 10, 0, 1, '分割面板', 'splitPaneDemo', 'components/base/SplitPaneDemo', 999, 'menu', 'splitPaneDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_menu` VALUES (122, 10, 0, 1, 'WebSocket', 'webSocketDemo', 'components/base/WebSocketDemo', 999, 'menu', 'webSocketDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_menu` VALUES (125, 10, 0, 1, '业务组件Demo', 'DemoShow', 'components/business/DemoShow', 999, 'menu', 'bussinessDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-03-28 11:28:35', '2025-03-28 11:28:35');
+INSERT INTO `sys_menu` VALUES (125, 10, 0, 1, '业务组件Demo', 'DemoShow', 'components/business/DemoShow', 999, 'menu', 'bussinessDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 
 -- ----------------------------
 -- Table structure for sys_quartz_job
@@ -487,8 +486,6 @@ CREATE TABLE `sys_quartz_job`  (
 -- ----------------------------
 INSERT INTO `sys_quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '测试', NULL, NULL, NULL, 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', 'Zheng Jie', '', '6', b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_quartz_job` VALUES (5, 'Test', '0/5 * * * * ?', b'1', '任务告警测试', 'run', NULL, '测试', 'test', '', NULL, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_quartz_job` VALUES (6, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, '测试3', 'Zheng Jie', '', NULL, b'1', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 
 -- ----------------------------
 -- Table structure for sys_quartz_log
@@ -506,7 +503,7 @@ CREATE TABLE `sys_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '异常详情',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_quartz_log
@@ -537,7 +534,7 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '666', '全部', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '本级', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
-INSERT INTO `sys_role` VALUES (7, 'test', 3, 'testtesttesttesttesttesttesttesttest', '全部', 'admin', 'admin', '2025-03-28 16:09:42', '2025-03-28 16:09:42');
+INSERT INTO `sys_role` VALUES (7, 'test', 3, 'testtesttesttesttesttesttesttesttest', '全部', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 
 -- ----------------------------
 -- Table structure for sys_roles_depts
@@ -583,10 +580,12 @@ INSERT INTO `sys_roles_menus` VALUES (10, 2);
 INSERT INTO `sys_roles_menus` VALUES (11, 1);
 INSERT INTO `sys_roles_menus` VALUES (11, 2);
 INSERT INTO `sys_roles_menus` VALUES (14, 1);
+INSERT INTO `sys_roles_menus` VALUES (14, 7);
 INSERT INTO `sys_roles_menus` VALUES (15, 1);
 INSERT INTO `sys_roles_menus` VALUES (15, 2);
 INSERT INTO `sys_roles_menus` VALUES (18, 1);
 INSERT INTO `sys_roles_menus` VALUES (18, 2);
+INSERT INTO `sys_roles_menus` VALUES (18, 7);
 INSERT INTO `sys_roles_menus` VALUES (21, 1);
 INSERT INTO `sys_roles_menus` VALUES (21, 2);
 INSERT INTO `sys_roles_menus` VALUES (22, 1);
@@ -605,6 +604,7 @@ INSERT INTO `sys_roles_menus` VALUES (34, 2);
 INSERT INTO `sys_roles_menus` VALUES (35, 1);
 INSERT INTO `sys_roles_menus` VALUES (36, 1);
 INSERT INTO `sys_roles_menus` VALUES (36, 2);
+INSERT INTO `sys_roles_menus` VALUES (36, 7);
 INSERT INTO `sys_roles_menus` VALUES (37, 1);
 INSERT INTO `sys_roles_menus` VALUES (39, 1);
 INSERT INTO `sys_roles_menus` VALUES (41, 1);
@@ -631,10 +631,13 @@ INSERT INTO `sys_roles_menus` VALUES (74, 1);
 INSERT INTO `sys_roles_menus` VALUES (75, 1);
 INSERT INTO `sys_roles_menus` VALUES (77, 1);
 INSERT INTO `sys_roles_menus` VALUES (77, 2);
+INSERT INTO `sys_roles_menus` VALUES (77, 7);
 INSERT INTO `sys_roles_menus` VALUES (78, 1);
 INSERT INTO `sys_roles_menus` VALUES (78, 2);
+INSERT INTO `sys_roles_menus` VALUES (78, 7);
 INSERT INTO `sys_roles_menus` VALUES (79, 1);
 INSERT INTO `sys_roles_menus` VALUES (79, 2);
+INSERT INTO `sys_roles_menus` VALUES (79, 7);
 INSERT INTO `sys_roles_menus` VALUES (80, 1);
 INSERT INTO `sys_roles_menus` VALUES (80, 2);
 INSERT INTO `sys_roles_menus` VALUES (83, 1);
@@ -681,12 +684,13 @@ CREATE TABLE `sys_user`  (
   INDEX `idx_dept_id`(`dept_id`) USING BTREE,
   INDEX `idx_enabled`(`enabled`) USING BTREE,
   INDEX `uniq_phone`(`phone`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES (1, 2, 'admin', '管理员', '男', '18888888888', '1943815081@qq.com', '', '', '$2a$10$Egp1/gvFlt7zhlXVfEFw4OfWQCGPw0ClmMcc6FjTnvXNRVf9zdMRa', b'1', b'1', 'admin', 'admin', '2020-05-03 16:38:31', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `sys_user` VALUES (3, 2, '测试', '测试', '男', '18888888881', '188888@qq.com', NULL, NULL, '$2a$10$DpAGWp3CYtYySPqJe.CnL.c/OCR0kkPLLAwAyID0yFHLamtYdYsvy', b'0', b'1', 'admin', 'admin', NULL, '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 
 -- ----------------------------
 -- Table structure for sys_users_jobs
@@ -704,6 +708,7 @@ CREATE TABLE `sys_users_jobs`  (
 -- Records of sys_users_jobs
 -- ----------------------------
 INSERT INTO `sys_users_jobs` VALUES (1, 11);
+INSERT INTO `sys_users_jobs` VALUES (3, 11);
 
 -- ----------------------------
 -- Table structure for sys_users_roles
@@ -721,6 +726,7 @@ CREATE TABLE `sys_users_roles`  (
 -- Records of sys_users_roles
 -- ----------------------------
 INSERT INTO `sys_users_roles` VALUES (1, 1);
+INSERT INTO `sys_users_roles` VALUES (3, 2);
 
 -- ----------------------------
 -- Table structure for tool_email_config
@@ -757,11 +763,12 @@ CREATE TABLE `tool_local_storage`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '本地存储' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '本地存储' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tool_local_storage
 -- ----------------------------
+INSERT INTO `tool_local_storage` VALUES (11, 'bg-202504100131576.jpg', 'bg', 'jpg', 'C:\\cutejava\\file\\image\\bg-202504100131576.jpg', 'image', '20.20MB   ', 'admin', 'admin', '2025-04-10 13:32:00', '2025-04-10 13:32:00');
 
 -- ----------------------------
 -- Table structure for tool_qiniu_config

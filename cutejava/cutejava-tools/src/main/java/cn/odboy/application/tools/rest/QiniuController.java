@@ -1,6 +1,6 @@
 package cn.odboy.application.tools.rest;
 
-import cn.odboy.application.tools.service.QiNiuConfigService;
+import cn.odboy.application.tools.service.QiniuConfigService;
 import cn.odboy.application.tools.service.QiniuContentService;
 import cn.odboy.base.PageResult;
 import cn.odboy.model.tools.domain.QiniuConfig;
@@ -38,7 +38,7 @@ import java.util.Map;
 @Api(tags = "工具：七牛云存储管理")
 public class QiniuController {
     private final QiniuContentService qiniuContentService;
-    private final QiNiuConfigService qiNiuConfigService;
+    private final QiniuConfigService qiNiuConfigService;
 
     @ApiOperation("查询七牛云存储配置")
     @PostMapping(value = "/describeQiniuConfig")

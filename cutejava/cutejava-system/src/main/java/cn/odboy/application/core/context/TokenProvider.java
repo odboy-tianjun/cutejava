@@ -3,7 +3,7 @@ package cn.odboy.application.core.context;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.odboy.application.core.config.SecurityProperties;
+import cn.odboy.config.AppProperties;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.model.UserJwtModel;
@@ -39,13 +39,13 @@ public class TokenProvider implements InitializingBean {
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
     private final RedisHelper redisHelper;
-    private final SecurityProperties properties;
+    private final AppProperties properties;
     public static final String AUTHORITIES_UUID_KEY = "uid";
     public static final String AUTHORITIES_UID_KEY = "userId";
 
     @Override
     public void afterPropertiesSet() {
-        byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
+        byte[] keyBytes = Decoders.BASE64.decode(properties.getJwt().getBase64Secret());
         Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -103,8 +103,8 @@ public class TokenProvider implements InitializingBean {
         // 判断当前时间与过期时间的时间差
         long differ = expireDate.getTime() - System.currentTimeMillis();
         // 如果在续期检查的范围内，则续期
-        if (differ <= properties.getDetect()) {
-            long renew = time + properties.getRenew();
+        if (differ <= properties.getJwt().getDetect()) {
+            long renew = time + properties.getJwt().getRenew();
             redisHelper.expire(loginKey, renew, TimeUnit.MILLISECONDS);
         }
     }

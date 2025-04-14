@@ -4,10 +4,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.odboy.application.tools.mapper.LocalStorageMapper;
 import cn.odboy.application.tools.service.LocalStorageService;
 import cn.odboy.base.PageResult;
+import cn.odboy.config.AppProperties;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.LocalStorage;
 import cn.odboy.model.tools.request.QueryLocalStorageRequest;
-import cn.odboy.properties.FileProperties;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
@@ -29,9 +29,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, LocalStorage> implements LocalStorageService {
-
     private final LocalStorageMapper localStorageMapper;
-    private final FileProperties properties;
+    private final AppProperties properties;
 
     @Override
     public PageResult<LocalStorage> describeLocalStoragePage(QueryLocalStorageRequest criteria, Page<Object> page) {
@@ -47,10 +46,10 @@ public class LocalStorageServiceImpl extends ServiceImpl<LocalStorageMapper, Loc
     @Transactional(rollbackFor = Exception.class)
     public LocalStorage uploadFile(String name, MultipartFile multipartFile) {
         long size = multipartFile.getSize();
-        FileUtil.checkSize(properties.getMaxSize(), size);
+        FileUtil.checkSize(properties.getFile().getFileMaxSize(), size);
         String suffix = FileUtil.getSuffix(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
-        File file = FileUtil.upload(multipartFile, properties.getPath().getPath() + type + File.separator);
+        File file = FileUtil.upload(multipartFile, properties.getFile().getPath() + type + File.separator);
         if (ObjectUtil.isNull(file)) {
             throw new BadRequestException("上传失败");
         }

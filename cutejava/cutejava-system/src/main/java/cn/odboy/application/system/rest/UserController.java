@@ -8,7 +8,8 @@ import cn.odboy.application.system.service.UserService;
 import cn.odboy.application.tools.service.CaptchaService;
 import cn.odboy.base.MyMetaOption;
 import cn.odboy.base.PageResult;
-import cn.odboy.constant.CodeEnum;
+import cn.odboy.config.AppProperties;
+import cn.odboy.constant.CaptchaBizEnum;
 import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.Dept;
@@ -16,7 +17,6 @@ import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
 import cn.odboy.model.system.request.QueryUserRequest;
 import cn.odboy.model.system.response.UpdateUserPasswordResponse;
-import cn.odboy.properties.RsaProperties;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.RsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -59,6 +59,7 @@ public class UserController {
     private final DeptService deptService;
     private final RoleService roleService;
     private final CaptchaService verificationCodeService;
+    private final AppProperties properties;
 
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
@@ -144,8 +145,8 @@ public class UserController {
     @ApiOperation("修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
     public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
-        String oldPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
-        String newPass = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
+        String oldPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
+        String newPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
         User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
@@ -174,12 +175,12 @@ public class UserController {
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody User resources) throws Exception {
-        String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, resources.getPassword());
+        String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), resources.getPassword());
         User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
-        verificationCodeService.checkCodeAvailable(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey(), resources.getEmail(), code);
+        verificationCodeService.checkCodeAvailable(CaptchaBizEnum.EMAIL_RESET_EMAIL_CODE.getBizCode(), resources.getEmail(), code);
         userService.modifyUserEmailByUsername(user.getUsername(), resources.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 七牛云存储工具类
  */
-public final class QiNiuUtil {
+public final class QiniuUtil {
 
     private static final String HUAD = "华东";
 

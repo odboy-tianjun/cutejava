@@ -1,9 +1,9 @@
 package cn.odboy.application.core.service.impl;
 
-import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.context.TokenProvider;
 import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
+import cn.odboy.config.AppProperties;
 import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.model.system.model.UserJwtModel;
 import cn.odboy.model.system.model.UserOnlineModel;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @AllArgsConstructor
 public class UserOnlineServiceImpl implements UserOnlineService {
-    private final SecurityProperties properties;
+    private final AppProperties properties;
     private final TokenProvider tokenProvider;
     private final RedisHelper redisHelper;
 
@@ -61,7 +61,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
             log.error(e.getMessage(), e);
         }
         String loginKey = tokenProvider.loginKey(token);
-        redisHelper.set(loginKey, userOnlineModel, properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
+        redisHelper.set(loginKey, userOnlineModel, properties.getJwt().getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
     @Override

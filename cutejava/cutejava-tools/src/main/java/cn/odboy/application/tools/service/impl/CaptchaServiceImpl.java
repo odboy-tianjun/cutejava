@@ -20,7 +20,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CaptchaServiceImpl implements CaptchaService {
     private final RedisHelper redisHelper;
-    @Value("${code.expiration}")
+    @Value("${app.email.captchaSetting.expiration}")
     private Long expiration;
 
     @Override

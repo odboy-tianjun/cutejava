@@ -1,16 +1,12 @@
-package cn.odboy.application.core.config;
+package cn.odboy.config.model;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Jwt参数配置
  */
 @Data
-@Configuration
-@ConfigurationProperties(prefix = "jwt")
-public class SecurityProperties {
+public class JwtAuthSettingModel {
     /**
      * 必须使用最少88位的Base64对该令牌进行编码
      */

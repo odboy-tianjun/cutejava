@@ -1,6 +1,6 @@
-package cn.odboy.application.core.config;
+package cn.odboy.config.model;
 
-import cn.odboy.application.core.constant.LoginCodeEnum;
+import cn.odboy.constant.LoginCodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.StringUtil;
 import com.wf.captcha.ArithmeticCaptcha;
@@ -10,22 +10,13 @@ import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import lombok.Data;
-import lombok.Getter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import java.awt.*;
 
 /**
- * 登录验证码配置信息
+ * 验证码配置
  */
 @Data
-@Configuration
-@ConfigurationProperties(prefix = "login.code")
-public class CaptchaProperties {
-    /**
-     * 验证码配置
-     */
-    @Getter
+public class UserLoginCaptchaSettingModel {
     private LoginCodeEnum codeType;
 
     /**

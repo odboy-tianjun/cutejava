@@ -31,41 +31,39 @@ import java.util.List;
  * @date 2022-04-03
  */
 public interface EasyService<T> extends IService<T> {
-    LambdaQueryWrapper<T> quick();
+    <G> int saveFeatureClazz(G resources);
 
-    <G> int quickSave(G resources);
+    <G> int saveFeatureClazzList(List<G> resources);
 
-    <G> int quickSaveBatch(List<G> resources);
+    <G> int modifyFeatureClazzById(G resources);
 
-    <G> int quickModifyById(G resources);
+    <G> boolean modifyFeatureClazzListById(Collection<G> resources, int batchSize);
 
-    <G> boolean quickModifyBatchById(Collection<G> resources, int batchSize);
+    <G> G describeFeatureClazzById(Serializable id, Class<G> targetClazz);
 
-    <G> G quickGetOneById(Serializable id, Class<G> targetClazz);
+    T describeClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
 
-    T quickGetOne(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
+    <G> G describeFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz);
 
-    <G> G quickGetOne(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz);
+    <G> List<G> describeFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
 
-    <G> List<G> quickListByIds(List<Serializable> ids, Class<G> targetClazz);
+    <Q> List<T> describeClazzListByArgs(Q criteria);
 
-    <Q> List<T> quickList(Q criteria);
+    List<T> describeClazzListByArgs(LambdaQueryWrapper<T> wrapper);
 
-    List<T> quickList(LambdaQueryWrapper<T> wrapper);
+    <G, Q> List<G> describeFeatureClazzListByArgs(Q criteria, Class<G> targetClazz);
 
-    <G, Q> List<G> quickList(Q criteria, Class<G> targetClazz);
+    <G> List<G> describeFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
 
-    <G> List<G> quickList(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
+    PageResult<T> describeClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
 
-    PageResult<T> quickPage(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
+    <G> PageResult<G> describeFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
 
-    <G> PageResult<G> quickPage(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
+    <G, Q> PageResult<G> describeFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
 
-    <G, Q> PageResult<G> quickPage(Q criteria, IPage<T> pageable, Class<G> targetClazz);
+    <Q> PageResult<T> describeClazzPageByArgs(Q criteria, IPage<T> pageable);
 
-    <Q> PageResult<T> quickPage(Q criteria, IPage<T> pageable);
+    int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity);
 
-    int quickUpdate(LambdaQueryWrapper<T> wrapper, T entity);
-
-    int quickDelete(LambdaQueryWrapper<T> wrapper);
+    int removeClazzByArgs(LambdaQueryWrapper<T> wrapper);
 }
