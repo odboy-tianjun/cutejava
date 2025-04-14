@@ -1,4 +1,4 @@
-package cn.odboy;
+package cn.odboy.monitor;
 
 import cn.odboy.application.system.service.DictService;
 import cn.odboy.monitor.service.HealthCheckPointService;
@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HealthCheckPointer implements HealthCheckPointService {
+public class HealthCheckPointerImpl implements HealthCheckPointService {
     @Autowired
     private DictService dictService;
 

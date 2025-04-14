@@ -1,7 +1,7 @@
 package cn.odboy.application.tools.service.impl;
 
 import cn.odboy.application.tools.mapper.QiniuConfigMapper;
-import cn.odboy.application.tools.service.QiNiuConfigService;
+import cn.odboy.application.tools.service.QiniuConfigService;
 import cn.odboy.constant.TransferProtocolConst;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.QiniuConfig;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "qiNiu")
-public class QiNiuConfigServiceImpl extends ServiceImpl<QiniuConfigMapper, QiniuConfig> implements QiNiuConfigService {
+public class QiniuConfigServiceImpl extends ServiceImpl<QiniuConfigMapper, QiniuConfig> implements QiniuConfigService {
     @Override
     @Cacheable(key = "'config'")
     public QiniuConfig describeQiniuConfig() {

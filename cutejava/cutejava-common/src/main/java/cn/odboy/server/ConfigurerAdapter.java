@@ -1,6 +1,7 @@
 package cn.odboy.server;
 
-import cn.odboy.properties.FileProperties;
+import cn.odboy.config.AppProperties;
+import cn.odboy.config.model.FileUploadSettingModel;
 import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.support.config.FastJsonConfig;
 import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
@@ -26,9 +27,9 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     /**
      * 文件配置
      */
-    private final FileProperties properties;
+    private final AppProperties properties;
 
-    public ConfigurerAdapter(FileProperties properties) {
+    public ConfigurerAdapter(AppProperties properties) {
         this.properties = properties;
     }
 
@@ -46,7 +47,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        FileProperties.ElPath path = properties.getPath();
+        FileUploadSettingModel.ElPath path = properties.getFile().getPath();
         String avatarUtl = "file:" + path.getAvatar().replace("\\", "/");
         String pathUtl = "file:" + path.getPath().replace("\\", "/");
         registry.addResourceHandler("/avatar/**").addResourceLocations(avatarUtl).setCachePeriod(0);

@@ -1,20 +1,17 @@
-package cn.odboy.properties;
+package cn.odboy.config.model;
 
 import cn.odboy.constant.SystemConst;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
+/**
+ * 文件上传配置
+ */
 @Data
-@Configuration
-@ConfigurationProperties(prefix = "file")
-public class FileProperties {
-
+public class FileUploadSettingModel {
     /**
      * 文件大小限制
      */
-    private Long maxSize;
-
+    private Long fileMaxSize;
     /**
      * 头像大小限制
      */

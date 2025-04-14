@@ -36,20 +36,17 @@ public class MybatisHelper {
         try {
             List<Field> fields = getAllFields(clazz, new ArrayList<>());
             for (Field field : fields) {
-                if (!field.canAccess(clazz)) {
+                if (!field.canAccess(query)) {
                     field.setAccessible(true);
                     MpQuery q = field.getAnnotation(MpQuery.class);
                     if (q != null) {
-                        String propName = q.propName();
-                        String blurry = q.blurry();
-                        String attributeName = StrUtil.isBlank(propName) ? field.getName() : propName;
-                        attributeName = humpToUnderline(attributeName);
+                        String attributeName = getAttributeName(q, field);
                         Object fieldVal = field.get(query);
                         if (ObjectUtil.isNull(fieldVal) || "".equals(fieldVal)) {
                             continue;
                         }
-                        if (ObjectUtil.isNotEmpty(blurry)) {
-                            handleBlurryQuery(queryWrapper, blurry, fieldVal);
+                        if (StrUtil.isNotBlank(q.blurry())) {
+                            handleBlurryQuery(queryWrapper, q.blurry(), fieldVal);
                             continue;
                         }
                         handleWrapper(q, queryWrapper, attributeName, fieldVal);
@@ -58,9 +55,14 @@ public class MybatisHelper {
                 }
             }
         } catch (Exception e) {
-            log.error("组装SQL失败", e);
+            log.error("Failed to build query wrapper for class: {}", clazz.getName(), e);
         }
         return queryWrapper;
+    }
+
+    private static String getAttributeName(MpQuery q, Field field) {
+        String attributeName = StrUtil.isBlank(q.propName()) ? field.getName() : q.propName();
+        return StrUtil.toUnderlineCase(attributeName);
     }
 
     private static <R> void handleWrapper(MpQuery q, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
@@ -87,10 +89,10 @@ public class MybatisHelper {
                 queryWrapper.likeRight(attributeName, fieldVal);
                 break;
             case IN:
-                handleInQuery(queryWrapper, attributeName, fieldVal);
+                handleInOrNotQuery(true, queryWrapper, attributeName, fieldVal);
                 break;
             case NOT_IN:
-                handleNotInQuery(queryWrapper, attributeName, fieldVal);
+                handleInOrNotQuery(false, queryWrapper, attributeName, fieldVal);
                 break;
             case NOT_EQUAL:
                 queryWrapper.ne(attributeName, fieldVal);
@@ -109,61 +111,42 @@ public class MybatisHelper {
         }
     }
 
-    private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
-        if (fieldVal instanceof List) {
-            List<Object> between = new ArrayList<>((List<?>) fieldVal);
-            if (CollectionUtil.isNotEmpty(between)) {
-                int minSize = 2;
-                if (between.size() >= minSize) {
-                    queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
-                } else {
-                    throw new BadRequestException("BETWEEN类型的对象列表长度必须 >= " + minSize);
-                }
-            }
-        } else {
-            throw new BadRequestException("BETWEEN类型的对象必须是一个List子集合");
-        }
-    }
-
-    private static <R> void handleNotInQuery(QueryWrapper<R> queryWrapper, String finalAttributeName, Object fieldVal) {
+    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
         Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
             if (anyValOptional.isPresent()) {
                 Object o = anyValOptional.get();
                 if (o instanceof Long) {
-                    queryWrapper.notIn(finalAttributeName, fieldVal);
+                    if (b) {
+                        queryWrapper.in(attributeName, fieldVal);
+                    } else {
+                        queryWrapper.notIn(attributeName, fieldVal);
+                    }
                 } else if (o instanceof Integer) {
-                    queryWrapper.notIn(finalAttributeName, fieldVal);
+                    if (b) {
+                        queryWrapper.in(attributeName, fieldVal);
+                    } else {
+                        queryWrapper.notIn(attributeName, fieldVal);
+                    }
                 } else {
-                    throw new BadRequestException("NOT_IN类型的对象属性值必须是Long/Integer类型集合");
+                    throw new BadRequestException("InOrNotIn查询参数类型的对象属性值必须是Long/Integer类型集合");
                 }
             }
         }
     }
 
-    /**
-     * IN查询
-     *
-     * @param queryWrapper       /
-     * @param fieldVal           /
-     * @param finalAttributeName /
-     * @param <R>                /
-     */
-    private static <R> void handleInQuery(QueryWrapper<R> queryWrapper, String finalAttributeName, Object fieldVal) {
-        Collection<?> wrapInVal = (Collection<?>) fieldVal;
-        if (CollectionUtil.isNotEmpty(wrapInVal)) {
-            Optional<?> anyValOptional = wrapInVal.stream().findAny();
-            if (anyValOptional.isPresent()) {
-                Object o = anyValOptional.get();
-                if (o instanceof Long) {
-                    queryWrapper.in(finalAttributeName, fieldVal);
-                } else if (o instanceof Integer) {
-                    queryWrapper.in(finalAttributeName, fieldVal);
-                } else {
-                    throw new BadRequestException("IN类型的对象属性值必须是Long/Integer类型集合");
-                }
+    private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
+        if (fieldVal instanceof List) {
+            List<Object> between = new ArrayList<>((List<?>) fieldVal);
+            int minLength = 2;
+            if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
+                queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
+            } else {
+                throw new BadRequestException("BETWEEN类型的对象列表长度必须 >= 2");
             }
+        } else {
+            throw new BadRequestException("BETWEEN类型的对象必须是一个List子集合");
         }
     }
 
@@ -179,7 +162,7 @@ public class MybatisHelper {
         List<String> blurryList = Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
         queryWrapper.and(wrapper -> {
             for (String blurryItem : blurryList) {
-                String column = humpToUnderline(blurryItem);
+                String column = StrUtil.toUnderlineCase(blurryItem);
                 wrapper.or();
                 wrapper.like(column, fieldVal.toString());
             }
@@ -192,16 +175,6 @@ public class MybatisHelper {
             getAllFields(clazz.getSuperclass(), fields);
         }
         return fields;
-    }
-
-    /***
-     * 驼峰命名转为下划线命名
-     *
-     * @param para
-     *        驼峰命名的字符串
-     */
-    private static String humpToUnderline(String para) {
-        return StrUtil.toUnderlineCase(para);
     }
 
     @TableName("test_domain")

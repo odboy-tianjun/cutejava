@@ -1,6 +1,6 @@
 package cn.odboy.websocket.context;
 
-import cn.odboy.websocket.dto.WebSocketMsgDto;
+import cn.odboy.websocket.dto.WebSocketMessageDto;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -88,8 +88,8 @@ public class WebSocketServer {
     /**
      * 群发自定义消息
      */
-    public static void sendMessage(WebSocketMsgDto webSocketMsgDto, @PathParam("sid") String sid) throws IOException {
-        String message = JSON.toJSONString(webSocketMsgDto);
+    public static void sendMessage(WebSocketMessageDto webSocketMessageDto, @PathParam("sid") String sid) throws IOException {
+        String message = JSON.toJSONString(webSocketMessageDto);
         log.info("推送消息到{}，推送内容:{}", sid, message);
         try {
             if (sid == null) {

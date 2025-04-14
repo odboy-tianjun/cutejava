@@ -3,23 +3,18 @@ package cn.odboy.application.core.rest;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.application.core.config.CaptchaProperties;
-import cn.odboy.application.core.config.LoginProperties;
-import cn.odboy.application.core.constant.LoginCodeEnum;
+import cn.odboy.constant.LoginCodeEnum;
 import cn.odboy.application.core.context.TokenProvider;
-import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.application.core.service.impl.UserDetailsServiceImpl;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
-import cn.odboy.base.PageResult;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.SystemRedisKey;
+import cn.odboy.config.AppProperties;
 import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.model.UserJwtModel;
-import cn.odboy.model.system.model.UserOnlineModel;
 import cn.odboy.model.system.request.UserLoginRequest;
 import cn.odboy.model.system.response.UserInfoResponse;
-import cn.odboy.properties.RsaProperties;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.RsaEncryptUtil;
 import cn.odboy.util.StringUtil;
@@ -28,10 +23,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,8 +51,7 @@ public class AuthController {
     private final RedisHelper redisHelper;
     private final UserOnlineServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
-    private final CaptchaProperties captchaProperties;
-    private final LoginProperties loginProperties;
+    private final AppProperties properties;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -67,7 +59,7 @@ public class AuthController {
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody UserLoginRequest loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = RsaEncryptUtil.decryptByPrivateKey(RsaProperties.privateKey, loginRequest.getPassword());
+        String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
@@ -93,7 +85,7 @@ public class AuthController {
             put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
             put("user", BeanUtil.copyProperties(jwtUser, UserInfoResponse.class));
         }};
-        if (loginProperties.isSingleLogin()) {
+        if (properties.getLogin().isSingle()) {
             // 踢掉之前已经登录的token
             onlineUserService.kickOutByUsername(loginRequest.getUsername());
         }
@@ -115,7 +107,7 @@ public class AuthController {
     @AnonymousPostMapping(value = "/code")
     public ResponseEntity<Object> getCode() {
         // 获取运算的结果
-        Captcha captcha = captchaProperties.getCaptcha();
+        Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
         String uuid = SystemRedisKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
         //当验证码类型为 arithmetic时且长度 >= 2 时，captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
@@ -123,7 +115,7 @@ public class AuthController {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存
-        redisHelper.set(uuid, captchaValue, captchaProperties.getExpiration(), TimeUnit.MINUTES);
+        redisHelper.set(uuid, captchaValue, properties.getLogin().getCaptchaSetting().getExpiration(), TimeUnit.MINUTES);
         // 验证码信息
         Map<String, Object> imgResult = new HashMap<String, Object>(2) {{
             put("img", captcha.toBase64());

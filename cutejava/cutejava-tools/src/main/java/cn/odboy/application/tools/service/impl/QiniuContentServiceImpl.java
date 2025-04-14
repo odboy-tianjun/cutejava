@@ -1,9 +1,9 @@
 package cn.odboy.application.tools.service.impl;
 
 import cn.odboy.application.tools.mapper.QiniuContentMapper;
-import cn.odboy.application.tools.service.QiNiuConfigService;
+import cn.odboy.application.tools.service.QiniuConfigService;
 import cn.odboy.application.tools.service.QiniuContentService;
-import cn.odboy.application.tools.util.QiNiuUtil;
+import cn.odboy.application.tools.util.QiniuUtil;
 import cn.odboy.base.PageResult;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.tools.domain.QiniuConfig;
@@ -40,9 +40,9 @@ import java.util.Map;
 @CacheConfig(cacheNames = "qiNiu")
 public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, QiniuContent> implements QiniuContentService {
     private final QiniuContentMapper qiniuContentMapper;
-    private final QiNiuConfigService qiNiuConfigService;
+    private final QiniuConfigService qiNiuConfigService;
 
-    @Value("${qiniu.max-size}")
+    @Value("${app.oss.qiniu.max-size}")
     private Long maxSize;
 
     @Override
@@ -64,14 +64,14 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
             throw new BadRequestException("请先添加相应配置，再操作");
         }
         // 构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
+        Configuration cfg = new Configuration(QiniuUtil.getRegion(qiniuConfig.getZone()));
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
         try {
             String key = file.getOriginalFilename();
             if (qiniuContentMapper.getQiniuContentByName(key) != null) {
-                key = QiNiuUtil.getKey(key);
+                key = QiniuUtil.getKey(key);
             }
             Response response = uploadManager.put(file.getBytes(), key, upToken);
             // 解析上传成功的结果
@@ -120,7 +120,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
             throw new BadRequestException("文件不存在");
         }
         // 构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
+        Configuration cfg = new Configuration(QiniuUtil.getRegion(qiniuConfig.getZone()));
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
@@ -140,7 +140,7 @@ public class QiniuContentServiceImpl extends ServiceImpl<QiniuContentMapper, Qin
             throw new BadRequestException("请先添加相应配置，再操作");
         }
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
+        Configuration cfg = new Configuration(QiniuUtil.getRegion(qiniuConfig.getZone()));
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         //文件名前缀

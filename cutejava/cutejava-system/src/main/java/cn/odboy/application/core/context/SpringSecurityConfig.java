@@ -1,6 +1,5 @@
 package cn.odboy.application.core.context;
 
-import cn.odboy.application.core.config.SecurityProperties;
 import cn.odboy.application.core.service.impl.UserOnlineServiceImpl;
 import cn.odboy.constant.RequestMethodEnum;
 import cn.odboy.util.AnonTagUtil;
@@ -31,7 +30,6 @@ public class SpringSecurityConfig {
     private final JwtAuthenticationEntryPoint authenticationErrorHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
-    private final SecurityProperties securityProperties;
     private final UserOnlineServiceImpl onlineUserService;
 
     @Bean

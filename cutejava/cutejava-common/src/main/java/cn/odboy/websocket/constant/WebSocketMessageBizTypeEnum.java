@@ -1,7 +1,7 @@
 package cn.odboy.websocket.constant;
 
 
-public enum WebSocketMsgTypeEnum {
+public enum WebSocketMessageBizTypeEnum {
     /**
      * 连接
      */

@@ -1,4 +1,4 @@
-package cn.odboy.application.core.constant;
+package cn.odboy.constant;
 
 /**
  * 验证码配置枚举

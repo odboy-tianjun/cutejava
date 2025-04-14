@@ -1,5 +1,7 @@
 package cn.odboy.thread;
 
+import cn.odboy.config.AppProperties;
+import cn.odboy.config.model.QuartzTaskThreadPoolSettingModel;
 import com.alibaba.ttl.TtlRunnable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class AsyncExecutor implements AsyncConfigurer {
     @Autowired
-    private AsyncTaskProperties properties;
+    private AppProperties properties;
 
     /**
      * 自定义线程池，用法 @Async
@@ -30,11 +32,12 @@ public class AsyncExecutor implements AsyncConfigurer {
      */
     @Override
     public Executor getAsyncExecutor() {
+        QuartzTaskThreadPoolSettingModel asyncTaskPool = properties.getAsyncTaskPool();
         // 自定义工厂
         ThreadFactory factory = r -> new Thread(r, "default-async-" + new AtomicInteger(1).getAndIncrement());
         // 自定义线程池
-        return new ThreadPoolExecutor(properties.getCorePoolSize(), properties.getMaxPoolSize(), properties.getKeepAliveSeconds(),
-                TimeUnit.SECONDS, new ArrayBlockingQueue<>(properties.getQueueCapacity()), factory,
+        return new ThreadPoolExecutor(asyncTaskPool.getCorePoolSize(), asyncTaskPool.getMaxPoolSize(), asyncTaskPool.getKeepAliveSeconds(),
+                TimeUnit.SECONDS, new ArrayBlockingQueue<>(asyncTaskPool.getQueueCapacity()), factory,
                 new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
@@ -43,13 +46,14 @@ public class AsyncExecutor implements AsyncConfigurer {
      */
     @Bean("taskAsync")
     public ThreadPoolTaskExecutor taskAsync() {
+        QuartzTaskThreadPoolSettingModel asyncTaskPool = properties.getAsyncTaskPool();
         // 用法 private ThreadPoolTaskExecutor taskExecutor
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(properties.getCorePoolSize());
-        executor.setMaxPoolSize(properties.getMaxPoolSize());
-        executor.setQueueCapacity(properties.getQueueCapacity());
+        executor.setCorePoolSize(asyncTaskPool.getCorePoolSize());
+        executor.setMaxPoolSize(asyncTaskPool.getMaxPoolSize());
+        executor.setQueueCapacity(asyncTaskPool.getQueueCapacity());
         executor.setThreadNamePrefix("task-async-");
-        executor.setKeepAliveSeconds(properties.getKeepAliveSeconds());
+        executor.setKeepAliveSeconds(asyncTaskPool.getKeepAliveSeconds());
         // DiscardOldestPolicy，抛弃最早的任务，将新任务加入队列。
         // AbortPolicy，拒绝执行新任务，并抛出异常。
         // CallerRunsPolicy，交由调用者线程执行新任务，如果调用者线程已关闭，则抛弃任务。

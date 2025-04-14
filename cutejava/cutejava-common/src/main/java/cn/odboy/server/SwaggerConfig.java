@@ -42,7 +42,7 @@ public class SwaggerConfig {
     @Value("${server.servlet.context-path:}")
     private String apiPath;
 
-    @Value("${swagger.enabled}")
+    @Value("${app.swagger.enabled}")
     private Boolean enabled;
 
     private final ApplicationContext applicationContext;

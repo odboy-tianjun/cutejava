@@ -23,11 +23,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 import java.lang.reflect.Field;
@@ -60,22 +56,6 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      */
     int alwaysUpdateSomeColumnById(@Param("et") E entity);
 
-    default QueryChainWrapper<E> select() {
-        return ChainWrappers.queryChain(this);
-    }
-
-    default UpdateChainWrapper<E> update() {
-        return ChainWrappers.updateChain(this);
-    }
-
-    default LambdaQueryChainWrapper<E> lambdaSelect() {
-        return ChainWrappers.lambdaQueryChain(this);
-    }
-
-    default LambdaUpdateChainWrapper<E> lambdaUpdate() {
-        return ChainWrappers.lambdaUpdateChain(this);
-    }
-
     /**
      * 获取字典
      *
@@ -84,7 +64,7 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      * @param valueName 值对应的列名称
      * @return Map<String, Object>
      */
-    default Map<String, Object> selectMap(LambdaQueryWrapper<E> wrapper, String keyName, String valueName) {
+    default Map<String, Object> getMapWithKv(LambdaQueryWrapper<E> wrapper, String keyName, String valueName) {
         Map<String, Object> result = new ConcurrentHashMap<>(1);
         List<E> list = this.selectList(wrapper);
         if (CollUtil.isEmpty(list)) {
@@ -123,7 +103,7 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      * @param clazz   期望的对象类型
      * @return List<T>
      */
-    default <T> List<T> selectList(LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
+    default <T> List<T> queryFeatureClazzList(LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
         List<E> list = this.selectList(wrapper);
         if (CollUtil.isEmpty(list)) {
             return new ArrayList<>();
@@ -138,7 +118,7 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      * @param clazz   期望的对象类型
      * @return List<T>
      */
-    default <T> List<T> selectList(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    default <T> List<T> queryFeatureClazzList(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
         List<E> list = wrapper.list();
         if (CollUtil.isEmpty(list)) {
             return new ArrayList<>();
@@ -154,7 +134,7 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> PageResult<T> selectPage(Pageable pageable, LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
+    default <T> PageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
@@ -174,7 +154,7 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> PageResult<T> selectPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    default <T> PageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
@@ -193,7 +173,7 @@ public interface EasyMapper<E> extends BaseMapper<E> {
      * @param clazz   期望的对象类型
      * @return T
      */
-    default <T> T selectOne(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    default <T> T getFeatureClazz(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
         E e = this.selectOne(wrapper);
         if (e == null) {
             return null;
