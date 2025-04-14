@@ -2,7 +2,7 @@
 
 #### 项目简介
 
-一个基于 Spring Boot 2.7.18 、 Mybatis-Plus、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
+一个基于 Spring Boot 2.7.18 、 Mybatis-Plus、 JWT、Spring Security、Redis、Vue2的前后端分离的后台管理系统
 
 **账号密码：** `admin / 123456`
 
