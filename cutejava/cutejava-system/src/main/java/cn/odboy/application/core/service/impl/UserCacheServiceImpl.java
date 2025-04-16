@@ -3,7 +3,7 @@ package cn.odboy.application.core.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import cn.odboy.application.core.service.UserCacheService;
 import cn.odboy.constant.SystemRedisKey;
-import cn.odboy.model.system.model.UserJwtModel;
+import cn.odboy.model.system.model.UserJwtVo;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -18,19 +18,19 @@ public class UserCacheServiceImpl implements UserCacheService {
     private RedisHelper redisHelper;
 
     @Override
-    public UserJwtModel describeUserJwtModelByUsername(String username) {
+    public UserJwtVo describeUserJwtModelByUsername(String username) {
         // 转小写
         username = StringUtil.lowerCase(username);
         if (StringUtil.isNotEmpty(username)) {
             // 获取数据
-            return redisHelper.get(SystemRedisKey.USER_INFO + username, UserJwtModel.class);
+            return redisHelper.get(SystemRedisKey.USER_INFO + username, UserJwtVo.class);
         }
         return null;
     }
 
 
     @Override
-    public void saveUserJwtModelByUserName(String userName, UserJwtModel user) {
+    public void saveUserJwtModelByUserName(String userName, UserJwtVo user) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
         if (StringUtil.isNotEmpty(userName)) {

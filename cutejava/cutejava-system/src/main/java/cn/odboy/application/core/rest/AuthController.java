@@ -12,7 +12,7 @@ import cn.odboy.constant.SystemRedisKey;
 import cn.odboy.config.AppProperties;
 import cn.odboy.context.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.model.system.model.UserJwtModel;
+import cn.odboy.model.system.model.UserJwtVo;
 import cn.odboy.model.system.request.UserLoginRequest;
 import cn.odboy.model.system.response.UserInfoResponse;
 import cn.odboy.redis.RedisHelper;
@@ -71,7 +71,7 @@ public class AuthController {
             throw new BadRequestException("验证码错误");
         }
         // 获取用户信息
-        UserJwtModel jwtUser = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        UserJwtVo jwtUser = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         // 验证用户密码
         if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
             throw new BadRequestException("登录密码错误");
@@ -98,7 +98,7 @@ public class AuthController {
     @ApiOperation("获取用户信息")
     @PostMapping(value = "/info")
     public ResponseEntity<UserInfoResponse> getUserInfo() {
-        UserJwtModel jwtUser = (UserJwtModel) SecurityHelper.getCurrentUser();
+        UserJwtVo jwtUser = (UserJwtVo) SecurityHelper.getCurrentUser();
         UserInfoResponse userInfoResponse = BeanUtil.copyProperties(jwtUser, UserInfoResponse.class);
         return ResponseEntity.ok(userInfoResponse);
     }

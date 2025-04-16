@@ -6,8 +6,8 @@ import cn.odboy.application.system.service.RoleService;
 import cn.odboy.application.system.service.UserService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.model.RoleCodeModel;
-import cn.odboy.model.system.model.UserJwtModel;
+import cn.odboy.model.system.model.RoleCodeVo;
+import cn.odboy.model.system.model.UserJwtVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,9 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserCacheService userCacheService;
 
     @Override
-    public UserJwtModel loadUserByUsername(String username) {
-        UserJwtModel userJwtModel = userCacheService.describeUserJwtModelByUsername(username);
-        if (userJwtModel == null) {
+    public UserJwtVo loadUserByUsername(String username) {
+        UserJwtVo userJwtVo = userCacheService.describeUserJwtModelByUsername(username);
+        if (userJwtVo == null) {
             User user = userService.describeUserByUsername(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");
@@ -35,13 +35,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     throw new BadRequestException("账号未激活！");
                 }
                 // 获取用户的权限
-                List<RoleCodeModel> authorities = roleService.buildUserRolePermissions(user);
+                List<RoleCodeVo> authorities = roleService.buildUserRolePermissions(user);
                 // 初始化JwtUserDto
-                userJwtModel = new UserJwtModel(user, dataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
+                userJwtVo = new UserJwtVo(user, dataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
-                userCacheService.saveUserJwtModelByUserName(username, userJwtModel);
+                userCacheService.saveUserJwtModelByUserName(username, userJwtVo);
             }
         }
-        return userJwtModel;
+        return userJwtVo;
     }
 }

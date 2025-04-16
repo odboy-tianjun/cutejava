@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class UserJwtModel implements UserDetails {
+public class UserJwtVo implements UserDetails {
 
     @ApiModelProperty(value = "用户")
     private final User user;
@@ -21,10 +21,10 @@ public class UserJwtModel implements UserDetails {
     private final List<Long> dataScopes;
 
     @ApiModelProperty(value = "角色")
-    private final List<RoleCodeModel> authorities;
+    private final List<RoleCodeVo> authorities;
 
     public Set<String> getRoles() {
-        return authorities.stream().map(RoleCodeModel::getAuthority).collect(Collectors.toSet());
+        return authorities.stream().map(RoleCodeVo::getAuthority).collect(Collectors.toSet());
     }
 
     @Override
