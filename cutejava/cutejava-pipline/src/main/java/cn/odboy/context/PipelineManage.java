@@ -26,12 +26,8 @@ public class PipelineManage {
         pipelineTaskPool.submitTask(pipelineId, () -> {
             List<PipelineNodeVo> pipelineNodeVos = initialize();
             for (PipelineNodeVo pipelineNodeVo : pipelineNodeVos) {
-                if (Thread.currentThread().isInterrupted()) {
-                    log.info("流水线被强行终止...");
-                    break;
-                }
                 executePipeline(pipelineId, pipelineNodeVo);
-                while (!Thread.currentThread().isInterrupted() && "running".equals(pipelineNodeVo.getExecuteStatus())) {
+                while ("running".equals(pipelineNodeVo.getExecuteStatus())) {
                     log.info("流水线执行中...");
                     ThreadUtil.safeSleep(2000);
                 }
