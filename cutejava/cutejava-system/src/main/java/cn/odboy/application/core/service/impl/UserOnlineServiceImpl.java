@@ -5,8 +5,8 @@ import cn.odboy.application.core.service.UserOnlineService;
 import cn.odboy.base.PageResult;
 import cn.odboy.config.AppProperties;
 import cn.odboy.constant.SystemRedisKey;
-import cn.odboy.model.system.model.UserJwtModel;
-import cn.odboy.model.system.model.UserOnlineModel;
+import cn.odboy.model.system.model.UserJwtVo;
+import cn.odboy.model.system.model.UserOnlineVo;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.BrowserUtil;
 import cn.odboy.util.DesEncryptUtil;
@@ -39,46 +39,46 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     private final RedisHelper redisHelper;
 
     @Override
-    public void saveUserJwtModelByToken(UserJwtModel userJwtModel, String token, HttpServletRequest request) {
-        String dept = userJwtModel.getUser().getDept().getName();
+    public void saveUserJwtModelByToken(UserJwtVo userJwtVo, String token, HttpServletRequest request) {
+        String dept = userJwtVo.getUser().getDept().getName();
         String ip = BrowserUtil.getIp(request);
         String id = tokenProvider.getId(token);
         String version = BrowserUtil.getVersion(request);
         String address = IpUtil.getCityInfo(ip);
-        UserOnlineModel userOnlineModel = null;
+        UserOnlineVo userOnlineVo = null;
         try {
-            userOnlineModel = new UserOnlineModel();
-            userOnlineModel.setUid(id);
-            userOnlineModel.setUserName(userJwtModel.getUsername());
-            userOnlineModel.setNickName(userJwtModel.getUser().getNickName());
-            userOnlineModel.setDept(dept);
-            userOnlineModel.setBrowser(version);
-            userOnlineModel.setIp(ip);
-            userOnlineModel.setAddress(address);
-            userOnlineModel.setKey(DesEncryptUtil.desEncrypt(token));
-            userOnlineModel.setLoginTime(new Date());
+            userOnlineVo = new UserOnlineVo();
+            userOnlineVo.setUid(id);
+            userOnlineVo.setUserName(userJwtVo.getUsername());
+            userOnlineVo.setNickName(userJwtVo.getUser().getNickName());
+            userOnlineVo.setDept(dept);
+            userOnlineVo.setBrowser(version);
+            userOnlineVo.setIp(ip);
+            userOnlineVo.setAddress(address);
+            userOnlineVo.setKey(DesEncryptUtil.desEncrypt(token));
+            userOnlineVo.setLoginTime(new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         String loginKey = tokenProvider.loginKey(token);
-        redisHelper.set(loginKey, userOnlineModel, properties.getJwt().getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
+        redisHelper.set(loginKey, userOnlineVo, properties.getJwt().getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public PageResult<UserOnlineModel> describeUserOnlineModelPage(String username, Pageable pageable) {
-        List<UserOnlineModel> onlineUserList = describeUserOnlineModelListByUsername(username);
-        List<UserOnlineModel> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
+    public PageResult<UserOnlineVo> describeUserOnlineModelPage(String username, Pageable pageable) {
+        List<UserOnlineVo> onlineUserList = describeUserOnlineModelListByUsername(username);
+        List<UserOnlineVo> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
         return PageUtil.toPage(paging, onlineUserList.size());
     }
 
     @Override
-    public List<UserOnlineModel> describeUserOnlineModelListByUsername(String username) {
+    public List<UserOnlineVo> describeUserOnlineModelListByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
-        List<UserOnlineModel> onlineUserList = new ArrayList<>();
+        List<UserOnlineVo> onlineUserList = new ArrayList<>();
         for (String key : keys) {
-            onlineUserList.add(redisHelper.get(key, UserOnlineModel.class));
+            onlineUserList.add(redisHelper.get(key, UserOnlineVo.class));
         }
         onlineUserList.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUserList;
@@ -91,9 +91,9 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public void downloadUserOnlineModelExcel(List<UserOnlineModel> all, HttpServletResponse response) throws IOException {
+    public void downloadUserOnlineModelExcel(List<UserOnlineVo> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (UserOnlineModel user : all) {
+        for (UserOnlineVo user : all) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", user.getUserName());
             map.put("部门", user.getDept());
@@ -107,8 +107,8 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     }
 
     @Override
-    public UserOnlineModel describeUserOnlineModelByKey(String key) {
-        return redisHelper.get(key, UserOnlineModel.class);
+    public UserOnlineVo describeUserOnlineModelByKey(String key) {
+        return redisHelper.get(key, UserOnlineVo.class);
     }
 
     @Override

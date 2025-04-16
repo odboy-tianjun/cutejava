@@ -16,7 +16,7 @@ import cn.odboy.exception.EntityExistException;
 import cn.odboy.model.system.domain.Menu;
 import cn.odboy.model.system.domain.Role;
 import cn.odboy.model.system.domain.User;
-import cn.odboy.model.system.model.RoleCodeModel;
+import cn.odboy.model.system.model.RoleCodeVo;
 import cn.odboy.model.system.request.CreateRoleRequest;
 import cn.odboy.model.system.request.QueryRoleRequest;
 import cn.odboy.redis.RedisHelper;
@@ -167,22 +167,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public List<RoleCodeModel> buildUserRolePermissions(User user) {
+    public List<RoleCodeVo> buildUserRolePermissions(User user) {
         String key = SystemRedisKey.ROLE_AUTH + user.getId();
-        List<RoleCodeModel> authorityList = redisHelper.getList(key, RoleCodeModel.class);
+        List<RoleCodeVo> authorityList = redisHelper.getList(key, RoleCodeVo.class);
         if (CollUtil.isEmpty(authorityList)) {
             Set<String> permissions = new HashSet<>();
             // 如果是管理员直接返回
             if (user.getIsAdmin()) {
                 permissions.add("admin");
-                return permissions.stream().map(RoleCodeModel::new)
+                return permissions.stream().map(RoleCodeVo::new)
                         .collect(Collectors.toList());
             }
             List<Role> roles = roleMapper.queryRoleListByUserId(user.getId());
             permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                     .map(Menu::getPermission)
                     .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
-            authorityList = permissions.stream().map(RoleCodeModel::new)
+            authorityList = permissions.stream().map(RoleCodeVo::new)
                     .collect(Collectors.toList());
             redisHelper.set(key, authorityList, 1, TimeUnit.HOURS);
         }

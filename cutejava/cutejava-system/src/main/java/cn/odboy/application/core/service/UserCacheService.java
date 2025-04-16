@@ -1,6 +1,6 @@
 package cn.odboy.application.core.service;
 
-import cn.odboy.model.system.model.UserJwtModel;
+import cn.odboy.model.system.model.UserJwtVo;
 import org.springframework.scheduling.annotation.Async;
 
 public interface UserCacheService {
@@ -8,9 +8,9 @@ public interface UserCacheService {
      * 返回用户缓存
      *
      * @param username 用户名
-     * @return UserJwtModel
+     * @return UserJwtVo
      */
-    UserJwtModel describeUserJwtModelByUsername(String username);
+    UserJwtVo describeUserJwtModelByUsername(String username);
 
     /**
      * 添加缓存到Redis
@@ -18,7 +18,7 @@ public interface UserCacheService {
      * @param userName 用户名
      */
     @Async
-    void saveUserJwtModelByUserName(String userName, UserJwtModel user);
+    void saveUserJwtModelByUserName(String userName, UserJwtVo user);
 
     /**
      * 清理用户缓存信息
