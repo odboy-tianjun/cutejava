@@ -216,7 +216,9 @@ public class PipelineTaskPool {
 
             if (running.compareAndSet(true, false)) {
                 if (currentThread != null) {
-                    currentThread.interrupt();
+//                    currentThread.interrupt();
+                    // 暴力停止线程
+                    currentThread.stop();
                 }
                 return true;
             }
