@@ -1,6 +1,7 @@
 package cn.odboy.util;
 
-import cn.odboy.context.PipelineManage;
+import cn.odboy.core.framework.flow.context.PipelineManager;
+import cn.odboy.core.framework.flow.context.PipelineProcessManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,11 +9,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PipelineTests {
     @Autowired
-    private PipelineManage pipelineManage;
+    private PipelineManager pipelineManager;
+    @Autowired
+    private PipelineProcessManager pipelineProcessManager;
 
     @Test
-    public void contextLoads() {
-        pipelineManage.execute();
+    public void testPipelineManager() {
+        pipelineManager.test();
+    }
+
+    @Test
+    public void testPipelineProcessManager() {
+        pipelineProcessManager.test();
     }
 }
 

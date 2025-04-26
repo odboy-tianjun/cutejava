@@ -154,7 +154,7 @@ mybatis-plus:
       id-type: auto
       # 表名是否使用驼峰转下划线命名,只对表名生效
       table-underline: true
-    # 是否控制台 print mybatis-plus 的 LOGO
+    # 是否控制台 print mybatisplus-plus 的 LOGO
     banner: true
 
 app:
