@@ -39,7 +39,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      */
     private static final String[] WHITELIST_STR = {
             "org.springframework",
-            "cn.odboy.model",
+            "cn.odboy.core.controller.*.dto",
+            "cn.odboy.core.dal.dataobject",
     };
 
     /**

@@ -9,10 +9,6 @@
 
     <modules>
         <module>cutejava-common</module>
-        <module>cutejava-domain</module>
-        <module>cutejava-tools</module>
-        <module>cutejava-job</module>
-        <module>cutejava-pipline</module>
         <module>cutejava-system</module>
         <module>cutejava-starter</module>
     </modules>
@@ -176,7 +172,7 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-        <!-- mybatis -->
+        <!-- mybatisplus -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -187,7 +183,7 @@
             <artifactId>mybatis-plus-jsqlparser</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
-        <!-- mybatis-plus代码生成 -->
+        <!-- mybatisplus-plus代码生成 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
