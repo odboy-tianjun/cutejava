@@ -2,6 +2,7 @@ package cn.odboy.core.controller.system;
 
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.PageResult;
+import cn.odboy.core.api.system.RoleApi;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.service.system.dto.CreateRoleRequest;
 import cn.odboy.core.service.system.dto.QueryRoleRequest;
@@ -34,27 +35,28 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：角色管理")
 @RequestMapping("/api/roles")
 public class RoleController {
+    private final RoleApi roleApi;
     private final RoleService roleService;
 
     @ApiOperation("获取单个role")
     @PostMapping(value = "/describeRoleById")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<Role> describeRoleById(@RequestBody Role args) {
-        return new ResponseEntity<>(roleService.describeRoleById(args.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(roleApi.describeRoleById(args.getId()), HttpStatus.OK);
     }
 
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, QueryRoleRequest criteria) throws IOException {
-        roleService.downloadRoleExcel(roleService.describeRoleList(criteria), response);
+        roleService.downloadRoleExcel(roleApi.describeRoleList(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")
     @PostMapping(value = "/describeRoleList")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<Role>> describeRoleList() {
-        return new ResponseEntity<>(roleService.describeRoleList(), HttpStatus.OK);
+        return new ResponseEntity<>(roleApi.describeRoleList(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
@@ -62,7 +64,7 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<PageResult<Role>> describeRolePage(QueryRoleRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(roleService.describeRolePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(roleApi.describeRolePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
@@ -108,7 +110,7 @@ public class RoleController {
             checkRoleLevels(role.getLevel());
         }
         // 验证是否被用户关联
-        roleService.verifyBindRelationByIds(ids);
+        roleApi.verifyBindRelationByIds(ids);
         roleService.removeRoleByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -119,7 +121,7 @@ public class RoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
+        List<Integer> levels = roleApi.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

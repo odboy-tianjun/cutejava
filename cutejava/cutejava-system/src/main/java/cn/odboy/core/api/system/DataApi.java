@@ -1,4 +1,4 @@
-package cn.odboy.core.service.system;
+package cn.odboy.core.api.system;
 
 
 import cn.odboy.core.dal.dataobject.system.User;
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 数据权限服务类
  */
-public interface DataService {
+public interface DataApi {
 
     /**
      * 获取数据权限

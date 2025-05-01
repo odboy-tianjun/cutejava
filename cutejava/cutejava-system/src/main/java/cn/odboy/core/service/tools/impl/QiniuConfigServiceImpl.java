@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "qiNiu")
 public class QiniuConfigServiceImpl extends ServiceImpl<QiniuConfigMapper, QiniuConfig> implements QiniuConfigService {
-    @Override
-    @Cacheable(key = "'config'")
-    public QiniuConfig describeQiniuConfig() {
-        QiniuConfig qiniuConfig = getById(1L);
-        return qiniuConfig == null ? new QiniuConfig() : qiniuConfig;
-    }
+
 
     @Override
     @CacheEvict(key = "'config'")

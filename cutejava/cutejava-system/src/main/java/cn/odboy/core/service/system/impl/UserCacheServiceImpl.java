@@ -18,18 +18,6 @@ public class UserCacheServiceImpl implements UserCacheService {
     private RedisHelper redisHelper;
 
     @Override
-    public UserJwtVo describeUserJwtModelByUsername(String username) {
-        // 转小写
-        username = StringUtil.lowerCase(username);
-        if (StringUtil.isNotEmpty(username)) {
-            // 获取数据
-            return redisHelper.get(SystemRedisKey.USER_INFO + username, UserJwtVo.class);
-        }
-        return null;
-    }
-
-
-    @Override
     public void saveUserJwtModelByUserName(String userName, UserJwtVo user) {
         // 转小写
         userName = StringUtil.lowerCase(userName);

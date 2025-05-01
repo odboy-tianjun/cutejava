@@ -17,13 +17,6 @@ public interface EmailService extends IService<EmailConfig> {
     void modifyEmailConfigOnPassChange(EmailConfig emailConfig) throws Exception;
 
     /**
-     * 查询配置
-     *
-     * @return EmailConfig 邮件配置
-     */
-    EmailConfig describeEmailConfig();
-
-    /**
      * 发送邮件
      *
      * @param sendEmailRequest 邮件发送的内容

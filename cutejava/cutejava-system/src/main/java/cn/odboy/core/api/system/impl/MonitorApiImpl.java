@@ -1,9 +1,9 @@
-package cn.odboy.core.service.system.impl;
+package cn.odboy.core.api.system.impl;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.core.service.system.MonitorService;
+import cn.odboy.core.api.system.MonitorApi;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class MonitorServiceImpl implements MonitorService {
+public class MonitorApiImpl implements MonitorApi {
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override

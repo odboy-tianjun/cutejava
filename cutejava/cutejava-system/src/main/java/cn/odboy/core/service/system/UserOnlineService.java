@@ -1,9 +1,7 @@
 package cn.odboy.core.service.system;
 
-import cn.odboy.base.PageResult;
 import cn.odboy.core.service.system.dto.UserJwtVo;
 import cn.odboy.core.service.system.dto.UserOnlineVo;
-import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,22 +17,6 @@ public interface UserOnlineService {
      */
     void saveUserJwtModelByToken(UserJwtVo userJwtVo, String token, HttpServletRequest request);
 
-    /**
-     * 查询全部数据
-     *
-     * @param username /
-     * @param pageable /
-     * @return /
-     */
-    PageResult<UserOnlineVo> describeUserOnlineModelPage(String username, Pageable pageable);
-
-    /**
-     * 查询全部数据，不分页
-     *
-     * @param username /
-     * @return /
-     */
-    List<UserOnlineVo> describeUserOnlineModelListByUsername(String username);
 
     /**
      * 退出登录
@@ -52,13 +34,6 @@ public interface UserOnlineService {
      */
     void downloadUserOnlineModelExcel(List<UserOnlineVo> all, HttpServletResponse response) throws IOException;
 
-    /**
-     * 查询用户
-     *
-     * @param key /
-     * @return /
-     */
-    UserOnlineVo describeUserOnlineModelByKey(String key);
 
     /**
      * 根据用户名强退用户

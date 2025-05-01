@@ -1,20 +1,15 @@
 package cn.odboy.core.service.system.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.PageResult;
 import cn.odboy.core.constant.SystemRedisKey;
-import cn.odboy.core.service.system.dto.CreateJobRequest;
-import cn.odboy.core.service.system.dto.QueryJobRequest;
 import cn.odboy.core.dal.dataobject.system.Job;
 import cn.odboy.core.dal.mysql.system.JobMapper;
 import cn.odboy.core.dal.mysql.system.UserMapper;
 import cn.odboy.core.service.system.JobService;
-import cn.odboy.exception.BadRequestException;
+import cn.odboy.core.service.system.dto.CreateJobRequest;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,35 +21,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobService {
     private final JobMapper jobMapper;
-    private final UserMapper userMapper;
     private final RedisHelper redisHelper;
 
-    @Override
-    public PageResult<Job> describeJobPage(QueryJobRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(jobMapper.queryJobPageByArgs(criteria, page));
-    }
 
-    @Override
-    public List<Job> describeJobList(QueryJobRequest criteria) {
-        return jobMapper.queryJobPageByArgs(criteria, PageUtil.getCount(jobMapper)).getRecords();
-    }
-
-    @Override
-    public Job describeJobById(Long id) {
-        String key = SystemRedisKey.JOB_ID + id;
-        Job job = redisHelper.get(key, Job.class);
-        if (job == null) {
-            job = getById(id);
-            redisHelper.set(key, job, 1, TimeUnit.DAYS);
-        }
-        return job;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -101,12 +75,6 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         FileUtil.downloadExcel(list, response);
     }
 
-    @Override
-    public void verifyBindRelationByIds(Set<Long> ids) {
-        if (userMapper.getCountByJobIds(ids) > 0) {
-            throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
-        }
-    }
 
     public void delCaches(Long id) {
         redisHelper.del(SystemRedisKey.JOB_ID + id);

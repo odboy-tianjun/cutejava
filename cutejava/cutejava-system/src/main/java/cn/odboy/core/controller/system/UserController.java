@@ -3,18 +3,19 @@ package cn.odboy.core.controller.system;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.MyMetaOption;
 import cn.odboy.base.PageResult;
-import cn.odboy.core.framework.properties.AppProperties;
+import cn.odboy.core.api.system.DataApi;
+import cn.odboy.core.api.system.DeptApi;
+import cn.odboy.core.api.system.RoleApi;
+import cn.odboy.core.api.system.UserApi;
 import cn.odboy.core.constant.CaptchaBizEnum;
-import cn.odboy.core.framework.permission.util.SecurityHelper;
-import cn.odboy.core.service.system.dto.QueryUserRequest;
 import cn.odboy.core.dal.dataobject.system.Dept;
 import cn.odboy.core.dal.dataobject.system.Role;
 import cn.odboy.core.dal.dataobject.system.UpdateUserPasswordResponse;
 import cn.odboy.core.dal.dataobject.system.User;
-import cn.odboy.core.service.system.DataService;
-import cn.odboy.core.service.system.DeptService;
-import cn.odboy.core.service.system.RoleService;
+import cn.odboy.core.framework.permission.util.SecurityHelper;
+import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.core.service.system.UserService;
+import cn.odboy.core.service.system.dto.QueryUserRequest;
 import cn.odboy.core.service.tools.CaptchaService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.PageUtil;
@@ -55,9 +56,10 @@ import java.util.stream.Collectors;
 public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-    private final DataService dataService;
-    private final DeptService deptService;
-    private final RoleService roleService;
+    private final DataApi dataApi;
+    private final DeptApi deptApi;
+    private final RoleApi roleApi;
+    private final UserApi userApi;
     private final CaptchaService verificationCodeService;
     private final AppProperties properties;
 
@@ -65,7 +67,7 @@ public class UserController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
     public void downloadUserExcel(HttpServletResponse response, QueryUserRequest criteria) throws IOException {
-        userService.downloadUserExcel(userService.describeUserList(criteria), response);
+        userService.downloadUserExcel(userApi.describeUserList(criteria), response);
     }
 
     @ApiOperation("查询用户")
@@ -76,23 +78,23 @@ public class UserController {
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
             // 先查找是否存在子节点
-            List<Dept> data = deptService.describeDeptListByPid(criteria.getDeptId());
+            List<Dept> data = deptApi.describeDeptListByPid(criteria.getDeptId());
             // 然后把子节点的ID都加入到集合中
-            criteria.getDeptIds().addAll(deptService.describeChildDeptIdListByDeptIds(data));
+            criteria.getDeptIds().addAll(deptApi.describeChildDeptIdListByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = dataService.describeDeptIdListByUserIdWithDeptId(userService.describeUserByUsername(SecurityHelper.getCurrentUsername()));
+        List<Long> dataScopes = dataApi.describeDeptIdListByUserIdWithDeptId(userApi.describeUserByUsername(SecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集
             criteria.getDeptIds().retainAll(dataScopes);
             if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-                return new ResponseEntity<>(userService.describeUserPage(criteria, page), HttpStatus.OK);
+                return new ResponseEntity<>(userApi.describeUserPage(criteria, page), HttpStatus.OK);
             }
         } else {
             // 否则取并集
             criteria.getDeptIds().addAll(dataScopes);
-            return new ResponseEntity<>(userService.describeUserPage(criteria, page), HttpStatus.OK);
+            return new ResponseEntity<>(userApi.describeUserPage(criteria, page), HttpStatus.OK);
         }
         return new ResponseEntity<>(PageUtil.noData(), HttpStatus.OK);
     }
@@ -132,10 +134,10 @@ public class UserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
-            Integer optLevel = Collections.min(roleService.describeRoleListByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(roleApi.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
+            Integer optLevel = Collections.min(roleApi.describeRoleListByUsersId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足，不能删除：" + userService.describeUserById(id).getUsername());
+                throw new BadRequestException("角色权限不足，不能删除：" + userApi.describeUserById(id).getUsername());
             }
         }
         userService.removeUserByIds(ids);
@@ -147,7 +149,7 @@ public class UserController {
     public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody UpdateUserPasswordResponse passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
-        User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
+        User user = userApi.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
         }
@@ -176,7 +178,7 @@ public class UserController {
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody User resources) throws Exception {
         String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), resources.getPassword());
-        User user = userService.describeUserByUsername(SecurityHelper.getCurrentUsername());
+        User user = userApi.describeUserByUsername(SecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
@@ -191,8 +193,8 @@ public class UserController {
      * @param resources /
      */
     private void checkLevel(User resources) {
-        Integer currentLevel = Collections.min(roleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
-        Integer optLevel = roleService.describeDeptLevelByRoles(resources.getRoles());
+        Integer currentLevel = Collections.min(roleApi.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
+        Integer optLevel = roleApi.describeDeptLevelByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
         }
