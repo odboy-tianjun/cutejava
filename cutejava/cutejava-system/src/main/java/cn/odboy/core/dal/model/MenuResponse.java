@@ -1,4 +1,4 @@
-package cn.odboy.core.dal.model.system;
+package cn.odboy.core.dal.model;
 
 import cn.odboy.base.MyObject;
 import cn.odboy.core.service.system.dto.MenuMetaVo;

@@ -10,7 +10,7 @@ import cn.odboy.core.constant.SystemRedisKey;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.service.system.dto.UserJwtVo;
 import cn.odboy.core.service.system.dto.UserLoginRequest;
-import cn.odboy.core.dal.model.system.UserInfoResponse;
+import cn.odboy.core.dal.model.UserInfoResponse;
 import cn.odboy.core.framework.permission.TokenProvider;
 import cn.odboy.core.framework.permission.UserDetailsServiceImpl;
 import cn.odboy.core.cache.service.impl.SystemUserOnlineServiceImpl;

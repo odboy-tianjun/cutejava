@@ -1,7 +1,7 @@
 package cn.odboy.core.api.system;
 
 import cn.odboy.core.dal.dataobject.system.Menu;
-import cn.odboy.core.dal.model.system.MenuResponse;
+import cn.odboy.core.dal.model.MenuResponse;
 import cn.odboy.core.service.system.dto.QueryMenuRequest;
 import java.util.List;
 import java.util.Set;

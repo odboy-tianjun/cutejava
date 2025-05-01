@@ -6,7 +6,7 @@ import cn.odboy.core.api.system.SystemMenuApi;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.service.system.dto.QueryMenuRequest;
 import cn.odboy.core.dal.dataobject.system.Menu;
-import cn.odboy.core.dal.model.system.MenuResponse;
+import cn.odboy.core.dal.model.MenuResponse;
 import cn.odboy.core.service.system.SystemMenuService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.PageUtil;
