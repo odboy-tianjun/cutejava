@@ -1,16 +1,14 @@
 package cn.odboy.core.service.system.impl;
 
-import cn.odboy.base.PageResult;
-import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.core.constant.SystemRedisKey;
-import cn.odboy.core.framework.permission.util.SecurityHelper;
-import cn.odboy.core.service.system.dto.QueryUserRequest;
 import cn.odboy.core.dal.dataobject.system.Job;
 import cn.odboy.core.dal.dataobject.system.Role;
 import cn.odboy.core.dal.dataobject.system.User;
 import cn.odboy.core.dal.mysql.system.UserJobMapper;
 import cn.odboy.core.dal.mysql.system.UserMapper;
 import cn.odboy.core.dal.mysql.system.UserRoleMapper;
+import cn.odboy.core.framework.permission.util.SecurityHelper;
+import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.core.service.system.UserCacheService;
 import cn.odboy.core.service.system.UserOnlineService;
 import cn.odboy.core.service.system.UserService;
@@ -18,9 +16,7 @@ import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,31 +46,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final RedisHelper redisHelper;
     private final UserCacheService userCacheService;
     private final UserOnlineService userOnlineService;
-
-    @Override
-    public PageResult<User> describeUserPage(QueryUserRequest criteria, Page<Object> page) {
-        criteria.setOffset(page.offset());
-        List<User> users = userMapper.queryUserPageByArgs(criteria, PageUtil.getCount(userMapper)).getRecords();
-        Long total = userMapper.getUserCountByArgs(criteria);
-        return PageUtil.toPage(users, total);
-    }
-
-    @Override
-    public List<User> describeUserList(QueryUserRequest criteria) {
-        return userMapper.queryUserPageByArgs(criteria, PageUtil.getCount(userMapper)).getRecords();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public User describeUserById(long id) {
-        String key = SystemRedisKey.USER_ID + id;
-        User user = redisHelper.get(key, User.class);
-        if (user == null) {
-            user = getById(id);
-            redisHelper.set(key, user, 1, TimeUnit.DAYS);
-        }
-        return user;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -178,11 +148,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userJobMapper.deleteByUserIds(ids);
         // 删除用户角色
         userRoleMapper.deleteByUserIds(ids);
-    }
-
-    @Override
-    public User describeUserByUsername(String username) {
-        return userMapper.getUserByUsername(username);
     }
 
     @Override

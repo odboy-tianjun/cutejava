@@ -2,6 +2,7 @@ package cn.odboy.core.controller.job;
 
 import cn.odboy.base.PageResult;
 import cn.odboy.context.SpringBeanHolder;
+import cn.odboy.core.api.job.QuartzJobApi;
 import cn.odboy.core.service.job.dto.QueryQuartzJobRequest;
 import cn.odboy.core.service.job.dto.UpdateQuartzJobRequest;
 import cn.odboy.core.dal.dataobject.job.QuartzJob;
@@ -38,27 +39,28 @@ import java.util.Set;
 public class QuartzJobController {
     private static final String ENTITY_NAME = "quartzJob";
     private final QuartzJobService quartzJobService;
+    private final QuartzJobApi quartzJobApi;
 
     @ApiOperation("查询定时任务")
     @GetMapping
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<PageResult<QuartzJob>> queryQuartzJob(QueryQuartzJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(quartzJobService.describeQuartzJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(quartzJobApi.describeQuartzJobPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出任务数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJob(HttpServletResponse response, QueryQuartzJobRequest criteria) throws IOException {
-        quartzJobService.downloadQuartzJobExcel(quartzJobService.describeQuartzJobList(criteria), response);
+        quartzJobService.downloadQuartzJobExcel(quartzJobApi.describeQuartzJobList(criteria), response);
     }
 
     @ApiOperation("导出日志数据")
     @GetMapping(value = "/logs/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJobLog(HttpServletResponse response, QueryQuartzJobRequest criteria) throws IOException {
-        quartzJobService.downloadQuartzLogExcel(quartzJobService.describeQuartzLogList(criteria), response);
+        quartzJobService.downloadQuartzLogExcel(quartzJobApi.describeQuartzLogList(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")
@@ -66,7 +68,7 @@ public class QuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<PageResult<QuartzLog>> queryQuartzJobLog(QueryQuartzJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(quartzJobService.describeQuartzLogPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(quartzJobApi.describeQuartzLogPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增定时任务")

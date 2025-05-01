@@ -2,18 +2,17 @@ package cn.odboy.core.service.tools.impl;
 
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
-import cn.odboy.core.service.tools.dto.SendEmailRequest;
+import cn.odboy.core.api.tools.EmailApi;
 import cn.odboy.core.dal.dataobject.tools.EmailConfig;
 import cn.odboy.core.dal.mysql.tools.EmailConfigMapper;
-import cn.odboy.core.service.tools.CaptchaService;
 import cn.odboy.core.service.tools.EmailService;
+import cn.odboy.core.service.tools.dto.SendEmailRequest;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.DesEncryptUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +24,13 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
     @Autowired
     private EmailService emailService;
     @Autowired
-    private CaptchaService captchaService;
+    private EmailApi emailApi;
 
     @Override
     @CachePut(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public void modifyEmailConfigOnPassChange(EmailConfig emailConfig) throws Exception {
-        EmailConfig localConfig = emailService.describeEmailConfig();
+        EmailConfig localConfig = emailApi.describeEmailConfig();
         if (!emailConfig.getPassword().equals(localConfig.getPassword())) {
             // 对称加密
             emailConfig.setPassword(DesEncryptUtil.desEncrypt(emailConfig.getPassword()));
@@ -40,17 +39,11 @@ public class EmailServiceImpl extends ServiceImpl<EmailConfigMapper, EmailConfig
         saveOrUpdate(emailConfig);
     }
 
-    @Override
-    @Cacheable(key = "'config'")
-    public EmailConfig describeEmailConfig() {
-        EmailConfig emailConfig = getById(1L);
-        return emailConfig == null ? new EmailConfig() : emailConfig;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendEmail(SendEmailRequest sendEmailRequest) {
-        EmailConfig emailConfig = emailService.describeEmailConfig();
+        EmailConfig emailConfig = emailApi.describeEmailConfig();
         if (emailConfig.getId() == null) {
             throw new BadRequestException("请先配置，再操作");
         }

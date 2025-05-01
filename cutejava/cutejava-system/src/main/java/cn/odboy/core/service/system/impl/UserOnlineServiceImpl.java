@@ -29,9 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
-@Service
 @Slf4j
+@Service
 @AllArgsConstructor
 public class UserOnlineServiceImpl implements UserOnlineService {
     private final AppProperties properties;
@@ -64,25 +63,6 @@ public class UserOnlineServiceImpl implements UserOnlineService {
         redisHelper.set(loginKey, userOnlineVo, properties.getJwt().getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
-    @Override
-    public PageResult<UserOnlineVo> describeUserOnlineModelPage(String username, Pageable pageable) {
-        List<UserOnlineVo> onlineUserList = describeUserOnlineModelListByUsername(username);
-        List<UserOnlineVo> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
-        return PageUtil.toPage(paging, onlineUserList.size());
-    }
-
-    @Override
-    public List<UserOnlineVo> describeUserOnlineModelListByUsername(String username) {
-        String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
-        List<String> keys = redisHelper.scan(loginKey + "*");
-        Collections.reverse(keys);
-        List<UserOnlineVo> onlineUserList = new ArrayList<>();
-        for (String key : keys) {
-            onlineUserList.add(redisHelper.get(key, UserOnlineVo.class));
-        }
-        onlineUserList.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
-        return onlineUserList;
-    }
 
     @Override
     public void logoutByToken(String token) {
@@ -106,10 +86,6 @@ public class UserOnlineServiceImpl implements UserOnlineService {
         FileUtil.downloadExcel(list, response);
     }
 
-    @Override
-    public UserOnlineVo describeUserOnlineModelByKey(String key) {
-        return redisHelper.get(key, UserOnlineVo.class);
-    }
 
     @Override
     public void kickOutByUsername(String username) {

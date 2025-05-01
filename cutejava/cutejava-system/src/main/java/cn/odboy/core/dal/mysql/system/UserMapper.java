@@ -34,11 +34,11 @@ public interface UserMapper extends BaseMapper<User> {
 
     List<User> queryUserListByMenuId(@Param("menuId") Long menuId);
 
-    int getCountByJobIds(@Param("jobIds") Set<Long> jobIds);
+    int getUserCountByJobIds(@Param("jobIds") Set<Long> jobIds);
 
-    int getCountByDeptIds(@Param("deptIds") Set<Long> deptIds);
+    int getUserCountByDeptIds(@Param("deptIds") Set<Long> deptIds);
 
-    int getCountByRoleIds(@Param("roleIds") Set<Long> roleIds);
+    int getUserCountByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
     void updatePasswordByUserIds(@Param("pwd") String password, @Param("userIds") Set<Long> userIds);
 }

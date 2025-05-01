@@ -3,21 +3,17 @@ package cn.odboy.core.service.job.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.PageResult;
-import cn.odboy.core.service.job.dto.QueryQuartzJobRequest;
-import cn.odboy.core.service.job.dto.UpdateQuartzJobRequest;
 import cn.odboy.core.dal.dataobject.job.QuartzJob;
 import cn.odboy.core.dal.dataobject.job.QuartzLog;
 import cn.odboy.core.dal.mysql.job.QuartzJobMapper;
 import cn.odboy.core.dal.mysql.job.QuartzLogMapper;
 import cn.odboy.core.framework.quartz.context.QuartzManage;
 import cn.odboy.core.service.job.QuartzJobService;
+import cn.odboy.core.service.job.dto.UpdateQuartzJobRequest;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
-import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronExpression;
@@ -41,25 +37,6 @@ public class QuartzJobServiceImpl extends ServiceImpl<QuartzJobMapper, QuartzJob
     private final QuartzManage quartzManage;
     private final RedisHelper redisHelper;
 
-    @Override
-    public PageResult<QuartzJob> describeQuartzJobPage(QueryQuartzJobRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(quartzJobMapper.queryQuartzJobPageByArgs(criteria, page));
-    }
-
-    @Override
-    public PageResult<QuartzLog> describeQuartzLogPage(QueryQuartzJobRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(quartzLogMapper.queryQuartzLogPageByArgs(criteria, page));
-    }
-
-    @Override
-    public List<QuartzJob> describeQuartzJobList(QueryQuartzJobRequest criteria) {
-        return quartzJobMapper.queryQuartzJobPageByArgs(criteria, PageUtil.getCount(quartzJobMapper)).getRecords();
-    }
-
-    @Override
-    public List<QuartzLog> describeQuartzLogList(QueryQuartzJobRequest criteria) {
-        return quartzLogMapper.queryQuartzLogPageByArgs(criteria, PageUtil.getCount(quartzLogMapper)).getRecords();
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

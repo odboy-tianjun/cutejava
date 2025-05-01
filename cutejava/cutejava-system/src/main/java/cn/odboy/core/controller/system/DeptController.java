@@ -1,6 +1,7 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.PageResult;
+import cn.odboy.core.api.system.DeptApi;
 import cn.odboy.core.service.system.dto.CreateDeptRequest;
 import cn.odboy.core.service.system.dto.QueryDeptRequest;
 import cn.odboy.core.dal.dataobject.system.Dept;
@@ -32,20 +33,21 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class DeptController {
+    private final DeptApi deptApi;
     private final DeptService deptService;
 
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, QueryDeptRequest criteria) throws Exception {
-        deptService.downloadDeptExcel(deptService.describeDeptList(criteria, false), response);
+        deptService.downloadDeptExcel(deptApi.describeDeptList(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<PageResult<Dept>> describeDeptPage(QueryDeptRequest criteria) throws Exception {
-        List<Dept> depts = deptService.describeDeptList(criteria, true);
+        List<Dept> depts = deptApi.describeDeptList(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }
 
@@ -55,8 +57,8 @@ public class DeptController {
     public ResponseEntity<Object> describeDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<Dept> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
-            Dept dept = deptService.describeDeptById(id);
-            List<Dept> depts = deptService.describeSuperiorDeptListByPid(dept, new ArrayList<>());
+            Dept dept = deptApi.describeDeptById(id);
+            List<Dept> depts = deptApi.describeSuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
                 for (Dept data : depts) {
                     if (data.getId().equals(dept.getPid())) {
@@ -68,7 +70,7 @@ public class DeptController {
             }
             deptSet.addAll(depts);
         }
-        return new ResponseEntity<>(deptService.buildDeptTree(new ArrayList<>(deptSet)), HttpStatus.OK);
+        return new ResponseEntity<>(deptApi.buildDeptTree(new ArrayList<>(deptSet)), HttpStatus.OK);
     }
 
     @ApiOperation("新增部门")
@@ -93,9 +95,9 @@ public class DeptController {
     public ResponseEntity<Object> removeDeptByIds(@RequestBody Set<Long> ids) {
         Set<Dept> depts = new HashSet<>();
         // 获取部门，和其所有子部门
-        deptService.traverseDeptByIdWithPids(ids, depts);
+        deptApi.traverseDeptByIdWithPids(ids, depts);
         // 验证是否被角色或用户关联
-        deptService.verifyBindRelationByIds(depts);
+        deptApi.verifyBindRelationByIds(depts);
         deptService.removeDeptByIds(depts);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,37 +1,26 @@
 package cn.odboy.core.service.system.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
-import cn.odboy.base.PageResult;
 import cn.odboy.core.constant.SystemRedisKey;
-import cn.odboy.core.service.system.dto.CreateDictDetailRequest;
-import cn.odboy.core.service.system.dto.QueryDictDetailRequest;
 import cn.odboy.core.dal.dataobject.system.Dict;
 import cn.odboy.core.dal.dataobject.system.DictDetail;
 import cn.odboy.core.dal.mysql.system.DictDetailMapper;
 import cn.odboy.core.dal.mysql.system.DictMapper;
 import cn.odboy.core.service.system.DictDetailService;
+import cn.odboy.core.service.system.dto.CreateDictDetailRequest;
 import cn.odboy.redis.RedisHelper;
-import cn.odboy.util.PageUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDetail> implements DictDetailService {
     private final DictMapper dictMapper;
-    private final DictDetailMapper dictDetailMapper;
     private final RedisHelper redisHelper;
 
-    @Override
-    public PageResult<DictDetail> describeDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page) {
-        return PageUtil.toPage(dictDetailMapper.queryDictDetailPageByArgs(criteria, page));
-    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -54,16 +43,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
         delCaches(dictDetail);
     }
 
-    @Override
-    public List<DictDetail> describeDictDetailListByName(String name) {
-        String key = SystemRedisKey.DICT_NAME + name;
-        List<DictDetail> dictDetails = redisHelper.getList(key, DictDetail.class);
-        if (CollUtil.isEmpty(dictDetails)) {
-            dictDetails = dictDetailMapper.queryDictDetailListByDictName(name);
-            redisHelper.set(key, dictDetails, 1, TimeUnit.DAYS);
-        }
-        return dictDetails;
-    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

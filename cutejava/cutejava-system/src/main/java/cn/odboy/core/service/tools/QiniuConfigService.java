@@ -7,13 +7,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface QiniuConfigService extends IService<QiniuConfig> {
 
     /**
-     * 查询配置
-     *
-     * @return QiniuConfig
-     */
-    QiniuConfig describeQiniuConfig();
-
-    /**
      * 保存
      *
      * @param type 类型
