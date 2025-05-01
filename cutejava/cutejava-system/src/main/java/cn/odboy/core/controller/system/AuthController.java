@@ -10,10 +10,10 @@ import cn.odboy.core.constant.SystemRedisKey;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.service.system.dto.UserJwtVo;
 import cn.odboy.core.service.system.dto.UserLoginRequest;
-import cn.odboy.core.dal.dataobject.system.UserInfoResponse;
+import cn.odboy.core.dal.model.system.UserInfoResponse;
 import cn.odboy.core.framework.permission.TokenProvider;
-import cn.odboy.core.service.system.impl.UserDetailsServiceImpl;
-import cn.odboy.core.service.system.impl.UserOnlineServiceImpl;
+import cn.odboy.core.framework.permission.UserDetailsServiceImpl;
+import cn.odboy.core.cache.service.impl.SystemUserOnlineServiceImpl;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.RsaEncryptUtil;
@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 @Api(tags = "系统：系统授权接口")
 public class AuthController {
     private final RedisHelper redisHelper;
-    private final UserOnlineServiceImpl onlineUserService;
+    private final SystemUserOnlineServiceImpl onlineUserService;
     private final TokenProvider tokenProvider;
     private final AppProperties properties;
     private final PasswordEncoder passwordEncoder;

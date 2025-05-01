@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@TableName("sys_dict")
+@TableName("system_dict")
 public class Dict extends MyEntity {
 
     @NotNull(groups = Update.class)

@@ -1,6 +1,6 @@
 package cn.odboy.core.framework.permission;
 
-import cn.odboy.core.api.system.UserOnlineApi;
+import cn.odboy.core.cache.api.SystemUserOnlineApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,11 +10,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     private final TokenProvider tokenProvider;
-    private final UserOnlineApi userOnlineApi;
+    private final SystemUserOnlineApi systemUserOnlineApi;
 
     @Override
     public void configure(HttpSecurity http) {
-        TokenFilter customFilter = new TokenFilter(tokenProvider, userOnlineApi);
+        TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineApi);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

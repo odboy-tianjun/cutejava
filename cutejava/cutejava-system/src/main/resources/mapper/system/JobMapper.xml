@@ -3,13 +3,13 @@
 <mapper namespace="cn.odboy.core.dal.mysql.system.JobMapper">
     <select id="getJobByName" resultType="cn.odboy.core.dal.dataobject.system.Job">
         select id
-        from sys_job
+        from system_job
         where name = #{name}
     </select>
     <select id="queryJobPageByArgs" resultType="cn.odboy.core.dal.dataobject.system.Job">
         select
         *
-        from sys_job
+        from system_job
         <where>
             <if test="criteria.name != null and criteria.name != ''">
                 and name like concat('%', #{criteria.name}, '%')

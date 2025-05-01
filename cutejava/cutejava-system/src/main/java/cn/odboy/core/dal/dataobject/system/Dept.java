@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@TableName("sys_dept")
+@TableName("system_dept")
 public class Dept extends MyEntity {
 
     @NotNull(groups = Update.class)

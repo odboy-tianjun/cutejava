@@ -23,7 +23,7 @@
     </resultMap>
     <select id="queryRoleList" resultType="cn.odboy.core.dal.dataobject.system.Role">
         select role_id as id, name, level
-        from sys_role
+        from system_role
         order by level
     </select>
     <select id="queryRoleListByArgs" resultMap="BaseResultMap">
@@ -35,7 +35,7 @@
         role.role_id as role_role_id, role.name as role_name, role.data_scope as role_data_scope,
         role.level as role_level, role.description as role_description, role.create_by as role_create_by,
         role.update_by as role_update_by, role.create_time as role_create_time, role.update_time as role_update_time
-        from sys_role role
+        from system_role role
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
                 and (
@@ -52,15 +52,15 @@
             limit #{criteria.offset}, #{criteria.size}
         </if>
         ) role
-        left join sys_roles_menus srm on role.role_role_id = srm.role_id
-        left join sys_menu menu on menu.menu_id = srm.menu_id
-        left join sys_roles_depts srd on role.role_role_id = srd.role_id
-        left join sys_dept dept on dept.dept_id = srd.dept_id
+        left join system_roles_menus srm on role.role_role_id = srm.role_id
+        left join system_menu menu on menu.menu_id = srm.menu_id
+        left join system_roles_depts srd on role.role_role_id = srd.role_id
+        left join system_dept dept on dept.dept_id = srd.dept_id
         order by role.role_level
     </select>
     <select id="getRoleCountByArgs" resultType="java.lang.Long">
         select count(*)
-        from sys_role role
+        from system_role role
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
                 and (
@@ -75,7 +75,7 @@
     </select>
     <select id="getRoleByName" resultType="cn.odboy.core.dal.dataobject.system.Role">
         select role_id as id
-        from sys_role
+        from system_role
         where name = #{name}
     </select>
     <select id="getRoleById" resultMap="BaseResultMap">
@@ -93,11 +93,11 @@
                menu.menu_id     as menu_id,
                menu.title       as menu_title,
                menu.permission  as menu_permission
-        from sys_role role
-                 left join sys_roles_menus srm on role.role_id = srm.role_id
-                 left join sys_menu menu on menu.menu_id = srm.menu_id
-                 left join sys_roles_depts srd on role.role_id = srd.role_id
-                 left join sys_dept dept on dept.dept_id = srd.dept_id
+        from system_role role
+                 left join system_roles_menus srm on role.role_id = srm.role_id
+                 left join system_menu menu on menu.menu_id = srm.menu_id
+                 left join system_roles_depts srd on role.role_id = srd.role_id
+                 left join system_dept dept on dept.dept_id = srd.dept_id
         where role.role_id = #{roleId}
     </select>
     <select id="queryRoleListByUserId" resultMap="BaseResultMap">
@@ -115,18 +115,18 @@
                menu.menu_id     as menu_id,
                menu.title       as menu_title,
                menu.permission  as menu_permission
-        from sys_role role
-                 left join sys_roles_menus srm on role.role_id = srm.role_id
-                 left join sys_menu menu on menu.menu_id = srm.menu_id
-                 left join sys_roles_depts srd on role.role_id = srd.role_id
-                 left join sys_dept dept on dept.dept_id = srd.dept_id
-                 left join sys_users_roles ur on role.role_id = ur.role_id
+        from system_role role
+                 left join system_roles_menus srm on role.role_id = srm.role_id
+                 left join system_menu menu on menu.menu_id = srm.menu_id
+                 left join system_roles_depts srd on role.role_id = srd.role_id
+                 left join system_dept dept on dept.dept_id = srd.dept_id
+                 left join system_users_roles ur on role.role_id = ur.role_id
         WHERE role.role_id = ur.role_id
           AND ur.user_id = #{userId}
     </select>
     <select id="getRoleCountByDeptIds" resultType="int">
         select count(*)
-        from sys_role r, sys_roles_depts d
+        from system_role r, system_roles_depts d
         where r.role_id = d.role_id
         and d.dept_id in
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
@@ -135,8 +135,8 @@
     </select>
     <select id="queryRoleListByMenuId" resultType="cn.odboy.core.dal.dataobject.system.Role">
         SELECT role.role_id as id
-        FROM sys_role role,
-             sys_roles_menus rm
+        FROM system_role role,
+             system_roles_menus rm
         WHERE role.role_id = rm.role_id
           AND rm.menu_id = #{menuId}
     </select>

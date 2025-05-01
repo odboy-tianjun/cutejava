@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@TableName("sys_menu")
+@TableName("system_menu")
 public class Menu extends MyEntity {
 
     @NotNull(groups = {Update.class})

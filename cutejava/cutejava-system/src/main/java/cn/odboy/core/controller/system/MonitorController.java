@@ -1,6 +1,6 @@
 package cn.odboy.core.controller.system;
 
-import cn.odboy.core.api.system.MonitorApi;
+import cn.odboy.core.api.system.SystemMonitorApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/monitor")
 public class MonitorController {
 
-    private final MonitorApi serverService;
+    private final SystemMonitorApi serverService;
 
     @PostMapping(value = "/describeServerMonitorInfo")
     @ApiOperation("查询服务监控")

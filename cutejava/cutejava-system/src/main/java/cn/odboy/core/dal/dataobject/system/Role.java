@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@TableName("sys_role")
+@TableName("system_role")
 public class Role extends MyEntity {
 
     @NotNull(groups = {Update.class})

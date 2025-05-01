@@ -25,7 +25,7 @@
         select
         menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count,
         i_frame, create_by, update_by, create_time, update_time
-        from sys_menu
+        from system_menu
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
                 and (
@@ -47,7 +47,7 @@
         order by menu_sort
     </select>
     <select id="queryMenuSetByRoleIdsAndType" resultMap="BaseResultMap">
-        SELECT m.* FROM sys_menu m, sys_roles_menus r
+        SELECT m.* FROM system_menu m, system_roles_menus r
         WHERE m.menu_id = r.menu_id AND r.role_id IN
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
             #{roleId}
@@ -74,7 +74,7 @@
                update_by,
                create_time,
                update_time
-        from sys_menu
+        from system_menu
         where pid is null
         order by menu_sort
     </select>
@@ -97,27 +97,27 @@
                update_by,
                create_time,
                update_time
-        from sys_menu
+        from system_menu
         WHERE pid = #{pid}
         ORDER BY menu_sort
     </select>
     <select id="getMenuByTitle" resultType="cn.odboy.core.dal.dataobject.system.Menu">
         SELECT menu_id id
-        FROM sys_menu
+        FROM system_menu
         WHERE title = #{title}
     </select>
     <select id="getMenuByComponentName" resultType="cn.odboy.core.dal.dataobject.system.Menu">
         SELECT menu_id id
-        FROM sys_menu
+        FROM system_menu
         WHERE name = #{name}
     </select>
     <select id="getMenuCountByPid" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM sys_menu
+        FROM system_menu
         WHERE pid = #{pid}
     </select>
     <update id="updateSubCntByMenuId">
-        update sys_menu
+        update system_menu
         set sub_count = #{count}
         where menu_id = #{menuId}
     </update>

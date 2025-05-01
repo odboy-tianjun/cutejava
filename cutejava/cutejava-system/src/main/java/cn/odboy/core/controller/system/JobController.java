@@ -1,11 +1,11 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.PageResult;
-import cn.odboy.core.api.system.JobApi;
+import cn.odboy.core.api.system.SystemJobApi;
 import cn.odboy.core.service.system.dto.CreateJobRequest;
 import cn.odboy.core.service.system.dto.QueryJobRequest;
 import cn.odboy.core.dal.dataobject.system.Job;
-import cn.odboy.core.service.system.JobService;
+import cn.odboy.core.service.system.SystemJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,14 +29,14 @@ import java.util.Set;
 @Api(tags = "系统：岗位管理")
 @RequestMapping("/api/job")
 public class JobController {
-    private final JobApi jobApi;
-    private final JobService jobService;
+    private final SystemJobApi systemJobApi;
+    private final SystemJobService systemJobService;
 
     @ApiOperation("导出岗位数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('job:list')")
     public void exportJob(HttpServletResponse response, QueryJobRequest criteria) throws IOException {
-        jobService.downloadJobExcel(jobApi.describeJobList(criteria), response);
+        systemJobService.downloadJobExcel(systemJobApi.describeJobList(criteria), response);
     }
 
     @ApiOperation("查询岗位")
@@ -44,14 +44,14 @@ public class JobController {
     @PreAuthorize("@el.check('job:list','user:list')")
     public ResponseEntity<PageResult<Job>> queryJob(QueryJobRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(jobApi.describeJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemJobApi.describeJobPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增岗位")
     @PostMapping(value = "/saveJob")
     @PreAuthorize("@el.check('job:add')")
     public ResponseEntity<Object> saveJob(@Validated @RequestBody CreateJobRequest resources) {
-        jobService.saveJob(resources);
+        systemJobService.saveJob(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -59,7 +59,7 @@ public class JobController {
     @PostMapping(value = "/modifyJobById")
     @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity<Object> modifyJobById(@Validated(Job.Update.class) @RequestBody Job resources) {
-        jobService.modifyJobById(resources);
+        systemJobService.modifyJobById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -68,8 +68,8 @@ public class JobController {
     @PreAuthorize("@el.check('job:del')")
     public ResponseEntity<Object> removeJobByIds(@RequestBody Set<Long> ids) {
         // 验证是否被用户关联
-        jobApi.verifyBindRelationByIds(ids);
-        jobService.removeJobByIds(ids);
+        systemJobApi.verifyBindRelationByIds(ids);
+        systemJobService.removeJobByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
