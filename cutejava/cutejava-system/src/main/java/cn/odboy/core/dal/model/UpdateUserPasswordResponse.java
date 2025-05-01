@@ -1,4 +1,4 @@
-package cn.odboy.core.dal.model.system;
+package cn.odboy.core.dal.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

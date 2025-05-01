@@ -10,7 +10,7 @@ import cn.odboy.core.api.system.SystemUserApi;
 import cn.odboy.core.constant.CaptchaBizEnum;
 import cn.odboy.core.dal.dataobject.system.Dept;
 import cn.odboy.core.dal.dataobject.system.Role;
-import cn.odboy.core.dal.model.system.UpdateUserPasswordResponse;
+import cn.odboy.core.dal.model.UpdateUserPasswordResponse;
 import cn.odboy.core.dal.dataobject.system.User;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;

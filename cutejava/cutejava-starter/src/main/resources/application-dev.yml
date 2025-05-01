@@ -1,3 +1,5 @@
+
+
 server:
   port: 8000
   http2:
@@ -228,3 +230,9 @@ app:
     captchaSetting:
       # 邮箱验证码有效时间/秒
       expiration: 300
+
+## 启用debug
+#debug: true
+#logging:
+#  level:
+#    root: debug
