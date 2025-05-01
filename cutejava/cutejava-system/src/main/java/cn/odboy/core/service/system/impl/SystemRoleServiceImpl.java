@@ -11,7 +11,7 @@ import cn.odboy.core.dal.mysql.system.RoleMapper;
 import cn.odboy.core.dal.mysql.system.RoleMenuMapper;
 import cn.odboy.core.dal.mysql.system.UserMapper;
 import cn.odboy.core.service.system.SystemRoleService;
-import cn.odboy.core.cache.service.SystemUserCacheService;
+import cn.odboy.core.cache.service.SystemUserJwtService;
 import cn.odboy.core.service.system.dto.CreateRoleRequest;
 import cn.odboy.exception.EntityExistException;
 import cn.odboy.redis.RedisHelper;
@@ -36,7 +36,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<RoleMapper, Role> impleme
     private final RoleDeptMapper roleDeptMapper;
     private final RoleMenuMapper roleMenuMapper;
     private final UserMapper userMapper;
-    private final SystemUserCacheService systemUserCacheService;
+    private final SystemUserJwtService systemUserJwtService;
     private final RedisHelper redisHelper;
 
     @Override
@@ -125,7 +125,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<RoleMapper, Role> impleme
     public void delCaches(Long id, List<User> users) {
         users = CollectionUtil.isEmpty(users) ? userMapper.queryUserListByRoleId(id) : users;
         if (CollectionUtil.isNotEmpty(users)) {
-            users.forEach(item -> systemUserCacheService.cleanUserJwtModelCacheByUsername(item.getUsername()));
+            users.forEach(item -> systemUserJwtService.cleanUserJwtModelCacheByUsername(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
             redisHelper.delByKeys(SystemRedisKey.DATA_USER, userIds);
             redisHelper.delByKeys(SystemRedisKey.MENU_USER, userIds);

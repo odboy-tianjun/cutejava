@@ -2,7 +2,7 @@ package cn.odboy.core.cache.api;
 
 import cn.odboy.core.service.system.dto.UserJwtVo;
 
-public interface SystemUserCacheApi {
+public interface SystemUserJwtApi {
     /**
      * 返回用户缓存
      *

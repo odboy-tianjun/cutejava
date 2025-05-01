@@ -3,7 +3,7 @@ package cn.odboy.core.cache.service;
 import cn.odboy.core.service.system.dto.UserJwtVo;
 import org.springframework.scheduling.annotation.Async;
 
-public interface SystemUserCacheService {
+public interface SystemUserJwtService {
     /**
      * 添加缓存到Redis
      *
