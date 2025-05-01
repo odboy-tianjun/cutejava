@@ -1,6 +1,6 @@
 package cn.odboy.core.cache.api.impl;
 
-import cn.odboy.core.cache.api.SystemUserCacheApi;
+import cn.odboy.core.cache.api.SystemUserJwtApi;
 import cn.odboy.core.constant.SystemRedisKey;
 import cn.odboy.core.service.system.dto.UserJwtVo;
 import cn.odboy.redis.RedisHelper;
@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 @Service
 @RequiredArgsConstructor
-public class SystemUserCacheApiImpl implements SystemUserCacheApi {
+public class SystemUserJwtApiImpl implements SystemUserJwtApi {
     @Resource
     private RedisHelper redisHelper;
 

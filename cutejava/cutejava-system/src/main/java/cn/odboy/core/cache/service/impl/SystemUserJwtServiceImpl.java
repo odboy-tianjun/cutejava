@@ -3,7 +3,7 @@ package cn.odboy.core.cache.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import cn.odboy.core.constant.SystemRedisKey;
 import cn.odboy.core.service.system.dto.UserJwtVo;
-import cn.odboy.core.cache.service.SystemUserCacheService;
+import cn.odboy.core.cache.service.SystemUserJwtService;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * 用户缓存管理
  */
 @Service
-public class SystemUserCacheServiceImpl implements SystemUserCacheService {
+public class SystemUserJwtServiceImpl implements SystemUserJwtService {
     @Resource
     private RedisHelper redisHelper;
 

@@ -9,7 +9,7 @@ import cn.odboy.core.dal.mysql.system.UserMapper;
 import cn.odboy.core.dal.mysql.system.UserRoleMapper;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;
-import cn.odboy.core.cache.service.SystemUserCacheService;
+import cn.odboy.core.cache.service.SystemUserJwtService;
 import cn.odboy.core.cache.service.SystemUserOnlineService;
 import cn.odboy.core.service.system.SystemUserService;
 import cn.odboy.exception.BadRequestException;
@@ -44,7 +44,7 @@ public class SystemUserServiceImpl extends ServiceImpl<UserMapper, User> impleme
     private final UserRoleMapper userRoleMapper;
     private final AppProperties properties;
     private final RedisHelper redisHelper;
-    private final SystemUserCacheService systemUserCacheService;
+    private final SystemUserJwtService systemUserJwtService;
     private final SystemUserOnlineService systemUserOnlineService;
 
     @Override
@@ -242,6 +242,6 @@ public class SystemUserServiceImpl extends ServiceImpl<UserMapper, User> impleme
      * @param username /
      */
     private void flushCache(String username) {
-        systemUserCacheService.cleanUserJwtModelCacheByUsername(username);
+        systemUserJwtService.cleanUserJwtModelCacheByUsername(username);
     }
 }
