@@ -4,7 +4,7 @@
     <select id="queryQuartzLogPageByArgs" resultType="cn.odboy.core.dal.dataobject.job.QuartzLog">
         SELECT
         *
-        FROM sys_quartz_log
+        FROM system_quartz_log
         <where>
             <if test="criteria.jobName != null and criteria.jobName != ''">
                 AND job_name LIKE CONCAT('%',#{criteria.jobName},'%')

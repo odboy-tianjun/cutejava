@@ -1,6 +1,6 @@
 package cn.odboy.core.dal.mysql.job;
 
-import cn.odboy.core.service.job.dto.QueryQuartzJobRequest;
+import cn.odboy.core.service.system.dto.QueryQuartzJobRequest;
 import cn.odboy.core.dal.dataobject.job.QuartzLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

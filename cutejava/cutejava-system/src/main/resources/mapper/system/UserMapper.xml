@@ -36,7 +36,7 @@
     </resultMap>
     <select id="getUserCountByArgs" resultType="java.lang.Long">
         select count(*)
-        from sys_user u
+        from system_user u
         <where>
             <if test="criteria.id != null">
                 and u.user_id = #{criteria.id}
@@ -74,8 +74,8 @@
         u.enabled as user_enabled, u.pwd_reset_time as user_pwd_reset_time, u.create_by as user_create_by,
         u.update_by as user_update_by, u.create_time as user_create_time, u.update_time as user_update_time,
         d.dept_id as dept_id, d.name as dept_name
-        from sys_user u
-        left join sys_dept d on u.dept_id = d.dept_id
+        from system_user u
+        left join system_dept d on u.dept_id = d.dept_id
         <where>
             <if test="criteria.id != null">
                 and u.user_id = #{criteria.id}
@@ -105,10 +105,10 @@
             limit #{criteria.offset}, #{criteria.size}
         </if>
         ) u
-        left join sys_users_jobs suj on u.user_user_id = suj.user_id
-        left join sys_job j on suj.job_id = j.id
-        left join sys_users_roles sur on u.user_user_id = sur.user_id
-        left join sys_role r on sur.role_id = r.role_id
+        left join system_users_jobs suj on u.user_user_id = suj.user_id
+        left join system_job j on suj.job_id = j.id
+        left join system_users_roles sur on u.user_user_id = sur.user_id
+        left join system_role r on sur.role_id = r.role_id
         order by u.user_user_id desc
     </select>
     <select id="getUserByUsername" resultMap="BaseResultMap">
@@ -131,44 +131,44 @@
                u.update_time    as user_update_time,
                d.dept_id        as dept_id,
                d.name           as dept_name
-        from sys_user u
-                 left join sys_dept d on u.dept_id = d.dept_id
+        from system_user u
+                 left join system_dept d on u.dept_id = d.dept_id
         where u.username = #{username}
     </select>
     <select id="getUserByEmail" resultType="cn.odboy.core.dal.dataobject.system.User">
         select user_id as id, username
-        from sys_user
+        from system_user
         where email = #{email}
     </select>
     <select id="getUserByPhone" resultType="cn.odboy.core.dal.dataobject.system.User">
         select user_id as id, username
-        from sys_user
+        from system_user
         where phone = #{phone}
     </select>
     <update id="updatePasswordByUsername">
-        update sys_user
+        update system_user
         set password       = #{password},
             pwd_reset_time = #{lastPasswordResetTime}
         where username = #{username}
     </update>
     <update id="updateEmailByUsername">
-        update sys_user
+        update system_user
         set email = #{email}
         where username = #{username}
     </update>
     <select id="queryUserListByRoleId" resultType="cn.odboy.core.dal.dataobject.system.User">
         SELECT u.user_id as id, u.username
-        FROM sys_user u,
-             sys_users_roles r
+        FROM system_user u,
+             system_users_roles r
         WHERE u.user_id = r.user_id
           AND r.role_id = #{roleId}
         group by u.user_id
     </select>
     <select id="queryUserListByDeptId" resultType="cn.odboy.core.dal.dataobject.system.User">
         SELECT u.*
-        FROM sys_user u,
-             sys_users_roles r,
-             sys_roles_depts d
+        FROM system_user u,
+             system_users_roles r,
+             system_roles_depts d
         WHERE u.user_id = r.user_id
           AND r.role_id = d.role_id
           AND d.dept_id = #{deptId}
@@ -176,37 +176,37 @@
     </select>
     <select id="queryUserListByMenuId" resultType="cn.odboy.core.dal.dataobject.system.User">
         SELECT u.user_id as id, u.username
-        FROM sys_user u,
-             sys_users_roles ur,
-             sys_roles_menus rm
+        FROM system_user u,
+             system_users_roles ur,
+             system_roles_menus rm
         WHERE u.user_id = ur.user_id
           AND ur.role_id = rm.role_id
           AND rm.menu_id = #{menuId}
         group by u.user_id
     </select>
     <select id="getUserCountByJobIds" resultType="int">
-        SELECT count(*) FROM sys_user u, sys_users_jobs j
+        SELECT count(*) FROM system_user u, system_users_jobs j
         WHERE u.user_id = j.user_id AND j.job_id IN
         <foreach collection="jobIds" item="jobId" open="(" separator="," close=")">
             #{jobId}
         </foreach>
     </select>
     <select id="getUserCountByDeptIds" resultType="int">
-        SELECT count(*) FROM sys_user u
+        SELECT count(*) FROM system_user u
         WHERE u.dept_id IN
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
             #{deptId}
         </foreach>
     </select>
     <select id="getUserCountByRoleIds" resultType="int">
-        SELECT count(*) FROM sys_user u, sys_users_roles r
+        SELECT count(*) FROM system_user u, system_users_roles r
         WHERE u.user_id = r.user_id AND r.role_id in
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>
     </select>
     <update id="updatePasswordByUserIds">
-        update sys_user set password = #{password}
+        update system_user set password = #{password}
         where user_id in
         <foreach collection="userIds" item="id" open="(" separator="," close=")">
             #{id}

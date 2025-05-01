@@ -10,7 +10,7 @@ import cn.odboy.core.service.tools.dto.SendEmailRequest;
 import cn.odboy.core.dal.dataobject.job.QuartzJob;
 import cn.odboy.core.dal.dataobject.job.QuartzLog;
 import cn.odboy.core.dal.mysql.job.QuartzLogMapper;
-import cn.odboy.core.service.job.QuartzJobService;
+import cn.odboy.core.service.system.SystemQuartzJobService;
 import cn.odboy.core.service.tools.EmailService;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
@@ -37,7 +37,7 @@ public class ExecutionJobBean extends QuartzJobBean {
         QuartzJob quartzJob = (QuartzJob) context.getMergedJobDataMap().get(QuartzJob.JOB_KEY);
         // 获取spring bean
         QuartzLogMapper quartzLogMapper = SpringBeanHolder.getBean(QuartzLogMapper.class);
-        QuartzJobService quartzJobService = SpringBeanHolder.getBean(QuartzJobService.class);
+        SystemQuartzJobService systemQuartzJobService = SpringBeanHolder.getBean(SystemQuartzJobService.class);
         RedisHelper redisHelper = SpringBeanHolder.getBean(RedisHelper.class);
 
         String uuid = quartzJob.getUuid();
@@ -67,7 +67,7 @@ public class ExecutionJobBean extends QuartzJobBean {
             if (StringUtil.isNotBlank(quartzJob.getSubTask())) {
                 String[] tasks = quartzJob.getSubTask().split("[,，]");
                 // 执行子任务
-                quartzJobService.startSubQuartJob(tasks);
+                systemQuartzJobService.startSubQuartJob(tasks);
             }
         } catch (Exception e) {
             if (StringUtil.isNotBlank(uuid)) {
@@ -83,7 +83,7 @@ public class ExecutionJobBean extends QuartzJobBean {
             if (quartzJob.getPauseAfterFailure() != null && quartzJob.getPauseAfterFailure()) {
                 quartzJob.setIsPause(false);
                 // 更新状态
-                quartzJobService.switchQuartzJobStatus(quartzJob);
+                systemQuartzJobService.switchQuartzJobStatus(quartzJob);
             }
             if (quartzJob.getEmail() != null) {
                 EmailService emailService = SpringBeanHolder.getBean(EmailService.class);

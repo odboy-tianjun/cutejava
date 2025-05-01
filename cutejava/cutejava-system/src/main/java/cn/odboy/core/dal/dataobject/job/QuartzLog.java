@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.Timestamp;
 
 @Data
-@TableName("sys_quartz_log")
+@TableName("system_quartz_log")
 @EqualsAndHashCode(callSuper = false)
 public class QuartzLog extends MyObject {
 

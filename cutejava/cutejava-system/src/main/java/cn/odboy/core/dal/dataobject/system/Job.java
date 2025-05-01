@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@TableName("sys_job")
+@TableName("system_job")
 public class Job extends MyEntity {
 
     @NotNull(groups = Update.class)

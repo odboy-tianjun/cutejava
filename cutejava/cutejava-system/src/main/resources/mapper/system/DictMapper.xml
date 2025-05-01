@@ -4,7 +4,7 @@
     <select id="queryDictPageByArgs" resultType="cn.odboy.core.dal.dataobject.system.Dict">
         SELECT
         *
-        from sys_dict d
+        from system_dict d
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
                 and (

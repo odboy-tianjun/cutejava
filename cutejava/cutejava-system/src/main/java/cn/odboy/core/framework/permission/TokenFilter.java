@@ -2,7 +2,7 @@ package cn.odboy.core.framework.permission;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.core.api.system.UserOnlineApi;
+import cn.odboy.core.cache.api.SystemUserOnlineApi;
 import cn.odboy.core.service.system.dto.UserOnlineVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -19,14 +19,14 @@ import java.io.IOException;
 @Slf4j
 public class TokenFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
-    private final UserOnlineApi userOnlineApi;
+    private final SystemUserOnlineApi systemUserOnlineApi;
 
     /**
      * @param tokenProvider     Token
-     * @param userOnlineApi 用户在线
+     * @param systemUserOnlineApi 用户在线
      */
-    public TokenFilter(TokenProvider tokenProvider, UserOnlineApi userOnlineApi) {
-        this.userOnlineApi = userOnlineApi;
+    public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineApi systemUserOnlineApi) {
+        this.systemUserOnlineApi = systemUserOnlineApi;
         this.tokenProvider = tokenProvider;
     }
 
@@ -38,7 +38,7 @@ public class TokenFilter extends GenericFilterBean {
         if (StrUtil.isNotBlank(token)) {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
-            UserOnlineVo userOnlineVo = userOnlineApi.describeUserOnlineModelByKey(loginKey);
+            UserOnlineVo userOnlineVo = systemUserOnlineApi.describeUserOnlineModelByKey(loginKey);
             // 判断用户在线信息是否为空
             if (userOnlineVo != null) {
                 // Token 续期判断

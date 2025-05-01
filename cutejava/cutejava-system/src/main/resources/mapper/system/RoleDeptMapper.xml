@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.odboy.core.dal.mysql.system.RoleDeptMapper">
     <insert id="insertBatchWithRoleId">
-        insert into sys_roles_depts (role_id, dept_id)
+        insert into system_roles_depts (role_id, dept_id)
         values
         <foreach collection="depts" item="item" open="(" separator="),(" close=")">
             #{roleId}, #{item.id}
@@ -11,12 +11,12 @@
 
     <delete id="deleteByRoleId">
         delete
-        from sys_roles_depts
+        from system_roles_depts
         where role_id = #{roleId}
     </delete>
 
     <delete id="deleteByRoleIds">
-        delete from sys_roles_depts
+        delete from system_roles_depts
         where role_id in
         <foreach collection="roleIds" item="id" open="(" separator="," close=")">
             #{id}

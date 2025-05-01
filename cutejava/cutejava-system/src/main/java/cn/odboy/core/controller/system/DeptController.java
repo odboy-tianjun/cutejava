@@ -1,11 +1,11 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.PageResult;
-import cn.odboy.core.api.system.DeptApi;
+import cn.odboy.core.api.system.SystemDeptApi;
 import cn.odboy.core.service.system.dto.CreateDeptRequest;
 import cn.odboy.core.service.system.dto.QueryDeptRequest;
 import cn.odboy.core.dal.dataobject.system.Dept;
-import cn.odboy.core.service.system.DeptService;
+import cn.odboy.core.service.system.SystemDeptService;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,21 +33,21 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class DeptController {
-    private final DeptApi deptApi;
-    private final DeptService deptService;
+    private final SystemDeptApi systemDeptApi;
+    private final SystemDeptService systemDeptService;
 
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, QueryDeptRequest criteria) throws Exception {
-        deptService.downloadDeptExcel(deptApi.describeDeptList(criteria, false), response);
+        systemDeptService.downloadDeptExcel(systemDeptApi.describeDeptList(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<PageResult<Dept>> describeDeptPage(QueryDeptRequest criteria) throws Exception {
-        List<Dept> depts = deptApi.describeDeptList(criteria, true);
+        List<Dept> depts = systemDeptApi.describeDeptList(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }
 
@@ -57,8 +57,8 @@ public class DeptController {
     public ResponseEntity<Object> describeDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<Dept> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
-            Dept dept = deptApi.describeDeptById(id);
-            List<Dept> depts = deptApi.describeSuperiorDeptListByPid(dept, new ArrayList<>());
+            Dept dept = systemDeptApi.describeDeptById(id);
+            List<Dept> depts = systemDeptApi.describeSuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
                 for (Dept data : depts) {
                     if (data.getId().equals(dept.getPid())) {
@@ -70,14 +70,14 @@ public class DeptController {
             }
             deptSet.addAll(depts);
         }
-        return new ResponseEntity<>(deptApi.buildDeptTree(new ArrayList<>(deptSet)), HttpStatus.OK);
+        return new ResponseEntity<>(systemDeptApi.buildDeptTree(new ArrayList<>(deptSet)), HttpStatus.OK);
     }
 
     @ApiOperation("新增部门")
     @PostMapping(value = "/saveDept")
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<Object> saveDept(@Validated @RequestBody CreateDeptRequest resources) {
-        deptService.saveDept(resources);
+        systemDeptService.saveDept(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -85,7 +85,7 @@ public class DeptController {
     @PostMapping(value = "/modifyDept")
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Object> modifyDept(@Validated(Dept.Update.class) @RequestBody Dept resources) {
-        deptService.modifyDept(resources);
+        systemDeptService.modifyDept(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -95,10 +95,10 @@ public class DeptController {
     public ResponseEntity<Object> removeDeptByIds(@RequestBody Set<Long> ids) {
         Set<Dept> depts = new HashSet<>();
         // 获取部门，和其所有子部门
-        deptApi.traverseDeptByIdWithPids(ids, depts);
+        systemDeptApi.traverseDeptByIdWithPids(ids, depts);
         // 验证是否被角色或用户关联
-        deptApi.verifyBindRelationByIds(depts);
-        deptService.removeDeptByIds(depts);
+        systemDeptApi.verifyBindRelationByIds(depts);
+        systemDeptService.removeDeptByIds(depts);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

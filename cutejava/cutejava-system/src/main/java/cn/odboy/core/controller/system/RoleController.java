@@ -2,12 +2,12 @@ package cn.odboy.core.controller.system;
 
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.PageResult;
-import cn.odboy.core.api.system.RoleApi;
+import cn.odboy.core.api.system.SystemRoleApi;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.service.system.dto.CreateRoleRequest;
 import cn.odboy.core.service.system.dto.QueryRoleRequest;
 import cn.odboy.core.dal.dataobject.system.Role;
-import cn.odboy.core.service.system.RoleService;
+import cn.odboy.core.service.system.SystemRoleService;
 import cn.odboy.exception.BadRequestException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -35,28 +35,28 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：角色管理")
 @RequestMapping("/api/roles")
 public class RoleController {
-    private final RoleApi roleApi;
-    private final RoleService roleService;
+    private final SystemRoleApi systemRoleApi;
+    private final SystemRoleService systemRoleService;
 
     @ApiOperation("获取单个role")
     @PostMapping(value = "/describeRoleById")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<Role> describeRoleById(@RequestBody Role args) {
-        return new ResponseEntity<>(roleApi.describeRoleById(args.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleApi.describeRoleById(args.getId()), HttpStatus.OK);
     }
 
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, QueryRoleRequest criteria) throws IOException {
-        roleService.downloadRoleExcel(roleApi.describeRoleList(criteria), response);
+        systemRoleService.downloadRoleExcel(systemRoleApi.describeRoleList(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")
     @PostMapping(value = "/describeRoleList")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<Role>> describeRoleList() {
-        return new ResponseEntity<>(roleApi.describeRoleList(), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleApi.describeRoleList(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
@@ -64,7 +64,7 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<PageResult<Role>> describeRolePage(QueryRoleRequest criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(roleApi.describeRolePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleApi.describeRolePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
@@ -78,7 +78,7 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:add')")
     public ResponseEntity<Object> saveRole(@Validated @RequestBody CreateRoleRequest resources) {
         checkRoleLevels(resources.getLevel());
-        roleService.saveRole(resources);
+        systemRoleService.saveRole(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -87,7 +87,7 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> modifyRoleById(@Validated(Role.Update.class) @RequestBody Role resources) {
         checkRoleLevels(resources.getLevel());
-        roleService.modifyRoleById(resources);
+        systemRoleService.modifyRoleById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -95,9 +95,9 @@ public class RoleController {
     @PostMapping(value = "/modifyBindMenuById")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> modifyBindMenuById(@RequestBody Role resources) {
-        Role role = roleService.getById(resources.getId());
+        Role role = systemRoleService.getById(resources.getId());
         checkRoleLevels(role.getLevel());
-        roleService.modifyBindMenuById(resources);
+        systemRoleService.modifyBindMenuById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -106,12 +106,12 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:del')")
     public ResponseEntity<Object> removeRoleByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Role role = roleService.getById(id);
+            Role role = systemRoleService.getById(id);
             checkRoleLevels(role.getLevel());
         }
         // 验证是否被用户关联
-        roleApi.verifyBindRelationByIds(ids);
-        roleService.removeRoleByIds(ids);
+        systemRoleApi.verifyBindRelationByIds(ids);
+        systemRoleService.removeRoleByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -121,7 +121,7 @@ public class RoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = roleApi.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
+        List<Integer> levels = systemRoleApi.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

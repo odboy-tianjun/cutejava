@@ -4,7 +4,7 @@
     <select id="queryQuartzJobPageByArgs" resultType="cn.odboy.core.dal.dataobject.job.QuartzJob">
         SELECT
         *
-        FROM sys_quartz_job
+        FROM system_quartz_job
         <where>
             <if test="criteria.jobName != null and criteria.jobName != ''">
                 AND job_name LIKE CONCAT('%',#{criteria.jobName},'%')
@@ -17,7 +17,7 @@
     </select>
     <select id="queryActiveQuartzJobList" resultType="cn.odboy.core.dal.dataobject.job.QuartzJob">
         SELECT *
-        FROM sys_quartz_job
+        FROM system_quartz_job
         WHERE is_pause = 0
     </select>
 </mapper>

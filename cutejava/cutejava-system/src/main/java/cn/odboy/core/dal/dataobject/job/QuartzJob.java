@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@TableName("sys_quartz_job")
+@TableName("system_quartz_job")
 public class QuartzJob extends MyEntity {
 
     public static final String JOB_KEY = "JOB_KEY";

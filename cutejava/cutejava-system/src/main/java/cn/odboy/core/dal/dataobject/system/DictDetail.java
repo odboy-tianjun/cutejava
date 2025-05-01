@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@TableName("sys_dict_detail")
+@TableName("system_dict_detail")
 public class DictDetail extends MyEntity {
 
     @NotNull(groups = Update.class)

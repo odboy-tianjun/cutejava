@@ -1,9 +1,9 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.PageResult;
-import cn.odboy.core.api.system.UserOnlineApi;
+import cn.odboy.core.cache.api.SystemUserOnlineApi;
 import cn.odboy.core.service.system.dto.UserOnlineVo;
-import cn.odboy.core.service.system.UserOnlineService;
+import cn.odboy.core.cache.service.SystemUserOnlineService;
 import cn.odboy.util.DesEncryptUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,21 +27,21 @@ import java.util.Set;
 @RequestMapping("/auth/online")
 @Api(tags = "系统：在线用户管理")
 public class OnlineController {
-    private final UserOnlineApi userOnlineApi;
-    private final UserOnlineService userOnlineService;
+    private final SystemUserOnlineApi systemUserOnlineApi;
+    private final SystemUserOnlineService systemUserOnlineService;
 
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
     public ResponseEntity<PageResult<UserOnlineVo>> queryOnlineUser(String username, Pageable pageable) {
-        return new ResponseEntity<>(userOnlineApi.describeUserOnlineModelPage(username, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(systemUserOnlineApi.describeUserOnlineModelPage(username, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        userOnlineService.downloadUserOnlineModelExcel(userOnlineApi.describeUserOnlineModelListByUsername(username), response);
+        systemUserOnlineService.downloadUserOnlineModelExcel(systemUserOnlineApi.describeUserOnlineModelListByUsername(username), response);
     }
 
     @ApiOperation("踢出用户")
@@ -51,7 +51,7 @@ public class OnlineController {
         for (String token : keys) {
             // 解密Key
             token = DesEncryptUtil.desDecrypt(token);
-            userOnlineService.logoutByToken(token);
+            systemUserOnlineService.logoutByToken(token);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
