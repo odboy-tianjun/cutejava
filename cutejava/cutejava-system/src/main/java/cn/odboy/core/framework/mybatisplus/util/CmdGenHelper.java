@@ -154,7 +154,7 @@ public class CmdGenHelper {
                 .entity("domain")
                 .service("service")
                 .mapper("mapper")
-                .serviceImpl("service.service")
+                .serviceImpl("service.impl")
                 .controller("rest")
                 .pathInfo(Collections.singletonMap(OutputFile.xml, (System.getProperty("os.name").toLowerCase().contains("win") ? "C:\\CodeGen\\resources\\mapper" : "/tmp/CodeGen/resources/mapper")));
     }
