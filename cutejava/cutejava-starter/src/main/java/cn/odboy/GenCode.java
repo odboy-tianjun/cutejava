@@ -13,6 +13,7 @@ public class GenCode {
     public static void main(String[] args) {
         CmdGenHelper generator = new CmdGenHelper();
         generator.setDatabaseUrl(String.format("jdbc:mysql://%s:%s/%s", "localhost", 3306, "cutejava20250321"));
+        generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
         generator.setDatabaseUsername("root");
         generator.setDatabasePassword("123456");
         genCareer(generator);
