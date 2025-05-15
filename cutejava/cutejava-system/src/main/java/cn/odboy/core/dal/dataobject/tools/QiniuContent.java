@@ -46,7 +46,5 @@ public class QiniuContent extends MyObject {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "创建或更新时间")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 }
