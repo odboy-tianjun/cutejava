@@ -31,6 +31,7 @@ public interface SystemUserService extends IService<User> {
      * @param ids /
      */
     void removeUserByIds(Set<Long> ids);
+
     /**
      * 修改密码
      *

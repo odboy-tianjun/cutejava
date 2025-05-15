@@ -24,6 +24,7 @@ public interface SystemMenuApi {
      * @return /
      */
     Menu describeMenuById(long id);
+
     /**
      * 获取所有子节点，包含自身ID
      *
@@ -48,6 +49,7 @@ public interface SystemMenuApi {
      * @return /
      */
     List<MenuResponse> buildMenuResponse(List<Menu> menus);
+
     /**
      * 懒加载菜单数据
      *

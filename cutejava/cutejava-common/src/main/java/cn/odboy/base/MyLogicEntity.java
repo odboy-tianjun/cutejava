@@ -1,6 +1,5 @@
 package cn.odboy.base;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -10,7 +9,6 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.format.annotation.DateTimeFormat;
 import java.lang.reflect.Field;
 import java.util.Date;
 

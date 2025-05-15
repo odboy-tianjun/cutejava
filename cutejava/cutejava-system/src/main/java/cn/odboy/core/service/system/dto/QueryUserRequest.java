@@ -1,11 +1,9 @@
 package cn.odboy.core.service.system.dto;
 
 import cn.odboy.base.MyObject;
-import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;

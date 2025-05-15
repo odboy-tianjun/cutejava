@@ -1,11 +1,11 @@
 package cn.odboy.core.cache.service.impl;
 
-import cn.odboy.core.framework.properties.AppProperties;
+import cn.odboy.core.cache.service.SystemUserOnlineService;
 import cn.odboy.core.constant.SystemRedisKey;
+import cn.odboy.core.framework.permission.TokenProvider;
+import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.core.service.system.dto.UserJwtVo;
 import cn.odboy.core.service.system.dto.UserOnlineVo;
-import cn.odboy.core.framework.permission.TokenProvider;
-import cn.odboy.core.cache.service.SystemUserOnlineService;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.BrowserUtil;
 import cn.odboy.util.DesEncryptUtil;

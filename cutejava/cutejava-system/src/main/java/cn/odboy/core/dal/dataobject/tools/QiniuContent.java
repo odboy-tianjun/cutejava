@@ -1,7 +1,6 @@
 package cn.odboy.core.dal.dataobject.tools;
 
 import cn.odboy.base.MyObject;
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,7 +9,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**

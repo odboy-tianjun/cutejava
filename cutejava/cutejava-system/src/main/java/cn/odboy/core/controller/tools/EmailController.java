@@ -1,9 +1,9 @@
 package cn.odboy.core.controller.tools;
 
 import cn.odboy.core.api.tools.EmailApi;
-import cn.odboy.core.service.tools.dto.SendEmailRequest;
 import cn.odboy.core.dal.dataobject.tools.EmailConfig;
 import cn.odboy.core.service.tools.EmailService;
+import cn.odboy.core.service.tools.dto.SendEmailRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

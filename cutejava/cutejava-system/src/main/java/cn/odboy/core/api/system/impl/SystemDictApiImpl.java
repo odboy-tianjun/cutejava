@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SystemDictApiImpl implements SystemDictApi {
     private final DictMapper dictMapper;
+
     @Override
     public PageResult<Dict> describeDictPage(QueryDictRequest criteria, Page<Object> page) {
         IPage<Dict> dicts = dictMapper.queryDictPageByArgs(criteria, page);

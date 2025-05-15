@@ -106,6 +106,7 @@ public class SystemDeptApiImpl implements SystemDeptApi {
     public Set<Dept> describeDeptByRoleId(Long id) {
         return deptMapper.queryDeptSetByRoleId(id);
     }
+
     @Override
     public Set<Dept> describeRelationDeptSet(List<Dept> menuList, Set<Dept> deptSet) {
         for (Dept dept : menuList) {

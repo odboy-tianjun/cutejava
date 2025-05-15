@@ -20,10 +20,12 @@ import java.util.concurrent.TimeUnit;
 public class SystemDictDetailApiImpl implements SystemDictDetailApi {
     private final DictDetailMapper dictDetailMapper;
     private final RedisHelper redisHelper;
+
     @Override
     public PageResult<DictDetail> describeDictDetailPage(QueryDictDetailRequest criteria, Page<Object> page) {
         return PageUtil.toPage(dictDetailMapper.queryDictDetailPageByArgs(criteria, page));
     }
+
     @Override
     public List<DictDetail> describeDictDetailListByName(String name) {
         String key = SystemRedisKey.DICT_NAME + name;

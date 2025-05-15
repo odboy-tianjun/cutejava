@@ -28,7 +28,6 @@ public class SystemJobServiceImpl extends ServiceImpl<JobMapper, Job> implements
     private final RedisHelper redisHelper;
 
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveJob(CreateJobRequest resources) {

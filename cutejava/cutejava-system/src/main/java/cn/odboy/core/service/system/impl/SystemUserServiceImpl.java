@@ -1,5 +1,7 @@
 package cn.odboy.core.service.system.impl;
 
+import cn.odboy.core.cache.service.SystemUserJwtService;
+import cn.odboy.core.cache.service.SystemUserOnlineService;
 import cn.odboy.core.constant.SystemRedisKey;
 import cn.odboy.core.dal.dataobject.system.Job;
 import cn.odboy.core.dal.dataobject.system.Role;
@@ -9,8 +11,6 @@ import cn.odboy.core.dal.mysql.system.UserMapper;
 import cn.odboy.core.dal.mysql.system.UserRoleMapper;
 import cn.odboy.core.framework.permission.util.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;
-import cn.odboy.core.cache.service.SystemUserJwtService;
-import cn.odboy.core.cache.service.SystemUserOnlineService;
 import cn.odboy.core.service.system.SystemUserService;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;

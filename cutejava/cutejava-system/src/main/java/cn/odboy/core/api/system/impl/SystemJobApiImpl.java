@@ -23,6 +23,7 @@ public class SystemJobApiImpl implements SystemJobApi {
     private final JobMapper jobMapper;
     private final UserMapper userMapper;
     private final RedisHelper redisHelper;
+
     @Override
     public PageResult<Job> describeJobPage(QueryJobRequest criteria, Page<Object> page) {
         return PageUtil.toPage(jobMapper.queryJobPageByArgs(criteria, page));

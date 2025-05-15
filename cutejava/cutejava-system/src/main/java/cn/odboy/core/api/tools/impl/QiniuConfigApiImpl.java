@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @CacheConfig(cacheNames = "qiNiu")
 public class QiniuConfigApiImpl implements QiniuConfigApi {
     private final QiniuConfigMapper qiniuConfigMapper;
+
     @Override
     @Cacheable(key = "'config'")
     public QiniuConfig describeQiniuConfig() {
