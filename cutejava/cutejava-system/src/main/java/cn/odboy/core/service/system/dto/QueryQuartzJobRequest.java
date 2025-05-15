@@ -1,8 +1,10 @@
 package cn.odboy.core.service.system.dto;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import java.sql.Timestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -16,7 +18,9 @@ public class QueryQuartzJobRequest {
     private Boolean isSuccess;
 
     @ApiModelProperty(value = "创建时间")
-    private List<Timestamp> createTime;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private List<Date> createTime;
 
     @ApiModelProperty(value = "页码", example = "1")
     private Integer page = 1;
