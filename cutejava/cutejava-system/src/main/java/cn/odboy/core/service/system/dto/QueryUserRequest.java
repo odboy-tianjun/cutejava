@@ -1,10 +1,12 @@
 package cn.odboy.core.service.system.dto;
 
 import cn.odboy.base.MyObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.sql.Timestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +31,9 @@ public class QueryUserRequest extends MyObject {
     private Long deptId;
 
     @ApiModelProperty(value = "创建时间")
-    private List<Timestamp> createTime;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private List<Date> createTime;
 
     @ApiModelProperty(value = "页码", example = "1")
     private Integer page = 1;

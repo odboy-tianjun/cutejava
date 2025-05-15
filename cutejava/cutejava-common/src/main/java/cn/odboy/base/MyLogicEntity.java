@@ -13,7 +13,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.lang.reflect.Field;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 /**
  * 逻辑删除通用模型

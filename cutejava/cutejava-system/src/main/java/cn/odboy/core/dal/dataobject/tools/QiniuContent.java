@@ -1,6 +1,7 @@
 package cn.odboy.core.dal.dataobject.tools;
 
 import cn.odboy.base.MyObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,7 +10,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.sql.Timestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 /**
  * 上传成功后，存储结果
@@ -44,5 +46,7 @@ public class QiniuContent extends MyObject {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "创建或更新时间")
-    private Timestamp updateTime;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 }
