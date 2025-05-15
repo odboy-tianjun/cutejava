@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "email")
 public class EmailApiImpl implements EmailApi {
-private final EmailConfigMapper emailConfigMapper;
+    private final EmailConfigMapper emailConfigMapper;
+
     @Override
     @Cacheable(key = "'config'")
     public EmailConfig describeEmailConfig() {

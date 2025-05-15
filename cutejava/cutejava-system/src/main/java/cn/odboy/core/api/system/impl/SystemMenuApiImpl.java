@@ -7,8 +7,8 @@ import cn.odboy.core.api.system.SystemMenuApi;
 import cn.odboy.core.api.system.SystemRoleApi;
 import cn.odboy.core.constant.SystemRedisKey;
 import cn.odboy.core.dal.dataobject.system.Menu;
-import cn.odboy.core.dal.model.MenuResponse;
 import cn.odboy.core.dal.dataobject.system.Role;
+import cn.odboy.core.dal.model.MenuResponse;
 import cn.odboy.core.dal.mysql.system.MenuMapper;
 import cn.odboy.core.service.system.SystemRoleService;
 import cn.odboy.core.service.system.dto.MenuMetaVo;
@@ -86,6 +86,7 @@ public class SystemMenuApiImpl implements SystemMenuApi {
         }
         return menus;
     }
+
     @Override
     public Set<Menu> describeChildMenuSet(List<Menu> menuList, Set<Menu> menuSet) {
         for (Menu menu : menuList) {

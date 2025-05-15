@@ -25,6 +25,7 @@ public interface SystemDeptApi {
      * @return /
      */
     Dept describeDeptById(Long id);
+
     /**
      * 根据PID查询
      *
@@ -40,6 +41,7 @@ public interface SystemDeptApi {
      * @return /
      */
     Set<Dept> describeDeptByRoleId(Long id);
+
     /**
      * 获取部门下所有关联的部门
      *

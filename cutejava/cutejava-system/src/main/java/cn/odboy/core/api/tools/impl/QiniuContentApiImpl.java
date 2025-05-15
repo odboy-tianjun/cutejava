@@ -17,6 +17,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "qiNiu")
 public class QiniuContentApiImpl implements QiniuContentApi {
     private final QiniuContentMapper qiniuContentMapper;
+
     @Override
     public PageResult<QiniuContent> describeQiniuContentPage(QueryQiniuRequest criteria, Page<Object> page) {
         return PageUtil.toPage(qiniuContentMapper.queryQiniuContentPageByArgs(criteria, page));

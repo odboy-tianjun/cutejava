@@ -22,7 +22,7 @@ public class TokenFilter extends GenericFilterBean {
     private final SystemUserOnlineApi systemUserOnlineApi;
 
     /**
-     * @param tokenProvider     Token
+     * @param tokenProvider       Token
      * @param systemUserOnlineApi 用户在线
      */
     public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineApi systemUserOnlineApi) {

@@ -21,7 +21,6 @@ public class SystemDictDetailServiceImpl extends ServiceImpl<DictDetailMapper, D
     private final RedisHelper redisHelper;
 
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveDictDetail(CreateDictDetailRequest resources) {
@@ -42,7 +41,6 @@ public class SystemDictDetailServiceImpl extends ServiceImpl<DictDetailMapper, D
         // 清理缓存
         delCaches(dictDetail);
     }
-
 
 
     @Override

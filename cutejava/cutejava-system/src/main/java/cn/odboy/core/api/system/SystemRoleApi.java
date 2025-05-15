@@ -67,6 +67,7 @@ public interface SystemRoleApi {
      * @return 权限信息
      */
     List<RoleCodeVo> buildUserRolePermissions(User user);
+
     /**
      * 验证是否被用户关联
      *
