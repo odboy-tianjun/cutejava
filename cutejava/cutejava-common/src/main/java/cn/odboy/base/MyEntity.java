@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import java.lang.reflect.Field;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 
@@ -32,12 +33,12 @@ public class MyEntity extends MyObject {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp createTime;
+    private Date createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp updateTime;
+    private Date updateTime;
 
     /* 分组校验 */
     public @interface Create {
