@@ -1,4 +1,4 @@
-package cn.odboy.core.framework.web;
+package cn.odboy.core.framework.web.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

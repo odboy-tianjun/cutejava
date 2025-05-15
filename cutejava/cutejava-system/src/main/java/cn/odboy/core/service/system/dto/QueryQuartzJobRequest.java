@@ -18,8 +18,6 @@ public class QueryQuartzJobRequest {
     private Boolean isSuccess;
 
     @ApiModelProperty(value = "创建时间")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private List<Date> createTime;
 
     @ApiModelProperty(value = "页码", example = "1")

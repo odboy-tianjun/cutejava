@@ -15,8 +15,6 @@ public class QueryMenuRequest {
     private String blurry;
 
     @ApiModelProperty(value = "创建时间")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private List<Date> createTime;
 
     @ApiModelProperty(value = "PID为空查询")
