@@ -1,8 +1,9 @@
 package cn.odboy.core.framework.permission.config;
 
-import cn.odboy.core.framework.permission.util.SecurityHelper;
+import cn.odboy.core.framework.permission.core.SecurityHelper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,19 +1,20 @@
 package cn.odboy;
 
 import cn.odboy.annotation.AnonymousGetMapping;
-import cn.odboy.context.BootApplication;
+import cn.odboy.context.CsBootApplication;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.net.UnknownHostException;
 
 @Slf4j
 @RestController
 @Api(hidden = true)
 @SpringBootApplication
-public class AppRun extends BootApplication {
+public class AppRun extends CsBootApplication {
 
     public static void main(String[] args) throws UnknownHostException {
         SpringApplication springApplication = new SpringApplication(AppRun.class);

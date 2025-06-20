@@ -1,15 +1,16 @@
 package cn.odboy.core.service.system;
 
-import cn.odboy.core.dal.dataobject.system.Role;
-import cn.odboy.core.service.system.dto.CreateRoleRequest;
+import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
+import cn.odboy.core.dal.model.system.CreateSystemRoleArgs;
 import com.baomidou.mybatisplus.extension.service.IService;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 
-public interface SystemRoleService extends IService<Role> {
+public interface SystemRoleService extends IService<SystemRoleTb> {
 
 
     /**
@@ -17,21 +18,21 @@ public interface SystemRoleService extends IService<Role> {
      *
      * @param resources /
      */
-    void saveRole(CreateRoleRequest resources);
+    void saveRole(CreateSystemRoleArgs resources);
 
     /**
      * 编辑
      *
      * @param resources /
      */
-    void modifyRoleById(Role resources);
+    void modifyRoleById(SystemRoleTb resources);
 
     /**
      * 修改绑定的菜单
      *
      * @param resources /
      */
-    void modifyBindMenuById(Role resources);
+    void modifyBindMenuById(SystemRoleTb resources);
 
     /**
      * 删除
@@ -48,6 +49,6 @@ public interface SystemRoleService extends IService<Role> {
      * @param response /
      * @throws IOException /
      */
-    void downloadRoleExcel(List<Role> roles, HttpServletResponse response) throws IOException;
+    void downloadRoleExcel(List<SystemRoleTb> roles, HttpServletResponse response) throws IOException;
 
 }

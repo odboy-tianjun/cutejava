@@ -1,21 +1,22 @@
 package cn.odboy.core.service.system;
 
-import cn.odboy.core.dal.dataobject.system.User;
+import cn.odboy.core.dal.dataobject.system.SystemUserTb;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface SystemUserService extends IService<User> {
+public interface SystemUserService extends IService<SystemUserTb> {
     /**
      * 新增用户
      *
      * @param resources /
      */
-    void saveUser(User resources);
+    void saveUser(SystemUserTb resources);
 
     /**
      * 编辑用户
@@ -23,7 +24,7 @@ public interface SystemUserService extends IService<User> {
      * @param resources /
      * @throws Exception /
      */
-    void modifyUserById(User resources) throws Exception;
+    void modifyUserById(SystemUserTb resources) throws Exception;
 
     /**
      * 删除用户
@@ -63,14 +64,14 @@ public interface SystemUserService extends IService<User> {
      * @param response /
      * @throws IOException /
      */
-    void downloadUserExcel(List<User> queryAll, HttpServletResponse response) throws IOException;
+    void downloadUserExcel(List<SystemUserTb> queryAll, HttpServletResponse response) throws IOException;
 
     /**
      * 用户自助修改资料
      *
      * @param resources /
      */
-    void modifyUserCenterInfoById(User resources);
+    void modifyUserCenterInfoById(SystemUserTb resources);
 
     /**
      * 重置密码

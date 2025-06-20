@@ -1,14 +1,10 @@
 package cn.odboy.websocket.context;
 
-import cn.odboy.websocket.dto.WebSocketMessageDto;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -35,7 +31,7 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam("sid") String sid) {
         this.session = session;
         this.sid = sid;
-        WebSocketClientManager.addClient(sid, this);
+        CsWebSocketClientManager.addClient(sid, this);
     }
 
     /**
@@ -43,7 +39,7 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        WebSocketClientManager.removeClient(this.sid);
+        CsWebSocketClientManager.removeClient(this.sid);
     }
 
     /**
@@ -63,7 +59,7 @@ public class WebSocketServer {
      * @param message /
      */
     private static void sendToAll(String message) {
-        for (WebSocketServer item : WebSocketClientManager.getAllClient()) {
+        for (WebSocketServer item : CsWebSocketClientManager.getAllClient()) {
             try {
                 item.innerSendMessage(message);
             } catch (IOException e) {
@@ -88,14 +84,14 @@ public class WebSocketServer {
     /**
      * 群发自定义消息
      */
-    public static void sendMessage(WebSocketMessageDto webSocketMessageDto, @PathParam("sid") String sid) throws IOException {
-        String message = JSON.toJSONString(webSocketMessageDto);
+    public static void sendMessage(CsWebSocketMessage webSocketMessage, @PathParam("sid") String sid) throws IOException {
+        String message = JSON.toJSONString(webSocketMessage);
         log.info("推送消息到{}，推送内容:{}", sid, message);
         try {
             if (sid == null) {
                 sendToAll(message);
             } else {
-                WebSocketClientManager.getClientBySid(sid).innerSendMessage(message);
+                CsWebSocketClientManager.getClientBySid(sid).innerSendMessage(message);
             }
         } catch (IOException ignored) {
         }

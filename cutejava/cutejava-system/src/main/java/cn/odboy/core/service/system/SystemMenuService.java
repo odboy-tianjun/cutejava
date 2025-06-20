@@ -1,14 +1,15 @@
 package cn.odboy.core.service.system;
 
-import cn.odboy.core.dal.dataobject.system.Menu;
+import cn.odboy.core.dal.dataobject.system.SystemMenuTb;
 import com.baomidou.mybatisplus.extension.service.IService;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 
-public interface SystemMenuService extends IService<Menu> {
+public interface SystemMenuService extends IService<SystemMenuTb> {
 
 
     /**
@@ -16,14 +17,14 @@ public interface SystemMenuService extends IService<Menu> {
      *
      * @param resources /
      */
-    void saveMenu(Menu resources);
+    void saveMenu(SystemMenuTb resources);
 
     /**
      * 编辑
      *
      * @param resources /
      */
-    void modifyMenuById(Menu resources);
+    void modifyMenuById(SystemMenuTb resources);
 
 
     /**
@@ -31,7 +32,7 @@ public interface SystemMenuService extends IService<Menu> {
      *
      * @param menuSet /
      */
-    void removeMenuByIds(Set<Menu> menuSet);
+    void removeMenuByIds(Set<SystemMenuTb> menuSet);
 
     /**
      * 导出
@@ -40,7 +41,7 @@ public interface SystemMenuService extends IService<Menu> {
      * @param response /
      * @throws IOException /
      */
-    void downloadMenuExcel(List<Menu> menus, HttpServletResponse response) throws IOException;
+    void downloadMenuExcel(List<SystemMenuTb> menus, HttpServletResponse response) throws IOException;
 
 
 }

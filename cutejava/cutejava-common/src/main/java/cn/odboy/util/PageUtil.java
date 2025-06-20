@@ -1,14 +1,18 @@
 package cn.odboy.util;
 
-import cn.odboy.base.PageResult;
+import cn.odboy.base.CsResultVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * 分页工具
+ *
+ * @author odboy
  */
 public final class PageUtil extends cn.hutool.core.util.PageUtil {
 
@@ -31,32 +35,39 @@ public final class PageUtil extends cn.hutool.core.util.PageUtil {
     /**
      * Page 数据处理
      */
-    public static <T> PageResult<T> toPage(IPage<T> page) {
-        return new PageResult<>(page.getRecords(), page.getTotal());
+    public static <T> CsResultVo<List<T>> toPage(IPage<T> page) {
+        return new CsResultVo<>(page.getRecords(), page.getTotal());
     }
 
     /**
      * 自定义分页
      */
-    public static <T> PageResult<T> toPage(List<T> list) {
-        return new PageResult<>(list, list.size());
+    public static <T> CsResultVo<List<T>> toPage(List<T> list) {
+        return new CsResultVo<>(list, list.size());
     }
 
     /**
      * 返回空数据
      */
-    public static <T> PageResult<T> noData() {
-        return new PageResult<>(null, 0);
+    public static <T> CsResultVo<List<T>> emptyListData() {
+        return new CsResultVo<>(new ArrayList<>(), 0);
+    }
+
+    /**
+     * 返回空数据
+     */
+    public static <T> CsResultVo<T> emptyData() {
+        return new CsResultVo<>(null, 0);
     }
 
     /**
      * 自定义分页
      */
-    public static <T> PageResult<T> toPage(List<T> list, long totalElements) {
-        return new PageResult<>(list, totalElements);
+    public static <T> CsResultVo<List<T>> toPage(List<T> list, long totalElements) {
+        return new CsResultVo<>(list, totalElements);
     }
 
-    public static Page<Object> getCount(BaseMapper<?> baseMapper) {
+    public static <T> Page<T> getCount(BaseMapper<T> baseMapper) {
         return new Page<>(1, baseMapper.selectCount(null));
     }
 }
