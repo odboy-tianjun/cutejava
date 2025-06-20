@@ -1,12 +1,13 @@
 package cn.odboy.core.util;
 
-import cn.odboy.core.framework.mybatisplus.constant.DataTypeEnum;
+import cn.odboy.core.framework.mybatisplus.config.DataTypeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.CloseUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;

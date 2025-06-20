@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.odboy.base.MyObject;
+import cn.odboy.base.CsSerializeObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class PipelineTests {
     @Getter
     @Setter
-    public static class PipelineNodeVo extends MyObject {
+    public static class PipelineNodeVo extends CsSerializeObject {
         /**
          * Service Code
          */
@@ -65,7 +65,7 @@ public class PipelineTests {
         private List<ButtonVo> buttonList;
 
         @Getter
-        public static class ButtonVo extends MyObject {
+        public static class ButtonVo extends CsSerializeObject {
             /**
              * 按钮类型（get:带参get请求 link:带参跳转）
              */

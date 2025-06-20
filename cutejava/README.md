@@ -10,6 +10,24 @@
 
 https://github.com/odboy-tianjun/cutejava
 
+#### 编码规范
+
+- 和数据库表一一对应的类, 以`Tb`结尾
+- 前端请求参数类名, 以`Args`结尾
+- 返回给前端的数据类名, 以`Vo`结尾
+- 事件驱动类名，以`Event`结尾
+- 消息队列/Socket传输类名，以`Message`结尾
+- 原框架以外的所有辅助类的类名, 以`Cs`开头
+- 查询分页、查询列表的方法，一律为同一个方法名
+    - 查询分页：queryUserListByArgs(args, page)
+    - 查询列表：queryUserListByArgs(args)
+    - MapperXml：这样mapper.xml文件中的实现方法只需要写一个queryUserListByArgs
+- Mapper层查询方法，统一使用以下命名规则
+    - 分页、列表：query{TableName}ListByArgs
+    - 精确查询：get{TableName}{By FieldName}
+    - 统计数量：get{具体语义}Count{By FieldName}
+- 枚举类名，以`Enum`结尾
+
 #### 主要特性
 
 - 使用最新技术栈，社区资源丰富。

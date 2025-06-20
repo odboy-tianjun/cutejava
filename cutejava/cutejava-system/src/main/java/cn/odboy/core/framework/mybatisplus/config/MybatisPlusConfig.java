@@ -1,6 +1,5 @@
 package cn.odboy.core.framework.mybatisplus.config;
 
-import cn.odboy.core.framework.mybatisplus.context.InsertBatchSqlInjector;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
@@ -34,7 +33,7 @@ public class MybatisPlusConfig {
      * Mapper支持批量插入
      */
     @Bean
-    public InsertBatchSqlInjector insertBatchSqlInjector() {
-        return new InsertBatchSqlInjector();
+    public MpInsertBatchSqlInjector insertBatchSqlInjector() {
+        return new MpInsertBatchSqlInjector();
     }
 }

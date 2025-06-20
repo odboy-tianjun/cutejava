@@ -1,11 +1,6 @@
 package cn.odboy.core.framework.properties;
 
-import cn.odboy.core.framework.properties.dto.ContentRsaEncodeSettingModel;
-import cn.odboy.core.framework.properties.dto.FileUploadSettingModel;
-import cn.odboy.core.framework.properties.dto.JwtAuthSettingModel;
-import cn.odboy.core.framework.properties.dto.QuartzTaskThreadPoolSettingModel;
-import cn.odboy.core.framework.properties.dto.SwaggerApiDocSettingModel;
-import cn.odboy.core.framework.properties.dto.UserLoginSettingModel;
+import cn.odboy.core.framework.properties.model.*;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -25,7 +20,8 @@ public class AppProperties {
     private JwtAuthSettingModel jwt;
     private UserLoginSettingModel login;
     private SwaggerApiDocSettingModel swagger;
-    private QuartzTaskThreadPoolSettingModel asyncTaskPool;
+    private ThreadPoolSettingModel asyncTaskPool;
+    private ThreadPoolSettingModel pipelineTaskPool;
 }
 
 

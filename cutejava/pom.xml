@@ -5,7 +5,7 @@
     <groupId>cn.odboy</groupId>
     <artifactId>cutejava</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.1</version>
+    <version>1.4.0</version>
 
     <modules>
         <module>cutejava-common</module>
@@ -27,112 +27,41 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <java.version>11</java.version>
         <logback.version>1.2.9</logback.version>
-        <fastjson2.version>2.0.54</fastjson2.version>
+        <fastjson2.version>2.0.57</fastjson2.version>
         <druid.version>1.2.19</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
-        <mybatis-plus.version>3.5.10.1</mybatis-plus.version>
-        <hutool.version>5.8.37</hutool.version>
+        <mybatis-plus.version>3.5.12</mybatis-plus.version>
+        <hutool.version>5.8.38</hutool.version>
     </properties>
 
     <dependencies>
         <!-- Spring boot Web容器 -->
-        <!-- fix: ch.qos.logback:logback-classic:1.2.9 -->
-        <!-- fix: ch.qos.logback:logback-core:1.2.9 -->
-        <!-- fix: org.springframework:spring-core:5.3.31 -->
-        <!-- fix: org.springframework:spring-web:5.3.31 -->
-        <!-- fix: org.springframework:spring-webmvc:5.3.31 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
+                <!-- 去掉jackson依赖，用fastjson -->
                 <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-json</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-core</artifactId>
-                </exclusion>
+                <!-- 去掉tomcat容器，用undertow -->
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-webmvc</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
-        <!-- 如果使用Spring Boot 2及以下，建议选择Slf4j 1.7.x + Logback 1.2.x -->
-        <!-- 如果使用Spring Boot 3，建议选择Slf4j 2.0.x + Logback 1.4.x（本篇发表时 Spring官方还没做好Logback 1.5.x的适配）-->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.13</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.2.13</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>5.3.36</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>5.3.36</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>5.3.36</version>
-        </dependency>
-
-        <!-- fix: io.undertow:undertow-core:2.2.28.Final -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.undertow</groupId>
-                    <artifactId>undertow-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-core</artifactId>
-            <version>2.3.17.Final</version>
         </dependency>
 
         <!-- Spring boot 测试 -->
-        <!-- fix: com.jayway.jsonpath:json-path:2.7.0 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.jayway.jsonpath</groupId>
-                    <artifactId>json-path</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.9.0</version>
         </dependency>
 
         <!--Spring boot 安全框架-->
@@ -183,7 +112,6 @@
             <artifactId>mybatis-plus-jsqlparser</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
-        <!-- mybatisplus-plus代码生成 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
@@ -196,7 +124,7 @@
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.33</version>
+            <version>2.3.34</version>
         </dependency>
 
         <!--spring boot 集成redis所需common-pool2-->
@@ -231,19 +159,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- 添加swagger-annotations依赖 -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>1.5.22</version>
         </dependency>
 
-        <!--Mysql依赖包-->
+        <!-- Mysql依赖包 -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>9.2.0</version>
+            <version>9.3.0</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -261,18 +187,20 @@
             <version>2.7.18.9</version>
         </dependency>
 
+        <!-- AOP切面支持 -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>1.9.7</version>
         </dependency>
+        <!-- jvm启动参数 javaagent 支持 -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>1.9.7</version>
         </dependency>
 
-        <!--lombok插件-->
+        <!-- lombok插件 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
