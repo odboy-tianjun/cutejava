@@ -3,48 +3,58 @@ package cn.odboy.core.service.system;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.core.dal.redis.system.SystemUserJwtService;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
+import cn.odboy.base.CsResultVo;
+import cn.odboy.core.dal.dataobject.system.SystemMenuTb;
 import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
 import cn.odboy.core.dal.dataobject.system.SystemUserTb;
+import cn.odboy.core.dal.model.system.CreateSystemRoleArgs;
+import cn.odboy.core.dal.model.system.QuerySystemRoleArgs;
+import cn.odboy.core.dal.model.system.SystemRoleCodeVo;
 import cn.odboy.core.dal.mysql.system.SystemRoleDeptMapper;
 import cn.odboy.core.dal.mysql.system.SystemRoleMapper;
 import cn.odboy.core.dal.mysql.system.SystemRoleMenuMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserMapper;
-import cn.odboy.core.dal.model.system.CreateSystemRoleArgs;
+import cn.odboy.core.dal.redis.system.SystemUserJwtService;
+import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
-import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
+import cn.odboy.util.StringUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemRoleTb> implements SystemRoleService {
-    private final SystemRoleMapper roleMapper;
-    private final SystemRoleDeptMapper roleDeptMapper;
-    private final SystemRoleMenuMapper roleMenuMapper;
-    private final SystemUserMapper userMapper;
+    private final SystemRoleMapper systemRoleMapper;
+    private final SystemRoleDeptMapper systemRoleDeptMapper;
+    private final SystemRoleMenuMapper systemRoleMenuMapper;
+    private final SystemUserMapper systemUserMapper;
     private final SystemUserJwtService systemUserJwtService;
-    private final RedisHelper redisHelper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveRole(CreateSystemRoleArgs resources) {
-        if (roleMapper.getRoleByName(resources.getName()) != null) {
+        if (systemRoleMapper.getRoleByName(resources.getName()) != null) {
             throw new EntityExistException(SystemRoleTb.class, "name", resources.getName());
         }
         save(BeanUtil.copyProperties(resources, SystemRoleTb.class));
         // 判断是否有部门数据，若有，则需创建关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            roleDeptMapper.insertBatchWithRoleId(resources.getDepts(), resources.getId());
+            systemRoleDeptMapper.insertBatchWithRoleId(resources.getDepts(), resources.getId());
         }
     }
 
@@ -52,7 +62,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
     @Transactional(rollbackFor = Exception.class)
     public void modifyRoleById(SystemRoleTb resources) {
         SystemRoleTb role = getById(resources.getId());
-        SystemRoleTb role1 = roleMapper.getRoleByName(resources.getName());
+        SystemRoleTb role1 = systemRoleMapper.getRoleByName(resources.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new EntityExistException(SystemRoleTb.class, "name", resources.getName());
         }
@@ -64,39 +74,31 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
         // 更新
         saveOrUpdate(role);
         // 删除关联部门数据
-        roleDeptMapper.deleteByRoleId(resources.getId());
+        systemRoleDeptMapper.deleteByRoleId(resources.getId());
         // 判断是否有部门数据，若有，则需更新关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            roleDeptMapper.insertBatchWithRoleId(resources.getDepts(), resources.getId());
+            systemRoleDeptMapper.insertBatchWithRoleId(resources.getDepts(), resources.getId());
         }
-        // 更新相关缓存
-        delCaches(role.getId(), null);
     }
 
     @Override
     public void modifyBindMenuById(SystemRoleTb role) {
-        List<SystemUserTb> users = userMapper.queryUserListByRoleId(role.getId());
+        List<SystemUserTb> users = systemUserMapper.queryUserListByRoleId(role.getId());
         // 更新菜单
-        roleMenuMapper.deleteByRoleId(role.getId());
+        systemRoleMenuMapper.deleteByRoleId(role.getId());
         // 判断是否为空
         if (CollUtil.isNotEmpty(role.getMenus())) {
-            roleMenuMapper.insertBatchWithRoleId(role.getMenus(), role.getId());
+            systemRoleMenuMapper.insertBatchWithRoleId(role.getMenus(), role.getId());
         }
-        // 更新缓存
-        delCaches(role.getId(), users);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeRoleByIds(Set<Long> ids) {
-        for (Long id : ids) {
-            // 更新相关缓存
-            delCaches(id, null);
-        }
         removeBatchByIds(ids);
         // 删除角色部门关联数据、角色菜单关联数据
-        roleDeptMapper.deleteByRoleIds(ids);
-        roleMenuMapper.deleteByRoleIds(ids);
+        systemRoleDeptMapper.deleteByRoleIds(ids);
+        systemRoleMenuMapper.deleteByRoleIds(ids);
     }
 
     @Override
@@ -113,21 +115,72 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
         FileUtil.downloadExcel(list, response);
     }
 
-    /**
-     * 清理缓存
-     *
-     * @param id /
-     */
-    public void delCaches(Long id, List<SystemUserTb> users) {
-        users = CollectionUtil.isEmpty(users) ? userMapper.queryUserListByRoleId(id) : users;
-        if (CollectionUtil.isNotEmpty(users)) {
-            users.forEach(item -> systemUserJwtService.cleanUserJwtModelCacheByUsername(item.getUsername()));
-            Set<Long> userIds = users.stream().map(SystemUserTb::getId).collect(Collectors.toSet());
-            redisHelper.delByKeys(SystemRedisKey.DATA_USER, userIds);
-            redisHelper.delByKeys(SystemRedisKey.MENU_USER, userIds);
-            redisHelper.delByKeys(SystemRedisKey.ROLE_AUTH, userIds);
-            redisHelper.delByKeys(SystemRedisKey.ROLE_USER, userIds);
+    @Override
+    public List<SystemRoleTb> describeRoleList() {
+        return systemRoleMapper.queryRoleList();
+    }
+
+    @Override
+    public List<SystemRoleTb> describeRoleList(QuerySystemRoleArgs criteria) {
+        return systemRoleMapper.queryRoleListByArgs(criteria);
+    }
+
+    @Override
+    public CsResultVo<List<SystemRoleTb>> describeRolePage(QuerySystemRoleArgs criteria, Page<Object> page) {
+        criteria.setOffset(page.offset());
+        List<SystemRoleTb> roles = systemRoleMapper.queryRoleListByArgs(criteria);
+        Long total = systemRoleMapper.getRoleCountByArgs(criteria);
+        return PageUtil.toPage(roles, total);
+    }
+
+    @Override
+    public SystemRoleTb describeRoleById(long id) {
+        return systemRoleMapper.selectById(id);
+    }
+
+    @Override
+    public List<SystemRoleTb> describeRoleListByUsersId(Long userId) {
+        return systemRoleMapper.queryRoleListByUserId(userId);
+    }
+
+    @Override
+    public Integer describeDeptLevelByRoles(Set<SystemRoleTb> roles) {
+        if (CollUtil.isEmpty(roles)) {
+            return Integer.MAX_VALUE;
         }
-        redisHelper.del(SystemRedisKey.ROLE_ID + id);
+        Set<SystemRoleTb> roleSet = new HashSet<>();
+        for (SystemRoleTb role : roles) {
+            roleSet.add(describeRoleById(role.getId()));
+        }
+        return Collections.min(roleSet.stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<SystemRoleCodeVo> buildUserRolePermissions(SystemUserTb user) {
+        Set<String> permissions = new HashSet<>();
+        // 如果是管理员直接返回
+        if (user.getIsAdmin()) {
+            permissions.add("admin");
+            return permissions.stream().map(SystemRoleCodeVo::new)
+                    .collect(Collectors.toList());
+        }
+        List<SystemRoleTb> roles = systemRoleMapper.queryRoleListByUserId(user.getId());
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
+                .map(SystemMenuTb::getPermission)
+                .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
+        return permissions.stream().map(SystemRoleCodeVo::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void verifyBindRelationByIds(Set<Long> ids) {
+        if (systemUserMapper.getUserCountByRoleIds(ids) > 0) {
+            throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
+        }
+    }
+
+    @Override
+    public List<SystemRoleTb> describeRoleListByMenuId(Long menuId) {
+        return systemRoleMapper.queryRoleListByMenuId(menuId);
     }
 }

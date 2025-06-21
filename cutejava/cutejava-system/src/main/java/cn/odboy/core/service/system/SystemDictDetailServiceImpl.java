@@ -1,24 +1,23 @@
 package cn.odboy.core.service.system;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemDictDetailTb;
-import cn.odboy.core.dal.dataobject.system.SystemDictTb;
-import cn.odboy.core.dal.mysql.system.SystemDictDetailMapper;
-import cn.odboy.core.dal.mysql.system.SystemDictMapper;
 import cn.odboy.core.dal.model.system.CreateSystemDictDetailArgs;
-import cn.odboy.redis.RedisHelper;
+import cn.odboy.core.dal.model.system.QuerySystemDictDetailArgs;
+import cn.odboy.core.dal.mysql.system.SystemDictDetailMapper;
+import cn.odboy.util.PageUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SystemDictDetailServiceImpl extends ServiceImpl<SystemDictDetailMapper, SystemDictDetailTb> implements SystemDictDetailService {
-    private final SystemDictMapper dictMapper;
-    private final RedisHelper redisHelper;
-
+    private final SystemDictDetailMapper systemDictDetailMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -26,8 +25,6 @@ public class SystemDictDetailServiceImpl extends ServiceImpl<SystemDictDetailMap
         SystemDictDetailTb dictDetail = BeanUtil.copyProperties(resources, SystemDictDetailTb.class);
         dictDetail.setDictId(resources.getDict().getId());
         save(dictDetail);
-        // 清理缓存
-        delCaches(dictDetail);
     }
 
     @Override
@@ -37,22 +34,23 @@ public class SystemDictDetailServiceImpl extends ServiceImpl<SystemDictDetailMap
         resources.setId(dictDetail.getId());
         // 更新数据
         saveOrUpdate(resources);
-        // 清理缓存
-        delCaches(dictDetail);
     }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeDictDetailById(Long id) {
-        SystemDictDetailTb dictDetail = getById(id);
         removeById(id);
-        // 清理缓存
-        delCaches(dictDetail);
     }
 
-    public void delCaches(SystemDictDetailTb dictDetail) {
-        SystemDictTb dict = dictMapper.selectById(dictDetail.getDictId());
-        redisHelper.del(SystemRedisKey.DICT_NAME + dict.getName());
+
+    @Override
+    public CsResultVo<List<SystemDictDetailTb>> queryDictDetailListByArgs(QuerySystemDictDetailArgs criteria, Page<Object> page) {
+        return PageUtil.toPage(systemDictDetailMapper.queryDictDetailListByArgs(criteria, page));
+    }
+
+    @Override
+    public List<SystemDictDetailTb> describeDictDetailListByName(String name) {
+        return systemDictDetailMapper.queryDictDetailListByDictName(name);
     }
 }

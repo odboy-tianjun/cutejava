@@ -3,7 +3,6 @@ package cn.odboy.core.controller.system;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.core.dal.dataobject.system.SystemLocalStorageTb;
-import cn.odboy.core.service.system.SystemLocalStorageApi;
 import cn.odboy.core.service.system.SystemLocalStorageService;
 import cn.odboy.core.dal.model.system.QuerySystemLocalStorageArgs;
 import cn.odboy.exception.BadRequestException;
@@ -29,21 +28,20 @@ import java.util.List;
 @RequestMapping("/api/localStorage")
 public class SystemLocalStorageController {
     private final SystemLocalStorageService localStorageService;
-    private final SystemLocalStorageApi localStorageApi;
 
     @ApiOperation("查询文件")
     @GetMapping
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity<CsResultVo<List<SystemLocalStorageTb>>> queryFile(QuerySystemLocalStorageArgs criteria) {
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(localStorageApi.describeLocalStoragePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(localStorageService.describeLocalStoragePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
     public void exportFile(HttpServletResponse response, QuerySystemLocalStorageArgs criteria) throws IOException {
-        localStorageService.downloadExcel(localStorageApi.describeLocalStorageList(criteria), response);
+        localStorageService.downloadExcel(localStorageService.describeLocalStorageList(criteria), response);
     }
 
     @ApiOperation("上传文件")

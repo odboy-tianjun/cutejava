@@ -1,7 +1,6 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
-import cn.odboy.core.service.system.SystemDictApi;
 import cn.odboy.core.dal.dataobject.system.SystemDictTb;
 import cn.odboy.core.service.system.SystemDictService;
 import cn.odboy.core.dal.model.system.CreateSystemDictArgs;
@@ -26,21 +25,20 @@ import java.util.Set;
 @Api(tags = "系统：字典管理")
 @RequestMapping("/api/dict")
 public class SystemDictController {
-    private final SystemDictApi systemDictApi;
     private final SystemDictService systemDictService;
 
     @ApiOperation("导出字典数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
     public void exportDict(HttpServletResponse response, QuerySystemDictArgs criteria) throws IOException {
-        systemDictService.downloadDictExcel(systemDictApi.describeDictList(criteria), response);
+        systemDictService.downloadDictExcel(systemDictService.describeDictList(criteria), response);
     }
 
     @ApiOperation("查询字典")
     @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<SystemDictTb>> queryAllDict() {
-        return new ResponseEntity<>(systemDictApi.describeDictList(new QuerySystemDictArgs()), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictService.describeDictList(new QuerySystemDictArgs()), HttpStatus.OK);
     }
 
     @ApiOperation("查询字典")
@@ -48,7 +46,7 @@ public class SystemDictController {
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<CsResultVo<List<SystemDictTb>>> queryDict(QuerySystemDictArgs criteria) {
         Page<SystemDictTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemDictApi.describeDictPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictService.describeDictPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增字典")

@@ -1,12 +1,16 @@
 package cn.odboy.core.service.system;
 
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemQiniuConfigTb;
 import cn.odboy.core.dal.dataobject.system.SystemQiniuContentTb;
+import cn.odboy.core.dal.model.system.QuerySystemQiniuArgs;
 import cn.odboy.core.dal.mysql.system.SystemQiniuContentMapper;
 import cn.odboy.core.util.QiniuUtil;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -32,11 +36,9 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "qiNiu")
 public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuContentMapper, SystemQiniuContentTb> implements SystemQiniuContentService {
-    private final SystemQiniuContentMapper qiniuContentMapper;
-    private final SystemQiniuConfigApi qiniuConfigApi;
-
+    private final SystemQiniuContentMapper systemQiniuContentMapper;
+    private final SystemQiniuConfigService systemQiniuConfigService;
     @Value("${app.oss.qiniu.max-size}")
     private Long maxSize;
 
@@ -44,7 +46,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     @Transactional(rollbackFor = Exception.class)
     public SystemQiniuContentTb uploadFile(MultipartFile file) {
         FileUtil.checkSize(maxSize, file.getSize());
-        SystemQiniuConfigTb qiniuConfig = qiniuConfigApi.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
         if (qiniuConfig.getId() == null) {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
@@ -55,14 +57,14 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
         try {
             String key = file.getOriginalFilename();
-            if (qiniuContentMapper.getQiniuContentByName(key) != null) {
+            if (systemQiniuContentMapper.getQiniuContentByName(key) != null) {
                 key = QiniuUtil.getKey(key);
             }
             Response response = uploadManager.put(file.getBytes(), key, upToken);
             // 解析上传成功的结果
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
             String fileNameNoExt = FileUtil.getPrefix(putRet.key);
-            SystemQiniuContentTb content = qiniuContentMapper.getQiniuContentByName(fileNameNoExt);
+            SystemQiniuContentTb content = systemQiniuContentMapper.getQiniuContentByName(fileNameNoExt);
             if (content == null) {
                 // 存入数据库
                 SystemQiniuContentTb qiniuContent = new SystemQiniuContentTb();
@@ -82,7 +84,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
 
     @Override
     public String createFilePreviewUrl(SystemQiniuContentTb content) {
-        SystemQiniuConfigTb qiniuConfig = qiniuConfigApi.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
         String finalUrl;
         String type = "公开";
         if (type.equals(content.getType())) {
@@ -99,8 +101,8 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeFileById(Long id) {
-        SystemQiniuConfigTb qiniuConfig = qiniuConfigApi.describeQiniuConfig();
-        SystemQiniuContentTb qiniuContent = qiniuContentMapper.selectById(id);
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
+        SystemQiniuContentTb qiniuContent = systemQiniuContentMapper.selectById(id);
         if (qiniuContent == null) {
             throw new BadRequestException("文件不存在");
         }
@@ -120,7 +122,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void synchronize() {
-        SystemQiniuConfigTb qiniuConfig = qiniuConfigApi.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
         if (qiniuConfig.getId() == null) {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
@@ -143,7 +145,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
             for (FileInfo item : items) {
                 String filename = FileUtil.getPrefix(item.key);
                 String suffix = FileUtil.getSuffix(item.key);
-                if (qiniuContentMapper.getQiniuContentByName(filename) == null) {
+                if (systemQiniuContentMapper.getQiniuContentByName(filename) == null) {
                     qiniuContent = new SystemQiniuContentTb();
                     qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(String.valueOf(item.fsize))));
                     qiniuContent.setSuffix(suffix);
@@ -182,5 +184,15 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    public CsResultVo<List<SystemQiniuContentTb>> describeQiniuContentPage(QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page) {
+        return PageUtil.toPage(systemQiniuContentMapper.queryQiniuContentPageByArgs(criteria, page));
+    }
+
+    @Override
+    public List<SystemQiniuContentTb> describeQiniuContentList(QuerySystemQiniuArgs criteria) {
+        return systemQiniuContentMapper.queryQiniuContentPageByArgs(criteria, PageUtil.getCount(systemQiniuContentMapper)).getRecords();
     }
 }

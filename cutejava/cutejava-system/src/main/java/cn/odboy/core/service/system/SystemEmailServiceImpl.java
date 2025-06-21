@@ -11,24 +11,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@CacheConfig(cacheNames = "email")
 public class SystemEmailServiceImpl extends ServiceImpl<SystemEmailConfigMapper, SystemEmailConfigTb> implements SystemEmailService {
-    @Lazy
-    @Autowired
-    private SystemEmailService emailService;
-    @Autowired
-    private SystemEmailApi emailApi;
 
     @Override
-    @CachePut(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public void modifyEmailConfigOnPassChange(SystemEmailConfigTb emailConfig) throws Exception {
-        SystemEmailConfigTb localConfig = emailApi.describeEmailConfig();
+        SystemEmailConfigTb localConfig = describeEmailConfig();
         if (!emailConfig.getPassword().equals(localConfig.getPassword())) {
             // 对称加密
             emailConfig.setPassword(DesEncryptUtil.desEncrypt(emailConfig.getPassword()));
@@ -41,7 +35,7 @@ public class SystemEmailServiceImpl extends ServiceImpl<SystemEmailConfigMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendEmail(SendSystemEmailArgs sendEmailRequest) {
-        SystemEmailConfigTb emailConfig = emailApi.describeEmailConfig();
+        SystemEmailConfigTb emailConfig = describeEmailConfig();
         if (emailConfig.getId() == null) {
             throw new BadRequestException("请先配置，再操作");
         }
@@ -82,5 +76,11 @@ public class SystemEmailServiceImpl extends ServiceImpl<SystemEmailConfigMapper,
             log.error("邮件发送失败", e);
             throw new BadRequestException("邮件发送失败");
         }
+    }
+
+    @Override
+    public SystemEmailConfigTb describeEmailConfig() {
+        SystemEmailConfigTb emailConfig = getById(1L);
+        return emailConfig == null ? new SystemEmailConfigTb() : emailConfig;
     }
 }

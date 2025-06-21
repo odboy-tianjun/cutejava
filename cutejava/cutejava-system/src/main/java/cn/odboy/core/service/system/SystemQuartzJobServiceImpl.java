@@ -3,8 +3,10 @@ package cn.odboy.core.service.system;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemQuartzJobTb;
 import cn.odboy.core.dal.dataobject.system.SystemQuartzLogTb;
+import cn.odboy.core.dal.model.system.QuerySystemQuartzJobArgs;
 import cn.odboy.core.dal.mysql.system.SystemQuartzJobMapper;
 import cn.odboy.core.dal.mysql.system.SystemQuartzLogMapper;
 import cn.odboy.core.framework.quartz.core.QuartzManage;
@@ -12,7 +14,9 @@ import cn.odboy.core.dal.model.system.UpdateSystemQuartzJobArgs;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronExpression;
@@ -26,9 +30,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service(value = "quartzJobService")
 public class SystemQuartzJobServiceImpl extends ServiceImpl<SystemQuartzJobMapper, SystemQuartzJobTb> implements SystemQuartzJobService {
-
-    private final SystemQuartzJobMapper quartzJobMapper;
-    private final SystemQuartzLogMapper quartzLogMapper;
+    private final SystemQuartzJobMapper systemQuartzJobMapper;
+    private final SystemQuartzLogMapper systemQuartzLogMapper;
     private final QuartzManage quartzManage;
     private final RedisHelper redisHelper;
 
@@ -156,5 +159,25 @@ public class SystemQuartzJobServiceImpl extends ServiceImpl<SystemQuartzJobMappe
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    public CsResultVo<List<SystemQuartzJobTb>> describeQuartzJobPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+        return PageUtil.toPage(systemQuartzJobMapper.queryQuartzJobPageByArgs(criteria, page));
+    }
+
+    @Override
+    public CsResultVo<List<SystemQuartzLogTb>> describeQuartzLogPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+        return PageUtil.toPage(systemQuartzLogMapper.queryQuartzLogPageByArgs(criteria, page));
+    }
+
+    @Override
+    public List<SystemQuartzJobTb> describeQuartzJobList(QuerySystemQuartzJobArgs criteria) {
+        return systemQuartzJobMapper.queryQuartzJobPageByArgs(criteria, PageUtil.getCount(systemQuartzJobMapper)).getRecords();
+    }
+
+    @Override
+    public List<SystemQuartzLogTb> describeQuartzLogList(QuerySystemQuartzJobArgs criteria) {
+        return systemQuartzLogMapper.queryQuartzLogPageByArgs(criteria, PageUtil.getCount(systemQuartzLogMapper)).getRecords();
     }
 }

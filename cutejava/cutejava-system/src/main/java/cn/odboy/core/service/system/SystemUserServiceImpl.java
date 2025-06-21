@@ -1,42 +1,50 @@
 package cn.odboy.core.service.system;
 
-import cn.odboy.core.dal.redis.system.SystemUserJwtService;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineService;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemJobTb;
 import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
 import cn.odboy.core.dal.dataobject.system.SystemUserTb;
+import cn.odboy.core.dal.model.system.QuerySystemUserArgs;
 import cn.odboy.core.dal.mysql.system.SystemUserJobMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserRoleMapper;
+import cn.odboy.core.dal.redis.system.SystemRedisKey;
+import cn.odboy.core.dal.redis.system.SystemUserJwtService;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineService;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
-import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemUserTb> implements SystemUserService {
-    private final SystemUserMapper userMapper;
-    private final SystemUserJobMapper userJobMapper;
-    private final SystemUserRoleMapper userRoleMapper;
+    private final SystemUserMapper systemUserMapper;
+    private final SystemUserJobMapper systemUserJobMapper;
+    private final SystemUserRoleMapper systemUserRoleMapper;
     private final AppProperties properties;
-    private final RedisHelper redisHelper;
     private final SystemUserJwtService systemUserJwtService;
     private final SystemUserOnlineService systemUserOnlineService;
 
@@ -44,29 +52,29 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
     @Transactional(rollbackFor = Exception.class)
     public void saveUser(SystemUserTb resources) {
         resources.setDeptId(resources.getDept().getId());
-        if (userMapper.getUserByUsername(resources.getUsername()) != null) {
+        if (systemUserMapper.getUserByUsername(resources.getUsername()) != null) {
             throw new EntityExistException(SystemUserTb.class, "username", resources.getUsername());
         }
-        if (userMapper.getUserByEmail(resources.getEmail()) != null) {
+        if (systemUserMapper.getUserByEmail(resources.getEmail()) != null) {
             throw new EntityExistException(SystemUserTb.class, "email", resources.getEmail());
         }
-        if (userMapper.getUserByPhone(resources.getPhone()) != null) {
+        if (systemUserMapper.getUserByPhone(resources.getPhone()) != null) {
             throw new EntityExistException(SystemUserTb.class, "phone", resources.getPhone());
         }
         save(resources);
         // 保存用户岗位
-        userJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
+        systemUserJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
         // 保存用户角色
-        userRoleMapper.insertBatchWithUserId(resources.getRoles(), resources.getId());
+        systemUserRoleMapper.insertBatchWithUserId(resources.getRoles(), resources.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserById(SystemUserTb resources) {
         SystemUserTb user = getById(resources.getId());
-        SystemUserTb user1 = userMapper.getUserByUsername(resources.getUsername());
-        SystemUserTb user2 = userMapper.getUserByEmail(resources.getEmail());
-        SystemUserTb user3 = userMapper.getUserByPhone(resources.getPhone());
+        SystemUserTb user1 = systemUserMapper.getUserByUsername(resources.getUsername());
+        SystemUserTb user2 = systemUserMapper.getUserByEmail(resources.getEmail());
+        SystemUserTb user3 = systemUserMapper.getUserByPhone(resources.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
             throw new EntityExistException(SystemUserTb.class, "username", resources.getUsername());
         }
@@ -75,17 +83,6 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         }
         if (user3 != null && !user.getId().equals(user3.getId())) {
             throw new EntityExistException(SystemUserTb.class, "phone", resources.getPhone());
-        }
-        // 如果用户的角色改变
-        if (!resources.getRoles().equals(user.getRoles())) {
-            redisHelper.del(SystemRedisKey.DATA_USER + resources.getId());
-            redisHelper.del(SystemRedisKey.MENU_USER + resources.getId());
-            redisHelper.del(SystemRedisKey.ROLE_AUTH + resources.getId());
-            redisHelper.del(SystemRedisKey.ROLE_USER + resources.getId());
-        }
-        // 修改部门会影响 数据权限
-        if (!Objects.equals(resources.getDept(), user.getDept())) {
-            redisHelper.del(SystemRedisKey.DATA_USER + resources.getId());
         }
         // 如果用户被禁用，则清除用户登录信息
         if (!resources.getEnabled()) {
@@ -102,21 +99,21 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         user.setNickName(resources.getNickName());
         user.setGender(resources.getGender());
         saveOrUpdate(user);
-        // 清除缓存
-        delCaches(user.getId(), user.getUsername());
+        // 清除用户登录缓存
+        flushLoginCacheInfo(user.getUsername());
         // 更新用户岗位
-        userJobMapper.deleteByUserId(resources.getId());
-        userJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
+        systemUserJobMapper.deleteByUserId(resources.getId());
+        systemUserJobMapper.insertBatchWithUserId(resources.getJobs(), resources.getId());
         // 更新用户角色
-        userRoleMapper.deleteByUserId(resources.getId());
-        userRoleMapper.insertBatchWithUserId(resources.getRoles(), resources.getId());
+        systemUserRoleMapper.deleteByUserId(resources.getId());
+        systemUserRoleMapper.insertBatchWithUserId(resources.getRoles(), resources.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserCenterInfoById(SystemUserTb resources) {
         SystemUserTb user = getById(resources.getId());
-        SystemUserTb user1 = userMapper.getUserByPhone(resources.getPhone());
+        SystemUserTb user1 = systemUserMapper.getUserByPhone(resources.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
             throw new EntityExistException(SystemUserTb.class, "phone", resources.getPhone());
         }
@@ -124,8 +121,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         user.setPhone(resources.getPhone());
         user.setGender(resources.getGender());
         saveOrUpdate(user);
-        // 清理缓存
-        delCaches(user.getId(), user.getUsername());
+        flushLoginCacheInfo(user.getUsername());
     }
 
     @Override
@@ -134,35 +130,35 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         for (Long id : ids) {
             // 清理缓存
             SystemUserTb user = getById(id);
-            delCaches(user.getId(), user.getUsername());
+            flushLoginCacheInfo(user.getUsername());
         }
-        userMapper.deleteByIds(ids);
+        systemUserMapper.deleteByIds(ids);
         // 删除用户岗位
-        userJobMapper.deleteByUserIds(ids);
+        systemUserJobMapper.deleteByUserIds(ids);
         // 删除用户角色
-        userRoleMapper.deleteByUserIds(ids);
+        systemUserRoleMapper.deleteByUserIds(ids);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserPasswordByUsername(String username, String pass) {
-        userMapper.updatePasswordByUsername(username, pass, new Date());
-        flushCache(username);
+        systemUserMapper.updatePasswordByUsername(username, pass, new Date());
+        flushLoginCacheInfo(username);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetUserPasswordByIds(Set<Long> ids, String password) {
-        List<SystemUserTb> users = userMapper.selectByIds(ids);
+        List<SystemUserTb> users = systemUserMapper.selectByIds(ids);
         // 清除缓存
         users.forEach(user -> {
             // 清除缓存
-            flushCache(user.getUsername());
+            flushLoginCacheInfo(user.getUsername());
             // 强制退出
             systemUserOnlineService.kickOutByUsername(user.getUsername());
         });
         // 重置密码
-        userMapper.updatePasswordByUserIds(password, ids);
+        systemUserMapper.updatePasswordByUserIds(password, ids);
     }
 
     @Override
@@ -176,7 +172,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         if (fileType != null && !image.contains(fileType)) {
             throw new BadRequestException("文件格式错误！, 仅支持 " + image + " 格式");
         }
-        SystemUserTb user = userMapper.getUserByUsername(SecurityHelper.getCurrentUsername());
+        SystemUserTb user = systemUserMapper.getUserByUsername(SecurityHelper.getCurrentUsername());
         String oldPath = user.getAvatarPath();
         File file = FileUtil.upload(multipartFile, properties.getFile().getPath().getAvatar());
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
@@ -186,7 +182,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
             FileUtil.del(oldPath);
         }
         @NotBlank String username = user.getUsername();
-        flushCache(username);
+        flushLoginCacheInfo(username);
         return new HashMap<>(1) {{
             put("avatar", file.getName());
         }};
@@ -195,8 +191,8 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserEmailByUsername(String username, String email) {
-        userMapper.updateEmailByUsername(username, email);
-        flushCache(username);
+        systemUserMapper.updateEmailByUsername(username, email);
+        flushLoginCacheInfo(username);
     }
 
     @Override
@@ -220,21 +216,34 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
     }
 
     /**
-     * 清理缓存
-     *
-     * @param id /
-     */
-    public void delCaches(Long id, String username) {
-        redisHelper.del(SystemRedisKey.USER_ID + id);
-        flushCache(username);
-    }
-
-    /**
      * 清理 登陆时 用户缓存信息
      *
      * @param username /
      */
-    private void flushCache(String username) {
+    private void flushLoginCacheInfo(String username) {
         systemUserJwtService.cleanUserJwtModelCacheByUsername(username);
+    }
+
+    @Override
+    public CsResultVo<List<SystemUserTb>> describeUserPage(QuerySystemUserArgs criteria, Page<Object> page) {
+        criteria.setOffset(page.offset());
+        List<SystemUserTb> users = systemUserMapper.queryUserPageByArgs(criteria, PageUtil.getCount(systemUserMapper)).getRecords();
+        Long total = systemUserMapper.getUserCountByArgs(criteria);
+        return PageUtil.toPage(users, total);
+    }
+
+    @Override
+    public List<SystemUserTb> describeUserList(QuerySystemUserArgs criteria) {
+        return systemUserMapper.queryUserPageByArgs(criteria, PageUtil.getCount(systemUserMapper)).getRecords();
+    }
+
+    @Override
+    public SystemUserTb describeUserById(long id) {
+        return systemUserMapper.selectById(id);
+    }
+
+    @Override
+    public SystemUserTb describeUserByUsername(String username) {
+        return systemUserMapper.getUserByUsername(username);
     }
 }

@@ -19,4 +19,11 @@ public interface SystemQiniuConfigService extends IService<SystemQiniuConfigTb> 
      * @param type 类型
      */
     void modifyQiniuConfigType(String type);
+
+    /**
+     * 查询配置
+     *
+     * @return QiniuConfig
+     */
+    SystemQiniuConfigTb describeQiniuConfig();
 }

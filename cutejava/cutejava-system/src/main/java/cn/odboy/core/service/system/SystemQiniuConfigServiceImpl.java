@@ -8,18 +8,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "qiNiu")
 public class SystemQiniuConfigServiceImpl extends ServiceImpl<SystemQiniuConfigMapper, SystemQiniuConfigTb> implements SystemQiniuConfigService {
-
+    private final SystemQiniuConfigMapper systemQiniuConfigMapper;
 
     @Override
-    @CacheEvict(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public void saveQiniuConfig(SystemQiniuConfigTb qiniuConfig) {
         qiniuConfig.setId(1L);
@@ -30,11 +29,18 @@ public class SystemQiniuConfigServiceImpl extends ServiceImpl<SystemQiniuConfigM
     }
 
     @Override
-    @CacheEvict(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public void modifyQiniuConfigType(String type) {
         SystemQiniuConfigTb qiniuConfig = getById(1L);
         qiniuConfig.setType(type);
         saveOrUpdate(qiniuConfig);
+    }
+
+
+
+    @Override
+    public SystemQiniuConfigTb describeQiniuConfig() {
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigMapper.selectById(1L);
+        return qiniuConfig == null ? new SystemQiniuConfigTb() : qiniuConfig;
     }
 }

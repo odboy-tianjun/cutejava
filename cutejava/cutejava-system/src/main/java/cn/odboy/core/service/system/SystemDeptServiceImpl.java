@@ -1,4 +1,4 @@
-package cn.odboy.core.service.system.ookkoko;
+package cn.odboy.core.service.system;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -6,17 +6,14 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.constant.system.SystemDataScopeEnum;
-import cn.odboy.core.dal.model.system.QuerySystemDeptArgs;
-import cn.odboy.core.dal.mysql.system.SystemRoleMapper;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
 import cn.odboy.core.dal.dataobject.system.SystemDeptTb;
-import cn.odboy.core.dal.dataobject.system.SystemUserTb;
-import cn.odboy.core.dal.mysql.system.SystemDeptMapper;
-import cn.odboy.core.dal.mysql.system.SystemUserMapper;
 import cn.odboy.core.dal.model.system.CreateSystemDeptArgs;
+import cn.odboy.core.dal.model.system.QuerySystemDeptArgs;
+import cn.odboy.core.dal.mysql.system.SystemDeptMapper;
+import cn.odboy.core.dal.mysql.system.SystemRoleMapper;
+import cn.odboy.core.dal.mysql.system.SystemUserMapper;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -24,21 +21,24 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemDeptTb> implements SystemDeptService {
-    private final SystemDeptMapper deptMapper;
-    private final SystemUserMapper userMapper;
-    private final RedisHelper redisHelper;
-    private final SystemRoleMapper roleMapper;
+    private final SystemDeptMapper systemDeptMapper;
+    private final SystemUserMapper systemUserMapper;
+    private final SystemRoleMapper systemRoleMapper;
 
 
     @Override
@@ -47,8 +47,6 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
         save(BeanUtil.copyProperties(resources, SystemDeptTb.class));
         // 清理缓存
         updateSubCnt(resources.getPid());
-        // 清理自定义角色权限的DataScope缓存
-        delCaches(resources.getPid());
     }
 
     @Override
@@ -66,17 +64,13 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
         // 更新父节点中子节点数目
         updateSubCnt(oldPid);
         updateSubCnt(newPid);
-        // 清理缓存
-        delCaches(resources.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeDeptByIds(Set<SystemDeptTb> deptSet) {
         for (SystemDeptTb dept : deptSet) {
-            // 清理缓存
-            delCaches(dept.getId());
-            deptMapper.deleteById(dept.getId());
+            systemDeptMapper.deleteById(dept.getId());
             updateSubCnt(dept.getPid());
         }
     }
@@ -97,22 +91,9 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
 
     private void updateSubCnt(Long deptId) {
         if (deptId != null) {
-            int count = deptMapper.getDeptCountByPid(deptId);
-            deptMapper.updateSubCountById(count, deptId);
+            int count = systemDeptMapper.getDeptCountByPid(deptId);
+            systemDeptMapper.updateSubCountById(count, deptId);
         }
-    }
-
-
-    /**
-     * 清理缓存
-     *
-     * @param id /
-     */
-    public void delCaches(Long id) {
-        List<SystemUserTb> users = userMapper.queryUserListByDeptId(id);
-        // 删除数据权限
-        redisHelper.delByKeys(SystemRedisKey.DATA_USER, users.stream().map(SystemUserTb::getId).collect(Collectors.toSet()));
-        redisHelper.del(SystemRedisKey.DEPT_ID + id);
     }
 
     /**
@@ -158,7 +139,7 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
         }
         // 数据权限
         criteria.setIds(SecurityHelper.getCurrentUserDataScope());
-        List<SystemDeptTb> list = deptMapper.queryDeptListByArgs(criteria);
+        List<SystemDeptTb> list = systemDeptMapper.queryDeptListByArgs(criteria);
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
         if (StringUtil.isBlank(dataScopeType)) {
             return deduplication(list);
@@ -168,30 +149,24 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
 
     @Override
     public SystemDeptTb describeDeptById(Long id) {
-        String key = SystemRedisKey.DEPT_ID + id;
-        SystemDeptTb dept = redisHelper.get(key, SystemDeptTb.class);
-        if (dept == null) {
-            dept = deptMapper.selectById(id);
-            redisHelper.set(key, dept, 1, TimeUnit.DAYS);
-        }
-        return dept;
+        return systemDeptMapper.selectById(id);
     }
 
     @Override
     public List<SystemDeptTb> describeDeptListByPid(long pid) {
-        return deptMapper.queryDeptListByPid(pid);
+        return systemDeptMapper.queryDeptListByPid(pid);
     }
 
     @Override
     public Set<SystemDeptTb> describeDeptByRoleId(Long id) {
-        return deptMapper.queryDeptSetByRoleId(id);
+        return systemDeptMapper.queryDeptSetByRoleId(id);
     }
 
     @Override
     public Set<SystemDeptTb> describeRelationDeptSet(List<SystemDeptTb> menuList, Set<SystemDeptTb> deptSet) {
         for (SystemDeptTb dept : menuList) {
             deptSet.add(dept);
-            List<SystemDeptTb> deptList = deptMapper.queryDeptListByPid(dept.getId());
+            List<SystemDeptTb> deptList = systemDeptMapper.queryDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(deptList)) {
                 describeRelationDeptSet(deptList, deptSet);
             }
@@ -202,26 +177,25 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     @Override
     public List<Long> describeChildDeptIdListByDeptIds(List<SystemDeptTb> deptList) {
         List<Long> list = new ArrayList<>();
-        deptList.forEach(dept -> {
-                    if (dept != null && dept.getEnabled()) {
-                        List<SystemDeptTb> deptList1 = deptMapper.queryDeptListByPid(dept.getId());
-                        if (CollUtil.isNotEmpty(deptList1)) {
-                            list.addAll(describeChildDeptIdListByDeptIds(deptList1));
-                        }
-                        list.add(dept.getId());
-                    }
+        for (SystemDeptTb systemDeptTb : deptList) {
+            if (systemDeptTb != null && systemDeptTb.getEnabled()) {
+                List<SystemDeptTb> deptList1 = systemDeptMapper.queryDeptListByPid(systemDeptTb.getId());
+                if (CollUtil.isNotEmpty(deptList1)) {
+                    list.addAll(describeChildDeptIdListByDeptIds(deptList1));
                 }
-        );
+                list.add(systemDeptTb.getId());
+            }
+        }
         return list;
     }
 
     @Override
     public List<SystemDeptTb> describeSuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
         if (dept.getPid() == null) {
-            deptList.addAll(deptMapper.queryDeptListByPidIsNull());
+            deptList.addAll(systemDeptMapper.queryDeptListByPidIsNull());
             return deptList;
         }
-        deptList.addAll(deptMapper.queryDeptListByPid(dept.getPid()));
+        deptList.addAll(systemDeptMapper.queryDeptListByPid(dept.getPid()));
         return describeSuperiorDeptListByPid(describeDeptById(dept.getPid()), deptList);
     }
 
@@ -263,10 +237,10 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     @Override
     public void verifyBindRelationByIds(Set<SystemDeptTb> deptSet) {
         Set<Long> deptIds = deptSet.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
-        if (userMapper.getUserCountByDeptIds(deptIds) > 0) {
+        if (systemUserMapper.getUserCountByDeptIds(deptIds) > 0) {
             throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
         }
-        if (roleMapper.getRoleCountByDeptIds(deptIds) > 0) {
+        if (systemRoleMapper.getRoleCountByDeptIds(deptIds) > 0) {
             throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
         }
     }

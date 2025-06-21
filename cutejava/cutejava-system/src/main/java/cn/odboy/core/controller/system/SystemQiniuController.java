@@ -3,9 +3,7 @@ package cn.odboy.core.controller.system;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemQiniuConfigTb;
 import cn.odboy.core.dal.dataobject.system.SystemQiniuContentTb;
-import cn.odboy.core.service.system.SystemQiniuConfigApi;
 import cn.odboy.core.service.system.SystemQiniuConfigService;
-import cn.odboy.core.service.system.SystemQiniuContentApi;
 import cn.odboy.core.service.system.SystemQiniuContentService;
 import cn.odboy.core.dal.model.system.QuerySystemQiniuArgs;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -36,13 +34,11 @@ import java.util.Map;
 public class SystemQiniuController {
     private final SystemQiniuContentService qiniuContentService;
     private final SystemQiniuConfigService qiNiuConfigService;
-    private final SystemQiniuConfigApi qiniuConfigApi;
-    private final SystemQiniuContentApi qiniuContentApi;
 
     @ApiOperation("查询七牛云存储配置")
     @PostMapping(value = "/describeQiniuConfig")
     public ResponseEntity<SystemQiniuConfigTb> describeQiniuConfig() {
-        return new ResponseEntity<>(qiniuConfigApi.describeQiniuConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(qiNiuConfigService.describeQiniuConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置七牛云存储")
@@ -56,14 +52,14 @@ public class SystemQiniuController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     public void exportQiNiu(HttpServletResponse response, QuerySystemQiniuArgs criteria) throws IOException {
-        qiniuContentService.downloadExcel(qiniuContentApi.describeQiniuContentList(criteria), response);
+        qiniuContentService.downloadExcel(qiniuContentService.describeQiniuContentList(criteria), response);
     }
 
     @ApiOperation("查询文件")
     @GetMapping
     public ResponseEntity<CsResultVo<List<SystemQiniuContentTb>>> queryQiNiu(QuerySystemQiniuArgs criteria) {
         Page<SystemQiniuContentTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(qiniuContentApi.describeQiniuContentPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(qiniuContentService.describeQiniuContentPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("上传文件")

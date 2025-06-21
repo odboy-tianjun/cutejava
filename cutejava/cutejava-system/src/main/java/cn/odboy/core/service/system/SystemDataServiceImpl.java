@@ -1,18 +1,18 @@
-package cn.odboy.core.service.system.ookkoko;
+package cn.odboy.core.service.system;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.core.constant.system.SystemDataScopeEnum;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
 import cn.odboy.core.dal.dataobject.system.SystemDeptTb;
 import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
 import cn.odboy.core.dal.dataobject.system.SystemUserTb;
-import cn.odboy.core.service.system.SystemRoleApi;
-import cn.odboy.redis.RedisHelper;
+import cn.odboy.core.dal.redis.system.SystemRedisKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 数据权限服务实现
@@ -20,8 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class SystemDataServiceImpl implements SystemDataService {
-    private final RedisHelper redisHelper;
-    private final SystemRoleApi systemRoleApi;
+    private final SystemRoleService systemRoleService;
     private final SystemDeptService systemDeptService;
 
     /**
@@ -33,29 +32,24 @@ public class SystemDataServiceImpl implements SystemDataService {
     @Override
     public List<Long> describeDeptIdListByUserIdWithDeptId(SystemUserTb user) {
         String key = SystemRedisKey.DATA_USER + user.getId();
-        List<Long> ids = redisHelper.getList(key, Long.class);
-        if (CollUtil.isEmpty(ids)) {
-            Set<Long> deptIds = new HashSet<>();
-            // 查询用户角色
-            List<SystemRoleTb> roleList = systemRoleApi.describeRoleListByUsersId(user.getId());
-            // 获取对应的部门ID
-            for (SystemRoleTb role : roleList) {
-                SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
-                switch (Objects.requireNonNull(dataScopeEnum)) {
-                    case THIS_LEVEL:
-                        deptIds.add(user.getDept().getId());
-                        break;
-                    case CUSTOMIZE:
-                        deptIds.addAll(getCustomize(deptIds, role));
-                        break;
-                    default:
-                        return new ArrayList<>();
-                }
+        Set<Long> deptIds = new HashSet<>();
+        // 查询用户角色
+        List<SystemRoleTb> roleList = systemRoleService.describeRoleListByUsersId(user.getId());
+        // 获取对应的部门ID
+        for (SystemRoleTb role : roleList) {
+            SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
+            switch (Objects.requireNonNull(dataScopeEnum)) {
+                case THIS_LEVEL:
+                    deptIds.add(user.getDept().getId());
+                    break;
+                case CUSTOMIZE:
+                    deptIds.addAll(getCustomize(deptIds, role));
+                    break;
+                default:
+                    return new ArrayList<>();
             }
-            ids = new ArrayList<>(deptIds);
-            redisHelper.set(key, ids, 1, TimeUnit.DAYS);
         }
-        return ids;
+        return new ArrayList<>(deptIds);
     }
 
     /**
