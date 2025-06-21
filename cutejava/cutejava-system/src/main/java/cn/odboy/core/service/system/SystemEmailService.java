@@ -22,4 +22,12 @@ public interface SystemEmailService extends IService<SystemEmailConfigTb> {
      * @param sendEmailRequest 邮件发送的内容
      */
     void sendEmail(SendSystemEmailArgs sendEmailRequest);
+
+
+    /**
+     * 查询配置
+     *
+     * @return EmailConfig 邮件配置
+     */
+    SystemEmailConfigTb describeEmailConfig();
 }

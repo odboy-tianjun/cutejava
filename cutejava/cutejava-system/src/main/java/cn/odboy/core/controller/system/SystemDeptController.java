@@ -2,7 +2,7 @@ package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemDeptTb;
-import cn.odboy.core.service.system.ookkoko.SystemDeptService;
+import cn.odboy.core.service.system.SystemDeptService;
 import cn.odboy.core.dal.model.system.CreateSystemDeptArgs;
 import cn.odboy.core.dal.model.system.QuerySystemDeptArgs;
 import cn.odboy.util.PageUtil;

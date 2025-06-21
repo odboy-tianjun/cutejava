@@ -2,7 +2,6 @@ package cn.odboy.core.controller.system;
 
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.core.service.system.SystemRoleApi;
 import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.service.system.SystemRoleService;
@@ -32,28 +31,27 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：角色管理")
 @RequestMapping("/api/roles")
 public class SystemRoleController {
-    private final SystemRoleApi systemRoleApi;
     private final SystemRoleService systemRoleService;
 
     @ApiOperation("获取单个role")
     @PostMapping(value = "/describeRoleById")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<SystemRoleTb> describeRoleById(@RequestBody SystemRoleTb args) {
-        return new ResponseEntity<>(systemRoleApi.describeRoleById(args.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleService.describeRoleById(args.getId()), HttpStatus.OK);
     }
 
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, QuerySystemRoleArgs criteria) throws IOException {
-        systemRoleService.downloadRoleExcel(systemRoleApi.describeRoleList(criteria), response);
+        systemRoleService.downloadRoleExcel(systemRoleService.describeRoleList(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")
     @PostMapping(value = "/describeRoleList")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<SystemRoleTb>> describeRoleList() {
-        return new ResponseEntity<>(systemRoleApi.describeRoleList(), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleService.describeRoleList(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
@@ -61,7 +59,7 @@ public class SystemRoleController {
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<CsResultVo<List<SystemRoleTb>>> describeRolePage(QuerySystemRoleArgs criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemRoleApi.describeRolePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleService.describeRolePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
@@ -107,7 +105,7 @@ public class SystemRoleController {
             checkRoleLevels(role.getLevel());
         }
         // 验证是否被用户关联
-        systemRoleApi.verifyBindRelationByIds(ids);
+        systemRoleService.verifyBindRelationByIds(ids);
         systemRoleService.removeRoleByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -118,7 +116,7 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = systemRoleApi.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        List<Integer> levels = systemRoleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

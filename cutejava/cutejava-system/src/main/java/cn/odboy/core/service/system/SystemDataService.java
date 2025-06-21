@@ -1,4 +1,4 @@
-package cn.odboy.core.service.system.ookkoko;
+package cn.odboy.core.service.system;
 
 
 import cn.odboy.core.dal.dataobject.system.SystemUserTb;

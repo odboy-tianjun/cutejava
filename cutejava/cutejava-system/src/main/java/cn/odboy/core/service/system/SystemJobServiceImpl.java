@@ -1,33 +1,39 @@
 package cn.odboy.core.service.system;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemJobTb;
-import cn.odboy.core.dal.mysql.system.SystemJobMapper;
 import cn.odboy.core.dal.model.system.CreateSystemJobArgs;
+import cn.odboy.core.dal.model.system.QuerySystemJobArgs;
+import cn.odboy.core.dal.mysql.system.SystemJobMapper;
+import cn.odboy.core.dal.mysql.system.SystemUserMapper;
+import cn.odboy.exception.BadRequestException;
 import cn.odboy.exception.EntityExistException;
-import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SystemJobServiceImpl extends ServiceImpl<SystemJobMapper, SystemJobTb> implements SystemJobService {
-    private final SystemJobMapper jobMapper;
-    private final RedisHelper redisHelper;
-
+    private final SystemJobMapper systemJobMapper;
+    private final SystemUserMapper systemUserMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveJob(CreateSystemJobArgs resources) {
-        SystemJobTb job = jobMapper.getJobByName(resources.getName());
+        SystemJobTb job = systemJobMapper.getJobByName(resources.getName());
         if (job != null) {
             throw new EntityExistException(SystemJobTb.class, "name", resources.getName());
         }
@@ -38,22 +44,18 @@ public class SystemJobServiceImpl extends ServiceImpl<SystemJobMapper, SystemJob
     @Transactional(rollbackFor = Exception.class)
     public void modifyJobById(SystemJobTb resources) {
         SystemJobTb job = getById(resources.getId());
-        SystemJobTb old = jobMapper.getJobByName(resources.getName());
+        SystemJobTb old = systemJobMapper.getJobByName(resources.getName());
         if (old != null && !old.getId().equals(resources.getId())) {
             throw new EntityExistException(SystemJobTb.class, "name", resources.getName());
         }
         resources.setId(job.getId());
         saveOrUpdate(resources);
-        // 删除缓存
-        delCaches(resources.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeJobByIds(Set<Long> ids) {
         removeBatchByIds(ids);
-        // 删除缓存
-        ids.forEach(this::delCaches);
     }
 
     @Override
@@ -70,7 +72,26 @@ public class SystemJobServiceImpl extends ServiceImpl<SystemJobMapper, SystemJob
     }
 
 
-    public void delCaches(Long id) {
-        redisHelper.del(SystemRedisKey.JOB_ID + id);
+    @Override
+    public CsResultVo<List<SystemJobTb>> describeJobPage(QuerySystemJobArgs criteria, Page<SystemJobTb> page) {
+        return PageUtil.toPage(systemJobMapper.queryJobPageByArgs(criteria, page));
+    }
+
+    @Override
+    public List<SystemJobTb> describeJobList(QuerySystemJobArgs criteria) {
+        return systemJobMapper.queryJobPageByArgs(criteria, PageUtil.getCount(systemJobMapper)).getRecords();
+    }
+
+    @Override
+    public SystemJobTb describeJobById(Long id) {
+        return systemJobMapper.selectById(id);
+    }
+
+
+    @Override
+    public void verifyBindRelationByIds(Set<Long> ids) {
+        if (systemUserMapper.getUserCountByJobIds(ids) > 0) {
+            throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
+        }
     }
 }

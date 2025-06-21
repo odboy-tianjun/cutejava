@@ -1,12 +1,16 @@
 package cn.odboy.core.service.system;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemLocalStorageTb;
+import cn.odboy.core.dal.model.system.QuerySystemLocalStorageArgs;
 import cn.odboy.core.dal.mysql.system.SystemLocalStorageMapper;
 import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.FileUtil;
+import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +29,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class SystemLocalStorageServiceImpl extends ServiceImpl<SystemLocalStorageMapper, SystemLocalStorageTb> implements SystemLocalStorageService {
-    private final SystemLocalStorageMapper localStorageMapper;
+    private final SystemLocalStorageMapper systemLocalStorageMapper;
     private final AppProperties properties;
 
     @Override
@@ -90,5 +94,15 @@ public class SystemLocalStorageServiceImpl extends ServiceImpl<SystemLocalStorag
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    public CsResultVo<List<SystemLocalStorageTb>> describeLocalStoragePage(QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+        return PageUtil.toPage(systemLocalStorageMapper.queryLocalStoragePageByArgs(criteria, page));
+    }
+
+    @Override
+    public List<SystemLocalStorageTb> describeLocalStorageList(QuerySystemLocalStorageArgs criteria) {
+        return systemLocalStorageMapper.queryLocalStoragePageByArgs(criteria, PageUtil.getCount(systemLocalStorageMapper)).getRecords();
     }
 }

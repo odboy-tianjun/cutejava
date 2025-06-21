@@ -232,10 +232,9 @@ app:
     qiniu:
       # 文件大小 /M
       max-size: 15
-  email:
-    captchaSetting:
-      # 邮箱验证码有效时间/秒
-      expiration: 300
+  captcha:
+    # 验证码有效时间/秒
+    expireTime: 300
 ## 启用debug
 #debug: true
 #logging:

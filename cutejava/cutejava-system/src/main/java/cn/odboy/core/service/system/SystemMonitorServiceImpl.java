@@ -24,7 +24,7 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class SystemMonitorApiImpl implements SystemMonitorApi {
+public class SystemMonitorServiceImpl implements SystemMonitorService {
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override

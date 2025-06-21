@@ -5,9 +5,9 @@ import cn.odboy.core.dal.model.system.SystemUserJwtVo;
 import cn.odboy.core.dal.redis.system.SystemUserJwtApi;
 import cn.odboy.core.dal.redis.system.SystemUserJwtService;
 import cn.odboy.core.dal.dataobject.system.SystemUserTb;
-import cn.odboy.core.service.system.ookkoko.SystemDataService;
-import cn.odboy.core.service.system.SystemRoleApi;
-import cn.odboy.core.service.system.SystemUserApi;
+import cn.odboy.core.service.system.SystemDataService;
+import cn.odboy.core.service.system.SystemRoleService;
+import cn.odboy.core.service.system.SystemUserService;
 import cn.odboy.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class UserDetailsHandler implements UserDetailsService {
-    private final SystemRoleApi systemRoleApi;
-    private final SystemUserApi systemUserApi;
+    private final SystemRoleService systemRoleService;
+    private final SystemUserService systemUserService;
     private final SystemDataService systemDataService;
     private final SystemUserJwtService systemUserJwtService;
     private final SystemUserJwtApi systemUserJwtApi;
@@ -30,7 +30,7 @@ public class UserDetailsHandler implements UserDetailsService {
     public SystemUserJwtVo loadUserByUsername(String username) {
         SystemUserJwtVo userJwtVo = systemUserJwtApi.describeUserJwtModelByUsername(username);
         if (userJwtVo == null) {
-            SystemUserTb user = systemUserApi.describeUserByUsername(username);
+            SystemUserTb user = systemUserService.describeUserByUsername(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");
             } else {
@@ -38,7 +38,7 @@ public class UserDetailsHandler implements UserDetailsService {
                     throw new BadRequestException("账号未激活！");
                 }
                 // 获取用户的权限
-                List<SystemRoleCodeVo> authorities = systemRoleApi.buildUserRolePermissions(user);
+                List<SystemRoleCodeVo> authorities = systemRoleService.buildUserRolePermissions(user);
                 // 初始化JwtUserDto
                 userJwtVo = new SystemUserJwtVo(user, systemDataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据

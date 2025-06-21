@@ -1,7 +1,6 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
-import cn.odboy.core.service.system.SystemDictDetailApi;
 import cn.odboy.core.dal.dataobject.system.SystemDictDetailTb;
 import cn.odboy.core.service.system.SystemDictDetailService;
 import cn.odboy.core.dal.model.system.CreateSystemDictDetailArgs;
@@ -26,13 +25,12 @@ import java.util.Map;
 @RequestMapping("/api/dictDetail")
 public class SystemDictDetailController {
     private final SystemDictDetailService systemDictDetailService;
-    private final SystemDictDetailApi systemDictDetailApi;
 
     @ApiOperation("查询字典详情")
     @GetMapping
     public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailListByArgs(QuerySystemDictDetailArgs criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemDictDetailApi.queryDictDetailListByArgs(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictDetailService.queryDictDetailListByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("查询多个字典详情")
@@ -41,7 +39,7 @@ public class SystemDictDetailController {
         String[] names = dictName.split("[,，]");
         Map<String, List<SystemDictDetailTb>> dictMap = new HashMap<>(16);
         for (String name : names) {
-            dictMap.put(name, systemDictDetailApi.describeDictDetailListByName(name));
+            dictMap.put(name, systemDictDetailService.describeDictDetailListByName(name));
         }
         return new ResponseEntity<>(dictMap, HttpStatus.OK);
     }
