@@ -97,12 +97,12 @@ public class SystemLocalStorageServiceImpl extends ServiceImpl<SystemLocalStorag
     }
 
     @Override
-    public CsResultVo<List<SystemLocalStorageTb>> describeLocalStoragePage(QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+    public CsResultVo<List<SystemLocalStorageTb>> queryLocalStoragePage(QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page) {
         return PageUtil.toPage(systemLocalStorageMapper.queryLocalStoragePageByArgs(criteria, page));
     }
 
     @Override
-    public List<SystemLocalStorageTb> describeLocalStorageList(QuerySystemLocalStorageArgs criteria) {
+    public List<SystemLocalStorageTb> queryLocalStorageList(QuerySystemLocalStorageArgs criteria) {
         return systemLocalStorageMapper.queryLocalStoragePageByArgs(criteria, PageUtil.getCount(systemLocalStorageMapper)).getRecords();
     }
 }

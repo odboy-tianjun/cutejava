@@ -46,7 +46,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     @Transactional(rollbackFor = Exception.class)
     public SystemQiniuContentTb uploadFile(MultipartFile file) {
         FileUtil.checkSize(maxSize, file.getSize());
-        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.queryQiniuConfig();
         if (qiniuConfig.getId() == null) {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
@@ -84,7 +84,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
 
     @Override
     public String createFilePreviewUrl(SystemQiniuContentTb content) {
-        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.queryQiniuConfig();
         String finalUrl;
         String type = "公开";
         if (type.equals(content.getType())) {
@@ -101,7 +101,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeFileById(Long id) {
-        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.queryQiniuConfig();
         SystemQiniuContentTb qiniuContent = systemQiniuContentMapper.selectById(id);
         if (qiniuContent == null) {
             throw new BadRequestException("文件不存在");
@@ -122,7 +122,7 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void synchronize() {
-        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.describeQiniuConfig();
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigService.queryQiniuConfig();
         if (qiniuConfig.getId() == null) {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
@@ -187,12 +187,12 @@ public class SystemQiniuContentServiceImpl extends ServiceImpl<SystemQiniuConten
     }
 
     @Override
-    public CsResultVo<List<SystemQiniuContentTb>> describeQiniuContentPage(QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page) {
+    public CsResultVo<List<SystemQiniuContentTb>> queryQiniuContentPage(QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page) {
         return PageUtil.toPage(systemQiniuContentMapper.queryQiniuContentPageByArgs(criteria, page));
     }
 
     @Override
-    public List<SystemQiniuContentTb> describeQiniuContentList(QuerySystemQiniuArgs criteria) {
+    public List<SystemQiniuContentTb> queryQiniuContentList(QuerySystemQiniuArgs criteria) {
         return systemQiniuContentMapper.queryQiniuContentPageByArgs(criteria, PageUtil.getCount(systemQiniuContentMapper)).getRecords();
     }
 }

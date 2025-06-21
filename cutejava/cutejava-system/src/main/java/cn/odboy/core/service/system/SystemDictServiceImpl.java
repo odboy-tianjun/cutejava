@@ -84,13 +84,13 @@ public class SystemDictServiceImpl extends ServiceImpl<SystemDictMapper, SystemD
     }
 
     @Override
-    public CsResultVo<List<SystemDictTb>> describeDictPage(QuerySystemDictArgs criteria, Page<SystemDictTb> page) {
+    public CsResultVo<List<SystemDictTb>> queryDictPage(QuerySystemDictArgs criteria, Page<SystemDictTb> page) {
         IPage<SystemDictTb> dicts = systemDictMapper.queryDictPageByArgs(criteria, page);
         return PageUtil.toPage(dicts);
     }
 
     @Override
-    public List<SystemDictTb> describeDictList(QuerySystemDictArgs criteria) {
+    public List<SystemDictTb> queryDictList(QuerySystemDictArgs criteria) {
         return systemDictMapper.queryDictPageByArgs(criteria, PageUtil.getCount(systemDictMapper)).getRecords();
     }
 }

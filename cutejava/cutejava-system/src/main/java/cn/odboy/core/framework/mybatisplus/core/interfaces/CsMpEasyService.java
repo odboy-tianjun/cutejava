@@ -40,29 +40,29 @@ public interface CsMpEasyService<T> extends IService<T> {
 
     <G> boolean modifyFeatureClazzListById(Collection<G> resources, int batchSize);
 
-    <G> G describeFeatureClazzById(Serializable id, Class<G> targetClazz);
+    <G> G queryFeatureClazzById(Serializable id, Class<G> targetClazz);
 
-    T describeClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
+    T queryClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
 
-    <G> G describeFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz);
+    <G> G queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz);
 
-    <G> List<G> describeFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
+    <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
 
-    <Q> List<T> describeClazzListByArgs(Q criteria);
+    <Q> List<T> queryClazzListByArgs(Q criteria);
 
-    List<T> describeClazzListByArgs(LambdaQueryWrapper<T> wrapper);
+    List<T> queryClazzListByArgs(LambdaQueryWrapper<T> wrapper);
 
-    <G, Q> List<G> describeFeatureClazzListByArgs(Q criteria, Class<G> targetClazz);
+    <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz);
 
-    <G> List<G> describeFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
+    <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
 
-    CsResultVo<List<T>> describeClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
+    CsResultVo<List<T>> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
 
-    <G> CsResultVo<List<G>> describeFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
+    <G> CsResultVo<List<G>> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
 
-    <G, Q> CsResultVo<List<G>> describeFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
+    <G, Q> CsResultVo<List<G>> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
 
-    <Q> CsResultVo<List<T>> describeClazzPageByArgs(Q criteria, IPage<T> pageable);
+    <Q> CsResultVo<List<T>> queryClazzPageByArgs(Q criteria, IPage<T> pageable);
 
     int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity);
 

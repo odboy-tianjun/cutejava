@@ -83,7 +83,7 @@ public interface SystemQuartzJobService extends IService<SystemQuartzJobTb> {
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemQuartzJobTb>> describeQuartzJobPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
+    CsResultVo<List<SystemQuartzJobTb>> queryQuartzJobPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
 
     /**
      * 查询全部
@@ -91,7 +91,7 @@ public interface SystemQuartzJobService extends IService<SystemQuartzJobTb> {
      * @param criteria 条件
      * @return /
      */
-    List<SystemQuartzJobTb> describeQuartzJobList(QuerySystemQuartzJobArgs criteria);
+    List<SystemQuartzJobTb> queryQuartzJobList(QuerySystemQuartzJobArgs criteria);
 
     /**
      * 分页查询日志
@@ -100,7 +100,7 @@ public interface SystemQuartzJobService extends IService<SystemQuartzJobTb> {
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemQuartzLogTb>> describeQuartzLogPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page);
+    CsResultVo<List<SystemQuartzLogTb>> queryQuartzLogPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page);
 
     /**
      * 查询全部
@@ -108,5 +108,5 @@ public interface SystemQuartzJobService extends IService<SystemQuartzJobTb> {
      * @param criteria 条件
      * @return /
      */
-    List<SystemQuartzLogTb> describeQuartzLogList(QuerySystemQuartzJobArgs criteria);
+    List<SystemQuartzLogTb> queryQuartzLogList(QuerySystemQuartzJobArgs criteria);
 }

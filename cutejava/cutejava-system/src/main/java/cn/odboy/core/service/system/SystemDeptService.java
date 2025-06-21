@@ -50,7 +50,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @return /
      * @throws Exception /
      */
-    List<SystemDeptTb> describeDeptList(QuerySystemDeptArgs criteria, Boolean isQuery) throws Exception;
+    List<SystemDeptTb> queryDeptList(QuerySystemDeptArgs criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -58,7 +58,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param id /
      * @return /
      */
-    SystemDeptTb describeDeptById(Long id);
+    SystemDeptTb queryDeptById(Long id);
 
     /**
      * 根据PID查询
@@ -66,7 +66,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param pid /
      * @return /
      */
-    List<SystemDeptTb> describeDeptListByPid(long pid);
+    List<SystemDeptTb> queryDeptListByPid(long pid);
 
     /**
      * 根据角色ID查询
@@ -74,7 +74,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param id /
      * @return /
      */
-    Set<SystemDeptTb> describeDeptByRoleId(Long id);
+    Set<SystemDeptTb> queryDeptByRoleId(Long id);
 
     /**
      * 获取部门下所有关联的部门
@@ -83,7 +83,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param depts    /
      * @return /
      */
-    Set<SystemDeptTb> describeRelationDeptSet(List<SystemDeptTb> deptList, Set<SystemDeptTb> depts);
+    Set<SystemDeptTb> queryRelationDeptSet(List<SystemDeptTb> deptList, Set<SystemDeptTb> depts);
 
     /**
      * 根据ID获取同级与上级数据
@@ -92,7 +92,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param depts /
      * @return /
      */
-    List<SystemDeptTb> describeSuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> depts);
+    List<SystemDeptTb> querySuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> depts);
 
     /**
      * 构建树形数据
@@ -108,7 +108,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param deptList 、
      * @return 、
      */
-    List<Long> describeChildDeptIdListByDeptIds(List<SystemDeptTb> deptList);
+    List<Long> queryChildDeptIdListByDeptIds(List<SystemDeptTb> deptList);
 
     /**
      * 验证是否被角色或用户关联

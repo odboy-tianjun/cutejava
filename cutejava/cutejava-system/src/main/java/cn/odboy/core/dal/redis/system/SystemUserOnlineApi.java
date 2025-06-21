@@ -15,7 +15,7 @@ public interface SystemUserOnlineApi {
      * @param pageable /
      * @return /
      */
-    CsResultVo<List<SystemUserOnlineVo>> describeUserOnlineModelPage(String username, Pageable pageable);
+    CsResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(String username, Pageable pageable);
 
     /**
      * 查询全部数据，不分页
@@ -23,7 +23,7 @@ public interface SystemUserOnlineApi {
      * @param username /
      * @return /
      */
-    List<SystemUserOnlineVo> describeUserOnlineModelListByUsername(String username);
+    List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username);
 
     /**
      * 查询用户
@@ -31,5 +31,5 @@ public interface SystemUserOnlineApi {
      * @param key /
      * @return /
      */
-    SystemUserOnlineVo describeUserOnlineModelByKey(String key);
+    SystemUserOnlineVo queryUserOnlineModelByKey(String key);
 }

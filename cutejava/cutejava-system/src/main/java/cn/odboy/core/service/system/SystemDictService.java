@@ -51,7 +51,7 @@ public interface SystemDictService extends IService<SystemDictTb> {
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemDictTb>> describeDictPage(QuerySystemDictArgs criteria, Page<SystemDictTb> page);
+    CsResultVo<List<SystemDictTb>> queryDictPage(QuerySystemDictArgs criteria, Page<SystemDictTb> page);
 
     /**
      * 查询全部数据
@@ -59,5 +59,5 @@ public interface SystemDictService extends IService<SystemDictTb> {
      * @param criteria /
      * @return /
      */
-    List<SystemDictTb> describeDictList(QuerySystemDictArgs criteria);
+    List<SystemDictTb> queryDictList(QuerySystemDictArgs criteria);
 }

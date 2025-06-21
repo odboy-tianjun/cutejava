@@ -16,5 +16,5 @@ public interface SystemDataService {
      * @param user /
      * @return /
      */
-    List<Long> describeDeptIdListByUserIdWithDeptId(SystemUserTb user);
+    List<Long> queryDeptIdListByUserIdWithDeptId(SystemUserTb user);
 }

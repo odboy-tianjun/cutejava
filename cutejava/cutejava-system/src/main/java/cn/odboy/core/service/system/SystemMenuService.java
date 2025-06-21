@@ -53,7 +53,7 @@ public interface SystemMenuService extends IService<SystemMenuTb> {
      * @return /
      * @throws Exception /
      */
-    List<SystemMenuTb> describeMenuList(QuerySystemMenuArgs criteria, Boolean isQuery) throws Exception;
+    List<SystemMenuTb> queryMenuList(QuerySystemMenuArgs criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -61,7 +61,7 @@ public interface SystemMenuService extends IService<SystemMenuTb> {
      * @param id /
      * @return /
      */
-    SystemMenuTb describeMenuById(long id);
+    SystemMenuTb queryMenuById(long id);
 
     /**
      * 获取所有子节点，包含自身ID
@@ -70,7 +70,7 @@ public interface SystemMenuService extends IService<SystemMenuTb> {
      * @param menuSet  /
      * @return /
      */
-    Set<SystemMenuTb> describeChildMenuSet(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet);
+    Set<SystemMenuTb> queryChildMenuSet(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet);
 
     /**
      * 构建菜单树
@@ -94,7 +94,7 @@ public interface SystemMenuService extends IService<SystemMenuTb> {
      * @param pid /
      * @return /
      */
-    List<SystemMenuTb> describeMenuListByPid(Long pid);
+    List<SystemMenuTb> queryMenuListByPid(Long pid);
 
     /**
      * 根据ID获取同级与上级数据
@@ -103,7 +103,7 @@ public interface SystemMenuService extends IService<SystemMenuTb> {
      * @param objects /
      * @return /
      */
-    List<SystemMenuTb> describeSuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> objects);
+    List<SystemMenuTb> querySuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> objects);
 
     /**
      * 根据当前用户获取菜单
@@ -111,5 +111,5 @@ public interface SystemMenuService extends IService<SystemMenuTb> {
      * @param currentUserId /
      * @return /
      */
-    List<SystemMenuTb> describeMenuListByUserId(Long currentUserId);
+    List<SystemMenuTb> queryMenuListByUserId(Long currentUserId);
 }

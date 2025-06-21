@@ -10,5 +10,5 @@ public interface SystemUserJwtApi {
      * @param username 用户名
      * @return UserJwtVo
      */
-    SystemUserJwtVo describeUserJwtModelByUsername(String username);
+    SystemUserJwtVo queryUserJwtModelByUsername(String username);
 }

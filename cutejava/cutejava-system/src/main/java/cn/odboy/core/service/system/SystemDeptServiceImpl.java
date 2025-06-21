@@ -53,7 +53,7 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     @Transactional(rollbackFor = Exception.class)
     public void modifyDept(SystemDeptTb resources) {
         // 旧的部门
-        Long oldPid = describeDeptById(resources.getId()).getPid();
+        Long oldPid = queryDeptById(resources.getId()).getPid();
         Long newPid = resources.getPid();
         if (resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
@@ -113,7 +113,7 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     }
 
     @Override
-    public List<SystemDeptTb> describeDeptList(QuerySystemDeptArgs criteria, Boolean isQuery) throws Exception {
+    public List<SystemDeptTb> queryDeptList(QuerySystemDeptArgs criteria, Boolean isQuery) throws Exception {
         String dataScopeType = SecurityHelper.getDataScopeType();
         if (isQuery) {
             if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {
@@ -148,40 +148,40 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     }
 
     @Override
-    public SystemDeptTb describeDeptById(Long id) {
+    public SystemDeptTb queryDeptById(Long id) {
         return systemDeptMapper.selectById(id);
     }
 
     @Override
-    public List<SystemDeptTb> describeDeptListByPid(long pid) {
+    public List<SystemDeptTb> queryDeptListByPid(long pid) {
         return systemDeptMapper.queryDeptListByPid(pid);
     }
 
     @Override
-    public Set<SystemDeptTb> describeDeptByRoleId(Long id) {
+    public Set<SystemDeptTb> queryDeptByRoleId(Long id) {
         return systemDeptMapper.queryDeptSetByRoleId(id);
     }
 
     @Override
-    public Set<SystemDeptTb> describeRelationDeptSet(List<SystemDeptTb> menuList, Set<SystemDeptTb> deptSet) {
+    public Set<SystemDeptTb> queryRelationDeptSet(List<SystemDeptTb> menuList, Set<SystemDeptTb> deptSet) {
         for (SystemDeptTb dept : menuList) {
             deptSet.add(dept);
             List<SystemDeptTb> deptList = systemDeptMapper.queryDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(deptList)) {
-                describeRelationDeptSet(deptList, deptSet);
+                queryRelationDeptSet(deptList, deptSet);
             }
         }
         return deptSet;
     }
 
     @Override
-    public List<Long> describeChildDeptIdListByDeptIds(List<SystemDeptTb> deptList) {
+    public List<Long> queryChildDeptIdListByDeptIds(List<SystemDeptTb> deptList) {
         List<Long> list = new ArrayList<>();
         for (SystemDeptTb systemDeptTb : deptList) {
             if (systemDeptTb != null && systemDeptTb.getEnabled()) {
                 List<SystemDeptTb> deptList1 = systemDeptMapper.queryDeptListByPid(systemDeptTb.getId());
                 if (CollUtil.isNotEmpty(deptList1)) {
-                    list.addAll(describeChildDeptIdListByDeptIds(deptList1));
+                    list.addAll(queryChildDeptIdListByDeptIds(deptList1));
                 }
                 list.add(systemDeptTb.getId());
             }
@@ -190,13 +190,13 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     }
 
     @Override
-    public List<SystemDeptTb> describeSuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
+    public List<SystemDeptTb> querySuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
         if (dept.getPid() == null) {
             deptList.addAll(systemDeptMapper.queryDeptListByPidIsNull());
             return deptList;
         }
         deptList.addAll(systemDeptMapper.queryDeptListByPid(dept.getPid()));
-        return describeSuperiorDeptListByPid(describeDeptById(dept.getPid()), deptList);
+        return querySuperiorDeptListByPid(queryDeptById(dept.getPid()), deptList);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
             }
             if (isChild) {
                 deptSet.add(dept);
-            } else if (dept.getPid() != null && !deptNames.contains(describeDeptById(dept.getPid()).getName())) {
+            } else if (dept.getPid() != null && !deptNames.contains(queryDeptById(dept.getPid()).getName())) {
                 deptSet.add(dept);
             }
         }
@@ -250,11 +250,11 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
         Set<SystemDeptTb> depts = new HashSet<>();
         for (Long id : ids) {
             // 根部门
-            depts.add(describeDeptById(id));
+            depts.add(queryDeptById(id));
             // 子部门
-            List<SystemDeptTb> deptList = describeDeptListByPid(id);
+            List<SystemDeptTb> deptList = queryDeptListByPid(id);
             if (CollectionUtil.isNotEmpty(deptList)) {
-                depts = describeRelationDeptSet(deptList, depts);
+                depts = queryRelationDeptSet(deptList, depts);
             }
         }
         return depts;

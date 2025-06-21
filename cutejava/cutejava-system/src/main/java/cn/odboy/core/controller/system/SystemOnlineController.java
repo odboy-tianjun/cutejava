@@ -32,14 +32,14 @@ public class SystemOnlineController {
     @GetMapping
     @PreAuthorize("@el.check()")
     public ResponseEntity<CsResultVo<List<SystemUserOnlineVo>>> queryOnlineUser(String username, Pageable pageable) {
-        return new ResponseEntity<>(systemUserOnlineApi.describeUserOnlineModelPage(username, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(systemUserOnlineApi.queryUserOnlineModelPage(username, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        systemUserOnlineService.downloadUserOnlineModelExcel(systemUserOnlineApi.describeUserOnlineModelListByUsername(username), response);
+        systemUserOnlineService.downloadUserOnlineModelExcel(systemUserOnlineApi.queryUserOnlineModelListByUsername(username), response);
     }
 
     @ApiOperation("踢出用户")

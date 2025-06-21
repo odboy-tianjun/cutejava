@@ -39,7 +39,7 @@ public class SystemDictDetailController {
         String[] names = dictName.split("[,，]");
         Map<String, List<SystemDictDetailTb>> dictMap = new HashMap<>(16);
         for (String name : names) {
-            dictMap.put(name, systemDictDetailService.describeDictDetailListByName(name));
+            dictMap.put(name, systemDictDetailService.queryDictDetailListByName(name));
         }
         return new ResponseEntity<>(dictMap, HttpStatus.OK);
     }

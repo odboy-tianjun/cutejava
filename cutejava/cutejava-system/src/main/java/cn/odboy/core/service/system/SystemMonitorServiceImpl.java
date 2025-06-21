@@ -28,7 +28,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
-    public Map<String, Object> describeServerMonitorInfo() {
+    public Map<String, Object> queryServerMonitorInfo() {
         Map<String, Object> resultMap = new LinkedHashMap<>(8);
         try {
             SystemInfo si = new SystemInfo();

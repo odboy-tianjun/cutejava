@@ -29,5 +29,5 @@ public interface SystemEmailService extends IService<SystemEmailConfigTb> {
      *
      * @return EmailConfig 邮件配置
      */
-    SystemEmailConfigTb describeEmailConfig();
+    SystemEmailConfigTb queryEmailConfig();
 }

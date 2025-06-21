@@ -22,7 +22,7 @@ public class SystemEmailServiceImpl extends ServiceImpl<SystemEmailConfigMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modifyEmailConfigOnPassChange(SystemEmailConfigTb emailConfig) throws Exception {
-        SystemEmailConfigTb localConfig = describeEmailConfig();
+        SystemEmailConfigTb localConfig = queryEmailConfig();
         if (!emailConfig.getPassword().equals(localConfig.getPassword())) {
             // 对称加密
             emailConfig.setPassword(DesEncryptUtil.desEncrypt(emailConfig.getPassword()));
@@ -35,7 +35,7 @@ public class SystemEmailServiceImpl extends ServiceImpl<SystemEmailConfigMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendEmail(SendSystemEmailArgs sendEmailRequest) {
-        SystemEmailConfigTb emailConfig = describeEmailConfig();
+        SystemEmailConfigTb emailConfig = queryEmailConfig();
         if (emailConfig.getId() == null) {
             throw new BadRequestException("请先配置，再操作");
         }
@@ -79,7 +79,7 @@ public class SystemEmailServiceImpl extends ServiceImpl<SystemEmailConfigMapper,
     }
 
     @Override
-    public SystemEmailConfigTb describeEmailConfig() {
+    public SystemEmailConfigTb queryEmailConfig() {
         SystemEmailConfigTb emailConfig = getById(1L);
         return emailConfig == null ? new SystemEmailConfigTb() : emailConfig;
     }

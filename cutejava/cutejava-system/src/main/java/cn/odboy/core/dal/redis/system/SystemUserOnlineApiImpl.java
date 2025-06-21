@@ -21,14 +21,14 @@ public class SystemUserOnlineApiImpl implements SystemUserOnlineApi {
     private final RedisHelper redisHelper;
 
     @Override
-    public CsResultVo<List<SystemUserOnlineVo>> describeUserOnlineModelPage(String username, Pageable pageable) {
-        List<SystemUserOnlineVo> onlineUserList = describeUserOnlineModelListByUsername(username);
+    public CsResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(String username, Pageable pageable) {
+        List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
         List<SystemUserOnlineVo> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
         return PageUtil.toPage(paging, onlineUserList.size());
     }
 
     @Override
-    public List<SystemUserOnlineVo> describeUserOnlineModelListByUsername(String username) {
+    public List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
@@ -41,7 +41,7 @@ public class SystemUserOnlineApiImpl implements SystemUserOnlineApi {
     }
 
     @Override
-    public SystemUserOnlineVo describeUserOnlineModelByKey(String key) {
+    public SystemUserOnlineVo queryUserOnlineModelByKey(String key) {
         return redisHelper.get(key, SystemUserOnlineVo.class);
     }
 }

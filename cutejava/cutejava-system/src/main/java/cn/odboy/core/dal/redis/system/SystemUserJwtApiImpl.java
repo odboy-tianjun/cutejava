@@ -15,7 +15,7 @@ public class SystemUserJwtApiImpl implements SystemUserJwtApi {
     private RedisHelper redisHelper;
 
     @Override
-    public SystemUserJwtVo describeUserJwtModelByUsername(String username) {
+    public SystemUserJwtVo queryUserJwtModelByUsername(String username) {
         // 转小写
         username = StringUtil.lowerCase(username);
         if (StringUtil.isNotEmpty(username)) {

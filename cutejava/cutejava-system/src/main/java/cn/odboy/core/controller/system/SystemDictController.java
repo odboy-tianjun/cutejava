@@ -31,14 +31,14 @@ public class SystemDictController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
     public void exportDict(HttpServletResponse response, QuerySystemDictArgs criteria) throws IOException {
-        systemDictService.downloadDictExcel(systemDictService.describeDictList(criteria), response);
+        systemDictService.downloadDictExcel(systemDictService.queryDictList(criteria), response);
     }
 
     @ApiOperation("查询字典")
     @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<SystemDictTb>> queryAllDict() {
-        return new ResponseEntity<>(systemDictService.describeDictList(new QuerySystemDictArgs()), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictService.queryDictList(new QuerySystemDictArgs()), HttpStatus.OK);
     }
 
     @ApiOperation("查询字典")
@@ -46,7 +46,7 @@ public class SystemDictController {
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<CsResultVo<List<SystemDictTb>>> queryDict(QuerySystemDictArgs criteria) {
         Page<SystemDictTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemDictService.describeDictPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictService.queryDictPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增字典")

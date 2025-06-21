@@ -73,17 +73,17 @@ public class SystemJobServiceImpl extends ServiceImpl<SystemJobMapper, SystemJob
 
 
     @Override
-    public CsResultVo<List<SystemJobTb>> describeJobPage(QuerySystemJobArgs criteria, Page<SystemJobTb> page) {
+    public CsResultVo<List<SystemJobTb>> queryJobPage(QuerySystemJobArgs criteria, Page<SystemJobTb> page) {
         return PageUtil.toPage(systemJobMapper.queryJobPageByArgs(criteria, page));
     }
 
     @Override
-    public List<SystemJobTb> describeJobList(QuerySystemJobArgs criteria) {
+    public List<SystemJobTb> queryJobList(QuerySystemJobArgs criteria) {
         return systemJobMapper.queryJobPageByArgs(criteria, PageUtil.getCount(systemJobMapper)).getRecords();
     }
 
     @Override
-    public SystemJobTb describeJobById(Long id) {
+    public SystemJobTb queryJobById(Long id) {
         return systemJobMapper.selectById(id);
     }
 

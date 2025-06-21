@@ -87,7 +87,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param id          /
      * @param targetClazz 目标类型
      */
-    public <G> G describeFeatureClazzById(Serializable id, Class<G> targetClazz) {
+    public <G> G queryFeatureClazzById(Serializable id, Class<G> targetClazz) {
         T entity = this.getById(id);
         return entity == null ? null : BeanUtil.copyProperties(entity, targetClazz);
     }
@@ -97,7 +97,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      *
      * @param wrapper 制造条件
      */
-    public T describeClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn) {
+    public T queryClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn) {
         if (orderColumn == null) {
             throw new BadRequestException("参数orderColumn(排序的列)必填");
         }
@@ -113,7 +113,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
         return ts.stream().findFirst().get();
     }
 
-    public <G> G describeFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz) {
+    public <G> G queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz) {
         if (orderColumn == null) {
             throw new BadRequestException("参数orderColumn(排序的列)必填");
         }
@@ -135,7 +135,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param ids         /
      * @param targetClazz 目标类型
      */
-    public <G> List<G> describeFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz) {
+    public <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz) {
         List<T> entitys = this.listByIds(ids);
         return entitys == null || entitys.isEmpty() ? CollUtil.newArrayList() : BeanUtil.copyToList(entitys, targetClazz);
     }
@@ -145,7 +145,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      *
      * @param criteria 动态条件
      */
-    public <Q> List<T> describeClazzListByArgs(Q criteria) {
+    public <Q> List<T> queryClazzListByArgs(Q criteria) {
         QueryWrapper<T> predicate = CsMpSimpleQUtil.build(criteria);
         return baseMapper.selectList(predicate);
     }
@@ -155,7 +155,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      *
      * @param wrapper 制造条件
      */
-    public List<T> describeClazzListByArgs(LambdaQueryWrapper<T> wrapper) {
+    public List<T> queryClazzListByArgs(LambdaQueryWrapper<T> wrapper) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
@@ -168,7 +168,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param criteria    动态条件
      * @param targetClazz 目标类型
      */
-    public <G, Q> List<G> describeFeatureClazzListByArgs(Q criteria, Class<G> targetClazz) {
+    public <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz) {
         QueryWrapper<T> predicate = CsMpSimpleQUtil.build(criteria);
         List<T> data = baseMapper.selectList(predicate);
         return BeanUtil.copyToList(data, targetClazz);
@@ -180,7 +180,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param wrapper     制造条件
      * @param targetClazz 目标类型
      */
-    public <G> List<G> describeFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz) {
+    public <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
@@ -193,7 +193,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param wrapper  制造条件
      * @param pageable 分页参数
      */
-    public CsResultVo<List<T>> describeClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
+    public CsResultVo<List<T>> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
@@ -208,7 +208,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param pageable    分页参数
      * @param targetClazz 目标类型
      */
-    public <G> CsResultVo<List<G>> describeFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
+    public <G> CsResultVo<List<G>> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
@@ -216,13 +216,13 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
         return new CsResultVo<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
     }
 
-    public <G, Q> CsResultVo<List<G>> describeFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
+    public <G, Q> CsResultVo<List<G>> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
         QueryWrapper<T> wrapper = CsMpSimpleQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
         return new CsResultVo<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
     }
 
-    public <Q> CsResultVo<List<T>> describeClazzPageByArgs(Q criteria, IPage<T> pageable) {
+    public <Q> CsResultVo<List<T>> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {
         QueryWrapper<T> wrapper = CsMpSimpleQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
         return new CsResultVo<>(originPageData.getRecords(), originPageData.getTotal());

@@ -39,21 +39,21 @@ public class SystemQuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJob(QuerySystemQuartzJobArgs criteria) {
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemQuartzJobService.describeQuartzJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出任务数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJob(HttpServletResponse response, QuerySystemQuartzJobArgs criteria) throws IOException {
-        systemQuartzJobService.downloadQuartzJobExcel(systemQuartzJobService.describeQuartzJobList(criteria), response);
+        systemQuartzJobService.downloadQuartzJobExcel(systemQuartzJobService.queryQuartzJobList(criteria), response);
     }
 
     @ApiOperation("导出日志数据")
     @GetMapping(value = "/logs/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJobLog(HttpServletResponse response, QuerySystemQuartzJobArgs criteria) throws IOException {
-        systemQuartzJobService.downloadQuartzLogExcel(systemQuartzJobService.describeQuartzLogList(criteria), response);
+        systemQuartzJobService.downloadQuartzLogExcel(systemQuartzJobService.queryQuartzLogList(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")
@@ -61,7 +61,7 @@ public class SystemQuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<CsResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(QuerySystemQuartzJobArgs criteria) {
         Page<SystemQuartzLogTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemQuartzJobService.describeQuartzLogPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增定时任务")

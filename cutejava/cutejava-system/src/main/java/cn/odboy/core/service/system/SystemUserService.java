@@ -91,7 +91,7 @@ public interface SystemUserService extends IService<SystemUserTb> {
      * @param id ID
      * @return /
      */
-    SystemUserTb describeUserById(long id);
+    SystemUserTb queryUserById(long id);
 
     /**
      * 根据用户名查询
@@ -99,7 +99,7 @@ public interface SystemUserService extends IService<SystemUserTb> {
      * @param username /
      * @return /
      */
-    SystemUserTb describeUserByUsername(String username);
+    SystemUserTb queryUserByUsername(String username);
 
     /**
      * 查询全部
@@ -108,7 +108,7 @@ public interface SystemUserService extends IService<SystemUserTb> {
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemUserTb>> describeUserPage(QuerySystemUserArgs criteria, Page<Object> page);
+    CsResultVo<List<SystemUserTb>> queryUserPage(QuerySystemUserArgs criteria, Page<Object> page);
 
     /**
      * 查询全部不分页
@@ -116,5 +116,5 @@ public interface SystemUserService extends IService<SystemUserTb> {
      * @param criteria 条件
      * @return /
      */
-    List<SystemUserTb> describeUserList(QuerySystemUserArgs criteria);
+    List<SystemUserTb> queryUserList(QuerySystemUserArgs criteria);
 }

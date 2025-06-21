@@ -162,22 +162,22 @@ public class SystemQuartzJobServiceImpl extends ServiceImpl<SystemQuartzJobMappe
     }
 
     @Override
-    public CsResultVo<List<SystemQuartzJobTb>> describeQuartzJobPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+    public CsResultVo<List<SystemQuartzJobTb>> queryQuartzJobPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
         return PageUtil.toPage(systemQuartzJobMapper.queryQuartzJobPageByArgs(criteria, page));
     }
 
     @Override
-    public CsResultVo<List<SystemQuartzLogTb>> describeQuartzLogPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+    public CsResultVo<List<SystemQuartzLogTb>> queryQuartzLogPage(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
         return PageUtil.toPage(systemQuartzLogMapper.queryQuartzLogPageByArgs(criteria, page));
     }
 
     @Override
-    public List<SystemQuartzJobTb> describeQuartzJobList(QuerySystemQuartzJobArgs criteria) {
+    public List<SystemQuartzJobTb> queryQuartzJobList(QuerySystemQuartzJobArgs criteria) {
         return systemQuartzJobMapper.queryQuartzJobPageByArgs(criteria, PageUtil.getCount(systemQuartzJobMapper)).getRecords();
     }
 
     @Override
-    public List<SystemQuartzLogTb> describeQuartzLogList(QuerySystemQuartzJobArgs criteria) {
+    public List<SystemQuartzLogTb> queryQuartzLogList(QuerySystemQuartzJobArgs criteria) {
         return systemQuartzLogMapper.queryQuartzLogPageByArgs(criteria, PageUtil.getCount(systemQuartzLogMapper)).getRecords();
     }
 }

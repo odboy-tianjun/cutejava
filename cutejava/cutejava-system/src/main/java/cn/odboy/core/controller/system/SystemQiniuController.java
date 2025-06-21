@@ -36,9 +36,9 @@ public class SystemQiniuController {
     private final SystemQiniuConfigService qiNiuConfigService;
 
     @ApiOperation("查询七牛云存储配置")
-    @PostMapping(value = "/describeQiniuConfig")
-    public ResponseEntity<SystemQiniuConfigTb> describeQiniuConfig() {
-        return new ResponseEntity<>(qiNiuConfigService.describeQiniuConfig(), HttpStatus.OK);
+    @PostMapping(value = "/queryQiniuConfig")
+    public ResponseEntity<SystemQiniuConfigTb> queryQiniuConfig() {
+        return new ResponseEntity<>(qiNiuConfigService.queryQiniuConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置七牛云存储")
@@ -52,14 +52,14 @@ public class SystemQiniuController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     public void exportQiNiu(HttpServletResponse response, QuerySystemQiniuArgs criteria) throws IOException {
-        qiniuContentService.downloadExcel(qiniuContentService.describeQiniuContentList(criteria), response);
+        qiniuContentService.downloadExcel(qiniuContentService.queryQiniuContentList(criteria), response);
     }
 
     @ApiOperation("查询文件")
     @GetMapping
     public ResponseEntity<CsResultVo<List<SystemQiniuContentTb>>> queryQiNiu(QuerySystemQiniuArgs criteria) {
         Page<SystemQiniuContentTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(qiniuContentService.describeQiniuContentPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(qiniuContentService.queryQiniuContentPage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("上传文件")
