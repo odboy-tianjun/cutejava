@@ -31,7 +31,6 @@ public class SystemDataServiceImpl implements SystemDataService {
      */
     @Override
     public List<Long> queryDeptIdListByUserIdWithDeptId(SystemUserTb user) {
-        String key = SystemRedisKey.DATA_USER + user.getId();
         Set<Long> deptIds = new HashSet<>();
         // 查询用户角色
         List<SystemRoleTb> roleList = systemRoleService.queryRoleListByUsersId(user.getId());
