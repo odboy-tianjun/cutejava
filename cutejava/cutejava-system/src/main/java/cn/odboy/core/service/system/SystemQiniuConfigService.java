@@ -25,5 +25,5 @@ public interface SystemQiniuConfigService extends IService<SystemQiniuConfigTb> 
      *
      * @return QiniuConfig
      */
-    SystemQiniuConfigTb describeQiniuConfig();
+    SystemQiniuConfigTb queryQiniuConfig();
 }

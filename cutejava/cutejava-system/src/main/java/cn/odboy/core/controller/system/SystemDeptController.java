@@ -30,25 +30,25 @@ public class SystemDeptController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, QuerySystemDeptArgs criteria) throws Exception {
-        systemDeptService.downloadDeptExcel(systemDeptService.describeDeptList(criteria, false), response);
+        systemDeptService.downloadDeptExcel(systemDeptService.queryDeptList(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> describeDeptPage(QuerySystemDeptArgs criteria) throws Exception {
-        List<SystemDeptTb> depts = systemDeptService.describeDeptList(criteria, true);
+    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDeptPage(QuerySystemDeptArgs criteria) throws Exception {
+        List<SystemDeptTb> depts = systemDeptService.queryDeptList(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @PostMapping("/describeDeptSuperiorTree")
+    @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> describeDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
+    public ResponseEntity<Object> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
-            SystemDeptTb dept = systemDeptService.describeDeptById(id);
-            List<SystemDeptTb> depts = systemDeptService.describeSuperiorDeptListByPid(dept, new ArrayList<>());
+            SystemDeptTb dept = systemDeptService.queryDeptById(id);
+            List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
                 for (SystemDeptTb data : depts) {
                     if (data.getId().equals(dept.getPid())) {

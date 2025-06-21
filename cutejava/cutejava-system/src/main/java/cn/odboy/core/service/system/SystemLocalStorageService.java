@@ -52,7 +52,7 @@ public interface SystemLocalStorageService extends IService<SystemLocalStorageTb
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemLocalStorageTb>> describeLocalStoragePage(QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page);
+    CsResultVo<List<SystemLocalStorageTb>> queryLocalStoragePage(QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page);
 
     /**
      * 查询全部数据
@@ -60,5 +60,5 @@ public interface SystemLocalStorageService extends IService<SystemLocalStorageTb
      * @param criteria 条件
      * @return /
      */
-    List<SystemLocalStorageTb> describeLocalStorageList(QuerySystemLocalStorageArgs criteria);
+    List<SystemLocalStorageTb> queryLocalStorageList(QuerySystemLocalStorageArgs criteria);
 }

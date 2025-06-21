@@ -9,5 +9,5 @@ public interface SystemMonitorService {
      *
      * @return Map<String, Object>
      */
-    Map<String, Object> describeServerMonitorInfo();
+    Map<String, Object> queryServerMonitorInfo();
 }

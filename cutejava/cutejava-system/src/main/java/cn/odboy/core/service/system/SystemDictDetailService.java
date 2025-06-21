@@ -46,5 +46,5 @@ public interface SystemDictDetailService extends IService<SystemDictDetailTb> {
      * @param name 字典名称
      * @return /
      */
-    List<SystemDictDetailTb> describeDictDetailListByName(String name);
+    List<SystemDictDetailTb> queryDictDetailListByName(String name);
 }

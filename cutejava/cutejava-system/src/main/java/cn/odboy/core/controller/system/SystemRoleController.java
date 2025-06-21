@@ -34,37 +34,37 @@ public class SystemRoleController {
     private final SystemRoleService systemRoleService;
 
     @ApiOperation("获取单个role")
-    @PostMapping(value = "/describeRoleById")
+    @PostMapping(value = "/queryRoleById")
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<SystemRoleTb> describeRoleById(@RequestBody SystemRoleTb args) {
-        return new ResponseEntity<>(systemRoleService.describeRoleById(args.getId()), HttpStatus.OK);
+    public ResponseEntity<SystemRoleTb> queryRoleById(@RequestBody SystemRoleTb args) {
+        return new ResponseEntity<>(systemRoleService.queryRoleById(args.getId()), HttpStatus.OK);
     }
 
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, QuerySystemRoleArgs criteria) throws IOException {
-        systemRoleService.downloadRoleExcel(systemRoleService.describeRoleList(criteria), response);
+        systemRoleService.downloadRoleExcel(systemRoleService.queryRoleList(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")
-    @PostMapping(value = "/describeRoleList")
+    @PostMapping(value = "/queryRoleList")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
-    public ResponseEntity<List<SystemRoleTb>> describeRoleList() {
-        return new ResponseEntity<>(systemRoleService.describeRoleList(), HttpStatus.OK);
+    public ResponseEntity<List<SystemRoleTb>> queryRoleList() {
+        return new ResponseEntity<>(systemRoleService.queryRoleList(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
     @GetMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> describeRolePage(QuerySystemRoleArgs criteria) {
+    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRolePage(QuerySystemRoleArgs criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemRoleService.describeRolePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleService.queryRolePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
-    @PostMapping(value = "/describeRoleLevel")
-    public ResponseEntity<Object> describeRoleLevel() {
+    @PostMapping(value = "/queryRoleLevel")
+    public ResponseEntity<Object> queryRoleLevel() {
         return new ResponseEntity<>(Dict.create().set("level", checkRoleLevels(null)), HttpStatus.OK);
     }
 
@@ -116,7 +116,7 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = systemRoleService.describeRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        List<Integer> levels = systemRoleService.queryRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

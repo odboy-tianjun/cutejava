@@ -159,7 +159,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
     }
 
     @Override
-    public List<SystemMenuTb> describeMenuList(QuerySystemMenuArgs criteria, Boolean isQuery) throws Exception {
+    public List<SystemMenuTb> queryMenuList(QuerySystemMenuArgs criteria, Boolean isQuery) throws Exception {
         if (Boolean.TRUE.equals(isQuery)) {
             criteria.setPidIsNull(true);
             List<Field> fields = ClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
@@ -181,7 +181,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
     }
 
     @Override
-    public SystemMenuTb describeMenuById(long id) {
+    public SystemMenuTb queryMenuById(long id) {
         return systemMenuMapper.selectById(id);
     }
 
@@ -192,26 +192,26 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
      * @return /
      */
     @Override
-    public List<SystemMenuTb> describeMenuListByUserId(Long currentUserId) {
-        List<SystemRoleTb> roles = systemRoleService.describeRoleListByUsersId(currentUserId);
+    public List<SystemMenuTb> queryMenuListByUserId(Long currentUserId) {
+        List<SystemRoleTb> roles = systemRoleService.queryRoleListByUsersId(currentUserId);
         Set<Long> roleIds = roles.stream().map(SystemRoleTb::getId).collect(Collectors.toSet());
         return new ArrayList<>(systemMenuMapper.queryMenuSetByRoleIdsAndType(roleIds, 2));
     }
 
     @Override
-    public Set<SystemMenuTb> describeChildMenuSet(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
+    public Set<SystemMenuTb> queryChildMenuSet(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
         for (SystemMenuTb menu : menuList) {
             menuSet.add(menu);
             List<SystemMenuTb> menus = systemMenuMapper.queryMenuListByPidOrderByMenuSort(menu.getId());
             if (CollUtil.isNotEmpty(menus)) {
-                describeChildMenuSet(menus, menuSet);
+                queryChildMenuSet(menus, menuSet);
             }
         }
         return menuSet;
     }
 
     @Override
-    public List<SystemMenuTb> describeMenuListByPid(Long pid) {
+    public List<SystemMenuTb> queryMenuListByPid(Long pid) {
         List<SystemMenuTb> menus;
         if (pid != null && !pid.equals(0L)) {
             menus = systemMenuMapper.queryMenuListByPidOrderByMenuSort(pid);
@@ -222,13 +222,13 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
     }
 
     @Override
-    public List<SystemMenuTb> describeSuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> menus) {
+    public List<SystemMenuTb> querySuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> menus) {
         if (menu.getPid() == null) {
             menus.addAll(systemMenuMapper.queryMenuListByPidIsNullOrderByMenuSort());
             return menus;
         }
         menus.addAll(systemMenuMapper.queryMenuListByPidOrderByMenuSort(menu.getPid()));
-        return describeSuperiorMenuList(describeMenuById(menu.getPid()), menus);
+        return querySuperiorMenuList(queryMenuById(menu.getPid()), menus);
     }
 
     @Override

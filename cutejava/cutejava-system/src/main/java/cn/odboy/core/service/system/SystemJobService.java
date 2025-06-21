@@ -50,7 +50,7 @@ public interface SystemJobService extends IService<SystemJobTb> {
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemJobTb>> describeJobPage(QuerySystemJobArgs criteria, Page<SystemJobTb> page);
+    CsResultVo<List<SystemJobTb>> queryJobPage(QuerySystemJobArgs criteria, Page<SystemJobTb> page);
 
     /**
      * 查询全部数据
@@ -58,7 +58,7 @@ public interface SystemJobService extends IService<SystemJobTb> {
      * @param criteria /
      * @return /
      */
-    List<SystemJobTb> describeJobList(QuerySystemJobArgs criteria);
+    List<SystemJobTb> queryJobList(QuerySystemJobArgs criteria);
 
 
     /**
@@ -74,5 +74,5 @@ public interface SystemJobService extends IService<SystemJobTb> {
      * @param id /
      * @return /
      */
-    SystemJobTb describeJobById(Long id);
+    SystemJobTb queryJobById(Long id);
 }

@@ -50,7 +50,7 @@ public class SystemDictDetailServiceImpl extends ServiceImpl<SystemDictDetailMap
     }
 
     @Override
-    public List<SystemDictDetailTb> describeDictDetailListByName(String name) {
+    public List<SystemDictDetailTb> queryDictDetailListByName(String name) {
         return systemDictDetailMapper.queryDictDetailListByDictName(name);
     }
 }

@@ -25,9 +25,9 @@ public class SystemEmailController {
     private final SystemEmailService systemEmailService;
 
     @ApiOperation("查询配置")
-    @PostMapping(value = "/describeEmailConfig")
-    public ResponseEntity<SystemEmailConfigTb> describeEmailConfig() {
-        return new ResponseEntity<>(systemEmailService.describeEmailConfig(), HttpStatus.OK);
+    @PostMapping(value = "/queryEmailConfig")
+    public ResponseEntity<SystemEmailConfigTb> queryEmailConfig() {
+        return new ResponseEntity<>(systemEmailService.queryEmailConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置邮件")

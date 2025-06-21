@@ -116,17 +116,17 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
     }
 
     @Override
-    public List<SystemRoleTb> describeRoleList() {
+    public List<SystemRoleTb> queryRoleList() {
         return systemRoleMapper.queryRoleList();
     }
 
     @Override
-    public List<SystemRoleTb> describeRoleList(QuerySystemRoleArgs criteria) {
+    public List<SystemRoleTb> queryRoleList(QuerySystemRoleArgs criteria) {
         return systemRoleMapper.queryRoleListByArgs(criteria);
     }
 
     @Override
-    public CsResultVo<List<SystemRoleTb>> describeRolePage(QuerySystemRoleArgs criteria, Page<Object> page) {
+    public CsResultVo<List<SystemRoleTb>> queryRolePage(QuerySystemRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemRoleTb> roles = systemRoleMapper.queryRoleListByArgs(criteria);
         Long total = systemRoleMapper.getRoleCountByArgs(criteria);
@@ -134,23 +134,23 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
     }
 
     @Override
-    public SystemRoleTb describeRoleById(long id) {
+    public SystemRoleTb queryRoleById(long id) {
         return systemRoleMapper.selectById(id);
     }
 
     @Override
-    public List<SystemRoleTb> describeRoleListByUsersId(Long userId) {
+    public List<SystemRoleTb> queryRoleListByUsersId(Long userId) {
         return systemRoleMapper.queryRoleListByUserId(userId);
     }
 
     @Override
-    public Integer describeDeptLevelByRoles(Set<SystemRoleTb> roles) {
+    public Integer queryDeptLevelByRoles(Set<SystemRoleTb> roles) {
         if (CollUtil.isEmpty(roles)) {
             return Integer.MAX_VALUE;
         }
         Set<SystemRoleTb> roleSet = new HashSet<>();
         for (SystemRoleTb role : roles) {
-            roleSet.add(describeRoleById(role.getId()));
+            roleSet.add(queryRoleById(role.getId()));
         }
         return Collections.min(roleSet.stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
     }
@@ -180,7 +180,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
     }
 
     @Override
-    public List<SystemRoleTb> describeRoleListByMenuId(Long menuId) {
+    public List<SystemRoleTb> queryRoleListByMenuId(Long menuId) {
         return systemRoleMapper.queryRoleListByMenuId(menuId);
     }
 }

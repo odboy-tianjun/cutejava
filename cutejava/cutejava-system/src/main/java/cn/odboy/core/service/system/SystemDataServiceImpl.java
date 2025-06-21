@@ -30,11 +30,11 @@ public class SystemDataServiceImpl implements SystemDataService {
      * @return /
      */
     @Override
-    public List<Long> describeDeptIdListByUserIdWithDeptId(SystemUserTb user) {
+    public List<Long> queryDeptIdListByUserIdWithDeptId(SystemUserTb user) {
         String key = SystemRedisKey.DATA_USER + user.getId();
         Set<Long> deptIds = new HashSet<>();
         // 查询用户角色
-        List<SystemRoleTb> roleList = systemRoleService.describeRoleListByUsersId(user.getId());
+        List<SystemRoleTb> roleList = systemRoleService.queryRoleListByUsersId(user.getId());
         // 获取对应的部门ID
         for (SystemRoleTb role : roleList) {
             SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
@@ -60,12 +60,12 @@ public class SystemDataServiceImpl implements SystemDataService {
      * @return 数据权限ID
      */
     public Set<Long> getCustomize(Set<Long> deptIds, SystemRoleTb role) {
-        Set<SystemDeptTb> deptList = systemDeptService.describeDeptByRoleId(role.getId());
+        Set<SystemDeptTb> deptList = systemDeptService.queryDeptByRoleId(role.getId());
         for (SystemDeptTb dept : deptList) {
             deptIds.add(dept.getId());
-            List<SystemDeptTb> deptChildren = systemDeptService.describeDeptListByPid(dept.getId());
+            List<SystemDeptTb> deptChildren = systemDeptService.queryDeptListByPid(dept.getId());
             if (CollUtil.isNotEmpty(deptChildren)) {
-                deptIds.addAll(systemDeptService.describeChildDeptIdListByDeptIds(deptChildren));
+                deptIds.addAll(systemDeptService.queryChildDeptIdListByDeptIds(deptChildren));
             }
         }
         return deptIds;

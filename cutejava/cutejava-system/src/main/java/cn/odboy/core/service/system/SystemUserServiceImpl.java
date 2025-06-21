@@ -225,7 +225,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
     }
 
     @Override
-    public CsResultVo<List<SystemUserTb>> describeUserPage(QuerySystemUserArgs criteria, Page<Object> page) {
+    public CsResultVo<List<SystemUserTb>> queryUserPage(QuerySystemUserArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemUserTb> users = systemUserMapper.queryUserPageByArgs(criteria, PageUtil.getCount(systemUserMapper)).getRecords();
         Long total = systemUserMapper.getUserCountByArgs(criteria);
@@ -233,17 +233,17 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
     }
 
     @Override
-    public List<SystemUserTb> describeUserList(QuerySystemUserArgs criteria) {
+    public List<SystemUserTb> queryUserList(QuerySystemUserArgs criteria) {
         return systemUserMapper.queryUserPageByArgs(criteria, PageUtil.getCount(systemUserMapper)).getRecords();
     }
 
     @Override
-    public SystemUserTb describeUserById(long id) {
+    public SystemUserTb queryUserById(long id) {
         return systemUserMapper.selectById(id);
     }
 
     @Override
-    public SystemUserTb describeUserByUsername(String username) {
+    public SystemUserTb queryUserByUsername(String username) {
         return systemUserMapper.getUserByUsername(username);
     }
 }

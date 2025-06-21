@@ -63,7 +63,7 @@ public interface SystemQiniuContentService extends IService<SystemQiniuContentTb
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemQiniuContentTb>> describeQiniuContentPage(QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page);
+    CsResultVo<List<SystemQiniuContentTb>> queryQiniuContentPage(QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page);
 
     /**
      * 查询全部
@@ -71,5 +71,5 @@ public interface SystemQiniuContentService extends IService<SystemQiniuContentTb
      * @param criteria 条件
      * @return /
      */
-    List<SystemQiniuContentTb> describeQiniuContentList(QuerySystemQiniuArgs criteria);
+    List<SystemQiniuContentTb> queryQiniuContentList(QuerySystemQiniuArgs criteria);
 }

@@ -19,10 +19,10 @@ public class SystemMonitorController {
 
     private final SystemMonitorService serverService;
 
-    @PostMapping(value = "/describeServerMonitorInfo")
+    @PostMapping(value = "/queryServerMonitorInfo")
     @ApiOperation("查询服务监控")
     @PreAuthorize("@el.check('monitor:list')")
-    public ResponseEntity<Object> describeServerMonitorInfo() {
-        return new ResponseEntity<>(serverService.describeServerMonitorInfo(), HttpStatus.OK);
+    public ResponseEntity<Object> queryServerMonitorInfo() {
+        return new ResponseEntity<>(serverService.queryServerMonitorInfo(), HttpStatus.OK);
     }
 }

@@ -39,7 +39,7 @@ public class TokenFilter extends GenericFilterBean {
         if (StrUtil.isNotBlank(token)) {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
-            SystemUserOnlineVo userOnlineVo = systemUserOnlineApi.describeUserOnlineModelByKey(loginKey);
+            SystemUserOnlineVo userOnlineVo = systemUserOnlineApi.queryUserOnlineModelByKey(loginKey);
             // 判断用户在线信息是否为空
             if (userOnlineVo != null) {
                 // Token 续期判断

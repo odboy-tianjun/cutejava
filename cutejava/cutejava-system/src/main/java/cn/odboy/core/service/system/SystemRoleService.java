@@ -60,7 +60,7 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      *
      * @return /
      */
-    List<SystemRoleTb> describeRoleList();
+    List<SystemRoleTb> queryRoleList();
 
     /**
      * 查询全部
@@ -68,7 +68,7 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      * @param criteria 条件
      * @return /
      */
-    List<SystemRoleTb> describeRoleList(QuerySystemRoleArgs criteria);
+    List<SystemRoleTb> queryRoleList(QuerySystemRoleArgs criteria);
 
     /**
      * 待条件分页查询
@@ -77,7 +77,7 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      * @param page     分页参数
      * @return /
      */
-    CsResultVo<List<SystemRoleTb>> describeRolePage(QuerySystemRoleArgs criteria, Page<Object> page);
+    CsResultVo<List<SystemRoleTb>> queryRolePage(QuerySystemRoleArgs criteria, Page<Object> page);
 
     /**
      * 根据ID查询
@@ -85,7 +85,7 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      * @param id /
      * @return /
      */
-    SystemRoleTb describeRoleById(long id);
+    SystemRoleTb queryRoleById(long id);
 
 
     /**
@@ -94,7 +94,7 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      * @param userId 用户ID
      * @return /
      */
-    List<SystemRoleTb> describeRoleListByUsersId(Long userId);
+    List<SystemRoleTb> queryRoleListByUsersId(Long userId);
 
     /**
      * 根据角色查询角色级别
@@ -102,7 +102,7 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      * @param roles /
      * @return /
      */
-    Integer describeDeptLevelByRoles(Set<SystemRoleTb> roles);
+    Integer queryDeptLevelByRoles(Set<SystemRoleTb> roles);
 
     /**
      * 获取用户权限信息
@@ -125,5 +125,5 @@ public interface SystemRoleService extends IService<SystemRoleTb> {
      * @param menuId /
      * @return /
      */
-    List<SystemRoleTb> describeRoleListByMenuId(Long menuId);
+    List<SystemRoleTb> queryRoleListByMenuId(Long menuId);
 }

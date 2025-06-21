@@ -39,7 +39,7 @@ public class SystemQiniuConfigServiceImpl extends ServiceImpl<SystemQiniuConfigM
 
 
     @Override
-    public SystemQiniuConfigTb describeQiniuConfig() {
+    public SystemQiniuConfigTb queryQiniuConfig() {
         SystemQiniuConfigTb qiniuConfig = systemQiniuConfigMapper.selectById(1L);
         return qiniuConfig == null ? new SystemQiniuConfigTb() : qiniuConfig;
     }

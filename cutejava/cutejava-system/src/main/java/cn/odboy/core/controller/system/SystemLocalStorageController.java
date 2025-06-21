@@ -34,14 +34,14 @@ public class SystemLocalStorageController {
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity<CsResultVo<List<SystemLocalStorageTb>>> queryFile(QuerySystemLocalStorageArgs criteria) {
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(localStorageService.describeLocalStoragePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(localStorageService.queryLocalStoragePage(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
     public void exportFile(HttpServletResponse response, QuerySystemLocalStorageArgs criteria) throws IOException {
-        localStorageService.downloadExcel(localStorageService.describeLocalStorageList(criteria), response);
+        localStorageService.downloadExcel(localStorageService.queryLocalStorageList(criteria), response);
     }
 
     @ApiOperation("上传文件")

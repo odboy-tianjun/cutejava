@@ -28,9 +28,9 @@ public class UserDetailsHandler implements UserDetailsService {
 
     @Override
     public SystemUserJwtVo loadUserByUsername(String username) {
-        SystemUserJwtVo userJwtVo = systemUserJwtApi.describeUserJwtModelByUsername(username);
+        SystemUserJwtVo userJwtVo = systemUserJwtApi.queryUserJwtModelByUsername(username);
         if (userJwtVo == null) {
-            SystemUserTb user = systemUserService.describeUserByUsername(username);
+            SystemUserTb user = systemUserService.queryUserByUsername(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");
             } else {
@@ -40,7 +40,7 @@ public class UserDetailsHandler implements UserDetailsService {
                 // 获取用户的权限
                 List<SystemRoleCodeVo> authorities = systemRoleService.buildUserRolePermissions(user);
                 // 初始化JwtUserDto
-                userJwtVo = new SystemUserJwtVo(user, systemDataService.describeDeptIdListByUserIdWithDeptId(user), authorities);
+                userJwtVo = new SystemUserJwtVo(user, systemDataService.queryDeptIdListByUserIdWithDeptId(user), authorities);
                 // 添加缓存数据
                 systemUserJwtService.saveUserJwtModelByUserName(username, userJwtVo);
             }
