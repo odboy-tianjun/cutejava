@@ -56,7 +56,7 @@ public class SystemMenuController {
     @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
     @PostMapping(value = "/queryChildMenuSet")
     @PreAuthorize("@el.check('menu:list','roles:list')")
-    public ResponseEntity<Object> queryChildMenuSet(@RequestParam Long id) {
+    public ResponseEntity<Set<Long>> queryChildMenuSet(@RequestParam Long id) {
         Set<SystemMenuTb> menuSet = new HashSet<>();
         List<SystemMenuTb> menuList = systemMenuService.queryMenuListByPid(id);
         menuSet.add(systemMenuService.queryMenuById(id));
@@ -99,7 +99,7 @@ public class SystemMenuController {
     @ApiOperation("新增菜单")
     @PostMapping(value = "/saveMenu")
     @PreAuthorize("@el.check('menu:add')")
-    public ResponseEntity<Object> saveMenu(@Validated @RequestBody SystemMenuTb resources) {
+    public ResponseEntity<Void> saveMenu(@Validated @RequestBody SystemMenuTb resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
@@ -110,7 +110,7 @@ public class SystemMenuController {
     @ApiOperation("修改菜单")
     @PostMapping(value = "/modifyMenuById")
     @PreAuthorize("@el.check('menu:edit')")
-    public ResponseEntity<Object> modifyMenuById(@Validated(SystemMenuTb.Update.class) @RequestBody SystemMenuTb resources) {
+    public ResponseEntity<Void> modifyMenuById(@Validated(SystemMenuTb.Update.class) @RequestBody SystemMenuTb resources) {
         systemMenuService.modifyMenuById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -118,7 +118,7 @@ public class SystemMenuController {
     @ApiOperation("删除菜单")
     @PostMapping(value = "/removeMenuByIds")
     @PreAuthorize("@el.check('menu:del')")
-    public ResponseEntity<Object> removeMenuByIds(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Void> removeMenuByIds(@RequestBody Set<Long> ids) {
         Set<SystemMenuTb> menuSet = new HashSet<>();
         for (Long id : ids) {
             List<SystemMenuTb> menuList = systemMenuService.queryMenuListByPid(id);

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { describeEmailConfig, modifyEmailConfig } from '@/api/tools/email'
+import { queryEmailConfig, modifyEmailConfig } from '@/api/tools/email'
 export default {
   name: 'Config',
   data() {
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     init() {
-      describeEmailConfig().then(res => {
+      queryEmailConfig().then(res => {
         this.form = res
       })
     },

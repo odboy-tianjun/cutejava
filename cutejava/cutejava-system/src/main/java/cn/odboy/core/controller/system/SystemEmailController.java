@@ -32,14 +32,14 @@ public class SystemEmailController {
 
     @ApiOperation("配置邮件")
     @PostMapping(value = "/modifyEmailConfig")
-    public ResponseEntity<Object> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig) throws Exception {
+    public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig) throws Exception {
         systemEmailService.modifyEmailConfigOnPassChange(emailConfig);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("发送邮件")
     @PostMapping(value = "/sendEmail")
-    public ResponseEntity<Object> sendEmail(@Validated @RequestBody SendSystemEmailArgs sendEmailRequest) {
+    public ResponseEntity<Void> sendEmail(@Validated @RequestBody SendSystemEmailArgs sendEmailRequest) {
         systemEmailService.sendEmail(sendEmailRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }

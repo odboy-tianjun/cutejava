@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 // 获取所有的Role
-export function describeRoleList() {
+export function queryRoleList() {
   return request({
-    url: 'api/roles/describeRoleList',
+    url: 'api/roles/queryRoleList',
     method: 'post'
   })
 }
@@ -18,7 +18,7 @@ export function add(data) {
 
 export function get(id) {
   return request({
-    url: 'api/roles/describeRoleById',
+    url: 'api/roles/queryRoleById',
     method: 'post',
     data: { id: id }
   })
@@ -26,7 +26,7 @@ export function get(id) {
 
 export function getLevel() {
   return request({
-    url: 'api/roles/describeRoleLevel',
+    url: 'api/roles/queryRoleLevel',
     method: 'post'
   })
 }

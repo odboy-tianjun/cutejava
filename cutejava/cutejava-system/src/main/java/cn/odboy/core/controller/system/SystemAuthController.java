@@ -58,7 +58,7 @@ public class SystemAuthController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
+    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
         String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
@@ -106,7 +106,7 @@ public class SystemAuthController {
 
     @ApiOperation("获取验证码")
     @AnonymousPostMapping(value = "/code")
-    public ResponseEntity<Object> getCode() {
+    public ResponseEntity<Map<String, Object>> getCode() {
         // 获取运算的结果
         Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
         String uuid = SystemRedisKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
@@ -127,7 +127,7 @@ public class SystemAuthController {
 
     @ApiOperation("退出登录")
     @AnonymousPostMapping(value = "/logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request) {
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
         String token = tokenProvider.getToken(request);
         onlineUserService.logoutByToken(token);
         return new ResponseEntity<>(HttpStatus.OK);

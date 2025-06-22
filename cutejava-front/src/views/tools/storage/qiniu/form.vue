@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { describeQiniuConfig, modifyQiniuConfig } from '@/api/tools/qiniu'
+import { queryQiniuConfig, modifyQiniuConfig } from '@/api/tools/qiniu'
 export default {
   data() {
     return {
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     init() {
-      describeQiniuConfig().then(res => {
+      queryQiniuConfig().then(res => {
         this.form = res
       })
     },

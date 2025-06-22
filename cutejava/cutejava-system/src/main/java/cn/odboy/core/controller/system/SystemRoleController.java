@@ -3,10 +3,10 @@ package cn.odboy.core.controller.system;
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
-import cn.odboy.core.framework.permission.core.SecurityHelper;
-import cn.odboy.core.service.system.SystemRoleService;
 import cn.odboy.core.dal.model.system.CreateSystemRoleArgs;
 import cn.odboy.core.dal.model.system.QuerySystemRoleArgs;
+import cn.odboy.core.framework.permission.core.SecurityHelper;
+import cn.odboy.core.service.system.SystemRoleService;
 import cn.odboy.exception.BadRequestException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -16,8 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
@@ -64,14 +67,14 @@ public class SystemRoleController {
 
     @ApiOperation("获取用户级别")
     @PostMapping(value = "/queryRoleLevel")
-    public ResponseEntity<Object> queryRoleLevel() {
+    public ResponseEntity<Dict> queryRoleLevel() {
         return new ResponseEntity<>(Dict.create().set("level", checkRoleLevels(null)), HttpStatus.OK);
     }
 
     @ApiOperation("新增角色")
     @PostMapping(value = "/saveRole")
     @PreAuthorize("@el.check('roles:add')")
-    public ResponseEntity<Object> saveRole(@Validated @RequestBody CreateSystemRoleArgs resources) {
+    public ResponseEntity<Void> saveRole(@Validated @RequestBody CreateSystemRoleArgs resources) {
         checkRoleLevels(resources.getLevel());
         systemRoleService.saveRole(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -80,7 +83,7 @@ public class SystemRoleController {
     @ApiOperation("修改角色")
     @PostMapping(value = "/modifyRoleById")
     @PreAuthorize("@el.check('roles:edit')")
-    public ResponseEntity<Object> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleTb resources) {
+    public ResponseEntity<Void> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleTb resources) {
         checkRoleLevels(resources.getLevel());
         systemRoleService.modifyRoleById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -89,7 +92,7 @@ public class SystemRoleController {
     @ApiOperation("修改角色菜单")
     @PostMapping(value = "/modifyBindMenuById")
     @PreAuthorize("@el.check('roles:edit')")
-    public ResponseEntity<Object> modifyBindMenuById(@RequestBody SystemRoleTb resources) {
+    public ResponseEntity<Void> modifyBindMenuById(@RequestBody SystemRoleTb resources) {
         SystemRoleTb role = systemRoleService.getById(resources.getId());
         checkRoleLevels(role.getLevel());
         systemRoleService.modifyBindMenuById(resources);
@@ -99,7 +102,7 @@ public class SystemRoleController {
     @ApiOperation("删除角色")
     @PostMapping(value = "/removeRoleByIds")
     @PreAuthorize("@el.check('roles:del')")
-    public ResponseEntity<Object> removeRoleByIds(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Void> removeRoleByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
             SystemRoleTb role = systemRoleService.getById(id);
             checkRoleLevels(role.getLevel());

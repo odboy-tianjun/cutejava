@@ -47,7 +47,7 @@ public class SystemLocalStorageController {
     @ApiOperation("上传文件")
     @PostMapping(value = "/uploadFile")
     @PreAuthorize("@el.check('storage:add')")
-    public ResponseEntity<Object> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Void> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
         localStorageService.uploadFile(name, file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -67,14 +67,14 @@ public class SystemLocalStorageController {
     @ApiOperation("修改文件")
     @PostMapping(value = "/modifyLocalStorageById")
     @PreAuthorize("@el.check('storage:edit')")
-    public ResponseEntity<Object> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb resources) {
+    public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb resources) {
         localStorageService.modifyLocalStorageById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("多选删除")
     @PostMapping(value = "/removeFileByIds")
-    public ResponseEntity<Object> deleteFileByIds(@RequestBody Long[] ids) {
+    public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
         localStorageService.removeFileByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

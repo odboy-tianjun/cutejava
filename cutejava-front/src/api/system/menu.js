@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function describeMenuListByPid(pid) {
+export function queryMenuListByPid(pid) {
   return request({
-    url: 'api/menus/describeMenuListByPid?pid=' + pid,
+    url: 'api/menus/queryMenuListByPid?pid=' + pid,
     method: 'post'
   })
 }
@@ -15,18 +15,18 @@ export function getMenus(params) {
   })
 }
 
-export function describeMenuSuperior(ids) {
+export function queryMenuSuperior(ids) {
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/menus/describeMenuSuperior',
+    url: 'api/menus/queryMenuSuperior',
     method: 'post',
     data
   })
 }
 
-export function describeChildMenuSet(id) {
+export function queryChildMenuSet(id) {
   return request({
-    url: 'api/menus/describeChildMenuSet?id=' + id,
+    url: 'api/menus/queryChildMenuSet?id=' + id,
     method: 'post'
   })
 }
@@ -62,4 +62,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, describeMenuListByPid, describeMenuSuperior, getMenus, describeChildMenuSet }
+export default { add, edit, del, queryMenuListByPid, queryMenuSuperior, getMenus, queryChildMenuSet }

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function describeDeptList(params) {
+export function queryDeptList(params) {
   return request({
     url: 'api/dept',
     method: 'get',
@@ -8,11 +8,11 @@ export function describeDeptList(params) {
   })
 }
 
-export function describeDeptSuperiorTree(ids, exclude) {
+export function queryDeptSuperiorTree(ids, exclude) {
   exclude = exclude !== undefined ? exclude : false
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/dept/describeDeptSuperiorTree?exclude=' + exclude,
+    url: 'api/dept/queryDeptSuperiorTree?exclude=' + exclude,
     method: 'post',
     data
   })
@@ -42,4 +42,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, describeDeptList, describeDeptSuperiorTree }
+export default { add, edit, del, queryDeptList, queryDeptSuperiorTree }

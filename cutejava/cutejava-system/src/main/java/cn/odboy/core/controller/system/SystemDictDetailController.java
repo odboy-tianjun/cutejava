@@ -35,7 +35,7 @@ public class SystemDictDetailController {
 
     @ApiOperation("查询多个字典详情")
     @GetMapping(value = "/getDictDetailMaps")
-    public ResponseEntity<Object> getDictDetailMaps(@RequestParam String dictName) {
+    public ResponseEntity<Map<String, List<SystemDictDetailTb>>> getDictDetailMaps(@RequestParam String dictName) {
         String[] names = dictName.split("[,，]");
         Map<String, List<SystemDictDetailTb>> dictMap = new HashMap<>(16);
         for (String name : names) {
@@ -47,7 +47,7 @@ public class SystemDictDetailController {
     @ApiOperation("新增字典详情")
     @PostMapping(value = "/saveDictDetail")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Object> saveDictDetail(@Validated @RequestBody CreateSystemDictDetailArgs resources) {
+    public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody CreateSystemDictDetailArgs resources) {
         systemDictDetailService.saveDictDetail(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -55,7 +55,7 @@ public class SystemDictDetailController {
     @ApiOperation("修改字典详情")
     @PostMapping(value = "/modifyDictDetailById")
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<Object> modifyDictDetailById(@Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb resources) {
+    public ResponseEntity<Void> modifyDictDetailById(@Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb resources) {
         systemDictDetailService.modifyDictDetailById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -63,7 +63,7 @@ public class SystemDictDetailController {
     @ApiOperation("删除字典详情")
     @PostMapping(value = "/removeDictDetailById")
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<Object> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
+    public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
         systemDictDetailService.removeDictDetailById(args.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }

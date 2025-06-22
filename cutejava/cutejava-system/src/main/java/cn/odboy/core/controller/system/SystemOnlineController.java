@@ -45,7 +45,7 @@ public class SystemOnlineController {
     @ApiOperation("踢出用户")
     @PostMapping(value = "/kickOutUser")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<Object> kickOutUser(@RequestBody Set<String> keys) throws Exception {
+    public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
         for (String token : keys) {
             // 解密Key
             token = DesEncryptUtil.desDecrypt(token);

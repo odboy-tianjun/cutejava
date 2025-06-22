@@ -148,7 +148,7 @@ export default {
     return {
       show: false,
       monitor: null,
-      url: 'api/monitor/describeServerMonitorInfo',
+      url: 'api/monitor/queryServerMonitorInfo',
       data: {},
       cpuInfo: {
         tooltip: {

@@ -44,10 +44,12 @@ public class SystemDeptController {
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
+    public ResponseEntity<CsResultVo<Set<SystemDeptTb>>> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
+            // 同级数据
             SystemDeptTb dept = systemDeptService.queryDeptById(id);
+            // 上级数据
             List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
                 for (SystemDeptTb data : depts) {
@@ -66,7 +68,7 @@ public class SystemDeptController {
     @ApiOperation("新增部门")
     @PostMapping(value = "/saveDept")
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<Object> saveDept(@Validated @RequestBody CreateSystemDeptArgs resources) {
+    public ResponseEntity<Void> saveDept(@Validated @RequestBody CreateSystemDeptArgs resources) {
         systemDeptService.saveDept(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -74,7 +76,7 @@ public class SystemDeptController {
     @ApiOperation("修改部门")
     @PostMapping(value = "/modifyDept")
     @PreAuthorize("@el.check('dept:edit')")
-    public ResponseEntity<Object> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb resources) {
+    public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb resources) {
         systemDeptService.modifyDept(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -82,7 +84,7 @@ public class SystemDeptController {
     @ApiOperation("删除部门")
     @PostMapping(value = "/removeDeptByIds")
     @PreAuthorize("@el.check('dept:del')")
-    public ResponseEntity<Object> removeDeptByIds(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Void> removeDeptByIds(@RequestBody Set<Long> ids) {
         // 获取部门，和其所有子部门
         Set<SystemDeptTb> depts = systemDeptService.traverseDeptByIdWithPids(ids);
         // 验证是否被角色或用户关联
