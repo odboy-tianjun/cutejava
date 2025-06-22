@@ -46,7 +46,7 @@ public class SystemJobController {
     @ApiOperation("新增岗位")
     @PostMapping(value = "/saveJob")
     @PreAuthorize("@el.check('job:add')")
-    public ResponseEntity<Object> saveJob(@Validated @RequestBody CreateSystemJobArgs resources) {
+    public ResponseEntity<Void> saveJob(@Validated @RequestBody CreateSystemJobArgs resources) {
         systemJobService.saveJob(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -54,7 +54,7 @@ public class SystemJobController {
     @ApiOperation("修改岗位")
     @PostMapping(value = "/modifyJobById")
     @PreAuthorize("@el.check('job:edit')")
-    public ResponseEntity<Object> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb resources) {
+    public ResponseEntity<Void> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb resources) {
         systemJobService.modifyJobById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -62,7 +62,7 @@ public class SystemJobController {
     @ApiOperation("删除岗位")
     @PostMapping(value = "/removeJobByIds")
     @PreAuthorize("@el.check('job:del')")
-    public ResponseEntity<Object> removeJobByIds(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
         // 验证是否被用户关联
         systemJobService.verifyBindRelationByIds(ids);
         systemJobService.removeJobByIds(ids);

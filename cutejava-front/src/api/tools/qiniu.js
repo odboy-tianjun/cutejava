@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function describeQiniuConfig() {
+export function queryQiniuConfig() {
   return request({
-    url: 'api/qiNiuContent/describeQiniuConfig',
+    url: 'api/qiNiuContent/queryQiniuConfig',
     method: 'post'
   })
 }

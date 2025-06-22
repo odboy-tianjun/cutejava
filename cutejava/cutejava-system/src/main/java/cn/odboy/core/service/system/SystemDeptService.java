@@ -100,7 +100,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @param depts /
      * @return /
      */
-    CsResultVo<Object> buildDeptTree(List<SystemDeptTb> depts);
+    CsResultVo<Set<SystemDeptTb>> buildDeptTree(List<SystemDeptTb> depts);
 
     /**
      * 获取

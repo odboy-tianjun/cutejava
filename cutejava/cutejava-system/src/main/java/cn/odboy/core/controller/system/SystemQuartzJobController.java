@@ -67,7 +67,7 @@ public class SystemQuartzJobController {
     @ApiOperation("新增定时任务")
     @PostMapping
     @PreAuthorize("@el.check('timing:add')")
-    public ResponseEntity<Object> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb resources) {
+    public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
@@ -80,7 +80,7 @@ public class SystemQuartzJobController {
     @ApiOperation("修改定时任务")
     @PutMapping
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody UpdateSystemQuartzJobArgs resources) {
+    public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody UpdateSystemQuartzJobArgs resources) {
         // 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
         checkBean(resources.getBeanName());
         systemQuartzJobService.modifyQuartzJobResumeCron(resources);
@@ -90,7 +90,7 @@ public class SystemQuartzJobController {
     @ApiOperation("更改定时任务状态")
     @PostMapping(value = "/switchQuartzJobStatus/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> switchQuartzJobStatus(@PathVariable Long id) {
+    public ResponseEntity<Void> switchQuartzJobStatus(@PathVariable Long id) {
         systemQuartzJobService.switchQuartzJobStatus(systemQuartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -98,7 +98,7 @@ public class SystemQuartzJobController {
     @ApiOperation("执行定时任务")
     @PostMapping(value = "/startQuartzJob/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> startQuartzJob(@PathVariable Long id) {
+    public ResponseEntity<Void> startQuartzJob(@PathVariable Long id) {
         systemQuartzJobService.startQuartzJob(systemQuartzJobService.getById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -106,7 +106,7 @@ public class SystemQuartzJobController {
     @ApiOperation("删除定时任务")
     @DeleteMapping
     @PreAuthorize("@el.check('timing:del')")
-    public ResponseEntity<Object> removeJobByIds(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
         systemQuartzJobService.removeJobByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -208,7 +208,7 @@ export default {
       }, 100)
     },
     getSupDepts(id) {
-      crudMenu.describeMenuSuperior(id).then(res => {
+      crudMenu.queryMenuSuperior(id).then(res => {
         const children = res.map(function(obj) {
           if (!obj.leaf && !obj.children) {
             obj.children = null

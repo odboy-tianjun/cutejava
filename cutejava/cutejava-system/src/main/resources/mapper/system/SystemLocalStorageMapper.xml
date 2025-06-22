@@ -4,7 +4,7 @@
     <select id="queryLocalStoragePageByArgs" resultType="cn.odboy.core.dal.dataobject.system.SystemLocalStorageTb">
         select
         *
-        from tool_local_storage
+        from system_local_storage
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">
                 AND (

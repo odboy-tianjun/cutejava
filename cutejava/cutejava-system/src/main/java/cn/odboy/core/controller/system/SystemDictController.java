@@ -52,7 +52,7 @@ public class SystemDictController {
     @ApiOperation("新增字典")
     @PostMapping(value = "/saveDict")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Object> saveDict(@Validated @RequestBody CreateSystemDictArgs resources) {
+    public ResponseEntity<Void> saveDict(@Validated @RequestBody CreateSystemDictArgs resources) {
         systemDictService.saveDict(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -60,7 +60,7 @@ public class SystemDictController {
     @ApiOperation("修改字典")
     @PostMapping(value = "/modifyDictById")
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<Object> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb resources) {
+    public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb resources) {
         systemDictService.modifyDictById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -68,7 +68,7 @@ public class SystemDictController {
     @ApiOperation("删除字典")
     @PostMapping(value = "/removeDictByIds")
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<Object> removeDictByIds(@RequestBody Set<Long> ids) {
+    public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {
         systemDictService.removeDictByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -200,7 +200,7 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
     }
 
     @Override
-    public CsResultVo<Object> buildDeptTree(List<SystemDeptTb> deptList) {
+    public CsResultVo<Set<SystemDeptTb>> buildDeptTree(List<SystemDeptTb> deptList) {
         Set<SystemDeptTb> trees = new LinkedHashSet<>();
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
@@ -228,7 +228,7 @@ public class SystemDeptServiceImpl extends ServiceImpl<SystemDeptMapper, SystemD
         if (CollectionUtil.isEmpty(trees)) {
             trees = deptSet;
         }
-        CsResultVo<Object> baseResult = new CsResultVo<>();
+        CsResultVo<Set<SystemDeptTb>> baseResult = new CsResultVo<>();
         baseResult.setContent(CollectionUtil.isEmpty(trees) ? deptSet : trees);
         baseResult.setTotalElements(deptSet.size());
         return baseResult;

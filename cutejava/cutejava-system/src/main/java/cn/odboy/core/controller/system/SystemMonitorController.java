@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class SystemMonitorController {
     @PostMapping(value = "/queryServerMonitorInfo")
     @ApiOperation("查询服务监控")
     @PreAuthorize("@el.check('monitor:list')")
-    public ResponseEntity<Object> queryServerMonitorInfo() {
+    public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
         return new ResponseEntity<>(serverService.queryServerMonitorInfo(), HttpStatus.OK);
     }
 }

@@ -30,7 +30,7 @@ public class SystemDataServiceImpl implements SystemDataService {
      * @return /
      */
     @Override
-    public List<Long> queryDeptIdListByUserIdWithDeptId(SystemUserTb user) {
+    public List<Long> queryDeptIdListByArgs(SystemUserTb user) {
         Set<Long> deptIds = new HashSet<>();
         // 查询用户角色
         List<SystemRoleTb> roleList = systemRoleService.queryRoleListByUsersId(user.getId());
@@ -42,7 +42,7 @@ public class SystemDataServiceImpl implements SystemDataService {
                     deptIds.add(user.getDept().getId());
                     break;
                 case CUSTOMIZE:
-                    deptIds.addAll(getCustomize(deptIds, role));
+                    deptIds.addAll(queryCustomDataPermissionList(deptIds, role));
                     break;
                 default:
                     return new ArrayList<>();
@@ -58,7 +58,7 @@ public class SystemDataServiceImpl implements SystemDataService {
      * @param role    角色
      * @return 数据权限ID
      */
-    public Set<Long> getCustomize(Set<Long> deptIds, SystemRoleTb role) {
+    public Set<Long> queryCustomDataPermissionList(Set<Long> deptIds, SystemRoleTb role) {
         Set<SystemDeptTb> deptList = systemDeptService.queryDeptByRoleId(role.getId());
         for (SystemDeptTb dept : deptList) {
             deptIds.add(dept.getId());

@@ -43,7 +43,7 @@ public class SystemQiniuController {
 
     @ApiOperation("配置七牛云存储")
     @PostMapping(value = "/modifyQiniuConfig")
-    public ResponseEntity<Object> modifyQiniuConfig(@Validated @RequestBody SystemQiniuConfigTb qiniuConfig) {
+    public ResponseEntity<Void> modifyQiniuConfig(@Validated @RequestBody SystemQiniuConfigTb qiniuConfig) {
         qiNiuConfigService.saveQiniuConfig(qiniuConfig);
         qiNiuConfigService.modifyQiniuConfigType(qiniuConfig.getType());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -64,7 +64,7 @@ public class SystemQiniuController {
 
     @ApiOperation("上传文件")
     @PostMapping
-    public ResponseEntity<Object> uploadQiNiu(@RequestParam MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> uploadQiNiu(@RequestParam MultipartFile file) {
         SystemQiniuContentTb qiniuContent = qiniuContentService.uploadFile(file);
         Map<String, Object> map = new HashMap<>(3);
         map.put("id", qiniuContent.getId());
@@ -75,14 +75,14 @@ public class SystemQiniuController {
 
     @ApiOperation("同步七牛云数据")
     @PostMapping(value = "/synchronize")
-    public ResponseEntity<Object> synchronizeQiNiu() {
+    public ResponseEntity<Void> synchronizeQiNiu() {
         qiniuContentService.synchronize();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("下载文件")
     @GetMapping(value = "/createFilePreviewUrl/{id}")
-    public ResponseEntity<Object> createFilePreviewUrl(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> createFilePreviewUrl(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>(1);
         map.put("url", qiniuContentService.createFilePreviewUrl(qiniuContentService.getById(id)));
         return new ResponseEntity<>(map, HttpStatus.OK);
@@ -90,14 +90,14 @@ public class SystemQiniuController {
 
     @ApiOperation("删除文件")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> deleteQiNiu(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteQiNiu(@PathVariable Long id) {
         qiniuContentService.removeFileById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("删除多张图片")
     @DeleteMapping
-    public ResponseEntity<Object> deleteAllQiNiu(@RequestBody Long[] ids) {
+    public ResponseEntity<Void> deleteAllQiNiu(@RequestBody Long[] ids) {
         qiniuContentService.removeFileByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

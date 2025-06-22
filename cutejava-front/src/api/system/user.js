@@ -67,7 +67,7 @@ export function updateEmail(form) {
 
 export function queryUserMetaPage(query) {
   return request({
-    url: 'api/users/describeUserMetadataOptions',
+    url: 'api/users/queryUserMetadataOptions',
     method: 'post',
     data: {
       page: 1,

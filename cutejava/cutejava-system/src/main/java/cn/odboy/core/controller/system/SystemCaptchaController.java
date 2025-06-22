@@ -30,21 +30,21 @@ public class SystemCaptchaController {
      */
     @ApiOperation("重置邮箱，发送验证码")
     @PostMapping(value = "/sendResetEmailCaptcha")
-    public ResponseEntity<Object> sendResetEmailCaptcha(@RequestParam String email) {
+    public ResponseEntity<Void> sendResetEmailCaptcha(@RequestParam String email) {
         emailService.sendEmail(captchaService.renderCodeTemplate(email, SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE.getRedisKey()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("重置密码，发送验证码")
     @PostMapping(value = "/sendResetPasswordCaptcha")
-    public ResponseEntity<Object> sendResetPasswordCaptcha(@RequestParam String email) {
+    public ResponseEntity<Void> sendResetPasswordCaptcha(@RequestParam String email) {
         emailService.sendEmail(captchaService.renderCodeTemplate(email, SystemCaptchaBizEnum.EMAIL_RESET_PWD_CODE.getRedisKey()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("验证码验证")
     @PostMapping(value = "/checkCodeAvailable")
-    public ResponseEntity<Object> checkCodeAvailable(@RequestParam String email, @RequestParam String code, @RequestParam String codeBi) {
+    public ResponseEntity<Void> checkCodeAvailable(@RequestParam String email, @RequestParam String code, @RequestParam String codeBi) {
         SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(codeBi);
         switch (Objects.requireNonNull(biEnum)) {
             case EMAIL_RESET_EMAIL_CODE:

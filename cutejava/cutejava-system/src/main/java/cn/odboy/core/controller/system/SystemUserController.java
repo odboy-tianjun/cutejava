@@ -70,7 +70,7 @@ public class SystemUserController {
             criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdListByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = systemDataService.queryDeptIdListByUserIdWithDeptId(systemUserService.queryUserByUsername(SecurityHelper.getCurrentUsername()));
+        List<Long> dataScopes = systemDataService.queryDeptIdListByArgs(systemUserService.queryUserByUsername(SecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集

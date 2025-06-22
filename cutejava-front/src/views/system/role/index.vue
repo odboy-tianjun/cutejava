@@ -122,8 +122,8 @@
 
 <script>
 import crudRoles from '@/api/system/role'
-import { describeDeptList, describeDeptSuperiorTree } from '@/api/system/dept'
-import { describeMenuListByPid, describeChildMenuSet } from '@/api/system/menu'
+import { queryDeptList, queryDeptSuperiorTree } from '@/api/system/dept'
+import { queryMenuListByPid, queryChildMenuSet } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -168,7 +168,7 @@ export default {
   methods: {
     getMenuDatas(node, resolve) {
       setTimeout(() => {
-        describeMenuListByPid(node.data.id ? node.data.id : 0).then(res => {
+        queryMenuListByPid(node.data.id ? node.data.id : 0).then(res => {
           resolve(res)
         })
       }, 100)
@@ -232,7 +232,7 @@ export default {
     },
     menuChange(menu) {
       // 获取该节点的所有子节点，id 包含自身
-      describeChildMenuSet(menu.id).then(childIds => {
+      queryChildMenuSet(menu.id).then(childIds => {
         // 判断是否在 menuIds 中，如果存在则删除，否则添加
         if (this.menuIds.indexOf(menu.id) !== -1) {
           for (let i = 0; i < childIds.length; i++) {
@@ -284,7 +284,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      describeDeptList({ enabled: true }).then(res => {
+      queryDeptList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -298,7 +298,7 @@ export default {
       depts.forEach(dept => {
         ids.push(dept.id)
       })
-      describeDeptSuperiorTree(ids).then(res => {
+      queryDeptSuperiorTree(ids).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -317,7 +317,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        describeDeptList({ enabled: true, pid: parentNode.id }).then(res => {
+        queryDeptList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function describeEmailConfig() {
+export function queryEmailConfig() {
   return request({
-    url: 'api/email/describeEmailConfig',
+    url: 'api/email/queryEmailConfig',
     method: 'post'
   })
 }

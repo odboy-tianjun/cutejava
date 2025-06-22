@@ -56,7 +56,7 @@ export default {
         '            zone: primary # This is needed for the load balancer\n' +
         '            profile: ${spring.profiles.active}\n' +
         '            version: ${info.project.version:}\n' +
-        '            git-version: ${git.commit.id.describe:}\n' +
+        '            git-version: ${git.commit.id.query:}\n' +
         '            git-commit: ${git.commit.id.abbrev:}\n' +
         '            git-branch: ${git.branch:}\n' +
         'ribbon:\n' +
