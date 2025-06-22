@@ -33,6 +33,7 @@ server:
 spring:
   application:
     name: cutejava
+    title: CuteJava后台管理系统
   lifecycle:
     # 采用java.time.Duration格式的值,如果在这个时间内，优雅停机没有停掉应用，超过这个时间就会强制停止应用
     timeout-per-shutdown-phase: 30s

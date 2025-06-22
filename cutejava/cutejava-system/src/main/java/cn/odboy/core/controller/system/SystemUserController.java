@@ -47,7 +47,7 @@ public class SystemUserController {
     private final SystemDataService systemDataService;
     private final SystemDeptService systemDeptService;
     private final SystemRoleService systemRoleService;
-    private final SystemCaptchaService verificationCodeService;
+    private final SystemEmailService systemEmailService;
     private final AppProperties properties;
 
     @ApiOperation("导出用户数据")
@@ -169,7 +169,7 @@ public class SystemUserController {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
-        verificationCodeService.checkCodeAvailable(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE.getBizCode(), resources.getEmail(), code);
+        systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, resources.getEmail(), code);
         systemUserService.modifyUserEmailByUsername(user.getUsername(), resources.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }
