@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author odboy
  */
-public final class PageUtil extends cn.hutool.core.util.PageUtil {
+public final class CsPageUtil extends cn.hutool.core.util.PageUtil {
 
     /**
      * List 分页
