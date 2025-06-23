@@ -12,11 +12,16 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * 字典明细 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
-    List<SystemDictDetailTb> queryDictDetailListByDictName(@Param("name") String name);
+    IPage<SystemDictDetailTb> selectDictDetailByArgs(@Param("criteria") QuerySystemDictDetailArgs criteria, Page<Object> page);
 
-    IPage<SystemDictDetailTb> queryDictDetailListByArgs(@Param("criteria") QuerySystemDictDetailArgs criteria, Page<Object> page);
+    List<SystemDictDetailTb> selectDictDetailByArgs(@Param("criteria") QuerySystemDictDetailArgs criteria);
 
     void deleteDictDetailByDictIds(@Param("dictIds") Set<Long> dictIds);
 }
