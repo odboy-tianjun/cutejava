@@ -21,7 +21,7 @@ public @interface CsMpQuery {
     /**
      * 查询方式
      */
-    QueryTypeEnum type() default QueryTypeEnum.EQUAL;
+    CsMpQTypeEnum type() default CsMpQTypeEnum.EQUAL;
 
     /**
      * 连接查询的属性名, 如User类中的dept

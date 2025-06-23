@@ -4,19 +4,26 @@ import cn.hutool.core.util.RandomUtil;
 import cn.odboy.core.dal.model.system.SystemUserJwtVo;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
-import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
  * 用户缓存管理
  */
-@Service
-public class SystemUserJwtServiceImpl implements SystemUserJwtService {
+@Component
+public class SystemUserJwtDAO {
     @Resource
     private RedisHelper redisHelper;
 
-    @Override
+    /**
+     * 添加缓存到Redis
+     *
+     * @param userName 用户名
+     */
+    @Async
+
     public void saveUserJwtModelByUserName(String userName, SystemUserJwtVo user) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
@@ -27,8 +34,14 @@ public class SystemUserJwtServiceImpl implements SystemUserJwtService {
         }
     }
 
+    /**
+     * 清理用户缓存信息
+     * 用户信息变更时
+     *
+     * @param userName 用户名
+     */
+    @Async
 
-    @Override
     public void cleanUserJwtModelCacheByUsername(String userName) {
         // 转小写
         userName = StringUtil.lowerCase(userName);
@@ -36,5 +49,22 @@ public class SystemUserJwtServiceImpl implements SystemUserJwtService {
             // 清除数据
             redisHelper.del(SystemRedisKey.USER_INFO + userName);
         }
+    }
+
+    /**
+     * 返回用户缓存
+     *
+     * @param username 用户名
+     * @return UserJwtVo
+     */
+
+    public SystemUserJwtVo queryUserJwtModelByUsername(String username) {
+        // 转小写
+        username = StringUtil.lowerCase(username);
+        if (StringUtil.isNotEmpty(username)) {
+            // 获取数据
+            return redisHelper.get(SystemRedisKey.USER_INFO + username, SystemUserJwtVo.class);
+        }
+        return null;
     }
 }

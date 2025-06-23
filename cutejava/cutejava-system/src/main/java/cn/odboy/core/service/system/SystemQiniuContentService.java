@@ -56,6 +56,7 @@ public interface SystemQiniuContentService extends IService<SystemQiniuContentTb
      * @param id 文件id
      */
     void removeFileById(Long id);
+
     /**
      * 分页查询
      *

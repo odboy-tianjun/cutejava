@@ -16,12 +16,12 @@ import java.util.List;
  */
 public class CsMpAnyQUtil {
     public static <T> T selectOne(BaseMapper<T> baseMapper, Object queryParams) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         return baseMapper.selectOne(queryWrapper);
     }
 
     public static <T, M> M selectOne(BaseMapper<T> baseMapper, Object queryParams, Class<M> mapperClazz) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         T mapperTarget = baseMapper.selectOne(queryWrapper);
         if (mapperTarget == null) {
             return null;
@@ -30,12 +30,12 @@ public class CsMpAnyQUtil {
     }
 
     public static <T> List<T> selectList(BaseMapper<T> baseMapper, Object queryParams) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         return baseMapper.selectList(queryWrapper);
     }
 
     public static <T, M> List<M> selectList(BaseMapper<T> baseMapper, Object queryParams, Class<M> mapperClazz) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         List<T> mapperTarget = baseMapper.selectList(queryWrapper);
         if (mapperTarget == null) {
             return new ArrayList<>();
@@ -44,17 +44,17 @@ public class CsMpAnyQUtil {
     }
 
     public static <T> Long selectCount(BaseMapper<T> baseMapper, Object queryParams) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         return baseMapper.selectCount(queryWrapper);
     }
 
     public static <T> Page<T> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         return baseMapper.selectPage(page, queryWrapper);
     }
 
     public static <T, M> Page<M> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams, Class<M> mapperClazz) {
-        QueryWrapper<T> queryWrapper = CsMpSimpleQUtil.build(queryParams);
+        QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         Page<T> tPage = baseMapper.selectPage(page, queryWrapper);
         Page<M> mapperTarget = new Page<>();
         mapperTarget.setRecords(BeanUtil.copyToList(tPage.getRecords(), mapperClazz));

@@ -1,15 +1,15 @@
 <template>
-  <elFrame :src="sqlApi" />
+  <elFrame :src="druidSqlApi" />
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import elFrame from '@/components/Iframe/index'
 export default {
-  name: 'Sql',
+  name: 'DruidSqlConsole',
   components: { elFrame },
   computed: {
     ...mapGetters([
-      'sqlApi'
+      'druidSqlApi'
     ])
   }
 }

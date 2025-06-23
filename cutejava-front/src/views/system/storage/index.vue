@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import QiNiu from './qiniu/index'
-import Local from './local/index'
+import QiNiu from './qiniu/index.vue'
+import Local from './local/index.vue'
 export default {
   name: 'Storage',
   components: { QiNiu, Local },

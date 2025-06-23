@@ -6,6 +6,7 @@ import cn.odboy.core.dal.model.system.CreateSystemDictDetailArgs;
 import cn.odboy.core.dal.model.system.QuerySystemDictDetailArgs;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+
 import java.util.List;
 
 
@@ -31,6 +32,7 @@ public interface SystemDictDetailService extends IService<SystemDictDetailTb> {
      * @param id /
      */
     void removeDictDetailById(Long id);
+
     /**
      * 分页查询
      *

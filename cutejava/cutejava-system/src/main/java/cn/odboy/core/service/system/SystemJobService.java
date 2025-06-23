@@ -43,6 +43,7 @@ public interface SystemJobService extends IService<SystemJobTb> {
      * @throws IOException /
      */
     void downloadJobExcel(List<SystemJobTb> jobs, HttpServletResponse response) throws IOException;
+
     /**
      * 分页查询
      *

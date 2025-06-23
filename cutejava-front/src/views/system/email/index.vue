@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import Config from './config'
-import Send from './send'
+import Config from './config.vue'
+import Send from './send.vue'
 export default {
   name: 'Email',
   components: { Config, Send },

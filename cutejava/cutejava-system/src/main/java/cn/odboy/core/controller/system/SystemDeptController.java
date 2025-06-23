@@ -2,9 +2,9 @@ package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemDeptTb;
-import cn.odboy.core.service.system.SystemDeptService;
 import cn.odboy.core.dal.model.system.CreateSystemDeptArgs;
 import cn.odboy.core.dal.model.system.QuerySystemDeptArgs;
+import cn.odboy.core.service.system.SystemDeptService;
 import cn.odboy.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +16,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController

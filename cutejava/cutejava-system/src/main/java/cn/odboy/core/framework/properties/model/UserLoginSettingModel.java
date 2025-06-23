@@ -5,6 +5,7 @@ import lombok.Setter;
 
 /**
  * 登录配置
+ *
  * @author odboy
  */
 @Getter

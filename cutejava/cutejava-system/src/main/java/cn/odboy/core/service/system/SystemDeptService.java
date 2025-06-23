@@ -42,6 +42,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
      * @throws IOException /
      */
     void downloadDeptExcel(List<SystemDeptTb> depts, HttpServletResponse response) throws IOException;
+
     /**
      * 查询所有数据
      *
@@ -120,7 +121,7 @@ public interface SystemDeptService extends IService<SystemDeptTb> {
     /**
      * 遍历所有部门和子部门
      *
-     * @param ids   /
+     * @param ids /
      */
     Set<SystemDeptTb> traverseDeptByIdWithPids(Set<Long> ids);
 }
