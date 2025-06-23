@@ -16,18 +16,7 @@
             <result column="name" property="name" jdbcType="VARCHAR"/>
         </association>
     </resultMap>
-    <select id="queryDictDetailListByDictName" resultMap="BaseResultMap">
-        select
-        dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
-        d.id as dict_id, d.name
-        from system_dict_detail dd, system_dict d
-        where dd.dict_id = d.id
-        <if test="name != null and name != ''">
-            and d.name = #{name}
-        </if>
-        order by dd.dict_sort
-    </select>
-    <select id="queryDictDetailListByArgs" resultMap="BaseResultMap">
+    <select id="selectDictDetailByArgs" resultMap="BaseResultMap">
         select
         dd.id, dd.label, dd.`value`, dd.`dict_sort`, dd.create_by, dd.update_by, dd.create_time, dd.update_time,
         d.id as dict_id, d.name
@@ -39,7 +28,7 @@
         <if test="criteria.label != null and criteria.label != ''">
             and dd.label = #{criteria.label}
         </if>
-        order by dd.dict_sort, dd.dict_id desc
+        order by dd.dict_sort
     </select>
     <delete id="deleteDictDetailByDictIds">
         delete from system_dict_detail

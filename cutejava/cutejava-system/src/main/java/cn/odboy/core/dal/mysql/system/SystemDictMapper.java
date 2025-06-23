@@ -8,7 +8,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
+
+/**
+ * 字典 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemDictMapper extends BaseMapper<SystemDictTb> {
-    IPage<SystemDictTb> queryDictPageByArgs(@Param("criteria") QuerySystemDictArgs criteria, Page<SystemDictTb> page);
+    IPage<SystemDictTb> selectDictByArgs(@Param("criteria") QuerySystemDictArgs criteria, Page<SystemDictTb> page);
+
+    List<SystemDictTb> selectDictByArgs(@Param("criteria") QuerySystemDictArgs criteria);
 }

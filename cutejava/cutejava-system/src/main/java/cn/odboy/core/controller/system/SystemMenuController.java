@@ -8,7 +8,7 @@ import cn.odboy.core.dal.model.system.SystemMenuVo;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.service.system.SystemMenuService;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.util.PageUtil;
+import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +28,13 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：菜单管理")
 @RequestMapping("/api/menus")
 public class SystemMenuController {
-    private static final String ENTITY_NAME = "menu";
     private final SystemMenuService systemMenuService;
 
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
     public void exportMenu(HttpServletResponse response, QuerySystemMenuArgs criteria) throws Exception {
-        systemMenuService.downloadMenuExcel(systemMenuService.queryMenuList(criteria, false), response);
+        systemMenuService.exportMenuExcel(systemMenuService.queryAllMenu(criteria, false), response);
     }
 
     @PostMapping(value = "/buildMenus")
@@ -50,7 +49,7 @@ public class SystemMenuController {
     @PostMapping(value = "/queryMenuListByPid")
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<List<SystemMenuTb>> queryMenuListByPid(@RequestParam Long pid) {
-        return new ResponseEntity<>(systemMenuService.queryMenuListByPid(pid), HttpStatus.OK);
+        return new ResponseEntity<>(systemMenuService.queryMenuByPid(pid), HttpStatus.OK);
     }
 
     @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
@@ -58,9 +57,9 @@ public class SystemMenuController {
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<Set<Long>> queryChildMenuSet(@RequestParam Long id) {
         Set<SystemMenuTb> menuSet = new HashSet<>();
-        List<SystemMenuTb> menuList = systemMenuService.queryMenuListByPid(id);
-        menuSet.add(systemMenuService.queryMenuById(id));
-        menuSet = systemMenuService.queryChildMenuSet(menuList, menuSet);
+        List<SystemMenuTb> menuList = systemMenuService.queryMenuByPid(id);
+        menuSet.add(systemMenuService.getMenuById(id));
+        menuSet = systemMenuService.queryChildMenu(menuList, menuSet);
         Set<Long> ids = menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
         return new ResponseEntity<>(ids, HttpStatus.OK);
     }
@@ -69,8 +68,8 @@ public class SystemMenuController {
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryMenu(QuerySystemMenuArgs criteria) throws Exception {
-        List<SystemMenuTb> menuList = systemMenuService.queryMenuList(criteria, true);
-        return new ResponseEntity<>(PageUtil.toPage(menuList), HttpStatus.OK);
+        List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
+        return new ResponseEntity<>(CsPageUtil.toPage(menuList), HttpStatus.OK);
     }
 
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")
@@ -80,7 +79,7 @@ public class SystemMenuController {
         Set<SystemMenuTb> menus = new LinkedHashSet<>();
         if (CollectionUtil.isNotEmpty(ids)) {
             for (Long id : ids) {
-                SystemMenuTb menu = systemMenuService.queryMenuById(id);
+                SystemMenuTb menu = systemMenuService.getMenuById(id);
                 List<SystemMenuTb> menuList = systemMenuService.querySuperiorMenuList(menu, new ArrayList<>());
                 for (SystemMenuTb data : menuList) {
                     if (data.getId().equals(menu.getPid())) {
@@ -93,7 +92,7 @@ public class SystemMenuController {
             menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
             return new ResponseEntity<>(systemMenuService.buildMenuTree(new ArrayList<>(menus)), HttpStatus.OK);
         }
-        return new ResponseEntity<>(systemMenuService.queryMenuListByPid(null), HttpStatus.OK);
+        return new ResponseEntity<>(systemMenuService.queryMenuByPid(null), HttpStatus.OK);
     }
 
     @ApiOperation("新增菜单")
@@ -101,7 +100,7 @@ public class SystemMenuController {
     @PreAuthorize("@el.check('menu:add')")
     public ResponseEntity<Void> saveMenu(@Validated @RequestBody SystemMenuTb resources) {
         if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
+            throw new BadRequestException("无效参数id");
         }
         systemMenuService.saveMenu(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -121,9 +120,9 @@ public class SystemMenuController {
     public ResponseEntity<Void> removeMenuByIds(@RequestBody Set<Long> ids) {
         Set<SystemMenuTb> menuSet = new HashSet<>();
         for (Long id : ids) {
-            List<SystemMenuTb> menuList = systemMenuService.queryMenuListByPid(id);
-            menuSet.add(systemMenuService.queryMenuById(id));
-            menuSet = systemMenuService.queryChildMenuSet(menuList, menuSet);
+            List<SystemMenuTb> menuList = systemMenuService.queryMenuByPid(id);
+            menuSet.add(systemMenuService.getMenuById(id));
+            menuSet = systemMenuService.queryChildMenu(menuList, menuSet);
         }
         systemMenuService.removeMenuByIds(menuSet);
         return new ResponseEntity<>(HttpStatus.OK);

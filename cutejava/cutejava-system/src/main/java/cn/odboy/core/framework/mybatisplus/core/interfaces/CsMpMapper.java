@@ -19,7 +19,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.util.PageUtil;
+import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -163,7 +163,7 @@ public interface CsMpMapper<E> extends BaseMapper<E> {
         pageSize = pageSize <= 0 ? 10 : pageSize;
         IPage<E> pageInfo = wrapper.page(new Page<>(pageNumber, pageSize));
         if (CollUtil.isEmpty(pageInfo.getRecords())) {
-            return PageUtil.emptyListData();
+            return CsPageUtil.emptyListData();
         }
         return new CsResultVo<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
     }

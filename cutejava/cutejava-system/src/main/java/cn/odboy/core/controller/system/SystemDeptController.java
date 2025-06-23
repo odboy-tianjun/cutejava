@@ -5,7 +5,7 @@ import cn.odboy.core.dal.dataobject.system.SystemDeptTb;
 import cn.odboy.core.dal.model.system.CreateSystemDeptArgs;
 import cn.odboy.core.dal.model.system.QuerySystemDeptArgs;
 import cn.odboy.core.service.system.SystemDeptService;
-import cn.odboy.util.PageUtil;
+import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +33,15 @@ public class SystemDeptController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, QuerySystemDeptArgs criteria) throws Exception {
-        systemDeptService.downloadDeptExcel(systemDeptService.queryDeptList(criteria, false), response);
+        systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDeptPage(QuerySystemDeptArgs criteria) throws Exception {
-        List<SystemDeptTb> depts = systemDeptService.queryDeptList(criteria, true);
-        return new ResponseEntity<>(PageUtil.toPage(depts), HttpStatus.OK);
+        List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
+        return new ResponseEntity<>(CsPageUtil.toPage(depts), HttpStatus.OK);
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
