@@ -9,7 +9,7 @@ import cn.odboy.core.dal.model.system.SystemUserInfoVo;
 import cn.odboy.core.dal.model.system.SystemUserJwtVo;
 import cn.odboy.core.dal.model.system.SystemUserLoginArgs;
 import cn.odboy.core.dal.redis.system.SystemRedisKey;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineDAO;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineInfoDAO;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.framework.permission.core.handler.TokenProvider;
 import cn.odboy.core.framework.permission.core.handler.UserDetailsHandler;
@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 @Api(tags = "系统：系统授权接口")
 public class SystemAuthController {
     private final RedisHelper redisHelper;
-    private final SystemUserOnlineDAO onlineUserService;
+    private final SystemUserOnlineInfoDAO onlineUserService;
     private final TokenProvider tokenProvider;
     private final AppProperties properties;
     private final PasswordEncoder passwordEncoder;

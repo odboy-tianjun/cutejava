@@ -8,9 +8,7 @@ import java.util.Set;
 
 @Mapper
 public interface SystemUserRoleMapper {
-    void insertBatchWithUserId(@Param("roles") Set<SystemRoleTb> roles, @Param("userId") Long userId);
+    void batchInsertUserRole(@Param("roles") Set<SystemRoleTb> roles, @Param("userId") Long userId);
 
-    void deleteByUserId(@Param("userId") Long userId);
-
-    void deleteByUserIds(@Param("userIds") Set<Long> userIds);
+    void batchDeleteUserRole(@Param("userIds") Set<Long> userIds);
 }

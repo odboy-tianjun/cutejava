@@ -18,13 +18,12 @@ import java.util.Map;
 @Api(tags = "系统-服务监控管理")
 @RequestMapping("/api/monitor")
 public class SystemMonitorController {
-
-    private final SystemMonitorService serverService;
+    private final SystemMonitorService systemMonitorService;
 
     @PostMapping(value = "/queryServerMonitorInfo")
     @ApiOperation("查询服务监控")
     @PreAuthorize("@el.check('monitor:list')")
     public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
-        return new ResponseEntity<>(serverService.queryServerMonitorInfo(), HttpStatus.OK);
+        return new ResponseEntity<>(systemMonitorService.queryServerMonitorInfo(), HttpStatus.OK);
     }
 }

@@ -8,16 +8,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 @Mapper
 public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
-
-    Long getUserCountByArgs(@Param("criteria") QuerySystemUserArgs criteria);
-
-    IPage<SystemUserTb> queryUserPageByArgs(@Param("criteria") QuerySystemUserArgs criteria, Page<SystemUserTb> page);
+    IPage<SystemUserTb> selectUserByArgs(@Param("criteria") QuerySystemUserArgs criteria, Page<SystemUserTb> page);
 
     SystemUserTb getUserByUsername(@Param("username") String username);
 
@@ -25,21 +21,23 @@ public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
 
     SystemUserTb getUserByPhone(@Param("phone") String phone);
 
-    void updatePasswordByUsername(@Param("username") String username, @Param("password") String password, @Param("lastPasswordResetTime") Date lastPasswordResetTime);
+    List<SystemUserTb> selectUserByRoleId(@Param("roleId") Long roleId);
 
-    void updateEmailByUsername(@Param("username") String username, @Param("email") String email);
+    List<SystemUserTb> selectUserByDeptId(@Param("deptId") Long deptId);
 
-    List<SystemUserTb> queryUserListByRoleId(@Param("roleId") Long roleId);
+    List<SystemUserTb> selectUserByMenuId(@Param("menuId") Long menuId);
 
-    List<SystemUserTb> queryUserListByDeptId(@Param("deptId") Long deptId);
+    Long countUserByJobIds(@Param("jobIds") Set<Long> jobIds);
 
-    List<SystemUserTb> queryUserListByMenuId(@Param("menuId") Long menuId);
+    Long countUserByDeptIds(@Param("deptIds") Set<Long> deptIds);
 
-    int getUserCountByJobIds(@Param("jobIds") Set<Long> jobIds);
+    Long countUserByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
-    int getUserCountByDeptIds(@Param("deptIds") Set<Long> deptIds);
+    Long countUserByArgs(@Param("criteria") QuerySystemUserArgs criteria);
 
-    int getUserCountByRoleIds(@Param("roleIds") Set<Long> roleIds);
+    void updateUserPasswordByUsername(@Param("username") String username, @Param("password") String password);
 
-    void updatePasswordByUserIds(@Param("pwd") String password, @Param("userIds") Set<Long> userIds);
+    void updateUserEmailByUsername(@Param("username") String username, @Param("email") String email);
+
+    void batchUpdatePassword(@Param("pwd") String password, @Param("userIds") Set<Long> userIds);
 }

@@ -7,13 +7,18 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Set;
 
 
+/**
+ * 角色菜单关联 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemRoleMenuMapper {
-    void insertBatchWithRoleId(@Param("menus") Set<SystemMenuTb> menus, @Param("roleId") Long roleId);
+    void batchInsertRoleMenu(@Param("menus") Set<SystemMenuTb> menus, @Param("roleId") Long roleId);
 
-    void deleteByRoleId(@Param("roleId") Long roleId);
+    void batchDeleteRoleMenu(@Param("roleIds") Set<Long> roleIds);
 
-    void deleteByRoleIds(@Param("roleIds") Set<Long> roleIds);
+    void deleteRoleMenuByRoleId(@Param("roleId") Long roleId);
 
-    void deleteByMenuId(@Param("menuId") Long menuId);
+    void deleteRoleMenuByMenuId(@Param("menuId") Long menuId);
 }

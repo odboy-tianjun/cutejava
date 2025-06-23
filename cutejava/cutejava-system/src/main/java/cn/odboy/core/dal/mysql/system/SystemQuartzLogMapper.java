@@ -9,7 +9,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 
+/**
+ * 定时任务日志 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemQuartzLogMapper extends BaseMapper<SystemQuartzLogTb> {
-    IPage<SystemQuartzLogTb> queryQuartzLogPageByArgs(@Param("criteria") QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page);
+    IPage<SystemQuartzLogTb> selectQuartzLogByArgs(@Param("criteria") QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page);
 }

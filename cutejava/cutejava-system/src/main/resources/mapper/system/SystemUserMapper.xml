@@ -34,7 +34,7 @@
             <result column="role_data_scope" property="dataScope"/>
         </collection>
     </resultMap>
-    <select id="getUserCountByArgs" resultType="java.lang.Long">
+    <select id="countUserByArgs" resultType="java.lang.Long">
         select count(*)
         from system_user u
         <where>
@@ -62,7 +62,7 @@
             </if>
         </where>
     </select>
-    <select id="queryUserPageByArgs" resultMap="BaseResultMap">
+    <select id="selectUserByArgs" resultMap="BaseResultMap">
         select u.*,
         j.id as job_id, j.name as job_name,
         r.role_id as role_id, r.name as role_name, r.level as role_level, r.data_scope as role_data_scope
@@ -145,18 +145,18 @@
         from system_user
         where phone = #{phone}
     </select>
-    <update id="updatePasswordByUsername">
+    <update id="updateUserPasswordByUsername">
         update system_user
         set password       = #{password},
-            pwd_reset_time = #{lastPasswordResetTime}
+            pwd_reset_time = NOW()
         where username = #{username}
     </update>
-    <update id="updateEmailByUsername">
+    <update id="updateUserEmailByUsername">
         update system_user
         set email = #{email}
         where username = #{username}
     </update>
-    <select id="queryUserListByRoleId" resultType="cn.odboy.core.dal.dataobject.system.SystemUserTb">
+    <select id="selectUserByRoleId" resultType="cn.odboy.core.dal.dataobject.system.SystemUserTb">
         SELECT u.user_id as id, u.username
         FROM system_user u,
              system_users_roles r
@@ -164,7 +164,7 @@
           AND r.role_id = #{roleId}
         group by u.user_id
     </select>
-    <select id="queryUserListByDeptId" resultType="cn.odboy.core.dal.dataobject.system.SystemUserTb">
+    <select id="selectUserByDeptId" resultType="cn.odboy.core.dal.dataobject.system.SystemUserTb">
         SELECT u.*
         FROM system_user u,
              system_users_roles r,
@@ -174,7 +174,7 @@
           AND d.dept_id = #{deptId}
         group by u.user_id
     </select>
-    <select id="queryUserListByMenuId" resultType="cn.odboy.core.dal.dataobject.system.SystemUserTb">
+    <select id="selectUserByMenuId" resultType="cn.odboy.core.dal.dataobject.system.SystemUserTb">
         SELECT u.user_id as id, u.username
         FROM system_user u,
              system_users_roles ur,
@@ -184,28 +184,28 @@
           AND rm.menu_id = #{menuId}
         group by u.user_id
     </select>
-    <select id="getUserCountByJobIds" resultType="int">
+    <select id="countUserByJobIds" resultType="Long">
         SELECT count(*) FROM system_user u, system_users_jobs j
         WHERE u.user_id = j.user_id AND j.job_id IN
         <foreach collection="jobIds" item="jobId" open="(" separator="," close=")">
             #{jobId}
         </foreach>
     </select>
-    <select id="getUserCountByDeptIds" resultType="int">
+    <select id="countUserByDeptIds" resultType="Long">
         SELECT count(*) FROM system_user u
         WHERE u.dept_id IN
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
             #{deptId}
         </foreach>
     </select>
-    <select id="getUserCountByRoleIds" resultType="int">
+    <select id="countUserByRoleIds" resultType="Long">
         SELECT count(*) FROM system_user u, system_users_roles r
         WHERE u.user_id = r.user_id AND r.role_id in
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>
     </select>
-    <update id="updatePasswordByUserIds">
+    <update id="batchUpdatePassword">
         update system_user set password = #{password}
         where user_id in
         <foreach collection="userIds" item="id" open="(" separator="," close=")">

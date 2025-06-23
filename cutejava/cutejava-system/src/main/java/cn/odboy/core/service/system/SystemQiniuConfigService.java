@@ -1,29 +1,52 @@
 package cn.odboy.core.service.system;
 
+import cn.odboy.core.constant.TransferProtocolConst;
 import cn.odboy.core.dal.dataobject.system.SystemQiniuConfigTb;
-import com.baomidou.mybatisplus.extension.service.IService;
+import cn.odboy.core.dal.mysql.system.SystemQiniuConfigMapper;
+import cn.odboy.exception.BadRequestException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
-public interface SystemQiniuConfigService extends IService<SystemQiniuConfigTb> {
+@Service
+@RequiredArgsConstructor
+public class SystemQiniuConfigService {
+    private final SystemQiniuConfigMapper systemQiniuConfigMapper;
 
     /**
      * 保存
      *
-     * @param type 类型
+     * @param qiniuConfig /
      */
-    void saveQiniuConfig(SystemQiniuConfigTb type);
+    @Transactional(rollbackFor = Exception.class)
+    public void saveQiniuConfig(SystemQiniuConfigTb qiniuConfig) {
+        qiniuConfig.setId(1L);
+        if (!(qiniuConfig.getHost().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || qiniuConfig.getHost().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
+        }
+        systemQiniuConfigMapper.insertOrUpdate(qiniuConfig);
+    }
 
     /**
      * 更新
      *
      * @param type 类型
      */
-    void modifyQiniuConfigType(String type);
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyQiniuConfigType(String type) {
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigMapper.selectById(1L);
+        qiniuConfig.setType(type);
+        systemQiniuConfigMapper.insertOrUpdate(qiniuConfig);
+    }
 
     /**
      * 查询配置
      *
-     * @return QiniuConfig
+     * @return /
      */
-    SystemQiniuConfigTb queryQiniuConfig();
+    public SystemQiniuConfigTb getLastQiniuConfig() {
+        SystemQiniuConfigTb qiniuConfig = systemQiniuConfigMapper.selectById(1L);
+        return qiniuConfig == null ? new SystemQiniuConfigTb() : qiniuConfig;
+    }
 }

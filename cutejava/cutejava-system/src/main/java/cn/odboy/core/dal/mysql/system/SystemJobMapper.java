@@ -8,9 +8,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 职位 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemJobMapper extends BaseMapper<SystemJobTb> {
     SystemJobTb getJobByName(@Param("name") String name);
 
-    IPage<SystemJobTb> queryJobPageByArgs(@Param("criteria") QuerySystemJobArgs criteria, Page<SystemJobTb> page);
+    IPage<SystemJobTb> selectJobByArgs(@Param("criteria") QuerySystemJobArgs criteria, Page<SystemJobTb> page);
 }

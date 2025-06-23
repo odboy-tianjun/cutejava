@@ -37,21 +37,21 @@ public class SystemRoleController {
     @PostMapping(value = "/queryRoleById")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<SystemRoleTb> queryRoleById(@RequestBody SystemRoleTb args) {
-        return new ResponseEntity<>(systemRoleService.queryRoleById(args.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleService.getRoleById(args.getId()), HttpStatus.OK);
     }
 
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
     public void exportRole(HttpServletResponse response, QuerySystemRoleArgs criteria) throws IOException {
-        systemRoleService.downloadRoleExcel(systemRoleService.queryRoleList(criteria), response);
+        systemRoleService.exportRoleExcel(systemRoleService.queryRoleByArgs(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")
-    @PostMapping(value = "/queryRoleList")
+    @PostMapping(value = "/selectAllRole")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
-    public ResponseEntity<List<SystemRoleTb>> queryRoleList() {
-        return new ResponseEntity<>(systemRoleService.queryRoleList(), HttpStatus.OK);
+    public ResponseEntity<List<SystemRoleTb>> selectAllRole() {
+        return new ResponseEntity<>(systemRoleService.queryAllRole(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
@@ -59,7 +59,7 @@ public class SystemRoleController {
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRolePage(QuerySystemRoleArgs criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemRoleService.queryRolePage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemRoleService.queryRoleByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("获取用户级别")
@@ -90,7 +90,7 @@ public class SystemRoleController {
     @PostMapping(value = "/modifyBindMenuById")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Void> modifyBindMenuById(@RequestBody SystemRoleTb resources) {
-        SystemRoleTb role = systemRoleService.getById(resources.getId());
+        SystemRoleTb role = systemRoleService.getRoleById(resources.getId());
         checkRoleLevels(role.getLevel());
         systemRoleService.modifyBindMenuById(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -101,7 +101,7 @@ public class SystemRoleController {
     @PreAuthorize("@el.check('roles:del')")
     public ResponseEntity<Void> removeRoleByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            SystemRoleTb role = systemRoleService.getById(id);
+            SystemRoleTb role = systemRoleService.getRoleById(id);
             checkRoleLevels(role.getLevel());
         }
         // 验证是否被用户关联
@@ -116,7 +116,7 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = systemRoleService.queryRoleListByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        List<Integer> levels = systemRoleService.queryRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

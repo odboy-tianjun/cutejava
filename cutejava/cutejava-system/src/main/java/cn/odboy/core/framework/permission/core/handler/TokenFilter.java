@@ -3,7 +3,7 @@ package cn.odboy.core.framework.permission.core.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.core.dal.model.system.SystemUserOnlineVo;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineDAO;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineInfoDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,14 +20,14 @@ import java.io.IOException;
 @Slf4j
 public class TokenFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
-    private final SystemUserOnlineDAO systemUserOnlineDAO;
+    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     /**
-     * @param tokenProvider       Token
-     * @param systemUserOnlineDAO 用户在线
+     * @param tokenProvider           Token
+     * @param systemUserOnlineInfoDAO 用户在线
      */
-    public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineDAO systemUserOnlineDAO) {
-        this.systemUserOnlineDAO = systemUserOnlineDAO;
+    public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
+        this.systemUserOnlineInfoDAO = systemUserOnlineInfoDAO;
         this.tokenProvider = tokenProvider;
     }
 
@@ -39,7 +39,7 @@ public class TokenFilter extends GenericFilterBean {
         if (StrUtil.isNotBlank(token)) {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
-            SystemUserOnlineVo userOnlineVo = systemUserOnlineDAO.queryUserOnlineModelByKey(loginKey);
+            SystemUserOnlineVo userOnlineVo = systemUserOnlineInfoDAO.queryUserOnlineModelByKey(loginKey);
             // 判断用户在线信息是否为空
             if (userOnlineVo != null) {
                 // Token 续期判断

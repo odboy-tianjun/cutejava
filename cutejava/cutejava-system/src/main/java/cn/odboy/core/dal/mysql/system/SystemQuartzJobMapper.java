@@ -10,9 +10,14 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 定时任务 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemQuartzJobMapper extends BaseMapper<SystemQuartzJobTb> {
-    IPage<SystemQuartzJobTb> queryQuartzJobPageByArgs(@Param("criteria") QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
+    IPage<SystemQuartzJobTb> selectQuartzJobByArgs(@Param("criteria") QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
 
-    List<SystemQuartzJobTb> queryActiveQuartzJobList();
+    List<SystemQuartzJobTb> selectAllEnableQuartzJob();
 }

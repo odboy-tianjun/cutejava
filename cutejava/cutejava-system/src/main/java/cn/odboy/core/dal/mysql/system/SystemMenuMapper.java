@@ -10,22 +10,28 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+
+/**
+ * 菜单 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemMenuMapper extends BaseMapper<SystemMenuTb> {
 
-    List<SystemMenuTb> queryMenuListByArgs(@Param("criteria") QuerySystemMenuArgs criteria);
+    List<SystemMenuTb> selectMenuByArgs(@Param("criteria") QuerySystemMenuArgs criteria);
 
-    LinkedHashSet<SystemMenuTb> queryMenuSetByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
+    LinkedHashSet<SystemMenuTb> selectMenuByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
 
-    List<SystemMenuTb> queryMenuListByPidIsNullOrderByMenuSort();
+    List<SystemMenuTb> selectMenuByPidIsNullOrderByMenuSort();
 
-    List<SystemMenuTb> queryMenuListByPidOrderByMenuSort(@Param("pid") Long pid);
+    List<SystemMenuTb> selectMenuByPidOrderByMenuSort(@Param("pid") Long pid);
 
     SystemMenuTb getMenuByTitle(@Param("title") String title);
 
     SystemMenuTb getMenuByComponentName(@Param("name") String name);
 
-    Integer getMenuCountByPid(@Param("pid") Long pid);
+    Integer countMenuByPid(@Param("pid") Long pid);
 
-    void updateSubCntByMenuId(@Param("count") int count, @Param("menuId") Long menuId);
+    void updateMenuSubCntByMenuId(@Param("count") int count, @Param("menuId") Long menuId);
 }

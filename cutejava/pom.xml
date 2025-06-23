@@ -13,7 +13,7 @@
         <module>cutejava-starter</module>
     </modules>
 
-    <name>后台管理</name>
+    <name>CuteJava后台管理</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

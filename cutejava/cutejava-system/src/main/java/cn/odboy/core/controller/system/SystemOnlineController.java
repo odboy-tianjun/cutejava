@@ -2,7 +2,7 @@ package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.model.system.SystemUserOnlineVo;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineDAO;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineInfoDAO;
 import cn.odboy.util.DesEncryptUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,20 +24,20 @@ import java.util.Set;
 @RequestMapping("/auth/online")
 @Api(tags = "系统：在线用户管理")
 public class SystemOnlineController {
-    private final SystemUserOnlineDAO systemUserOnlineDAO;
+    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
     public ResponseEntity<CsResultVo<List<SystemUserOnlineVo>>> queryOnlineUser(String username, Pageable pageable) {
-        return new ResponseEntity<>(systemUserOnlineDAO.queryUserOnlineModelPage(username, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(systemUserOnlineInfoDAO.queryUserOnlineModelPage(username, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        systemUserOnlineDAO.downloadUserOnlineModelExcel(systemUserOnlineDAO.queryUserOnlineModelListByUsername(username), response);
+        systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
     }
 
     @ApiOperation("踢出用户")
@@ -47,7 +47,7 @@ public class SystemOnlineController {
         for (String token : keys) {
             // 解密Key
             token = DesEncryptUtil.desDecrypt(token);
-            systemUserOnlineDAO.logoutByToken(token);
+            systemUserOnlineInfoDAO.logoutByToken(token);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
