@@ -8,7 +8,10 @@ import cn.odboy.core.dal.model.system.SystemUserJwtVo;
 import cn.odboy.core.dal.redis.system.SystemRedisKey;
 import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.redis.RedisHelper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +36,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class TokenProvider implements InitializingBean {
 
+    private Key signingKey;
     private JwtParser jwtParser;
-    private JwtBuilder jwtBuilder;
     private final RedisHelper redisHelper;
     private final AppProperties properties;
     public static final String AUTHORITIES_UUID_KEY = "uid";
@@ -42,13 +45,13 @@ public class TokenProvider implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
+        // 解码Base64密钥并创建签名密钥
         byte[] keyBytes = Decoders.BASE64.decode(properties.getJwt().getBase64Secret());
-        Key key = Keys.hmacShaKeyFor(keyBytes);
+        signingKey = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
-                .setSigningKey(key)
+                // 使用预生成的签名密钥
+                .setSigningKey(signingKey)
                 .build();
-        jwtBuilder = Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS512);
     }
 
     /**
@@ -65,9 +68,14 @@ public class TokenProvider implements InitializingBean {
         claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
         // 设置UUID，确保每次Token不一样
         claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
-        return jwtBuilder
+        // 直接调用 Jwts.builder() 创建新实例Add commentMore actions
+        return Jwts.builder()
+                // 设置自定义 Claims
                 .setClaims(claims)
+                // 设置主题
                 .setSubject(user.getUsername())
+                // 使用预生成的签名密钥和算法签名
+                .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
