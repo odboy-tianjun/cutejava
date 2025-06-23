@@ -38,7 +38,7 @@ public class SystemQiniuController {
     @ApiOperation("查询七牛云存储配置")
     @PostMapping(value = "/queryQiniuConfig")
     public ResponseEntity<SystemQiniuConfigTb> queryQiniuConfig() {
-        return new ResponseEntity<>(qiNiuConfigService.queryQiniuConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(qiNiuConfigService.getLastQiniuConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置七牛云存储")
@@ -52,14 +52,14 @@ public class SystemQiniuController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     public void exportQiNiu(HttpServletResponse response, QuerySystemQiniuArgs criteria) throws IOException {
-        qiniuContentService.downloadExcel(qiniuContentService.queryQiniuContentList(criteria), response);
+        qiniuContentService.exportQiniuContentExcel(qiniuContentService.queryQiniuContentByArgs(criteria), response);
     }
 
     @ApiOperation("查询文件")
     @GetMapping
     public ResponseEntity<CsResultVo<List<SystemQiniuContentTb>>> queryQiNiu(QuerySystemQiniuArgs criteria) {
         Page<SystemQiniuContentTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(qiniuContentService.queryQiniuContentPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(qiniuContentService.queryQiniuContentByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("上传文件")
@@ -84,7 +84,7 @@ public class SystemQiniuController {
     @GetMapping(value = "/createFilePreviewUrl/{id}")
     public ResponseEntity<Map<String, Object>> createFilePreviewUrl(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>(1);
-        map.put("url", qiniuContentService.createFilePreviewUrl(qiniuContentService.getById(id)));
+        map.put("url", qiniuContentService.createFilePreviewUrl(qiniuContentService.getQiniuContentById(id)));
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 

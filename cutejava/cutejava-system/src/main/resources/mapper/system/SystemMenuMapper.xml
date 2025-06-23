@@ -21,7 +21,7 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
-    <select id="queryMenuListByArgs" resultMap="BaseResultMap">
+    <select id="selectMenuByArgs" resultMap="BaseResultMap">
         select
         menu_id, title, name, menu_sort, component, path, type, permission, icon, cache, hidden, pid, sub_count,
         i_frame, create_by, update_by, create_time, update_time
@@ -46,7 +46,7 @@
         </where>
         order by menu_sort
     </select>
-    <select id="queryMenuSetByRoleIdsAndType" resultMap="BaseResultMap">
+    <select id="selectMenuByRoleIdsAndType" resultMap="BaseResultMap">
         SELECT m.* FROM system_menu m, system_roles_menus r
         WHERE m.menu_id = r.menu_id AND r.role_id IN
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
@@ -55,7 +55,7 @@
         AND type != #{type}
         order by m.menu_sort
     </select>
-    <select id="queryMenuListByPidIsNullOrderByMenuSort" resultMap="BaseResultMap">
+    <select id="selectMenuByPidIsNullOrderByMenuSort" resultMap="BaseResultMap">
         SELECT menu_id,
                title,
                name,
@@ -78,7 +78,7 @@
         where pid is null
         order by menu_sort
     </select>
-    <select id="queryMenuListByPidOrderByMenuSort" resultMap="BaseResultMap">
+    <select id="selectMenuByPidOrderByMenuSort" resultMap="BaseResultMap">
         SELECT menu_id,
                title,
                name,
@@ -111,12 +111,12 @@
         FROM system_menu
         WHERE name = #{name}
     </select>
-    <select id="getMenuCountByPid" resultType="java.lang.Integer">
+    <select id="countMenuByPid" resultType="java.lang.Integer">
         SELECT count(*)
         FROM system_menu
         WHERE pid = #{pid}
     </select>
-    <update id="updateSubCntByMenuId">
+    <update id="updateMenuSubCntByMenuId">
         update system_menu
         set sub_count = #{count}
         where menu_id = #{menuId}

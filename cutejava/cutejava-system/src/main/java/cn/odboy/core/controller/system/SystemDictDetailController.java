@@ -28,9 +28,9 @@ public class SystemDictDetailController {
 
     @ApiOperation("查询字典详情")
     @GetMapping
-    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailListByArgs(QuerySystemDictDetailArgs criteria) {
+    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> selectDictDetailByArgs(QuerySystemDictDetailArgs criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemDictDetailService.queryDictDetailListByArgs(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictDetailService.queryDictDetailByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("查询多个字典详情")
@@ -39,7 +39,7 @@ public class SystemDictDetailController {
         String[] names = dictName.split("[,，]");
         Map<String, List<SystemDictDetailTb>> dictMap = new HashMap<>(16);
         for (String name : names) {
-            dictMap.put(name, systemDictDetailService.queryDictDetailListByName(name));
+            dictMap.put(name, systemDictDetailService.queryDictDetailByName(name));
         }
         return new ResponseEntity<>(dictMap, HttpStatus.OK);
     }

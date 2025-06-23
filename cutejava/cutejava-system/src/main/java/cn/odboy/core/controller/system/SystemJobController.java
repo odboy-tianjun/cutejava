@@ -32,7 +32,7 @@ public class SystemJobController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('job:list')")
     public void exportJob(HttpServletResponse response, QuerySystemJobArgs criteria) throws IOException {
-        systemJobService.downloadJobExcel(systemJobService.queryJobList(criteria), response);
+        systemJobService.exportJobExcel(systemJobService.queryJobByArgs(criteria), response);
     }
 
     @ApiOperation("查询岗位")
@@ -40,7 +40,7 @@ public class SystemJobController {
     @PreAuthorize("@el.check('job:list','user:list')")
     public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJob(QuerySystemJobArgs criteria) {
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemJobService.queryJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemJobService.queryJobByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增岗位")

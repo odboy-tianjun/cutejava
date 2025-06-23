@@ -31,7 +31,6 @@ import java.util.Set;
 @RequestMapping("/api/jobs")
 @Api(tags = "系统:定时任务管理")
 public class SystemQuartzJobController {
-    private static final String ENTITY_NAME = "quartzJob";
     private final SystemQuartzJobService systemQuartzJobService;
 
     @ApiOperation("查询定时任务")
@@ -39,21 +38,21 @@ public class SystemQuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJob(QuerySystemQuartzJobArgs criteria) {
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("导出任务数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJob(HttpServletResponse response, QuerySystemQuartzJobArgs criteria) throws IOException {
-        systemQuartzJobService.downloadQuartzJobExcel(systemQuartzJobService.queryQuartzJobList(criteria), response);
+        systemQuartzJobService.exportQuartzJobExcel(systemQuartzJobService.queryQuartzJobByArgs(criteria), response);
     }
 
     @ApiOperation("导出日志数据")
     @GetMapping(value = "/logs/download")
     @PreAuthorize("@el.check('timing:list')")
     public void exportQuartzJobLog(HttpServletResponse response, QuerySystemQuartzJobArgs criteria) throws IOException {
-        systemQuartzJobService.downloadQuartzLogExcel(systemQuartzJobService.queryQuartzLogList(criteria), response);
+        systemQuartzJobService.exportQuartzLogExcel(systemQuartzJobService.queryQuartzLogByArgs(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")
@@ -61,7 +60,7 @@ public class SystemQuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity<CsResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(QuerySystemQuartzJobArgs criteria) {
         Page<SystemQuartzLogTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogPage(criteria, page), HttpStatus.OK);
+        return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增定时任务")
@@ -69,7 +68,7 @@ public class SystemQuartzJobController {
     @PreAuthorize("@el.check('timing:add')")
     public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb resources) {
         if (resources.getId() != null) {
-            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
+            throw new BadRequestException("无效参数id");
         }
         // 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
         checkBean(resources.getBeanName());
@@ -91,7 +90,7 @@ public class SystemQuartzJobController {
     @PostMapping(value = "/switchQuartzJobStatus/{id}")
     @PreAuthorize("@el.check('timing:edit')")
     public ResponseEntity<Void> switchQuartzJobStatus(@PathVariable Long id) {
-        systemQuartzJobService.switchQuartzJobStatus(systemQuartzJobService.getById(id));
+        systemQuartzJobService.switchQuartzJobStatus(systemQuartzJobService.getQuartzJobById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -99,7 +98,7 @@ public class SystemQuartzJobController {
     @PostMapping(value = "/startQuartzJob/{id}")
     @PreAuthorize("@el.check('timing:edit')")
     public ResponseEntity<Void> startQuartzJob(@PathVariable Long id) {
-        systemQuartzJobService.startQuartzJob(systemQuartzJobService.getById(id));
+        systemQuartzJobService.startQuartzJob(systemQuartzJobService.getQuartzJobById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

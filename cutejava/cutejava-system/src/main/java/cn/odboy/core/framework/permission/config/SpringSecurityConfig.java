@@ -1,7 +1,7 @@
 package cn.odboy.core.framework.permission.config;
 
 import cn.odboy.constant.RequestMethodEnum;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineDAO;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineInfoDAO;
 import cn.odboy.core.framework.permission.core.handler.JwtAccessDeniedHandler;
 import cn.odboy.core.framework.permission.core.handler.JwtAuthenticationEntryPoint;
 import cn.odboy.core.framework.permission.core.handler.TokenProvider;
@@ -34,7 +34,7 @@ public class SpringSecurityConfig {
     private final JwtAuthenticationEntryPoint authenticationErrorHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
-    private final SystemUserOnlineDAO systemUserOnlineDAO;
+    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -112,6 +112,6 @@ public class SpringSecurityConfig {
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, systemUserOnlineDAO);
+        return new TokenConfigurer(tokenProvider, systemUserOnlineInfoDAO);
     }
 }

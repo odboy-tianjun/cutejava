@@ -4,18 +4,17 @@ import cn.hutool.core.util.RandomUtil;
 import cn.odboy.core.dal.model.system.SystemUserJwtVo;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 用户缓存管理
  */
 @Component
-public class SystemUserJwtDAO {
-    @Resource
-    private RedisHelper redisHelper;
+@RequiredArgsConstructor
+public class SystemUserInfoDAO {
+    private final RedisHelper redisHelper;
 
     /**
      * 添加缓存到Redis
@@ -23,10 +22,7 @@ public class SystemUserJwtDAO {
      * @param userName 用户名
      */
     @Async
-
-    public void saveUserJwtModelByUserName(String userName, SystemUserJwtVo user) {
-        // 转小写
-        userName = StringUtil.lowerCase(userName);
+    public void saveUserLoginInfoByUserName(String userName, SystemUserJwtVo user) {
         if (StringUtil.isNotEmpty(userName)) {
             // 添加数据, 避免数据同时过期（2小时左右）
             long time = 7200 + RandomUtil.randomInt(900, 1800);
@@ -41,10 +37,7 @@ public class SystemUserJwtDAO {
      * @param userName 用户名
      */
     @Async
-
-    public void cleanUserJwtModelCacheByUsername(String userName) {
-        // 转小写
-        userName = StringUtil.lowerCase(userName);
+    public void deleteUserLoginInfoByUserName(String userName) {
         if (StringUtil.isNotEmpty(userName)) {
             // 清除数据
             redisHelper.del(SystemRedisKey.USER_INFO + userName);
@@ -58,9 +51,7 @@ public class SystemUserJwtDAO {
      * @return UserJwtVo
      */
 
-    public SystemUserJwtVo queryUserJwtModelByUsername(String username) {
-        // 转小写
-        username = StringUtil.lowerCase(username);
+    public SystemUserJwtVo getUserLoginInfoByUserName(String username) {
         if (StringUtil.isNotEmpty(username)) {
             // 获取数据
             return redisHelper.get(SystemRedisKey.USER_INFO + username, SystemUserJwtVo.class);

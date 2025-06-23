@@ -10,7 +10,7 @@ import cn.odboy.util.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,9 +19,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Service
+@Component
 @AllArgsConstructor
-public class SystemUserOnlineDAO {
+public class SystemUserOnlineInfoDAO {
     private final AppProperties properties;
     private final TokenProvider tokenProvider;
     private final RedisHelper redisHelper;
@@ -114,8 +114,8 @@ public class SystemUserOnlineDAO {
 
     public CsResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(String username, Pageable pageable) {
         List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
-        List<SystemUserOnlineVo> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
-        return PageUtil.toPage(paging, onlineUserList.size());
+        List<SystemUserOnlineVo> paging = CsPageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
+        return CsPageUtil.toPage(paging, onlineUserList.size());
     }
 
     /**

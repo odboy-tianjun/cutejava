@@ -6,7 +6,7 @@
         from system_job
         where name = #{name}
     </select>
-    <select id="queryJobPageByArgs" resultType="cn.odboy.core.dal.dataobject.system.SystemJobTb">
+    <select id="selectJobByArgs" resultType="cn.odboy.core.dal.dataobject.system.SystemJobTb">
         select
         *
         from system_job

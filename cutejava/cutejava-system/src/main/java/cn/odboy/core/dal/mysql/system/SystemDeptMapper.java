@@ -7,19 +7,23 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Set;
 
+/**
+ * 部门 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemDeptMapper extends BaseMapper<SystemDeptTb> {
-    List<SystemDeptTb> queryDeptListByArgs(@Param("criteria") QuerySystemDeptArgs criteria);
+    List<SystemDeptTb> selectDeptByArgs(@Param("criteria") QuerySystemDeptArgs criteria);
 
-    List<SystemDeptTb> queryDeptListByPid(@Param("pid") Long pid);
+    List<SystemDeptTb> selectDeptByPid(@Param("pid") Long pid);
 
-    int getDeptCountByPid(@Param("pid") Long pid);
+    int countDeptByPid(@Param("pid") Long pid);
 
-    List<SystemDeptTb> queryDeptListByPidIsNull();
+    List<SystemDeptTb> selectDeptByPidIsNull();
 
-    Set<SystemDeptTb> queryDeptSetByRoleId(@Param("roleId") Long roleId);
+    List<SystemDeptTb> selectDeptByRoleId(@Param("roleId") Long roleId);
 
-    void updateSubCountById(@Param("count") Integer count, @Param("id") Long id);
+    void updateDeptSubCountById(@Param("count") Integer count, @Param("id") Long id);
 }

@@ -8,7 +8,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 本地存储记录 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemLocalStorageMapper extends BaseMapper<SystemLocalStorageTb> {
-    IPage<SystemLocalStorageTb> queryLocalStoragePageByArgs(@Param("criteria") QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page);
+    IPage<SystemLocalStorageTb> selectLocalStorageByArgs(@Param("criteria") QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page);
 }

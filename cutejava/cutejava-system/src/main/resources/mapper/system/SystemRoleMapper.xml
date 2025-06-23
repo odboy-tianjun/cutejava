@@ -21,12 +21,12 @@
             <result column="dept_name" property="name"/>
         </collection>
     </resultMap>
-    <select id="queryRoleList" resultType="cn.odboy.core.dal.dataobject.system.SystemRoleTb">
+    <select id="selectAllRole" resultType="cn.odboy.core.dal.dataobject.system.SystemRoleTb">
         select role_id as id, name, level
         from system_role
         order by level
     </select>
-    <select id="queryRoleListByArgs" resultMap="BaseResultMap">
+    <select id="selectRoleByArgs" resultMap="BaseResultMap">
         select role.*,
         dept.dept_id as dept_id, dept.name as dept_name,
         menu.menu_id as menu_id, menu.title as menu_title, menu.permission as menu_permission
@@ -58,7 +58,7 @@
         left join system_dept dept on dept.dept_id = srd.dept_id
         order by role.role_level
     </select>
-    <select id="getRoleCountByArgs" resultType="java.lang.Long">
+    <select id="countRoleByArgs" resultType="java.lang.Long">
         select count(*)
         from system_role role
         <where>
@@ -100,7 +100,7 @@
                  left join system_dept dept on dept.dept_id = srd.dept_id
         where role.role_id = #{roleId}
     </select>
-    <select id="queryRoleListByUserId" resultMap="BaseResultMap">
+    <select id="selectRoleByUserId" resultMap="BaseResultMap">
         SELECT role.role_id     as role_role_id,
                role.name        as role_name,
                role.data_scope  as role_data_scope,
@@ -124,7 +124,7 @@
         WHERE role.role_id = ur.role_id
           AND ur.user_id = #{userId}
     </select>
-    <select id="getRoleCountByDeptIds" resultType="int">
+    <select id="countRoleByDeptIds" resultType="int">
         select count(*)
         from system_role r, system_roles_depts d
         where r.role_id = d.role_id
@@ -133,7 +133,7 @@
             #{deptId}
         </foreach>
     </select>
-    <select id="queryRoleListByMenuId" resultType="cn.odboy.core.dal.dataobject.system.SystemRoleTb">
+    <select id="selectRoleByMenuId" resultType="cn.odboy.core.dal.dataobject.system.SystemRoleTb">
         SELECT role.role_id as id
         FROM system_role role,
              system_roles_menus rm

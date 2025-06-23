@@ -6,11 +6,14 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Set;
 
+/**
+ * 角色部门关联 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemRoleDeptMapper {
-    void insertBatchWithRoleId(@Param("depts") Set<SystemDeptTb> depts, @Param("roleId") Long roleId);
+    void batchInsertRoleDept(@Param("depts") Set<SystemDeptTb> depts, @Param("roleId") Long roleId);
 
-    void deleteByRoleId(@Param("roleId") Long roleId);
-
-    void deleteByRoleIds(@Param("roleIds") Set<Long> roleIds);
+    void batchDeleteRoleDept(@Param("roleIds") Set<Long> roleIds);
 }

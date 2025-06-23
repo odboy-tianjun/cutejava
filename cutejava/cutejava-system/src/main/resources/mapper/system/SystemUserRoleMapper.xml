@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.odboy.core.dal.mysql.system.SystemUserRoleMapper">
-    <insert id="insertBatchWithUserId">
+    <insert id="batchInsertUserRole">
         insert into system_users_roles (user_id, role_id)
         values
         <foreach collection="roles" item="item" open="(" separator="),(" close=")">
@@ -9,13 +9,7 @@
         </foreach>
     </insert>
 
-    <delete id="deleteByUserId">
-        delete
-        from system_users_roles
-        where user_id = #{userId}
-    </delete>
-
-    <delete id="deleteByUserIds">
+    <delete id="batchDeleteUserRole">
         delete from system_users_roles
         where user_id in
         <foreach collection="userIds" item="id" open="(" separator="," close=")">

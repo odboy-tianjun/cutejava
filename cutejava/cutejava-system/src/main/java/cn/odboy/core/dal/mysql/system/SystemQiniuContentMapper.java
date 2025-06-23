@@ -8,10 +8,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-
+/**
+ * 七牛云存储记录 Mapper
+ *
+ * @author odboy
+ */
 @Mapper
 public interface SystemQiniuContentMapper extends BaseMapper<SystemQiniuContentTb> {
     SystemQiniuContentTb getQiniuContentByName(@Param("name") String name);
 
-    IPage<SystemQiniuContentTb> queryQiniuContentPageByArgs(@Param("criteria") QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page);
+    IPage<SystemQiniuContentTb> selectQiniuContentByArgs(@Param("criteria") QuerySystemQiniuArgs criteria, Page<SystemQiniuContentTb> page);
 }

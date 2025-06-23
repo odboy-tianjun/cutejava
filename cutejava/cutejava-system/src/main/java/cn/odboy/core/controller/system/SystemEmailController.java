@@ -27,13 +27,13 @@ public class SystemEmailController {
     @ApiOperation("查询配置")
     @PostMapping(value = "/queryEmailConfig")
     public ResponseEntity<SystemEmailConfigTb> queryEmailConfig() {
-        return new ResponseEntity<>(systemEmailService.getEmailConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(systemEmailService.getLastEmailConfig(), HttpStatus.OK);
     }
 
     @ApiOperation("配置邮件")
     @PostMapping(value = "/modifyEmailConfig")
     public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig) throws Exception {
-        systemEmailService.modifyEmailConfigOnPassChange(emailConfig);
+        systemEmailService.modifyEmailConfig(emailConfig);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
