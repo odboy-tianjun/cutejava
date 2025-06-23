@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * 查询条件创建工具
  */
 @Slf4j
-public class CsMpSimpleQUtil {
+public class CsMpQUtil {
     public static <R, Q> QueryWrapper<R> build(Q query) {
         QueryWrapper<R> queryWrapper = new QueryWrapper<>();
         if (query == null) {

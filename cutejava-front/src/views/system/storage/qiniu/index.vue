@@ -69,7 +69,7 @@
 import crudQiNiu from '@/api/tools/qiniu'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import eForm from './form'
+import eForm from './form.vue'
 import CRUD, { presenter, header, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'

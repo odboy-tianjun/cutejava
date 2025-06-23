@@ -1,9 +1,8 @@
 package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineApi;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineService;
 import cn.odboy.core.dal.model.system.SystemUserOnlineVo;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineDAO;
 import cn.odboy.util.DesEncryptUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,21 +24,20 @@ import java.util.Set;
 @RequestMapping("/auth/online")
 @Api(tags = "系统：在线用户管理")
 public class SystemOnlineController {
-    private final SystemUserOnlineApi systemUserOnlineApi;
-    private final SystemUserOnlineService systemUserOnlineService;
+    private final SystemUserOnlineDAO systemUserOnlineDAO;
 
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
     public ResponseEntity<CsResultVo<List<SystemUserOnlineVo>>> queryOnlineUser(String username, Pageable pageable) {
-        return new ResponseEntity<>(systemUserOnlineApi.queryUserOnlineModelPage(username, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(systemUserOnlineDAO.queryUserOnlineModelPage(username, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        systemUserOnlineService.downloadUserOnlineModelExcel(systemUserOnlineApi.queryUserOnlineModelListByUsername(username), response);
+        systemUserOnlineDAO.downloadUserOnlineModelExcel(systemUserOnlineDAO.queryUserOnlineModelListByUsername(username), response);
     }
 
     @ApiOperation("踢出用户")
@@ -49,7 +47,7 @@ public class SystemOnlineController {
         for (String token : keys) {
             // 解密Key
             token = DesEncryptUtil.desDecrypt(token);
-            systemUserOnlineService.logoutByToken(token);
+            systemUserOnlineDAO.logoutByToken(token);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

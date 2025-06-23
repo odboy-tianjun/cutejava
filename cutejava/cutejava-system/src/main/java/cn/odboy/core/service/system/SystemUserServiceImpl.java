@@ -8,13 +8,11 @@ import cn.odboy.core.dal.model.system.QuerySystemUserArgs;
 import cn.odboy.core.dal.mysql.system.SystemUserJobMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserRoleMapper;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
-import cn.odboy.core.dal.redis.system.SystemUserJwtService;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineService;
+import cn.odboy.core.dal.redis.system.SystemUserJwtDAO;
+import cn.odboy.core.dal.redis.system.SystemUserOnlineDAO;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.exception.EntityExistException;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
@@ -24,18 +22,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,21 +37,21 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
     private final SystemUserJobMapper systemUserJobMapper;
     private final SystemUserRoleMapper systemUserRoleMapper;
     private final AppProperties properties;
-    private final SystemUserJwtService systemUserJwtService;
-    private final SystemUserOnlineService systemUserOnlineService;
+    private final SystemUserJwtDAO systemUserJwtDAO;
+    private final SystemUserOnlineDAO systemUserOnlineDAO;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveUser(SystemUserTb resources) {
         resources.setDeptId(resources.getDept().getId());
         if (systemUserMapper.getUserByUsername(resources.getUsername()) != null) {
-            throw new EntityExistException(SystemUserTb.class, "username", resources.getUsername());
+            throw new BadRequestException("用户名已存在");
         }
         if (systemUserMapper.getUserByEmail(resources.getEmail()) != null) {
-            throw new EntityExistException(SystemUserTb.class, "email", resources.getEmail());
+            throw new BadRequestException("邮箱已存在");
         }
         if (systemUserMapper.getUserByPhone(resources.getPhone()) != null) {
-            throw new EntityExistException(SystemUserTb.class, "phone", resources.getPhone());
+            throw new BadRequestException("手机号已存在");
         }
         save(resources);
         // 保存用户岗位
@@ -76,17 +68,17 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         SystemUserTb user2 = systemUserMapper.getUserByEmail(resources.getEmail());
         SystemUserTb user3 = systemUserMapper.getUserByPhone(resources.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
-            throw new EntityExistException(SystemUserTb.class, "username", resources.getUsername());
+            throw new BadRequestException("用户名已存在");
         }
         if (user2 != null && !user.getId().equals(user2.getId())) {
-            throw new EntityExistException(SystemUserTb.class, "email", resources.getEmail());
+            throw new BadRequestException("邮箱已存在");
         }
         if (user3 != null && !user.getId().equals(user3.getId())) {
-            throw new EntityExistException(SystemUserTb.class, "phone", resources.getPhone());
+            throw new BadRequestException("手机号已存在");
         }
         // 如果用户被禁用，则清除用户登录信息
         if (!resources.getEnabled()) {
-            systemUserOnlineService.kickOutByUsername(resources.getUsername());
+            systemUserOnlineDAO.kickOutByUsername(resources.getUsername());
         }
         user.setDeptId(resources.getDept().getId());
         user.setUsername(resources.getUsername());
@@ -115,7 +107,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         SystemUserTb user = getById(resources.getId());
         SystemUserTb user1 = systemUserMapper.getUserByPhone(resources.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
-            throw new EntityExistException(SystemUserTb.class, "phone", resources.getPhone());
+            throw new BadRequestException("手机号已存在");
         }
         user.setNickName(resources.getNickName());
         user.setPhone(resources.getPhone());
@@ -155,7 +147,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
             // 清除缓存
             flushLoginCacheInfo(user.getUsername());
             // 强制退出
-            systemUserOnlineService.kickOutByUsername(user.getUsername());
+            systemUserOnlineDAO.kickOutByUsername(user.getUsername());
         });
         // 重置密码
         systemUserMapper.updatePasswordByUserIds(password, ids);
@@ -221,7 +213,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
      * @param username /
      */
     private void flushLoginCacheInfo(String username) {
-        systemUserJwtService.cleanUserJwtModelCacheByUsername(username);
+        systemUserJwtDAO.cleanUserJwtModelCacheByUsername(username);
     }
 
     @Override

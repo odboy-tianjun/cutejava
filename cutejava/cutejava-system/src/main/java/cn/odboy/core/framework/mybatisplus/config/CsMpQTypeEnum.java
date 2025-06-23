@@ -3,7 +3,7 @@ package cn.odboy.core.framework.mybatisplus.config;
 /**
  * 动态查询 枚举
  */
-public enum QueryTypeEnum {
+public enum CsMpQTypeEnum {
     /**
      * 相等
      */

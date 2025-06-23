@@ -14,9 +14,7 @@ import cn.odboy.core.dal.mysql.system.SystemRoleDeptMapper;
 import cn.odboy.core.dal.mysql.system.SystemRoleMapper;
 import cn.odboy.core.dal.mysql.system.SystemRoleMenuMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserMapper;
-import cn.odboy.core.dal.redis.system.SystemUserJwtService;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.exception.EntityExistException;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import cn.odboy.util.StringUtil;
@@ -25,15 +23,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,13 +36,12 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
     private final SystemRoleDeptMapper systemRoleDeptMapper;
     private final SystemRoleMenuMapper systemRoleMenuMapper;
     private final SystemUserMapper systemUserMapper;
-    private final SystemUserJwtService systemUserJwtService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveRole(CreateSystemRoleArgs resources) {
         if (systemRoleMapper.getRoleByName(resources.getName()) != null) {
-            throw new EntityExistException(SystemRoleTb.class, "name", resources.getName());
+            throw new BadRequestException("角色名称已存在");
         }
         save(BeanUtil.copyProperties(resources, SystemRoleTb.class));
         // 判断是否有部门数据，若有，则需创建关联
@@ -64,7 +56,7 @@ public class SystemRoleServiceImpl extends ServiceImpl<SystemRoleMapper, SystemR
         SystemRoleTb role = getById(resources.getId());
         SystemRoleTb role1 = systemRoleMapper.getRoleByName(resources.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
-            throw new EntityExistException(SystemRoleTb.class, "name", resources.getName());
+            throw new BadRequestException("角色名称已存在");
         }
         role.setName(resources.getName());
         role.setDescription(resources.getDescription());

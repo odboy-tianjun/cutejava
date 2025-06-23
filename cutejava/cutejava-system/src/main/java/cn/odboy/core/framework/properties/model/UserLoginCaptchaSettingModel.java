@@ -12,6 +12,7 @@ import java.awt.*;
 
 /**
  * 验证码配置
+ *
  * @author odboy
  */
 @Getter

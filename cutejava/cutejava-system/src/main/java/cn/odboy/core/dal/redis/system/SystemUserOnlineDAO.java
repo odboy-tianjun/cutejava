@@ -1,16 +1,15 @@
 package cn.odboy.core.dal.redis.system;
 
-import cn.odboy.core.framework.permission.core.handler.TokenProvider;
-import cn.odboy.core.framework.properties.AppProperties;
+import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.model.system.SystemUserJwtVo;
 import cn.odboy.core.dal.model.system.SystemUserOnlineVo;
+import cn.odboy.core.framework.permission.core.handler.TokenProvider;
+import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.redis.RedisHelper;
-import cn.odboy.util.BrowserUtil;
-import cn.odboy.util.DesEncryptUtil;
-import cn.odboy.util.FileUtil;
-import cn.odboy.util.IpUtil;
+import cn.odboy.util.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +21,19 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class SystemUserOnlineServiceImpl implements SystemUserOnlineService {
+public class SystemUserOnlineDAO {
     private final AppProperties properties;
     private final TokenProvider tokenProvider;
     private final RedisHelper redisHelper;
 
-    @Override
+    /**
+     * 保存在线用户信息
+     *
+     * @param userJwtVo /
+     * @param token     /
+     * @param request   /
+     */
+
     public void saveUserJwtModelByToken(SystemUserJwtVo userJwtVo, String token, HttpServletRequest request) {
         String dept = userJwtVo.getUser().getDept().getName();
         String ip = BrowserUtil.getIp(request);
@@ -53,14 +59,25 @@ public class SystemUserOnlineServiceImpl implements SystemUserOnlineService {
         redisHelper.set(loginKey, userOnlineVo, properties.getJwt().getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * 退出登录
+     *
+     * @param token /
+     */
 
-    @Override
     public void logoutByToken(String token) {
         String loginKey = tokenProvider.loginKey(token);
         redisHelper.del(loginKey);
     }
 
-    @Override
+    /**
+     * 导出
+     *
+     * @param all      /
+     * @param response /
+     * @throws IOException /
+     */
+
     public void downloadUserOnlineModelExcel(List<SystemUserOnlineVo> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemUserOnlineVo user : all) {
@@ -76,10 +93,58 @@ public class SystemUserOnlineServiceImpl implements SystemUserOnlineService {
         FileUtil.downloadExcel(list, response);
     }
 
+    /**
+     * 根据用户名强退用户
+     *
+     * @param username /
+     */
 
-    @Override
     public void kickOutByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + username + "*";
         redisHelper.scanDel(loginKey);
+    }
+
+    /**
+     * 查询全部数据
+     *
+     * @param username /
+     * @param pageable /
+     * @return /
+     */
+
+    public CsResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(String username, Pageable pageable) {
+        List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
+        List<SystemUserOnlineVo> paging = PageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
+        return PageUtil.toPage(paging, onlineUserList.size());
+    }
+
+    /**
+     * 查询全部数据，不分页
+     *
+     * @param username /
+     * @return /
+     */
+
+    public List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username) {
+        String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
+        List<String> keys = redisHelper.scan(loginKey + "*");
+        Collections.reverse(keys);
+        List<SystemUserOnlineVo> onlineUserList = new ArrayList<>();
+        for (String key : keys) {
+            onlineUserList.add(redisHelper.get(key, SystemUserOnlineVo.class));
+        }
+        onlineUserList.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
+        return onlineUserList;
+    }
+
+    /**
+     * 查询用户
+     *
+     * @param key /
+     * @return /
+     */
+
+    public SystemUserOnlineVo queryUserOnlineModelByKey(String key) {
+        return redisHelper.get(key, SystemUserOnlineVo.class);
     }
 }

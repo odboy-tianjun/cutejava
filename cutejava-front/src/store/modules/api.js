@@ -9,7 +9,7 @@ const api = {
     // 上传文件到七牛云
     qiNiuUploadApi: baseUrl + '/api/qiNiuContent',
     // Sql 监控
-    sqlApi: baseUrl + '/druid/index.html',
+    druidSqlApi: baseUrl + '/druid/index.html',
     // websocket
     websocketApi: baseUrl + '/webSocket/{sid}',
     // swagger

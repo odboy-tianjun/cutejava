@@ -1,10 +1,9 @@
 package cn.odboy.core.framework.permission.core.handler;
 
+import cn.odboy.core.dal.dataobject.system.SystemUserTb;
 import cn.odboy.core.dal.model.system.SystemRoleCodeVo;
 import cn.odboy.core.dal.model.system.SystemUserJwtVo;
-import cn.odboy.core.dal.redis.system.SystemUserJwtApi;
-import cn.odboy.core.dal.redis.system.SystemUserJwtService;
-import cn.odboy.core.dal.dataobject.system.SystemUserTb;
+import cn.odboy.core.dal.redis.system.SystemUserJwtDAO;
 import cn.odboy.core.service.system.SystemDataService;
 import cn.odboy.core.service.system.SystemRoleService;
 import cn.odboy.core.service.system.SystemUserService;
@@ -23,12 +22,11 @@ public class UserDetailsHandler implements UserDetailsService {
     private final SystemRoleService systemRoleService;
     private final SystemUserService systemUserService;
     private final SystemDataService systemDataService;
-    private final SystemUserJwtService systemUserJwtService;
-    private final SystemUserJwtApi systemUserJwtApi;
+    private final SystemUserJwtDAO systemUserJwtDAO;
 
     @Override
     public SystemUserJwtVo loadUserByUsername(String username) {
-        SystemUserJwtVo userJwtVo = systemUserJwtApi.queryUserJwtModelByUsername(username);
+        SystemUserJwtVo userJwtVo = systemUserJwtDAO.queryUserJwtModelByUsername(username);
         if (userJwtVo == null) {
             SystemUserTb user = systemUserService.queryUserByUsername(username);
             if (user == null) {
@@ -42,7 +40,7 @@ public class UserDetailsHandler implements UserDetailsService {
                 // 初始化JwtUserDto
                 userJwtVo = new SystemUserJwtVo(user, systemDataService.queryDeptIdListByArgs(user), authorities);
                 // 添加缓存数据
-                systemUserJwtService.saveUserJwtModelByUserName(username, userJwtVo);
+                systemUserJwtDAO.saveUserJwtModelByUserName(username, userJwtVo);
             }
         }
         return userJwtVo;

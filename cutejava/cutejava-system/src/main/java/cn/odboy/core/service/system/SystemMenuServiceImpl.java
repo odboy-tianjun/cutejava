@@ -13,7 +13,6 @@ import cn.odboy.core.dal.mysql.system.SystemMenuMapper;
 import cn.odboy.core.dal.mysql.system.SystemRoleMenuMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserMapper;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.exception.EntityExistException;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -21,16 +20,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -50,11 +44,11 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
     @Transactional(rollbackFor = Exception.class)
     public void saveMenu(SystemMenuTb resources) {
         if (systemMenuMapper.getMenuByTitle(resources.getTitle()) != null) {
-            throw new EntityExistException(SystemMenuTb.class, "title", resources.getTitle());
+            throw new BadRequestException("菜单标题已存在");
         }
         if (StringUtil.isNotBlank(resources.getComponentName())) {
             if (systemMenuMapper.getMenuByComponentName(resources.getComponentName()) != null) {
-                throw new EntityExistException(SystemMenuTb.class, "componentName", resources.getComponentName());
+                throw new BadRequestException("菜单组件名称已存在");
             }
         }
         if (Long.valueOf(0L).equals(resources.getPid())) {
@@ -87,7 +81,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
         SystemMenuTb menu1 = systemMenuMapper.getMenuByTitle(resources.getTitle());
 
         if (menu1 != null && !menu1.getId().equals(menu.getId())) {
-            throw new EntityExistException(SystemMenuTb.class, "title", resources.getTitle());
+            throw new BadRequestException("菜单标题已存在");
         }
 
         if (resources.getPid().equals(0L)) {
@@ -101,7 +95,7 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
         if (StringUtil.isNotBlank(resources.getComponentName())) {
             menu1 = systemMenuMapper.getMenuByComponentName(resources.getComponentName());
             if (menu1 != null && !menu1.getId().equals(menu.getId())) {
-                throw new EntityExistException(SystemMenuTb.class, "componentName", resources.getComponentName());
+                throw new BadRequestException("菜单组件名称已存在");
             }
         }
         menu.setTitle(resources.getTitle());
@@ -116,6 +110,9 @@ public class SystemMenuServiceImpl extends ServiceImpl<SystemMenuMapper, SystemM
         menu.setComponentName(resources.getComponentName());
         menu.setPermission(resources.getPermission());
         menu.setType(resources.getType());
+        // auto fill
+        menu.setUpdateBy(null);
+        menu.setUpdateTime(null);
         saveOrUpdate(menu);
         // 计算父级菜单节点数目
         updateSubCnt(oldPid);

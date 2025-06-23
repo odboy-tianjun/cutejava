@@ -8,7 +8,6 @@ import cn.odboy.core.dal.model.system.QuerySystemJobArgs;
 import cn.odboy.core.dal.mysql.system.SystemJobMapper;
 import cn.odboy.core.dal.mysql.system.SystemUserMapper;
 import cn.odboy.exception.BadRequestException;
-import cn.odboy.exception.EntityExistException;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.PageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -16,13 +15,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +31,7 @@ public class SystemJobServiceImpl extends ServiceImpl<SystemJobMapper, SystemJob
     public void saveJob(CreateSystemJobArgs resources) {
         SystemJobTb job = systemJobMapper.getJobByName(resources.getName());
         if (job != null) {
-            throw new EntityExistException(SystemJobTb.class, "name", resources.getName());
+            throw new BadRequestException("职位名称已存在");
         }
         save(BeanUtil.copyProperties(resources, SystemJobTb.class));
     }
@@ -46,7 +42,7 @@ public class SystemJobServiceImpl extends ServiceImpl<SystemJobMapper, SystemJob
         SystemJobTb job = getById(resources.getId());
         SystemJobTb old = systemJobMapper.getJobByName(resources.getName());
         if (old != null && !old.getId().equals(resources.getId())) {
-            throw new EntityExistException(SystemJobTb.class, "name", resources.getName());
+            throw new BadRequestException("职位名称已存在");
         }
         resources.setId(job.getId());
         saveOrUpdate(resources);

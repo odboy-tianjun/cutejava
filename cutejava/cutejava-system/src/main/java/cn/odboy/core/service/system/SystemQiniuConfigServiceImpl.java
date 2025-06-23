@@ -6,9 +6,6 @@ import cn.odboy.core.dal.mysql.system.SystemQiniuConfigMapper;
 import cn.odboy.exception.BadRequestException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +32,6 @@ public class SystemQiniuConfigServiceImpl extends ServiceImpl<SystemQiniuConfigM
         qiniuConfig.setType(type);
         saveOrUpdate(qiniuConfig);
     }
-
 
 
     @Override

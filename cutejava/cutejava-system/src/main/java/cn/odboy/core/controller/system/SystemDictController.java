@@ -2,9 +2,9 @@ package cn.odboy.core.controller.system;
 
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.system.SystemDictTb;
-import cn.odboy.core.service.system.SystemDictService;
 import cn.odboy.core.dal.model.system.CreateSystemDictArgs;
 import cn.odboy.core.dal.model.system.QuerySystemDictArgs;
+import cn.odboy.core.service.system.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

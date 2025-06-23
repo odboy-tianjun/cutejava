@@ -18,7 +18,7 @@ package cn.odboy.core.framework.mybatisplus.core.interfaces;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.core.framework.mybatisplus.core.CsMpSimpleQUtil;
+import cn.odboy.core.framework.mybatisplus.core.CsMpQUtil;
 import cn.odboy.exception.BadRequestException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -146,7 +146,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param criteria 动态条件
      */
     public <Q> List<T> queryClazzListByArgs(Q criteria) {
-        QueryWrapper<T> predicate = CsMpSimpleQUtil.build(criteria);
+        QueryWrapper<T> predicate = CsMpQUtil.build(criteria);
         return baseMapper.selectList(predicate);
     }
 
@@ -169,7 +169,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param targetClazz 目标类型
      */
     public <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz) {
-        QueryWrapper<T> predicate = CsMpSimpleQUtil.build(criteria);
+        QueryWrapper<T> predicate = CsMpQUtil.build(criteria);
         List<T> data = baseMapper.selectList(predicate);
         return BeanUtil.copyToList(data, targetClazz);
     }
@@ -217,13 +217,13 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
     }
 
     public <G, Q> CsResultVo<List<G>> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
-        QueryWrapper<T> wrapper = CsMpSimpleQUtil.build(criteria);
+        QueryWrapper<T> wrapper = CsMpQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
         return new CsResultVo<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
     }
 
     public <Q> CsResultVo<List<T>> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {
-        QueryWrapper<T> wrapper = CsMpSimpleQUtil.build(criteria);
+        QueryWrapper<T> wrapper = CsMpQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
         return new CsResultVo<>(originPageData.getRecords(), originPageData.getTotal());
     }

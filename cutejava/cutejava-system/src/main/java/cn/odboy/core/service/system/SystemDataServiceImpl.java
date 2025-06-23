@@ -5,14 +5,10 @@ import cn.odboy.core.constant.system.SystemDataScopeEnum;
 import cn.odboy.core.dal.dataobject.system.SystemDeptTb;
 import cn.odboy.core.dal.dataobject.system.SystemRoleTb;
 import cn.odboy.core.dal.dataobject.system.SystemUserTb;
-import cn.odboy.core.dal.redis.system.SystemRedisKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
 
 /**
  * 数据权限服务实现
