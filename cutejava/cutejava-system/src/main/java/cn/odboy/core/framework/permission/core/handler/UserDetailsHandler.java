@@ -1,12 +1,12 @@
 package cn.odboy.core.framework.permission.core.handler;
 
-import cn.odboy.core.dal.dataobject.system.SystemUserTb;
-import cn.odboy.core.dal.model.system.SystemRoleCodeVo;
-import cn.odboy.core.dal.model.system.SystemUserJwtVo;
-import cn.odboy.core.dal.redis.system.SystemUserInfoDAO;
-import cn.odboy.core.service.system.SystemDataService;
-import cn.odboy.core.service.system.SystemRoleService;
-import cn.odboy.core.service.system.SystemUserService;
+import cn.odboy.core.dal.dataobject.SystemUserTb;
+import cn.odboy.core.dal.model.SystemRoleCodeVo;
+import cn.odboy.core.dal.model.SystemUserJwtVo;
+import cn.odboy.core.dal.redis.SystemUserInfoDAO;
+import cn.odboy.core.service.SystemDataService;
+import cn.odboy.core.service.SystemRoleService;
+import cn.odboy.core.service.SystemUserService;
 import cn.odboy.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

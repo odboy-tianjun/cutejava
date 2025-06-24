@@ -5,7 +5,7 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.context.SpringBeanHolder;
-import cn.odboy.core.constant.system.SystemDataScopeEnum;
+import cn.odboy.core.constant.SystemDataScopeEnum;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;

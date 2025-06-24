@@ -1,6 +1,6 @@
 package cn.odboy.core.framework.permission.config;
 
-import cn.odboy.core.dal.redis.system.SystemUserOnlineInfoDAO;
+import cn.odboy.core.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.core.framework.permission.core.handler.TokenFilter;
 import cn.odboy.core.framework.permission.core.handler.TokenProvider;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package cn.odboy.monitor;
 
-import cn.odboy.core.service.system.SystemDictService;
+import cn.odboy.core.service.SystemDictService;
 import cn.odboy.monitor.service.CsHealthCheckPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

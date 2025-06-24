@@ -1,7 +1,7 @@
 package cn.odboy.core.framework.permission.config;
 
 import cn.odboy.constant.RequestMethodEnum;
-import cn.odboy.core.dal.redis.system.SystemUserOnlineInfoDAO;
+import cn.odboy.core.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.core.framework.permission.core.handler.JwtAccessDeniedHandler;
 import cn.odboy.core.framework.permission.core.handler.JwtAuthenticationEntryPoint;
 import cn.odboy.core.framework.permission.core.handler.TokenProvider;

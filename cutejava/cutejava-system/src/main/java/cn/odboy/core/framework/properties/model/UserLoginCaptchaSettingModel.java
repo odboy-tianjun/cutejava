@@ -1,6 +1,6 @@
 package cn.odboy.core.framework.properties.model;
 
-import cn.odboy.core.constant.LoginCodeEnum;
+import cn.odboy.core.constant.CaptchaCodeEnum;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.StringUtil;
 import com.wf.captcha.*;
@@ -18,7 +18,7 @@ import java.awt.*;
 @Getter
 @Setter
 public class UserLoginCaptchaSettingModel {
-    private LoginCodeEnum codeType;
+    private CaptchaCodeEnum codeType;
 
     /**
      * 验证码有效期 分钟
