@@ -1,11 +1,14 @@
 package cn.odboy.core.service;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.core.dal.model.QuerySystemLocalStorageArgs;
 import cn.odboy.core.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.core.framework.properties.AppProperties;
+import cn.odboy.core.framework.server.core.FileUploadPathHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
@@ -19,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -30,6 +30,7 @@ import java.util.Map;
 public class SystemLocalStorageService {
     private final SystemLocalStorageMapper systemLocalStorageMapper;
     private final AppProperties properties;
+    private final FileUploadPathHelper fileUploadPathHelper;
 
     /**
      * 上传
@@ -41,24 +42,25 @@ public class SystemLocalStorageService {
     @Transactional(rollbackFor = Exception.class)
     public SystemLocalStorageTb uploadFile(String name, MultipartFile multipartFile) {
         long size = multipartFile.getSize();
-        FileUtil.checkSize(properties.getFile().getFileMaxSize(), size);
+        FileUtil.checkSize(fileUploadPathHelper.getFileMaxSize(), size);
         String suffix = FileUtil.getSuffix(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
-        File file = FileUtil.upload(multipartFile, properties.getFile().getPath() + type + File.separator);
-        if (ObjectUtil.isNull(file)) {
+        String uploadDateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT);
+        File file = FileUtil.upload(multipartFile, fileUploadPathHelper.getPath() + uploadDateStr + File.separator);
+        if (file == null) {
             throw new BadRequestException("上传失败");
         }
         try {
             String formatSize = FileUtil.getSize(size);
-            name = StringUtil.isBlank(name) ? FileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
-            SystemLocalStorageTb localStorage = new SystemLocalStorageTb(
-                    file.getName(),
-                    name,
-                    suffix,
-                    file.getPath(),
-                    type,
-                    formatSize
-            );
+            String prefixName = StringUtil.isBlank(name) ? FileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
+            SystemLocalStorageTb localStorage = new SystemLocalStorageTb();
+            localStorage.setRealName(file.getName());
+            localStorage.setName(prefixName);
+            localStorage.setSuffix(suffix);
+            localStorage.setPath(file.getPath());
+            localStorage.setType(type);
+            localStorage.setSize(formatSize);
+            localStorage.setDateGroup(uploadDateStr);
             systemLocalStorageMapper.insert(localStorage);
             return localStorage;
         } catch (Exception e) {
@@ -88,8 +90,12 @@ public class SystemLocalStorageService {
     public void removeFileByIds(Long[] ids) {
         for (Long id : ids) {
             SystemLocalStorageTb storage = systemLocalStorageMapper.selectById(id);
-            FileUtil.del(storage.getPath());
-            systemLocalStorageMapper.deleteById(storage);
+            try {
+                FileUtil.del(storage.getPath());
+                systemLocalStorageMapper.deleteById(storage);
+            } catch (IORuntimeException e) {
+                throw new BadRequestException("删除文件 " + storage.getName() + " 失败");
+            }
         }
     }
 

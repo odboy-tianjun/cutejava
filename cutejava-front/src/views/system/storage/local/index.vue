@@ -57,7 +57,7 @@
       <el-table-column prop="name" label="文件名">
         <template slot-scope="scope">
           <el-popover
-            :content="'file/' + scope.row.type + '/' + scope.row.realName"
+            :content="'file/' + scope.row.dateGroup + '/' + scope.row.realName"
             placement="top-start"
             title="路径"
             width="200"
@@ -65,7 +65,7 @@
           >
             <a
               slot="reference"
-              :href="baseApi + '/file/' + scope.row.type + '/' + scope.row.realName"
+              :href="baseApi + '/file/' + scope.row.dateGroup + '/' + scope.row.realName"
               class="el-link--primary"
               style="word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color: #1890ff;font-size: 13px;"
               target="_blank"
@@ -78,8 +78,8 @@
       <el-table-column prop="path" label="预览图">
         <template slot-scope="{row}">
           <el-image
-            :src=" baseApi + '/file/' + row.type + '/' + row.realName"
-            :preview-src-list="[baseApi + '/file/' + row.type + '/' + row.realName]"
+            :src=" baseApi + '/file/' + row.dateGroup + '/' + row.realName"
+            :preview-src-list="[baseApi + '/file/' + row.dateGroup + '/' + row.realName]"
             fit="contain"
             lazy
             class="el-avatar"
@@ -104,7 +104,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import crudFile from '@/api/tools/localStorage'
+import crudFile from '@/api/system/localStorage'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
