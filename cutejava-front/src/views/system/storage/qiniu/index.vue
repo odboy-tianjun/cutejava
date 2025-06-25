@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import crudQiNiu from '@/api/tools/qiniu'
+import crudQiNiu from '@/api/system/qiniu'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import eForm from './form.vue'

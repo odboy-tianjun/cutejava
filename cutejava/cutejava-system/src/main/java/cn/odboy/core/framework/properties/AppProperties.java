@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
-    private FileUploadSettingModel file;
     private ContentRsaEncodeSettingModel rsa;
     private JwtAuthSettingModel jwt;
     private UserLoginSettingModel login;

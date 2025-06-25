@@ -4,7 +4,7 @@ export function add(data) {
   return request({
     url: 'api/localStorage/uploadFile',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -20,7 +20,7 @@ export function edit(data) {
   return request({
     url: 'api/localStorage/modifyLocalStorageById',
     method: 'post',
-    data
+    data: data
   })
 }
 

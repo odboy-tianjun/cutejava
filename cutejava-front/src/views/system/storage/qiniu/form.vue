@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { queryQiniuConfig, modifyQiniuConfig } from '@/api/tools/qiniu'
+import { queryQiniuConfig, modifyQiniuConfig } from '@/api/system/qiniu'
 export default {
   data() {
     return {

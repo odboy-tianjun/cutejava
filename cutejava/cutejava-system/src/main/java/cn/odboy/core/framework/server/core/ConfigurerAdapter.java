@@ -1,7 +1,6 @@
 package cn.odboy.core.framework.server.core;
 
 import cn.odboy.core.framework.properties.AppProperties;
-import cn.odboy.core.framework.properties.model.FileUploadSettingModel;
 import cn.odboy.core.framework.server.converters.DateStringArraysToListDateConverter;
 import cn.odboy.core.framework.server.converters.DateStringToDateConverter;
 import com.alibaba.fastjson2.JSONWriter;
@@ -32,9 +31,10 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     /**
      * 文件配置
      */
-    private final AppProperties appProperties;
+    private final AppProperties properties;
     private final DateStringArraysToListDateConverter dateStringArraysToListDateConverter;
     private final DateStringToDateConverter dateStringToDateConverter;
+    private final FileUploadPathHelper fileUploadPathHelper;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -50,10 +50,9 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        FileUploadSettingModel.ElPath path = appProperties.getFile().getPath();
-        String avatarUtl = "file:" + path.getAvatar().replace("\\", "/");
-        String pathUtl = "file:" + path.getPath().replace("\\", "/");
-        registry.addResourceHandler("/avatar/**").addResourceLocations(avatarUtl).setCachePeriod(0);
+        String path = fileUploadPathHelper.getPath();
+        String pathUtl = "file:" + path.replace("\\", "/");
+        registry.addResourceHandler("/avatar/**").addResourceLocations(pathUtl).setCachePeriod(0);
         registry.addResourceHandler("/file/**").addResourceLocations(pathUtl).setCachePeriod(0);
         registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
     }

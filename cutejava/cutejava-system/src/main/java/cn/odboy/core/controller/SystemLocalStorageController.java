@@ -1,5 +1,6 @@
 package cn.odboy.core.controller;
 
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.core.dal.dataobject.SystemLocalStorageTb;
@@ -30,9 +31,10 @@ public class SystemLocalStorageController {
     private final SystemLocalStorageService localStorageService;
 
     @ApiOperation("查询文件")
-    @GetMapping
+    @PostMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<CsResultVo<List<SystemLocalStorageTb>>> queryFile(QuerySystemLocalStorageArgs criteria) {
+    public ResponseEntity<CsResultVo<List<SystemLocalStorageTb>>> queryLocalStorage(@Validated @RequestBody CsPageArgs<QuerySystemLocalStorageArgs> args) {
+        QuerySystemLocalStorageArgs criteria = args.getArgs();
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(localStorageService.queryLocalStorage(criteria, page), HttpStatus.OK);
     }

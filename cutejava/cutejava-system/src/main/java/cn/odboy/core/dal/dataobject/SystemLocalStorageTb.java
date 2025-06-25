@@ -8,12 +8,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @TableName("system_local_storage")
 public class SystemLocalStorageTb extends CsBaseUserTimeTb {
 
@@ -39,14 +37,8 @@ public class SystemLocalStorageTb extends CsBaseUserTimeTb {
     @ApiModelProperty(value = "大小")
     private String size;
 
-    public SystemLocalStorageTb(String realName, String name, String suffix, String path, String type, String size) {
-        this.realName = realName;
-        this.name = name;
-        this.suffix = suffix;
-        this.path = path;
-        this.type = type;
-        this.size = size;
-    }
+    @ApiModelProperty(value = "日期分组")
+    private String dateGroup;
 
     public void copy(SystemLocalStorageTb source) {
         BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
