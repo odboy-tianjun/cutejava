@@ -19,10 +19,10 @@ public final class CsPageUtil extends cn.hutool.core.util.PageUtil {
     /**
      * List 分页
      */
-    public static <T> List<T> softPaging(int page, int size, List<T> list) {
-        int pageIndex = page - 1;
-        int fromIndex = pageIndex * size;
-        int toIndex = pageIndex * size + size;
+    public static <T> List<T> softPaging(long page, long size, List<T> list) {
+        int pageIndex = Math.toIntExact(page - 1);
+        int fromIndex = Math.toIntExact(pageIndex * size);
+        int toIndex = Math.toIntExact(pageIndex * size + size);
         if (fromIndex > list.size()) {
             return Collections.emptyList();
         } else if (toIndex >= list.size()) {

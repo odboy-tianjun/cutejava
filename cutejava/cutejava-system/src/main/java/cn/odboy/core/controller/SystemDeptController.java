@@ -1,5 +1,6 @@
 package cn.odboy.core.controller;
 
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemDeptTb;
 import cn.odboy.core.dal.model.CreateSystemDeptArgs;
@@ -37,9 +38,10 @@ public class SystemDeptController {
     }
 
     @ApiOperation("查询部门")
-    @GetMapping
+    @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDeptPage(QuerySystemDeptArgs criteria) throws Exception {
+    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDept(@Validated @RequestBody CsPageArgs<QuerySystemDeptArgs> args) throws Exception {
+        QuerySystemDeptArgs criteria = args.getArgs();
         List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(depts), HttpStatus.OK);
     }

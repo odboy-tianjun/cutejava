@@ -12,7 +12,7 @@ export function add(data) {
   return request({
     url: 'api/roles/saveRole',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -43,7 +43,7 @@ export function edit(data) {
   return request({
     url: 'api/roles/modifyRoleById',
     method: 'post',
-    data
+    data: data
   })
 }
 

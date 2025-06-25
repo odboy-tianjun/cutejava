@@ -7,9 +7,9 @@ import cn.odboy.core.framework.permission.core.handler.TokenProvider;
 import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.redis.RedisHelper;
 import cn.odboy.util.*;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,14 +107,18 @@ public class SystemUserOnlineInfoDAO {
     /**
      * 查询全部数据
      *
-     * @param username /
+     * @param onlineVo /
      * @param pageable /
      * @return /
      */
 
-    public CsResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(String username, Pageable pageable) {
+    public CsResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
+        String username = null;
+        if (onlineVo != null) {
+            username = onlineVo.getUserName();
+        }
         List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
-        List<SystemUserOnlineVo> paging = CsPageUtil.softPaging(pageable.getPageNumber(), pageable.getPageSize(), onlineUserList);
+        List<SystemUserOnlineVo> paging = CsPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
         return CsPageUtil.toPage(paging, onlineUserList.size());
     }
 

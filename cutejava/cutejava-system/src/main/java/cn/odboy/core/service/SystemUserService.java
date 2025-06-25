@@ -13,6 +13,7 @@ import cn.odboy.core.dal.redis.SystemUserInfoDAO;
 import cn.odboy.core.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;
+import cn.odboy.core.framework.server.core.FileUploadPathHelper;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
@@ -40,6 +41,7 @@ public class SystemUserService {
     private final AppProperties properties;
     private final SystemUserInfoDAO systemUserInfoDAO;
     private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    private final FileUploadPathHelper fileUploadPathHelper;
 
     /**
      * 新增用户
@@ -202,7 +204,7 @@ public class SystemUserService {
             throw new BadRequestException("异常用户数据，请联系管理员处理");
         }
         // 文件大小验证
-        FileUtil.checkSize(properties.getFile().getAvatarMaxSize(), multipartFile.getSize());
+        FileUtil.checkSize(fileUploadPathHelper.getAvatarMaxSize(), multipartFile.getSize());
         // 验证文件上传的格式
         String image = "gif jpg png jpeg";
         String fileType = FileUtil.getSuffix(multipartFile.getOriginalFilename());
@@ -210,7 +212,7 @@ public class SystemUserService {
             throw new BadRequestException("文件格式错误！, 仅支持 " + image + " 格式");
         }
         String oldPath = user.getAvatarPath();
-        File file = FileUtil.upload(multipartFile, properties.getFile().getPath().getAvatar());
+        File file = FileUtil.upload(multipartFile, fileUploadPathHelper.getPath());
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
         user.setAvatarName(file.getName());
         systemUserMapper.insertOrUpdate(user);

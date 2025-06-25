@@ -200,7 +200,11 @@ export default {
       }
     },
     getMenus(tree, treeNode, resolve) {
-      const params = { pid: tree.id }
+      const params = {
+        page: 1,
+        size: 999999,
+        args: { pid: tree.id }
+      }
       setTimeout(() => {
         crudMenu.getMenus(params).then(res => {
           resolve(res.content)
@@ -220,7 +224,7 @@ export default {
     },
     loadMenus({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudMenu.getMenusTree(parentNode.id).then(res => {
+        crudMenu.queryMenuListByPid(parentNode.id).then(res => {
           parentNode.children = res.map(function(obj) {
             if (!obj.leaf) {
               obj.children = null

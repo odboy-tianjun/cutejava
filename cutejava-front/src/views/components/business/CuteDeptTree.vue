@@ -60,7 +60,11 @@ export default {
         params['pid'] = node.data.id
       }
       setTimeout(() => {
-        queryDeptList(params).then(res => {
+        queryDeptList({
+          page: 1,
+          size: 999999,
+          args: params
+        }).then(res => {
           if (resolve) {
             resolve(res.content)
           } else {

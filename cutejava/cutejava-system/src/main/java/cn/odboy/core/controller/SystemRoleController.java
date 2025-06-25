@@ -1,6 +1,7 @@
 package cn.odboy.core.controller;
 
 import cn.hutool.core.lang.Dict;
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemRoleTb;
 import cn.odboy.core.dal.model.CreateSystemRoleArgs;
@@ -48,16 +49,17 @@ public class SystemRoleController {
     }
 
     @ApiOperation("返回全部的角色")
-    @PostMapping(value = "/selectAllRole")
+    @PostMapping(value = "/queryRoleList")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
-    public ResponseEntity<List<SystemRoleTb>> selectAllRole() {
+    public ResponseEntity<List<SystemRoleTb>> queryRoleList() {
         return new ResponseEntity<>(systemRoleService.queryAllRole(), HttpStatus.OK);
     }
 
     @ApiOperation("查询角色")
-    @GetMapping
+    @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRolePage(QuerySystemRoleArgs criteria) {
+    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<QuerySystemRoleArgs> args) {
+        QuerySystemRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemRoleService.queryRoleByArgs(criteria, page), HttpStatus.OK);
     }

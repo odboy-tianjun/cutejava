@@ -1,5 +1,6 @@
 package cn.odboy.core.controller;
 
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.core.dal.model.CreateSystemDictDetailArgs;
@@ -27,8 +28,9 @@ public class SystemDictDetailController {
     private final SystemDictDetailService systemDictDetailService;
 
     @ApiOperation("查询字典详情")
-    @GetMapping
-    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> selectDictDetailByArgs(QuerySystemDictDetailArgs criteria) {
+    @PostMapping
+    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<QuerySystemDictDetailArgs> args) {
+        QuerySystemDictDetailArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemDictDetailService.queryDictDetailByArgs(criteria, page), HttpStatus.OK);
     }

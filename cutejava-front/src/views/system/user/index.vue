@@ -376,7 +376,11 @@ export default {
       this.crud.toQuery()
     },
     getDepts() {
-      queryDeptList({ enabled: true }).then(res => {
+      queryDeptList({
+        page: 1,
+        size: 999999,
+        args: { enabled: true }
+      }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -405,7 +409,11 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        queryDeptList({ enabled: true, pid: parentNode.id }).then(res => {
+        queryDeptList({
+          page: 1,
+          size: 999999,
+          args: { enabled: true, pid: parentNode.id }
+        }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null

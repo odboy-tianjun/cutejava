@@ -1,5 +1,6 @@
 package cn.odboy.core.controller;
 
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemQiniuConfigTb;
 import cn.odboy.core.dal.dataobject.SystemQiniuContentTb;
@@ -56,15 +57,16 @@ public class SystemQiniuController {
     }
 
     @ApiOperation("查询文件")
-    @GetMapping
-    public ResponseEntity<CsResultVo<List<SystemQiniuContentTb>>> queryQiNiu(QuerySystemQiniuArgs criteria) {
+    @PostMapping
+    public ResponseEntity<CsResultVo<List<SystemQiniuContentTb>>> queryQiniuContentByArgs(@Validated @RequestBody CsPageArgs<QuerySystemQiniuArgs> args) {
+        QuerySystemQiniuArgs criteria = args.getArgs();
         Page<SystemQiniuContentTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(qiniuContentService.queryQiniuContentByArgs(criteria, page), HttpStatus.OK);
     }
 
     @ApiOperation("上传文件")
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> uploadQiNiu(@RequestParam MultipartFile file) {
+    @PostMapping("/uploadFile")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam MultipartFile file) {
         SystemQiniuContentTb qiniuContent = qiniuContentService.uploadFile(file);
         Map<String, Object> map = new HashMap<>(3);
         map.put("id", qiniuContent.getId());

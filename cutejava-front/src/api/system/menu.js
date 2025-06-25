@@ -10,8 +10,8 @@ export function queryMenuListByPid(pid) {
 export function getMenus(params) {
   return request({
     url: 'api/menus',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 
@@ -20,7 +20,7 @@ export function queryMenuSuperior(ids) {
   return request({
     url: 'api/menus/queryMenuSuperior',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -42,7 +42,7 @@ export function add(data) {
   return request({
     url: 'api/menus/saveMenu',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -58,7 +58,7 @@ export function edit(data) {
   return request({
     url: 'api/menus/modifyMenuById',
     method: 'post',
-    data
+    data: data
   })
 }
 

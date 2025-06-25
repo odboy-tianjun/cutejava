@@ -29,13 +29,10 @@
           />
         </el-form-item>
         <el-form-item label="顶级部门">
-          <el-radio-group v-model="form.isTop" style="width: 140px">
+          <el-radio-group v-model="form.isTop" style="width: 370px">
             <el-radio label="1">是</el-radio>
             <el-radio label="0">否</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="状态" prop="enabled">
-          <el-radio v-for="item in dict.dept_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
         </el-form-item>
         <el-form-item v-if="form.isTop === '0'" style="margin-bottom: 0;" label="上级部门" prop="pid">
           <treeselect
@@ -45,6 +42,9 @@
             style="width: 370px;"
             placeholder="选择上级类目"
           />
+        </el-form-item>
+        <el-form-item label="状态" prop="enabled">
+          <el-radio v-for="item in dict.dept_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -139,7 +139,11 @@ export default {
   },
   methods: {
     getDeptDatas(tree, treeNode, resolve) {
-      const params = { pid: tree.id }
+      const params = {
+        page: 1,
+        size: 999999,
+        args: { pid: tree.id }
+      }
       setTimeout(() => {
         crudDept.queryDeptList(params).then(res => {
           resolve(res.content)
@@ -178,7 +182,11 @@ export default {
       })
     },
     getDepts() {
-      crudDept.queryDeptList({ enabled: true }).then(res => {
+      crudDept.queryDeptList({
+        page: 1,
+        size: 999999,
+        args: { enabled: true }
+      }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -190,7 +198,11 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.queryDeptList({ enabled: true, pid: parentNode.id }).then(res => {
+        crudDept.queryDeptList({
+          page: 1,
+          size: 999999,
+          args: { enabled: true, pid: parentNode.id }
+        }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
