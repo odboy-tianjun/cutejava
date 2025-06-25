@@ -29,6 +29,12 @@ public class SystemDictDetailController {
 
     @ApiOperation("查询字典详情")
     @PostMapping
+    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<QuerySystemDictDetailArgs> args) {
+        return queryDictDetailByArgs(args);
+    }
+
+    @ApiOperation("查询字典详情")
+    @PostMapping(value = "/queryDictDetailByArgs")
     public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<QuerySystemDictDetailArgs> args) {
         QuerySystemDictDetailArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());

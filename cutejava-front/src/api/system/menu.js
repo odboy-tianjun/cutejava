@@ -7,9 +7,9 @@ export function queryMenuListByPid(pid) {
   })
 }
 
-export function getMenus(params) {
+export function queryMenuByArgs(params) {
   return request({
-    url: 'api/menus',
+    url: 'api/menus/queryMenuByArgs',
     method: 'post',
     data: params
   })
@@ -62,4 +62,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, queryMenuListByPid, queryMenuSuperior, getMenus, queryChildMenuSet }
+export default { add, edit, del, queryMenuListByPid, queryMenuSuperior, queryMenuByArgs, queryChildMenuSet }

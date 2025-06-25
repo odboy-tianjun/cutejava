@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getAllJob() {
+export function queryAllEnableJob() {
   const params = {
     page: 1,
     size: 999999,
@@ -9,7 +9,7 @@ export function getAllJob() {
     }
   }
   return request({
-    url: 'api/job',
+    url: 'api/job/queryAllEnableJob',
     method: 'post',
     data: params
   })

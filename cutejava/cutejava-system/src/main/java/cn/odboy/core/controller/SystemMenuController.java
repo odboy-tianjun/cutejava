@@ -68,6 +68,13 @@ public class SystemMenuController {
     @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
+    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<QuerySystemMenuArgs> args) throws Exception {
+        return queryAllMenu(args);
+    }
+
+    @PostMapping(value = "/queryMenuByArgs")
+    @ApiOperation("查询菜单")
+    @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<QuerySystemMenuArgs> args) throws Exception {
         QuerySystemMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
