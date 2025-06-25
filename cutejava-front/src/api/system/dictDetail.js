@@ -9,7 +9,7 @@ export function get(dictName) {
     }
   }
   return request({
-    url: 'api/dictDetail',
+    url: 'api/dictDetail/queryDictDetailByArgs',
     method: 'post',
     data: params
   })

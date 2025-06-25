@@ -10,8 +10,8 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/quartzJob',
-    method: 'delete',
+    url: 'api/quartzJob/removeJobByIds',
+    method: 'post',
     data: ids
   })
 }

@@ -1,12 +1,5 @@
 import request from '@/utils/request'
 
-// export function getDicts() {
-//   return request({
-//     url: 'api/dict/queryAllDict',
-//     method: 'post'
-//   })
-// }
-
 export function add(data) {
   return request({
     url: 'api/dict/saveDict',

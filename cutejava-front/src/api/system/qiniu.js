@@ -31,8 +31,8 @@ export function sync() {
 
 export function del(ids) {
   return request({
-    url: 'api/qiNiuContent',
-    method: 'delete',
+    url: 'api/qiNiuContent/removeFileByIds',
+    method: 'post',
     data: ids
   })
 }

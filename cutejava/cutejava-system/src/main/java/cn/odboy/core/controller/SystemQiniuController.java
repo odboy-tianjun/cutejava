@@ -98,8 +98,8 @@ public class SystemQiniuController {
     }
 
     @ApiOperation("删除多张图片")
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAllQiNiu(@RequestBody Long[] ids) {
+    @PostMapping(value = "/removeFileByIds")
+    public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
         qiniuContentService.removeFileByIds(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

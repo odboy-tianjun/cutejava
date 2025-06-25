@@ -1,16 +1,15 @@
 package cn.odboy.core.controller;
 
 import cn.odboy.core.constant.SystemCaptchaBizEnum;
+import cn.odboy.core.dal.model.SystemCheckEmailCaptchaArgs;
 import cn.odboy.core.service.SystemEmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,9 +34,9 @@ public class SystemCaptchaController {
 
     @ApiOperation("验证码验证")
     @PostMapping(value = "/checkEmailCaptcha")
-    public ResponseEntity<Void> checkEmailCaptcha(@RequestParam String email, @RequestParam String code, @RequestParam String codeBi) {
-        SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(codeBi);
-        systemEmailService.checkEmailCaptcha(biEnum, email, code);
+    public ResponseEntity<Void> checkEmailCaptcha(@Validated @RequestBody SystemCheckEmailCaptchaArgs args) {
+        SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(args.getBizCode());
+        systemEmailService.checkEmailCaptcha(biEnum, args.getEmail(), args.getCode());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

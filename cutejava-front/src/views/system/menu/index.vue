@@ -93,7 +93,7 @@
       ref="table"
       v-loading="crud.loading"
       lazy
-      :load="getMenus"
+      :load="queryMenuByArgs"
       :data="crud.data"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       row-key="id"
@@ -199,14 +199,14 @@ export default {
         this.menus.push({ id: 0, label: '顶级类目', children: null })
       }
     },
-    getMenus(tree, treeNode, resolve) {
+    queryMenuByArgs(tree, treeNode, resolve) {
       const params = {
         page: 1,
         size: 999999,
         args: { pid: tree.id }
       }
       setTimeout(() => {
-        crudMenu.getMenus(params).then(res => {
+        crudMenu.queryMenuByArgs(params).then(res => {
           resolve(res.content)
         })
       }, 100)

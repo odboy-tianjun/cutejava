@@ -185,7 +185,7 @@ import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
 import { queryDeptList, queryDeptSuperiorTree } from '@/api/system/dept'
 import { queryRoleList, getLevel } from '@/api/system/role'
-import { getAllJob } from '@/api/system/job'
+import { queryAllEnableJob } from '@/api/system/job'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -450,7 +450,7 @@ export default {
     },
     // 获取弹窗内岗位数据
     getJobs() {
-      getAllJob().then(res => {
+      queryAllEnableJob().then(res => {
         this.jobs = res.content
       }).catch(() => { })
     },

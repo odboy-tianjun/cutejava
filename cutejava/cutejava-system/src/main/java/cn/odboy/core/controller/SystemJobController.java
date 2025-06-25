@@ -37,12 +37,19 @@ public class SystemJobController {
     }
 
     @ApiOperation("查询岗位")
-    @PostMapping
+    @PostMapping(value = "/queryAllEnableJob")
     @PreAuthorize("@el.check('job:list','user:list')")
     public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJobByArgs(@Validated @RequestBody CsPageArgs<QuerySystemJobArgs> args) {
         QuerySystemJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemJobService.queryJobByArgs(criteria, page), HttpStatus.OK);
+    }
+
+    @ApiOperation("查询岗位")
+    @PostMapping
+    @PreAuthorize("@el.check('job:list','user:list')")
+    public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJobByCrud(@Validated @RequestBody CsPageArgs<QuerySystemJobArgs> args) {
+        return queryJobByArgs(args);
     }
 
     @ApiOperation("新增岗位")
