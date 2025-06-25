@@ -1,6 +1,7 @@
 package cn.odboy.core.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemMenuTb;
 import cn.odboy.core.dal.model.QuerySystemMenuArgs;
@@ -64,10 +65,11 @@ public class SystemMenuController {
         return new ResponseEntity<>(ids, HttpStatus.OK);
     }
 
-    @GetMapping
+    @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryMenu(QuerySystemMenuArgs criteria) throws Exception {
+    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<QuerySystemMenuArgs> args) throws Exception {
+        QuerySystemMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(menuList), HttpStatus.OK);
     }

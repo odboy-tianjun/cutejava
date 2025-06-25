@@ -1,5 +1,5 @@
-import { initData, download } from '@/api/data'
-import { parseTime, downloadFile } from '@/utils/index'
+import { download, initData } from '@/api/data'
+import { downloadFile, parseTime } from '@/utils/index'
 import Vue from 'vue'
 
 /**
@@ -348,8 +348,10 @@ function CRUD(options) {
       return {
         page: crud.page.page,
         size: crud.page.size,
-        ...crud.query,
-        ...crud.params
+        args: {
+          ...crud.query,
+          ...crud.params
+        }
       }
     },
     // 当前页改变

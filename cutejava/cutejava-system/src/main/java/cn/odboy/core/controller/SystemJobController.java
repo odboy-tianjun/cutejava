@@ -1,5 +1,6 @@
 package cn.odboy.core.controller;
 
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.core.dal.dataobject.SystemJobTb;
 import cn.odboy.core.dal.model.CreateSystemJobArgs;
@@ -36,9 +37,10 @@ public class SystemJobController {
     }
 
     @ApiOperation("查询岗位")
-    @GetMapping
+    @PostMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJob(QuerySystemJobArgs criteria) {
+    public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJobByArgs(@Validated @RequestBody CsPageArgs<QuerySystemJobArgs> args) {
+        QuerySystemJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemJobService.queryJobByArgs(criteria, page), HttpStatus.OK);
     }

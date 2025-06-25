@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { queryEmailConfig, modifyEmailConfig } from '@/api/tools/email'
+import { queryEmailConfig, modifyEmailConfig } from '@/api/system/email'
 export default {
   name: 'Config',
   data() {

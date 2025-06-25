@@ -11,7 +11,7 @@ export function modifyQiniuConfig(data) {
   return request({
     url: 'api/qiNiuContent/modifyQiniuConfig',
     method: 'post',
-    data
+    data: data
   })
 }
 

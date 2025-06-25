@@ -1,6 +1,7 @@
 package cn.odboy.core.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.base.CsSelectOptionItemVo;
 import cn.odboy.core.constant.SystemCaptchaBizEnum;
@@ -12,7 +13,6 @@ import cn.odboy.core.dal.model.UpdateSystemUserPasswordArgs;
 import cn.odboy.core.framework.permission.core.SecurityHelper;
 import cn.odboy.core.framework.properties.AppProperties;
 import cn.odboy.core.service.*;
-import cn.odboy.core.service.system.*;
 import cn.odboy.exception.BadRequestException;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.RsaEncryptUtil;
@@ -57,10 +57,11 @@ public class SystemUserController {
     }
 
     @ApiOperation("查询用户")
-    @GetMapping
+    @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<CsResultVo<List<SystemUserTb>>> queryUser(QuerySystemUserArgs criteria) {
-        Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
+    public ResponseEntity<CsResultVo<List<SystemUserTb>>> queryUserByArgs(@Validated @RequestBody CsPageArgs<QuerySystemUserArgs> args) {
+        Page<Object> page = new Page<>(args.getPage(), args.getSize());
+        QuerySystemUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
             // 先查找是否存在子节点
@@ -189,8 +190,9 @@ public class SystemUserController {
     @ApiOperation("查询用户基础数据")
     @PostMapping(value = "/queryUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<List<CsSelectOptionItemVo>> queryUserMetadataOptions(@Validated @RequestBody QuerySystemUserArgs criteria) {
+    public ResponseEntity<List<CsSelectOptionItemVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<QuerySystemUserArgs> args) {
         int maxPageSize = 50;
+        QuerySystemUserArgs criteria = args.getArgs();
         LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
         wrapper.and(c -> {
             c.eq(SystemUserTb::getPhone, criteria.getBlurry());

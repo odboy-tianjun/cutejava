@@ -11,7 +11,7 @@ export function add(data) {
   return request({
     url: 'api/dict/saveDict',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -27,7 +27,7 @@ export function edit(data) {
   return request({
     url: 'api/dict/modifyDictById',
     method: 'post',
-    data
+    data: data
   })
 }
 

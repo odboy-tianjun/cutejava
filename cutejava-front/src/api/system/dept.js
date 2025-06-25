@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function queryDeptList(params) {
   return request({
     url: 'api/dept',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 
@@ -14,7 +14,7 @@ export function queryDeptSuperiorTree(ids, exclude) {
   return request({
     url: 'api/dept/queryDeptSuperiorTree?exclude=' + exclude,
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -22,7 +22,7 @@ export function add(data) {
   return request({
     url: 'api/dept/saveDept',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -38,7 +38,7 @@ export function edit(data) {
   return request({
     url: 'api/dept/modifyDept',
     method: 'post',
-    data
+    data: data
   })
 }
 

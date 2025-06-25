@@ -85,16 +85,16 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="description" width="150px" label="描述" />
       <el-table-column :show-overflow-tooltip="true" prop="createTime" width="136px" label="创建日期" />
-      <el-table-column v-if="checkPer(['admin','timing:edit','timing:del'])" label="操作" width="170px" align="center" fixed="right">
+      <el-table-column v-if="checkPer(['admin','quartzJob:edit','quartzJob:del'])" label="操作" width="170px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','timing:edit']" size="mini" style="margin-right: 3px;" type="text" @click="crud.toEdit(scope.row)">编辑</el-button>
-          <el-button v-permission="['admin','timing:edit']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
-          <el-button v-permission="['admin','timing:edit']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
+          <el-button v-permission="['admin','quartzJob:edit']" size="mini" style="margin-right: 3px;" type="text" @click="crud.toEdit(scope.row)">编辑</el-button>
+          <el-button v-permission="['admin','quartzJob:edit']" style="margin-left: -2px" type="text" size="mini" @click="execute(scope.row.id)">执行</el-button>
+          <el-button v-permission="['admin','quartzJob:edit']" style="margin-left: 3px" type="text" size="mini" @click="updateStatus(scope.row.id,scope.row.isPause ? '恢复' : '暂停')">
             {{ scope.row.isPause ? '恢复' : '暂停' }}
           </el-button>
           <el-popover
             :ref="scope.row.id"
-            v-permission="['admin','timing:del']"
+            v-permission="['admin','quartzJob:del']"
             placement="top"
             width="200"
           >
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import crudJob from '@/api/quartzjob/timing'
+import crudJob from '@/api/system/quartzJob'
 import Log from './log'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
@@ -124,19 +124,19 @@ import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, jobName: null, subTask: null, beanName: null, methodName: null, params: null, cronExpression: null, pauseAfterFailure: true, isPause: false, personInCharge: null, email: null, description: null }
 export default {
-  name: 'Timing',
+  name: 'QuartzJob',
   components: { Log, pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
+    return CRUD({ title: '定时任务', url: 'api/quartzJob', crudMethod: { ...crudJob }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       delLoading: false,
       permission: {
-        add: ['admin', 'timing:add'],
-        edit: ['admin', 'timing:edit'],
-        del: ['admin', 'timing:del']
+        add: ['admin', 'quartzJob:add'],
+        edit: ['admin', 'quartzJob:edit'],
+        del: ['admin', 'quartzJob:del']
       },
       rules: {
         jobName: [
