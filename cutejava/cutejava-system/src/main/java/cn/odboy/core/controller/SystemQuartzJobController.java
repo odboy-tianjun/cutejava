@@ -37,7 +37,7 @@ public class SystemQuartzJobController {
     @ApiOperation("查询定时任务")
     @PostMapping
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByArgs(@Validated @RequestBody CsPageArgs<QuerySystemQuartzJobArgs> args) {
+    public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<QuerySystemQuartzJobArgs> args) {
         QuerySystemQuartzJobArgs criteria = args.getArgs();
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobByArgs(criteria, page), HttpStatus.OK);
