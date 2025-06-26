@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function sendResetEmailCaptcha(email) {
   return request({
-    url: 'api/code/sendResetEmailCaptcha?email=' + email,
+    url: 'api/captcha/sendResetEmailCaptcha?email=' + email,
     method: 'post'
   })
 }
 
 export function sendResetPasswordCaptcha(email) {
   return request({
-    url: 'api/code/sendResetPasswordCaptcha?email=' + email,
+    url: 'api/captcha/sendResetPasswordCaptcha?email=' + email,
     method: 'post'
   })
 }
@@ -21,7 +21,7 @@ export function checkEmailCaptcha(email, code, bizCode) {
     bizCode: bizCode
   }
   return request({
-    url: 'api/code/checkEmailCaptcha',
+    url: 'api/captcha/checkEmailCaptcha',
     method: 'post',
     data: params
   })

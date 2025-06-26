@@ -5,9 +5,9 @@ const api = {
     // 图片上传
     imagesUploadApi: baseUrl + '/api/localStorage/uploadPicture',
     // 修改头像
-    updateAvatarApi: baseUrl + '/api/users/modifyUserAvatar',
+    updateAvatarApi: baseUrl + '/api/user/modifyUserAvatar',
     // 上传文件到七牛云
-    qiNiuUploadApi: baseUrl + '/api/qiNiuContent',
+    qiNiuUploadApi: baseUrl + '/api/qiNiuContent/uploadFile',
     // Sql 监控
     druidSqlApi: baseUrl + '/druid/index.html',
     // websocket
