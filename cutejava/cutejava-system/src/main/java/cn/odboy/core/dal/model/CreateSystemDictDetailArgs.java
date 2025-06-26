@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CreateSystemDictDetailArgs extends CsSerializeObject {
-    @NotBlank(message = "参数dict必填")
+    @NotNull(message = "参数dict必填")
     private SystemDictTb dict;
     @NotBlank(message = "字典标签必填")
     private String label;

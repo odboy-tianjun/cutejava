@@ -39,5 +39,5 @@ public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
 
     void updateUserEmailByUsername(@Param("username") String username, @Param("email") String email);
 
-    void batchUpdatePassword(@Param("pwd") String password, @Param("userIds") Set<Long> userIds);
+    void batchUpdatePassword(@Param("password") String password, @Param("userIds") Set<Long> userIds);
 }
