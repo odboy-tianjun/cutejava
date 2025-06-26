@@ -3,14 +3,14 @@ import request from '@/utils/request'
 // 获取所有的Role
 export function queryRoleList() {
   return request({
-    url: 'api/roles/queryRoleList',
+    url: 'api/role/queryRoleList',
     method: 'post'
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/roles/saveRole',
+    url: 'api/role/saveRole',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export function add(data) {
 
 export function get(id) {
   return request({
-    url: 'api/roles/queryRoleById',
+    url: 'api/role/queryRoleById',
     method: 'post',
     data: { id: id }
   })
@@ -26,14 +26,14 @@ export function get(id) {
 
 export function getLevel() {
   return request({
-    url: 'api/roles/queryRoleLevel',
+    url: 'api/role/queryRoleLevel',
     method: 'post'
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/roles/removeRoleByIds',
+    url: 'api/role/removeRoleByIds',
     method: 'post',
     data: ids
   })
@@ -41,7 +41,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/roles/modifyRoleById',
+    url: 'api/role/modifyRoleById',
     method: 'post',
     data: data
   })
@@ -49,7 +49,7 @@ export function edit(data) {
 
 export function editMenu(data) {
   return request({
-    url: 'api/roles/modifyBindMenuById',
+    url: 'api/role/modifyBindMenuById',
     method: 'post',
     data
   })

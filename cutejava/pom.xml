@@ -5,11 +5,12 @@
     <groupId>cn.odboy</groupId>
     <artifactId>cutejava</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 
     <modules>
-        <module>cutejava-common</module>
-        <module>cutejava-system</module>
+        <module>cutejava-framework</module>
+        <module>cutejava-module-system</module>
+        <module>cutejava-module-devops</module>
         <module>cutejava-starter</module>
     </modules>
 
@@ -32,6 +33,11 @@
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <hutool.version>5.8.38</hutool.version>
+        <jjwt.version>0.11.5</jjwt.version>
+        <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
+        <jna.version>5.8.0</jna.version>
+        <mail.version>1.4.7</mail.version>
+        <qiniu.version>7.9.3</qiniu.version>
     </properties>
 
     <dependencies>
@@ -272,6 +278,85 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- 工具包 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- jwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+
+        <!-- linux的管理 -->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
+        <!-- 获取系统信息 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>6.6.5</version>
+        </dependency>
+
+        <!-- 邮件依赖 -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${mail.version}</version>
+        </dependency>
+
+        <!-- 七牛云存储 -->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu.version}</version>
+        </dependency>
+
+        <!-- quartz -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.quartz-scheduler</groupId>
+                    <artifactId>quartz</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.10.1</version>
         </dependency>
     </dependencies>
 

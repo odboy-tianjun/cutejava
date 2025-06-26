@@ -139,7 +139,7 @@ export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '角色', url: 'api/roles', crudMethod: { ...crudRoles }})
+    return CRUD({ title: '角色', url: 'api/role', crudMethod: { ...crudRoles }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

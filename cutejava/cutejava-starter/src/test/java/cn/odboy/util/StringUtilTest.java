@@ -1,5 +1,6 @@
 package cn.odboy.util;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -39,6 +40,6 @@ public class StringUtilTest {
 
     @Test
     public void testGetIP() {
-        assertEquals("127.0.0.1", BrowserUtil.getIp(new MockHttpServletRequest()));
+        Assertions.assertEquals("127.0.0.1", BrowserUtil.getIp(new MockHttpServletRequest()));
     }
 }

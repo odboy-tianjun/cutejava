@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function queryMenuListByPid(pid) {
   return request({
-    url: 'api/menus/queryMenuListByPid?pid=' + pid,
+    url: 'api/menu/queryMenuListByPid?pid=' + pid,
     method: 'post'
   })
 }
 
 export function queryMenuByArgs(params) {
   return request({
-    url: 'api/menus/queryMenuByArgs',
+    url: 'api/menu/queryMenuByArgs',
     method: 'post',
     data: params
   })
@@ -18,7 +18,7 @@ export function queryMenuByArgs(params) {
 export function queryMenuSuperior(ids) {
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/menus/queryMenuSuperior',
+    url: 'api/menu/queryMenuSuperior',
     method: 'post',
     data: data
   })
@@ -26,21 +26,21 @@ export function queryMenuSuperior(ids) {
 
 export function queryChildMenuSet(id) {
   return request({
-    url: 'api/menus/queryChildMenuSet?id=' + id,
+    url: 'api/menu/queryChildMenuSet?id=' + id,
     method: 'post'
   })
 }
 
 export function buildMenus() {
   return request({
-    url: 'api/menus/buildMenus',
+    url: 'api/menu/buildMenus',
     method: 'post'
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/menus/saveMenu',
+    url: 'api/menu/saveMenu',
     method: 'post',
     data: data
   })
@@ -48,7 +48,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/menus/removeMenuByIds',
+    url: 'api/menu/removeMenuByIds',
     method: 'post',
     data: ids
   })
@@ -56,7 +56,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/menus/modifyMenuById',
+    url: 'api/menu/modifyMenuById',
     method: 'post',
     data: data
   })
