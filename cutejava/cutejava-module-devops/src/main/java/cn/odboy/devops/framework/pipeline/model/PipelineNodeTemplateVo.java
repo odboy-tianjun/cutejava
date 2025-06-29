@@ -22,21 +22,25 @@ public class PipelineNodeTemplateVo extends CsObject {
      */
     private String code;
     /**
+     * 业务类型（service:系统内置服务 rpc:远程调用）
+     */
+    private String type;
+    /**
      * 业务名称
      */
     private String name;
     /**
      * 是否可点击
      */
-    private Boolean click;
+    private Boolean click = false;
     /**
      * 是否可重试
      */
-    private Boolean retry;
+    private Boolean retry = false;
     /**
      * 是否可点击：点击展示详情，详情内容类型
      */
-    private String detailType;
+    private String detailType = "";
     /**
      * 默认参数
      */

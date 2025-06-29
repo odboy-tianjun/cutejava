@@ -1,8 +1,8 @@
-package cn.odboy.devops.framework.pipeline;
+package cn.odboy.devops.framework.pipeline.core;
 
 import cn.odboy.devops.constant.pipeline.PipelineConst;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.devops.dal.dataobject.pipeline.PipelineInstanceTb;
+import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.stereotype.Component;
@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 @Slf4j
 @Component
 public class PipelineJobManage {
+    private static final String JOB_KEY = "PIPELINE_JOB_";
     @Resource
     private Scheduler scheduler;
 
@@ -23,11 +24,11 @@ public class PipelineJobManage {
             // 构建 JobDetail
             JobDetail jobDetail = JobBuilder
                     .newJob(PipelineJobBean.class)
-                    .withIdentity(pipelineInstance.getPipelineInstanceId())
+                    .withIdentity(JOB_KEY + pipelineInstance.getPipelineInstanceId())
                     .build();
             // 构建Trigger
             Trigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(pipelineInstance.getPipelineInstanceId())
+                    .withIdentity(JOB_KEY + pipelineInstance.getPipelineInstanceId())
                     .startNow()
                     .build();
             // 添加流水线实例
@@ -48,7 +49,7 @@ public class PipelineJobManage {
      */
     public void deleteJob(PipelineInstanceTb pipelineInstance) {
         try {
-            JobKey jobKey = JobKey.jobKey(pipelineInstance.getPipelineInstanceId());
+            JobKey jobKey = JobKey.jobKey(JOB_KEY + pipelineInstance.getPipelineInstanceId());
             scheduler.pauseJob(jobKey);
             scheduler.deleteJob(jobKey);
         } catch (Exception e) {

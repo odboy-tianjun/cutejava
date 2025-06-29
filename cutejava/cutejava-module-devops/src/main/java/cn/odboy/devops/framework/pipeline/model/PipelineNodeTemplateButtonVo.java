@@ -4,6 +4,9 @@ import cn.odboy.base.CsObject;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 流水线节点控制按钮
  *
@@ -21,19 +24,11 @@ public class PipelineNodeTemplateButtonVo extends CsObject {
      */
     private String title;
     /**
-     * 出现的条件，根据node节点的状态判断
-     */
-    private String condition;
-    /**
-     * link: 按钮跳转的url
-     */
-    private String linkUrl;
-    /**
-     * link: 是否新窗口打开
-     */
-    private boolean isBlank = true;
-    /**
-     * service: 服务编码
+     * 按钮传递的参数
      */
     private String code;
+    /**
+     * 按钮样式参数
+     */
+    private Map<String, String> parameters = new HashMap<>();
 }

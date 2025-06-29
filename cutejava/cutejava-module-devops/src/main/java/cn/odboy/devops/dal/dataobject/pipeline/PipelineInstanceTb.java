@@ -22,7 +22,7 @@ import java.util.Date;
 @Setter
 @TableName("pipeline_instance")
 @ApiModel(value = "PipelineInstance对象", description = "流水线实例")
-public class PipelineInstanceTb extends CsObject{
+public class PipelineInstanceTb extends CsObject {
 
     /**
      * 流水线模板id
@@ -43,7 +43,7 @@ public class PipelineInstanceTb extends CsObject{
      */
     @ApiModelProperty("流水线实例id")
     @TableField("pipeline_instance_id")
-    private String pipelineInstanceId;
+    private Long pipelineInstanceId;
 
     /**
      * 创建时间
