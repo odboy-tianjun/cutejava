@@ -5,7 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.pipeline.PipelineInstanceTb;
 import cn.odboy.devops.dal.dataobject.pipeline.PipelineTemplateTb;
-import cn.odboy.devops.framework.pipeline.PipelineJobManage;
+import cn.odboy.devops.framework.pipeline.core.PipelineJobManage;
 import cn.odboy.devops.service.pipeline.PipelineInstanceService;
 import cn.odboy.devops.service.pipeline.PipelineTemplateService;
 import com.alibaba.fastjson2.JSON;
@@ -44,15 +44,13 @@ public class PipelineReleaseTests {
         String envCode = "daily";
         Map<String, Object> context = new HashMap<>();
         context.put("createBy", createBy);
-        context.put("appName", appName);
-        context.put("envCode", envCode);
         // 获取模板
-        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(1L);
+        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(4L);
         // 创建流水线实例
         PipelineInstanceTb pipelineInstanceTb = new PipelineInstanceTb();
         pipelineInstanceTb.setPipelineTemplateId(pipelineTemplateTb.getId());
         pipelineInstanceTb.setPipelineInstanceName("流水线测试");
-        pipelineInstanceTb.setPipelineInstanceId(IdUtil.nanoId());
+        pipelineInstanceTb.setPipelineInstanceId(IdUtil.getSnowflakeNextId());
         pipelineInstanceTb.setCreateTime(nowTime);
         pipelineInstanceTb.setCreateBy(createBy);
         pipelineInstanceTb.setUpdateTime(nowTime);
@@ -67,6 +65,14 @@ public class PipelineReleaseTests {
         pipelineInstanceService.createPipelineInstance(pipelineInstanceTb);
         pipelineJobManage.startJob(pipelineInstanceTb);
         ThreadUtil.safeSleep(1000 * 60 * 60 * 24);
+    }
+
+    public static void main(String[] args) {
+        System.err.println("nanoId=" + IdUtil.nanoId());
+        System.err.println("objectId=" + IdUtil.objectId());
+        System.err.println("snowflakeNextId=" + IdUtil.getSnowflakeNextIdStr());
+        System.err.println("fastUUID=" + IdUtil.fastUUID());
+        System.err.println("fastSimpleUUID=" + IdUtil.fastSimpleUUID());
     }
 }
 

@@ -18,10 +18,24 @@ public class PipelineNodeJobExecuteResult extends CsObject {
         return result;
     }
 
+    public static PipelineNodeJobExecuteResult success(String message) {
+        PipelineNodeJobExecuteResult result = new PipelineNodeJobExecuteResult();
+        result.setStatus(PipelineStatusEnum.SUCCESS);
+        result.setMessage(message);
+        return result;
+    }
+
     public static PipelineNodeJobExecuteResult fail() {
         PipelineNodeJobExecuteResult result = new PipelineNodeJobExecuteResult();
         result.setStatus(PipelineStatusEnum.FAIL);
         result.setMessage(PipelineStatusEnum.FAIL.getDesc());
+        return result;
+    }
+
+    public static PipelineNodeJobExecuteResult fail(String message) {
+        PipelineNodeJobExecuteResult result = new PipelineNodeJobExecuteResult();
+        result.setStatus(PipelineStatusEnum.FAIL);
+        result.setMessage(message);
         return result;
     }
 }

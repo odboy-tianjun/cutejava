@@ -20,4 +20,5 @@ public interface PipelineConst {
     String INSTANCE_NODE_CODE_KEY = "pipelineInstanceNodeCode";
     String INSTANCE_NODE_NAME_KEY = "pipelineInstanceNodeName";
     String INSTANCE_NODE_TEMPLATE_ARGS_KEY = "pipelineInstanceNodeTemplateArgs";
+    String INSTANCE_RETRY_NODE_INDEX_KEY = "pipelineInstanceRetryNodeIndex";
 }

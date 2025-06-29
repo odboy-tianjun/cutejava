@@ -27,6 +27,11 @@ public interface PipelineNodeBizCodeConst {
     String DEPLOY_APPROVE = PipelineConst.EXECUTOR_PREFIX + "node_deploy_approve";
 
     /**
+     * 合并确认
+     */
+    String MERGE_CONFIRM = PipelineConst.EXECUTOR_PREFIX + "node_merge_confirm";
+
+    /**
      * 合并到Master
      */
     String MERGE_MASTER = PipelineConst.EXECUTOR_PREFIX + "node_merge_master";
