@@ -2,6 +2,7 @@ package cn.odboy.framework.websocket.context;
 
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -14,7 +15,9 @@ import java.util.Objects;
 @Slf4j
 @Component
 @ServerEndpoint("/webSocket/{sid}")
-public class WebSocketServer {
+public class CsWsServer {
+    @Autowired
+    private WsClientManager wsClientManager;
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -31,7 +34,7 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam("sid") String sid) {
         this.session = session;
         this.sid = sid;
-        CsWebSocketClientManager.addClient(sid, this);
+        wsClientManager.addClient(sid, this);
     }
 
     /**
@@ -39,7 +42,7 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        CsWebSocketClientManager.removeClient(this.sid);
+        wsClientManager.removeClient(this.sid);
     }
 
     /**
@@ -58,8 +61,8 @@ public class WebSocketServer {
      *
      * @param message /
      */
-    private static void sendToAll(String message) {
-        for (WebSocketServer item : CsWebSocketClientManager.getAllClient()) {
+    private void sendToAll(String message) {
+        for (CsWsServer item : wsClientManager.getAllClient()) {
             try {
                 item.innerSendMessage(message);
             } catch (IOException e) {
@@ -71,7 +74,6 @@ public class WebSocketServer {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("WebSocket sid={} 发生错误", this.sid, error);
-        error.printStackTrace();
     }
 
     /**
@@ -84,14 +86,14 @@ public class WebSocketServer {
     /**
      * 群发自定义消息
      */
-    public static void sendMessage(CsWebSocketMessage webSocketMessage, @PathParam("sid") String sid) throws IOException {
-        String message = JSON.toJSONString(webSocketMessage);
+    public void sendMessage(CsWsMessage message, @PathParam("sid") String sid) throws IOException {
+        String body = JSON.toJSONString(message);
         log.info("推送消息到{}，推送内容:{}", sid, message);
         try {
             if (sid == null) {
-                sendToAll(message);
+                sendToAll(body);
             } else {
-                CsWebSocketClientManager.getClientBySid(sid).innerSendMessage(message);
+                wsClientManager.getClientBySid(sid).innerSendMessage(body);
             }
         } catch (Exception ignored) {
         }
@@ -105,7 +107,7 @@ public class WebSocketServer {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        WebSocketServer that = (WebSocketServer) o;
+        CsWsServer that = (CsWsServer) o;
         return Objects.equals(session, that.session) &&
                 Objects.equals(sid, that.sid);
     }
