@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @date 2024-06-07
  */
 @Component
-public class CsWebSocketFactory implements WebServerFactoryCustomizer<UndertowServletWebServerFactory> {
+public class WsFactory implements WebServerFactoryCustomizer<UndertowServletWebServerFactory> {
 
     @Override
     public void customize(UndertowServletWebServerFactory factory) {

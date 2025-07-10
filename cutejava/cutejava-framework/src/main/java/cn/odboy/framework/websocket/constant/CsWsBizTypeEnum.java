@@ -1,7 +1,7 @@
 package cn.odboy.framework.websocket.constant;
 
 
-public enum CsWebSocketBizTypeEnum {
+public enum CsWsBizTypeEnum {
     /**
      * 连接
      */

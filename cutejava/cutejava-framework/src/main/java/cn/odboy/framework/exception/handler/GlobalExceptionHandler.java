@@ -2,8 +2,6 @@ package cn.odboy.framework.exception.handler;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.exception.EntityExistException;
-import cn.odboy.framework.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,26 +47,6 @@ public class GlobalExceptionHandler {
         // 打印堆栈信息
         log.error(ExceptionUtil.stacktraceToString(e));
         return buildResponseEntity(ApiError.error(e.getStatus(), e.getMessage()));
-    }
-
-    /**
-     * 处理 EntityExist
-     */
-    @ExceptionHandler(value = EntityExistException.class)
-    public ResponseEntity<ApiError> entityExistException(EntityExistException e) {
-        // 打印堆栈信息
-        log.error(ExceptionUtil.stacktraceToString(e));
-        return buildResponseEntity(ApiError.error(e.getMessage()));
-    }
-
-    /**
-     * 处理 EntityNotFound
-     */
-    @ExceptionHandler(value = EntityNotFoundException.class)
-    public ResponseEntity<ApiError> entityNotFoundException(EntityNotFoundException e) {
-        // 打印堆栈信息
-        log.error(ExceptionUtil.stacktraceToString(e));
-        return buildResponseEntity(ApiError.error(NOT_FOUND.value(), e.getMessage()));
     }
 
     /**
