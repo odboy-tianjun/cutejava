@@ -15,6 +15,9 @@
  */
 package cn.odboy.framework.mybatisplus.core;
 
+import cn.hutool.core.util.StrUtil;
+import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
@@ -42,6 +45,8 @@ import java.util.function.Consumer;
  */
 @Data
 public class CsMpCmdGenUtil {
+    // 项目根路径。生成结果 C:\Users\Administrator\Documents\GitHub\cutejava\cutejava
+    private static final String projectRootPath = System.getProperty("user.dir") + "/";
     /**
      * 数据库类型 MySQL
      */
@@ -56,16 +61,18 @@ public class CsMpCmdGenUtil {
     private String databaseUsername;
     private String databasePassword;
     private String driverClassName;
-    private String parentPackageName;
-    private String parentPackageModuleName;
+    private String parentPackageName = "cn.odboy";
+    private String parentModuleName;
 
     /**
      * 代码生成函数
      *
+     * @param moduleName  模块名称
      * @param tablePrefix 表前缀(可空)
      * @param tableNames  表名称, 多个用逗号分隔
      */
-    public void gen(String tablePrefix, List<String> tableNames) {
+    public void gen(String moduleName, String tablePrefix, List<String> tableNames) {
+        this.parentModuleName = moduleName;
         // 1.数据库配置
         DataSourceConfig.Builder dataSourceConfigBuilder = new DataSourceConfig
                 .Builder(this.databaseUrl, this.databaseUsername, this.databasePassword)
@@ -111,7 +118,7 @@ public class CsMpCmdGenUtil {
         // 5.2.Controller策略配置
         // 开启生成@RestController控制器
         fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder.controllerBuilder().enableRestStyle());
-        // 如果不需要生成Controller，fastAutoGenerator.templateConfig(templateConfig -> templateConfig.controller(""))。5.3.Service策略配置：格式化service接口和实现类的文件名称, 去掉默认的ServiceName前面的I
+        // 如果不需要生成Controller, fastAutoGenerator.templateConfig(templateConfig -> templateConfig.controller(""))。5.3.Service策略配置：格式化service接口和实现类的文件名称, 去掉默认的ServiceName前面的I
         fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder
                 .serviceBuilder()
                 .formatServiceFileName("%sService")
@@ -141,18 +148,45 @@ public class CsMpCmdGenUtil {
                 .enableSkipView()
                 .disableSqlFilter()
                 .addInclude(tableNames)
+                // 实体类生成策略
+                .entityBuilder()
+                .superClass(CsBaseUserTimeTb.class)
+                .addIgnoreColumns("create_time", "update_time", "create_by", "update_by")
+                // 开启生成实体时生成字段注解。
+                // 会在实体类的属性前，添加[@TableField("nickname")]
+                .enableTableFieldAnnotation()
+                .disableSerialVersionUID()
+                // 阶段2：Mapper策略配置
                 .mapperBuilder()
+                // 开启 @Mapper 注解。
+                // 会在mapper接口上添加注解[@Mapper]
+//                .enableMapperAnnotation()
+                // 启用 BaseResultMap 生成。
+                // 会在mapper.xml文件生成[通用查询映射结果]配置。
+//                .enableBaseResultMap()
+                // 启用 BaseColumnList。
+                // 会在mapper.xml文件生成[通用查询结果列 ]配置
+//                .enableBaseColumnList()
+                // 阶段4：Controller策略配置
+                .controllerBuilder()
+                // 会在控制类中加[@RestController]注解。
+                .enableRestStyle()
+                // 开启驼峰转连字符
+                .enableHyphenStyle()
                 .build();
     }
 
     private Consumer<PackageConfig.Builder> getPackageConfigConsumer() {
-        String mapperPath = FileUtil.getTmpDirPath() + "CodeGen/resources/mapper";
+        String mapperPath = projectRootPath + "CodeGen/resources/mapper";
+        if (StrUtil.isBlank(this.parentModuleName)) {
+            throw new BadRequestException("模块名称必填");
+        }
         return packageConfigBuilder -> packageConfigBuilder
-                .parent(this.parentPackageName == null ? "cn.codegen" : this.parentPackageName)
-                .moduleName(this.parentPackageModuleName == null ? "moduleName" : this.parentPackageModuleName)
-                .entity("domain")
+                .parent(this.parentPackageName)
+                .moduleName(this.parentModuleName)
+                .entity("dal.dataobject")
+                .mapper("dal.mysql")
                 .service("service")
-                .mapper("mapper")
                 .serviceImpl("service.impl")
                 .controller("rest")
                 .pathInfo(Collections.singletonMap(OutputFile.xml, mapperPath));

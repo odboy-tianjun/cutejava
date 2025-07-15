@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.model.QuerySystemDeptArgs;
+import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Mapper
 public interface SystemDeptMapper extends BaseMapper<SystemDeptTb> {
-    List<SystemDeptTb> selectDeptByArgs(@Param("criteria") QuerySystemDeptArgs criteria);
+    List<SystemDeptTb> selectDeptByArgs(@Param("criteria") SystemQueryDeptArgs criteria);
 
     List<SystemDeptTb> selectDeptByPid(@Param("pid") Long pid);
 

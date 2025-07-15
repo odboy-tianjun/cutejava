@@ -3,8 +3,8 @@ package cn.odboy.system.controller;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
-import cn.odboy.system.dal.model.CreateSystemDictArgs;
-import cn.odboy.system.dal.model.QuerySystemDictArgs;
+import cn.odboy.system.dal.model.SystemCreateDictArgs;
+import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.service.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -31,7 +31,7 @@ public class SystemDictController {
     @ApiOperation("导出字典数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
-    public void exportDict(HttpServletResponse response, QuerySystemDictArgs criteria) throws IOException {
+    public void exportDict(HttpServletResponse response, SystemQueryDictArgs criteria) throws IOException {
         systemDictService.exportDictExcel(systemDictService.queryDictByArgs(criteria), response);
     }
 
@@ -39,14 +39,14 @@ public class SystemDictController {
     @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<SystemDictTb>> queryAllDict() {
-        return new ResponseEntity<>(systemDictService.queryDictByArgs(new QuerySystemDictArgs()), HttpStatus.OK);
+        return new ResponseEntity<>(systemDictService.queryDictByArgs(new SystemQueryDictArgs()), HttpStatus.OK);
     }
 
     @ApiOperation("查询字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<CsResultVo<List<SystemDictTb>>> queryDictByArgs(@Validated @RequestBody CsPageArgs<QuerySystemDictArgs> args) {
-        QuerySystemDictArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemDictTb>>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
+        SystemQueryDictArgs criteria = args.getArgs();
         Page<SystemDictTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemDictService.queryDictByArgs(criteria, page), HttpStatus.OK);
     }
@@ -54,7 +54,7 @@ public class SystemDictController {
     @ApiOperation("新增字典")
     @PostMapping(value = "/saveDict")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Void> saveDict(@Validated @RequestBody CreateSystemDictArgs resources) {
+    public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs resources) {
         systemDictService.saveDict(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

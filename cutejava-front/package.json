@@ -5,7 +5,8 @@
   "author": "Odboy",
   "license": "Apache-2.0",
   "scripts": {
-    "dev-win": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
+    "dev-win1": "vue-cli-service serve",
+    "dev-win2": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "dev-linux": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",

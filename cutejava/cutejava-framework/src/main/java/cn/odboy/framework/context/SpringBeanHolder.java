@@ -22,8 +22,8 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
     private static boolean addCallback = true;
 
     /**
-     * 针对 某些初始化方法，在SpringContextHolder 未初始化时 提交回调方法。
-     * 在SpringContextHolder 初始化后，进行回调使用
+     * 针对 某些初始化方法, 在SpringContextHolder 未初始化时 提交回调方法。
+     * 在SpringContextHolder 初始化后, 进行回调使用
      *
      * @param callBack 回调函数
      */

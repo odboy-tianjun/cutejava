@@ -23,7 +23,7 @@ public class AsyncTheadPoolConfig implements AsyncConfigurer {
     private AppProperties properties;
 
     /**
-     * 自定义线程池，用法 @Async
+     * 自定义线程池, 用法 @Async
      *
      * @return Executor
      */
@@ -39,7 +39,7 @@ public class AsyncTheadPoolConfig implements AsyncConfigurer {
     }
 
     /**
-     * 自定义线程池，用法，注入到类中使用
+     * 自定义线程池, 用法, 注入到类中使用
      */
     @Bean("taskAsync")
     public ThreadPoolTaskExecutor taskAsync() {

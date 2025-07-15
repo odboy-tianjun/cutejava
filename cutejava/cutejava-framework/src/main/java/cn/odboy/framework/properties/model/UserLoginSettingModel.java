@@ -1,5 +1,6 @@
 package cn.odboy.framework.properties.model;
 
+import cn.odboy.base.CsObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserLoginSettingModel {
+public class UserLoginSettingModel extends CsObject {
     /**
      * 账号单用户 登录
      */

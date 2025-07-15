@@ -3,8 +3,8 @@ package cn.odboy.system.controller;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.model.CreateSystemDeptArgs;
-import cn.odboy.system.dal.model.QuerySystemDeptArgs;
+import cn.odboy.system.dal.model.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
@@ -33,15 +33,15 @@ public class SystemDeptController {
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
-    public void exportDept(HttpServletResponse response, QuerySystemDeptArgs criteria) throws Exception {
+    public void exportDept(HttpServletResponse response, SystemQueryDeptArgs criteria) throws Exception {
         systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDept(@Validated @RequestBody CsPageArgs<QuerySystemDeptArgs> args) throws Exception {
-        QuerySystemDeptArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args) throws Exception {
+        SystemQueryDeptArgs criteria = args.getArgs();
         List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(depts), HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class SystemDeptController {
                         data.setSubCount(data.getSubCount() - 1);
                     }
                 }
-                // 编辑部门时不显示自己以及自己下级的数据，避免出现PID数据环形问题
+                // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
                 depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
             }
             deptSet.addAll(depts);
@@ -73,7 +73,7 @@ public class SystemDeptController {
     @ApiOperation("新增部门")
     @PostMapping(value = "/saveDept")
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<Void> saveDept(@Validated @RequestBody CreateSystemDeptArgs resources) {
+    public ResponseEntity<Void> saveDept(@Validated @RequestBody SystemCreateDeptArgs resources) {
         systemDeptService.saveDept(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -90,7 +90,7 @@ public class SystemDeptController {
     @PostMapping(value = "/removeDeptByIds")
     @PreAuthorize("@el.check('dept:del')")
     public ResponseEntity<Void> removeDeptByIds(@RequestBody Set<Long> ids) {
-        // 获取部门，和其所有子部门
+        // 获取部门, 和其所有子部门
         Set<SystemDeptTb> depts = systemDeptService.traverseDeptByIdWithPids(ids);
         // 验证是否被角色或用户关联
         systemDeptService.verifyBindRelationByIds(depts);

@@ -12,8 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {

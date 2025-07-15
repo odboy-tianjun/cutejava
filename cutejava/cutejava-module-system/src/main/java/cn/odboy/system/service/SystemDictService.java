@@ -5,9 +5,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
-import cn.odboy.system.dal.model.CreateSystemDictArgs;
-import cn.odboy.system.dal.model.QuerySystemDictArgs;
-import cn.odboy.system.dal.model.QuerySystemDictDetailArgs;
+import cn.odboy.system.dal.model.SystemCreateDictArgs;
+import cn.odboy.system.dal.model.SystemQueryDictArgs;
+import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.CsPageUtil;
@@ -34,7 +34,7 @@ public class SystemDictService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveDict(CreateSystemDictArgs resources) {
+    public void saveDict(SystemCreateDictArgs resources) {
         systemDictMapper.insert(BeanUtil.copyProperties(resources, SystemDictTb.class));
     }
 
@@ -77,7 +77,7 @@ public class SystemDictService {
     public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemDictTb dict : dicts) {
-            QuerySystemDictDetailArgs criteria = new QuerySystemDictDetailArgs();
+            SystemQueryDictDetailArgs criteria = new SystemQueryDictDetailArgs();
             criteria.setDictName(dict.getName());
             List<SystemDictDetailTb> dictDetails = systemDictDetailMapper.selectDictDetailByArgs(criteria);
             if (CollectionUtil.isNotEmpty(dictDetails)) {
@@ -111,7 +111,7 @@ public class SystemDictService {
      * @return /
      */
 
-    public CsResultVo<List<SystemDictTb>> queryDictByArgs(QuerySystemDictArgs criteria, Page<SystemDictTb> page) {
+    public CsResultVo<List<SystemDictTb>> queryDictByArgs(SystemQueryDictArgs criteria, Page<SystemDictTb> page) {
         return CsPageUtil.toPage(systemDictMapper.selectDictByArgs(criteria, page));
     }
 
@@ -122,7 +122,7 @@ public class SystemDictService {
      * @return /
      */
 
-    public List<SystemDictTb> queryDictByArgs(QuerySystemDictArgs criteria) {
+    public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs criteria) {
         return systemDictMapper.selectDictByArgs(criteria);
     }
 

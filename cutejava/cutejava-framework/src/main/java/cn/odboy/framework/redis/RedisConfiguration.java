@@ -36,8 +36,8 @@ import java.util.Map;
 public class RedisConfiguration extends CachingConfigurerSupport {
 
     /**
-     * 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）<br/>
-     * 未配置可能导致，登录失败，反复登录等问题
+     * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/>
+     * 未配置可能导致, 登录失败, 反复登录等问题
      */
     private static final String[] WHITELIST_STR = {
             "org.springframework",

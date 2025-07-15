@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class CsDistributedIdUtil {
     /**
-     * 起始毫秒时间戳，2020-12-30
+     * 起始毫秒时间戳, 2020-12-30
      */
     private static final long START_TIMESTAMP = 1609314517000L;
     /**
@@ -77,7 +77,7 @@ public final class CsDistributedIdUtil {
     }
 
     /**
-     * 构造函数，初始化数据中心 ID 和机器 ID
+     * 构造函数, 初始化数据中心 ID 和机器 ID
      *
      * @param dataCenterId     数据中心 ID
      * @param workerId         机器 ID
@@ -116,7 +116,7 @@ public final class CsDistributedIdUtil {
     public long nextId() {
         long currentTimestamp = System.currentTimeMillis();
 
-        // 如果当前时间戳小于上一次生成 ID 的时间戳，说明时钟回拨，抛出异常
+        // 如果当前时间戳小于上一次生成 ID 的时间戳, 说明时钟回拨，抛出异常
         if (currentTimestamp < lastTimestamp.get()) {
             throw new RuntimeException("Clock moved backwards. Refusing to generate id for " + (lastTimestamp.get() - currentTimestamp) + " milliseconds");
         }

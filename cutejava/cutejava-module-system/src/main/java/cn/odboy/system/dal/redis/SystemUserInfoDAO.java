@@ -1,8 +1,8 @@
 package cn.odboy.system.dal.redis;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;

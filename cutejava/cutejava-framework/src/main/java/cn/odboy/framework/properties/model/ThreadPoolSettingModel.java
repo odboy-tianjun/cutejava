@@ -1,5 +1,6 @@
 package cn.odboy.framework.properties.model;
 
+import cn.odboy.base.CsObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ThreadPoolSettingModel {
+public class ThreadPoolSettingModel extends CsObject {
     /**
      * 核心线程池大小
      */

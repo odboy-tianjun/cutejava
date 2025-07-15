@@ -4,12 +4,12 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
-import cn.odboy.system.dal.model.QuerySystemLocalStorageArgs;
-import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.FileUploadPathHelper;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
+import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -29,8 +29,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SystemLocalStorageService {
     private final SystemLocalStorageMapper systemLocalStorageMapper;
-    private final AppProperties properties;
     private final FileUploadPathHelper fileUploadPathHelper;
+    private final AppProperties properties;
+
 
     /**
      * 上传
@@ -42,7 +43,7 @@ public class SystemLocalStorageService {
     @Transactional(rollbackFor = Exception.class)
     public SystemLocalStorageTb uploadFile(String name, MultipartFile multipartFile) {
         long size = multipartFile.getSize();
-        FileUtil.checkSize(fileUploadPathHelper.getFileMaxSize(), size);
+        FileUtil.checkSize(properties.getOss().getMaxSize(), size);
         String suffix = FileUtil.getSuffix(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
         String uploadDateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT);
@@ -128,7 +129,7 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public CsResultVo<List<SystemLocalStorageTb>> queryLocalStorage(QuerySystemLocalStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+    public CsResultVo<List<SystemLocalStorageTb>> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
         return CsPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 
@@ -138,7 +139,7 @@ public class SystemLocalStorageService {
      * @param criteria 条件
      * @return /
      */
-    public List<SystemLocalStorageTb> queryLocalStorage(QuerySystemLocalStorageArgs criteria) {
+    public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
         return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, CsPageUtil.getCount(systemLocalStorageMapper)).getRecords();
     }
 }

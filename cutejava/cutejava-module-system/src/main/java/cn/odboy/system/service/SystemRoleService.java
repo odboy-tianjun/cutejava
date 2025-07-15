@@ -4,17 +4,17 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsResultVo;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.CreateSystemRoleArgs;
-import cn.odboy.system.dal.model.QuerySystemRoleArgs;
+import cn.odboy.system.dal.model.SystemCreateRoleArgs;
+import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
 import cn.odboy.system.dal.mysql.SystemRoleDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -43,12 +43,12 @@ public class SystemRoleService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveRole(CreateSystemRoleArgs resources) {
+    public void saveRole(SystemCreateRoleArgs resources) {
         if (systemRoleMapper.getRoleByName(resources.getName()) != null) {
             throw new BadRequestException("角色名称已存在");
         }
         systemRoleMapper.insert(BeanUtil.copyProperties(resources, SystemRoleTb.class));
-        // 判断是否有部门数据，若有，则需创建关联
+        // 判断是否有部门数据, 若有, 则需创建关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
             systemRoleDeptMapper.batchInsertRoleDept(resources.getDepts(), resources.getId());
         }
@@ -76,7 +76,7 @@ public class SystemRoleService {
         systemRoleMapper.insertOrUpdate(role);
         // 删除关联部门数据
         systemRoleDeptMapper.batchDeleteRoleDept(Collections.singleton(resources.getId()));
-        // 判断是否有部门数据，若有，则需更新关联
+        // 判断是否有部门数据, 若有, 则需更新关联
         if (CollectionUtil.isNotEmpty(resources.getDepts())) {
             systemRoleDeptMapper.batchInsertRoleDept(resources.getDepts(), resources.getId());
         }
@@ -149,7 +149,7 @@ public class SystemRoleService {
      * @return
      */
 
-    public List<SystemRoleTb> queryRoleByArgs(QuerySystemRoleArgs criteria) {
+    public List<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria) {
         return systemRoleMapper.selectRoleByArgs(criteria);
     }
 
@@ -161,7 +161,7 @@ public class SystemRoleService {
      * @return
      */
 
-    public CsResultVo<List<SystemRoleTb>> queryRoleByArgs(QuerySystemRoleArgs criteria, Page<Object> page) {
+    public CsResultVo<List<SystemRoleTb>> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByArgs(criteria);
         Long total = systemRoleMapper.countRoleByArgs(criteria);
@@ -229,7 +229,7 @@ public class SystemRoleService {
 
     public void verifyBindRelationByIds(Set<Long> ids) {
         if (systemUserMapper.countUserByRoleIds(ids) > 0) {
-            throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
+            throw new BadRequestException("所选角色存在用户关联, 请解除关联再试！");
         }
     }
 

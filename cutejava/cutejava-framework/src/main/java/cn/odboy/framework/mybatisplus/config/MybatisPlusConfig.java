@@ -18,7 +18,7 @@ public class MybatisPlusConfig {
         // MySQL的分页拦截器
         PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
         paginationInnerInterceptor.setMaxLimit(500L);
-        /// 这个配置会导致：当分页没数据时，游标从0开始，会导致无论page为什么值，就算分页超出最大页数，依然能够查询到
+        /// 这个配置会导致：当分页没数据时, 游标从0开始，会导致无论page为什么值，就算分页超出最大页数，依然能够查询到
         /// paginationInnerInterceptor.setOverflow(true);
         paginationInnerInterceptor.setOptimizeJoin(true);
         interceptor.addInnerInterceptor(paginationInnerInterceptor);

@@ -48,10 +48,10 @@ public final class IpUtil {
                     // 排除loopback类型地址
                     if (!inetAddr.isLoopbackAddress()) {
                         if (inetAddr.isSiteLocalAddress()) {
-                            // 如果是site-local地址，就是它了
+                            // 如果是site-local地址, 就是它了
                             return inetAddr.getHostAddress();
                         } else if (candidateAddress == null) {
-                            // site-local类型的地址未被发现，先记录候选地址
+                            // site-local类型的地址未被发现, 先记录候选地址
                             candidateAddress = inetAddr;
                         }
                     }

@@ -36,7 +36,7 @@ public final class BigDecimalUtil {
      *
      * @param a 加数
      * @param b 加数
-     * @return 两个加数的和，保留两位小数
+     * @return 两个加数的和, 保留两位小数
      */
     public static BigDecimal add(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);
@@ -49,7 +49,7 @@ public final class BigDecimalUtil {
      *
      * @param a 被减数
      * @param b 减数
-     * @return 两数的差，保留两位小数
+     * @return 两数的差, 保留两位小数
      */
     public static BigDecimal subtract(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);
@@ -62,7 +62,7 @@ public final class BigDecimalUtil {
      *
      * @param a 乘数
      * @param b 乘数
-     * @return 两个乘数的积，保留两位小数
+     * @return 两个乘数的积, 保留两位小数
      */
     public static BigDecimal multiply(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);

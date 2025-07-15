@@ -2,19 +2,19 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsResultVo;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
+import cn.odboy.framework.server.core.FileUploadPathHelper;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.QuerySystemUserArgs;
+import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.mysql.SystemUserJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
-import cn.odboy.system.framework.permission.core.SecurityHelper;
-import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.server.core.FileUploadPathHelper;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -90,7 +90,7 @@ public class SystemUserService {
         if (user3 != null && !user.getId().equals(user3.getId())) {
             throw new BadRequestException("手机号已存在");
         }
-        // 如果用户被禁用，则清除用户登录信息
+        // 如果用户被禁用, 则清除用户登录信息
         if (!resources.getEnabled()) {
             systemUserOnlineInfoDAO.kickOutByUsername(resources.getUsername());
         }
@@ -198,10 +198,10 @@ public class SystemUserService {
 
     @Transactional(rollbackFor = Exception.class)
     public Map<String, String> modifyUserAvatar(MultipartFile multipartFile) {
-        SystemUserTb user = systemUserMapper.getUserByUsername(SecurityHelper.getCurrentUsername());
+        SystemUserTb user = systemUserMapper.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         String username = user.getUsername();
         if (StrUtil.isBlank(username)) {
-            throw new BadRequestException("异常用户数据，请联系管理员处理");
+            throw new BadRequestException("异常用户数据, 请联系管理员处理");
         }
         // 文件大小验证
         FileUtil.checkSize(fileUploadPathHelper.getAvatarMaxSize(), multipartFile.getSize());
@@ -273,7 +273,7 @@ public class SystemUserService {
      * @return /
      */
 
-    public CsResultVo<List<SystemUserTb>> queryUserByArgs(QuerySystemUserArgs criteria, Page<Object> page) {
+    public CsResultVo<List<SystemUserTb>> queryUserByArgs(SystemQueryUserArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, CsPageUtil.getCount(systemUserMapper)).getRecords();
         Long total = systemUserMapper.countUserByArgs(criteria);
@@ -287,7 +287,7 @@ public class SystemUserService {
      * @return /
      */
 
-    public List<SystemUserTb> queryUserByArgs(QuerySystemUserArgs criteria) {
+    public List<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria) {
         return systemUserMapper.selectUserByArgs(criteria, CsPageUtil.getCount(systemUserMapper)).getRecords();
     }
 

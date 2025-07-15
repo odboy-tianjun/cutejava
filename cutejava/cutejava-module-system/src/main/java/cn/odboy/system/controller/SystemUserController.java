@@ -4,16 +4,16 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.base.CsSelectOptionItemVo;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.QuerySystemUserArgs;
-import cn.odboy.system.dal.model.UpdateSystemUserPasswordArgs;
-import cn.odboy.system.framework.permission.core.SecurityHelper;
-import cn.odboy.framework.properties.AppProperties;
+import cn.odboy.system.dal.model.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
+import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.service.*;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.RsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -52,16 +52,16 @@ public class SystemUserController {
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
-    public void exportUserExcel(HttpServletResponse response, QuerySystemUserArgs criteria) throws IOException {
+    public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs criteria) throws IOException {
         systemUserService.exportUserExcel(systemUserService.queryUserByArgs(criteria), response);
     }
 
     @ApiOperation("查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<CsResultVo<List<SystemUserTb>>> queryUserByArgs(@Validated @RequestBody CsPageArgs<QuerySystemUserArgs> args) {
+    public ResponseEntity<CsResultVo<List<SystemUserTb>>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
         Page<Object> page = new Page<>(args.getPage(), args.getSize());
-        QuerySystemUserArgs criteria = args.getArgs();
+        SystemQueryUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
             // 先查找是否存在子节点
@@ -70,7 +70,7 @@ public class SystemUserController {
             criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdListByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = systemDataService.queryDeptIdListByArgs(systemUserService.getUserByUsername(SecurityHelper.getCurrentUsername()));
+        List<Long> dataScopes = systemDataService.queryDeptIdListByArgs(systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集
@@ -109,7 +109,7 @@ public class SystemUserController {
     @ApiOperation("修改用户：个人中心")
     @PostMapping(value = "modifyUserCenterInfoById")
     public ResponseEntity<Object> modifyUserCenterInfoById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb resources) {
-        if (!resources.getId().equals(SecurityHelper.getCurrentUserId())) {
+        if (!resources.getId().equals(CsSecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
         systemUserService.modifyUserCenterInfoById(resources);
@@ -121,10 +121,10 @@ public class SystemUserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足，不能删除：" + systemUserService.getUserById(id).getUsername());
+                throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
             }
         }
         systemUserService.removeUserByIds(ids);
@@ -133,10 +133,10 @@ public class SystemUserController {
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
-    public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody UpdateSystemUserPasswordArgs passVo) throws Exception {
+    public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo) throws Exception {
         String oldPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
         String newPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
-        SystemUserTb user = systemUserService.getUserByUsername(SecurityHelper.getCurrentUsername());
+        SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
         }
@@ -165,7 +165,7 @@ public class SystemUserController {
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb resources) throws Exception {
         String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), resources.getPassword());
-        SystemUserTb user = systemUserService.getUserByUsername(SecurityHelper.getCurrentUsername());
+        SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
@@ -180,7 +180,7 @@ public class SystemUserController {
      * @param resources /
      */
     private void checkLevel(SystemUserTb resources) {
-        Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
         Integer optLevel = systemRoleService.getDeptLevelByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
@@ -190,9 +190,9 @@ public class SystemUserController {
     @ApiOperation("查询用户基础数据")
     @PostMapping(value = "/queryUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<List<CsSelectOptionItemVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<QuerySystemUserArgs> args) {
+    public ResponseEntity<List<CsSelectOptionItemVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
         int maxPageSize = 50;
-        QuerySystemUserArgs criteria = args.getArgs();
+        SystemQueryUserArgs criteria = args.getArgs();
         LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
         wrapper.and(c -> {
             c.eq(SystemUserTb::getPhone, criteria.getBlurry());

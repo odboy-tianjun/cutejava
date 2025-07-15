@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemDictTb;
-import cn.odboy.system.dal.model.QuerySystemDictArgs;
+import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Mapper
 public interface SystemDictMapper extends BaseMapper<SystemDictTb> {
-    IPage<SystemDictTb> selectDictByArgs(@Param("criteria") QuerySystemDictArgs criteria, Page<SystemDictTb> page);
+    IPage<SystemDictTb> selectDictByArgs(@Param("criteria") SystemQueryDictArgs criteria, Page<SystemDictTb> page);
 
-    List<SystemDictTb> selectDictByArgs(@Param("criteria") QuerySystemDictArgs criteria);
+    List<SystemDictTb> selectDictByArgs(@Param("criteria") SystemQueryDictArgs criteria);
 }

@@ -3,8 +3,8 @@ package cn.odboy.system.controller;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
-import cn.odboy.system.dal.model.CreateSystemDictDetailArgs;
-import cn.odboy.system.dal.model.QuerySystemDictDetailArgs;
+import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
+import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -29,14 +29,14 @@ public class SystemDictDetailController {
 
     @ApiOperation("查询字典详情")
     @PostMapping
-    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<QuerySystemDictDetailArgs> args) {
+    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
         return queryDictDetailByArgs(args);
     }
 
     @ApiOperation("查询字典详情")
     @PostMapping(value = "/queryDictDetailByArgs")
-    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<QuerySystemDictDetailArgs> args) {
-        QuerySystemDictDetailArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemDictDetailTb>>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
+        SystemQueryDictDetailArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemDictDetailService.queryDictDetailByArgs(criteria, page), HttpStatus.OK);
     }
@@ -44,7 +44,7 @@ public class SystemDictDetailController {
     @ApiOperation("查询多个字典详情")
     @GetMapping(value = "/getDictDetailMaps")
     public ResponseEntity<Map<String, List<SystemDictDetailTb>>> getDictDetailMaps(@RequestParam String dictName) {
-        String[] names = dictName.split("[,，]");
+        String[] names = dictName.split("[,, ]");
         Map<String, List<SystemDictDetailTb>> dictMap = new HashMap<>(16);
         for (String name : names) {
             dictMap.put(name, systemDictDetailService.queryDictDetailByName(name));
@@ -55,7 +55,7 @@ public class SystemDictDetailController {
     @ApiOperation("新增字典详情")
     @PostMapping(value = "/saveDictDetail")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody CreateSystemDictDetailArgs resources) {
+    public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody SystemCreateDictDetailArgs resources) {
         systemDictDetailService.saveDictDetail(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

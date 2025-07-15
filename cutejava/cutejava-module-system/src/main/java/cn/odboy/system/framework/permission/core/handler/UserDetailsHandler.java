@@ -1,5 +1,6 @@
 package cn.odboy.system.framework.permission.core.handler;
 
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
@@ -7,7 +8,6 @@ import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemRoleService;
 import cn.odboy.system.service.SystemUserService;
-import cn.odboy.framework.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;

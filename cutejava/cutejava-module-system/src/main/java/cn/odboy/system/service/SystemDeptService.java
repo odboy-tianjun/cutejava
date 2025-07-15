@@ -5,15 +5,15 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.odboy.base.CsResultVo;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.model.CreateSystemDeptArgs;
-import cn.odboy.system.dal.model.QuerySystemDeptArgs;
+import cn.odboy.system.dal.model.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.system.framework.permission.core.SecurityHelper;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -43,7 +43,7 @@ public class SystemDeptService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveDept(CreateSystemDeptArgs resources) {
+    public void saveDept(SystemCreateDeptArgs resources) {
         systemDeptMapper.insert(BeanUtil.copyProperties(resources, SystemDeptTb.class));
         systemDeptService.updateDeptSubCnt(resources.getPid());
     }
@@ -123,7 +123,7 @@ public class SystemDeptService {
         List<SystemDeptTb> deptList = new ArrayList<>();
         // 使用 Set 存储所有部门的 id
         Set<Long> idSet = list.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
-        // 遍历部门列表，筛选出没有父部门的部门
+        // 遍历部门列表, 筛选出没有父部门的部门
         for (SystemDeptTb dept : list) {
             if (!idSet.contains(dept.getPid())) {
                 deptList.add(dept);
@@ -141,8 +141,8 @@ public class SystemDeptService {
      * @throws Exception /
      */
 
-    public List<SystemDeptTb> queryAllDept(QuerySystemDeptArgs criteria, Boolean isQuery) throws Exception {
-        String dataScopeType = SecurityHelper.getDataScopeType();
+    public List<SystemDeptTb> queryAllDept(SystemQueryDeptArgs criteria, Boolean isQuery) throws Exception {
+        String dataScopeType = CsSecurityHelper.getDataScopeType();
         if (isQuery) {
             if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {
                 criteria.setPidIsNull(true);
@@ -153,7 +153,7 @@ public class SystemDeptService {
                 add("enabled");
             }};
             for (Field field : fields) {
-                // 设置对象的访问权限，保证对private的属性的访问
+                // 设置对象的访问权限, 保证对private的属性的访问
                 field.setAccessible(true);
                 Object val = field.get(criteria);
                 if (fieldNames.contains(field.getName())) {
@@ -166,9 +166,9 @@ public class SystemDeptService {
             }
         }
         // 数据权限
-        criteria.setIds(SecurityHelper.getCurrentUserDataScope());
+        criteria.setIds(CsSecurityHelper.getCurrentUserDataScope());
         List<SystemDeptTb> list = systemDeptMapper.selectDeptByArgs(criteria);
-        // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
+        // 如果为空, 就代表为自定义权限或者本级权限, 就需要去重, 不理解可以注释掉，看查询结果
         if (StringUtil.isBlank(dataScopeType)) {
             return deduplication(list);
         }

@@ -3,8 +3,8 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
-import cn.odboy.system.dal.model.CreateSystemDictDetailArgs;
-import cn.odboy.system.dal.model.QuerySystemDictDetailArgs;
+import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
+import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,7 +26,7 @@ public class SystemDictDetailService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveDictDetail(CreateSystemDictDetailArgs resources) {
+    public void saveDictDetail(SystemCreateDictDetailArgs resources) {
         SystemDictDetailTb dictDetail = BeanUtil.copyProperties(resources, SystemDictDetailTb.class);
         dictDetail.setDictId(resources.getDict().getId());
         systemDictDetailMapper.insert(dictDetail);
@@ -64,7 +64,7 @@ public class SystemDictDetailService {
      * @return /
      */
 
-    public CsResultVo<List<SystemDictDetailTb>> queryDictDetailByArgs(QuerySystemDictDetailArgs criteria, Page<Object> page) {
+    public CsResultVo<List<SystemDictDetailTb>> queryDictDetailByArgs(SystemQueryDictDetailArgs criteria, Page<Object> page) {
         return CsPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(criteria, page));
     }
 
@@ -76,7 +76,7 @@ public class SystemDictDetailService {
      */
 
     public List<SystemDictDetailTb> queryDictDetailByName(String name) {
-        QuerySystemDictDetailArgs criteria = new QuerySystemDictDetailArgs();
+        SystemQueryDictDetailArgs criteria = new SystemQueryDictDetailArgs();
         criteria.setDictName(name);
         return systemDictDetailMapper.selectDictDetailByArgs(criteria);
     }

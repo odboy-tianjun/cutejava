@@ -3,19 +3,19 @@ package cn.odboy.system.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.constant.SystemConst;
 import cn.odboy.constant.CaptchaCodeEnum;
+import cn.odboy.constant.SystemConst;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
+import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserLoginArgs;
 import cn.odboy.system.dal.redis.SystemRedisKey;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
-import cn.odboy.system.framework.permission.core.SecurityHelper;
+import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
-import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.util.RsaEncryptUtil;
 import cn.odboy.util.StringUtil;
 import com.wf.captcha.base.Captcha;
@@ -99,7 +99,7 @@ public class SystemAuthController {
     @ApiOperation("获取用户信息")
     @PostMapping(value = "/info")
     public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-        SystemUserJwtVo jwtUser = (SystemUserJwtVo) SecurityHelper.getCurrentUser();
+        SystemUserJwtVo jwtUser = (SystemUserJwtVo) CsSecurityHelper.getCurrentUser();
         SystemUserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, SystemUserInfoVo.class);
         return ResponseEntity.ok(userInfoVo);
     }
@@ -110,7 +110,7 @@ public class SystemAuthController {
         // 获取运算的结果
         Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
         String uuid = SystemRedisKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
-        //当验证码类型为 arithmetic时且长度 >= 2 时，captcha.text()的结果有几率为浮点型
+        //当验证码类型为 arithmetic时且长度 >= 2 时, captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
         if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() && captchaValue.contains(SystemConst.SYMBOL_DOT)) {
             captchaValue = captchaValue.split("\\.")[0];

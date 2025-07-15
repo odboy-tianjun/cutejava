@@ -3,12 +3,12 @@ package cn.odboy.system.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
-import cn.odboy.system.dal.model.QuerySystemMenuArgs;
-import cn.odboy.system.dal.model.SystemMenuVo;
-import cn.odboy.system.framework.permission.core.SecurityHelper;
-import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.dal.dataobject.SystemMenuTb;
+import cn.odboy.system.dal.model.SystemMenuVo;
+import cn.odboy.system.dal.model.SystemQueryMenuArgs;
+import cn.odboy.system.framework.permission.core.CsSecurityHelper;
+import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,14 +34,14 @@ public class SystemMenuController {
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
-    public void exportMenu(HttpServletResponse response, QuerySystemMenuArgs criteria) throws Exception {
+    public void exportMenu(HttpServletResponse response, SystemQueryMenuArgs criteria) throws Exception {
         systemMenuService.exportMenuExcel(systemMenuService.queryAllMenu(criteria, false), response);
     }
 
     @PostMapping(value = "/buildMenus")
     @ApiOperation("获取前端所需菜单")
     public ResponseEntity<List<SystemMenuVo>> buildMenus() {
-        List<SystemMenuTb> menuList = systemMenuService.queryMenuListByUserId(SecurityHelper.getCurrentUserId());
+        List<SystemMenuTb> menuList = systemMenuService.queryMenuListByUserId(CsSecurityHelper.getCurrentUserId());
         List<SystemMenuTb> menus = systemMenuService.buildMenuTree(menuList);
         return new ResponseEntity<>(systemMenuService.buildMenuVo(menus), HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class SystemMenuController {
         return new ResponseEntity<>(systemMenuService.queryMenuByPid(pid), HttpStatus.OK);
     }
 
-    @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
+    @ApiOperation("根据菜单ID返回所有子节点ID, 包含自身ID")
     @PostMapping(value = "/queryChildMenuSet")
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<Set<Long>> queryChildMenuSet(@RequestParam Long id) {
@@ -68,15 +68,15 @@ public class SystemMenuController {
     @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<QuerySystemMenuArgs> args) throws Exception {
+    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
         return queryAllMenu(args);
     }
 
     @PostMapping(value = "/queryMenuByArgs")
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<QuerySystemMenuArgs> args) throws Exception {
-        QuerySystemMenuArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+        SystemQueryMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(menuList), HttpStatus.OK);
     }
@@ -97,7 +97,7 @@ public class SystemMenuController {
                 }
                 menus.addAll(menuList);
             }
-            // 编辑菜单时不显示自己以及自己下级的数据，避免出现PID数据环形问题
+            // 编辑菜单时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
             menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
             return new ResponseEntity<>(systemMenuService.buildMenuTree(new ArrayList<>(menus)), HttpStatus.OK);
         }

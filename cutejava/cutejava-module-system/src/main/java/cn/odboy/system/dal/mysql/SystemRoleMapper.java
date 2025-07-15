@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.model.QuerySystemRoleArgs;
+import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,9 +18,9 @@ import java.util.Set;
 public interface SystemRoleMapper extends BaseMapper<SystemRoleTb> {
     List<SystemRoleTb> selectAllRole();
 
-    List<SystemRoleTb> selectRoleByArgs(@Param("criteria") QuerySystemRoleArgs criteria);
+    List<SystemRoleTb> selectRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
 
-    Long countRoleByArgs(@Param("criteria") QuerySystemRoleArgs criteria);
+    Long countRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
 
     SystemRoleTb getRoleByName(@Param("name") String name);
 

@@ -4,13 +4,14 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
+import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
-import cn.odboy.system.dal.model.SendSystemEmailArgs;
+import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
 import cn.odboy.util.CsResourceTemplateUtil;
-import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.util.DesEncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,7 @@ import java.util.Collections;
 public class SystemEmailService {
     private final SystemEmailConfigMapper systemEmailConfigMapper;
     private final RedisHelper redisHelper;
-    @Value("${app.captcha.expireTime}")
-    private Long captchaExpireTime;
+    private final AppProperties properties;
     @Value("${spring.application.title}")
     private String applicationTitle;
 
@@ -57,10 +57,10 @@ public class SystemEmailService {
      */
 
 
-    public void sendEmail(SendSystemEmailArgs sendEmailRequest) {
+    public void sendEmail(SystemSendEmailArgs sendEmailRequest) {
         SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
         if (systemEmailConfigTb.getId() == null) {
-            throw new BadRequestException("请先配置，再操作");
+            throw new BadRequestException("请先配置, 再操作");
         }
         // 封装
         MailAccount account = new MailAccount();
@@ -81,7 +81,7 @@ public class SystemEmailService {
         account.setSslEnable(true);
         // 使用STARTTLS安全连接
         account.setStarttlsEnable(true);
-        // 解决jdk8之后默认禁用部分tls协议，导致邮件发送失败的问题
+        // 解决jdk8之后默认禁用部分tls协议, 导致邮件发送失败的问题
         account.setSslProtocols("TLSv1 TLSv1.1 TLSv1.2");
         String content = sendEmailRequest.getContent();
         // 发送
@@ -129,15 +129,15 @@ public class SystemEmailService {
         if (oldCode == null) {
             String code = RandomUtil.randomNumbers(6);
             // 存入缓存
-            if (!redisHelper.set(redisKey, code, captchaExpireTime)) {
-                throw new BadRequestException("服务异常，请联系网站负责人");
+            if (!redisHelper.set(redisKey, code, properties.getCaptcha().getExpireTime())) {
+                throw new BadRequestException("服务异常, 请联系网站负责人");
             }
             // 存在就再次发送原来的验证码
             content = CsResourceTemplateUtil.render("system", biEnum.getTemplateName(), Dict.create().set("code", code));
         } else {
             content = CsResourceTemplateUtil.render("system", biEnum.getTemplateName(), Dict.create().set("code", oldCode));
         }
-        SendSystemEmailArgs sendEmailRequest = new SendSystemEmailArgs(Collections.singletonList(email), applicationTitle, content);
+        SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
         sendEmail(sendEmailRequest);
     }
 

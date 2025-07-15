@@ -3,12 +3,12 @@ package cn.odboy.system.controller;
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.model.CreateSystemRoleArgs;
-import cn.odboy.system.dal.model.QuerySystemRoleArgs;
-import cn.odboy.system.framework.permission.core.SecurityHelper;
-import cn.odboy.system.service.SystemRoleService;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.dal.dataobject.SystemRoleTb;
+import cn.odboy.system.dal.model.SystemCreateRoleArgs;
+import cn.odboy.system.dal.model.SystemQueryRoleArgs;
+import cn.odboy.system.framework.permission.core.CsSecurityHelper;
+import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +44,7 @@ public class SystemRoleController {
     @ApiOperation("导出角色数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('role:list')")
-    public void exportRole(HttpServletResponse response, QuerySystemRoleArgs criteria) throws IOException {
+    public void exportRole(HttpServletResponse response, SystemQueryRoleArgs criteria) throws IOException {
         systemRoleService.exportRoleExcel(systemRoleService.queryRoleByArgs(criteria), response);
     }
 
@@ -58,8 +58,8 @@ public class SystemRoleController {
     @ApiOperation("查询角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<QuerySystemRoleArgs> args) {
-        QuerySystemRoleArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
+        SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemRoleService.queryRoleByArgs(criteria, page), HttpStatus.OK);
     }
@@ -73,7 +73,7 @@ public class SystemRoleController {
     @ApiOperation("新增角色")
     @PostMapping(value = "/saveRole")
     @PreAuthorize("@el.check('roles:add')")
-    public ResponseEntity<Void> saveRole(@Validated @RequestBody CreateSystemRoleArgs resources) {
+    public ResponseEntity<Void> saveRole(@Validated @RequestBody SystemCreateRoleArgs resources) {
         checkRoleLevels(resources.getLevel());
         systemRoleService.saveRole(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -118,11 +118,11 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = systemRoleService.queryRoleByUsersId(SecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        List<Integer> levels = systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {
-                throw new BadRequestException("权限不足，你的角色级别：" + min + "，低于操作的角色级别：" + level);
+                throw new BadRequestException("权限不足, 你的角色级别：" + min + ", 低于操作的角色级别：" + level);
             }
         }
         return min;

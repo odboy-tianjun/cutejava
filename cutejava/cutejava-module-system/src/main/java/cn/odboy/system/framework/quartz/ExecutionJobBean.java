@@ -6,14 +6,14 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.quartz.core.QuartzRunnable;
+import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
-import cn.odboy.system.dal.model.SendSystemEmailArgs;
+import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.service.SystemEmailService;
 import cn.odboy.system.service.SystemQuartzJobService;
-import cn.odboy.framework.quartz.core.QuartzRunnable;
-import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -91,7 +91,7 @@ public class ExecutionJobBean extends QuartzJobBean {
                 SystemEmailService emailService = SpringBeanHolder.getBean(SystemEmailService.class);
                 // 邮箱报警
                 if (StringUtil.isNoneBlank(quartzJob.getEmail())) {
-                    SendSystemEmailArgs sendEmailRequest = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
+                    SystemSendEmailArgs sendEmailRequest = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
                     emailService.sendEmail(sendEmailRequest);
                 }
             }
@@ -100,8 +100,8 @@ public class ExecutionJobBean extends QuartzJobBean {
         }
     }
 
-    private SendSystemEmailArgs taskAlarm(SystemQuartzJobTb quartzJob, String msg) {
-        SendSystemEmailArgs sendEmailRequest = new SendSystemEmailArgs();
+    private SystemSendEmailArgs taskAlarm(SystemQuartzJobTb quartzJob, String msg) {
+        SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs();
         sendEmailRequest.setSubject("定时任务【" + quartzJob.getJobName() + "】执行失败，请尽快处理！");
         Map<String, Object> data = new HashMap<>(16);
         data.put("task", quartzJob);

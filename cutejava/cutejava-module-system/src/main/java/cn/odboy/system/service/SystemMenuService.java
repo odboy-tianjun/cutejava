@@ -3,15 +3,15 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.model.QuerySystemMenuArgs;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
+import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -182,18 +182,18 @@ public class SystemMenuService {
      * @throws Exception /
      */
 
-    public List<SystemMenuTb> queryAllMenu(QuerySystemMenuArgs criteria, Boolean isQuery) throws Exception {
+    public List<SystemMenuTb> queryAllMenu(SystemQueryMenuArgs criteria, Boolean isQuery) throws Exception {
         if (Boolean.TRUE.equals(isQuery)) {
             criteria.setPidIsNull(true);
             List<Field> fields = ClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
             for (Field field : fields) {
-                //设置对象的访问权限，保证对private的属性的访问
+                //设置对象的访问权限, 保证对private的属性的访问
                 field.setAccessible(true);
                 Object val = field.get(criteria);
                 if ("pidIsNull".equals(field.getName())) {
                     continue;
                 }
-                // 如果有查询条件，则不指定pidIsNull
+                // 如果有查询条件, 则不指定pidIsNull
                 if (ObjectUtil.isNotNull(val)) {
                     criteria.setPidIsNull(null);
                     break;
@@ -228,7 +228,7 @@ public class SystemMenuService {
     }
 
     /**
-     * 获取所有子节点，包含自身ID
+     * 获取所有子节点, 包含自身ID
      *
      * @param menuList /
      * @param menuSet  /
@@ -324,7 +324,7 @@ public class SystemMenuService {
                 List<SystemMenuTb> menuList = menu.getChildren();
                 SystemMenuVo menuVo = new SystemMenuVo();
                 menuVo.setName(ObjectUtil.isNotEmpty(menu.getComponentName()) ? menu.getComponentName() : menu.getTitle());
-                // 一级目录需要加斜杠，不然会报警告
+                // 一级目录需要加斜杠, 不然会报警告
                 menuVo.setPath(menu.getPid() == null ? "/" + menu.getPath() : menu.getPath());
                 menuVo.setHidden(menu.getHidden());
                 // 如果不是外链
