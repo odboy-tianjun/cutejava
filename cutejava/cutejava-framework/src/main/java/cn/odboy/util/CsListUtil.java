@@ -47,8 +47,8 @@ public final class CsListUtil {
     }
 
     /**
-     * list转map，保留新值 -> Map<String, User> userMap = items.stream().collect(Collectors.toMap(User::getName, user -> user)) <br>
-     * list转map，保留旧值 -> Map<String, User> userMap = users.stream().collect(Collectors.toMap(User::getName, user -> user, (existing, replacement) -> existing));
+     * list转map, 保留新值 -> Map<String, User> userMap = items.stream().collect(Collectors.toMap(User::getName, user -> user)) <br>
+     * list转map, 保留旧值 -> Map<String, User> userMap = users.stream().collect(Collectors.toMap(User::getName, user -> user, (existing, replacement) -> existing));
      */
     public static void main(String[] args) {
         List<CsBaseUserTimeTb> entities = new ArrayList<>();

@@ -1,7 +1,6 @@
 package cn.odboy.annotation;
 
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 

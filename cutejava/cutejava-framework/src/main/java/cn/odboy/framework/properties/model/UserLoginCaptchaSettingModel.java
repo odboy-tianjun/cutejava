@@ -1,5 +1,6 @@
 package cn.odboy.framework.properties.model;
 
+import cn.odboy.base.CsObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.StringUtil;
@@ -17,7 +18,7 @@ import java.awt.*;
  */
 @Getter
 @Setter
-public class UserLoginCaptchaSettingModel {
+public class UserLoginCaptchaSettingModel extends CsObject {
     private CaptchaCodeEnum codeType;
 
     /**
@@ -61,7 +62,7 @@ public class UserLoginCaptchaSettingModel {
             case ARITHMETIC:
                 // 算术类型 https://gitee.com/whvse/EasyCaptcha
                 captcha = new FixedArithmeticCaptcha(width, height);
-                // 几位数运算，默认是两位
+                // 几位数运算, 默认是两位
                 captcha.setLen(length);
                 break;
             case CHINESE:

@@ -3,10 +3,10 @@ package cn.odboy.system.controller;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.constant.FileTypeEnum;
-import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
-import cn.odboy.system.dal.model.QuerySystemLocalStorageArgs;
-import cn.odboy.system.service.SystemLocalStorageService;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
+import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.service.SystemLocalStorageService;
 import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -33,8 +33,8 @@ public class SystemLocalStorageController {
     @ApiOperation("查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<CsResultVo<List<SystemLocalStorageTb>>> queryLocalStorage(@Validated @RequestBody CsPageArgs<QuerySystemLocalStorageArgs> args) {
-        QuerySystemLocalStorageArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemLocalStorageTb>>> queryLocalStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
+        SystemQueryStorageArgs criteria = args.getArgs();
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(localStorageService.queryLocalStorage(criteria, page), HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class SystemLocalStorageController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
-    public void exportFile(HttpServletResponse response, QuerySystemLocalStorageArgs criteria) throws IOException {
+    public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
         localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorage(criteria), response);
     }
 

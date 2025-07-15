@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.io.Closeable;
 
 /**
- * 用于关闭各种连接，缺啥补啥
+ * 用于关闭各种连接, 缺啥补啥
  */
 @UtilityClass
 public final class CloseUtil {

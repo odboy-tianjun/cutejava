@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
-import cn.odboy.system.dal.model.QuerySystemQuartzJobArgs;
+import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Mapper
 public interface SystemQuartzJobMapper extends BaseMapper<SystemQuartzJobTb> {
-    IPage<SystemQuartzJobTb> selectQuartzJobByArgs(@Param("criteria") QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
+    IPage<SystemQuartzJobTb> selectQuartzJobByArgs(@Param("criteria") SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
 
     List<SystemQuartzJobTb> selectAllEnableQuartzJob();
 }

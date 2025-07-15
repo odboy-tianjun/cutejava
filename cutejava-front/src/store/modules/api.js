@@ -6,8 +6,6 @@ const api = {
     imagesUploadApi: baseUrl + '/api/localStorage/uploadPicture',
     // 修改头像
     updateAvatarApi: baseUrl + '/api/user/modifyUserAvatar',
-    // 上传文件到七牛云
-    qiNiuUploadApi: baseUrl + '/api/qiNiuContent/uploadFile',
     // Sql 监控
     druidSqlApi: baseUrl + '/druid/index.html',
     // websocket
@@ -16,6 +14,8 @@ const api = {
     swaggerApi: baseUrl + '/doc.html',
     // 文件上传
     fileUploadApi: baseUrl + '/api/localStorage/uploadFile',
+    // oss上传
+    ossUploadApi: baseUrl + '/api/ossStorage/uploadFile',
     // baseUrl，
     baseApi: baseUrl
   }

@@ -21,6 +21,8 @@ public class AppProperties {
     private SwaggerApiDocSettingModel swagger;
     private ThreadPoolSettingModel asyncTaskPool;
     private ThreadPoolSettingModel pipelineTaskPool;
+    private CaptchaModel captcha;
+    private StorageOSSModel oss;
 }
 
 

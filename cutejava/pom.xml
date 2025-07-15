@@ -37,7 +37,6 @@
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.8.0</jna.version>
         <mail.version>1.4.7</mail.version>
-        <qiniu.version>7.9.3</qiniu.version>
     </properties>
 
     <dependencies>
@@ -46,12 +45,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
-                <!-- 去掉jackson依赖，用fastjson -->
+                <!-- 去掉jackson依赖, 用fastjson -->
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-json</artifactId>
                 </exclusion>
-                <!-- 去掉tomcat容器，用undertow -->
+                <!-- 去掉tomcat容器, 用undertow -->
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -163,7 +162,7 @@
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.3</version>
             <exclusions>
-                <!-- 去掉 swagger-annotations 依赖，避免冲突 -->
+                <!-- 去掉 swagger-annotations 依赖, 避免冲突 -->
                 <exclusion>
                     <groupId>io.swagger</groupId>
                     <artifactId>swagger-annotations</artifactId>
@@ -267,7 +266,7 @@
             <version>1.13.0</version>
         </dependency>
 
-        <!-- 提供增强的 InheritableThreadLocal，即使用线程池组件也可以在线程之间传输值 -->
+        <!-- 提供增强的 InheritableThreadLocal, 即使用线程池组件也可以在线程之间传输值 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>transmittable-thread-local</artifactId>
@@ -328,13 +327,6 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${mail.version}</version>
-        </dependency>
-
-        <!-- 七牛云存储 -->
-        <dependency>
-            <groupId>com.qiniu</groupId>
-            <artifactId>qiniu-java-sdk</artifactId>
-            <version>${qiniu.version}</version>
         </dependency>
 
         <!-- quartz -->

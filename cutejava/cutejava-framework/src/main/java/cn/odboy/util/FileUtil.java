@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import static cn.odboy.constant.SystemConst.*;
 
 /**
- * File工具类，扩展 hutool 工具包
+ * File工具类, 扩展 hutool 工具包
  */
 @Slf4j
 @UtilityClass
@@ -39,9 +39,9 @@ public final class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * 系统临时目录
      * <br>
-     * windows 包含路径分割符，但Linux 不包含,
-     * 在windows \\==\ 前提下，
-     * 为安全起见 同意拼装 路径分割符，
+     * windows 包含路径分割符, 但Linux 不包含,
+     * 在windows \\==\ 前提下,
+     * 为安全起见 同意拼装 路径分割符,
      * <pre>
      *       java.io.tmpdir
      *       windows : C:\Users/xxx\AppData\Local\Temp\
@@ -77,7 +77,7 @@ public final class FileUtil extends cn.hutool.core.io.FileUtil {
         String prefix = "." + getSuffix(fileName);
         File file = null;
         try {
-            // 用uuid作为文件名，防止生成的临时文件重复
+            // 用uuid作为文件名, 防止生成的临时文件重复
             file = new File(SYS_TEM_DIR + IdUtil.simpleUUID() + prefix);
             // MultipartFile to File
             multipartFile.transferTo(file);
@@ -189,7 +189,7 @@ public final class FileUtil extends cn.hutool.core.io.FileUtil {
             });
             return sanitizedMap;
         }).collect(Collectors.toList());
-        // 一次性写出内容，使用默认样式，强制输出标题
+        // 一次性写出内容, 使用默认样式，强制输出标题
         writer.write(sanitizedList, true);
         SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
         //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法

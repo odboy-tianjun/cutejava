@@ -1,6 +1,5 @@
 package cn.odboy.framework.server.core;
 
-import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.converters.DateStringArraysToListDateConverter;
 import cn.odboy.framework.server.converters.DateStringToDateConverter;
 import com.alibaba.fastjson2.JSONWriter;
@@ -28,10 +27,6 @@ import java.util.List;
 @EnableWebMvc
 @RequiredArgsConstructor
 public class ConfigurerAdapter implements WebMvcConfigurer {
-    /**
-     * 文件配置
-     */
-    private final AppProperties properties;
     private final DateStringArraysToListDateConverter dateStringArraysToListDateConverter;
     private final DateStringToDateConverter dateStringToDateConverter;
     private final FileUploadPathHelper fileUploadPathHelper;
@@ -67,7 +62,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         supportMediaTypeList.add(MediaType.APPLICATION_JSON);
         FastJsonConfig config = new FastJsonConfig();
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        // 开启引用检测，枚举支持
+        // 开启引用检测, 枚举支持
         config.setWriterFeatures(
                 // 是否输出值为null的字段
                 // SerializerFeature.WriteMapNullValue,
@@ -77,12 +72,11 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 //                JSONWriter.Feature.WriteNullListAsEmpty,
                 // 字符类型字段如果为null,输出为"",而非null
 //                JSONWriter.Feature.WriteNullStringAsEmpty,
-                // 太具体的数值会直接影响逻辑本身，所以不要这个
+                // 太具体的数值会直接影响逻辑本身, 所以不要这个
                 // SerializerFeature.WriteNullNumberAsZero,
                 JSONWriter.Feature.WriteEnumUsingToString,
-//                SerializerFeature.DisableCircularReferenceDetect
-                JSONWriter.Feature.ReferenceDetection
-        );
+//                SerializerFeature.DisableCircularReferenceDetect,
+                JSONWriter.Feature.ReferenceDetection);
         fastJsonConverter.setFastJsonConfig(config);
         fastJsonConverter.setSupportedMediaTypes(supportMediaTypeList);
         fastJsonConverter.setDefaultCharset(StandardCharsets.UTF_8);

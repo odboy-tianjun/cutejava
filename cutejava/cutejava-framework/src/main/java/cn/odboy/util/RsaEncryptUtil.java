@@ -12,7 +12,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * Rsa 工具类，公钥私钥生成，加解密
+ * Rsa 工具类, 公钥私钥生成, 加解密
  */
 @UtilityClass
 public final class RsaEncryptUtil {
@@ -42,7 +42,7 @@ public final class RsaEncryptUtil {
         System.out.println("加密后：" + text1);
         System.out.println("解密后：" + text2);
         if (RsaEncryptUtil.SRC.equals(text2)) {
-            System.out.println("解密字符串和原始字符串一致，解密成功");
+            System.out.println("解密字符串和原始字符串一致, 解密成功");
         } else {
             System.out.println("解密字符串和原始字符串不一致，解密失败");
         }

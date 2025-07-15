@@ -162,7 +162,7 @@ public class RedisHelper {
             if (keys.length == 1) {
                 boolean result = redisTemplate.delete(keys[0]);
                 log.debug("--------------------------------------------");
-                log.debug(new StringBuilder("删除缓存：").append(keys[0]).append("，结果：").append(result).toString());
+                log.debug(new StringBuilder("删除缓存：").append(keys[0]).append(", 结果：").append(result).toString());
                 log.debug("--------------------------------------------");
             } else {
                 Set<Object> keySet = new HashSet<>();
@@ -218,7 +218,7 @@ public class RedisHelper {
         if (value == null) {
             return null;
         }
-        // 如果 value 不是目标类型，则尝试将其反序列化为 clazz 类型 by
+        // 如果 value 不是目标类型, 则尝试将其反序列化为 clazz 类型 by
         if (!clazz.isInstance(value)) {
             return JSON.parseObject(value.toString(), clazz);
         } else if (clazz.isInstance(value)) {
@@ -308,7 +308,7 @@ public class RedisHelper {
      *
      * @param key   键
      * @param value 值
-     * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期，注意:这里将会替换原有的时间
+     * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期, 注意:这里将会替换原有的时间
      * @return true成功 false 失败
      */
     public boolean set(String key, Object value, long time) {

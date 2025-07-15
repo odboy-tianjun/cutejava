@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
-import cn.odboy.system.dal.model.QuerySystemMenuArgs;
+import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +19,7 @@ import java.util.Set;
 @Mapper
 public interface SystemMenuMapper extends BaseMapper<SystemMenuTb> {
 
-    List<SystemMenuTb> selectMenuByArgs(@Param("criteria") QuerySystemMenuArgs criteria);
+    List<SystemMenuTb> selectMenuByArgs(@Param("criteria") SystemQueryMenuArgs criteria);
 
     LinkedHashSet<SystemMenuTb> selectMenuByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
 

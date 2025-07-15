@@ -34,7 +34,7 @@ public class QuartzConfig {
         @Override
         protected Object createJobInstance(@NonNull TriggerFiredBundle bundle) throws Exception {
             try {
-                // 调用父类的方法，把Job注入到spring中
+                // 调用父类的方法, 把Job注入到spring中
                 Object jobInstance = super.createJobInstance(bundle);
                 capableBeanFactory.autowireBean(jobInstance);
                 log.debug("Job instance created and autowired: {}", jobInstance.getClass().getName());

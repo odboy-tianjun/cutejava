@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class SystemCaptchaController {
     private final SystemEmailService systemEmailService;
 
-    @ApiOperation("重置邮箱，发送验证码")
+    @ApiOperation("重置邮箱, 发送验证码")
     @PostMapping(value = "/sendResetEmailCaptcha")
     public ResponseEntity<Void> sendResetEmailCaptcha(@RequestParam String email) {
         systemEmailService.sendCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, email);

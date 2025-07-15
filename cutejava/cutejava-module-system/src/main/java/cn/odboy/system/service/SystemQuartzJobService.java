@@ -4,15 +4,15 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsResultVo;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
-import cn.odboy.system.dal.model.QuerySystemQuartzJobArgs;
-import cn.odboy.system.dal.model.UpdateSystemQuartzJobArgs;
+import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
+import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
-import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
@@ -56,7 +56,7 @@ public class SystemQuartzJobService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyQuartzJobResumeCron(UpdateSystemQuartzJobArgs resources) {
+    public void modifyQuartzJobResumeCron(SystemUpdateQuartzJobArgs resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
@@ -126,7 +126,7 @@ public class SystemQuartzJobService {
     public void startSubQuartJob(String[] tasks) throws InterruptedException {
         for (String id : tasks) {
             if (StrUtil.isBlank(id)) {
-                // 如果是手动清除子任务id，会出现id为空字符串的问题
+                // 如果是手动清除子任务id, 会出现id为空字符串的问题
                 continue;
             }
             SystemQuartzJobTb quartzJob = systemQuartzJobMapper.selectById(Long.parseLong(id));
@@ -139,10 +139,10 @@ public class SystemQuartzJobService {
             quartzJob.setUuid(uuid);
             // 执行任务
             startQuartzJob(quartzJob);
-            // 获取执行状态，如果执行失败则停止后面的子任务执行
+            // 获取执行状态, 如果执行失败则停止后面的子任务执行
             Boolean result = redisHelper.get(uuid, Boolean.class);
             while (result == null) {
-                // 休眠5秒，再次获取子任务执行情况
+                // 休眠5秒, 再次获取子任务执行情况
                 Thread.sleep(5000);
                 result = redisHelper.get(uuid, Boolean.class);
             }
@@ -212,7 +212,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsResultVo<List<SystemQuartzJobTb>> queryQuartzJobByArgs(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+    public CsResultVo<List<SystemQuartzJobTb>> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
         return CsPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
     }
 
@@ -224,7 +224,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsResultVo<List<SystemQuartzLogTb>> queryQuartzLogByArgs(QuerySystemQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+    public CsResultVo<List<SystemQuartzLogTb>> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
         return CsPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
     }
 
@@ -235,7 +235,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public List<SystemQuartzJobTb> queryQuartzJobByArgs(QuerySystemQuartzJobArgs criteria) {
+    public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria) {
         return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, CsPageUtil.getCount(systemQuartzJobMapper)).getRecords();
     }
 
@@ -246,7 +246,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public List<SystemQuartzLogTb> queryQuartzLogByArgs(QuerySystemQuartzJobArgs criteria) {
+    public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria) {
         return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, CsPageUtil.getCount(systemQuartzLogMapper)).getRecords();
     }
 

@@ -3,12 +3,12 @@ package cn.odboy.system.controller;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
-import cn.odboy.system.dal.model.QuerySystemQuartzJobArgs;
-import cn.odboy.system.dal.model.UpdateSystemQuartzJobArgs;
+import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
+import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.service.SystemQuartzJobService;
-import cn.odboy.framework.exception.BadRequestException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,8 +37,8 @@ public class SystemQuartzJobController {
     @ApiOperation("查询定时任务")
     @PostMapping
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<QuerySystemQuartzJobArgs> args) {
-        QuerySystemQuartzJobArgs criteria = args.getArgs();
+    public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
+        SystemQueryQuartzJobArgs criteria = args.getArgs();
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobByArgs(criteria, page), HttpStatus.OK);
     }
@@ -46,21 +46,21 @@ public class SystemQuartzJobController {
     @ApiOperation("导出任务数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public void exportQuartzJob(HttpServletResponse response, QuerySystemQuartzJobArgs criteria) throws IOException {
+    public void exportQuartzJob(HttpServletResponse response, SystemQueryQuartzJobArgs criteria) throws IOException {
         systemQuartzJobService.exportQuartzJobExcel(systemQuartzJobService.queryQuartzJobByArgs(criteria), response);
     }
 
     @ApiOperation("导出日志数据")
     @GetMapping(value = "/logs/download")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public void exportQuartzJobLog(HttpServletResponse response, QuerySystemQuartzJobArgs criteria) throws IOException {
+    public void exportQuartzJobLog(HttpServletResponse response, SystemQueryQuartzJobArgs criteria) throws IOException {
         systemQuartzJobService.exportQuartzLogExcel(systemQuartzJobService.queryQuartzLogByArgs(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")
     @PostMapping(value = "/logs")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(QuerySystemQuartzJobArgs criteria) {
+    public ResponseEntity<CsResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(SystemQueryQuartzJobArgs criteria) {
         Page<SystemQuartzLogTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogByArgs(criteria, page), HttpStatus.OK);
     }
@@ -72,7 +72,7 @@ public class SystemQuartzJobController {
         if (resources.getId() != null) {
             throw new BadRequestException("无效参数id");
         }
-        // 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
+        // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
         checkBean(resources.getBeanName());
         systemQuartzJobService.createJob(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -81,8 +81,8 @@ public class SystemQuartzJobController {
     @ApiOperation("修改定时任务")
     @PutMapping
     @PreAuthorize("@el.check('quartzJob:edit')")
-    public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody UpdateSystemQuartzJobArgs resources) {
-        // 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
+    public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs resources) {
+        // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
         checkBean(resources.getBeanName());
         systemQuartzJobService.modifyQuartzJobResumeCron(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -113,7 +113,7 @@ public class SystemQuartzJobController {
     }
 
     /**
-     * 验证Bean是不是合法的，合法的定时任务 Bean 需要用 @Service 定义
+     * 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
      *
      * @param beanName Bean名称
      */

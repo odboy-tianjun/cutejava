@@ -1,6 +1,7 @@
 package cn.odboy.framework.doc;
 
 import cn.odboy.constant.SystemConst;
+import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.util.AnonTagUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
@@ -35,19 +36,15 @@ import java.util.stream.Collectors;
 @EnableSwagger2
 @RequiredArgsConstructor
 public class SwaggerConfig {
-
     @Value("${server.servlet.context-path:}")
     private String apiPath;
-
-    @Value("${app.swagger.enabled}")
-    private Boolean enabled;
-
+    private final AppProperties properties;
     private final ApplicationContext applicationContext;
 
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enabled)
+                .enable(properties.getSwagger().getEnabled())
                 .pathMapping("/")
                 .apiInfo(apiInfo())
                 .select()
@@ -104,7 +101,7 @@ public class SwaggerConfig {
     }
 
     /**
-     * 解决Springfox与SpringBoot集成后，WebMvcRequestHandlerProvider和WebFluxRequestHandlerProvider冲突问题
+     * 解决Springfox与SpringBoot集成后, WebMvcRequestHandlerProvider和WebFluxRequestHandlerProvider冲突问题
      *
      * @return /
      */

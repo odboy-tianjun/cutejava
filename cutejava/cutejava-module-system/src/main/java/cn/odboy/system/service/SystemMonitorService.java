@@ -67,7 +67,7 @@ public class SystemMonitorService {
         String osName = System.getProperty("os.name");
         long available = 0, total = 0;
         for (OSFileStore fs : fsArray) {
-            // windows 需要将所有磁盘分区累加，linux 和 mac 直接累加会出现磁盘重复的问题，待修复
+            // windows 需要将所有磁盘分区累加, linux 和 mac 直接累加会出现磁盘重复的问题, 待修复
             if (osName.toLowerCase().startsWith(SystemConst.WIN)) {
                 available += fs.getUsableSpace();
                 total += fs.getTotalSpace();

@@ -2,12 +2,12 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.odboy.base.CsResultVo;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
-import cn.odboy.system.dal.model.CreateSystemJobArgs;
-import cn.odboy.system.dal.model.QuerySystemJobArgs;
+import cn.odboy.system.dal.model.SystemCreateJobArgs;
+import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,7 +32,7 @@ public class SystemJobService {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveJob(CreateSystemJobArgs resources) {
+    public void saveJob(SystemCreateJobArgs resources) {
         SystemJobTb job = systemJobMapper.getJobByName(resources.getName());
         if (job != null) {
             throw new BadRequestException("职位名称已存在");
@@ -97,7 +97,7 @@ public class SystemJobService {
      */
 
 
-    public CsResultVo<List<SystemJobTb>> queryJobByArgs(QuerySystemJobArgs criteria, Page<SystemJobTb> page) {
+    public CsResultVo<List<SystemJobTb>> queryJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
         return CsPageUtil.toPage(systemJobMapper.selectJobByArgs(criteria, page));
     }
 
@@ -108,7 +108,7 @@ public class SystemJobService {
      * @return /
      */
 
-    public List<SystemJobTb> queryJobByArgs(QuerySystemJobArgs criteria) {
+    public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs criteria) {
         return systemJobMapper.selectJobByArgs(criteria, CsPageUtil.getCount(systemJobMapper)).getRecords();
     }
 
@@ -120,7 +120,7 @@ public class SystemJobService {
 
     public void verifyBindRelationByIds(Set<Long> ids) {
         if (systemUserMapper.countUserByJobIds(ids) > 0) {
-            throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
+            throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
         }
     }
 }

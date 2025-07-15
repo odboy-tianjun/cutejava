@@ -1,31 +1,31 @@
 <template>
   <el-tabs v-model="activeName" style="padding-left: 8px;" @tab-click="tabClick">
-    <el-tab-pane label="本地存储" name="first">
+    <el-tab-pane label="本地存储" name="local">
       <Local ref="local" />
     </el-tab-pane>
-    <el-tab-pane label="七牛云存储" name="second">
-      <QiNiu ref="qiNiu" />
+    <el-tab-pane label="OSS存储" name="oss">
+      <Oss ref="oss" />
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
-import QiNiu from './qiniu/index.vue'
 import Local from './local/index.vue'
+import Oss from './oss/index.vue'
 export default {
   name: 'Storage',
-  components: { QiNiu, Local },
+  components: { Local, Oss },
   data() {
     return {
-      activeName: 'first'
+      activeName: 'local'
     }
   },
   methods: {
     tabClick(name) {
-      if (this.activeName === 'first') {
+      if (this.activeName === 'local') {
         this.$refs.local.crud.toQuery()
       } else {
-        this.$refs.qiNiu.crud.toQuery()
+        this.$refs.oss.crud.toQuery()
       }
     }
   }

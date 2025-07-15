@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.QuerySystemUserArgs;
+import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Mapper
 public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
-    IPage<SystemUserTb> selectUserByArgs(@Param("criteria") QuerySystemUserArgs criteria, Page<SystemUserTb> page);
+    IPage<SystemUserTb> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria, Page<SystemUserTb> page);
 
     SystemUserTb getUserByUsername(@Param("username") String username);
 
@@ -33,7 +33,7 @@ public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
 
     Long countUserByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
-    Long countUserByArgs(@Param("criteria") QuerySystemUserArgs criteria);
+    Long countUserByArgs(@Param("criteria") SystemQueryUserArgs criteria);
 
     void updateUserPasswordByUsername(@Param("username") String username, @Param("password") String password);
 

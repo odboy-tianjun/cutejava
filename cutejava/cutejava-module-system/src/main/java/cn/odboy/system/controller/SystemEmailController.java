@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
-import cn.odboy.system.dal.model.SendSystemEmailArgs;
+import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.service.SystemEmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class SystemEmailController {
 
     @ApiOperation("发送邮件")
     @PostMapping(value = "/sendEmail")
-    public ResponseEntity<Void> sendEmail(@Validated @RequestBody SendSystemEmailArgs sendEmailRequest) {
+    public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
         systemEmailService.sendEmail(sendEmailRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
