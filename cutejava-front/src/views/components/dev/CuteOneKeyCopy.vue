@@ -1,7 +1,6 @@
 <!-- 一键复制组件 -->
 <!-- 使用方式： <one-key-copy style="margin-left: 10pt" :content.sync="data" /> -->
 <template>
-  <!--  <el-tooltip class="item" effect="dark" content="复制" placement="right-end">-->
   <el-button
     v-clipboard:copy="content"
     v-clipboard:success="onCopy"
@@ -9,11 +8,11 @@
     size="mini"
     icon="el-icon-document-copy"
   />
-  <!--  </el-tooltip>-->
 </template>
 
 <script>
 export default {
+  name: 'CuteOneKeyCopy',
   props: {
     content: {
       type: String,
