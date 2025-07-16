@@ -46,8 +46,13 @@ public class SystemDictController {
     @PostMapping
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<CsResultVo<List<SystemDictTb>>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
+        Page<SystemDictTb> page;
         SystemQueryDictArgs criteria = args.getArgs();
-        Page<SystemDictTb> page = new Page<>(criteria.getPage(), criteria.getSize());
+        if (args.getSize() != null) {
+            page = new Page<>(args.getPage(), args.getSize());
+        } else {
+            page = new Page<>(criteria.getPage(), criteria.getSize());
+        }
         return new ResponseEntity<>(systemDictService.queryDictByArgs(criteria, page), HttpStatus.OK);
     }
 

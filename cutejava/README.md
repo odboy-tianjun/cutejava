@@ -54,8 +54,9 @@ https://github.com/odboy-tianjun/cutejava
 
 #### 丰富的自定义组件
 
-- CuteTable
-- CuteFormDialog
+- CuteSimpleTable 简单表格
+- CuteDragTable 支持拖拽的表格
+- CuteFormDialog 支持表单的对话框
 
 #### 系统模块
 

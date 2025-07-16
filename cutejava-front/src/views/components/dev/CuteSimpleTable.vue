@@ -18,13 +18,13 @@
       <el-table-column v-if="crud.operateColumn" :width="crud.operateColumn.width" label="操作" :formatter="crud.operateColumn.formatter" :fixed="crud.operateColumn.fixed" />
     </el-table>
     <el-pagination
-      :current-page="crud.pageProps.current"
+      :current-page="pageProps.current"
       :page-sizes="[10, 20, 50]"
-      :page-size="crud.pageProps.pageSize"
+      :page-size="pageProps.pageSize"
       layout="total, sizes, prev, pager, next"
-      :total="crud.pageProps.total"
-      @size-change="(size) => crud.onPageChange(crud.pageProps.current, size, crud.pageProps.total)"
-      @current-change="(current) => crud.onPageChange(current, crud.pageProps.pageSize, crud.pageProps.total)"
+      :total="pageProps.total"
+      @size-change="(size) => crud.onPageChange(pageProps.current, size, pageProps.total)"
+      @current-change="(current) => crud.onPageChange(current, pageProps.pageSize, pageProps.total)"
     />
   </div>
 </template>
@@ -32,7 +32,7 @@
 <script>
 
 export default {
-  name: 'CuteTable',
+  name: 'CuteSimpleTable',
   props: {
     primaryKey: {
       type: String,
@@ -73,6 +73,17 @@ export default {
       type: String,
       required: false,
       default: 'none'
+    },
+    pageProps: {
+      type: Object,
+      required: true,
+      default: function() {
+        return {
+          current: 1,
+          pageSize: 10,
+          total: 0
+        }
+      }
     }
   },
   data() {
@@ -84,16 +95,12 @@ export default {
         operateColumn: this.operateColumn,
         fetchUrl: null,
         dataSource: this.dataSource && this.dataSource.length > 0 ? this.dataSource : [],
-        pageProps: {
-          current: 1,
-          pageSize: 10,
-          total: 0
-        },
         onPageChange: (currentPage, pageSize) => {
-          this.crud.pageProps.current = currentPage
-          this.crud.pageProps.pageSize = pageSize
+          this.pageProps.current = currentPage
+          this.pageProps.pageSize = pageSize
           console.log('on-page-change', currentPage, pageSize)
           // this.$emit('onPageChange', currentPage, pageSize, total)
+          this.refresh()
         }
       }
     }
@@ -114,7 +121,7 @@ export default {
       let params = {}
       // 自定义请求参数
       if (this.paramsTransform) {
-        params = this.paramsTransform(this.crud.pageProps)
+        params = this.paramsTransform(this.pageProps)
       }
       if (this.fetch) {
         try {
@@ -128,7 +135,7 @@ export default {
             return this.responseTransform(response)
           }
           if (response && response.totalElements && response.content) {
-            this.crud.pageProps.total = response.totalElements
+            this.pageProps.total = response.totalElements
             this.crud.dataSource = response.content
           }
           return response
