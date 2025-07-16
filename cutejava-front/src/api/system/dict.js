@@ -24,4 +24,12 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+export function queryPageDict(data) {
+  return request({
+    url: 'api/dict',
+    method: 'post',
+    data: data
+  })
+}
+
+export default { add, edit, del, queryPageDict }
