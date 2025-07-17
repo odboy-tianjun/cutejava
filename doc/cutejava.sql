@@ -11,7 +11,7 @@
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
 
- Date: 16/07/2025 21:13:16
+ Date: 17/07/2025 20:47:29
 */
 
 SET NAMES utf8mb4;
@@ -662,7 +662,7 @@ CREATE TABLE `system_menu`  (
   UNIQUE INDEX `uniq_title`(`title` ASC) USING BTREE,
   INDEX `idx_pid`(`pid` ASC) USING BTREE,
   INDEX `idx_sys_menu_menu_id`(`menu_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 128 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 130 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
@@ -676,7 +676,6 @@ INSERT INTO `system_menu` VALUES (9, 6, 0, 1, 'SQL监控', 'DruidSqlConsole', 's
 INSERT INTO `system_menu` VALUES (10, NULL, 13, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (11, 10, 0, 1, '图标库', 'Icons', 'components/icons/index', 51, 'icon', 'icon', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (14, 36, 0, 1, '邮件工具', 'Email', 'system/email/index', 35, 'email', 'email', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
-INSERT INTO `system_menu` VALUES (15, 10, 0, 1, '富文本', 'Editor', 'components/base/Editor', 52, 'fwb', 'tinymce', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'system/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (21, NULL, 2, 0, '演示:多级菜单', NULL, '', 900, 'menu', 'nested', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (22, 21, 2, 0, '二级菜单1', NULL, '', 999, 'menu', 'menu1', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
@@ -684,8 +683,7 @@ INSERT INTO `system_menu` VALUES (23, 21, 0, 1, '二级菜单2', NULL, 'nested/m
 INSERT INTO `system_menu` VALUES (24, 22, 0, 1, '三级菜单1', 'Test', 'nested/menu1/menu1-1', 999, 'menu', 'menu1-1', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (27, 22, 0, 1, '三级菜单2', NULL, 'nested/menu1/menu1-2', 999, 'menu', 'menu1-2', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (28, 1, 3, 1, '任务调度', 'QuartzJob', 'system/quartzJob/index', 9, 'timing', 'quartz-job', b'0', b'0', b'0', 'quartzJob:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
-INSERT INTO `system_menu` VALUES (33, 10, 0, 1, 'Markdown', 'Markdown', 'components/base/MarkDown', 53, 'markdown', 'markdown', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
-INSERT INTO `system_menu` VALUES (34, 10, 0, 1, 'Yaml编辑器', 'YamlEdit', 'components/base/YamlEdit', 54, 'dev', 'yaml', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
+INSERT INTO `system_menu` VALUES (34, 10, 0, 1, '演示:Yaml编辑器', 'CuteYamlEditorDemo', 'demo/CuteYamlEditorDemo', 999, 'menu', 'cuteYamlEditorDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 17:09:24');
 INSERT INTO `system_menu` VALUES (35, 1, 3, 1, '部门管理', 'Dept', 'system/dept/index', 6, 'dept', 'dept', b'0', b'0', b'0', 'dept:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (36, 1, 2, 0, '系统工具', NULL, '', 10, 'sys-tools', 'sys-tools', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (37, 1, 3, 1, '岗位管理', 'Job', 'system/job/index', 7, 'Steve-Jobs', 'job', b'0', b'0', b'0', 'job:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
@@ -718,13 +716,15 @@ INSERT INTO `system_menu` VALUES (79, 18, 0, 2, '文件删除', NULL, '', 4, '',
 INSERT INTO `system_menu` VALUES (80, 6, 0, 1, '服务监控', 'ServerMonitor', 'system/server/index', 14, 'codeConsole', 'server', b'0', b'0', b'0', 'monitor:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (83, 10, 0, 1, '图表库', 'Echarts', 'components/base/Echarts', 50, 'chart', 'echarts', b'0', b'1', b'0', '', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (117, 10, 0, 1, '演示:一键复制组件', 'CuteOneKeyCopy', 'demo/CuteOneKeyCopyDemo', 999, 'menu', 'cuteOneKeyCopyDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
-INSERT INTO `system_menu` VALUES (118, 10, 0, 1, 'Java代码编辑器', 'javaCodemirror', 'components/base/CodemirrorDemo', 55, 'menu', 'javaCodemirror', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
+INSERT INTO `system_menu` VALUES (118, 10, 0, 1, '演示:Java代码编辑器', 'CuteJavaEditorDemo', 'demo/CuteJavaEditorDemo', 999, 'menu', 'cuteJavaEditorDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 17:09:01');
 INSERT INTO `system_menu` VALUES (119, 10, 0, 1, '数字滚动', 'countToDemo', 'components/base/CountToDemo', 56, 'menu', 'countToDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (121, 10, 0, 1, '分割面板', 'splitPaneDemo', 'components/base/SplitPaneDemo', 57, 'menu', 'splitPaneDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (122, 10, 0, 1, 'WebSocket', 'webSocketDemo', 'components/base/WebSocketDemo', 58, 'menu', 'webSocketDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
-INSERT INTO `system_menu` VALUES (125, 10, 0, 1, '演示:业务组件', 'DemoShow', 'components/business/DemoShow', 999, 'menu', 'bussinessDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
+INSERT INTO `system_menu` VALUES (125, 10, 0, 1, '演示:业务组件', 'CuteBusinessDemo', 'demo/CuteBusinessDemo', 999, 'menu', 'cuteBusinessDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 19:37:29');
 INSERT INTO `system_menu` VALUES (126, 10, 2, 1, '演示:简单表格组件', 'CuteSimpleTableDemo', 'demo/CuteSimpleTableDemo', 999, 'menu', 'cuteSimpleTableDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
 INSERT INTO `system_menu` VALUES (127, 10, 2, 1, '演示:拖拽表格组件', 'CuteDragTableDemo', 'demo/CuteDragTableDemo', 999, 'menu', 'cuteDragTableDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-16 21:12:41');
+INSERT INTO `system_menu` VALUES (128, 10, 0, 1, '演示:Markdown编辑器', 'CuteMarkdownDemo', 'demo/CuteMarkdownDemo', 999, 'menu', 'cuteMarkdownDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 10:53:29', '2025-07-17 15:49:25');
+INSERT INTO `system_menu` VALUES (129, 10, 0, 1, '演示:富文本编辑器', 'CuteRichTextEditorDemo', 'demo/CuteRichTextEditorDemo', 999, 'menu', 'cuteRichTextEditorDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 13:22:21', '2025-07-17 15:49:34');
 
 -- ----------------------------
 -- Table structure for system_oss_storage
@@ -879,8 +879,6 @@ INSERT INTO `system_roles_menus` VALUES (10, 2);
 INSERT INTO `system_roles_menus` VALUES (11, 1);
 INSERT INTO `system_roles_menus` VALUES (11, 2);
 INSERT INTO `system_roles_menus` VALUES (14, 1);
-INSERT INTO `system_roles_menus` VALUES (15, 1);
-INSERT INTO `system_roles_menus` VALUES (15, 2);
 INSERT INTO `system_roles_menus` VALUES (18, 1);
 INSERT INTO `system_roles_menus` VALUES (18, 2);
 INSERT INTO `system_roles_menus` VALUES (21, 1);
@@ -894,8 +892,6 @@ INSERT INTO `system_roles_menus` VALUES (24, 2);
 INSERT INTO `system_roles_menus` VALUES (27, 1);
 INSERT INTO `system_roles_menus` VALUES (27, 2);
 INSERT INTO `system_roles_menus` VALUES (28, 1);
-INSERT INTO `system_roles_menus` VALUES (33, 1);
-INSERT INTO `system_roles_menus` VALUES (33, 2);
 INSERT INTO `system_roles_menus` VALUES (34, 1);
 INSERT INTO `system_roles_menus` VALUES (34, 2);
 INSERT INTO `system_roles_menus` VALUES (35, 1);
@@ -948,6 +944,8 @@ INSERT INTO `system_roles_menus` VALUES (122, 2);
 INSERT INTO `system_roles_menus` VALUES (125, 1);
 INSERT INTO `system_roles_menus` VALUES (126, 1);
 INSERT INTO `system_roles_menus` VALUES (127, 1);
+INSERT INTO `system_roles_menus` VALUES (128, 1);
+INSERT INTO `system_roles_menus` VALUES (129, 1);
 
 -- ----------------------------
 -- Table structure for system_user
