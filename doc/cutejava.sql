@@ -11,7 +11,7 @@
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
 
- Date: 17/07/2025 20:49:05
+ Date: 17/07/2025 22:54:08
 */
 
 SET NAMES utf8mb4;
@@ -628,7 +628,7 @@ CREATE TABLE `system_local_storage`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_local_storage
@@ -662,7 +662,7 @@ CREATE TABLE `system_menu`  (
   UNIQUE INDEX `uniq_title`(`title` ASC) USING BTREE,
   INDEX `idx_pid`(`pid` ASC) USING BTREE,
   INDEX `idx_sys_menu_menu_id`(`menu_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 130 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 131 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
@@ -673,7 +673,7 @@ INSERT INTO `system_menu` VALUES (3, 1, 3, 1, '角色管理', 'Role', 'system/ro
 INSERT INTO `system_menu` VALUES (5, 1, 3, 1, '菜单管理', 'Menu', 'system/menu/index', 5, 'menu', 'menu', b'0', b'0', b'0', 'menu:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (6, 1, 3, 0, '系统监控', NULL, NULL, 11, 'monitor', 'monitor', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (9, 6, 0, 1, 'SQL监控', 'DruidSqlConsole', 'system/druidSql/index', 18, 'sqlMonitor', 'druid-console', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
-INSERT INTO `system_menu` VALUES (10, NULL, 13, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
+INSERT INTO `system_menu` VALUES (10, NULL, 14, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (11, 10, 0, 1, '图标库', 'Icons', 'components/icons/index', 51, 'icon', 'icon', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (14, 36, 0, 1, '邮件工具', 'Email', 'system/email/index', 35, 'email', 'email', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'system/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
@@ -725,6 +725,7 @@ INSERT INTO `system_menu` VALUES (126, 10, 2, 1, '演示:简单表格组件', 'C
 INSERT INTO `system_menu` VALUES (127, 10, 2, 1, '演示:拖拽表格组件', 'CuteDragTableDemo', 'demo/CuteDragTableDemo', 999, 'menu', 'cuteDragTableDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (128, 10, 0, 1, '演示:Markdown编辑器', 'CuteMarkdownDemo', 'demo/CuteMarkdownDemo', 999, 'menu', 'cuteMarkdownDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 10:53:29', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (129, 10, 0, 1, '演示:富文本编辑器', 'CuteRichTextEditorDemo', 'demo/CuteRichTextEditorDemo', 999, 'menu', 'cuteRichTextEditorDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 13:22:21', '2025-07-17 20:48:58');
+INSERT INTO `system_menu` VALUES (130, 10, 0, 1, '演示:文件上传', 'CuteFileUploadDemo', 'demo/CuteFileUploadDemo', 999, 'menu', 'cuteFileUploadDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 21:51:35', '2025-07-17 21:58:07');
 
 -- ----------------------------
 -- Table structure for system_oss_storage
@@ -750,11 +751,12 @@ CREATE TABLE `system_oss_storage`  (
   `object_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '对象路径',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `udx_filemd5`(`file_md5` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'OSS存储' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'OSS存储' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_oss_storage
 -- ----------------------------
+INSERT INTO `system_oss_storage` VALUES (2, 'admin', 'admin', '2025-07-17 21:13:21', '2025-07-17 21:13:21', 'minio', 'http://192.168.100.128:9000', 'cutejava', '7z2500-x64.exe', 1641049, 'exe', '7z2500-x64-20250717091319922', 'exe', '9eeca41aa10ef3c99d7db2ea97160e17', 'http://192.168.100.128:9000/cutejava/20250717/704d5389832a4583a406c97453b03e4a.exe', '704d5389832a4583a406c97453b03e4a', '20250717/704d5389832a4583a406c97453b03e4a.exe');
 
 -- ----------------------------
 -- Table structure for system_quartz_job
@@ -946,6 +948,7 @@ INSERT INTO `system_roles_menus` VALUES (126, 1);
 INSERT INTO `system_roles_menus` VALUES (127, 1);
 INSERT INTO `system_roles_menus` VALUES (128, 1);
 INSERT INTO `system_roles_menus` VALUES (129, 1);
+INSERT INTO `system_roles_menus` VALUES (130, 1);
 
 -- ----------------------------
 -- Table structure for system_user
