@@ -59,6 +59,7 @@ https://github.com/odboy-tianjun/cutejava
 - CuteSimpleTable 简单表格
 - CuteDragTable 支持拖拽的表格
 - CuteFormDialog 支持表单的对话框
+- CuteFormDrawer 支持表单的抽屉
 - CuteRichTextEditor 富文本编辑器
 - CuteOneKeyCopy 一键复制
 - CuteMarkdown Markdown编辑器
