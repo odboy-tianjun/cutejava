@@ -141,7 +141,7 @@ export default {
     getDeptDatas(tree, treeNode, resolve) {
       const params = {
         page: 1,
-        size: 999999,
+        size: 9999999,
         args: { pid: tree.id }
       }
       setTimeout(() => {
@@ -184,7 +184,7 @@ export default {
     getDepts() {
       crudDept.queryDeptList({
         page: 1,
-        size: 999999,
+        size: 9999999,
         args: { enabled: true }
       }).then(res => {
         this.depts = res.content.map(function(obj) {
@@ -200,7 +200,7 @@ export default {
       if (action === LOAD_CHILDREN_OPTIONS) {
         crudDept.queryDeptList({
           page: 1,
-          size: 999999,
+          size: 9999999,
           args: { enabled: true, pid: parentNode.id }
         }).then(res => {
           parentNode.children = res.content.map(function(obj) {

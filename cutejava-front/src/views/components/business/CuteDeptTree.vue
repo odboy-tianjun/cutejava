@@ -43,18 +43,13 @@ export default {
       currentDept: null
     }
   },
-  watch: {
-    // 监听currentDept变量
-    currentDept(newValue) {
-      this.$emit('input', newValue)
-    }
-  },
   methods: {
     getDeptData(node, resolve) {
       const params = {}
       if (typeof node !== 'object') {
         if (node) {
           params['name'] = node
+          this.$emit('search', node)
         }
       } else if (node.level !== 0) {
         params['pid'] = node.data.id
@@ -62,7 +57,7 @@ export default {
       setTimeout(() => {
         queryDeptList({
           page: 1,
-          size: 999999,
+          size: 9999999,
           args: params
         }).then(res => {
           if (resolve) {

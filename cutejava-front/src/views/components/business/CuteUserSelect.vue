@@ -40,12 +40,6 @@ export default {
       options: []
     }
   },
-  watch: {
-    // 监听users变量
-    users(newValue) {
-      this.$emit('input', newValue)
-    }
-  },
   methods: {
     remoteMethod(query) {
       if (query !== '') {
@@ -66,7 +60,6 @@ export default {
     },
     onChange(value) {
       this.$emit('change', value)
-      this.$emit('input', value)
     }
   }
 }

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(dictName) {
   const params = {
     page: 1,
-    size: 999999,
+    size: 9999999,
     args: {
       dictName: dictName
     }

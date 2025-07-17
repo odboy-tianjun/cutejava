@@ -52,24 +52,33 @@ https://github.com/odboy-tianjun/cutejava
 - 存储管理：本地存储、Minio存储
 - 服务监控：监控服务器的负载情况
 
-#### 丰富的自定义组件
+#### 前端基础组件
+
+> 组件所在路径：cutejava-front/src/views/components/dev
 
 - CuteSimpleTable 简单表格
 - CuteDragTable 支持拖拽的表格
 - CuteFormDialog 支持表单的对话框
+- CuteRichTextEditor 富文本编辑器
+- CuteOneKeyCopy 一键复制
+- CuteMarkdown Markdown编辑器
+- CuteJavaEditor Java编辑器（已弃用）
+- CuteYamlEditor Yaml编辑器（已弃用）
+- CuteCodeEditor 多语言编辑器（支持yaml、java、go、swift、dockerfile、groovy、lua、perl、python、ruby、sql、xml、vue）
+
+#### 前端业务组件
+
+> 组件所在路径：cutejava-front/src/views/components/business
+
+- CuteDeptTree 部门树
+- CuteUserSelect 用户多选框
 
 #### 系统模块
 
-- cutejava-framework：系统基础框架，提供核心功能，如：权限、数据权限、异常处理、缓存、工具类、接口限流、接口防重、接口幂等。
-- cutejava-system：系统功能模块，提供用户、角色、菜单、部门、岗位、字典、定时任务、邮件、Minio存储、服务监控等功能
-- cutejava-pipeline：流水线模块，参考阿里云云效，提供流水线功能，可配置流水线任务，并支持任务依赖、任务参数、任务参数校验、任务参数回填。
+- cutejava-framework：系统基础框架。提供核心功能，如：权限、数据权限、异常处理、缓存、工具类、接口限流、接口防重、接口幂等。
+- cutejava-system：系统功能模块。提供用户、角色、菜单、部门、岗位、字典、定时任务、邮件、Minio存储、服务监控等功能
+- cutejava-devops：devops模块，已实现流水线功能。参考阿里云云效，提供流水线功能，可配置流水线任务，并支持任务依赖、任务参数、任务参数校验、任务参数回填。
 
 #### 特别鸣谢
 
-- 感谢 [PanJiaChen](https://github.com/PanJiaChen/vue-element-admin) 大佬提供的前端模板
-
-- 感谢 [Moxun](https://github.com/moxun1639) 大佬提供的前端 Curd 通用组件
-
-- 感谢 [zhy6599](https://gitee.com/zhy6599) 大佬提供的后端运维管理相关功能
-
-- 感谢 [j.yao.SUSE](https://github.com/everhopingandwaiting) 大佬提供的匿名接口与Redis限流等功能
+- 感谢 [elunez](https://github.com/elunez/eladmin-mp) 大佬提供的基础框架

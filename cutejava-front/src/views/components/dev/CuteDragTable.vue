@@ -49,11 +49,6 @@ export default {
       required: true,
       default: null
     },
-    dataSource: {
-      type: Array,
-      required: false,
-      default: null
-    },
     fetch: {
       type: Function,
       required: false,
@@ -94,7 +89,7 @@ export default {
         columns: this.columns && this.columns.length > 0 ? this.columns : [],
         operateColumn: this.operateColumn,
         fetchUrl: null,
-        dataSource: this.dataSource && this.dataSource.length > 0 ? this.dataSource : [],
+        dataSource: [],
         onPageChange: (currentPage, pageSize) => {
           this.pageProps.current = currentPage
           this.pageProps.pageSize = pageSize
@@ -114,11 +109,6 @@ export default {
       this.initDragTable()
     },
     async initData() {
-      // 以dataSource属性为准
-      if (this.dataSource) {
-        this.crud.dataSource = this.dataSource
-        return
-      }
       let params = {}
       // 自定义请求参数
       if (this.paramsTransform) {
@@ -135,7 +125,7 @@ export default {
           if (this.responseTransform) {
             return this.responseTransform(response)
           }
-          if (response && response.totalElements && response.content) {
+          if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
             this.pageProps.total = response.totalElements
             this.crud.dataSource = response.content
           }
