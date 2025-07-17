@@ -40,9 +40,6 @@
       width="500px"
     >
       <el-form ref="form" :model="form" size="small" label-width="80px">
-        <el-form-item label="文件名">
-          <el-input v-model="form.name" style="width: 370px;" />
-        </el-form-item>
         <!--   上传文件   -->
         <el-form-item v-if="crud.status.add" label="上传">
           <el-upload
@@ -53,7 +50,7 @@
             :headers="headers"
             :on-success="handleSuccess"
             :on-error="handleError"
-            :action="ossUploadApi + '?name=' + form.name"
+            :action="ossUploadApi"
           >
             <div class="my-upload"><i class="el-icon-upload" /> 添加文件</div>
             <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过100M</div>
@@ -106,7 +103,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 import Clipboard from 'clipboard'
 import { Message } from 'element-ui'
 
-const defaultForm = { id: null, name: '' }
+const defaultForm = { id: null }
 export default {
   components: { pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
@@ -145,7 +142,6 @@ export default {
         this.loading = false
         this.$message.error('上传文件大小不能超过 100MB')
       }
-      this.form.name = file.name
       return isLt2M
     },
     handleSuccess(response, file, fileList) {

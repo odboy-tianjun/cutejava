@@ -72,6 +72,8 @@ https://github.com/odboy-tianjun/cutejava
 
 - CuteDeptTree 部门树
 - CuteUserSelect 用户多选框
+- CuteFileUpload 上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
+- CuteFileDragUpload 支持拖拽上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
 
 #### 系统模块
 

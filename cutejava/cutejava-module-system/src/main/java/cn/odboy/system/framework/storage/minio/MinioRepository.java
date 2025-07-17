@@ -11,7 +11,6 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.OSSConfigModel;
 import cn.odboy.framework.properties.model.StorageOSSModel;
-import cn.odboy.framework.server.core.FileUploadPathHelper;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.util.CsDateUtil;
 import cn.odboy.util.FileUtil;
@@ -38,7 +37,6 @@ import java.util.List;
 public class MinioRepository {
     private final AppProperties properties;
     private final MinioClient minioClient;
-    private final FileUploadPathHelper fileUploadPathHelper;
 
     /**
      * 检查存储bucket是否存在
@@ -114,27 +112,19 @@ public class MinioRepository {
     /**
      * 文件上传
      *
-     * @param file 文件
+     * @param tempFile         文件
+     * @param originalFilename 源文件名
+     * @param fileSize         文件大小
+     * @param contentType      文件类型
+     * @param md5              文件md5
      * @return String 上传后的文件名，上传失败返回 null
      */
-    public SystemOssStorageTb upload(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        if (StrUtil.isBlank(originalFilename)) {
-            throw new BadRequestException("文件名不能为空");
-        }
-
+    public SystemOssStorageTb upload(File tempFile, String originalFilename, long fileSize, String contentType, String md5) {
         StorageOSSModel ossConfig = properties.getOss();
         OSSConfigModel ossMinioConfig = ossConfig.getMinio();
-        long fileSize = file.getSize();
-        FileUtil.checkSize(ossConfig.getMaxSize(), fileSize);
-        String contentType = file.getContentType();
-
-        // 按天分组
-        String nowDateStr = CsDateUtil.getNowDateStr();
-        File tempFile = FileUtil.upload(file, fileUploadPathHelper.getPath() + nowDateStr + File.separator);
-        if (tempFile == null) {
-            throw new BadRequestException("上传失败");
-        }
+        String type = FileTypeUtil.getType(tempFile);
+        String prefix = FileUtil.getPrefix(tempFile);
+        String suffix = FileUtil.getSuffix(tempFile);
 
         String fileCode = IdUtil.fastSimpleUUID();
         String fileName = fileCode + getFileExtension(originalFilename);
@@ -148,10 +138,10 @@ public class MinioRepository {
         systemOssStorageTb.setBucketName(StrUtil.trim(ossMinioConfig.getBucketName()));
         systemOssStorageTb.setFileName(originalFilename);
         systemOssStorageTb.setFileSize(fileSize);
-        systemOssStorageTb.setFileMime(FileTypeUtil.getType(tempFile));
-        systemOssStorageTb.setFilePrefix(FileUtil.getPrefix(tempFile));
-        systemOssStorageTb.setFileSuffix(FileUtil.getSuffix(tempFile));
-        systemOssStorageTb.setFileMd5(FileUtil.getMd5(tempFile));
+        systemOssStorageTb.setFileMime(type);
+        systemOssStorageTb.setFilePrefix(prefix);
+        systemOssStorageTb.setFileSuffix(suffix);
+        systemOssStorageTb.setFileMd5(md5);
         systemOssStorageTb.setFileUrl(fileUrl);
         systemOssStorageTb.setFileCode(fileCode);
         systemOssStorageTb.setObjectName(objectName);
@@ -276,9 +266,12 @@ public class MinioRepository {
             return null;
         }
         try {
-            GetPresignedObjectUrlArgs presignedUrlArgs = GetPresignedObjectUrlArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fullFileName).method(Method.GET)
-                    // 设置 URL 过期时间为 1 小时
-                    .expiry(3600).build();
+            GetPresignedObjectUrlArgs presignedUrlArgs = GetPresignedObjectUrlArgs.builder()
+                    .bucket(properties.getOss().getMinio().getBucketName())
+                    .object(fullFileName)
+                    .method(Method.GET)
+                    // 设置 URL 过期时间为 7 天, 最大 7 天, 别挣扎了
+                    .expiry(3600 * 24 * 7).build();
             String url = minioClient.getPresignedObjectUrl(presignedUrlArgs);
             log.info("生成预签名 URL 成功，fileName: {}, url: {}", fullFileName, url);
             return url;

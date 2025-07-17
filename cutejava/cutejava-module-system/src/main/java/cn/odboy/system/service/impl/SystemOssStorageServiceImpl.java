@@ -1,14 +1,19 @@
 package cn.odboy.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
+import cn.odboy.framework.properties.model.StorageOSSModel;
+import cn.odboy.framework.server.core.FileUploadPathHelper;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemOssStorageMapper;
 import cn.odboy.system.framework.storage.minio.MinioRepository;
 import cn.odboy.system.service.SystemOssStorageService;
+import cn.odboy.util.CsDateUtil;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,6 +44,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb> implements SystemOssStorageService {
     private final MinioRepository minioRepository;
+    private final AppProperties properties;
+    private final FileUploadPathHelper fileUploadPathHelper;
 
     @Override
     public CsResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
@@ -77,12 +85,36 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void uploadFile(String name, MultipartFile file) {
-        SystemOssStorageTb storageTb = minioRepository.upload(file);
+    public String uploadFile(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (StrUtil.isBlank(originalFilename)) {
+            throw new BadRequestException("文件名不能为空");
+        }
+        StorageOSSModel ossConfig = properties.getOss();
+        long fileSize = file.getSize();
+        String contentType = file.getContentType();
+        FileUtil.checkSize(ossConfig.getMaxSize(), fileSize);
+        // 按天分组
+        String nowDateStr = CsDateUtil.getNowDateStr();
+        // 上传到本地临时目录
+        File tempFile = FileUtil.upload(file, fileUploadPathHelper.getPath() + nowDateStr + File.separator);
+        if (tempFile == null) {
+            throw new BadRequestException("上传失败");
+        }
+        // 校验文件md5, 看是否已存在云端（不确定, 可能云端已经删除, 但是正常来说云端是不允许私自删除的, 所以这里忽略云端不存在的情况）
+        String md5 = FileUtil.getMd5(tempFile);
+        SystemOssStorageTb systemOssStorageTb = getByMd5(md5);
+        if (systemOssStorageTb != null) {
+            // 重新生成7天链接
+            return minioRepository.generatePreviewUrl(systemOssStorageTb.getObjectName());
+        }
+        // 上传到OSS
+        SystemOssStorageTb storageTb = minioRepository.upload(tempFile, originalFilename, fileSize, contentType, md5);
         if (storageTb == null) {
             throw new BadRequestException("文件上传失败");
         }
         save(storageTb);
+        return minioRepository.generatePreviewUrl(storageTb.getObjectName());
     }
 
     /**
@@ -97,5 +129,10 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
             minioRepository.remove(storage.getObjectName());
             removeById(storage);
         }
+    }
+
+    @Override
+    public SystemOssStorageTb getByMd5(String md5) {
+        return lambdaQuery().eq(SystemOssStorageTb::getFileMd5, md5).one();
     }
 }
