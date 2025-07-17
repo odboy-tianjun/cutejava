@@ -27,7 +27,9 @@ public interface SystemOssStorageService extends IService<SystemOssStorageTb> {
 
     void exportOssStorageExcel(List<SystemOssStorageVo> list, HttpServletResponse response) throws IOException;
 
-    void uploadFile(String name, MultipartFile file);
+    String uploadFile(MultipartFile file);
 
     void removeFileByIds(Long[] ids);
+
+    SystemOssStorageTb getByMd5(String md5);
 }

@@ -49,9 +49,9 @@ public class SystemOssStorageController {
     @ApiOperation("上传文件")
     @PostMapping(value = "/uploadFile")
     @PreAuthorize("@el.check('storage:add')")
-    public ResponseEntity<Void> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
-        systemOssStorageService.uploadFile(name, file);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        String fileUrl = systemOssStorageService.uploadFile(file);
+        return ResponseEntity.ok(fileUrl);
     }
 
     @ApiOperation("多选删除")
