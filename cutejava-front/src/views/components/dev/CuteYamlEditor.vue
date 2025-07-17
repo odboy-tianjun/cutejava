@@ -1,3 +1,7 @@
+<!--Yaml编辑器 基于-->
+<!--<a href="https://github.com/codemirror/CodeMirror" target="_blank">CodeMirror</a>，-->
+<!--主题预览地址 <a href="https://codemirror.net/demo/theme.html#idea" target="_blank">Theme</a>-->
+<!--</p>-->
 <template>
   <textarea ref="textarea" />
 </template>
@@ -6,18 +10,21 @@
 import CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
 // 替换主题这里需修改名称
-import 'codemirror/theme/idea.css'
+// 主题预览地址 https://blog.csdn.net/qq_41694291/article/details/106429772
+import 'codemirror/theme/darcula.css'
 import 'codemirror/mode/yaml/yaml'
 export default {
+  name: 'CuteYamlEditor',
   props: {
-    value: {
+    content: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     height: {
       type: String,
       required: false,
-      default: '450px'
+      default: '500px'
     },
     readOnly: {
       type: Boolean,
@@ -31,40 +38,49 @@ export default {
     }
   },
   watch: {
-    value(value) {
+    content(newVal, oldVal) {
       const editorValue = this.editor.getValue()
-      if (value !== editorValue) {
-        this.editor.setValue(this.value)
+      if (newVal !== editorValue) {
+        this.editor.setValue(newVal)
       }
     },
-    height(newHeight) {
-      this.editor.setSize('auto', newHeight)
+    height(newVal, oldVal) {
+      this.editor.setSize('auto', newVal)
     }
   },
   mounted() {
     this.editor = CodeMirror.fromTextArea(this.$refs.textarea, {
       mode: 'text/x-yaml',
+      autoRefresh: true,
       lineNumbers: true,
       lint: true,
       lineWrapping: true,
       tabSize: 2,
-      cursorHeight: 0.9,
+      cursorHeight: 1,
       // 替换主题这里需修改名称
-      theme: 'idea'
+      theme: 'darcula'
     })
     this.editor.setSize('auto', this.height)
-    if (this.value) {
-      this.editor.setValue(this.value)
+    if (this.content) {
+      this.editor.setValue(this.content)
     }
     this.editor.setOption('readOnly', this.readOnly)
     this.editor.on('change', cm => {
-      this.$emit('changed', cm.getValue())
-      this.$emit('input', cm.getValue())
+      this.$emit('change', cm.getValue())
     })
   },
   methods: {
     getValue() {
+      if (this.editor == null) {
+        return ''
+      }
       return this.editor.getValue()
+    },
+    setValue(val) {
+      if (this.editor == null) {
+        return
+      }
+      this.editor.setValue(val)
     }
   }
 }

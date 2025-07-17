@@ -202,7 +202,7 @@ export default {
     queryMenuByArgs(tree, treeNode, resolve) {
       const params = {
         page: 1,
-        size: 999999,
+        size: 9999999,
         args: { pid: tree.id }
       }
       setTimeout(() => {

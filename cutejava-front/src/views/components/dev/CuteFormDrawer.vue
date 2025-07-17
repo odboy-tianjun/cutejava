@@ -1,10 +1,13 @@
 <template>
-  <el-dialog
+  <el-drawer
     :title="title"
     :visible.sync="visible"
-    :width="width"
-    :fullscreen="fullscreen"
+    :size="width"
     :before-close="beforeClose"
+    :append-to-body="true"
+    :close-on-press-escape="false"
+    :destroy-on-close="true"
+    :show-close="false"
   >
     <div class="container-form">
       <el-form ref="form" :model="form.model" :rules="form.rules">
@@ -15,16 +18,15 @@
     <el-divider />
     <div class="dialog-footer" style="padding-right: 30px;text-align: right">
       <el-button type="danger" @click="hidden">取 消</el-button>
-      <!--<el-button @click="resetForm('form')">重 置</el-button>-->
       <el-button type="primary" @click="submitForm('form')">提 交</el-button>
     </div>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>
 
 export default {
-  name: 'CuteFormDialog',
+  name: 'CuteFormDrawer',
   props: {
     title: {
       type: String,
@@ -35,11 +37,6 @@ export default {
       type: String,
       required: false,
       default: '40%'
-    },
-    fullscreen: {
-      type: Boolean,
-      required: false,
-      default: false
     },
     form: {
       type: Object,
@@ -82,6 +79,7 @@ export default {
 .container-form {
   overflow-y: scroll; /* 启用滚动 */
   scrollbar-width: none; /* Firefox */
+  height: 88%;
   padding-right: 20px;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
