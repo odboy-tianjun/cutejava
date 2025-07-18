@@ -11,7 +11,7 @@
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
 
- Date: 17/07/2025 23:06:56
+ Date: 18/07/2025 20:23:43
 */
 
 SET NAMES utf8mb4;
@@ -662,7 +662,7 @@ CREATE TABLE `system_menu`  (
   UNIQUE INDEX `uniq_title`(`title` ASC) USING BTREE,
   INDEX `idx_pid`(`pid` ASC) USING BTREE,
   INDEX `idx_sys_menu_menu_id`(`menu_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 131 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
@@ -673,7 +673,7 @@ INSERT INTO `system_menu` VALUES (3, 1, 3, 1, '角色管理', 'Role', 'system/ro
 INSERT INTO `system_menu` VALUES (5, 1, 3, 1, '菜单管理', 'Menu', 'system/menu/index', 5, 'menu', 'menu', b'0', b'0', b'0', 'menu:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (6, 1, 3, 0, '系统监控', NULL, NULL, 11, 'monitor', 'monitor', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (9, 6, 0, 1, 'SQL监控', 'DruidSqlConsole', 'system/druidSql/index', 18, 'sqlMonitor', 'druid-console', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
-INSERT INTO `system_menu` VALUES (10, NULL, 14, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
+INSERT INTO `system_menu` VALUES (10, NULL, 16, 0, '组件管理', NULL, NULL, 50, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (11, 10, 0, 1, '图标库', 'Icons', 'components/icons/index', 51, 'icon', 'icon', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (14, 36, 0, 1, '邮件工具', 'Email', 'system/email/index', 35, 'email', 'email', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'system/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', 'admin', 'admin', '2025-07-16 21:12:41', '2025-07-17 20:48:58');
@@ -726,6 +726,8 @@ INSERT INTO `system_menu` VALUES (127, 10, 2, 1, '演示:拖拽表格组件', 'C
 INSERT INTO `system_menu` VALUES (128, 10, 0, 1, '演示:Markdown编辑器', 'CuteMarkdownDemo', 'componentsDemo/CuteMarkdownDemo', 999, 'menu', 'cuteMarkdownDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 10:53:29', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (129, 10, 0, 1, '演示:富文本编辑器', 'CuteRichTextEditorDemo', 'componentsDemo/CuteRichTextEditorDemo', 999, 'menu', 'cuteRichTextEditorDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 13:22:21', '2025-07-17 20:48:58');
 INSERT INTO `system_menu` VALUES (130, 10, 0, 1, '演示:文件上传', 'CuteFileUploadDemo', 'componentsDemo/CuteFileUploadDemo', 999, 'menu', 'cuteFileUploadDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-17 21:51:35', '2025-07-17 21:58:07');
+INSERT INTO `system_menu` VALUES (131, 10, 0, 1, '演示:流水线节点', 'CutePipelineNodeDemo', 'componentsDemo/CutePipelineNodeDemo.vue', 999, 'menu', 'cutePipelineNodeDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-18 10:57:29', '2025-07-18 10:57:29');
+INSERT INTO `system_menu` VALUES (132, 10, 0, 1, '演示:文件拖拽上传', 'CuteFileDragUploadDemo', 'componentsDemo/CuteFileDragUploadDemo', 999, 'menu', 'cuteFileDragUploadDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2025-07-18 20:20:20', '2025-07-18 20:20:20');
 
 -- ----------------------------
 -- Table structure for system_oss_storage
@@ -949,6 +951,8 @@ INSERT INTO `system_roles_menus` VALUES (127, 1);
 INSERT INTO `system_roles_menus` VALUES (128, 1);
 INSERT INTO `system_roles_menus` VALUES (129, 1);
 INSERT INTO `system_roles_menus` VALUES (130, 1);
+INSERT INTO `system_roles_menus` VALUES (131, 1);
+INSERT INTO `system_roles_menus` VALUES (132, 1);
 
 -- ----------------------------
 -- Table structure for system_user
