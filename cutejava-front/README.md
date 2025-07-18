@@ -6,19 +6,6 @@
 
 模板文档： [https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
 
-#### 集成、自定义组件
-- echart 图表
-- wangEditor 富文本
-- MavonEditor Markdown编辑器
-- CodeMirror Yaml编辑器
-- CodeMirror Java代码编辑器
-- 自定义业务组件(用户下拉选择框、部门下拉选择框)
-- 滚动数字
-- 表格拖拽
-- 面板分割
-- WebSocket
-- 快速复制
-
 ## 快速开始
 
 ### 环境要求
