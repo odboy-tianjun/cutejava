@@ -2,6 +2,8 @@
  * Created by PanJiaChen on 16/11/18.
  */
 
+import dayjs from 'dayjs'
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -373,3 +375,11 @@ export const type = (value) => Object.prototype.toString.call(value).slice(8, -1
 
 // 深拷贝对象
 export const deepClone = (obj) => JSON.parse(JSON.stringify(obj))
+
+// 格式化日期时间字符串
+export const formatDateTimeStr = (date) => {
+  if (date) {
+    return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+  }
+  return ''
+}

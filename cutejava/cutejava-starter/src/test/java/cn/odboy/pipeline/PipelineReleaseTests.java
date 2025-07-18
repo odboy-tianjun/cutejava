@@ -57,7 +57,7 @@ public class PipelineReleaseTests {
         pipelineInstanceTb.setType(pipelineTemplateTb.getType());
         pipelineInstanceTb.setAppName(appName);
         pipelineInstanceTb.setEnv(envCode);
-        pipelineInstanceTb.setStatus(PipelineStatusEnum.WAIT.getCode());
+        pipelineInstanceTb.setStatus(PipelineStatusEnum.PENDING.getCode());
         pipelineInstanceTb.setCurrentNode(null);
         pipelineInstanceTb.setCurrentNodeStatus(null);
         pipelineInstanceTb.setContext(JSON.toJSONString(context));

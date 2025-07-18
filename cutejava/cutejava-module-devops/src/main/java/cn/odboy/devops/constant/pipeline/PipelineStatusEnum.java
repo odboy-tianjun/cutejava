@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PipelineStatusEnum {
-    WAIT("wait", "#C0C4CC", "未开始"),
+    PENDING("pending", "#C0C4CC", "未开始"),
     RUNNING("running", "#409EFF", "运行中"),
     SUCCESS("success", "#67C23A", "执行成功"),
     FAIL("fail", "#F56C6C", "执行失败");
