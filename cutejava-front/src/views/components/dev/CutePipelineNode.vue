@@ -55,7 +55,7 @@
     </div>
     <div class="box-current-node">
       <a @click="onCurrentNodeClick">
-        {{ templateData.currentNode }}
+        {{ templateData.currentNodeMsg }}
       </a>
     </div>
     <el-row>

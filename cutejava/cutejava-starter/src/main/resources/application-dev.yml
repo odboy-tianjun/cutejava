@@ -49,6 +49,14 @@ spring:
       repositories:
         # 是否启用Redis存储(关闭防止出现 Multiple Spring Data modules found, entering strict repository configuration mode)
         enabled: false
+  #    mongodb:
+  #      auto-index-creation: true
+  #      host: 192.168.100.128    #指定MongoDB服务地址
+  #      port: 27017     #指定端口，默认就为27017
+  #      database: admin   #指定使用的数据库(集合)
+  #      authentication-database: admin   # 登录认证的逻辑库名
+  #      username: admin  #用户名
+  #      password: 123456  #密码
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
@@ -140,7 +148,7 @@ mybatis-plus:
   check-config-location: true
   # MyBatis Mapper 所对应的 XML 文件位置
   # Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
-  mapper-locations: classpath*:/mapper/**/*.xml
+  mapper-locations: classpath*:mapper/**/*.xml
   # MyBatis-Plus 全局策略中的 DB 策略配置
   global-config:
     db-config:
@@ -225,3 +233,21 @@ app:
 #logging:
 #  level:
 #    root: debug
+mongo-plus:
+  data:
+    mongodb:
+      database: cutejava
+      connectTimeoutMS: 50000
+      host: 192.168.100.128
+      port: 27017
+      retry-writes: false
+      username: cutejava
+      password: 123456
+      authentication-database: cutejava
+  log: true
+  pretty: true
+  configuration:
+    field:
+      ignoring-null: false
+    auto-create-index: true
+    auto-convert-object-id: true

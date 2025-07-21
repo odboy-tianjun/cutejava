@@ -163,7 +163,7 @@ export default {
           createTime: '2025-07-17 21:12:01',
           updateTime: '2025-07-17 21:13:01',
           startTime: '2025-07-17 21:13:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -176,7 +176,7 @@ export default {
           createTime: '2025-07-17 21:13:01',
           updateTime: '2025-07-17 21:18:01',
           startTime: '2025-07-17 21:13:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -193,7 +193,7 @@ export default {
           createTime: '2025-07-17 21:18:01',
           updateTime: '2025-07-17 21:28:01',
           startTime: '2025-07-17 21:18:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -210,7 +210,7 @@ export default {
           createTime: '2025-07-17 21:28:01',
           updateTime: '2025-07-17 21:28:21',
           startTime: '2025-07-17 21:28:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -237,7 +237,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: '2025-07-17 21:28:21',
-          currentNode: '等待人工审批',
+          currentNodeMsg: '等待人工审批',
           currentNodeStatus: 'running',
           status: 'running'
         },
@@ -258,7 +258,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         },
@@ -277,7 +277,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         },
@@ -290,7 +290,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         }
@@ -304,7 +304,7 @@ export default {
           createTime: '2025-07-17 21:12:01',
           updateTime: '2025-07-17 21:13:01',
           startTime: '2025-07-17 21:13:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -317,7 +317,7 @@ export default {
           createTime: '2025-07-17 21:13:01',
           updateTime: '2025-07-17 21:18:01',
           startTime: '2025-07-17 21:13:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -334,7 +334,7 @@ export default {
           createTime: '2025-07-17 21:18:01',
           updateTime: '2025-07-17 21:28:01',
           startTime: '2025-07-17 21:18:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -351,7 +351,7 @@ export default {
           createTime: '2025-07-17 21:28:01',
           updateTime: '2025-07-17 21:28:21',
           startTime: '2025-07-17 21:28:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -378,7 +378,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:30:21',
           startTime: '2025-07-17 21:28:21',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -399,7 +399,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:58:21',
           startTime: '2025-07-17 21:30:21',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -418,7 +418,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 22:10:21',
           startTime: '2025-07-17 21:58:21',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -431,7 +431,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 22:10:58',
           startTime: '2025-07-17 22:10:21',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         }
@@ -445,7 +445,7 @@ export default {
           createTime: '2025-07-17 21:12:01',
           updateTime: '2025-07-17 21:13:01',
           startTime: '2025-07-17 21:13:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -458,7 +458,7 @@ export default {
           createTime: '2025-07-17 21:13:01',
           updateTime: '2025-07-17 21:18:01',
           startTime: '2025-07-17 21:13:01',
-          currentNode: '执行成功',
+          currentNodeMsg: '执行成功',
           currentNodeStatus: 'success',
           status: 'success'
         },
@@ -475,7 +475,7 @@ export default {
           createTime: '2025-07-17 21:18:01',
           updateTime: '2025-07-17 21:28:01',
           startTime: '2025-07-17 21:18:01',
-          currentNode: '执行失败',
+          currentNodeMsg: '执行失败',
           currentNodeStatus: 'fail',
           status: 'fail'
         },
@@ -492,7 +492,7 @@ export default {
           createTime: '2025-07-17 21:28:01',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         },
@@ -519,7 +519,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         },
@@ -540,7 +540,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         },
@@ -559,7 +559,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         },
@@ -572,7 +572,7 @@ export default {
           createTime: '2025-07-17 21:28:21',
           updateTime: '2025-07-17 21:28:21',
           startTime: null,
-          currentNode: '待执行',
+          currentNodeMsg: '待执行',
           currentNodeStatus: 'pending',
           status: 'pending'
         }

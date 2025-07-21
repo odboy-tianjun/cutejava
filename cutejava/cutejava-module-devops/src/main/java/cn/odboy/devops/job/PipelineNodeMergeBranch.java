@@ -14,8 +14,8 @@ import org.quartz.JobDataMap;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_init")
-public class PipelineNodeInitJob implements PipelineNodeJobExecutor {
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_merge_branch")
+public class PipelineNodeMergeBranch implements PipelineNodeJobExecutor {
     private final PipelineTemplateService pipelineTemplateService;
     private final PipelineInstanceService pipelineInstanceService;
     private final PipelineInstanceNodeService pipelineInstanceNodeService;

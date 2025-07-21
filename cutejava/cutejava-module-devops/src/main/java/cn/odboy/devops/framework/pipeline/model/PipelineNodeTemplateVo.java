@@ -44,9 +44,9 @@ public class PipelineNodeTemplateVo extends CsObject {
     /**
      * 默认参数
      */
-    private Map<String, String> parameters = new HashMap<>();
+    private Map<String, Object> parameters = new HashMap<>();
     /**
      * 流水线节点控制按钮
      */
-    private List<PipelineNodeTemplateButtonVo> buttons = new ArrayList<>();
+    private List<PipelineNodeOperateButtonVo> buttons = new ArrayList<>();
 }
