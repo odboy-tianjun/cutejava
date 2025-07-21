@@ -90,3 +90,4 @@ https://github.com/odboy-tianjun/cutejava
 
 - 感谢 [elunez](https://github.com/elunez/eladmin-mp) 大佬提供的基础框架
 - 感谢 [aizuda](https://mongoplus.com/) 大佬提供的Mongodb框架
+  - 建表参考 'cutejava/doc/mongodb.md'
