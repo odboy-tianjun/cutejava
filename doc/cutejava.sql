@@ -11,7 +11,7 @@
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
 
- Date: 18/07/2025 20:23:43
+ Date: 21/07/2025 23:48:13
 */
 
 SET NAMES utf8mb4;
@@ -125,46 +125,32 @@ INSERT INTO `devops_kubernetes_cluster_config` VALUES (3, 'online', 'online', 1,
 -- ----------------------------
 DROP TABLE IF EXISTS `pipeline_instance`;
 CREATE TABLE `pipeline_instance`  (
-  `pipeline_template_id` bigint NOT NULL COMMENT '流水线模板id',
-  `pipeline_instance_name` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线实例名称',
-  `pipeline_instance_id` bigint NOT NULL COMMENT '流水线实例id',
+  `instance_id` bigint NOT NULL COMMENT '流水线实例id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
   `update_time` datetime NOT NULL COMMENT '更新时间',
-  `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线模板类型',
-  `app_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用名称',
+  `instance_name` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线实例名称',
   `env` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '环境编码',
+  `context_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '上下文名称',
+  `context_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '上下文参数，这里指QuartzJobDataMap',
+  `current_node` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '流水线实例当前节点code',
+  `current_node_status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '流水线实例当前节点状态',
   `status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线实例状态',
-  `current_node` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '流水线实例当前节点code',
-  `current_node_status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '流水线实例当前节点状态',
-  `context` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '输入参数',
-  `pipeline_template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线模板',
-  UNIQUE INDEX `udx_pipeline_instance_id`(`pipeline_instance_id` ASC) USING BTREE
+  `template_id` bigint NOT NULL COMMENT '流水线模板id',
+  `template_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线模板类型',
+  `template_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线模板',
+  PRIMARY KEY (`instance_id`) USING BTREE,
+  UNIQUE INDEX `udx_pipeline_instance_id`(`instance_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '流水线实例' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of pipeline_instance
 -- ----------------------------
-
--- ----------------------------
--- Table structure for pipeline_instance_node_detail
--- ----------------------------
-DROP TABLE IF EXISTS `pipeline_instance_node_detail`;
-CREATE TABLE `pipeline_instance_node_detail`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `pipeline_instance_id` bigint NOT NULL COMMENT '流水线实例id',
-  `start_time` datetime NOT NULL COMMENT '开始时间',
-  `node_index` int NOT NULL COMMENT '节点索引',
-  `node_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '节点编码',
-  `step_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '步骤说明',
-  `step_status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '步骤状态',
-  `step_msg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常明细',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '流水线实例节点明细' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of pipeline_instance_node_detail
--- ----------------------------
+INSERT INTO `pipeline_instance` VALUES (1947317102650097664, '2025-07-21 23:25:51', 'System', '2025-07-21 23:25:51', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
+INSERT INTO `pipeline_instance` VALUES (1947317268257996800, '2025-07-21 23:26:31', 'System', '2025-07-21 23:26:31', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
+INSERT INTO `pipeline_instance` VALUES (1947317337031999488, '2025-07-21 23:26:47', 'System', '2025-07-21 23:26:47', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
+INSERT INTO `pipeline_instance` VALUES (1947319567210639360, '2025-07-21 23:35:39', 'System', '2025-07-21 23:35:39', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
+INSERT INTO `pipeline_instance` VALUES (1947319638933237760, '2025-07-21 23:35:56', 'System', '2025-07-21 23:35:56', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
 
 -- ----------------------------
 -- Table structure for pipeline_template
@@ -628,7 +614,7 @@ CREATE TABLE `system_local_storage`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_local_storage
@@ -807,7 +793,7 @@ CREATE TABLE `system_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常详情',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_quartz_log
@@ -836,7 +822,7 @@ CREATE TABLE `system_role`  (
 -- ----------------------------
 -- Records of system_role
 -- ----------------------------
-INSERT INTO `system_role` VALUES (1, '超级管理员', 1, '666', '全部', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
+INSERT INTO `system_role` VALUES (1, '超级管理员', 1, '6666', '全部', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 INSERT INTO `system_role` VALUES (2, '普通用户', 2, '-', '本级', 'admin', 'admin', '2025-01-05 00:00:00', '2025-01-05 00:00:00');
 
 -- ----------------------------
