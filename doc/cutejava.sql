@@ -11,7 +11,7 @@
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
 
- Date: 21/07/2025 23:48:13
+ Date: 22/07/2025 23:17:57
 */
 
 SET NAMES utf8mb4;
@@ -146,11 +146,6 @@ CREATE TABLE `pipeline_instance`  (
 -- ----------------------------
 -- Records of pipeline_instance
 -- ----------------------------
-INSERT INTO `pipeline_instance` VALUES (1947317102650097664, '2025-07-21 23:25:51', 'System', '2025-07-21 23:25:51', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
-INSERT INTO `pipeline_instance` VALUES (1947317268257996800, '2025-07-21 23:26:31', 'System', '2025-07-21 23:26:31', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
-INSERT INTO `pipeline_instance` VALUES (1947317337031999488, '2025-07-21 23:26:47', 'System', '2025-07-21 23:26:47', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
-INSERT INTO `pipeline_instance` VALUES (1947319567210639360, '2025-07-21 23:35:39', 'System', '2025-07-21 23:35:39', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
-INSERT INTO `pipeline_instance` VALUES (1947319638933237760, '2025-07-21 23:35:56', 'System', '2025-07-21 23:35:56', '流水线测试', 'daily', 'cuteops', NULL, 'node_deploy_java', 'success', 'success', 4, 'backend', '[{\n		\"code\": \"node_init\",\n		\"type\": \"service\",\n		\"name\": \"初始化\"\n	},\n	{\n		\"code\": \"node_merge_branch\",\n		\"type\": \"service\",\n		\"name\": \"合并代码\",\n		\"click\": \"true\",\n		\"retry\": \"true\"\n	},\n	{\n		\"code\": \"node_build_java\",\n		\"type\": \"service\",\n		\"name\": \"构建\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"detailType\": \"gitlab\",\n		\"parameters\": {\n			\"pipeline\": \"pipeline-backend\",\n			\"jdkVersion\": \"jdk11\"\n		}\n	},\n	{\n		\"code\": \"node_deploy_java\",\n		\"type\": \"service\",\n		\"name\": \"部署\",\n		\"click\": \"true\",\n		\"retry\": \"true\",\n		\"buttons\": [{\n			\"type\": \"link\",\n			\"title\": \"查看部署详情\",\n			\"code\": \"success\",\n			\"parameters\": {\n				\"isBlank\": \"true\"\n			}\n		}]\n	}\n]');
 
 -- ----------------------------
 -- Table structure for pipeline_template
@@ -614,7 +609,7 @@ CREATE TABLE `system_local_storage`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_local_storage
@@ -793,7 +788,7 @@ CREATE TABLE `system_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常详情',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_quartz_log
