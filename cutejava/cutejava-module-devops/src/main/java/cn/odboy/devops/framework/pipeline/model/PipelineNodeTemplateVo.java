@@ -20,33 +20,33 @@ public class PipelineNodeTemplateVo extends CsObject {
     /**
      * 业务编码
      */
-    private String code;
+    protected String code;
     /**
      * 业务类型（service:系统内置服务 rpc:远程调用）
      */
-    private String type;
+    protected String type;
     /**
      * 业务名称
      */
-    private String name;
+    protected String name;
     /**
      * 是否可点击
      */
-    private Boolean click = false;
+    protected Boolean click = false;
     /**
      * 是否可重试
      */
-    private Boolean retry = false;
+    protected Boolean retry = false;
     /**
      * 是否可点击：点击展示详情，详情内容类型
      */
-    private String detailType = "";
+    protected String detailType = "";
     /**
      * 默认参数
      */
-    private Map<String, Object> parameters = new HashMap<>();
+    protected Map<String, Object> parameters = new HashMap<>();
     /**
      * 流水线节点控制按钮
      */
-    private List<PipelineNodeOperateButtonVo> buttons = new ArrayList<>();
+    protected List<PipelineNodeOperateButtonVo> buttons = new ArrayList<>();
 }

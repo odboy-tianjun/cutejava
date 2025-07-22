@@ -16,7 +16,6 @@ import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +27,11 @@ import java.util.stream.Collectors;
 
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class SystemMenuService {
     private final SystemMenuMapper systemMenuMapper;
     private final SystemRoleMenuMapper systemRoleMenuMapper;
     private final SystemRoleService systemRoleService;
-    private final SystemMenuService systemMenuService;
 
     private static final String YES_STR = "是";
     private static final String NO_STR = "否";
@@ -65,7 +63,7 @@ public class SystemMenuService {
         // 计算子节点数目
         resources.setSubCount(0);
         // 更新父节点菜单数目
-        systemMenuService.updateMenuSubCnt(resources.getPid());
+        this.updateMenuSubCnt(resources.getPid());
     }
 
     /**
@@ -122,8 +120,8 @@ public class SystemMenuService {
         menu.setUpdateTime(null);
         systemMenuMapper.insertOrUpdate(menu);
         // 计算父级菜单节点数目
-        systemMenuService.updateMenuSubCnt(oldPid);
-        systemMenuService.updateMenuSubCnt(newPid);
+        this.updateMenuSubCnt(oldPid);
+        this.updateMenuSubCnt(newPid);
     }
 
     /**
@@ -137,7 +135,7 @@ public class SystemMenuService {
         for (SystemMenuTb menu : menuSet) {
             systemRoleMenuMapper.deleteRoleMenuByMenuId(menu.getId());
             systemMenuMapper.deleteById(menu.getId());
-            systemMenuService.updateMenuSubCnt(menu.getPid());
+            this.updateMenuSubCnt(menu.getPid());
         }
     }
 

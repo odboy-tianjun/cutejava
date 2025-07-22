@@ -20,8 +20,8 @@ public class PipelineInstanceDAO {
         if (o != null) {
             return true;
         }
-        // 365天
-        redisHelper.set(redisKey, true, 60 * 60 * 24 * 365);
+        // 3个月
+        redisHelper.set(redisKey, true, 60 * 60 * 24 * 90);
         return false;
     }
 
