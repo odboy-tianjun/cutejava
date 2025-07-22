@@ -1,15 +1,14 @@
 package cn.odboy.devops.framework.pipeline.core;
 
+import cn.hutool.core.util.IdUtil;
 import cn.odboy.devops.constant.pipeline.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
-import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
 
 /**
  * 流水线任务管理器
@@ -20,37 +19,29 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @Component
 public class PipelineJobManage {
-    private static final String JOB_KEY = "PIPELINE_JOB_%s_%s";
+    private static final String JOB_KEY = "PIPELINE_JOB_%s";
     @Resource
     private Scheduler scheduler;
 
     /**
      * 启动 job
      */
-    public void startJob(PipelineInstanceTb pipelineInstance, PipelineNodeTemplateVo pipelineNodeTemplate) {
+    public String startJob(PipelineInstanceTb pipelineInstance) {
+        // 流水线Id(雪花)
+        Long instanceId = IdUtil.getSnowflakeNextId();
         try {
-            // 流水线Id
-            Long instanceId = pipelineInstance.getInstanceId();
-            String jobId = String.format(JOB_KEY, instanceId, pipelineNodeTemplate.getCode());
+            pipelineInstance.setInstanceId(instanceId);
+            String keyName = String.format(JOB_KEY, instanceId);
             // 构建 JobDetail
-            JobKey jobKey = JobKey.jobKey(jobId);
-            JobDetail jobDetail = JobBuilder
-                    .newJob(PipelineNodeJobBean.class)
-                    .withIdentity(jobKey)
-                    .build();
+            JobKey jobKey = JobKey.jobKey(keyName);
+            JobDetail jobDetail = JobBuilder.newJob(PipelineJobBean.class).withIdentity(jobKey).build();
             // 构建Trigger
-            TriggerKey triggerKey = TriggerKey.triggerKey(String.format(JOB_KEY, instanceId, pipelineNodeTemplate.getCode()));
-            Trigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(triggerKey)
-                    .startNow()
-                    .build();
+            TriggerKey triggerKey = TriggerKey.triggerKey(keyName);
+            Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).startNow().build();
             // 任务参数
             JobDataMap jobDataMap = cronTrigger.getJobDataMap();
-            jobDataMap.put(PipelineConst.INSTANCE_ID, pipelineInstance.getInstanceId());
-            jobDataMap.put(PipelineConst.CONTEXT_NAME, pipelineInstance.getContextName());
-            jobDataMap.put(PipelineConst.ENV, pipelineInstance.getEnv());
-            jobDataMap.put(PipelineConst.TEMPLATE_ID, pipelineInstance.getTemplateId());
-            jobDataMap.put(PipelineConst.CURRENT_NODE_TEMPLATE, pipelineNodeTemplate);
+            jobDataMap.put(PipelineConst.INSTANCE, pipelineInstance);
+            jobDataMap.put(PipelineConst.RETRY_NODE_CODE, "");
             try {
                 // 在quartz的内部线程池中异步执行
                 scheduler.scheduleJob(jobDetail, cronTrigger);
@@ -61,14 +52,15 @@ public class PipelineJobManage {
             log.error("创建定时任务失败", e);
             throw new BadRequestException("创建定时任务失败");
         }
+        return String.valueOf(instanceId);
     }
 
     /**
      * 删除job
      */
-    public void deleteJob(@NotNull String instanceId, @NotNull String nodeCode) {
+    public void deleteJob(Long instanceId) {
         try {
-            JobKey jobKey = JobKey.jobKey(String.format(JOB_KEY, instanceId, nodeCode));
+            JobKey jobKey = JobKey.jobKey(String.format(JOB_KEY, instanceId));
             scheduler.pauseJob(jobKey);
             scheduler.deleteJob(jobKey);
         } catch (Exception e) {
@@ -81,8 +73,34 @@ public class PipelineJobManage {
      * 中断正在执行的任务<br/>
      * 任务终止需要配合响应中断或停止信号
      */
-    public void interruptJob(@NotNull String instanceId, @NotNull String nodeCode) throws SchedulerException {
-        JobKey jobKey = JobKey.jobKey(String.format(JOB_KEY, instanceId, nodeCode));
+    public void interruptJob(Long instanceId) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(String.format(JOB_KEY, instanceId));
         scheduler.interrupt(jobKey);
+    }
+
+    public void startJobByNodeCode(PipelineInstanceTb pipelineInstance, String retryNodeCode) {
+        try {
+            Long instanceId = pipelineInstance.getInstanceId();
+            String keyName = String.format(JOB_KEY, instanceId);
+            // 构建 JobDetail
+            JobKey jobKey = JobKey.jobKey(keyName);
+            JobDetail jobDetail = JobBuilder.newJob(PipelineJobBean.class).withIdentity(jobKey).build();
+            // 构建Trigger
+            TriggerKey triggerKey = TriggerKey.triggerKey(keyName);
+            Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).startNow().build();
+            // 任务参数
+            JobDataMap jobDataMap = cronTrigger.getJobDataMap();
+            jobDataMap.put(PipelineConst.INSTANCE, pipelineInstance);
+            jobDataMap.put(PipelineConst.RETRY_NODE_CODE, retryNodeCode);
+            try {
+                // 在quartz的内部线程池中异步执行
+                scheduler.scheduleJob(jobDetail, cronTrigger);
+            } catch (ObjectAlreadyExistsException e) {
+                log.warn("定时任务已存在，跳过加载");
+            }
+        } catch (Exception e) {
+            log.error("创建定时任务失败", e);
+            throw new BadRequestException("创建定时任务失败");
+        }
     }
 }

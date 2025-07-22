@@ -32,7 +32,7 @@ public class PipelineInstanceNodeDetailTb extends CsObject {
      * 流水线节点Id
      */
     @CollectionField("node_id")
-    private String nodeId;
+    private Long nodeId;
 
     /**
      * 开始时间
@@ -46,11 +46,6 @@ public class PipelineInstanceNodeDetailTb extends CsObject {
     @CollectionField("finish_time")
     private Date finishTime;
 
-    /**
-     * 节点索引
-     */
-    @CollectionField("node_index")
-    private Integer nodeIndex;
     /**
      * 节点编码
      */

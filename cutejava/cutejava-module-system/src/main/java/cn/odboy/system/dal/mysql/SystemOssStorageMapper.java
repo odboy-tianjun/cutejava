@@ -20,5 +20,6 @@ import java.util.List;
 @Mapper
 public interface SystemOssStorageMapper extends BaseMapper<SystemOssStorageTb> {
     IPage<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page);
+
     List<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs criteria);
 }

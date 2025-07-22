@@ -4,13 +4,13 @@
     :style="{
       borderTopWidth: '5px',
       borderTopStyle: 'solid',
-      borderTopColor: statusColorConst[templateData.status].color
+      borderTopColor: statusColorConst[pipelineData.currentNodeStatus ? pipelineData.currentNodeStatus : statusColorConst.pending.code].color
     }"
   >
     <div>
       <div style="float: left;">
         <i
-          v-if="templateData.currentNodeStatus === 'pending'"
+          v-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.pending.code"
           class="el-icon-time"
           :style="{
             fontSize: '22px',
@@ -18,7 +18,7 @@
           }"
         />
         <i
-          v-else-if="templateData.currentNodeStatus === 'running'"
+          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.running.code"
           class="el-icon-loading"
           :style="{
             fontSize: '22px',
@@ -26,7 +26,7 @@
           }"
         />
         <i
-          v-else-if="templateData.currentNodeStatus === 'success'"
+          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.success.code"
           class="el-icon-success"
           :style="{
             fontSize: '22px',
@@ -34,7 +34,7 @@
           }"
         />
         <i
-          v-else-if="templateData.currentNodeStatus === 'fail'"
+          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.fail.code"
           class="el-icon-error"
           :style="{
             fontSize: '22px',
@@ -43,25 +43,25 @@
         />
         <i
           v-else
-          class="el-icon-error"
+          class="el-icon-time"
           :style="{
             fontSize: '22px',
-            color: statusColorConst.fail.color
+            color: statusColorConst.pending.color
           }"
         />
       </div>
-      <div class="box-name">{{ templateData.name }}</div>
+      <div class="box-name">{{ pipelineData.name }}</div>
       <div style="clear: both" />
     </div>
     <div class="box-current-node">
       <a @click="onCurrentNodeClick">
-        {{ templateData.currentNodeMsg }}
+        {{ pipelineData.currentNodeMsg ? pipelineData.currentNodeMsg : statusColorConst.pending.label }}
       </a>
     </div>
     <el-row>
       <el-col :span="12" style="text-align: left">
         <!-- 流水线状态为fail，且节点支持重试 -->
-        <div v-if="templateData.status === 'fail' && templateData.retry === true">
+        <div v-if="pipelineData.currentNodeStatus === 'fail' && pipelineData.retry === true">
           <div class="box-buttons">
             <el-button
               type="text"
@@ -77,30 +77,13 @@
             </el-button>
           </div>
         </div>
-        <!-- 流水线状态为running，且有操作按钮 -->
-        <div v-else-if="templateData.status === 'running' && templateData.buttons && templateData.buttons.length > 0">
-          <div class="box-buttons">
-            <el-button
-              v-for="buttonItem in templateData.buttons"
-              :key="buttonItem.service"
-              size="medium"
-              type="text"
-              :style="{
-                padding: 0,
-                margin: '0 10px 0 10px',
-                color: ['apply','agree','ok','success'].includes(buttonItem.code) ? 'green' : 'red'
-              }"
-              @click="onNodeOperationClick(buttonItem)"
-            >
-              {{ buttonItem.title }}
-            </el-button>
-          </div>
-        </div>
         <!-- 流水线状态为success，且有需要满足条件的操作按钮 -->
-        <div v-else-if="templateData.status === 'success' && templateData.buttons && templateData.buttons.length > 0">
+        <div
+          v-else-if="pipelineData.currentNodeStatus === statusColorConst.success.code && pipelineData.buttons && pipelineData.buttons.length > 0"
+        >
           <div class="box-buttons">
             <el-button
-              v-for="buttonItem in templateData.buttons"
+              v-for="buttonItem in pipelineData.buttons"
               :key="buttonItem.service"
               size="medium"
               type="text"
@@ -108,7 +91,28 @@
                 padding: 0,
                 margin: '0 10px 0 10px',
                 color: ['apply','agree','ok','success'].includes(buttonItem.code) ? 'green' : 'red',
-                display: ['success', 'fail'].includes(buttonItem.code) && templateData.status === buttonItem.code ? '' : 'none'
+                display: ['success', 'fail'].includes(buttonItem.code) && pipelineData.status === buttonItem.code ? '' : 'none'
+              }"
+              @click="onNodeOperationClick(buttonItem)"
+            >
+              {{ buttonItem.title }}
+            </el-button>
+          </div>
+        </div>
+        <!-- 流水线状态非pending，且有操作按钮 -->
+        <div
+          v-else-if="pipelineData.currentNodeStatus !== statusColorConst.pending.code && pipelineData.buttons && pipelineData.buttons.length > 0"
+        >
+          <div class="box-buttons">
+            <el-button
+              v-for="buttonItem in pipelineData.buttons"
+              :key="buttonItem.service"
+              size="medium"
+              type="text"
+              :style="{
+                padding: 0,
+                margin: '0 10px 0 10px',
+                color: ['apply','agree','ok','success'].includes(buttonItem.code) ? 'green' : 'red'
               }"
               @click="onNodeOperationClick(buttonItem)"
             >
@@ -128,7 +132,7 @@
       </el-col>
       <div style="clear: both" />
     </el-row>
-    <cute-preview-drawer ref="detailDrawer" :title="templateData.name">
+    <cute-preview-drawer ref="detailDrawer" :title="pipelineData.name">
       <div style="padding: 20px">
         这里是明细
       </div>
@@ -155,28 +159,26 @@ export default {
   data() {
     return {
       statusColorConst: {
-        pending: { label: '未开始', color: '#C0C4CC' },
-        running: { label: '运行中', color: '#67C23A' },
-        success: { label: '执行成功', color: '#67C23A' },
-        fail: { label: '执行失败', color: '#F56C6C' }
+        pending: { code: 'pending', label: '未开始', color: '#C0C4CC' },
+        running: { code: 'running', label: '运行中', color: '#67C23A' },
+        success: { code: 'success', label: '执行成功', color: '#67C23A' },
+        fail: { code: 'fail', label: '执行失败', color: '#F56C6C' }
       },
-      executeTimeStr: ''
+      executeTimeStr: '',
+      pipelineData: {}
     }
   },
   watch: {
     templateData: {
       handler(newVal, oldVal) {
+        this.pipelineData = { ...newVal }
         this.executeTimeStr = this.renderDateTimeStr(newVal)
       },
       deep: true
     }
   },
-  // computed: {
-  //   formatExecuteTimeStr() {
-  //     return this.renderDateTimeStr(this.templateData)
-  //   }
-  // },
   mounted() {
+    this.pipelineData = this.templateData
     this.executeTimeStr = this.renderDateTimeStr(this.templateData)
   },
   methods: {
@@ -189,7 +191,20 @@ export default {
         case 'running':
         case 'success':
         case 'fail':
-          executeTimeStr = this.formatTimeDifference(newVal.startTime, newVal.updateTime)
+          if (newVal.currentNodeStatus !== this.statusColorConst.pending.code) {
+            if (newVal.startTime && newVal.finishTime) {
+              executeTimeStr = this.formatTimeDifference(newVal.startTime, newVal.finishTime)
+              return executeTimeStr
+            }
+            if (newVal.startTime) {
+              executeTimeStr = this.formatTimeDifference(newVal.startTime, new Date())
+              return executeTimeStr
+            }
+            if (newVal.createTime) {
+              executeTimeStr = this.formatTimeDifference(newVal.createTime, new Date())
+              return executeTimeStr
+            }
+          }
           break
         default:
           executeTimeStr = ''
@@ -223,10 +238,11 @@ export default {
       if (seconds >= 0) {
         return `${seconds} 秒`
       }
+      return `${diffInMilliseconds} 毫秒`
     },
     onCurrentNodeClick() {
-      const templateData = this.templateData || { click: false }
-      if (!templateData.click) {
+      const pipelineData = this.pipelineData || { click: false }
+      if (!pipelineData.click) {
         console.warn('当前流水线节点不支持查看明细')
         return
       }
@@ -234,12 +250,12 @@ export default {
       this.$refs.detailDrawer.show()
     },
     onNodeRetryClick() {
-      const templateData = this.templateData || { retry: false }
-      if (!templateData.retry) {
+      const pipelineData = this.pipelineData || { retry: false }
+      if (!pipelineData.retry) {
         console.warn('当前流水线节点不支持重试')
         return
       }
-      console.error('templateData', this.templateData)
+      console.error('pipelineData', this.pipelineData)
     },
     onNodeOperationClick(buttonInfo) {
       console.error('buttonInfo', buttonInfo)
@@ -277,7 +293,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   text-wrap: nowrap;
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
 }
 

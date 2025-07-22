@@ -18,7 +18,6 @@ import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +28,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class SystemDeptService {
     private final SystemDeptMapper systemDeptMapper;
     private final SystemUserMapper systemUserMapper;
     private final SystemRoleMapper systemRoleMapper;
-    private final SystemDeptService systemDeptService;
 
     /**
      * 创建
@@ -45,7 +43,7 @@ public class SystemDeptService {
     @Transactional(rollbackFor = Exception.class)
     public void saveDept(SystemCreateDeptArgs resources) {
         systemDeptMapper.insert(BeanUtil.copyProperties(resources, SystemDeptTb.class));
-        systemDeptService.updateDeptSubCnt(resources.getPid());
+        this.updateDeptSubCnt(resources.getPid());
     }
 
     /**
@@ -65,8 +63,8 @@ public class SystemDeptService {
         SystemDeptTb dept = systemDeptMapper.selectById(resources.getId());
         resources.setId(dept.getId());
         systemDeptMapper.insertOrUpdate(resources);
-        systemDeptService.updateDeptSubCnt(oldPid);
-        systemDeptService.updateDeptSubCnt(newPid);
+        this.updateDeptSubCnt(oldPid);
+        this.updateDeptSubCnt(newPid);
     }
 
     /**
@@ -79,7 +77,7 @@ public class SystemDeptService {
     public void removeDeptByIds(Set<SystemDeptTb> deptSet) {
         for (SystemDeptTb dept : deptSet) {
             systemDeptMapper.deleteById(dept.getId());
-            systemDeptService.updateDeptSubCnt(dept.getPid());
+            this.updateDeptSubCnt(dept.getPid());
         }
     }
 

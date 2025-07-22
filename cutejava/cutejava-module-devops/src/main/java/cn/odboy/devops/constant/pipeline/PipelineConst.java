@@ -22,10 +22,13 @@ public interface PipelineConst {
 //    String INSTANCE_NODE_TEMPLATE_ARGS_KEY = "pipelineInstanceNodeTemplateArgs";
 //    String INSTANCE_RETRY_NODE_INDEX_KEY = "pipelineInstanceRetryNodeIndex";
     // 以下为标准常量
+    String INSTANCE = "Instance";
     String INSTANCE_ID = "InstanceId";
+    String TEMPLATE = "Template";
     String TEMPLATE_ID = "TemplateId";
     String ENV = "Env";
     String CONTEXT_NAME = "ContextName";
     String RETRY_NODE_CODE = "RetryNodeCode";
     String CURRENT_NODE_TEMPLATE = "CurrentNodeTemplate";
+    String LAST_NODE_RESULT = "LastNodeResult";
 }

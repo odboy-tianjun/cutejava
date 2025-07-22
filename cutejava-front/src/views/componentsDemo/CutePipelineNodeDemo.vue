@@ -1,19 +1,19 @@
 <template>
   <div>
-    <el-divider>演示：运行中</el-divider>
+    <el-divider>演示：动态流水线 <el-button type="primary" @click="startPipelineTest">启动流水线</el-button></el-divider>
     <div class="box-pipeline">
-      <div v-if="dataList1 && dataList1.length > 0" class="box-pipeline-content">
+      <div v-if="dynamicList && dynamicList.length > 0" class="box-pipeline-content">
         <cute-pipeline-node
-          v-for="(template, index) in dataList1"
+          v-for="(template, index) in dynamicList"
           :key="template.code"
-          :template-data="dataList1[index]"
+          :template-data.sync="dynamicList[index]"
         />
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
           v-for="(template, index) in templateList"
           :key="template.code"
-          :template-data="dataList1[index]"
+          :template-data.sync="templateList[index]"
         />
       </div>
     </div>
@@ -23,14 +23,14 @@
         <cute-pipeline-node
           v-for="(template, index) in dataList2"
           :key="template.code"
-          :template-data="dataList2[index]"
+          :template-data.sync="dataList2[index]"
         />
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
           v-for="(template, index) in templateList"
           :key="template.code"
-          :template-data="dataList2[index]"
+          :template-data.sync="templateList[index]"
         />
       </div>
     </div>
@@ -40,14 +40,14 @@
         <cute-pipeline-node
           v-for="(template, index) in dataList3"
           :key="template.code"
-          :template-data="dataList3[index]"
+          :template-data.sync="dataList3[index]"
         />
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
           v-for="(template, index) in templateList"
           :key="template.code"
-          :template-data="dataList3[index]"
+          :template-data.sync="templateList[index]"
         />
       </div>
     </div>
@@ -58,6 +58,7 @@
 
 import CutePipelineNode from '@/views/components/dev/CutePipelineNode'
 import { formatDateTimeStr } from '@/utils'
+import { startPipeline, queryLastPipelineDetail } from '@/api/devops/pipeline'
 
 export default {
   name: 'CutePipelineNodeDemo',
@@ -154,147 +155,6 @@ export default {
           click: false,
           retry: true
         }],
-      // 运行中
-      dataList1: [
-        {
-          code: 'node_init',
-          type: 'service',
-          name: '初始化',
-          createTime: '2025-07-17 21:12:01',
-          updateTime: '2025-07-17 21:13:01',
-          startTime: '2025-07-17 21:13:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_merge_branch',
-          type: 'service',
-          name: '合并代码',
-          click: true,
-          retry: true,
-          createTime: '2025-07-17 21:13:01',
-          updateTime: '2025-07-17 21:18:01',
-          startTime: '2025-07-17 21:13:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_build_java',
-          type: 'service',
-          name: '构建',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-backend'
-          },
-          createTime: '2025-07-17 21:18:01',
-          updateTime: '2025-07-17 21:28:01',
-          startTime: '2025-07-17 21:18:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_image_scan',
-          type: 'service',
-          name: '镜像扫描',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-image-scan'
-          },
-          createTime: '2025-07-17 21:28:01',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: '2025-07-17 21:28:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_approve_deploy',
-          type: 'service',
-          name: '部署审批',
-          click: false,
-          retry: true,
-          buttons: [
-            {
-              type: 'execute',
-              title: '同意',
-              code: 'agree',
-              parameters: {}
-            },
-            {
-              type: 'execute',
-              title: '拒绝',
-              code: 'refuse',
-              parameters: {}
-            }
-          ],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: '2025-07-17 21:28:21',
-          currentNodeMsg: '等待人工审批',
-          currentNodeStatus: 'running',
-          status: 'running'
-        },
-        {
-          code: 'node_deploy_java',
-          type: 'service',
-          name: '部署',
-          click: true,
-          retry: false,
-          buttons: [{
-            type: 'link',
-            title: '查看部署详情',
-            code: 'success',
-            parameters: {
-              'isBlank': true
-            }
-          }],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        },
-        {
-          code: 'node_merge_confirm',
-          type: 'service',
-          name: '合并确认',
-          click: false,
-          retry: false,
-          buttons: [{
-            type: 'execute',
-            title: '通过',
-            code: 'agree',
-            parameters: {}
-          }],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        },
-        {
-          code: 'node_merge_master',
-          type: 'service',
-          name: '合并回Master',
-          click: false,
-          retry: true,
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        }
-      ],
       // 成功
       dataList2: [
         {
@@ -576,21 +436,18 @@ export default {
           currentNodeStatus: 'pending',
           status: 'pending'
         }
-      ]
+      ],
+      // 动态流水线
+      dynamicHook: null,
+      dynamicList: [],
+      dynamicInstanceId: ''
     }
   },
   mounted() {
-    setInterval(this.refreshData, 1000)
+    this.refreshData()
   },
   methods: {
     refreshData() {
-      // 运行中
-      for (const datum of this.dataList1) {
-        if (datum.status === 'running') {
-          datum.updateTime = formatDateTimeStr(new Date())
-        }
-      }
-      this.dataList1 = [...this.dataList1]
       // 成功
       for (const datum of this.dataList2) {
         if (datum.status === 'running') {
@@ -605,6 +462,22 @@ export default {
         }
       }
       this.dataList3 = [...this.dataList3]
+    },
+    startPipelineTest() {
+      const that = this
+      if (that.dynamicHook) {
+        clearInterval(that.dynamicHook)
+      }
+      startPipeline().then((instanceId) => {
+        that.dynamicInstanceId = instanceId
+        setTimeout(() => {
+          that.dynamicHook = setInterval(() => {
+            queryLastPipelineDetail(that.dynamicInstanceId).then((data) => {
+              that.dynamicList = data
+            })
+          }, 1000)
+        }, 2000)
+      })
     }
   }
 }

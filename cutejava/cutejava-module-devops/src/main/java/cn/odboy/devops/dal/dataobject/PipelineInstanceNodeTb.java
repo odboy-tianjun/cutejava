@@ -72,6 +72,8 @@ public class PipelineInstanceNodeTb extends CsObject {
     private Date updateTime;
     @CollectionField("start_time")
     private Date startTime;
+    @CollectionField("finish_time")
+    private Date finishTime;
     /**
      * 节点状态
      */
@@ -79,9 +81,4 @@ public class PipelineInstanceNodeTb extends CsObject {
     private String currentNodeMsg = PipelineStatusEnum.PENDING.getDesc();
     @CollectionField("current_node_status")
     private String currentNodeStatus = PipelineStatusEnum.PENDING.getCode();
-    /**
-     * 节点状态
-     */
-    @CollectionField("status")
-    private String status = PipelineStatusEnum.PENDING.getCode();
 }

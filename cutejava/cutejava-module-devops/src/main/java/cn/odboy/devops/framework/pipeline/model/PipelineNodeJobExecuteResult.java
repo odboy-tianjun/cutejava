@@ -10,18 +10,29 @@ import lombok.Setter;
 public class PipelineNodeJobExecuteResult extends CsObject {
     private PipelineStatusEnum status;
     private String message;
+    private Object data;
 
     public static PipelineNodeJobExecuteResult success() {
         PipelineNodeJobExecuteResult result = new PipelineNodeJobExecuteResult();
         result.setStatus(PipelineStatusEnum.SUCCESS);
         result.setMessage(PipelineStatusEnum.SUCCESS.getDesc());
+        result.setData("");
         return result;
     }
 
-    public static PipelineNodeJobExecuteResult success(String message) {
+    public static PipelineNodeJobExecuteResult success(Object data) {
+        PipelineNodeJobExecuteResult result = new PipelineNodeJobExecuteResult();
+        result.setStatus(PipelineStatusEnum.SUCCESS);
+        result.setMessage(PipelineStatusEnum.SUCCESS.getDesc());
+        result.setData(data);
+        return result;
+    }
+
+    public static PipelineNodeJobExecuteResult success(String message, Object data) {
         PipelineNodeJobExecuteResult result = new PipelineNodeJobExecuteResult();
         result.setStatus(PipelineStatusEnum.SUCCESS);
         result.setMessage(message);
+        result.setData(data);
         return result;
     }
 

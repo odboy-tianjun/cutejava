@@ -7,20 +7,19 @@ import cn.odboy.devops.framework.pipeline.core.PipelineNodeJobExecutor;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.devops.job.biz.PipelineNodeInitBiz;
+import cn.odboy.devops.job.biz.PipelineNodeMergeBranchBiz;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDataMap;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_init")
 @RequiredArgsConstructor
-public class PipelineNodeInitJob extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
-    private final PipelineNodeInitBiz pipelineNodeInitBiz;
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_merge_branch")
+public class PipelineNodeMergeBranchJob extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+    private final PipelineNodeMergeBranchBiz pipelineNodeMergeBranchBiz;
 
     @Override
     public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws BadRequestException {
@@ -33,10 +32,10 @@ public class PipelineNodeInitJob extends AbstractPipelineNodeJobService implemen
         List<PipelineNodeTemplateVo> templateList = JSON.parseArray(jobDataMap.getString(PipelineConst.TEMPLATE), PipelineNodeTemplateVo.class);
         PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult) jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
         // 步骤执行
-        pipelineNodeInitBiz.initStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeInitBiz.createReleaseBranch(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeInitBiz.mergeMasterToRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeInitBiz.initFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.initStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.createReleaseBranch(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.mergeMasterToRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.initFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
         return PipelineNodeJobExecuteResult.success();
     }
 }

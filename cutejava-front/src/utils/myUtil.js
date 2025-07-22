@@ -75,6 +75,19 @@ const LabelUtil = {
   }
 }
 
+const SizeUtil = {
+  formatBytes: function(value) {
+    if (typeof value !== 'number' || isNaN(value) || value <= 0) {
+      return '0 Bytes'
+    }
+    const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const index = Math.floor(Math.log(value) / Math.log(1024))
+    const unit = units[Math.min(index, units.length - 1)]
+    const result = (value / Math.pow(1024, index)).toFixed(2)
+    return `${result} ${unit}`
+  }
+}
+
 const DateUtil = {
   formatDate: function(originVal) {
     if (originVal === undefined) {
@@ -119,5 +132,6 @@ export {
   StringUtil,
   ObjectUtil,
   LabelUtil,
-  DateUtil
+  DateUtil,
+  SizeUtil
 }
