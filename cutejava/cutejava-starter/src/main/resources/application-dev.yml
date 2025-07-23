@@ -237,7 +237,7 @@ mongo-plus:
       password: 123456
       authentication-database: cutejava
   log: true
-  pretty: true
+  pretty: false
   configuration:
     field:
       ignoring-null: false

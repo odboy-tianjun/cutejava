@@ -23,3 +23,13 @@ export function queryLastPipelineDetail(instanceId) {
     }
   })
 }
+
+export function queryLastPipelineDetailWs(instanceId) {
+  return request({
+    url: 'api/devops/pipelineInstance/lastWs',
+    method: 'post',
+    data: {
+      instanceId
+    }
+  })
+}

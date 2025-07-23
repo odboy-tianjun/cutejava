@@ -1,15 +1,17 @@
 package cn.odboy.framework.websocket.context;
 
-import cn.odboy.framework.websocket.constant.CsWsBizTypeEnum;
-import lombok.Data;
+import cn.odboy.base.CsObject;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class CsWsMessage {
-    private String message;
-    private CsWsBizTypeEnum bizType;
+@Getter
+@Setter
+public class CsWsMessage extends CsObject {
+    private String bizType;
+    private String data;
 
-    public CsWsMessage(String message, CsWsBizTypeEnum bizType) {
-        this.message = message;
+    public CsWsMessage(String bizType, String data) {
         this.bizType = bizType;
+        this.data = data;
     }
 }
