@@ -26,7 +26,7 @@ public class PipelineJobManage {
     /**
      * 启动 job
      */
-    public String startJob(PipelineInstanceTb pipelineInstance) {
+    public PipelineInstanceTb startJob(PipelineInstanceTb pipelineInstance) {
         // 流水线Id(雪花)
         Long instanceId = IdUtil.getSnowflakeNextId();
         try {
@@ -52,7 +52,7 @@ public class PipelineJobManage {
             log.error("创建定时任务失败", e);
             throw new BadRequestException("创建定时任务失败");
         }
-        return String.valueOf(instanceId);
+        return pipelineInstance;
     }
 
     /**
@@ -78,7 +78,7 @@ public class PipelineJobManage {
         scheduler.interrupt(jobKey);
     }
 
-    public void startJobByNodeCode(PipelineInstanceTb pipelineInstance, String retryNodeCode) {
+    public PipelineInstanceTb startJobByNodeCode(PipelineInstanceTb pipelineInstance, String retryNodeCode) {
         try {
             Long instanceId = pipelineInstance.getInstanceId();
             String keyName = String.format(JOB_KEY, instanceId);
@@ -102,5 +102,6 @@ public class PipelineJobManage {
             log.error("创建定时任务失败", e);
             throw new BadRequestException("创建定时任务失败");
         }
+        return pipelineInstance;
     }
 }

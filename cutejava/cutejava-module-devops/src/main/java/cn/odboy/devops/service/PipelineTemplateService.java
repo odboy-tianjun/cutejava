@@ -2,6 +2,7 @@ package cn.odboy.devops.service;
 
 import cn.odboy.devops.dal.dataobject.PipelineTemplateTb;
 import cn.odboy.devops.dal.mysql.PipelineTemplateMapper;
+import cn.odboy.framework.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,15 @@ public class PipelineTemplateService {
     private final PipelineTemplateMapper pipelineTemplateMapper;
 
     public PipelineTemplateTb getPipelineTemplateById(Long id) {
-        return pipelineTemplateMapper.selectById(id);
+        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateMapper.selectById(id);
+        if (pipelineTemplateTb == null) {
+            throw new BadRequestException("模板不存在");
+        }
+        return pipelineTemplateTb;
+    }
+
+    public String getPipelineTemplateContentById(Long id) {
+        PipelineTemplateTb pipelineTemplateTb = getPipelineTemplateById(id);
+        return pipelineTemplateTb.getTemplate();
     }
 }

@@ -6,9 +6,11 @@ import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeDetailTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
+import cn.odboy.devops.dal.model.StartPipelineResultVo;
 import cn.odboy.devops.dal.mysql.PipelineInstanceMapper;
 import cn.odboy.devops.dal.redis.PipelineInstanceDAO;
 import cn.odboy.devops.framework.pipeline.core.PipelineJobManage;
+import cn.odboy.devops.framework.pipeline.model.PipelineInstanceVo;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeDataVo;
 import cn.odboy.devops.service.PipelineInstanceNodeDetailService;
 import cn.odboy.devops.service.PipelineInstanceNodeService;
@@ -33,24 +35,28 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
     private final PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
 
     @Override
-    public String startPipeline(PipelineInstanceTb pipelineInstanceTb) {
+    public StartPipelineResultVo startPipeline(PipelineInstanceTb pipelineInstanceTb) {
         if (pipelineInstanceDAO.lock(pipelineInstanceTb)) {
             throw new BadRequestException("流水线运行中，无法重复执行");
         }
-        return PipelineConst.INSTANCE_ID + pipelineJobManage.startJob(pipelineInstanceTb);
+        PipelineInstanceTb record = pipelineJobManage.startJob(pipelineInstanceTb);
+        StartPipelineResultVo resultVo = new StartPipelineResultVo();
+        resultVo.setInstanceId(record.getInstanceId());
+        resultVo.setTemplateContent(record.getTemplateContent());
+        return resultVo;
     }
 
     @Override
-    public void restartPipeline(PipelineInstanceTb pipelineInstanceTb, String retryNodeCode) {
+    public StartPipelineResultVo restartPipeline(PipelineInstanceTb pipelineInstanceTb, String retryNodeCode) {
         if (pipelineInstanceTb.getInstanceId() == null) {
             throw new BadRequestException("流水线实例Id必填");
-        }
-        if (pipelineInstanceDAO.lock(pipelineInstanceTb)) {
-            throw new BadRequestException("流水线运行中，无法重复执行");
         }
         PipelineInstanceTb currentInstance = pipelineInstanceMapper.selectById(pipelineInstanceTb.getInstanceId());
         if (currentInstance == null) {
             throw new BadRequestException("无效流水线，请刷新页面后再试");
+        }
+        if (pipelineInstanceDAO.lock(currentInstance)) {
+            throw new BadRequestException("流水线运行中，无法重复执行");
         }
         // pending、running、success、fail
         List<String> canRestartStatus = new ArrayList<>() {{
@@ -62,11 +68,15 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
         }
         log.info("解锁流水线, {}", JSON.toJSONString(currentInstance));
         pipelineInstanceDAO.unLock(currentInstance);
-        pipelineJobManage.startJobByNodeCode(currentInstance, retryNodeCode);
+        PipelineInstanceTb record = pipelineJobManage.startJobByNodeCode(currentInstance, retryNodeCode);
+        StartPipelineResultVo resultVo = new StartPipelineResultVo();
+        resultVo.setInstanceId(record.getInstanceId());
+        resultVo.setTemplateContent(record.getTemplateContent());
+        return resultVo;
     }
 
     @Override
-    public List<PipelineNodeDataVo> queryLastPipelineDetail(String instanceIdStr) {
+    public PipelineInstanceVo queryLastPipelineDetail(String instanceIdStr) {
         String realInstanceIdStr = instanceIdStr.replace(PipelineConst.INSTANCE_ID, "");
         Long instanceId = Long.valueOf(realInstanceIdStr);
         List<PipelineNodeDataVo> records = new ArrayList<>();
@@ -85,6 +95,8 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
             dataVo.setCurrentNodeStatus(pipelineInstanceNodeDetail.getStepStatus());
             records.add(dataVo);
         }
-        return records;
+        PipelineInstanceVo pipelineInstanceVo = BeanUtil.copyProperties(pipelineInstanceTb, PipelineInstanceVo.class);
+        pipelineInstanceVo.setNodes(records);
+        return pipelineInstanceVo;
     }
 }

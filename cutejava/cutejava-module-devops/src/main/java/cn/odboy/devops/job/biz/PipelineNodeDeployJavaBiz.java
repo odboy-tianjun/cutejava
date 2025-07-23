@@ -13,23 +13,18 @@ import java.util.List;
 @Slf4j
 @Service
 public class PipelineNodeDeployJavaBiz {
-    @PipelineNodeStepLog("初始化开始")
-    public void initStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
+    @PipelineNodeStepLog("部署开始")
+    public void deployStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+        ThreadUtil.safeSleep(2000);
     }
 
-    @PipelineNodeStepLog("Master分支合并到Release分支")
-    public void mergeMasterToRelease(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
+    @PipelineNodeStepLog("部署中")
+    public void deployJavaByWithContextName(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult, String templateType) {
+        ThreadUtil.safeSleep(10000);
     }
 
-    @PipelineNodeStepLog("新建Release分支")
-    public void createReleaseBranch(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
-    }
-
-    @PipelineNodeStepLog("初始化完成")
-    public void initFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
+    @PipelineNodeStepLog("部署完成")
+    public void deployFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+        ThreadUtil.safeSleep(2000);
     }
 }

@@ -13,23 +13,18 @@ import java.util.List;
 @Slf4j
 @Service
 public class PipelineNodeMergeBranchBiz {
-    @PipelineNodeStepLog("初始化开始")
-    public void initStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    @PipelineNodeStepLog("分支合并开始")
+    public void mergeBranchStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(5000);
     }
 
-    @PipelineNodeStepLog("Master分支合并到Release分支")
-    public void mergeMasterToRelease(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    @PipelineNodeStepLog("集成区分支合并到release分支")
+    public void integrationAreaBranchMergeRelease(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(5000);
     }
 
-    @PipelineNodeStepLog("新建Release分支")
-    public void createReleaseBranch(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
-    }
-
-    @PipelineNodeStepLog("初始化完成")
-    public void initFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    @PipelineNodeStepLog("分支合并完成")
+    public void mergeBranchFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(5000);
     }
 }

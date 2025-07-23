@@ -3,11 +3,13 @@ package cn.odboy.devops.dal.dataobject;
 import cn.odboy.base.CsObject;
 import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeOperateButtonVo;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.anwen.mongo.annotation.ID;
 import com.anwen.mongo.annotation.collection.CollectionField;
 import com.anwen.mongo.annotation.collection.CollectionName;
 import com.anwen.mongo.enums.FieldFill;
 import com.anwen.mongo.enums.IdTypeEnum;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,11 +31,13 @@ public class PipelineInstanceNodeTb extends CsObject {
      * mongoid
      */
     @ID(type = IdTypeEnum.ASSIGN_ID)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
     /**
      * 流水线实例id
      */
     @CollectionField("instance_id")
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long instanceId;
     /**
      * 节点名称

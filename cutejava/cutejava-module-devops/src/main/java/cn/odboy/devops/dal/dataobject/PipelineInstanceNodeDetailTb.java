@@ -1,11 +1,13 @@
 package cn.odboy.devops.dal.dataobject;
 
 import cn.odboy.base.CsObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.anwen.mongo.annotation.ID;
 import com.anwen.mongo.annotation.collection.CollectionField;
 import com.anwen.mongo.annotation.collection.CollectionName;
 import com.anwen.mongo.enums.FieldFill;
 import com.anwen.mongo.enums.IdTypeEnum;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,11 +29,13 @@ public class PipelineInstanceNodeDetailTb extends CsObject {
      * mongoid
      */
     @ID(type = IdTypeEnum.ASSIGN_ID)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
     /**
      * 流水线节点Id
      */
     @CollectionField("node_id")
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long nodeId;
 
     /**

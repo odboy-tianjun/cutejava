@@ -1,6 +1,5 @@
 package cn.odboy.devops.controller;
 
-import cn.odboy.annotation.AnonymousGetMapping;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.dataobject.PipelineTemplateTb;
 import cn.odboy.devops.dal.model.DevOpsQueryLastPipelineDetailArgs;
@@ -22,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/devops/pipeline")
-@Api(tags = "DevOps：流水线管理")
-public class DevopsPipelineController {
+@RequestMapping("/api/devops/pipelineInstance")
+@Api(tags = "DevOps：流水线实例管理")
+public class DevopsPipelineInstanceController {
     @Autowired
     private PipelineTemplateService pipelineTemplateService;
     @Autowired
@@ -67,7 +66,7 @@ public class DevopsPipelineController {
         pipelineInstanceTb.setInstanceId(1947604330727079936L);
         String retryNodeCode = "node_build_java";
         pipelineInstanceService.restartPipeline(pipelineInstanceTb, retryNodeCode);
-        return ResponseEntity.ok("流水线重启成功");
+        return ResponseEntity.ok(pipelineInstanceService.restartPipeline(pipelineInstanceTb, retryNodeCode));
     }
 
     @ApiOperation("查询流水线明细")
