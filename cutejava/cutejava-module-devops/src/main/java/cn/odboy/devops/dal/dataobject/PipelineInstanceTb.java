@@ -1,10 +1,12 @@
 package cn.odboy.devops.dal.dataobject;
 
 import cn.odboy.base.CsObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -27,6 +29,7 @@ import java.util.Date;
 public class PipelineInstanceTb extends CsObject {
     @ApiModelProperty("流水线实例id")
     @TableId(value = "instance_id")
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long instanceId;
 
     @ApiModelProperty("创建时间")

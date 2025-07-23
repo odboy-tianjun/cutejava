@@ -9,10 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 
 public abstract class AbstractPipelineNodeJobService {
-    //    @Autowired
-//    private PipelineTemplateService pipelineTemplateService;
-//    @Autowired
-//    private PipelineInstanceService pipelineInstanceService;
     @Autowired
     private PipelineInstanceNodeService pipelineInstanceNodeService;
     @Autowired

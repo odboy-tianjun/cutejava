@@ -9,7 +9,7 @@ const api = {
     // Sql 监控
     druidSqlApi: baseUrl + '/druid/index.html',
     // websocket
-    websocketApi: baseUrl + '/webSocket/{sid}',
+    websocketApi: baseUrl + '/websocket/{sid}',
     // swagger
     swaggerApi: baseUrl + '/doc.html',
     // 文件上传

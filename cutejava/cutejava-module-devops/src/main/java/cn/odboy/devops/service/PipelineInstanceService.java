@@ -1,6 +1,8 @@
 package cn.odboy.devops.service;
 
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
+import cn.odboy.devops.dal.model.StartPipelineResultVo;
+import cn.odboy.devops.framework.pipeline.model.PipelineInstanceVo;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeDataVo;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  * @since 2025-06-26
  */
 public interface PipelineInstanceService {
-    String startPipeline(PipelineInstanceTb pipelineInstanceTb);
-    void restartPipeline(PipelineInstanceTb pipelineInstanceTb, String retryNodeCode);
-    List<PipelineNodeDataVo> queryLastPipelineDetail(String instanceId);
+    StartPipelineResultVo startPipeline(PipelineInstanceTb pipelineInstanceTb);
+    StartPipelineResultVo restartPipeline(PipelineInstanceTb pipelineInstanceTb, String retryNodeCode);
+    PipelineInstanceVo queryLastPipelineDetail(String instanceId);
 }

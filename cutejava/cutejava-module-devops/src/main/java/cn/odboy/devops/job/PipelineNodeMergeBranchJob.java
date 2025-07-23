@@ -32,10 +32,9 @@ public class PipelineNodeMergeBranchJob extends AbstractPipelineNodeJobService i
         List<PipelineNodeTemplateVo> templateList = JSON.parseArray(jobDataMap.getString(PipelineConst.TEMPLATE), PipelineNodeTemplateVo.class);
         PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult) jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
         // 步骤执行
-        pipelineNodeMergeBranchBiz.initStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeMergeBranchBiz.createReleaseBranch(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeMergeBranchBiz.mergeMasterToRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeMergeBranchBiz.initFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.mergeBranchStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.integrationAreaBranchMergeRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeMergeBranchBiz.mergeBranchFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
         return PipelineNodeJobExecuteResult.success();
     }
 }

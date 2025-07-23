@@ -32,10 +32,10 @@ public class PipelineNodeBuildJavaJob extends AbstractPipelineNodeJobService imp
         List<PipelineNodeTemplateVo> templateList = JSON.parseArray(jobDataMap.getString(PipelineConst.TEMPLATE), PipelineNodeTemplateVo.class);
         PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult) jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
         // 步骤执行
-        pipelineNodeBuildJavaBiz.initStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeBuildJavaBiz.createReleaseBranch(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeBuildJavaBiz.mergeMasterToRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeBuildJavaBiz.initFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeBuildJavaBiz.buildJavaStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeBuildJavaBiz.startGitlabPipeline(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeBuildJavaBiz.uploadPackageToOss(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeBuildJavaBiz.buildJavaFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
         return PipelineNodeJobExecuteResult.success();
     }
 }
