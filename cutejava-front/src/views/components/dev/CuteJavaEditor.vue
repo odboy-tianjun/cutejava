@@ -13,6 +13,7 @@ import 'codemirror/lib/codemirror.css'
 // 主题预览地址 https://blog.csdn.net/qq_41694291/article/details/106429772
 import 'codemirror/theme/darcula.css'
 import 'codemirror/mode/javascript/javascript'
+
 export default {
   name: 'CuteJavaEditor',
   props: {

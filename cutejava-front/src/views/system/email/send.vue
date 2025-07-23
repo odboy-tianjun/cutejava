@@ -8,16 +8,24 @@
         <el-input v-model="form.tos" style="width: 646px" placeholder="请输入收件地址，多个地址英文逗号,隔开" />
       </el-form-item>
       <div ref="editor" class="editor" />
-      <el-button :loading="loading" style="margin-left:1.6%;margin-bottom: 30px" size="medium" type="primary" @click="doSubmit">发送邮件</el-button>
+      <el-button
+        :loading="loading"
+        style="margin-left:1.6%;margin-bottom: 30px"
+        size="medium"
+        type="primary"
+        @click="doSubmit"
+      >发送邮件
+      </el-button>
     </el-form>
   </div>
 </template>
 
 <script>
 import { sendEmail } from '@/api/system/email'
-import { upload } from '@/utils/upload'
 import { mapGetters } from 'vuex'
 import E from 'wangeditor'
+import { UploadFile } from '@/utils/CsDomUtil'
+
 export default {
   name: 'Index',
   data() {
@@ -49,7 +57,7 @@ export default {
       // files 是 input 中选中的文件列表
       // insert 是获取图片 url 后，插入到编辑器的方法
       files.forEach(image => {
-        upload(_this.imagesUploadApi, image).then(res => {
+        UploadFile(_this.imagesUploadApi, image).then(res => {
           const data = res.data
           const url = _this.baseApi + '/file/' + data.type + '/' + data.realName
           insert(url)
@@ -87,12 +95,13 @@ export default {
 </script>
 
 <style scoped>
-  .editor{
-    text-align:left;
-    margin: 20px;
-    width: 730px;
-  }
- ::v-deep .w-e-text-container {
-    height: 360px !important;
-  }
+.editor {
+  text-align: left;
+  margin: 20px;
+  width: 730px;
+}
+
+::v-deep .w-e-text-container {
+  height: 360px !important;
+}
 </style>

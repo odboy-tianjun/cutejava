@@ -10,7 +10,7 @@ import Element from 'element-ui'
 import dict from './components/Dict'
 
 // 防止二次提交
-import { preventReClick } from '@/utils/commands'
+import { preventReClick } from '@/plugins/PreventReClickDirective'
 
 // 一键复制插件
 import VueClipboard from 'vue-clipboard2'
@@ -19,7 +19,7 @@ import VueClipboard from 'vue-clipboard2'
 import SplitPane from 'vue-splitpane'
 
 // 权限指令
-import checkPer from '@/utils/permission'
+import checkPer from '@/plugins/CheckPermPlugin'
 import permission from './components/Permission'
 import './assets/styles/element-variables.scss'
 
@@ -35,8 +35,8 @@ import './router/index' // permission control
 
 Vue.use(checkPer)
 Vue.use(permission)
+Vue.directive(preventReClick)
 Vue.use(dict)
-Vue.use(preventReClick)
 Vue.use(VueClipboard)
 Vue.use(Element, {
   size: Cookies.get('size') || 'small' // set element-ui default size

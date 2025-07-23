@@ -40,9 +40,10 @@
 </template>
 
 <script>
-import clipboard from '@/utils/clipboard'
+import clipboard from '@/plugins/ClipboardPlugin'
 import svgIcons from './svg-icons'
 import elementIcons from './element-icons'
+
 export default {
   name: 'Icons',
   data() {
@@ -75,6 +76,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
+
   .icon-item {
     margin: 20px;
     height: 85px;
@@ -85,11 +87,13 @@ export default {
     color: #24292e;
     cursor: pointer;
   }
+
   span {
     display: block;
     font-size: 16px;
     margin-top: 10px;
   }
+
   .disabled {
     pointer-events: none;
   }

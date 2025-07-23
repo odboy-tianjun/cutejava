@@ -7,7 +7,7 @@
 
 <script>
 // doc: https://panjiachen.github.io/vue-element-admin-site/feature/component/svg-icon.html#usage
-import { isExternal } from '@/utils/validate'
+import { IsExternal } from '@/utils/CsValidateUtil'
 
 export default {
   name: 'SvgIcon',
@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     isExternal() {
-      return isExternal(this.iconClass)
+      return IsExternal(this.iconClass)
     },
     iconName() {
       return `#icon-${this.iconClass}`
@@ -56,7 +56,7 @@ export default {
 
 .svg-external-icon {
   background-color: currentColor;
-  mask-size: cover!important;
+  mask-size: cover !important;
   display: inline-block;
 }
 </style>

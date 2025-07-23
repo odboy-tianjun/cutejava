@@ -11,8 +11,7 @@
   </el-card>
 </template>
 <script>
-import MyWebSocket from '@/utils/websocket'
-import { mapGetters } from 'vuex'
+import CsWsClient from '@/utils/CsWsClient'
 
 export default {
   data() {
@@ -21,12 +20,6 @@ export default {
       sendVal: '',
       responseTxt: ''
     }
-  },
-  computed: {
-    ...mapGetters([
-      'websocketApi',
-      'user'
-    ])
   },
   // mounted() {},
   destroyed() {
@@ -39,7 +32,7 @@ export default {
       // 获取mapGetters中的值
       // console.error('userInfo', this.user)
       const that = this
-      that.client = new MyWebSocket(that, that.websocketApi.replaceAll('{sid}', that.user.username))
+      that.client = new CsWsClient(that)
       that.client.connect(function(event) {
         console.info('=============== MyWebSocket:event', event)
       }, function(msgEvent) {

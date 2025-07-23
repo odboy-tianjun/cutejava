@@ -27,6 +27,7 @@ import 'codemirror/mode/sql/sql'
 import 'codemirror/mode/vue/vue'
 import 'codemirror/mode/xml/xml'
 import { Message } from 'element-ui'
+
 const SupportModeList = ['yaml', 'java', 'go', 'swift', 'dockerfile', 'groovy', 'lua', 'perl', 'python', 'ruby', 'sql', 'xml', 'vue']
 export default {
   name: 'CuteCodeEditor',

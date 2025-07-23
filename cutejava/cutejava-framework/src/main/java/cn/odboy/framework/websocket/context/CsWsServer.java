@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-@ServerEndpoint("/webSocket/{sid}")
+@ServerEndpoint("/websocket/{sid}")
 public class CsWsServer {
     @Autowired
     private WsClientManager wsClientManager;

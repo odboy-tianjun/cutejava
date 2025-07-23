@@ -52,6 +52,9 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
     }
 
+    /**
+     * Http消息转换器
+     */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         // 添加默认的 StringHttpMessageConverter

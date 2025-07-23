@@ -34,7 +34,7 @@ const user = {
           setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
           setUserInfo(res.user, commit)
-          // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
+          // 第一次加载菜单时用到， 具体见 src/plugins/CheckPermPlugin.js
           commit('SET_LOAD_MENUS', true)
           resolve()
         }).catch(error => {

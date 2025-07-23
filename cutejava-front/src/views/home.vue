@@ -36,6 +36,7 @@ import LineChart from './dashboard/LineChart'
 import RadarChart from '@/components/Echarts/RadarChart'
 import PieChart from '@/components/Echarts/PieChart'
 import BarChart from '@/components/Echarts/BarChart'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 const lineChartData = {
   newVisitis: {
@@ -71,6 +72,20 @@ export default {
       lineChartData: lineChartData.newVisitis
     }
   },
+  mounted() {
+    // setTimeout(() => {
+    //   CsMessage.Info('CsMessage Info')
+    // }, 1000)
+    // setTimeout(() => {
+    //   CsMessage.Warning('CsMessage Warning')
+    // }, 2000)
+    // setTimeout(() => {
+    //   CsMessage.Error('CsMessage Error')
+    // }, 3000)
+    // setTimeout(() => {
+    //   CsMessage.Success('CsMessage Success')
+    // }, 4000)
+  },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
@@ -80,28 +95,28 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 32px;
-    background-color: rgb(240, 242, 245);
-    position: relative;
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
 
-    .github-corner {
-      position: absolute;
-      top: 0;
-      border: 0;
-      right: 0;
-    }
-
-    .chart-wrapper {
-      background: #fff;
-      padding: 16px 16px 0;
-      margin-bottom: 32px;
-    }
+  .github-corner {
+    position: absolute;
+    top: 0;
+    border: 0;
+    right: 0;
   }
 
-  @media (max-width:1024px) {
-    .chart-wrapper {
-      padding: 8px;
-    }
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
   }
+}
+
+@media (max-width: 1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
 </style>

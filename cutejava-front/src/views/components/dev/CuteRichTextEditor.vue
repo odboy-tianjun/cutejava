@@ -28,8 +28,9 @@
 import { mapGetters } from 'vuex'
 import '@wangeditor/editor/dist/css/style.css'
 import { Message } from 'element-ui'
-import { upload } from '@/utils/upload'
-import { Toolbar, Editor } from '@wangeditor/editor-for-vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { UploadFile } from '@/utils/CsDomUtil'
+
 export default {
   name: 'CuteRichTextEditor',
   components: { Toolbar, Editor },
@@ -62,7 +63,7 @@ export default {
             allowedFileTypes: ['image/*'],
             // 自定义上传
             async customUpload(file, insertFn) { // JS 语法
-              upload(that.imagesUploadApi, file).then(res => {
+              UploadFile(that.imagesUploadApi, file).then(res => {
                 const data = res.data
                 const url = that.baseApi + '/file/' + data.dateGroup + '/' + data.realName
                 // 最后插入图片

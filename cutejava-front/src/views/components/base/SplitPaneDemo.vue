@@ -45,23 +45,26 @@
 export default {
   name: 'SplitPaneDemo',
   methods: {
-    resize() {}
+    resize() {
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.wrap{
-  height:300px;
-  .paneL{
-    background-color:red;
-    height:100%;
-    width:100%;
+.wrap {
+  height: 300px;
+
+  .paneL {
+    background-color: red;
+    height: 100%;
+    width: 100%;
   }
-  .paneR{
+
+  .paneR {
     background-color: blue;
-    height:100%;
-    width:100%;
+    height: 100%;
+    width: 100%;
   }
 }
 </style>

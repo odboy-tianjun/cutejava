@@ -12,6 +12,7 @@
 <script>
 import Local from './local/index.vue'
 import Oss from './oss/index.vue'
+
 export default {
   name: 'Storage',
   components: { Local, Oss },

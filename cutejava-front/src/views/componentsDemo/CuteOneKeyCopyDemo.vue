@@ -11,6 +11,7 @@
 import Clipboard from 'clipboard'
 import { Message } from 'element-ui'
 import CuteOneKeyCopy from '@/views/components/dev/CuteOneKeyCopy'
+
 export default {
   components: { CuteOneKeyCopy },
   data() {
@@ -54,6 +55,7 @@ export default {
   color: #333;
   cursor: pointer;
 }
+
 #btn:active {
   background-color: #ddd;
   color: #666;

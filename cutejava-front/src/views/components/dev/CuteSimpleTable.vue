@@ -14,8 +14,20 @@
       @selection-change="onTableSelectionChange"
     >
       <el-table-column v-if="mode === 'multi'" type="selection" width="55" />
-      <el-table-column v-for="(column, index) in crud.columns" :key="index" :label="column.label" :prop="column.prop" :formatter="column.formatter ? column.formatter : null" />
-      <el-table-column v-if="crud.operateColumn" :width="crud.operateColumn.width" label="操作" :formatter="crud.operateColumn.formatter" :fixed="crud.operateColumn.fixed" />
+      <el-table-column
+        v-for="(column, index) in crud.columns"
+        :key="index"
+        :label="column.label"
+        :prop="column.prop"
+        :formatter="column.formatter ? column.formatter : null"
+      />
+      <el-table-column
+        v-if="crud.operateColumn"
+        :width="crud.operateColumn.width"
+        label="操作"
+        :formatter="crud.operateColumn.formatter"
+        :fixed="crud.operateColumn.fixed"
+      />
     </el-table>
     <el-pagination
       :current-page="pageProps.current"

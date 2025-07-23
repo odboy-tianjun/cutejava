@@ -61,7 +61,9 @@
     <el-row>
       <el-col :span="12" style="text-align: left">
         <!-- 流水线状态为fail，且节点支持重试 -->
-        <div v-if="pipelineData.currentNodeStatus === 'fail' && pipelineData.retry === true">
+        <div
+          v-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === 'fail' && pipelineData.retry === true"
+        >
           <div class="box-buttons">
             <el-button
               type="text"
@@ -69,7 +71,7 @@
               :style="{
                 padding: 0,
                 margin: '0 10px 0 10px',
-                color: statusColorConst.success.color
+                color: statusColorConst.running.color
               }"
               @click="onNodeRetryClick"
             >
@@ -79,7 +81,7 @@
         </div>
         <!-- 流水线状态为success，且有需要满足条件的操作按钮 -->
         <div
-          v-else-if="pipelineData.currentNodeStatus === statusColorConst.success.code && pipelineData.buttons && pipelineData.buttons.length > 0"
+          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.success.code && pipelineData.buttons && pipelineData.buttons.length > 0"
         >
           <div class="box-buttons">
             <el-button
@@ -90,7 +92,7 @@
               :style="{
                 padding: 0,
                 margin: '0 10px 0 10px',
-                color: ['apply','agree','ok','success'].includes(buttonItem.code) ? 'green' : 'red',
+                color: ['apply','agree','ok','success'].includes(buttonItem.code) ? statusColorConst.running.color : statusColorConst.fail.color,
                 display: ['success', 'fail'].includes(buttonItem.code) && pipelineData.status === buttonItem.code ? '' : 'none'
               }"
               @click="onNodeOperationClick(buttonItem)"
@@ -101,7 +103,7 @@
         </div>
         <!-- 流水线状态非pending，且有操作按钮 -->
         <div
-          v-else-if="pipelineData.currentNodeStatus !== statusColorConst.pending.code && pipelineData.buttons && pipelineData.buttons.length > 0"
+          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus !== statusColorConst.pending.code && pipelineData.buttons && pipelineData.buttons.length > 0"
         >
           <div class="box-buttons">
             <el-button
@@ -112,7 +114,7 @@
               :style="{
                 padding: 0,
                 margin: '0 10px 0 10px',
-                color: ['apply','agree','ok','success'].includes(buttonItem.code) ? 'green' : 'red'
+                color: ['apply','agree','ok','success'].includes(buttonItem.code) ? statusColorConst.running.color : statusColorConst.fail.color
               }"
               @click="onNodeOperationClick(buttonItem)"
             >
@@ -160,7 +162,7 @@ export default {
     return {
       statusColorConst: {
         pending: { code: 'pending', label: '未开始', color: '#C0C4CC' },
-        running: { code: 'running', label: '运行中', color: '#67C23A' },
+        running: { code: 'running', label: '运行中', color: '#409EFF' },
         success: { code: 'success', label: '执行成功', color: '#67C23A' },
         fail: { code: 'fail', label: '执行失败', color: '#F56C6C' }
       },
@@ -265,8 +267,8 @@ export default {
 </script>
 <style scoped>
 .box-card {
-  width: 240px; /* 卡片宽度 */
-  max-width: 240px; /* 卡片宽度 */
+  width: 260px; /* 卡片宽度 */
+  max-width: 260px; /* 卡片宽度 */
   padding: 10px;
   background-color: #fff; /* 背景颜色 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */

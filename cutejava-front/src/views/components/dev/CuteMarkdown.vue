@@ -15,10 +15,11 @@
 </template>
 
 <script>
-import { upload } from '@/utils/upload'
 import { mapGetters } from 'vuex'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import { UploadFile } from '@/utils/CsDomUtil'
+
 const dynamicHeight = 160
 export default {
   name: 'CuteMarkdown',
@@ -52,7 +53,7 @@ export default {
   methods: {
     imgAdd(pos, $file) {
       const that = this
-      upload(that.imagesUploadApi, $file).then(res => {
+      UploadFile(that.imagesUploadApi, $file).then(res => {
         const data = res.data
         const url = that.baseApi + '/file/' + data.type + '/' + data.realName
         that.$refs.md.$img2Url(pos, url)
