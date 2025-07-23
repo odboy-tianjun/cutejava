@@ -15,16 +15,16 @@ import java.util.List;
 public class PipelineNodeMergeBranchBiz {
     @PipelineNodeStepLog("分支合并开始")
     public void mergeBranchStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
+        ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("集成区分支合并到release分支")
     public void integrationAreaBranchMergeRelease(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
+        ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("分支合并完成")
     public void mergeBranchFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(5000);
+        ThreadUtil.safeSleep(2000);
     }
 }

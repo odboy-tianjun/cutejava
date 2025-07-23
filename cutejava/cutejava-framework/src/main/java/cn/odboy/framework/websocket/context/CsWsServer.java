@@ -1,8 +1,8 @@
 package cn.odboy.framework.websocket.context;
 
 import com.alibaba.fastjson2.JSON;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -15,9 +15,8 @@ import java.util.Objects;
 @Slf4j
 @Component
 @ServerEndpoint("/websocket/{sid}")
+@Getter
 public class CsWsServer {
-    @Autowired
-    private WsClientManager wsClientManager;
     /**
      * 与某个客户端的连接会话, 需要通过它来给客户端发送数据
      */
@@ -34,7 +33,7 @@ public class CsWsServer {
     public void onOpen(Session session, @PathParam("sid") String sid) {
         this.session = session;
         this.sid = sid;
-        wsClientManager.addClient(sid, this);
+        CsWsClientManager.addClient(sid, this);
     }
 
     /**
@@ -42,7 +41,11 @@ public class CsWsServer {
      */
     @OnClose
     public void onClose() {
-        wsClientManager.removeClient(this.sid);
+        try {
+            CsWsClientManager.removeClient(this.sid);
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     /**
@@ -52,8 +55,10 @@ public class CsWsServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("收到来 sid={} 的信息: {}", sid, message);
-        sendToAll(message);
+        CsWsMessage wsMessage = JSON.parseObject(message, CsWsMessage.class);
+        String bizType = wsMessage.getBizType();
+        Object data = wsMessage.getData();
+        log.info("收到来 sid={} 的信息: message={}, bizType={}, data={}", sid, message, bizType, JSON.toJSONString(data));
     }
 
     /**
@@ -62,11 +67,12 @@ public class CsWsServer {
      * @param message /
      */
     private void sendToAll(String message) {
-        for (CsWsServer item : wsClientManager.getAllClient()) {
+        for (CsWsServer item : CsWsClientManager.getAllClient()) {
             try {
                 item.innerSendMessage(message);
             } catch (IOException e) {
                 log.error("发送消息给 sid={} 失败", item.sid, e);
+                CsWsClientManager.removeClient(item.sid);
             }
         }
     }
@@ -74,6 +80,15 @@ public class CsWsServer {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("WebSocket sid={} 发生错误", this.sid, error);
+        CsWsServer client = CsWsClientManager.getClientBySid(this.sid);
+        if (client != null) {
+            try {
+                client.getSession().close();
+            } catch (IOException e) {
+                // ignore
+            }
+            CsWsClientManager.removeClient(this.sid);
+        }
     }
 
     /**
@@ -93,7 +108,10 @@ public class CsWsServer {
             if (sid == null) {
                 sendToAll(body);
             } else {
-                wsClientManager.getClientBySid(sid).innerSendMessage(body);
+                CsWsServer wsClient = CsWsClientManager.getClientBySid(sid);
+                if (wsClient != null) {
+                    wsClient.innerSendMessage(body);
+                }
             }
         } catch (Exception ignored) {
         }
@@ -108,8 +126,7 @@ public class CsWsServer {
             return false;
         }
         CsWsServer that = (CsWsServer) o;
-        return Objects.equals(session, that.session) &&
-                Objects.equals(sid, that.sid);
+        return Objects.equals(session, that.session) && Objects.equals(sid, that.sid);
     }
 
     @Override

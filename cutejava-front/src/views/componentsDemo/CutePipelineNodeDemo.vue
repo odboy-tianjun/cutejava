@@ -67,9 +67,10 @@
 
 import CutePipelineNode from '@/views/components/dev/CutePipelineNode'
 import { getPipelineTemplate } from '@/api/devops/pipelineTemplate'
-import { queryLastPipelineDetail, restartPipeline, startPipeline } from '@/api/devops/pipelineInstance'
+import { queryLastPipelineDetail, queryLastPipelineDetailWs, startPipeline } from '@/api/devops/pipelineInstance'
 import { CountArraysObjectByPropKey, FormatDateTimeStr } from '@/utils/CsUtil'
 import CsMessage from '@/utils/elementui/CsMessage'
+import CsWsClient from '@/utils/CsWsClient'
 
 export default {
   name: 'CutePipelineNodeDemo',
@@ -458,16 +459,18 @@ export default {
       dynamicStartButtonLoading: false,
       dynamicTemplate: [],
       dynamicHook: null,
-      dynamicInstance: {}
+      dynamicInstance: {},
+      dynamicWsClient: null
     }
   },
   mounted() {
     this.refreshData()
     this.initPipelineTemplate(4)
-    const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
-    if (pipelineInstanceId) {
-      this.fetchLastDetail(pipelineInstanceId)
-    }
+    // const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
+    // if (pipelineInstanceId) {
+    //   this.fetchLastDetail(pipelineInstanceId)
+    // }
+    // this.connectWebSocketServer(pipelineInstanceId)
   },
   methods: {
     refreshData() {
@@ -486,6 +489,11 @@ export default {
       }
       this.dataList3 = [...this.dataList3]
     },
+    /**
+     * 初始化流水线模板
+     * @param templateId
+     * @returns {Promise<void>}
+     */
     async initPipelineTemplate(templateId) {
       const pipelineTemplate = await getPipelineTemplate(templateId)
       if (pipelineTemplate && pipelineTemplate.template) {
@@ -496,6 +504,51 @@ export default {
         }
       }
     },
+    /**
+     * 连接WebSocket服务
+     */
+    connectWebSocketServer(instanceId) {
+      const that = this
+      const sid = 'instanceId_' + instanceId
+      that.dynamicWsClient = new CsWsClient(sid)
+      that.dynamicWsClient.connect(that.handleWebSocketError, that.handleWebSocketMessage)
+      setTimeout(() => {
+        // 请求推送流水线数据
+        queryLastPipelineDetailWs(sid)
+        that.dynamicStartButtonLoading = false
+        that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
+      }, 1000)
+    },
+    handleWebSocketError(e) {
+      console.error('连接WebSocket服务失败', e)
+    },
+    handleWebSocketMessage(e) {
+      const that = this
+      const data = e.data
+      // console.error('来自服务器的数据:data', data)
+      const callbackData = JSON.parse(data)
+      // console.error('callbackData', callbackData)
+      try {
+        that.dynamicInstance = JSON.parse(callbackData.data)
+        // 判断流水线是否结束
+        const successCount = CountArraysObjectByPropKey(that.dynamicInstance.nodes, 'status', 'success')
+        if (that.dynamicTemplate && that.dynamicTemplate.length === successCount) {
+          if (that.dynamicWsClient) {
+            that.dynamicWsClient.close()
+          }
+          that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
+        } else {
+          that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
+        }
+      } catch (e) {
+        // ignore
+      }
+    },
+    /**
+     * 通过Http的方式拉取流水线最新的状态
+     * @param instanceId
+     * @returns {Promise<void>}
+     */
     async fetchLastDetail(instanceId) {
       const that = this
       const intervalTime = 2000
@@ -517,6 +570,10 @@ export default {
         that.dynamicStartButtonLoading = false
       }, 2000)
     },
+    /**
+     * 启动流水线
+     * @returns {Promise<void>}
+     */
     async startPipelineTest() {
       const that = this
       try {
@@ -535,8 +592,9 @@ export default {
         // }
         const result = await startPipeline()
         CsMessage.Success('流水线启动成功')
-        await that.fetchLastDetail(result.instanceId)
+        // await that.fetchLastDetail(result.instanceId)
         sessionStorage.setItem('pipelineInstanceId', result.instanceId)
+        this.connectWebSocketServer(result.instanceId)
       } catch (e) {
         that.dynamicStartButtonLoading = false
       }

@@ -1,6 +1,7 @@
 package cn.odboy.devops.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.odboy.devops.constant.pipeline.PipelineConst;
 import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeDetailTb;
@@ -16,13 +17,18 @@ import cn.odboy.devops.service.PipelineInstanceNodeDetailService;
 import cn.odboy.devops.service.PipelineInstanceNodeService;
 import cn.odboy.devops.service.PipelineInstanceService;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.websocket.context.CsWsMessage;
+import cn.odboy.framework.websocket.context.CsWsServer;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -33,6 +39,8 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
     private final PipelineInstanceDAO pipelineInstanceDAO;
     private final PipelineInstanceNodeService pipelineInstanceNodeService;
     private final PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
+    private final CsWsServer csWsServer;
+    private volatile Map<String, Thread> runningThreadMap = new HashMap<>();
 
     @Override
     public StartPipelineResultVo startPipeline(PipelineInstanceTb pipelineInstanceTb) {
@@ -98,5 +106,35 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
         PipelineInstanceVo pipelineInstanceVo = BeanUtil.copyProperties(pipelineInstanceTb, PipelineInstanceVo.class);
         pipelineInstanceVo.setNodes(records);
         return pipelineInstanceVo;
+    }
+
+    @Override
+    public void queryLastPipelineDetailWs(String instanceId) {
+        Thread thread = runningThreadMap.get(instanceId);
+        if (thread != null && !thread.isInterrupted()) {
+            try {
+                thread.stop();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        thread = new Thread(() -> {
+            boolean loop = true;
+            final String currentSid = instanceId;
+            final String realInstanceId = currentSid.replace("instanceId_", "");
+            while (loop) {
+                ThreadUtil.safeSleep(1000);
+                try {
+                    PipelineInstanceVo pipelineInstanceVo = queryLastPipelineDetail(realInstanceId);
+                    CsWsMessage message = new CsWsMessage("FetchPipelineLastDetail", JSON.toJSONString(pipelineInstanceVo));
+                    csWsServer.sendMessage(message, currentSid);
+                } catch (IOException e) {
+                    log.error("推送流水线最新数据失败", e);
+                    loop = false;
+                }
+            }
+        });
+        thread.start();
+        runningThreadMap.put(instanceId, thread);
     }
 }

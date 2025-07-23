@@ -75,4 +75,12 @@ public class DevopsPipelineInstanceController {
     public ResponseEntity<?> queryLastPipelineDetail(@Validated @RequestBody DevOpsQueryLastPipelineDetailArgs args) {
         return ResponseEntity.ok(pipelineInstanceService.queryLastPipelineDetail(args.getInstanceId()));
     }
+
+    @ApiOperation("查询流水线明细Ws")
+    @PostMapping(value = "/lastWs")
+    @PreAuthorize("@el.check()")
+    public ResponseEntity<?> queryLastPipelineDetailWs(@Validated @RequestBody DevOpsQueryLastPipelineDetailArgs args) {
+        pipelineInstanceService.queryLastPipelineDetailWs(args.getInstanceId());
+        return ResponseEntity.ok("开始推送流水线明细");
+    }
 }

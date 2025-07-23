@@ -20,7 +20,7 @@ public class PipelineNodeDeployJavaBiz {
 
     @PipelineNodeStepLog("部署中")
     public void deployJavaByWithContextName(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult, String templateType) {
-        ThreadUtil.safeSleep(10000);
+        ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("部署完成")
