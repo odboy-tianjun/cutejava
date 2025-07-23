@@ -4,8 +4,9 @@
 
 <script>
 import echarts from 'echarts'
+import { DeBounce } from '@/utils/CsUtil'
+
 require('echarts/theme/macarons') // echarts theme
-import { debounce } from '@/utils'
 
 const animationDuration = 3000
 
@@ -31,7 +32,7 @@ export default {
   },
   mounted() {
     this.initChart()
-    this.__resizeHandler = debounce(() => {
+    this.__resizeHandler = DeBounce(() => {
       if (this.chart) {
         this.chart.resize()
       }

@@ -1,6 +1,6 @@
 import { download, initData } from '@/api/data'
-import { downloadFile, parseTime } from '@/utils/index'
 import Vue from 'vue'
+import { DownloadFile } from '@/utils/CsDomUtil'
 
 /**
  * CRUD配置
@@ -30,15 +30,20 @@ function CRUD(options) {
     // Form 表单
     form: {},
     // 重置表单
-    defaultForm: () => {},
+    defaultForm: () => {
+    },
     // 等待时间
     time: 50,
     // CRUD Method
     crudMethod: {
-      add: (form) => {},
-      del: (id) => {},
-      edit: (form) => {},
-      get: (id) => {}
+      add: (form) => {
+      },
+      del: (id) => {
+      },
+      edit: (form) => {
+      },
+      get: (id) => {
+      }
     },
     // 主页操作栏显示哪些按钮
     optShow: {
@@ -328,7 +333,7 @@ function CRUD(options) {
     doExport() {
       crud.downloadLoading = true
       download(crud.url + '/download', crud.getQueryParams()).then(result => {
-        downloadFile(result, crud.title + '数据', 'xlsx')
+        DownloadFile(result, crud.title + '数据', 'xlsx')
         crud.downloadLoading = false
       }).catch(() => {
         crud.downloadLoading = false
@@ -419,6 +424,7 @@ function CRUD(options) {
      */
     resetDataStatus() {
       const dataStatus = {}
+
       function resetStatus(datas) {
         datas.forEach(e => {
           dataStatus[crud.getDataId(e)] = {
@@ -430,6 +436,7 @@ function CRUD(options) {
           }
         })
       }
+
       resetStatus(crud.data)
       crud.dataStatus = dataStatus
     },
@@ -461,7 +468,9 @@ function CRUD(options) {
      */
     selectChange(selection, row) {
       // 如果selection中存在row代表是选中，否则是取消选中
-      if (selection.find(val => { return crud.getDataId(val) === crud.getDataId(row) })) {
+      if (selection.find(val => {
+        return crud.getDataId(val) === crud.getDataId(row)
+      })) {
         if (row.children) {
           row.children.forEach(val => {
             crud.getTable().toggleRowSelection(val, true)
@@ -673,9 +682,6 @@ function presenter(crud) {
         ele.registerVM('presenter', this, 0)
       })
       this.crud = this.$crud['defalut'] || cruds[0]
-    },
-    methods: {
-      parseTime
     },
     created() {
       for (const k in this.$crud) {

@@ -4,7 +4,15 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
-        <el-input v-model="query.blurry" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-input
+          v-model="query.blurry"
+          clearable
+          size="small"
+          placeholder="输入内容模糊搜索"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
         <date-range-picker v-model="query.createTime" class="date-item" />
         <rrOperation />
       </div>
@@ -23,7 +31,14 @@
       </crudOperation>
     </div>
     <!--表单组件-->
-    <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.add ? '文件上传' : '编辑文件'" width="500px">
+    <el-dialog
+      append-to-body
+      :close-on-click-modal="false"
+      :before-close="crud.cancelCU"
+      :visible.sync="crud.status.cu > 0"
+      :title="crud.status.add ? '文件上传' : '编辑文件'"
+      width="500px"
+    >
       <el-form ref="form" :model="form" size="small" label-width="80px">
         <el-form-item label="文件名">
           <el-input v-model="form.name" style="width: 370px;" />
@@ -52,7 +67,13 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+    <el-table
+      ref="table"
+      v-loading="crud.loading"
+      :data="crud.data"
+      style="width: 100%;"
+      @selection-change="crud.selectionChangeHandler"
+    >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="文件名">
         <template slot-scope="scope">
@@ -105,7 +126,7 @@
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import crudFile from '@/api/system/localStorage'
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
+import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
@@ -175,10 +196,11 @@ export default {
 </script>
 
 <style scoped>
- ::v-deep .el-image__error, .el-image__placeholder{
-    background: none;
-  }
- ::v-deep .el-image-viewer__wrapper{
-    top: 55px;
-  }
+::v-deep .el-image__error, .el-image__placeholder {
+  background: none;
+}
+
+::v-deep .el-image-viewer__wrapper {
+  top: 55px;
+}
 </style>

@@ -49,14 +49,6 @@ spring:
       repositories:
         # 是否启用Redis存储(关闭防止出现 Multiple Spring Data modules found, entering strict repository configuration mode)
         enabled: false
-  #    mongodb:
-  #      auto-index-creation: true
-  #      host: 192.168.100.128    #指定MongoDB服务地址
-  #      port: 27017     #指定端口，默认就为27017
-  #      database: admin   #指定使用的数据库(集合)
-  #      authentication-database: admin   # 登录认证的逻辑库名
-  #      username: admin  #用户名
-  #      password: 123456  #密码
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource

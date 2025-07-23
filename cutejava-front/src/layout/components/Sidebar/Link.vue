@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { isExternal } from '@/utils/validate'
+import { IsExternal } from '@/utils/CsValidateUtil'
 
 export default {
   props: {
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     linkProps(url) {
-      if (isExternal(url)) {
+      if (IsExternal(url)) {
         return {
           is: 'a',
           href: url,

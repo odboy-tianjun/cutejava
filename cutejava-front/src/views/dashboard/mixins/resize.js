@@ -1,4 +1,4 @@
-import { debounce } from '@/utils'
+import { DeBounce } from '@/utils/CsUtil'
 
 export default {
   data() {
@@ -8,7 +8,7 @@ export default {
     }
   },
   mounted() {
-    this.$_resizeHandler = debounce(() => {
+    this.$_resizeHandler = DeBounce(() => {
       if (this.chart) {
         this.chart.resize()
       }

@@ -1,4 +1,4 @@
-import Date from './datetime.js'
+import Date from '../plugins/DateExtendPlugin.js'
 
 export const calendarBaseShortcuts = [{
   text: '今天',

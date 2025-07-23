@@ -106,7 +106,9 @@ export default {
 
       for (const router of routes) {
         // skip hidden router
-        if (router.hidden) { continue }
+        if (router.hidden) {
+          continue
+        }
 
         const data = {
           path: !this.ishttp(router.path) ? path.resolve(basePath, router.path) : router.path,
@@ -167,7 +169,7 @@ export default {
     display: inline-block;
     vertical-align: middle;
 
-   ::v-deep .el-input__inner {
+    ::v-deep .el-input__inner {
       border-radius: 0;
       border: 0;
       padding-left: 0;

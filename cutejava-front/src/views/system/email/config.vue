@@ -28,6 +28,7 @@
 
 <script>
 import { getLastEmailConfig, modifyEmailConfig } from '@/api/system/email'
+
 export default {
   name: 'Config',
   data() {

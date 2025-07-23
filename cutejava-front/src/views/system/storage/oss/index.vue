@@ -95,7 +95,7 @@
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import crudFile from '@/api/system/ossStorage'
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
+import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'

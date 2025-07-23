@@ -68,10 +68,10 @@
 
 <script>
 import CuteSimpleTable from '@/views/components/dev/CuteSimpleTable'
-import { DateUtil } from '@/utils/myUtil'
 import DictService from '@/api/system/dict'
 import CuteFormDialog from '@/views/components/dev/CuteFormDialog'
 import CuteFormDrawer from '@/views/components/dev/CuteFormDrawer'
+import { FormatRowDateTimeStr } from '@/utils/CsUtil'
 
 export default {
   name: 'CuteSimpleTableDemo',
@@ -101,7 +101,7 @@ export default {
         columns: [
           { prop: 'name', label: '名称' },
           { prop: 'description', label: '描述' },
-          { prop: 'createTime', label: '创建时间', formatter: DateUtil.formatRowDateTime },
+          { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
           { prop: 'createBy', label: '创建人' }
         ],
         operateColumn: {

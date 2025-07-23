@@ -18,6 +18,7 @@
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
+
 export default {
   name: 'CuteFileUpload',
   props: {

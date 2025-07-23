@@ -2,10 +2,7 @@ import {
   initData,
   download
 } from '@/api/data'
-import {
-  parseTime,
-  downloadFile
-} from '@/utils'
+import { DownloadFile } from '@/utils/CsDomUtil'
 
 export default {
   data() {
@@ -46,8 +43,7 @@ export default {
     }
   },
   methods: {
-    parseTime,
-    downloadFile,
+    DownloadFile,
     async init() {
       if (!await this.beforeInit()) {
         return

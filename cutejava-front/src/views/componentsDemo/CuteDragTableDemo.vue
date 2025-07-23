@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import { DateUtil } from '@/utils/myUtil'
 import DictService from '@/api/system/dict'
 import CuteDragTable from '@/views/components/dev/CuteDragTable.vue'
+import { FormatRowDateTimeStr } from '@/utils/CsUtil'
 
 export default {
   name: 'CuteDragTableDemo',
@@ -74,7 +74,7 @@ export default {
         columns: [
           { prop: 'name', label: '名称' },
           { prop: 'description', label: '描述' },
-          { prop: 'createTime', label: '创建时间', formatter: DateUtil.formatRowDateTime },
+          { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
           { prop: 'createBy', label: '创建人' }
         ],
         operateColumn: {

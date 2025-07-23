@@ -2,7 +2,15 @@
   <div class="app-container">
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <el-input v-model="query.userName" clearable size="small" placeholder="输入用户名称查询" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-input
+          v-model="query.userName"
+          clearable
+          size="small"
+          placeholder="输入用户名称查询"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
         <rrOperation />
       </div>
       <crudOperation>
@@ -21,7 +29,13 @@
       </crudOperation>
     </div>
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+    <el-table
+      ref="table"
+      v-loading="crud.loading"
+      :data="crud.data"
+      style="width: 100%;"
+      @selection-change="crud.selectionChangeHandler"
+    >
       <el-table-column type="selection" width="55" />
       <el-table-column :show-overflow-tooltip="true" prop="uid" label="会话编号" />
       <el-table-column prop="userName" label="用户名" />
@@ -42,7 +56,13 @@
             <p>确定强制退出该用户吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.key, scope.$index)">确定</el-button>
+              <el-button
+                :loading="delLoading"
+                type="primary"
+                size="mini"
+                @click="delMethod(scope.row.key, scope.$index)"
+              >确定
+              </el-button>
             </div>
             <el-button slot="reference" size="mini" type="text">强退</el-button>
           </el-popover>
@@ -56,7 +76,7 @@
 
 <script>
 import { kickOutUser } from '@/api/system/online'
-import CRUD, { presenter, header, crud } from '@crud/crud'
+import CRUD, { crud, header, presenter } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
@@ -91,7 +111,8 @@ export default {
         type: 'warning'
       }).then(() => {
         this.delMethod(datas)
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
     // 踢出用户
     delMethod(key, index) {

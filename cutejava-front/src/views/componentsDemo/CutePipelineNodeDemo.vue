@@ -1,19 +1,28 @@
 <template>
   <div>
-    <el-divider>演示：动态流水线 <el-button type="primary" @click="startPipelineTest">启动流水线</el-button></el-divider>
+    <el-divider>演示：动态流水线
+      <el-button
+        v-prevent-re-click
+        type="primary"
+        :loading="dynamicStartButtonLoading"
+        :disabled="dynamicStartButtonLoading"
+        @click="startPipelineTest"
+      >{{ dynamicStartupStatusMap[dynamicStartupStatus].label }}
+      </el-button>
+    </el-divider>
     <div class="box-pipeline">
-      <div v-if="dynamicList && dynamicList.length > 0" class="box-pipeline-content">
+      <div v-if="dynamicInstance.nodes && dynamicInstance.nodes.length > 0" class="box-pipeline-content">
         <cute-pipeline-node
-          v-for="(template, index) in dynamicList"
+          v-for="(template, index) in dynamicInstance.nodes"
           :key="template.code"
-          :template-data.sync="dynamicList[index]"
+          :template-data.sync="dynamicInstance.nodes[index]"
         />
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
-          v-for="(template, index) in templateList"
+          v-for="(template, index) in dynamicTemplate"
           :key="template.code"
-          :template-data.sync="templateList[index]"
+          :template-data.sync="dynamicTemplate[index]"
         />
       </div>
     </div>
@@ -28,9 +37,9 @@
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
-          v-for="(template, index) in templateList"
+          v-for="(template, index) in defaultTemplate"
           :key="template.code"
-          :template-data.sync="templateList[index]"
+          :template-data.sync="defaultTemplate[index]"
         />
       </div>
     </div>
@@ -45,9 +54,9 @@
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
-          v-for="(template, index) in templateList"
+          v-for="(template, index) in defaultTemplate"
           :key="template.code"
-          :template-data.sync="templateList[index]"
+          :template-data.sync="defaultTemplate[index]"
         />
       </div>
     </div>
@@ -57,15 +66,18 @@
 <script>
 
 import CutePipelineNode from '@/views/components/dev/CutePipelineNode'
-import { formatDateTimeStr } from '@/utils'
-import { startPipeline, queryLastPipelineDetail } from '@/api/devops/pipeline'
+import { getPipelineTemplate } from '@/api/devops/pipelineTemplate'
+import { queryLastPipelineDetail, restartPipeline, startPipeline } from '@/api/devops/pipelineInstance'
+import { CountArraysObjectByPropKey, FormatDateTimeStr } from '@/utils/CsUtil'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
   name: 'CutePipelineNodeDemo',
   components: { CutePipelineNode },
   data() {
     return {
-      templateList: [
+      // 静态模板
+      defaultTemplate: [
         {
           code: 'node_init',
           type: 'service',
@@ -438,46 +450,96 @@ export default {
         }
       ],
       // 动态流水线
+      dynamicStartupStatus: 'start',
+      dynamicStartupStatusMap: {
+        start: { label: '启动', code: 'start' },
+        restart: { label: '重新启动', code: 'restart' }
+      },
+      dynamicStartButtonLoading: false,
+      dynamicTemplate: [],
       dynamicHook: null,
-      dynamicList: [],
-      dynamicInstanceId: ''
+      dynamicInstance: {}
     }
   },
   mounted() {
     this.refreshData()
+    this.initPipelineTemplate(4)
+    const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
+    if (pipelineInstanceId) {
+      this.fetchLastDetail(pipelineInstanceId)
+    }
   },
   methods: {
     refreshData() {
       // 成功
       for (const datum of this.dataList2) {
         if (datum.status === 'running') {
-          datum.updateTime = formatDateTimeStr(new Date())
+          datum.updateTime = FormatDateTimeStr(new Date())
         }
       }
       this.dataList2 = [...this.dataList2]
       // 失败或重试
       for (const datum of this.dataList3) {
         if (datum.status === 'running') {
-          datum.updateTime = formatDateTimeStr(new Date())
+          datum.updateTime = FormatDateTimeStr(new Date())
         }
       }
       this.dataList3 = [...this.dataList3]
     },
-    startPipelineTest() {
-      const that = this
-      if (that.dynamicHook) {
-        clearInterval(that.dynamicHook)
+    async initPipelineTemplate(templateId) {
+      const pipelineTemplate = await getPipelineTemplate(templateId)
+      if (pipelineTemplate && pipelineTemplate.template) {
+        try {
+          this.dynamicTemplate = JSON.parse(pipelineTemplate.template)
+        } catch (e) {
+          // ignore
+        }
       }
-      startPipeline().then((instanceId) => {
-        that.dynamicInstanceId = instanceId
-        setTimeout(() => {
-          that.dynamicHook = setInterval(() => {
-            queryLastPipelineDetail(that.dynamicInstanceId).then((data) => {
-              that.dynamicList = data
-            })
-          }, 1000)
-        }, 2000)
-      })
+    },
+    async fetchLastDetail(instanceId) {
+      const that = this
+      const intervalTime = 2000
+      setTimeout(() => {
+        that.dynamicHook = setInterval(() => {
+          queryLastPipelineDetail(instanceId).then((data) => {
+            that.dynamicInstance = data
+            // 判断流水线是否结束
+            const successCount = CountArraysObjectByPropKey(data.nodes, 'status', 'success')
+            if (that.dynamicTemplate && that.dynamicTemplate.length === successCount) {
+              clearInterval(that.dynamicHook)
+              that.dynamicHook = null
+              that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
+            } else {
+              that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
+            }
+          })
+        }, intervalTime)
+        that.dynamicStartButtonLoading = false
+      }, 2000)
+    },
+    async startPipelineTest() {
+      const that = this
+      try {
+        if (that.dynamicHook) {
+          clearInterval(that.dynamicHook)
+        }
+        that.dynamicStartButtonLoading = true
+        // 这里的 dynamicStartupStatus状态，需要后期与上下文关联后，初始化的时候带入最近一个流水线实例
+        // let result
+        // if (that.dynamicStartupStatus === that.dynamicStartupStatusMap.start.code) {
+        //   result = await restartPipeline()
+        //   CsMessage.Success('流水线重新启动成功')
+        // } else {
+        //   result = await startPipeline()
+        //   CsMessage.Success('流水线启动成功')
+        // }
+        const result = await startPipeline()
+        CsMessage.Success('流水线启动成功')
+        await that.fetchLastDetail(result.instanceId)
+        sessionStorage.setItem('pipelineInstanceId', result.instanceId)
+      } catch (e) {
+        that.dynamicStartButtonLoading = false
+      }
     }
   }
 }
@@ -489,15 +551,19 @@ export default {
   white-space: nowrap; /* 防止内容换行，使所有内容在一行显示 */
   padding: 30px 20px 30px 20px;
 }
+
 .box-pipeline::-webkit-scrollbar {
   height: 5px; /* 设置水平滚动条高度 */
 }
+
 .box-pipeline::-webkit-scrollbar-track {
   background: #f1f1f1; /* 滚动条底色 */
 }
+
 .box-pipeline::-webkit-scrollbar-thumb {
   background: #DCDFE6; /* 滚动条颜色 */
 }
+
 .box-pipeline-content {
   display: inline-block; /* 使内容水平排列 */
   white-space: nowrap; /* 防止内容换行 */
