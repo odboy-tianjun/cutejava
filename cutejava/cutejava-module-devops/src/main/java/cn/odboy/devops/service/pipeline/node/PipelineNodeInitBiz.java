@@ -1,4 +1,4 @@
-package cn.odboy.devops.job.biz;
+package cn.odboy.devops.service.pipeline.node;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
@@ -15,7 +15,7 @@ import java.util.List;
 public class PipelineNodeInitBiz {
     @PipelineNodeStepLog("初始化开始")
     public void initStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(2000);
+        ThreadUtil.safeSleep(1000);
     }
 
     @PipelineNodeStepLog("Master分支合并到Release分支")
@@ -30,6 +30,6 @@ public class PipelineNodeInitBiz {
 
     @PipelineNodeStepLog("初始化完成")
     public void initFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(2000);
+        ThreadUtil.safeSleep(1000);
     }
 }

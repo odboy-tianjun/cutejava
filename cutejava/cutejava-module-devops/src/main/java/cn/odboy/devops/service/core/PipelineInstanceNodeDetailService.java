@@ -1,4 +1,4 @@
-package cn.odboy.devops.service;
+package cn.odboy.devops.service.core;
 
 import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeDetailTb;

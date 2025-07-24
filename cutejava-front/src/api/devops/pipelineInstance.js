@@ -1,16 +1,18 @@
 import request from '@/utils/request'
 
-export function startPipeline() {
+export function startPipeline(data) {
   return request({
     url: 'api/devops/pipelineInstance/start',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
-export function restartPipeline() {
+export function restartPipeline(data) {
   return request({
     url: 'api/devops/pipelineInstance/restart',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 

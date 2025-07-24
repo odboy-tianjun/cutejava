@@ -4,7 +4,7 @@ import cn.odboy.devops.constant.pipeline.PipelineConst;
 import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
-import cn.odboy.devops.service.PipelineInstanceNodeService;
+import cn.odboy.devops.service.core.PipelineInstanceNodeService;
 import cn.odboy.framework.context.SpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;

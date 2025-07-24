@@ -3,8 +3,8 @@ package cn.odboy.devops.controller;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.dataobject.PipelineTemplateTb;
 import cn.odboy.devops.dal.model.DevOpsQueryLastPipelineDetailArgs;
-import cn.odboy.devops.service.PipelineInstanceService;
-import cn.odboy.devops.service.PipelineTemplateService;
+import cn.odboy.devops.service.core.PipelineInstanceService;
+import cn.odboy.devops.service.core.PipelineTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +29,18 @@ public class DevopsPipelineInstanceController {
     @Autowired
     private PipelineInstanceService pipelineInstanceService;
 
+    /**
+     * 已验证流程
+     */
     @ApiOperation("启动流水线")
     @PostMapping(value = "/start")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> startPipeline() {
+    public ResponseEntity<?> startPipeline(@RequestBody PipelineTemplateTb args) {
         // 输入参数
         String appName = "cuteops";
         String envCode = "daily";
         // 获取模板
-        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(4L);
+        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(args.getId());
         // 创建流水线实例
         PipelineInstanceTb pipelineInstanceTb = new PipelineInstanceTb();
         pipelineInstanceTb.setTemplateId(pipelineTemplateTb.getId());
@@ -49,13 +52,26 @@ public class DevopsPipelineInstanceController {
         return ResponseEntity.ok(pipelineInstanceService.startPipeline(pipelineInstanceTb));
     }
 
+    /**
+     * TODO 待实现
+     */
     @ApiOperation("重启流水线")
     @PostMapping(value = "/restart")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> restartPipeline() {
+    public ResponseEntity<?> restartPipeline(@RequestBody PipelineTemplateTb args) {
+        return ResponseEntity.ok("功能开发中");
+    }
+
+    /**
+     * 已验证流程
+     */
+    @ApiOperation("流水线节点重试")
+    @PostMapping(value = "/retry")
+    @PreAuthorize("@el.check()")
+    public ResponseEntity<?> retryPipelineNode(@RequestBody PipelineTemplateTb args) {
         String appName = "cuteops";
         String envCode = "daily";
-        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(4L);
+        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(args.getId());
         PipelineInstanceTb pipelineInstanceTb = new PipelineInstanceTb();
         pipelineInstanceTb.setTemplateId(pipelineTemplateTb.getId());
         pipelineInstanceTb.setInstanceName("流水线测试");

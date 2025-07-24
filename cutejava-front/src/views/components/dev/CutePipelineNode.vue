@@ -61,10 +61,9 @@
     <el-row>
       <el-col :span="12" style="text-align: left">
         <!-- 流水线状态为fail，且节点支持重试 -->
-        <div
-          v-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === 'fail' && pipelineData.retry === true"
-        >
+        <div v-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === 'fail' && pipelineData.retry === true">
           <div class="box-buttons">
+            {{ '1' }}
             <el-button
               type="text"
               size="medium"
@@ -80,10 +79,9 @@
           </div>
         </div>
         <!-- 流水线状态为success，且有需要满足条件的操作按钮 -->
-        <div
-          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.success.code && pipelineData.buttons && pipelineData.buttons.length > 0"
-        >
+        <div v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus === statusColorConst.success.code && pipelineData.buttons && pipelineData.buttons.length > 0">
           <div class="box-buttons">
+            {{ '2' }}
             <el-button
               v-for="buttonItem in pipelineData.buttons"
               :key="buttonItem.service"
@@ -102,10 +100,9 @@
           </div>
         </div>
         <!-- 流水线状态非pending，且有操作按钮 -->
-        <div
-          v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus !== statusColorConst.pending.code && pipelineData.buttons && pipelineData.buttons.length > 0"
-        >
+        <div v-else-if="pipelineData.currentNodeStatus && pipelineData.currentNodeStatus !== statusColorConst.pending.code && pipelineData.buttons && pipelineData.buttons.length > 0">
           <div class="box-buttons">
+            {{ '3' }}
             <el-button
               v-for="buttonItem in pipelineData.buttons"
               :key="buttonItem.service"
@@ -267,8 +264,8 @@ export default {
 </script>
 <style scoped>
 .box-card {
-  width: 260px; /* 卡片宽度 */
-  max-width: 260px; /* 卡片宽度 */
+  width: 300px; /* 卡片宽度 */
+  max-width: 300px; /* 卡片宽度 */
   padding: 10px;
   background-color: #fff; /* 背景颜色 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */

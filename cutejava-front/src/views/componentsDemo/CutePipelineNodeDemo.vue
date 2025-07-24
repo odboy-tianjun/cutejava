@@ -1,8 +1,9 @@
 <template>
   <div>
-    <el-divider>演示：动态流水线
+    <el-divider>演示：{{ dynamicTemplate.description ? dynamicTemplate.description: '动态流水线演示' }}
       <el-button
         v-prevent-re-click
+        style="margin-left: 10px"
         type="primary"
         :loading="dynamicStartButtonLoading"
         :disabled="dynamicStartButtonLoading"
@@ -20,46 +21,46 @@
       </div>
       <div v-else class="box-pipeline-content">
         <cute-pipeline-node
-          v-for="(template, index) in dynamicTemplate"
+          v-for="(template, index) in dynamicTemplateList"
           :key="template.code"
-          :template-data.sync="dynamicTemplate[index]"
+          :template-data.sync="dynamicTemplateList[index]"
         />
       </div>
     </div>
-    <el-divider>演示：成功</el-divider>
-    <div class="box-pipeline">
-      <div v-if="dataList2 && dataList2.length > 0" class="box-pipeline-content">
-        <cute-pipeline-node
-          v-for="(template, index) in dataList2"
-          :key="template.code"
-          :template-data.sync="dataList2[index]"
-        />
-      </div>
-      <div v-else class="box-pipeline-content">
-        <cute-pipeline-node
-          v-for="(template, index) in defaultTemplate"
-          :key="template.code"
-          :template-data.sync="defaultTemplate[index]"
-        />
-      </div>
-    </div>
-    <el-divider>演示：失败或重试</el-divider>
-    <div class="box-pipeline">
-      <div v-if="dataList3 && dataList3.length > 0" class="box-pipeline-content">
-        <cute-pipeline-node
-          v-for="(template, index) in dataList3"
-          :key="template.code"
-          :template-data.sync="dataList3[index]"
-        />
-      </div>
-      <div v-else class="box-pipeline-content">
-        <cute-pipeline-node
-          v-for="(template, index) in defaultTemplate"
-          :key="template.code"
-          :template-data.sync="defaultTemplate[index]"
-        />
-      </div>
-    </div>
+    <!--    <el-divider>演示：成功</el-divider>-->
+    <!--    <div class="box-pipeline">-->
+    <!--      <div v-if="dataList2 && dataList2.length > 0" class="box-pipeline-content">-->
+    <!--        <cute-pipeline-node-->
+    <!--          v-for="(template, index) in dataList2"-->
+    <!--          :key="template.code"-->
+    <!--          :template-data.sync="dataList2[index]"-->
+    <!--        />-->
+    <!--      </div>-->
+    <!--      <div v-else class="box-pipeline-content">-->
+    <!--        <cute-pipeline-node-->
+    <!--          v-for="(template, index) in defaultTemplate"-->
+    <!--          :key="template.code"-->
+    <!--          :template-data.sync="defaultTemplate[index]"-->
+    <!--        />-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <el-divider>演示：失败或重试</el-divider>-->
+    <!--    <div class="box-pipeline">-->
+    <!--      <div v-if="dataList3 && dataList3.length > 0" class="box-pipeline-content">-->
+    <!--        <cute-pipeline-node-->
+    <!--          v-for="(template, index) in dataList3"-->
+    <!--          :key="template.code"-->
+    <!--          :template-data.sync="dataList3[index]"-->
+    <!--        />-->
+    <!--      </div>-->
+    <!--      <div v-else class="box-pipeline-content">-->
+    <!--        <cute-pipeline-node-->
+    <!--          v-for="(template, index) in defaultTemplate"-->
+    <!--          :key="template.code"-->
+    <!--          :template-data.sync="defaultTemplate[index]"-->
+    <!--        />-->
+    <!--      </div>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -67,8 +68,8 @@
 
 import CutePipelineNode from '@/views/components/dev/CutePipelineNode'
 import { getPipelineTemplate } from '@/api/devops/pipelineTemplate'
-import { queryLastPipelineDetail, queryLastPipelineDetailWs, startPipeline } from '@/api/devops/pipelineInstance'
-import { CountArraysObjectByPropKey, FormatDateTimeStr } from '@/utils/CsUtil'
+import { queryLastPipelineDetailWs, startPipeline } from '@/api/devops/pipelineInstance'
+import { CountArraysObjectByPropKey } from '@/utils/CsUtil'
 import CsMessage from '@/utils/elementui/CsMessage'
 import CsWsClient from '@/utils/CsWsClient'
 import { mapGetters } from 'vuex'
@@ -78,423 +79,431 @@ export default {
   components: { CutePipelineNode },
   data() {
     return {
-      // 静态模板
-      defaultTemplate: [
-        {
-          code: 'node_init',
-          type: 'service',
-          name: '初始化'
-        },
-        {
-          code: 'node_merge_branch',
-          type: 'service',
-          name: '合并代码',
-          click: true,
-          retry: true
-        },
-        {
-          code: 'node_build_java',
-          type: 'service',
-          name: '构建',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-backend'
-          }
-        },
-        {
-          code: 'node_image_scan',
-          type: 'service',
-          name: '镜像扫描',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-image-scan'
-          }
-        },
-        {
-          code: 'node_approve_deploy',
-          type: 'service',
-          name: '部署审批',
-          click: false,
-          retry: true,
-          buttons: [{
-            type: 'execute',
-            title: '同意',
-            code: 'agree',
-            parameters: {}
-          },
-          {
-            type: 'execute',
-            title: '拒绝',
-            code: 'refuse',
-            parameters: {}
-          }
-          ]
-        },
-        {
-          code: 'node_deploy_java',
-          type: 'service',
-          name: '部署',
-          click: true,
-          retry: false,
-          buttons: [{
-            type: 'link',
-            title: '查看部署详情',
-            code: 'success',
-            parameters: {
-              'isBlank': true
-            }
-          }]
-        },
-        {
-          code: 'node_merge_confirm',
-          type: 'service',
-          name: '合并确认',
-          click: false,
-          retry: false,
-          buttons: [{
-            type: 'execute',
-            title: '通过',
-            code: 'agree',
-            parameters: {}
-          }]
-        },
-        {
-          code: 'node_merge_master',
-          type: 'service',
-          name: '合并回Master',
-          click: false,
-          retry: true
-        }],
-      // 成功
-      dataList2: [
-        {
-          code: 'node_init',
-          type: 'service',
-          name: '初始化',
-          createTime: '2025-07-17 21:12:01',
-          updateTime: '2025-07-17 21:13:01',
-          startTime: '2025-07-17 21:13:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_merge_branch',
-          type: 'service',
-          name: '合并代码',
-          click: true,
-          retry: true,
-          createTime: '2025-07-17 21:13:01',
-          updateTime: '2025-07-17 21:18:01',
-          startTime: '2025-07-17 21:13:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_build_java',
-          type: 'service',
-          name: '构建',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-backend'
-          },
-          createTime: '2025-07-17 21:18:01',
-          updateTime: '2025-07-17 21:28:01',
-          startTime: '2025-07-17 21:18:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_image_scan',
-          type: 'service',
-          name: '镜像扫描',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-image-scan'
-          },
-          createTime: '2025-07-17 21:28:01',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: '2025-07-17 21:28:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_approve_deploy',
-          type: 'service',
-          name: '部署审批',
-          click: false,
-          retry: true,
-          buttons: [
-            {
-              type: 'execute',
-              title: '同意',
-              code: 'agree',
-              parameters: {}
-            },
-            {
-              type: 'execute',
-              title: '拒绝',
-              code: 'refuse',
-              parameters: {}
-            }
-          ],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:30:21',
-          startTime: '2025-07-17 21:28:21',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_deploy_java',
-          type: 'service',
-          name: '部署',
-          click: true,
-          retry: false,
-          buttons: [{
-            type: 'link',
-            title: '查看部署详情',
-            code: 'success',
-            parameters: {
-              'isBlank': true
-            }
-          }],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:58:21',
-          startTime: '2025-07-17 21:30:21',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_merge_confirm',
-          type: 'service',
-          name: '合并确认',
-          click: false,
-          retry: false,
-          buttons: [{
-            type: 'execute',
-            title: '通过',
-            code: 'agree',
-            parameters: {}
-          }],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 22:10:21',
-          startTime: '2025-07-17 21:58:21',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_merge_master',
-          type: 'service',
-          name: '合并回Master',
-          click: false,
-          retry: true,
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 22:10:58',
-          startTime: '2025-07-17 22:10:21',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        }
-      ],
-      // 失败或重试
-      dataList3: [
-        {
-          code: 'node_init',
-          type: 'service',
-          name: '初始化',
-          createTime: '2025-07-17 21:12:01',
-          updateTime: '2025-07-17 21:13:01',
-          startTime: '2025-07-17 21:13:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_merge_branch',
-          type: 'service',
-          name: '合并代码',
-          click: true,
-          retry: true,
-          createTime: '2025-07-17 21:13:01',
-          updateTime: '2025-07-17 21:18:01',
-          startTime: '2025-07-17 21:13:01',
-          currentNodeMsg: '执行成功',
-          currentNodeStatus: 'success',
-          status: 'success'
-        },
-        {
-          code: 'node_build_java',
-          type: 'service',
-          name: '构建',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-backend'
-          },
-          createTime: '2025-07-17 21:18:01',
-          updateTime: '2025-07-17 21:28:01',
-          startTime: '2025-07-17 21:18:01',
-          currentNodeMsg: '执行失败',
-          currentNodeStatus: 'fail',
-          status: 'fail'
-        },
-        {
-          code: 'node_image_scan',
-          type: 'service',
-          name: '镜像扫描',
-          click: true,
-          retry: true,
-          detailType: 'gitlab',
-          parameters: {
-            pipeline: 'pipeline-image-scan'
-          },
-          createTime: '2025-07-17 21:28:01',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        },
-        {
-          code: 'node_approve_deploy',
-          type: 'service',
-          name: '部署审批',
-          click: false,
-          retry: true,
-          buttons: [
-            {
-              type: 'execute',
-              title: '同意',
-              code: 'agree',
-              parameters: {}
-            },
-            {
-              type: 'execute',
-              title: '拒绝',
-              code: 'refuse',
-              parameters: {}
-            }
-          ],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        },
-        {
-          code: 'node_deploy_java',
-          type: 'service',
-          name: '部署',
-          click: true,
-          retry: false,
-          buttons: [{
-            type: 'link',
-            title: '查看部署详情',
-            code: 'success',
-            parameters: {
-              'isBlank': true
-            }
-          }],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        },
-        {
-          code: 'node_merge_confirm',
-          type: 'service',
-          name: '合并确认',
-          click: false,
-          retry: false,
-          buttons: [{
-            type: 'execute',
-            title: '通过',
-            code: 'agree',
-            parameters: {}
-          }],
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        },
-        {
-          code: 'node_merge_master',
-          type: 'service',
-          name: '合并回Master',
-          click: false,
-          retry: true,
-          createTime: '2025-07-17 21:28:21',
-          updateTime: '2025-07-17 21:28:21',
-          startTime: null,
-          currentNodeMsg: '待执行',
-          currentNodeStatus: 'pending',
-          status: 'pending'
-        }
-      ],
+      // // 静态模板
+      // defaultTemplate: [
+      //   {
+      //     code: 'node_init',
+      //     type: 'service',
+      //     name: '初始化'
+      //   },
+      //   {
+      //     code: 'node_merge_branch',
+      //     type: 'service',
+      //     name: '合并代码',
+      //     click: true,
+      //     retry: true
+      //   },
+      //   {
+      //     code: 'node_build_java',
+      //     type: 'service',
+      //     name: '构建',
+      //     click: true,
+      //     retry: true,
+      //     detailType: 'gitlab',
+      //     parameters: {
+      //       pipeline: 'pipeline-backend'
+      //     }
+      //   },
+      //   {
+      //     code: 'node_image_scan',
+      //     type: 'service',
+      //     name: '镜像扫描',
+      //     click: true,
+      //     retry: true,
+      //     detailType: 'gitlab',
+      //     parameters: {
+      //       pipeline: 'pipeline-image-scan'
+      //     }
+      //   },
+      //   {
+      //     code: 'node_approve_deploy',
+      //     type: 'service',
+      //     name: '部署审批',
+      //     click: false,
+      //     retry: true,
+      //     buttons: [{
+      //       type: 'execute',
+      //       title: '同意',
+      //       code: 'agree',
+      //       parameters: {}
+      //     },
+      //     {
+      //       type: 'execute',
+      //       title: '拒绝',
+      //       code: 'refuse',
+      //       parameters: {}
+      //     }
+      //     ]
+      //   },
+      //   {
+      //     code: 'node_deploy_java',
+      //     type: 'service',
+      //     name: '部署',
+      //     click: true,
+      //     retry: false,
+      //     buttons: [{
+      //       type: 'link',
+      //       title: '查看部署详情',
+      //       code: 'success',
+      //       parameters: {
+      //         'isBlank': true
+      //       }
+      //     }]
+      //   },
+      //   {
+      //     code: 'node_merge_confirm',
+      //     type: 'service',
+      //     name: '合并确认',
+      //     click: false,
+      //     retry: false,
+      //     buttons: [{
+      //       type: 'execute',
+      //       title: '通过',
+      //       code: 'agree',
+      //       parameters: {}
+      //     }]
+      //   },
+      //   {
+      //     code: 'node_merge_master',
+      //     type: 'service',
+      //     name: '合并回Master',
+      //     click: false,
+      //     retry: true
+      //   }],
+      // // 成功
+      // dataList2: [
+      //   {
+      //     code: 'node_init',
+      //     type: 'service',
+      //     name: '初始化',
+      //     createTime: '2025-07-17 21:12:01',
+      //     updateTime: '2025-07-17 21:13:01',
+      //     startTime: '2025-07-17 21:13:01',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_merge_branch',
+      //     type: 'service',
+      //     name: '合并代码',
+      //     click: true,
+      //     retry: true,
+      //     createTime: '2025-07-17 21:13:01',
+      //     updateTime: '2025-07-17 21:18:01',
+      //     startTime: '2025-07-17 21:13:01',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_build_java',
+      //     type: 'service',
+      //     name: '构建',
+      //     click: true,
+      //     retry: true,
+      //     detailType: 'gitlab',
+      //     parameters: {
+      //       pipeline: 'pipeline-backend'
+      //     },
+      //     createTime: '2025-07-17 21:18:01',
+      //     updateTime: '2025-07-17 21:28:01',
+      //     startTime: '2025-07-17 21:18:01',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_image_scan',
+      //     type: 'service',
+      //     name: '镜像扫描',
+      //     click: true,
+      //     retry: true,
+      //     detailType: 'gitlab',
+      //     parameters: {
+      //       pipeline: 'pipeline-image-scan'
+      //     },
+      //     createTime: '2025-07-17 21:28:01',
+      //     updateTime: '2025-07-17 21:28:21',
+      //     startTime: '2025-07-17 21:28:01',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_approve_deploy',
+      //     type: 'service',
+      //     name: '部署审批',
+      //     click: false,
+      //     retry: true,
+      //     buttons: [
+      //       {
+      //         type: 'execute',
+      //         title: '同意',
+      //         code: 'agree',
+      //         parameters: {}
+      //       },
+      //       {
+      //         type: 'execute',
+      //         title: '拒绝',
+      //         code: 'refuse',
+      //         parameters: {}
+      //       }
+      //     ],
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 21:30:21',
+      //     startTime: '2025-07-17 21:28:21',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_deploy_java',
+      //     type: 'service',
+      //     name: '部署',
+      //     click: true,
+      //     retry: false,
+      //     buttons: [{
+      //       type: 'link',
+      //       title: '查看部署详情',
+      //       code: 'success',
+      //       parameters: {
+      //         'isBlank': true
+      //       }
+      //     }],
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 21:58:21',
+      //     startTime: '2025-07-17 21:30:21',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_merge_confirm',
+      //     type: 'service',
+      //     name: '合并确认',
+      //     click: false,
+      //     retry: false,
+      //     buttons: [{
+      //       type: 'execute',
+      //       title: '通过',
+      //       code: 'agree',
+      //       parameters: {}
+      //     }],
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 22:10:21',
+      //     startTime: '2025-07-17 21:58:21',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_merge_master',
+      //     type: 'service',
+      //     name: '合并回Master',
+      //     click: false,
+      //     retry: true,
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 22:10:58',
+      //     startTime: '2025-07-17 22:10:21',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   }
+      // ],
+      // // 失败或重试
+      // dataList3: [
+      //   {
+      //     code: 'node_init',
+      //     type: 'service',
+      //     name: '初始化',
+      //     createTime: '2025-07-17 21:12:01',
+      //     updateTime: '2025-07-17 21:13:01',
+      //     startTime: '2025-07-17 21:13:01',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_merge_branch',
+      //     type: 'service',
+      //     name: '合并代码',
+      //     click: true,
+      //     retry: true,
+      //     createTime: '2025-07-17 21:13:01',
+      //     updateTime: '2025-07-17 21:18:01',
+      //     startTime: '2025-07-17 21:13:01',
+      //     currentNodeMsg: '执行成功',
+      //     currentNodeStatus: 'success',
+      //     status: 'success'
+      //   },
+      //   {
+      //     code: 'node_build_java',
+      //     type: 'service',
+      //     name: '构建',
+      //     click: true,
+      //     retry: true,
+      //     detailType: 'gitlab',
+      //     parameters: {
+      //       pipeline: 'pipeline-backend'
+      //     },
+      //     createTime: '2025-07-17 21:18:01',
+      //     updateTime: '2025-07-17 21:28:01',
+      //     startTime: '2025-07-17 21:18:01',
+      //     currentNodeMsg: '执行失败',
+      //     currentNodeStatus: 'fail',
+      //     status: 'fail'
+      //   },
+      //   {
+      //     code: 'node_image_scan',
+      //     type: 'service',
+      //     name: '镜像扫描',
+      //     click: true,
+      //     retry: true,
+      //     detailType: 'gitlab',
+      //     parameters: {
+      //       pipeline: 'pipeline-image-scan'
+      //     },
+      //     createTime: '2025-07-17 21:28:01',
+      //     updateTime: '2025-07-17 21:28:21',
+      //     startTime: null,
+      //     currentNodeMsg: '待执行',
+      //     currentNodeStatus: 'pending',
+      //     status: 'pending'
+      //   },
+      //   {
+      //     code: 'node_approve_deploy',
+      //     type: 'service',
+      //     name: '部署审批',
+      //     click: false,
+      //     retry: true,
+      //     buttons: [
+      //       {
+      //         type: 'execute',
+      //         title: '同意',
+      //         code: 'agree',
+      //         parameters: {}
+      //       },
+      //       {
+      //         type: 'execute',
+      //         title: '拒绝',
+      //         code: 'refuse',
+      //         parameters: {}
+      //       }
+      //     ],
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 21:28:21',
+      //     startTime: null,
+      //     currentNodeMsg: '待执行',
+      //     currentNodeStatus: 'pending',
+      //     status: 'pending'
+      //   },
+      //   {
+      //     code: 'node_deploy_java',
+      //     type: 'service',
+      //     name: '部署',
+      //     click: true,
+      //     retry: false,
+      //     buttons: [{
+      //       type: 'link',
+      //       title: '查看部署详情',
+      //       code: 'success',
+      //       parameters: {
+      //         'isBlank': true
+      //       }
+      //     }],
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 21:28:21',
+      //     startTime: null,
+      //     currentNodeMsg: '待执行',
+      //     currentNodeStatus: 'pending',
+      //     status: 'pending'
+      //   },
+      //   {
+      //     code: 'node_merge_confirm',
+      //     type: 'service',
+      //     name: '合并确认',
+      //     click: false,
+      //     retry: false,
+      //     buttons: [{
+      //       type: 'execute',
+      //       title: '通过',
+      //       code: 'agree',
+      //       parameters: {}
+      //     }],
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 21:28:21',
+      //     startTime: null,
+      //     currentNodeMsg: '待执行',
+      //     currentNodeStatus: 'pending',
+      //     status: 'pending'
+      //   },
+      //   {
+      //     code: 'node_merge_master',
+      //     type: 'service',
+      //     name: '合并回Master',
+      //     click: false,
+      //     retry: true,
+      //     createTime: '2025-07-17 21:28:21',
+      //     updateTime: '2025-07-17 21:28:21',
+      //     startTime: null,
+      //     currentNodeMsg: '待执行',
+      //     currentNodeStatus: 'pending',
+      //     status: 'pending'
+      //   }
+      // ],
       // 动态流水线
-      dynamicStartupStatus: 'start',
       dynamicStartupStatusMap: {
         start: { label: '启动', code: 'start' },
         restart: { label: '重新启动', code: 'restart' }
       },
+      // 按钮状态
+      dynamicStartupStatus: 'start',
       dynamicStartButtonLoading: false,
-      dynamicTemplate: [],
-      dynamicHook: null,
+      // 当前模板
+      dynamicTemplate: {
+        id: 6
+      },
+      // 当前流水线节点模板
+      dynamicTemplateList: [],
+      // dynamicHook: null,
+      // 当前流水线实例
       dynamicInstance: {},
+      // 当前ws客户端
       dynamicWsClient: null
     }
-  },
-  mounted() {
-    this.refreshData()
-    this.initPipelineTemplate(4)
-    // const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
-    // if (pipelineInstanceId) {
-    //   this.fetchLastDetail(pipelineInstanceId)
-    // }
-    // this.connectWebSocketServer(pipelineInstanceId)
   },
   computed: {
     ...mapGetters([
       'user'
     ])
   },
+  mounted() {
+    // this.refreshData()
+    this.initPipelineTemplate(this.dynamicTemplate.id)
+    // const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
+    // if (pipelineInstanceId) {
+    //   this.fetchLastDetail(pipelineInstanceId)
+    // }
+    // this.connectWebSocketServer(pipelineInstanceId)
+  },
   methods: {
-    refreshData() {
-      // 成功
-      for (const datum of this.dataList2) {
-        if (datum.status === 'running') {
-          datum.updateTime = FormatDateTimeStr(new Date())
-        }
-      }
-      this.dataList2 = [...this.dataList2]
-      // 失败或重试
-      for (const datum of this.dataList3) {
-        if (datum.status === 'running') {
-          datum.updateTime = FormatDateTimeStr(new Date())
-        }
-      }
-      this.dataList3 = [...this.dataList3]
-    },
+    // refreshData() {
+    //   // 成功
+    //   for (const datum of this.dataList2) {
+    //     if (datum.status === 'running') {
+    //       datum.updateTime = FormatDateTimeStr(new Date())
+    //     }
+    //   }
+    //   this.dataList2 = [...this.dataList2]
+    //   // 失败或重试
+    //   for (const datum of this.dataList3) {
+    //     if (datum.status === 'running') {
+    //       datum.updateTime = FormatDateTimeStr(new Date())
+    //     }
+    //   }
+    //   this.dataList3 = [...this.dataList3]
+    // },
     /**
      * 初始化流水线模板
      * @param templateId
@@ -504,7 +513,8 @@ export default {
       const pipelineTemplate = await getPipelineTemplate(templateId)
       if (pipelineTemplate && pipelineTemplate.template) {
         try {
-          this.dynamicTemplate = JSON.parse(pipelineTemplate.template)
+          this.dynamicTemplate = pipelineTemplate
+          this.dynamicTemplateList = JSON.parse(pipelineTemplate.template)
         } catch (e) {
           // ignore
         }
@@ -539,7 +549,7 @@ export default {
         that.dynamicInstance = JSON.parse(callbackData.data)
         // 判断流水线是否结束
         const successCount = CountArraysObjectByPropKey(that.dynamicInstance.nodes, 'status', 'success')
-        if (that.dynamicTemplate && that.dynamicTemplate.length === successCount) {
+        if (that.dynamicTemplateList && that.dynamicTemplateList.length === successCount) {
           // 所有节点执行成功
           if (that.dynamicWsClient) {
             that.dynamicWsClient.close()
@@ -557,38 +567,41 @@ export default {
         // ignore
       }
     },
-    /**
-     * 通过Http的方式拉取流水线最新的状态
-     * @param instanceId
-     * @returns {Promise<void>}
-     */
-    async fetchLastDetail(instanceId) {
-      const that = this
-      const intervalTime = 2000
-      setTimeout(() => {
-        that.dynamicHook = setInterval(() => {
-          queryLastPipelineDetail(instanceId).then((data) => {
-            that.dynamicInstance = data
-            // 判断流水线是否结束
-            const successCount = CountArraysObjectByPropKey(data.nodes, 'status', 'success')
-            if (that.dynamicTemplate && that.dynamicTemplate.length === successCount) {
-              clearInterval(that.dynamicHook)
-              that.dynamicHook = null
-              that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
-            } else {
-              that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
-            }
-          })
-        }, intervalTime)
-        that.dynamicStartButtonLoading = false
-      }, 2000)
-    },
+    // /**
+    //  * 通过Http的方式拉取流水线最新的状态
+    //  * @param instanceId
+    //  * @returns {Promise<void>}
+    //  */
+    // async fetchLastDetail(instanceId) {
+    //   const that = this
+    //   const intervalTime = 2000
+    //   setTimeout(() => {
+    //     that.dynamicHook = setInterval(() => {
+    //       queryLastPipelineDetail(instanceId).then((data) => {
+    //         that.dynamicInstance = data
+    //         // 判断流水线是否结束
+    //         const successCount = CountArraysObjectByPropKey(data.nodes, 'status', 'success')
+    //         if (that.dynamicTemplateList && that.dynamicTemplateList.length === successCount) {
+    //           clearInterval(that.dynamicHook)
+    //           that.dynamicHook = null
+    //           that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
+    //         } else {
+    //           that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
+    //         }
+    //       })
+    //     }, intervalTime)
+    //     that.dynamicStartButtonLoading = false
+    //   }, 2000)
+    // },
     /**
      * 启动流水线
      * @returns {Promise<void>}
      */
-    async startPipelineTest() {
+    async startPipelineTest(data) {
       const that = this
+      const args = {
+        id: that.dynamicTemplate.id
+      }
       try {
         if (that.dynamicHook) {
           clearInterval(that.dynamicHook)
@@ -603,7 +616,7 @@ export default {
         //   result = await startPipeline()
         //   CsMessage.Success('流水线启动成功')
         // }
-        const result = await startPipeline()
+        const result = await startPipeline(args)
         CsMessage.Success('流水线启动成功')
         // await that.fetchLastDetail(result.instanceId)
         sessionStorage.setItem('pipelineInstanceId', result.instanceId)

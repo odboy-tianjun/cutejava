@@ -9,7 +9,7 @@ import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.mysql.PipelineInstanceMapper;
 import cn.odboy.devops.dal.redis.PipelineInstanceDAO;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
-import cn.odboy.devops.service.PipelineInstanceNodeService;
+import cn.odboy.devops.service.core.PipelineInstanceNodeService;
 import cn.odboy.framework.context.SpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;

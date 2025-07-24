@@ -2,8 +2,8 @@ package cn.odboy.devops.framework.pipeline;
 
 import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
-import cn.odboy.devops.service.PipelineInstanceNodeDetailService;
-import cn.odboy.devops.service.PipelineInstanceNodeService;
+import cn.odboy.devops.service.core.PipelineInstanceNodeDetailService;
+import cn.odboy.devops.service.core.PipelineInstanceNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
