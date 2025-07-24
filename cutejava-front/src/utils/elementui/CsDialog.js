@@ -11,7 +11,7 @@ export default {
    * @param confirmCallBack 确认回调
    * @param cancelCallBack 取消回调
    */
-  FullConfirm(questionText, msgType, confirmCallBack, cancelCallBack) {
+  FullConfirm: function(questionText, msgType, confirmCallBack, cancelCallBack) {
     let currentType = 'info'
     if (msgType === 's') {
       currentType = 'success'
@@ -38,7 +38,7 @@ export default {
    * @param confirmCallBack 确认回调
    * @param cancelCallBack 取消回调
    */
-  DeleteConfirm(confirmCallBack, cancelCallBack) {
+  DeleteConfirm: function(confirmCallBack, cancelCallBack) {
     this.FullConfirm('确定删除本条数据吗？', 'w', confirmCallBack, cancelCallBack)
   }, /**
    * 数据删除确认对话框(自定义提示内容)
@@ -46,7 +46,7 @@ export default {
    * @param confirmCallBack 确认回调
    * @param cancelCallBack 取消回调
    */
-  DeleteMessageConfirm(message, confirmCallBack, cancelCallBack) {
+  DeleteMessageConfirm: function(message, confirmCallBack, cancelCallBack) {
     this.FullConfirm(message, 'w', confirmCallBack, cancelCallBack)
   }, /**
    * 数据输入对话框
@@ -56,7 +56,7 @@ export default {
    * @param confirmCallBack 校验通过回调
    * @param cancelCallBack 取消回调
    */
-  TextInputConfirm(title, patternText, errorMsg, confirmCallBack, cancelCallBack) {
+  TextInputConfirm: function(title, patternText, errorMsg, confirmCallBack, cancelCallBack) {
     Vue.prototype.$prompt('', title, {
       confirmButtonText: '确定', cancelButtonText: '取消', inputPattern: patternText, inputErrorMessage: errorMsg
     }).then(({ value }) => {
@@ -73,7 +73,7 @@ export default {
    * @param title 标题
    * @param content 内容
    */
-  ShowConfirm(title, content) {
+  ShowConfirm: function(title, content) {
     Vue.prototype.$alert(content, title, {
       confirmButtonText: '关闭'
     })

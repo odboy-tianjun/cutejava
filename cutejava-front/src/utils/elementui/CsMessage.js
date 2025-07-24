@@ -3,22 +3,22 @@ import Vue from 'vue'
  * 消息提示
  */
 export default {
-  Info(content) {
+  Info: function(content) {
     Vue.prototype.$message({
       message: content, type: 'info'
     })
   },
-  Success(content) {
+  Success: function(content) {
     Vue.prototype.$message({
       message: content, type: 'success'
     })
   },
-  Warning(content) {
+  Warning: function(content) {
     Vue.prototype.$message({
       message: content, type: 'warning'
     })
   },
-  Error(content) {
+  Error: function(content) {
     Vue.prototype.$message({
       message: content, type: 'error'
     })

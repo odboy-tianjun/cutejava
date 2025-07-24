@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CsWsMessage extends CsObject {
-    private String bizType;
+    private String bizCode;
     private String data;
 
-    public CsWsMessage(String bizType, String data) {
-        this.bizType = bizType;
+    public CsWsMessage(String bizCode, String data) {
+        this.bizCode = bizCode;
         this.data = data;
     }
 }

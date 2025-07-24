@@ -71,6 +71,7 @@ import { queryLastPipelineDetail, queryLastPipelineDetailWs, startPipeline } fro
 import { CountArraysObjectByPropKey, FormatDateTimeStr } from '@/utils/CsUtil'
 import CsMessage from '@/utils/elementui/CsMessage'
 import CsWsClient from '@/utils/CsWsClient'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CutePipelineNodeDemo',
@@ -472,6 +473,11 @@ export default {
     // }
     // this.connectWebSocketServer(pipelineInstanceId)
   },
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
+  },
   methods: {
     refreshData() {
       // 成功
@@ -509,7 +515,8 @@ export default {
      */
     connectWebSocketServer(instanceId) {
       const that = this
-      const sid = 'instanceId_' + instanceId
+      // {username}_{bizCode}_{contextParams}
+      const sid = `${that.user.username}_FetchPipelineLastDetail_${instanceId}`
       that.dynamicWsClient = new CsWsClient(sid)
       that.dynamicWsClient.connect(that.handleWebSocketError, that.handleWebSocketMessage)
       setTimeout(() => {
@@ -533,11 +540,17 @@ export default {
         // 判断流水线是否结束
         const successCount = CountArraysObjectByPropKey(that.dynamicInstance.nodes, 'status', 'success')
         if (that.dynamicTemplate && that.dynamicTemplate.length === successCount) {
+          // 所有节点执行成功
           if (that.dynamicWsClient) {
             that.dynamicWsClient.close()
           }
           that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
         } else {
+          const failCount = CountArraysObjectByPropKey(that.dynamicInstance.nodes, 'status', 'fail')
+          // 存在失败的节点
+          if (that.dynamicWsClient && failCount > 0) {
+            that.dynamicWsClient.close()
+          }
           that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
         }
       } catch (e) {
@@ -594,8 +607,9 @@ export default {
         CsMessage.Success('流水线启动成功')
         // await that.fetchLastDetail(result.instanceId)
         sessionStorage.setItem('pipelineInstanceId', result.instanceId)
-        this.connectWebSocketServer(result.instanceId)
+        that.connectWebSocketServer(result.instanceId)
       } catch (e) {
+        console.error('error', e)
         that.dynamicStartButtonLoading = false
       }
     }

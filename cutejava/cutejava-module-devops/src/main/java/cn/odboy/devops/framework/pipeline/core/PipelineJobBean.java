@@ -103,6 +103,7 @@ public class PipelineJobBean implements InterruptableJob {
                 }
 
                 try {
+                    // 流水线正式启动
                     pipelineNodeJobManage.startJob(pipelineInstanceTb, pipelineNodeTemplateVo);
                     pipelineInstanceTb.setCurrentNode(pipelineNodeTemplateVo.getCode());
                     pipelineInstanceTb.setCurrentNodeStatus(PipelineStatusEnum.RUNNING.getCode());
@@ -120,15 +121,16 @@ public class PipelineJobBean implements InterruptableJob {
                             pipelineInstanceMapper.updateById(pipelineInstanceTb);
                             break;
                         }
-                        ThreadUtil.safeSleep(5000);
-                        PipelineInstanceNodeTb pipelineInstanceNode = pipelineInstanceNodeService.getPipelineInstanceNodeByArgs(instanceId, pipelineNodeTemplateVo.getCode());
-                        if (PipelineStatusEnum.SUCCESS.getCode().equals(pipelineInstanceNode.getCurrentNodeStatus())) {
+                        // 检查实例节点状态
+                        ThreadUtil.safeSleep(3000);
+                        PipelineInstanceNodeTb runningInstanceNode = pipelineInstanceNodeService.getPipelineInstanceNodeByArgs(instanceId, pipelineNodeTemplateVo.getCode());
+                        if (PipelineStatusEnum.SUCCESS.getCode().equals(runningInstanceNode.getCurrentNodeStatus())) {
                             pipelineStatusEnum = PipelineStatusEnum.SUCCESS;
                             pipelineInstanceTb.setCurrentNodeStatus(pipelineStatusEnum.getCode());
                             pipelineInstanceMapper.updateById(pipelineInstanceTb);
                             break;
                         }
-                        if (PipelineStatusEnum.FAIL.getCode().equals(pipelineInstanceNode.getCurrentNodeStatus())) {
+                        if (PipelineStatusEnum.FAIL.getCode().equals(runningInstanceNode.getCurrentNodeStatus())) {
                             pipelineStatusEnum = PipelineStatusEnum.FAIL;
                             pipelineInstanceTb.setCurrentNodeStatus(pipelineStatusEnum.getCode());
                             pipelineInstanceMapper.updateById(pipelineInstanceTb);

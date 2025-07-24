@@ -36,7 +36,6 @@ import LineChart from './dashboard/LineChart'
 import RadarChart from '@/components/Echarts/RadarChart'
 import PieChart from '@/components/Echarts/PieChart'
 import BarChart from '@/components/Echarts/BarChart'
-import CsMessage from '@/utils/elementui/CsMessage'
 
 const lineChartData = {
   newVisitis: {
