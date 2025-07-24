@@ -1,7 +1,7 @@
 package cn.odboy.devops.controller;
 
 import cn.odboy.base.CsArgs;
-import cn.odboy.devops.service.PipelineTemplateService;
+import cn.odboy.devops.service.core.PipelineTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

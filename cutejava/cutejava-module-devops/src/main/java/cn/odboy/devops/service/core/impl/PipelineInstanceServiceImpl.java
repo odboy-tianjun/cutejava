@@ -1,4 +1,4 @@
-package cn.odboy.devops.service.impl;
+package cn.odboy.devops.service.core.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.thread.ThreadUtil;
@@ -13,9 +13,9 @@ import cn.odboy.devops.dal.redis.PipelineInstanceDAO;
 import cn.odboy.devops.framework.pipeline.core.PipelineJobManage;
 import cn.odboy.devops.framework.pipeline.model.PipelineInstanceVo;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeDataVo;
-import cn.odboy.devops.service.PipelineInstanceNodeDetailService;
-import cn.odboy.devops.service.PipelineInstanceNodeService;
-import cn.odboy.devops.service.PipelineInstanceService;
+import cn.odboy.devops.service.core.PipelineInstanceNodeDetailService;
+import cn.odboy.devops.service.core.PipelineInstanceNodeService;
+import cn.odboy.devops.service.core.PipelineInstanceService;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.websocket.context.CsWsClientManager;
 import cn.odboy.framework.websocket.context.CsWsMessage;

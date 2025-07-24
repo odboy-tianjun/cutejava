@@ -1,4 +1,4 @@
-package cn.odboy.devops.job;
+package cn.odboy.devops.service.pipeline;
 
 import cn.odboy.devops.constant.pipeline.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
@@ -6,8 +6,7 @@ import cn.odboy.devops.framework.pipeline.AbstractPipelineNodeJobService;
 import cn.odboy.devops.framework.pipeline.core.PipelineNodeJobExecutor;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
-import cn.odboy.devops.job.biz.PipelineNodeBuildJavaBiz;
-import cn.odboy.devops.job.biz.PipelineNodeInitBiz;
+import cn.odboy.devops.service.pipeline.node.PipelineNodeDemoBiz;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +15,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 流水线节点任务：安卓包签名
+ *
+ * @author odboy
+ * @date 2025-07-24
+ */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_build_java")
-public class PipelineNodeBuildJavaJob extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
-    private final PipelineNodeBuildJavaBiz pipelineNodeBuildJavaBiz;
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_apk_sign_android")
+public class PipelineNodeApkSignAndroidService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+    private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 
     @Override
     public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws BadRequestException {
@@ -32,10 +37,8 @@ public class PipelineNodeBuildJavaJob extends AbstractPipelineNodeJobService imp
         List<PipelineNodeTemplateVo> templateList = JSON.parseArray(jobDataMap.getString(PipelineConst.TEMPLATE), PipelineNodeTemplateVo.class);
         PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult) jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
         // 步骤执行
-        pipelineNodeBuildJavaBiz.buildJavaStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeBuildJavaBiz.startGitlabPipeline(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeBuildJavaBiz.uploadPackageToOss(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeBuildJavaBiz.buildJavaFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeDemoBiz.start(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeDemoBiz.finish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
         return PipelineNodeJobExecuteResult.success();
     }
 }

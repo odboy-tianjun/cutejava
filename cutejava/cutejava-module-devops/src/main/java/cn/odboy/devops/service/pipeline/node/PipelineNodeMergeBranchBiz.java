@@ -1,4 +1,4 @@
-package cn.odboy.devops.job.biz;
+package cn.odboy.devops.service.pipeline.node;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
@@ -15,7 +15,7 @@ import java.util.List;
 public class PipelineNodeMergeBranchBiz {
     @PipelineNodeStepLog("分支合并开始")
     public void mergeBranchStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(2000);
+        ThreadUtil.safeSleep(1000);
     }
 
     @PipelineNodeStepLog("集成区分支合并到release分支")
@@ -25,6 +25,6 @@ public class PipelineNodeMergeBranchBiz {
 
     @PipelineNodeStepLog("分支合并完成")
     public void mergeBranchFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(2000);
+        ThreadUtil.safeSleep(1000);
     }
 }

@@ -1,4 +1,4 @@
-package cn.odboy.devops.service;
+package cn.odboy.devops.service.core;
 
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.model.StartPipelineResultVo;

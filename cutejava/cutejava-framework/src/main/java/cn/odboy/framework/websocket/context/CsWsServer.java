@@ -87,7 +87,7 @@ public class CsWsServer {
      */
     public void sendMessage(CsWsMessage message, @PathParam("sid") String sid) throws IOException {
         String body = JSON.toJSONString(message);
-        log.info("推送消息到{}, 推送内容:{}", sid, message);
+//        log.info("推送消息到{}, 推送内容:{}", sid, message);
         try {
             if (sid == null) {
                 sendToAll(body);
