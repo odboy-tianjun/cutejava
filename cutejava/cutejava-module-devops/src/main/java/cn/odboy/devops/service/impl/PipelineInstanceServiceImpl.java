@@ -17,6 +17,7 @@ import cn.odboy.devops.service.PipelineInstanceNodeDetailService;
 import cn.odboy.devops.service.PipelineInstanceNodeService;
 import cn.odboy.devops.service.PipelineInstanceService;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.websocket.context.CsWsClientManager;
 import cn.odboy.framework.websocket.context.CsWsMessage;
 import cn.odboy.framework.websocket.context.CsWsServer;
 import com.alibaba.fastjson2.JSON;
@@ -24,11 +25,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -39,8 +37,6 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
     private final PipelineInstanceDAO pipelineInstanceDAO;
     private final PipelineInstanceNodeService pipelineInstanceNodeService;
     private final PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
-    private final CsWsServer csWsServer;
-    private volatile Map<String, Thread> runningThreadMap = new HashMap<>();
 
     @Override
     public StartPipelineResultVo startPipeline(PipelineInstanceTb pipelineInstanceTb) {
@@ -109,32 +105,29 @@ public class PipelineInstanceServiceImpl implements PipelineInstanceService {
     }
 
     @Override
-    public void queryLastPipelineDetailWs(String instanceId) {
-        Thread thread = runningThreadMap.get(instanceId);
-        if (thread != null && !thread.isInterrupted()) {
-            try {
-                thread.stop();
-            } catch (Exception e) {
-                // ignore
-            }
+    public void queryLastPipelineDetailWs(String sid) {
+        // sid {username}_{bizCode}_{contextParams}
+        String[] sids = sid.split("_");
+        if (sids.length != 3) {
+            throw new BadRequestException("sid格式异常");
         }
-        thread = new Thread(() -> {
+        CsWsServer wsServer = CsWsClientManager.getClientBySid(sid);
+        wsServer.restartTask(() -> {
+//            String username = sids[0];
+            String bizCode = sids[1];
+            String instanceId = sids[2];
             boolean loop = true;
-            final String currentSid = instanceId;
-            final String realInstanceId = currentSid.replace("instanceId_", "");
             while (loop) {
                 ThreadUtil.safeSleep(1000);
                 try {
-                    PipelineInstanceVo pipelineInstanceVo = queryLastPipelineDetail(realInstanceId);
-                    CsWsMessage message = new CsWsMessage("FetchPipelineLastDetail", JSON.toJSONString(pipelineInstanceVo));
-                    csWsServer.sendMessage(message, currentSid);
-                } catch (IOException e) {
+                    PipelineInstanceVo pipelineInstanceVo = queryLastPipelineDetail(instanceId);
+                    CsWsMessage message = new CsWsMessage(bizCode, JSON.toJSONString(pipelineInstanceVo));
+                    wsServer.sendMessage(message, sid);
+                } catch (Exception e) {
                     log.error("推送流水线最新数据失败", e);
                     loop = false;
                 }
             }
         });
-        thread.start();
-        runningThreadMap.put(instanceId, thread);
     }
 }

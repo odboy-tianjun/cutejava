@@ -9,7 +9,9 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
@@ -17,6 +19,7 @@ import java.util.Objects;
 @ServerEndpoint("/websocket/{sid}")
 @Getter
 public class CsWsServer {
+    private static final Map<String, Thread> taskThreadMap = new ConcurrentHashMap<>();
     /**
      * 与某个客户端的连接会话, 需要通过它来给客户端发送数据
      */
@@ -32,8 +35,22 @@ public class CsWsServer {
     @OnOpen
     public void onOpen(Session session, @PathParam("sid") String sid) {
         this.session = session;
+        // {username}#{bizCode}#{contextParams}
         this.sid = sid;
         CsWsClientManager.addClient(sid, this);
+    }
+
+    /**
+     * 收到客户端消息后调用的方法
+     *
+     * @param message 客户端发送过来的消息
+     */
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        CsWsMessage wsMessage = JSON.parseObject(message, CsWsMessage.class);
+        String bizCode = wsMessage.getBizCode();
+        Object data = wsMessage.getData();
+        log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode, JSON.toJSONString(data));
     }
 
     /**
@@ -48,46 +65,13 @@ public class CsWsServer {
         }
     }
 
-    /**
-     * 收到客户端消息后调用的方法
-     *
-     * @param message 客户端发送过来的消息
-     */
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        CsWsMessage wsMessage = JSON.parseObject(message, CsWsMessage.class);
-        String bizType = wsMessage.getBizType();
-        Object data = wsMessage.getData();
-        log.info("收到来 sid={} 的信息: message={}, bizType={}, data={}", sid, message, bizType, JSON.toJSONString(data));
-    }
-
-    /**
-     * 群发消息
-     *
-     * @param message /
-     */
-    private void sendToAll(String message) {
-        for (CsWsServer item : CsWsClientManager.getAllClient()) {
-            try {
-                item.innerSendMessage(message);
-            } catch (IOException e) {
-                log.error("发送消息给 sid={} 失败", item.sid, e);
-                CsWsClientManager.removeClient(item.sid);
-            }
-        }
-    }
-
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("WebSocket sid={} 发生错误", this.sid, error);
-        CsWsServer client = CsWsClientManager.getClientBySid(this.sid);
-        if (client != null) {
-            try {
-                client.getSession().close();
-            } catch (IOException e) {
-                // ignore
-            }
+//        log.error("WebSocket sid={} 发生错误", this.sid, error);
+        try {
             CsWsClientManager.removeClient(this.sid);
+        } catch (Exception e) {
+            // ignore
         }
     }
 
@@ -99,7 +83,7 @@ public class CsWsServer {
     }
 
     /**
-     * 群发自定义消息
+     * 精准推送消息
      */
     public void sendMessage(CsWsMessage message, @PathParam("sid") String sid) throws IOException {
         String body = JSON.toJSONString(message);
@@ -114,6 +98,20 @@ public class CsWsServer {
                 }
             }
         } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * 群发消息
+     */
+    public void sendToAll(String message) {
+        for (CsWsServer item : CsWsClientManager.getAllClient()) {
+            try {
+                item.innerSendMessage(message);
+            } catch (IOException e) {
+                log.error("发送消息给 sid={} 失败", item.sid, e);
+                CsWsClientManager.removeClient(item.sid);
+            }
         }
     }
 
@@ -132,5 +130,35 @@ public class CsWsServer {
     @Override
     public int hashCode() {
         return Objects.hash(session, sid);
+    }
+
+    public Thread getTaskThread(String sid) {
+        Thread thread = taskThreadMap.get(sid);
+        if (thread == null) {
+            return null;
+        }
+        if (thread.isInterrupted()) {
+            taskThreadMap.remove(sid);
+            return null;
+        }
+        return thread;
+    }
+
+    public void restartTask(Runnable runnable) {
+        stopTask(this.sid);
+        Thread thread = new Thread(runnable);
+        thread.start();
+        taskThreadMap.put(this.sid, thread);
+    }
+
+    public void stopTask(String sid) {
+        Thread thread = getTaskThread(this.sid);
+        if (thread != null) {
+            try {
+                thread.stop();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
     }
 }

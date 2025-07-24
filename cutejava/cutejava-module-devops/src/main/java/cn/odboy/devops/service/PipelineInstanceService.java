@@ -19,5 +19,5 @@ public interface PipelineInstanceService {
 
     PipelineInstanceVo queryLastPipelineDetail(String instanceId);
 
-    void queryLastPipelineDetailWs(String instanceId);
+    void queryLastPipelineDetailWs(String sid);
 }

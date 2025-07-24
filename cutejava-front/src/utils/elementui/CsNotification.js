@@ -4,17 +4,17 @@ import Vue from 'vue'
  * 通知
  */
 export default {
-  Info(content) {
+  Info: function(content) {
     Vue.prototype.$notify({ message: content, type: 'info' })
-  }, Success(content) {
+  }, Success: function(content) {
     Vue.prototype.$notify({ message: content, type: 'success' })
-  }, SuccessDuration(content, durationTime) {
+  }, SuccessDuration: function(content, durationTime) {
     Vue.prototype.$notify({ message: content, type: 'success', duration: durationTime })
-  }, Warning(content) {
+  }, Warning: function(content) {
     Vue.prototype.$notify({ message: content, type: 'warning' })
-  }, Error(content) {
+  }, Error: function(content) {
     Vue.prototype.$notify({ message: content, type: 'error' })
-  }, ErrorDuration(content, durationTime) {
+  }, ErrorDuration: function(content, durationTime) {
     Vue.prototype.$notify({ message: content, type: 'error', duration: durationTime })
   }
 }
