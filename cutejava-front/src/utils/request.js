@@ -30,7 +30,9 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    return response.data
+    const data = response.data
+    // console.error('data', data)
+    return data
   },
   error => {
     // 兼容blob下载出错json提示
@@ -57,7 +59,7 @@ service.interceptors.response.use(
           return Promise.reject(error)
         }
       }
-      console.log(code)
+      // console.log(code)
       if (code) {
         if (code === 401) {
           store.dispatch('LogOut').then(() => {

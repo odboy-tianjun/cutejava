@@ -6,7 +6,7 @@ import cn.odboy.devops.framework.pipeline.AbstractPipelineNodeJobService;
 import cn.odboy.devops.framework.pipeline.core.PipelineNodeJobExecutor;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
-import cn.odboy.devops.service.pipeline.node.PipelineNodeMergeBranchBiz;
+import cn.odboy.devops.service.pipeline.node.PipelineNodeDemoBiz;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +16,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 流水线节点任务：分支合并
+ * 流水线节点任务：上传安卓发布包
  *
  * @author odboy
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_merge_branch")
-public class PipelineNodeMergeBranchService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
-    private final PipelineNodeMergeBranchBiz pipelineNodeMergeBranchBiz;
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_upload_android_apk")
+public class PipelineNodeUploadAndroidApkService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+    private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 
     @Override
-    public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws Exception {
+    public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws BadRequestException {
         // 参数列表
         long instanceId = jobDataMap.getLong(PipelineConst.INSTANCE_ID);
         PipelineNodeTemplateVo currentNodeTemplate = (PipelineNodeTemplateVo) jobDataMap.get(PipelineConst.CURRENT_NODE_TEMPLATE);
@@ -37,9 +37,8 @@ public class PipelineNodeMergeBranchService extends AbstractPipelineNodeJobServi
         List<PipelineNodeTemplateVo> templateList = JSON.parseArray(jobDataMap.getString(PipelineConst.TEMPLATE), PipelineNodeTemplateVo.class);
         PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult) jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
         // 步骤执行
-        pipelineNodeMergeBranchBiz.mergeBranchStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeMergeBranchBiz.integrationAreaBranchMergeRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
-        pipelineNodeMergeBranchBiz.mergeBranchFinish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeDemoBiz.start(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
+        pipelineNodeDemoBiz.finish(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
         return PipelineNodeJobExecuteResult.success();
     }
 }

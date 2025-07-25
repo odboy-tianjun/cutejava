@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_apk_sign_android")
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_sign_android_apk")
 public class PipelineNodeApkSignAndroidService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
     private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 

@@ -46,17 +46,17 @@ public class PipelineNodeStepLogAspect extends AbstractPipelineNodeJobService {
         }
         PipelineNodeStepLog pipelineNodeStepLog = method.getAnnotation(PipelineNodeStepLog.class);
         try {
-            addLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.RUNNING, PipelineStatusEnum.RUNNING.getDesc(), null);
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.RUNNING, PipelineStatusEnum.RUNNING.getDesc(), null);
             Object result = joinPoint.proceed();
-            addLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.SUCCESS, PipelineStatusEnum.SUCCESS.getDesc(), new Date());
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.SUCCESS, PipelineStatusEnum.SUCCESS.getDesc(), new Date());
             return result;
         } catch (BadRequestException e) {
             log.error("执行失败", e);
-            addLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.FAIL, e.getMessage(), new Date());
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.FAIL, e.getMessage(), new Date());
             throw e;
         } catch (Throwable e) {
             log.error("执行失败", e);
-            addLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.FAIL, PipelineStatusEnum.FAIL.getDesc(), new Date());
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.FAIL, PipelineStatusEnum.FAIL.getDesc(), new Date());
             throw e;
         }
     }

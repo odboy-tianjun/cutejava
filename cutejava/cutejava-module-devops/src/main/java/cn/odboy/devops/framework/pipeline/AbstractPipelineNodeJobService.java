@@ -18,7 +18,7 @@ public abstract class AbstractPipelineNodeJobService {
         return pipelineInstanceNodeService.getPipelineInstanceNodeByArgs(instanceId, code);
     }
 
-    public void addLog(PipelineInstanceNodeTb pipelineInstanceNode, String stepName, PipelineStatusEnum stepStatus, String stepMsg, Date finishTime) {
+    public void addPipelineInstanceNodeDetailLog(PipelineInstanceNodeTb pipelineInstanceNode, String stepName, PipelineStatusEnum stepStatus, String stepMsg, Date finishTime) {
         if (pipelineInstanceNode != null) {
             pipelineInstanceNodeDetailService.addLog(pipelineInstanceNode.getId(), pipelineInstanceNode.getCode(), stepName, stepStatus, stepMsg, finishTime);
         }

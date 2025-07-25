@@ -11,5 +11,5 @@ import org.quartz.JobDataMap;
  * @date 2025-07-21
  */
 public interface PipelineNodeJobExecutor {
-    PipelineNodeJobExecuteResult execute(JobDataMap contextArgs) throws BadRequestException;
+    PipelineNodeJobExecuteResult execute(JobDataMap contextArgs) throws Exception;
 }

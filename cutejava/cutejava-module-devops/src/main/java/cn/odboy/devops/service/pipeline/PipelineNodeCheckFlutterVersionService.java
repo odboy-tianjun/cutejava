@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 流水线节点任务：Post调用插件 代码上传扫描结果
+ * 流水线节点任务：检查Flutter版本
  *
  * @author odboy
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_http_post_plugin-stc_result")
-public class PipelineNodeHttpPostPluginStcResultService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_check_flutter_version")
+public class PipelineNodeCheckFlutterVersionService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
     private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 
     @Override

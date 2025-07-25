@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 流水线节点任务：Post调用插件 代码上传扫描
+ * 流水线节点任务：人工审批C++构建结果
  *
  * @author odboy
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_http_post_plugin-stc_upload")
-public class PipelineNodeHttpPostPluginStcUploadService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_approve_cplus")
+public class PipelineNodeApproveCPlusService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
     private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 
     @Override

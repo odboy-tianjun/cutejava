@@ -23,5 +23,7 @@ public interface PipelineInstanceNodeDetailService extends IService<PipelineInst
 
     void removeByNodeIds(List<Long> nodeIds);
 
-    PipelineInstanceNodeDetailTb getLastPipelineInstanceNodeDetailByArgs(PipelineInstanceNodeTb instanceNode, Long nodeId, String nodeCode);
+    PipelineInstanceNodeDetailTb getLastPipelineInstanceNodeDetailByArgs(PipelineInstanceNodeTb instanceNode);
+
+    List<PipelineInstanceNodeDetailTb> queryPipelineInstanceNodeDetailByArgs(PipelineInstanceNodeTb instanceNodeTb);
 }

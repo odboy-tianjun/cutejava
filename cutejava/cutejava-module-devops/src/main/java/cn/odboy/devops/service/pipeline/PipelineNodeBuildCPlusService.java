@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 流水线节点任务：上传安卓发布包
+ * 流水线节点任务：C++构建
  *
  * @author odboy
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_mpaas_upload_android")
-public class PipelineNodeMPassUploadAndroidService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_build_cplus")
+public class PipelineNodeBuildCPlusService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
     private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 
     @Override

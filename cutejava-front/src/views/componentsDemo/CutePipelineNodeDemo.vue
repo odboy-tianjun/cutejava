@@ -17,6 +17,8 @@
           v-for="(template, index) in dynamicInstance.nodes"
           :key="template.code"
           :template-data.sync="dynamicInstance.nodes[index]"
+          :instance-data.sync="dynamicInstance"
+          @retry="onPipelineRetrySuccess"
         />
       </div>
       <div v-else class="box-pipeline-content">
@@ -24,6 +26,7 @@
           v-for="(template, index) in dynamicTemplateList"
           :key="template.code"
           :template-data.sync="dynamicTemplateList[index]"
+          :instance-data.sync="dynamicInstance"
         />
       </div>
     </div>
@@ -462,7 +465,7 @@ export default {
       dynamicStartButtonLoading: false,
       // 当前模板
       dynamicTemplate: {
-        id: 6
+        id: 21
       },
       // 当前流水线节点模板
       dynamicTemplateList: [],
@@ -553,6 +556,7 @@ export default {
           // 所有节点执行成功
           if (that.dynamicWsClient) {
             that.dynamicWsClient.close()
+            sessionStorage.removeItem('pipelineInstanceId')
           }
           that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
         } else {
@@ -597,7 +601,7 @@ export default {
      * 启动流水线
      * @returns {Promise<void>}
      */
-    async startPipelineTest(data) {
+    async startPipelineTest() {
       const that = this
       const args = {
         id: that.dynamicTemplate.id
@@ -625,6 +629,10 @@ export default {
         console.error('error', e)
         that.dynamicStartButtonLoading = false
       }
+    },
+    onPipelineRetrySuccess(data) {
+      sessionStorage.setItem('pipelineInstanceId', data.instanceId)
+      this.connectWebSocketServer(data.instanceId)
     }
   }
 }

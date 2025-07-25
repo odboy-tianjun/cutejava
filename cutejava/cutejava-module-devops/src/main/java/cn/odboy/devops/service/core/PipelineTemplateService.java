@@ -26,9 +26,4 @@ public class PipelineTemplateService {
         }
         return pipelineTemplateTb;
     }
-
-    public String getPipelineTemplateContentById(Long id) {
-        PipelineTemplateTb pipelineTemplateTb = getPipelineTemplateById(id);
-        return pipelineTemplateTb.getTemplate();
-    }
 }

@@ -3,6 +3,7 @@ package cn.odboy.devops.controller;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.dataobject.PipelineTemplateTb;
 import cn.odboy.devops.dal.model.DevOpsQueryLastPipelineDetailArgs;
+import cn.odboy.devops.framework.pipeline.model.PipelineInstanceVo;
 import cn.odboy.devops.service.core.PipelineInstanceService;
 import cn.odboy.devops.service.core.PipelineTemplateService;
 import io.swagger.annotations.Api;
@@ -68,21 +69,8 @@ public class DevopsPipelineInstanceController {
     @ApiOperation("流水线节点重试")
     @PostMapping(value = "/retry")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> retryPipelineNode(@RequestBody PipelineTemplateTb args) {
-        String appName = "cuteops";
-        String envCode = "daily";
-        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(args.getId());
-        PipelineInstanceTb pipelineInstanceTb = new PipelineInstanceTb();
-        pipelineInstanceTb.setTemplateId(pipelineTemplateTb.getId());
-        pipelineInstanceTb.setInstanceName("流水线测试");
-        pipelineInstanceTb.setTemplateType(pipelineTemplateTb.getType());
-        pipelineInstanceTb.setContextName(appName);
-        pipelineInstanceTb.setEnv(envCode);
-        pipelineInstanceTb.setTemplateContent(pipelineTemplateTb.getTemplate());
-        pipelineInstanceTb.setInstanceId(1947604330727079936L);
-        String retryNodeCode = "node_build_java";
-        pipelineInstanceService.restartPipeline(pipelineInstanceTb, retryNodeCode);
-        return ResponseEntity.ok(pipelineInstanceService.restartPipeline(pipelineInstanceTb, retryNodeCode));
+    public ResponseEntity<?> retryPipelineNode(@RequestBody PipelineInstanceVo args) {
+        return ResponseEntity.ok(pipelineInstanceService.retryPipelineNode(args));
     }
 
     @ApiOperation("查询流水线明细")

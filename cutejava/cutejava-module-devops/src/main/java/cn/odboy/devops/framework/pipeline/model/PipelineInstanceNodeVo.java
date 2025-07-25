@@ -1,9 +1,12 @@
 package cn.odboy.devops.framework.pipeline.model;
 
+import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeDetailTb;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 流水线节点数据
@@ -12,7 +15,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class PipelineNodeDataVo extends PipelineNodeTemplateVo {
+public class PipelineInstanceNodeVo extends PipelineNodeTemplateVo {
     /**
      * 节点创建时间
      */
@@ -41,4 +44,8 @@ public class PipelineNodeDataVo extends PipelineNodeTemplateVo {
      * 流水线实例状态
      */
     private String status;
+    /**
+     * 节点步骤明细记录
+     */
+    private List<PipelineInstanceNodeDetailTb> historys = new ArrayList<>();
 }

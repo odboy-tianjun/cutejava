@@ -11,6 +11,7 @@ import com.anwen.mongo.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,22 +41,27 @@ public class PipelineInstanceNodeDetailServiceImpl extends ServiceImpl<PipelineI
 
     @Override
     public PipelineInstanceNodeDetailTb getPipelineInstanceNodeDetailByArgs(Long nodeId, String nodeCode, String stepName) {
-        return one(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeDetailTb.class).eq(PipelineInstanceNodeDetailTb::getNodeId, nodeId).eq(PipelineInstanceNodeDetailTb::getNodeCode, nodeCode).eq(PipelineInstanceNodeDetailTb::getStepName, stepName));
+        return one(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeDetailTb.class)
+                .eq(PipelineInstanceNodeDetailTb::getNodeId, nodeId).eq(PipelineInstanceNodeDetailTb::getNodeCode, nodeCode)
+                .eq(PipelineInstanceNodeDetailTb::getStepName, stepName)
+        );
     }
 
     @Override
     public void removeByNodeIds(List<Long> nodeIds) {
         if (CollUtil.isNotEmpty(nodeIds)) {
-            remove(new LambdaUpdateChainWrapper<>(getBaseMapper(), PipelineInstanceNodeDetailTb.class).in(PipelineInstanceNodeDetailTb::getNodeId, nodeIds));
+            remove(new LambdaUpdateChainWrapper<>(getBaseMapper(), PipelineInstanceNodeDetailTb.class)
+                    .in(PipelineInstanceNodeDetailTb::getNodeId, nodeIds)
+            );
         }
     }
 
     @Override
-    public PipelineInstanceNodeDetailTb getLastPipelineInstanceNodeDetailByArgs(PipelineInstanceNodeTb instanceNode, Long nodeId, String nodeCode) {
+    public PipelineInstanceNodeDetailTb getLastPipelineInstanceNodeDetailByArgs(PipelineInstanceNodeTb instanceNode) {
         List<PipelineInstanceNodeDetailTb> pipelineInstanceNodeDetailList = list(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeDetailTb.class)
-                .eq(PipelineInstanceNodeDetailTb::getNodeId, nodeId)
-                .eq(PipelineInstanceNodeDetailTb::getNodeCode, nodeCode)
-                .orderByDesc(PipelineInstanceNodeDetailTb::getId)
+                .eq(PipelineInstanceNodeDetailTb::getNodeId, instanceNode.getId())
+                .eq(PipelineInstanceNodeDetailTb::getNodeCode, instanceNode.getCode())
+                .orderByDesc(PipelineInstanceNodeDetailTb::getStartTime)
         );
         // 明细为空，返回节点状态
         if (pipelineInstanceNodeDetailList.isEmpty()) {
@@ -86,5 +92,14 @@ public class PipelineInstanceNodeDetailServiceImpl extends ServiceImpl<PipelineI
         // 返回步骤说明
         pipelineInstanceNodeDetailTb.setStepMsg(pipelineInstanceNodeDetailTb.getStepName());
         return pipelineInstanceNodeDetailTb;
+    }
+
+    @Override
+    public List<PipelineInstanceNodeDetailTb> queryPipelineInstanceNodeDetailByArgs(PipelineInstanceNodeTb instanceNode) {
+        return list(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeDetailTb.class)
+                .eq(PipelineInstanceNodeDetailTb::getNodeId, instanceNode.getId())
+                .eq(PipelineInstanceNodeDetailTb::getNodeCode, instanceNode.getCode())
+                .orderByAsc(PipelineInstanceNodeDetailTb::getStartTime)
+        );
     }
 }
