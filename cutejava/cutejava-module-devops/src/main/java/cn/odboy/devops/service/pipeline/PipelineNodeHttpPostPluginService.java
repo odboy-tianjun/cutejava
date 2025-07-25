@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 流水线节点任务：特殊合并到release分支
+ * 流水线节点任务：Post调用插件
  *
  * @author odboy
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_release_android")
-public class PipelineNodeReleaseAndroidService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_http_post_plugin")
+public class PipelineNodeHttpPostPluginService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
     private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 
     @Override

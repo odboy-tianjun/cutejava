@@ -1,3 +1,7 @@
+/**
+ * 在modules中定义后，需要到这注册
+ * @type {any}
+ */
 const getters = {
   deployUploadApi: state => state.api.deployUploadApi,
   databaseUploadApi: state => state.api.databaseUploadApi,
@@ -19,6 +23,7 @@ const getters = {
   druidSqlApi: state => state.api.druidSqlApi,
   swaggerApi: state => state.api.swaggerApi,
   websocketApi: state => state.api.websocketApi,
-  sidebarRouters: state => state.permission.sidebarRouters
+  sidebarRouters: state => state.permission.sidebarRouters,
+  statusConst: state => state.pipeline.statusConst
 }
 export default getters

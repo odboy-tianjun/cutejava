@@ -1,6 +1,8 @@
 package cn.odboy.devops.framework.pipeline.model;
 
 import cn.odboy.base.CsObject;
+import com.alibaba.fastjson2.annotation.JSONField;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +16,11 @@ import java.util.List;
 @Getter
 @Setter
 public class PipelineInstanceVo extends CsObject {
-    private Long instanceId;
+    private String instanceId;
     private String instanceName;
     private String env;
+    private String code;
     private String contextName;
     private String contextParams;
-    private List<PipelineNodeDataVo> nodes;
+    private List<PipelineInstanceNodeVo> nodes;
 }

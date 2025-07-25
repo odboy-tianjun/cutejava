@@ -8,6 +8,14 @@ export function startPipeline(data) {
   })
 }
 
+export function retryPipeline(data) {
+  return request({
+    url: 'api/devops/pipelineInstance/retry',
+    method: 'post',
+    data
+  })
+}
+
 export function restartPipeline(data) {
   return request({
     url: 'api/devops/pipelineInstance/restart',

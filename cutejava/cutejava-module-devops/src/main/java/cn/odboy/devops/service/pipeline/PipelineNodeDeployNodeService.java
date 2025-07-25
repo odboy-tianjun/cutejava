@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2025-07-24
  */
 @RequiredArgsConstructor
-@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_deploy_python")
+@Service(value = PipelineConst.EXECUTOR_PREFIX + "node_deploy_node")
 public class PipelineNodeDeployNodeService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
     private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
 

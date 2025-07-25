@@ -45,16 +45,6 @@ public class PipelineJobBean implements InterruptableJob {
         PipelineInstanceTb pipelineInstanceTb = (PipelineInstanceTb) jobDataMap.get(PipelineConst.INSTANCE);
         pipelineInstanceTb.setStatus(PipelineStatusEnum.PENDING.getCode());
 
-        //        // 模拟终止流水线
-//        ThreadUtil.execAsync(() -> {
-//            ThreadUtil.safeSleep(6000);
-//            try {
-//                pipelineJobManage.interruptJob(pipelineInstanceTb.getInstanceId());
-//            } catch (SchedulerException e) {
-//                log.error("终止流水线异常", e);
-//            }
-//        });
-
         if (StrUtil.isBlank(retryNodeCode)) {
             // 创建实例
             pipelineInstanceMapper.insert(pipelineInstanceTb);

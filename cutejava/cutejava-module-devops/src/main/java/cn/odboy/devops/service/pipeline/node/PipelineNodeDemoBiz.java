@@ -16,11 +16,11 @@ public class PipelineNodeDemoBiz {
 
     @PipelineNodeStepLog("开始")
     public void start(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(1000);
+        ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("完成")
     public void finish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
-        ThreadUtil.safeSleep(1000);
+        ThreadUtil.safeSleep(2000);
     }
 }
