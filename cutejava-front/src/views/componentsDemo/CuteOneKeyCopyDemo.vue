@@ -9,8 +9,8 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import { Message } from 'element-ui'
 import CuteOneKeyCopy from '@/views/components/dev/CuteOneKeyCopy'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
   components: { CuteOneKeyCopy },
@@ -32,13 +32,13 @@ export default {
       })
       // 复制成功
       clipboard.on('success', (e) => {
-        Message.success('复制成功')
+        CsMessage.Success('复制成功')
         console.log(e, '复制成功')
         clipboard.destroy()
       })
       // //复制失败
       clipboard.on('error', (e) => {
-        Message.error('复制失败')
+        CsMessage.Error('复制失败')
         console.log(e, '复制失败')
         clipboard.destroy()
       })

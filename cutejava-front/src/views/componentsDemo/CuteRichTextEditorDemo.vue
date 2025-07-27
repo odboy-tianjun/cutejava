@@ -22,8 +22,8 @@ export default {
   },
   methods: {
     onChange(html, text) {
-      console.error('onChange:html', html)
-      console.error('onChange:text', text)
+      console.log('onChange:html', html)
+      console.log('onChange:text', text)
     }
   }
 }

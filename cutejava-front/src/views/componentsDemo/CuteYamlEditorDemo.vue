@@ -248,7 +248,7 @@ export default {
   },
   methods: {
     onChange(value) {
-      console.error('onChange', value)
+      console.log('onChange', value)
     }
   }
 }

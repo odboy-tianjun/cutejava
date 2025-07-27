@@ -171,13 +171,13 @@ export default {
       this.$refs.dialogForm.show()
     },
     onDialogFormSubmit(values) {
-      console.error('onDialogFormSubmit', values)
+      console.log('onDialogFormSubmit', values)
     },
     onDrawerClick() {
       this.$refs.drawerFrom.show()
     },
     onDrawerFormSubmit(values) {
-      console.error('onDrawerFormSubmit', values)
+      console.log('onDrawerFormSubmit', values)
     }
   }
 }

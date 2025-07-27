@@ -166,7 +166,7 @@ export default {
     },
     beforeUpload(file) {
       let isLt2M = true
-      isLt2M = file.size / 1024 / 1024 < 100
+      isLt2M = file.size / 1024 ** 2 < 100
       if (!isLt2M) {
         this.loading = false
         this.$message.error('上传文件大小不能超过 100MB')

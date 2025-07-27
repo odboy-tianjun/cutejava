@@ -26,12 +26,12 @@ export default {
   },
   methods: {
     onChange(text, markdown) {
-      console.error('onChange:text', text)
-      console.error('onChange:markdown', markdown)
+      console.log('onChange:text', text)
+      console.log('onChange:markdown', markdown)
     },
     onSave(text, markdown) {
-      console.error('onSave:text', text)
-      console.error('onSave:markdown', markdown)
+      console.log('onSave:text', text)
+      console.log('onSave:markdown', markdown)
     }
   }
 }

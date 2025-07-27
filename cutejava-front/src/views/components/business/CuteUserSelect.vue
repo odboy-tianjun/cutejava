@@ -59,7 +59,10 @@ export default {
       })
     },
     onChange(value) {
+      // 绑定change事件
       this.$emit('change', value)
+      // 绑定form value
+      this.$emit('input', value)
     }
   }
 }
