@@ -1,6 +1,6 @@
 package cn.odboy;
 
-import cn.odboy.framework.context.CsBootApplication;
+import cn.odboy.framework.context.BootApplication;
 import com.anwen.mongo.config.MongoPlusAutoConfiguration;
 import com.anwen.mongo.config.OverrideMongoConfiguration;
 import io.swagger.annotations.Api;
@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 @Api(hidden = true)
 @SpringBootApplication(exclude = OverrideMongoConfiguration.class)
 @Import(MongoPlusAutoConfiguration.class)
-public class AppRun extends CsBootApplication {
+public class AppRun extends BootApplication {
 
     public static void main(String[] args) throws UnknownHostException {
         SpringApplication springApplication = new SpringApplication(AppRun.class);

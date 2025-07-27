@@ -5,7 +5,7 @@ import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.devops.service.core.PipelineInstanceNodeService;
-import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
@@ -25,7 +25,7 @@ import java.util.Date;
 public class PipelineNodeJobBean implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        PipelineInstanceNodeService pipelineInstanceNodeService = SpringBeanHolder.getBean(PipelineInstanceNodeService.class);
+        PipelineInstanceNodeService pipelineInstanceNodeService = CsSpringBeanHolder.getBean(PipelineInstanceNodeService.class);
 
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
         long instanceId = jobDataMap.getLong(PipelineConst.INSTANCE_ID);
@@ -34,7 +34,7 @@ public class PipelineNodeJobBean implements Job {
 
         try {
             String serviceName = PipelineConst.EXECUTOR_PREFIX + nodeCode;
-            PipelineNodeJobExecutor pipelineNodeJobExecutor = SpringBeanHolder.getBean(serviceName);
+            PipelineNodeJobExecutor pipelineNodeJobExecutor = CsSpringBeanHolder.getBean(serviceName);
             pipelineInstanceNodeService.updatePipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.RUNNING, PipelineStatusEnum.RUNNING.getDesc());
             PipelineNodeJobExecuteResult executeResult = pipelineNodeJobExecutor.execute(jobDataMap);
             jobExecutionContext.getMergedJobDataMap().put(PipelineConst.LAST_NODE_RESULT, executeResult);

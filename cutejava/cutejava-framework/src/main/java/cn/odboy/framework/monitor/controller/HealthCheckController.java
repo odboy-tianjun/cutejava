@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/healthCheck")
 @Api(tags = "系统：健康检查接口")
-public class CsHealthCheckController {
+public class HealthCheckController {
     @Autowired
     private CsHealthCheckPointService healthCheckPointService;
 

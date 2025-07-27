@@ -31,10 +31,10 @@ import java.net.UnknownHostException;
  * @date 2024-04-20
  */
 @Slf4j
-public class CsBootApplication {
+public class BootApplication {
     @Bean
-    public SpringBeanHolder springBeanHolder() {
-        return new SpringBeanHolder();
+    public CsSpringBeanHolder springBeanHolder() {
+        return new CsSpringBeanHolder();
     }
 
     protected static void inited(ConfigurableApplicationContext application) throws UnknownHostException {
