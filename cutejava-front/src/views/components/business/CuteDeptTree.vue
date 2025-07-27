@@ -30,7 +30,7 @@ export default {
   name: 'CuteDeptTree',
   props: {
     value: {
-      type: Object,
+      type: [Number, String],
       required: false,
       default: null
     }
@@ -68,9 +68,11 @@ export default {
         })
       }, 100)
     },
-    handleNodeClick(data) {
-      this.$emit('node-click', data)
-      this.$emit('input', data)
+    handleNodeClick(value) {
+      // 绑定node-click事件
+      this.$emit('node-click', value)
+      // 绑定form value
+      this.$emit('input', value.id)
     }
   }
 }

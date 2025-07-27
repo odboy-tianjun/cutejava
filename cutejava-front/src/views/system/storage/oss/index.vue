@@ -101,7 +101,7 @@ import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 import Clipboard from 'clipboard'
-import { Message } from 'element-ui'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 const defaultForm = { id: null }
 export default {
@@ -137,7 +137,7 @@ export default {
     },
     beforeUpload(file) {
       let isLt2M = true
-      isLt2M = file.size / 1024 / 1024 < 100
+      isLt2M = file.size / 1024 ** 2 < 100
       if (!isLt2M) {
         this.loading = false
         this.$message.error('上传文件大小不能超过 100MB')
@@ -169,12 +169,12 @@ export default {
       })
       // 复制成功
       clipboard.on('success', (e) => {
-        Message.success('复制成功')
+        CsMessage.Success('复制成功')
         clipboard.destroy()
       })
       // //复制失败
       clipboard.on('error', (e) => {
-        Message.error('复制失败')
+        CsMessage.Error('复制失败')
         clipboard.destroy()
       })
     }

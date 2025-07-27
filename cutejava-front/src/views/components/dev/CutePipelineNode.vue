@@ -309,7 +309,7 @@ export default {
         CsMessage.Warning('当前流水线节点不支持查看明细')
         return
       }
-      console.error('templateData', this.templateData)
+      console.log('templateData', this.templateData)
       this.$refs.detailDrawer.show()
     },
     onNodeRetryClick() {
@@ -327,7 +327,7 @@ export default {
       this.$emit('retry', data)
     },
     onNodeOperationClick(buttonInfo) {
-      console.error('buttonInfo', buttonInfo)
+      console.log('buttonInfo', buttonInfo)
     }
   }
 }

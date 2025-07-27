@@ -26,7 +26,7 @@ import 'codemirror/mode/ruby/ruby'
 import 'codemirror/mode/sql/sql'
 import 'codemirror/mode/vue/vue'
 import 'codemirror/mode/xml/xml'
-import { Message } from 'element-ui'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 const SupportModeList = ['yaml', 'java', 'go', 'swift', 'dockerfile', 'groovy', 'lua', 'perl', 'python', 'ruby', 'sql', 'xml', 'vue']
 export default {
@@ -98,7 +98,7 @@ export default {
       })
       return
     }
-    Message.error('不支持的mode')
+    CsMessage.Error('不支持的mode')
   },
   methods: {
     getValue() {

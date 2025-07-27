@@ -40,7 +40,7 @@ export default {
       const that = this
       that.$refs[formName].validate((valid) => {
         if (valid) {
-          console.error('submitForm:form', that.form)
+          console.log('submitForm:form', that.form)
         } else {
           return false
         }

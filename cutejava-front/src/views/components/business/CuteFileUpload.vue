@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
   name: 'CuteFileUpload',
@@ -42,7 +42,7 @@ export default {
   methods: {
     beforeUpload(file) {
       let isLt2M = true
-      isLt2M = file.size / 1024 / 1024 < 100
+      isLt2M = file.size / 1024 ** 2 < 100
       if (!isLt2M) {
         this.$message.error('上传文件大小不能超过 100MB')
         return false
@@ -51,17 +51,20 @@ export default {
     },
     // 监听上传失成功
     handleSuccess(response, file, fileList) {
-      // Message.success('上传成功')
       // this.$refs.upload.clearFiles()
-      console.error('response', response)
-      console.error('file', file)
-      console.error('fileList', fileList)
+      // console.error('response', response)
+      // console.error('file', file)
+      // console.error('fileList', fileList)
       this.value.fileUrl = response
+      // 绑定on-success事件
+      this.$emit('on-success', response, file, fileList)
     },
     // 监听上传失败
     handleError(e, file, fileList) {
       const msg = JSON.parse(e.message)
-      Message.error(msg.message)
+      CsMessage.Error(msg.message)
+      // 绑定on-error事件
+      this.$emit('on-error', e, file, fileList)
     }
   }
 }

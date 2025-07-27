@@ -27,9 +27,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import '@wangeditor/editor/dist/css/style.css'
-import { Message } from 'element-ui'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { UploadFile } from '@/utils/CsDomUtil'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
   name: 'CuteRichTextEditor',
@@ -155,19 +155,19 @@ export default {
     customAlert(info, type) {
       switch (type) {
         case 'success':
-          Message.success(info)
+          CsMessage.Error(info)
           break
         case 'info':
-          Message.info(info)
+          CsMessage.Info(info)
           break
         case 'warning':
-          Message.warning(info)
+          CsMessage.Warning(info)
           break
         case 'error':
-          Message.error(info)
+          CsMessage.Error(info)
           break
         default:
-          Message.info(info)
+          CsMessage.Info(info)
           break
       }
     },
