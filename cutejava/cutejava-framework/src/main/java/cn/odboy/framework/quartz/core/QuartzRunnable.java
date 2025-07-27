@@ -1,6 +1,6 @@
 package cn.odboy.framework.quartz.core;
 
-import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;
@@ -18,7 +18,7 @@ public class QuartzRunnable implements Callable<Object> {
     private final String params;
 
     public QuartzRunnable(String beanName, String methodName, String params) throws NoSuchMethodException, SecurityException {
-        this.target = SpringBeanHolder.getBean(beanName);
+        this.target = CsSpringBeanHolder.getBean(beanName);
         this.params = params;
         if (StringUtils.isNotBlank(params)) {
             this.method = target.getClass().getDeclaredMethod(methodName, String.class);

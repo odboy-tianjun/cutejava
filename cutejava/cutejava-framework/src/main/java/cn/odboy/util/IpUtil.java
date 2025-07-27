@@ -1,6 +1,6 @@
 package cn.odboy.util;
 
-import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import lombok.experimental.UtilityClass;
 import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 import net.dreamlu.mica.ip2region.core.IpInfo;
@@ -17,7 +17,7 @@ public final class IpUtil {
     /**
      * 注入bean
      */
-    private final static Ip2regionSearcher IP_SEARCHER = SpringBeanHolder.getBean(Ip2regionSearcher.class);
+    private final static Ip2regionSearcher IP_SEARCHER = CsSpringBeanHolder.getBean(Ip2regionSearcher.class);
 
     /**
      * 根据ip获取详细地址

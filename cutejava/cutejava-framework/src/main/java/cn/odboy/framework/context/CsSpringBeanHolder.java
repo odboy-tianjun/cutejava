@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @SuppressWarnings({"unchecked", "all"})
-public class SpringBeanHolder implements ApplicationContextAware, DisposableBean {
+public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
@@ -29,7 +29,7 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
      */
     public synchronized static void addCallBacks(CallBack callBack) {
         if (addCallback) {
-            SpringBeanHolder.CALL_BACKS.add(callBack);
+            CsSpringBeanHolder.CALL_BACKS.add(callBack);
         } else {
             log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
             callBack.executor();
@@ -109,22 +109,22 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
 
     @Override
     public void destroy() {
-        SpringBeanHolder.clearHolder();
+        CsSpringBeanHolder.clearHolder();
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SpringBeanHolder.applicationContext != null) {
-            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringBeanHolder.applicationContext);
+        if (CsSpringBeanHolder.applicationContext != null) {
+            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + CsSpringBeanHolder.applicationContext);
         }
-        SpringBeanHolder.applicationContext = applicationContext;
+        CsSpringBeanHolder.applicationContext = applicationContext;
         if (addCallback) {
-            for (CallBack callBack : SpringBeanHolder.CALL_BACKS) {
+            for (CallBack callBack : CsSpringBeanHolder.CALL_BACKS) {
                 callBack.executor();
             }
             CALL_BACKS.clear();
         }
-        SpringBeanHolder.addCallback = false;
+        CsSpringBeanHolder.addCallback = false;
     }
 
     /**

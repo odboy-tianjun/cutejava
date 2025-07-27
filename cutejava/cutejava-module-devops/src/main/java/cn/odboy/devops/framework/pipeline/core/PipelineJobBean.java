@@ -10,7 +10,7 @@ import cn.odboy.devops.dal.mysql.PipelineInstanceMapper;
 import cn.odboy.devops.dal.redis.PipelineInstanceDAO;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.devops.service.core.PipelineInstanceNodeService;
-import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +33,11 @@ public class PipelineJobBean implements InterruptableJob {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         // 获取服务
-        PipelineInstanceMapper pipelineInstanceMapper = SpringBeanHolder.getBean(PipelineInstanceMapper.class);
-        PipelineInstanceNodeService pipelineInstanceNodeService = SpringBeanHolder.getBean(PipelineInstanceNodeService.class);
-        PipelineInstanceDAO pipelineInstanceDAO = SpringBeanHolder.getBean(PipelineInstanceDAO.class);
-        PipelineJobManage pipelineJobManage = SpringBeanHolder.getBean(PipelineJobManage.class);
-        PipelineNodeJobManage pipelineNodeJobManage = SpringBeanHolder.getBean(PipelineNodeJobManage.class);
+        PipelineInstanceMapper pipelineInstanceMapper = CsSpringBeanHolder.getBean(PipelineInstanceMapper.class);
+        PipelineInstanceNodeService pipelineInstanceNodeService = CsSpringBeanHolder.getBean(PipelineInstanceNodeService.class);
+        PipelineInstanceDAO pipelineInstanceDAO = CsSpringBeanHolder.getBean(PipelineInstanceDAO.class);
+        PipelineJobManage pipelineJobManage = CsSpringBeanHolder.getBean(PipelineJobManage.class);
+        PipelineNodeJobManage pipelineNodeJobManage = CsSpringBeanHolder.getBean(PipelineNodeJobManage.class);
 
         // 参数解析
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
@@ -160,8 +160,8 @@ public class PipelineJobBean implements InterruptableJob {
     public void interrupt() throws UnableToInterruptJobException {
         this.interrupted = true;
         if (this.currentInstanceId != null && StrUtil.isNotBlank(this.currentNodeCode)) {
-            PipelineInstanceMapper pipelineInstanceMapper = SpringBeanHolder.getBean(PipelineInstanceMapper.class);
-            PipelineInstanceDAO pipelineInstanceDAO = SpringBeanHolder.getBean(PipelineInstanceDAO.class);
+            PipelineInstanceMapper pipelineInstanceMapper = CsSpringBeanHolder.getBean(PipelineInstanceMapper.class);
+            PipelineInstanceDAO pipelineInstanceDAO = CsSpringBeanHolder.getBean(PipelineInstanceDAO.class);
 
             int seconds = 30_000;
             log.info("中断信号已发出，等待最多 {} 秒，若未自行结束则强制终止线程", seconds);

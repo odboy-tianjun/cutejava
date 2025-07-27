@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.framework.context.SpringBeanHolder;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
@@ -120,7 +120,7 @@ public class SystemQuartzJobController {
     private void checkBean(String beanName) {
         // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
         // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
-        if (!SpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
+        if (!CsSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
             throw new BadRequestException("非法的 Bean，请重新输入！");
         }
     }

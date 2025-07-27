@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * 获取 HttpServletRequest
  */
-public class RequestHolder {
+public class CsRequestHolder {
 
     public static HttpServletRequest getHttpServletRequest() {
         return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
