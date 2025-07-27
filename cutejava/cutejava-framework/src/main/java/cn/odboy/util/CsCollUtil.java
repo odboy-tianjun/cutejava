@@ -15,7 +15,7 @@
  */
 package cn.odboy.util;
 
-import cn.odboy.base.CsSelectOptionItemVo;
+import cn.odboy.base.CsSelectOptionVo;
 import com.alibaba.fastjson2.JSON;
 import lombok.experimental.UtilityClass;
 
@@ -197,22 +197,22 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
     }
 
     public static void main(String[] args) {
-        List<CsSelectOptionItemVo> testData = new ArrayList<>();
-        CsSelectOptionItemVo selectOption1 = CsSelectOptionItemVo.builder().label("苹果").value("apple").build();
-        CsSelectOptionItemVo selectOption2 = CsSelectOptionItemVo.builder().label("苹果").value("apple").build();
-        CsSelectOptionItemVo selectOption3 = CsSelectOptionItemVo.builder().label("香蕉").value("banana").build();
-        CsSelectOptionItemVo selectOption4 = CsSelectOptionItemVo.builder().label("猫").value("cat").build();
+        List<CsSelectOptionVo> testData = new ArrayList<>();
+        CsSelectOptionVo selectOption1 = CsSelectOptionVo.builder().label("苹果").value("apple").build();
+        CsSelectOptionVo selectOption2 = CsSelectOptionVo.builder().label("苹果").value("apple").build();
+        CsSelectOptionVo selectOption3 = CsSelectOptionVo.builder().label("香蕉").value("banana").build();
+        CsSelectOptionVo selectOption4 = CsSelectOptionVo.builder().label("猫").value("cat").build();
         testData.add(selectOption1);
         testData.add(selectOption2);
         testData.add(selectOption3);
         testData.add(selectOption4);
-        List<CsSelectOptionItemVo> selectOptions1 = CsCollUtil.streamAscSort(testData, CsSelectOptionItemVo::getValue);
+        List<CsSelectOptionVo> selectOptions1 = CsCollUtil.streamAscSort(testData, CsSelectOptionVo::getValue);
         System.out.println(JSON.toJSONString(selectOptions1));
-        List<CsSelectOptionItemVo> selectOptions2 = CsCollUtil.streamDescSort(testData, CsSelectOptionItemVo::getValue);
+        List<CsSelectOptionVo> selectOptions2 = CsCollUtil.streamDescSort(testData, CsSelectOptionVo::getValue);
         System.out.println(JSON.toJSONString(selectOptions2));
-        List<CsSelectOptionItemVo> selectOptions3 = CsCollUtil.streamDistinct(testData, CsSelectOptionItemVo::getValue);
+        List<CsSelectOptionVo> selectOptions3 = CsCollUtil.streamDistinct(testData, CsSelectOptionVo::getValue);
         System.out.println(JSON.toJSONString(selectOptions3));
-        Map<String, String> selectMap1 = CsCollUtil.streamToMap(testData, CsSelectOptionItemVo::getValue, CsSelectOptionItemVo::getLabel);
+        Map<String, String> selectMap1 = CsCollUtil.streamToMap(testData, CsSelectOptionVo::getValue, CsSelectOptionVo::getLabel);
         System.out.println(JSON.toJSONString(selectMap1));
         // 这只是一个示范
         BigDecimal total1 = CsCollUtil.streamBigDecimalAdd(testData, "value");

@@ -30,7 +30,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CsSelectOptionItemVo extends CsObject {
+public class CsSelectOptionVo extends CsObject {
     private String label;
     private String value;
     private Map<String, Object> ext;

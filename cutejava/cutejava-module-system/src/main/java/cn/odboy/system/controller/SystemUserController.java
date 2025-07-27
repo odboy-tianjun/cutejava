@@ -3,7 +3,7 @@ package cn.odboy.system.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
-import cn.odboy.base.CsSelectOptionItemVo;
+import cn.odboy.base.CsSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
@@ -190,7 +190,7 @@ public class SystemUserController {
     @ApiOperation("查询用户基础数据")
     @PostMapping(value = "/queryUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<List<CsSelectOptionItemVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
+    public ResponseEntity<List<CsSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
         int maxPageSize = 50;
         SystemQueryUserArgs criteria = args.getArgs();
         LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
@@ -210,7 +210,7 @@ public class SystemUserController {
             ext.put("deptId", m.getDeptId());
             ext.put("email", m.getEmail());
             ext.put("phone", m.getPhone());
-            return CsSelectOptionItemVo.builder()
+            return CsSelectOptionVo.builder()
                     .label(m.getNickName())
                     .value(m.getUsername())
                     .ext(ext)

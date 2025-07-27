@@ -12,9 +12,13 @@
         <el-form-item label="部门" prop="dept">
           <cute-dept-tree v-model="form.dept" />
         </el-form-item>
+        <el-form-item label="产品线" prop="productLine">
+          <cute-product-line-select v-model="form.productLine" @detail="onProductLineDetailChange" />
+        </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
-          <el-button>取消</el-button>
+          <el-button type="primary" @click="onSubmit('form')">提 交</el-button>
+          <el-button type="danger" @click="onReset('form')">重 置</el-button>
+          <el-button>取 消</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -30,6 +34,12 @@
       </div>
       <cute-dept-tree @node-click="onDeptTreeNodeClick" @search="onDeptTreeSearch" />
     </el-card>
+    <el-card style="margin-top: 10px">
+      <div slot="header" class="clearfix">
+        <span>产品线选择框</span>
+      </div>
+      <cute-product-line-select @change="onProductLineChange" @detail="onProductLineDetailChange" />
+    </el-card>
   </div>
 </template>
 
@@ -37,31 +47,49 @@
 
 import CuteUserSelect from '@/views/components/business/CuteUserSelect.vue'
 import CuteDeptTree from '@/views/components/business/CuteDeptTree.vue'
+import CuteProductLineSelect from '@/views/components/business/CuteProductLineSelect.vue'
 
 export default {
   name: 'CuteBusinessDemo',
-  components: { CuteDeptTree, CuteUserSelect },
+  components: { CuteProductLineSelect, CuteDeptTree, CuteUserSelect },
   data() {
     return {
       form: {
         user: null,
-        dept: null
+        dept: null,
+        productLine: null
       }
     }
   },
   methods: {
     onUserSelectChange(data) {
-      console.error('onUserSelectChange=', data)
+      console.log('onUserSelectChange=', data)
     },
     onDeptTreeNodeClick(data) {
-      console.error('onDeptTreeNodeClick=', data)
+      console.log('onDeptTreeNodeClick=', data)
     },
-    onSubmit() {
-      console.error('this.form=', this.form)
+    onSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('this.form=', this.form)
+        } else {
+          console.error('error submit!!')
+          return false
+        }
+      })
+    },
+    onReset(formName) {
+      this.$refs[formName].resetFields()
     },
     onDeptTreeSearch(key) {
-      console.error('onDeptTreeSearch:key', key)
-      console.error('onDeptTreeSearch:form.dept', this.form.dept)
+      console.log('onDeptTreeSearch:key', key)
+      console.log('onDeptTreeSearch:form.dept', this.form.dept)
+    },
+    onProductLineChange(data) {
+      console.log('onProductLineChange', data)
+    },
+    onProductLineDetailChange(data) {
+      console.log('onProductLineDetailChange', data)
     }
   }
 }
