@@ -545,9 +545,9 @@ export default {
     handleWebSocketMessage(e) {
       const that = this
       const data = e.data
-      // console.error('来自服务器的数据:data', data)
+      // console.log('来自服务器的数据:data', data)
       const callbackData = JSON.parse(data)
-      // console.error('callbackData', callbackData)
+      // console.log('callbackData', callbackData)
       try {
         that.dynamicInstance = JSON.parse(callbackData.data)
         // 判断流水线是否结束
@@ -607,9 +607,9 @@ export default {
         id: that.dynamicTemplate.id
       }
       try {
-        if (that.dynamicHook) {
-          clearInterval(that.dynamicHook)
-        }
+        // if (that.dynamicHook) {
+        //   clearInterval(that.dynamicHook)
+        // }
         that.dynamicStartButtonLoading = true
         // 这里的 dynamicStartupStatus状态，需要后期与上下文关联后，初始化的时候带入最近一个流水线实例
         // let result

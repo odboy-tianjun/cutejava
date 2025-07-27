@@ -9,6 +9,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.SystemProductLineVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
@@ -17,6 +18,7 @@ import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.ClassUtil;
 import cn.odboy.util.FileUtil;
 import cn.odboy.util.StringUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -338,5 +341,60 @@ public class SystemDeptService {
             }
         }
         return depts;
+    }
+
+    public List<SystemProductLineVo> queryDeptSelectDataSource() {
+        List<SystemDeptTb> depts = findEnabledDepts();
+        return buildDeptSelectOptions(depts);
+    }
+
+    private List<SystemProductLineVo> buildDeptSelectOptions(List<SystemDeptTb> depts) {
+        // 获取所有部门并按父子关系组织
+        Map<Long, SystemDeptTb> deptMap = depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
+        List<SystemProductLineVo> options = new ArrayList<>();
+        for (SystemDeptTb dept : depts) {
+            // 构建部门ID路径
+            List<Long> pathIds = new ArrayList<>();
+            buildDeptIdPath(dept, deptMap, pathIds);
+
+            // 反转路径，从顶级部门到当前部门
+            Collections.reverse(pathIds);
+
+            SystemProductLineVo dto = new SystemProductLineVo();
+            dto.setValue(dept.getId());
+            dto.setIdPath(pathIds.stream().map(String::valueOf).collect(Collectors.joining("-")));
+            dto.setLabel(buildNamePath(dept, deptMap)); // 保留名称路径用于显示
+
+            options.add(dto);
+        }
+
+        // 按部门名称路径排序
+        options.sort(Comparator.comparing(SystemProductLineVo::getLabel));
+        return options;
+    }
+
+    private void buildDeptIdPath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap, List<Long> pathIds) {
+        pathIds.add(dept.getId());
+        if (dept.getPid() != null && dept.getPid() != 0 && deptMap.containsKey(dept.getPid())) {
+            buildDeptIdPath(deptMap.get(dept.getPid()), deptMap, pathIds);
+        }
+    }
+
+    private String buildNamePath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap) {
+        List<String> pathNames = new ArrayList<>();
+        buildDeptNamePath(dept, deptMap, pathNames);
+        Collections.reverse(pathNames);
+        return String.join("/", pathNames);
+    }
+
+    private void buildDeptNamePath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap, List<String> pathNames) {
+        pathNames.add(dept.getName());
+        if (dept.getPid() != null && dept.getPid() != 0 && deptMap.containsKey(dept.getPid())) {
+            buildDeptNamePath(deptMap.get(dept.getPid()), deptMap, pathNames);
+        }
+    }
+
+    private List<SystemDeptTb> findEnabledDepts() {
+        return systemDeptMapper.selectList(new LambdaQueryWrapper<SystemDeptTb>().eq(SystemDeptTb::getEnabled, 1));
     }
 }
