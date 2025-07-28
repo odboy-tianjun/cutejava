@@ -12,9 +12,9 @@ import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
-import cn.odboy.util.ClassUtil;
-import cn.odboy.util.FileUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsClassUtil;
+import cn.odboy.util.CsFileUtil;
+import cn.odboy.util.CsStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +46,7 @@ public class SystemMenuService {
         if (systemMenuMapper.getMenuByTitle(resources.getTitle()) != null) {
             throw new BadRequestException("菜单标题已存在");
         }
-        if (StringUtil.isNotBlank(resources.getComponentName())) {
+        if (CsStringUtil.isNotBlank(resources.getComponentName())) {
             if (systemMenuMapper.getMenuByComponentName(resources.getComponentName()) != null) {
                 throw new BadRequestException("菜单组件名称已存在");
             }
@@ -97,7 +97,7 @@ public class SystemMenuService {
         Long oldPid = menu.getPid();
         Long newPid = resources.getPid();
 
-        if (StringUtil.isNotBlank(resources.getComponentName())) {
+        if (CsStringUtil.isNotBlank(resources.getComponentName())) {
             menu1 = systemMenuMapper.getMenuByComponentName(resources.getComponentName());
             if (menu1 != null && !menu1.getId().equals(menu.getId())) {
                 throw new BadRequestException("菜单组件名称已存在");
@@ -160,7 +160,7 @@ public class SystemMenuService {
             map.put("创建日期", menu.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -183,7 +183,7 @@ public class SystemMenuService {
     public List<SystemMenuTb> queryAllMenu(SystemQueryMenuArgs criteria, Boolean isQuery) throws Exception {
         if (Boolean.TRUE.equals(isQuery)) {
             criteria.setPidIsNull(true);
-            List<Field> fields = ClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
+            List<Field> fields = CsClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
             for (Field field : fields) {
                 //设置对象的访问权限, 保证对private的属性的访问
                 field.setAccessible(true);
@@ -328,11 +328,11 @@ public class SystemMenuService {
                 // 如果不是外链
                 if (!menu.getIFrame()) {
                     if (menu.getPid() == null) {
-                        menuVo.setComponent(StringUtil.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
+                        menuVo.setComponent(CsStringUtil.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
                         // 如果不是一级菜单，并且菜单类型为目录，则代表是多级菜单
                     } else if (menu.getType() == 0) {
-                        menuVo.setComponent(StringUtil.isEmpty(menu.getComponent()) ? "ParentView" : menu.getComponent());
-                    } else if (StringUtil.isNoneBlank(menu.getComponent())) {
+                        menuVo.setComponent(CsStringUtil.isEmpty(menu.getComponent()) ? "ParentView" : menu.getComponent());
+                    } else if (CsStringUtil.isNoneBlank(menu.getComponent())) {
                         menuVo.setComponent(menu.getComponent());
                     }
                 }

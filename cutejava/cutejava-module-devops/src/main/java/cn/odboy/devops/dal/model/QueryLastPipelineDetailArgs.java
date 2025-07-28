@@ -13,23 +13,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.framework.properties.model;
+package cn.odboy.devops.dal.model;
 
 import cn.odboy.base.CsObject;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * 登录配置
- *
- * @author odboy
- */
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
-public class UserLoginSettingModel extends CsObject {
-    /**
-     * 账号单用户 登录
-     */
-    private boolean single = false;
-    private UserLoginCaptchaSettingModel captchaSetting;
+public class QueryLastPipelineDetailArgs extends CsObject {
+    @NotBlank(message = "流水线实例id必填")
+    private String instanceId;
 }

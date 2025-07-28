@@ -15,6 +15,9 @@
         <el-form-item label="产品线" prop="productLine">
           <cute-product-line-select v-model="form.productLine" @detail="onProductLineDetailChange" />
         </el-form-item>
+        <el-form-item label="产品线Pro" prop="productLinePro">
+          <cute-product-line-select-pro v-model="form.productLine" @detail="onProductLineDetailProChange" />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('form')">提 交</el-button>
           <el-button type="danger" @click="onReset('form')">重 置</el-button>
@@ -40,6 +43,12 @@
       </div>
       <cute-product-line-select @change="onProductLineChange" @detail="onProductLineDetailChange" />
     </el-card>
+    <el-card style="margin-top: 10px">
+      <div slot="header" class="clearfix">
+        <span>产品线选择框Pro</span>
+      </div>
+      <cute-product-line-select-pro @change="onProductLineDetailProChange" />
+    </el-card>
   </div>
 </template>
 
@@ -48,16 +57,18 @@
 import CuteUserSelect from '@/views/components/business/CuteUserSelect.vue'
 import CuteDeptTree from '@/views/components/business/CuteDeptTree.vue'
 import CuteProductLineSelect from '@/views/components/business/CuteProductLineSelect.vue'
+import CuteProductLineSelectPro from '@/views/components/business/CuteProductLineSelectPro.vue'
 
 export default {
   name: 'CuteBusinessDemo',
-  components: { CuteProductLineSelect, CuteDeptTree, CuteUserSelect },
+  components: { CuteProductLineSelectPro, CuteProductLineSelect, CuteDeptTree, CuteUserSelect },
   data() {
     return {
       form: {
         user: null,
         dept: null,
-        productLine: null
+        productLine: null,
+        productLinePro: null
       }
     }
   },
@@ -90,6 +101,9 @@ export default {
     },
     onProductLineDetailChange(data) {
       console.log('onProductLineDetailChange', data)
+    },
+    onProductLineDetailProChange(data) {
+      console.log('onProductLineDetailProChange', data)
     }
   }
 }

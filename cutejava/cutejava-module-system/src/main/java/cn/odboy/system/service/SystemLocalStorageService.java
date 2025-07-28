@@ -6,13 +6,13 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.server.core.FileUploadPathHelper;
+import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
+import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.FileUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SystemLocalStorageService {
     private final SystemLocalStorageMapper systemLocalStorageMapper;
-    private final FileUploadPathHelper fileUploadPathHelper;
+    private final CsFileLocalUploadHelper fileUploadPathHelper;
     private final AppProperties properties;
 
 
@@ -43,17 +43,17 @@ public class SystemLocalStorageService {
     @Transactional(rollbackFor = Exception.class)
     public SystemLocalStorageTb uploadFile(String name, MultipartFile multipartFile) {
         long size = multipartFile.getSize();
-        FileUtil.checkSize(properties.getOss().getMaxSize(), size);
-        String suffix = FileUtil.getSuffix(multipartFile.getOriginalFilename());
-        String type = FileUtil.getFileType(suffix);
+        CsFileUtil.checkSize(properties.getOss().getMaxSize(), size);
+        String suffix = CsFileUtil.getSuffix(multipartFile.getOriginalFilename());
+        String type = CsFileUtil.getFileType(suffix);
         String uploadDateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT);
-        File file = FileUtil.upload(multipartFile, fileUploadPathHelper.getPath() + uploadDateStr + File.separator);
+        File file = CsFileUtil.upload(multipartFile, fileUploadPathHelper.getPath() + uploadDateStr + File.separator);
         if (file == null) {
             throw new BadRequestException("上传失败");
         }
         try {
-            String formatSize = FileUtil.getSize(size);
-            String prefixName = StringUtil.isBlank(name) ? FileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
+            String formatSize = CsFileUtil.getSize(size);
+            String prefixName = CsStringUtil.isBlank(name) ? CsFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
             SystemLocalStorageTb localStorage = new SystemLocalStorageTb();
             localStorage.setRealName(file.getName());
             localStorage.setName(prefixName);
@@ -65,7 +65,7 @@ public class SystemLocalStorageService {
             systemLocalStorageMapper.insert(localStorage);
             return localStorage;
         } catch (Exception e) {
-            FileUtil.del(file);
+            CsFileUtil.del(file);
             throw e;
         }
     }
@@ -92,7 +92,7 @@ public class SystemLocalStorageService {
         for (Long id : ids) {
             SystemLocalStorageTb storage = systemLocalStorageMapper.selectById(id);
             try {
-                FileUtil.del(storage.getPath());
+                CsFileUtil.del(storage.getPath());
                 systemLocalStorageMapper.deleteById(storage);
             } catch (IORuntimeException e) {
                 throw new BadRequestException("删除文件 " + storage.getName() + " 失败");
@@ -119,7 +119,7 @@ public class SystemLocalStorageService {
             map.put("创建日期", localStorage.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     /**

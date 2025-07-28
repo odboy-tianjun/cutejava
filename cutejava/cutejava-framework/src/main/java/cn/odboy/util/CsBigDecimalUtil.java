@@ -9,7 +9,7 @@ import java.math.RoundingMode;
  * 计算类
  */
 @UtilityClass
-public final class BigDecimalUtil {
+public final class CsBigDecimalUtil {
 
     /**
      * 将对象转换为 BigDecimal

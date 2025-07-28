@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2021-2025 Odboy
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cn.odboy.devops.framework.pipeline.core;
 
 import cn.hutool.core.thread.ThreadUtil;
@@ -16,6 +31,7 @@ import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,21 +45,48 @@ public class PipelineJobBean implements InterruptableJob {
     private volatile boolean interrupted = false;
     private volatile Long currentInstanceId = null;
     private volatile String currentNodeCode = null;
+    private volatile Thread executingThread = null;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        // 保存当前执行线程引用
+        this.executingThread = Thread.currentThread();
+
+        // 参数解析
+        JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
+        PipelineInstanceTb pipelineInstanceTb = (PipelineInstanceTb) jobDataMap.get(PipelineConst.INSTANCE);
+        pipelineInstanceTb.setStatus(PipelineStatusEnum.PENDING.getCode());
+        // 获取服务
+        PipelineJobManage pipelineJobManage = CsSpringBeanHolder.getBean(PipelineJobManage.class);
+
+        try {
+            doExecute(jobDataMap, pipelineInstanceTb, pipelineJobManage);
+        } finally {
+            // 清理所有实例变量
+            cleanupInstanceVariables();
+            // 删除任务
+            Long instanceId = pipelineInstanceTb.getInstanceId();
+            if (instanceId != null) {
+                pipelineJobManage.deleteJob(instanceId);
+            }
+        }
+    }
+
+    private void cleanupInstanceVariables() {
+        this.executingThread = null;
+        this.currentInstanceId = null;
+        this.currentNodeCode = null;
+        this.interrupted = false;
+    }
+
+    private void doExecute(JobDataMap jobDataMap, PipelineInstanceTb pipelineInstanceTb, PipelineJobManage pipelineJobManage) {
+        // 参数解析
+        String retryNodeCode = jobDataMap.getString(PipelineConst.RETRY_NODE_CODE);
         // 获取服务
         PipelineInstanceMapper pipelineInstanceMapper = CsSpringBeanHolder.getBean(PipelineInstanceMapper.class);
         PipelineInstanceNodeService pipelineInstanceNodeService = CsSpringBeanHolder.getBean(PipelineInstanceNodeService.class);
         PipelineInstanceDAO pipelineInstanceDAO = CsSpringBeanHolder.getBean(PipelineInstanceDAO.class);
-        PipelineJobManage pipelineJobManage = CsSpringBeanHolder.getBean(PipelineJobManage.class);
         PipelineNodeJobManage pipelineNodeJobManage = CsSpringBeanHolder.getBean(PipelineNodeJobManage.class);
-
-        // 参数解析
-        JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
-        String retryNodeCode = jobDataMap.getString(PipelineConst.RETRY_NODE_CODE);
-        PipelineInstanceTb pipelineInstanceTb = (PipelineInstanceTb) jobDataMap.get(PipelineConst.INSTANCE);
-        pipelineInstanceTb.setStatus(PipelineStatusEnum.PENDING.getCode());
 
         if (StrUtil.isBlank(retryNodeCode)) {
             // 创建实例
@@ -158,39 +201,54 @@ public class PipelineJobBean implements InterruptableJob {
      */
     @Override
     public void interrupt() throws UnableToInterruptJobException {
+        log.info("收到中断信号，准备强制终止流水线任务");
         this.interrupted = true;
-        if (this.currentInstanceId != null && StrUtil.isNotBlank(this.currentNodeCode)) {
+
+        // 直接强制终止线程
+        if (this.executingThread != null && this.executingThread.isAlive()) {
+            log.warn("正在强制终止线程，instanceId={}", this.currentInstanceId);
+
+            // 更新流水线实例状态
+            updateInstanceStatusToFail();
+
+            // 直接停止线程
+            try {
+                this.executingThread.stop();
+                log.info("线程已强制终止，instanceId={}", this.currentInstanceId);
+            } catch (ThreadDeath td) {
+                // Thread.stop()会抛出ThreadDeath异常，这是正常的
+                log.info("线程终止完成，instanceId={}", this.currentInstanceId);
+            } catch (Exception e) {
+                log.error("强制终止线程时发生异常", e);
+            }
+        }
+    }
+
+    private void updateInstanceStatusToFail() {
+        if (this.currentInstanceId != null) {
             PipelineInstanceMapper pipelineInstanceMapper = CsSpringBeanHolder.getBean(PipelineInstanceMapper.class);
             PipelineInstanceDAO pipelineInstanceDAO = CsSpringBeanHolder.getBean(PipelineInstanceDAO.class);
-
-            int seconds = 30_000;
-            log.info("中断信号已发出，等待最多 {} 秒，若未自行结束则强制终止线程", seconds);
-            long waitStart = System.currentTimeMillis();
-            while ((System.currentTimeMillis() - waitStart) < seconds) {
-                if (Thread.currentThread().isInterrupted()) {
-                    log.info("线程已自行中断");
-                    return;
-                }
-                ThreadUtil.safeSleep(1000);
-            }
-
-            log.info("等待超时，强制终止线程");
             PipelineInstanceTb pipelineInstanceTb = pipelineInstanceMapper.selectById(this.currentInstanceId);
             if (pipelineInstanceTb != null) {
                 // 更新状态 & 解锁
-                pipelineInstanceTb.setCurrentNode(this.currentNodeCode);
-                pipelineInstanceTb.setCurrentNodeStatus(PipelineStatusEnum.FAIL.getCode());
+                if (StrUtil.isNotBlank(this.currentNodeCode)) {
+                    pipelineInstanceTb.setCurrentNode(this.currentNodeCode);
+                    pipelineInstanceTb.setCurrentNodeStatus(PipelineStatusEnum.FAIL.getCode());
+                    // 更新节点状态
+                    PipelineInstanceNodeService pipelineInstanceNodeService = CsSpringBeanHolder.getBean(PipelineInstanceNodeService.class);
+                    pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(
+                            this.currentInstanceId,
+                            this.currentNodeCode,
+                            PipelineStatusEnum.FAIL,
+                            "用户主动停止",
+                            new Date()
+                    );
+                }
                 pipelineInstanceTb.setStatus(PipelineStatusEnum.FAIL.getCode());
+                // 更新实例状态
                 pipelineInstanceMapper.updateById(pipelineInstanceTb);
                 pipelineInstanceDAO.unLock(pipelineInstanceTb);
-
-                // 杀死
-                try {
-                    log.info("流水线实例线程被杀死, instanceId={}", this.currentInstanceId);
-                    Thread.currentThread().stop();
-                } catch (Exception e) {
-                    log.error("流水线实例线程杀死失败", e);
-                }
+                log.info("流水线实例被解锁, instanceId={}", this.currentInstanceId);
             }
         }
     }

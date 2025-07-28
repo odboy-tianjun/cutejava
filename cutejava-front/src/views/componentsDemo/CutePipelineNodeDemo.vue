@@ -7,8 +7,16 @@
         type="primary"
         :loading="dynamicStartButtonLoading"
         :disabled="dynamicStartButtonLoading"
-        @click="startPipelineTest"
+        @click="doStartPipeline"
       >{{ dynamicStartupStatusMap[dynamicStartupStatus].label }}
+      </el-button>
+      <el-button
+        v-prevent-re-click
+        :disabled="!dynamicRunning"
+        style="margin-left: 10px"
+        type="danger"
+        @click="doStopPipeline"
+      >停止
       </el-button>
     </el-divider>
     <div class="box-pipeline">
@@ -18,7 +26,9 @@
           :key="template.code"
           :template-data.sync="dynamicInstance.nodes[index]"
           :instance-data.sync="dynamicInstance"
-          @retry="onPipelineRetrySuccess"
+          @node-click="onPipelineNodeClick"
+          @node-retry="onPipelineNodeRetryClick"
+          @node-opera="onPipelineNodeOperationClick"
         />
       </div>
       <div v-else class="box-pipeline-content">
@@ -30,40 +40,28 @@
         />
       </div>
     </div>
-    <!--    <el-divider>演示：成功</el-divider>-->
-    <!--    <div class="box-pipeline">-->
-    <!--      <div v-if="dataList2 && dataList2.length > 0" class="box-pipeline-content">-->
-    <!--        <cute-pipeline-node-->
-    <!--          v-for="(template, index) in dataList2"-->
-    <!--          :key="template.code"-->
-    <!--          :template-data.sync="dataList2[index]"-->
-    <!--        />-->
-    <!--      </div>-->
-    <!--      <div v-else class="box-pipeline-content">-->
-    <!--        <cute-pipeline-node-->
-    <!--          v-for="(template, index) in defaultTemplate"-->
-    <!--          :key="template.code"-->
-    <!--          :template-data.sync="defaultTemplate[index]"-->
-    <!--        />-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--    <el-divider>演示：失败或重试</el-divider>-->
-    <!--    <div class="box-pipeline">-->
-    <!--      <div v-if="dataList3 && dataList3.length > 0" class="box-pipeline-content">-->
-    <!--        <cute-pipeline-node-->
-    <!--          v-for="(template, index) in dataList3"-->
-    <!--          :key="template.code"-->
-    <!--          :template-data.sync="dataList3[index]"-->
-    <!--        />-->
-    <!--      </div>-->
-    <!--      <div v-else class="box-pipeline-content">-->
-    <!--        <cute-pipeline-node-->
-    <!--          v-for="(template, index) in defaultTemplate"-->
-    <!--          :key="template.code"-->
-    <!--          :template-data.sync="defaultTemplate[index]"-->
-    <!--        />-->
-    <!--      </div>-->
-    <!--    </div>-->
+    <cute-preview-drawer ref="detailDrawer" :title="currentNodeData.name">
+      <el-timeline>
+        <el-timeline-item timestamp="2018/4/12" placement="top">
+          <el-card>
+            <h4>更新 Github 模板</h4>
+            <p>王小虎 提交于 2018/4/12 20:46</p>
+          </el-card>
+        </el-timeline-item>
+        <el-timeline-item timestamp="2018/4/3" placement="top">
+          <el-card>
+            <h4>更新 Github 模板</h4>
+            <p>王小虎 提交于 2018/4/3 20:46</p>
+          </el-card>
+        </el-timeline-item>
+        <el-timeline-item timestamp="2018/4/2" placement="top">
+          <el-card>
+            <h4>更新 Github 模板</h4>
+            <p>王小虎 提交于 2018/4/2 20:46</p>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
+    </cute-preview-drawer>
   </div>
 </template>
 
@@ -71,391 +69,30 @@
 
 import CutePipelineNode from '@/views/components/dev/CutePipelineNode'
 import { getPipelineTemplate } from '@/api/devops/pipelineTemplate'
-import { queryLastPipelineDetailWs, startPipeline } from '@/api/devops/pipelineInstance'
+import {
+  queryLastPipelineDetailWs,
+  restartPipeline,
+  retryPipeline,
+  startPipeline,
+  stopPipeline
+} from '@/api/devops/pipelineInstance'
 import { CountArraysObjectByPropKey } from '@/utils/CsUtil'
 import CsMessage from '@/utils/elementui/CsMessage'
 import CsWsClient from '@/utils/CsWsClient'
 import { mapGetters } from 'vuex'
+import CutePreviewDrawer from '@/views/components/dev/CutePreviewDrawer.vue'
 
 export default {
   name: 'CutePipelineNodeDemo',
-  components: { CutePipelineNode },
+  components: { CutePreviewDrawer, CutePipelineNode },
   data() {
     return {
-      // // 静态模板
-      // defaultTemplate: [
-      //   {
-      //     code: 'node_init',
-      //     type: 'service',
-      //     name: '初始化'
-      //   },
-      //   {
-      //     code: 'node_merge_branch',
-      //     type: 'service',
-      //     name: '合并代码',
-      //     click: true,
-      //     retry: true
-      //   },
-      //   {
-      //     code: 'node_build_java',
-      //     type: 'service',
-      //     name: '构建',
-      //     click: true,
-      //     retry: true,
-      //     detailType: 'gitlab',
-      //     parameters: {
-      //       pipeline: 'pipeline-backend'
-      //     }
-      //   },
-      //   {
-      //     code: 'node_image_scan',
-      //     type: 'service',
-      //     name: '镜像扫描',
-      //     click: true,
-      //     retry: true,
-      //     detailType: 'gitlab',
-      //     parameters: {
-      //       pipeline: 'pipeline-image-scan'
-      //     }
-      //   },
-      //   {
-      //     code: 'node_approve_deploy',
-      //     type: 'service',
-      //     name: '部署审批',
-      //     click: false,
-      //     retry: true,
-      //     buttons: [{
-      //       type: 'execute',
-      //       title: '同意',
-      //       code: 'agree',
-      //       parameters: {}
-      //     },
-      //     {
-      //       type: 'execute',
-      //       title: '拒绝',
-      //       code: 'refuse',
-      //       parameters: {}
-      //     }
-      //     ]
-      //   },
-      //   {
-      //     code: 'node_deploy_java',
-      //     type: 'service',
-      //     name: '部署',
-      //     click: true,
-      //     retry: false,
-      //     buttons: [{
-      //       type: 'link',
-      //       title: '查看部署详情',
-      //       code: 'success',
-      //       parameters: {
-      //         'isBlank': true
-      //       }
-      //     }]
-      //   },
-      //   {
-      //     code: 'node_merge_confirm',
-      //     type: 'service',
-      //     name: '合并确认',
-      //     click: false,
-      //     retry: false,
-      //     buttons: [{
-      //       type: 'execute',
-      //       title: '通过',
-      //       code: 'agree',
-      //       parameters: {}
-      //     }]
-      //   },
-      //   {
-      //     code: 'node_merge_master',
-      //     type: 'service',
-      //     name: '合并回Master',
-      //     click: false,
-      //     retry: true
-      //   }],
-      // // 成功
-      // dataList2: [
-      //   {
-      //     code: 'node_init',
-      //     type: 'service',
-      //     name: '初始化',
-      //     createTime: '2025-07-17 21:12:01',
-      //     updateTime: '2025-07-17 21:13:01',
-      //     startTime: '2025-07-17 21:13:01',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_merge_branch',
-      //     type: 'service',
-      //     name: '合并代码',
-      //     click: true,
-      //     retry: true,
-      //     createTime: '2025-07-17 21:13:01',
-      //     updateTime: '2025-07-17 21:18:01',
-      //     startTime: '2025-07-17 21:13:01',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_build_java',
-      //     type: 'service',
-      //     name: '构建',
-      //     click: true,
-      //     retry: true,
-      //     detailType: 'gitlab',
-      //     parameters: {
-      //       pipeline: 'pipeline-backend'
-      //     },
-      //     createTime: '2025-07-17 21:18:01',
-      //     updateTime: '2025-07-17 21:28:01',
-      //     startTime: '2025-07-17 21:18:01',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_image_scan',
-      //     type: 'service',
-      //     name: '镜像扫描',
-      //     click: true,
-      //     retry: true,
-      //     detailType: 'gitlab',
-      //     parameters: {
-      //       pipeline: 'pipeline-image-scan'
-      //     },
-      //     createTime: '2025-07-17 21:28:01',
-      //     updateTime: '2025-07-17 21:28:21',
-      //     startTime: '2025-07-17 21:28:01',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_approve_deploy',
-      //     type: 'service',
-      //     name: '部署审批',
-      //     click: false,
-      //     retry: true,
-      //     buttons: [
-      //       {
-      //         type: 'execute',
-      //         title: '同意',
-      //         code: 'agree',
-      //         parameters: {}
-      //       },
-      //       {
-      //         type: 'execute',
-      //         title: '拒绝',
-      //         code: 'refuse',
-      //         parameters: {}
-      //       }
-      //     ],
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 21:30:21',
-      //     startTime: '2025-07-17 21:28:21',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_deploy_java',
-      //     type: 'service',
-      //     name: '部署',
-      //     click: true,
-      //     retry: false,
-      //     buttons: [{
-      //       type: 'link',
-      //       title: '查看部署详情',
-      //       code: 'success',
-      //       parameters: {
-      //         'isBlank': true
-      //       }
-      //     }],
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 21:58:21',
-      //     startTime: '2025-07-17 21:30:21',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_merge_confirm',
-      //     type: 'service',
-      //     name: '合并确认',
-      //     click: false,
-      //     retry: false,
-      //     buttons: [{
-      //       type: 'execute',
-      //       title: '通过',
-      //       code: 'agree',
-      //       parameters: {}
-      //     }],
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 22:10:21',
-      //     startTime: '2025-07-17 21:58:21',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_merge_master',
-      //     type: 'service',
-      //     name: '合并回Master',
-      //     click: false,
-      //     retry: true,
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 22:10:58',
-      //     startTime: '2025-07-17 22:10:21',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   }
-      // ],
-      // // 失败或重试
-      // dataList3: [
-      //   {
-      //     code: 'node_init',
-      //     type: 'service',
-      //     name: '初始化',
-      //     createTime: '2025-07-17 21:12:01',
-      //     updateTime: '2025-07-17 21:13:01',
-      //     startTime: '2025-07-17 21:13:01',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_merge_branch',
-      //     type: 'service',
-      //     name: '合并代码',
-      //     click: true,
-      //     retry: true,
-      //     createTime: '2025-07-17 21:13:01',
-      //     updateTime: '2025-07-17 21:18:01',
-      //     startTime: '2025-07-17 21:13:01',
-      //     currentNodeMsg: '执行成功',
-      //     currentNodeStatus: 'success',
-      //     status: 'success'
-      //   },
-      //   {
-      //     code: 'node_build_java',
-      //     type: 'service',
-      //     name: '构建',
-      //     click: true,
-      //     retry: true,
-      //     detailType: 'gitlab',
-      //     parameters: {
-      //       pipeline: 'pipeline-backend'
-      //     },
-      //     createTime: '2025-07-17 21:18:01',
-      //     updateTime: '2025-07-17 21:28:01',
-      //     startTime: '2025-07-17 21:18:01',
-      //     currentNodeMsg: '执行失败',
-      //     currentNodeStatus: 'fail',
-      //     status: 'fail'
-      //   },
-      //   {
-      //     code: 'node_image_scan',
-      //     type: 'service',
-      //     name: '镜像扫描',
-      //     click: true,
-      //     retry: true,
-      //     detailType: 'gitlab',
-      //     parameters: {
-      //       pipeline: 'pipeline-image-scan'
-      //     },
-      //     createTime: '2025-07-17 21:28:01',
-      //     updateTime: '2025-07-17 21:28:21',
-      //     startTime: null,
-      //     currentNodeMsg: '待执行',
-      //     currentNodeStatus: 'pending',
-      //     status: 'pending'
-      //   },
-      //   {
-      //     code: 'node_approve_deploy',
-      //     type: 'service',
-      //     name: '部署审批',
-      //     click: false,
-      //     retry: true,
-      //     buttons: [
-      //       {
-      //         type: 'execute',
-      //         title: '同意',
-      //         code: 'agree',
-      //         parameters: {}
-      //       },
-      //       {
-      //         type: 'execute',
-      //         title: '拒绝',
-      //         code: 'refuse',
-      //         parameters: {}
-      //       }
-      //     ],
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 21:28:21',
-      //     startTime: null,
-      //     currentNodeMsg: '待执行',
-      //     currentNodeStatus: 'pending',
-      //     status: 'pending'
-      //   },
-      //   {
-      //     code: 'node_deploy_java',
-      //     type: 'service',
-      //     name: '部署',
-      //     click: true,
-      //     retry: false,
-      //     buttons: [{
-      //       type: 'link',
-      //       title: '查看部署详情',
-      //       code: 'success',
-      //       parameters: {
-      //         'isBlank': true
-      //       }
-      //     }],
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 21:28:21',
-      //     startTime: null,
-      //     currentNodeMsg: '待执行',
-      //     currentNodeStatus: 'pending',
-      //     status: 'pending'
-      //   },
-      //   {
-      //     code: 'node_merge_confirm',
-      //     type: 'service',
-      //     name: '合并确认',
-      //     click: false,
-      //     retry: false,
-      //     buttons: [{
-      //       type: 'execute',
-      //       title: '通过',
-      //       code: 'agree',
-      //       parameters: {}
-      //     }],
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 21:28:21',
-      //     startTime: null,
-      //     currentNodeMsg: '待执行',
-      //     currentNodeStatus: 'pending',
-      //     status: 'pending'
-      //   },
-      //   {
-      //     code: 'node_merge_master',
-      //     type: 'service',
-      //     name: '合并回Master',
-      //     click: false,
-      //     retry: true,
-      //     createTime: '2025-07-17 21:28:21',
-      //     updateTime: '2025-07-17 21:28:21',
-      //     startTime: null,
-      //     currentNodeMsg: '待执行',
-      //     currentNodeStatus: 'pending',
-      //     status: 'pending'
-      //   }
-      // ],
-      // 动态流水线
+      testAppInfo: {
+        appName: 'cuteops',
+        pipelineTemplateEnv: 'daily',
+        iterationName: '流水线测试'
+      },
+      // ============== 动态流水线
       dynamicStartupStatusMap: {
         start: { label: '启动', code: 'start' },
         restart: { label: '重新启动', code: 'restart' }
@@ -473,7 +110,10 @@ export default {
       // 当前流水线实例
       dynamicInstance: {},
       // 当前ws客户端
-      dynamicWsClient: null
+      dynamicWsClient: null,
+      dynamicRunning: false,
+      // ============== 交互变量
+      currentNodeData: {}
     }
   },
   computed: {
@@ -482,31 +122,9 @@ export default {
     ])
   },
   mounted() {
-    // this.refreshData()
     this.initPipelineTemplate(this.dynamicTemplate.id)
-    // const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
-    // if (pipelineInstanceId) {
-    //   this.fetchLastDetail(pipelineInstanceId)
-    // }
-    // this.connectWebSocketServer(pipelineInstanceId)
   },
   methods: {
-    // refreshData() {
-    //   // 成功
-    //   for (const datum of this.dataList2) {
-    //     if (datum.status === 'running') {
-    //       datum.updateTime = FormatDateTimeStr(new Date())
-    //     }
-    //   }
-    //   this.dataList2 = [...this.dataList2]
-    //   // 失败或重试
-    //   for (const datum of this.dataList3) {
-    //     if (datum.status === 'running') {
-    //       datum.updateTime = FormatDateTimeStr(new Date())
-    //     }
-    //   }
-    //   this.dataList3 = [...this.dataList3]
-    // },
     /**
      * 初始化流水线模板
      * @param templateId
@@ -530,6 +148,13 @@ export default {
       const that = this
       // {username}_{bizCode}_{contextParams}
       const sid = `${that.user.username}_FetchPipelineLastDetail_${instanceId}`
+      if (that.dynamicWsClient) {
+        try {
+          that.dynamicWsClient.close()
+        } catch (e) {
+          // ignore
+        }
+      }
       that.dynamicWsClient = new CsWsClient(sid)
       that.dynamicWsClient.connect(that.handleWebSocketError, that.handleWebSocketMessage)
       setTimeout(() => {
@@ -547,6 +172,7 @@ export default {
       const data = e.data
       // console.log('来自服务器的数据:data', data)
       const callbackData = JSON.parse(data)
+      that.dynamicRunning = true
       // console.log('callbackData', callbackData)
       try {
         that.dynamicInstance = JSON.parse(callbackData.data)
@@ -555,8 +181,9 @@ export default {
         if (that.dynamicTemplateList && that.dynamicTemplateList.length === successCount) {
           // 所有节点执行成功
           if (that.dynamicWsClient) {
-            that.dynamicWsClient.close()
             sessionStorage.removeItem('pipelineInstanceId')
+            that.dynamicWsClient.close()
+            that.dynamicRunning = false
           }
           that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
         } else {
@@ -564,75 +191,87 @@ export default {
           // 存在失败的节点
           if (that.dynamicWsClient && failCount > 0) {
             that.dynamicWsClient.close()
+            that.dynamicRunning = false
           }
           that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
         }
       } catch (e) {
         // ignore
+        that.dynamicRunning = false
       }
     },
-    // /**
-    //  * 通过Http的方式拉取流水线最新的状态
-    //  * @param instanceId
-    //  * @returns {Promise<void>}
-    //  */
-    // async fetchLastDetail(instanceId) {
-    //   const that = this
-    //   const intervalTime = 2000
-    //   setTimeout(() => {
-    //     that.dynamicHook = setInterval(() => {
-    //       queryLastPipelineDetail(instanceId).then((data) => {
-    //         that.dynamicInstance = data
-    //         // 判断流水线是否结束
-    //         const successCount = CountArraysObjectByPropKey(data.nodes, 'status', 'success')
-    //         if (that.dynamicTemplateList && that.dynamicTemplateList.length === successCount) {
-    //           clearInterval(that.dynamicHook)
-    //           that.dynamicHook = null
-    //           that.dynamicStartupStatus = that.dynamicStartupStatusMap.start.code
-    //         } else {
-    //           that.dynamicStartupStatus = that.dynamicStartupStatusMap.restart.code
-    //         }
-    //       })
-    //     }, intervalTime)
-    //     that.dynamicStartButtonLoading = false
-    //   }, 2000)
-    // },
     /**
      * 启动流水线
      * @returns {Promise<void>}
      */
-    async startPipelineTest() {
+    async doStartPipeline() {
       const that = this
-      const args = {
-        id: that.dynamicTemplate.id
-      }
       try {
-        // if (that.dynamicHook) {
-        //   clearInterval(that.dynamicHook)
-        // }
         that.dynamicStartButtonLoading = true
         // 这里的 dynamicStartupStatus状态，需要后期与上下文关联后，初始化的时候带入最近一个流水线实例
-        // let result
-        // if (that.dynamicStartupStatus === that.dynamicStartupStatusMap.start.code) {
-        //   result = await restartPipeline()
-        //   CsMessage.Success('流水线重新启动成功')
-        // } else {
-        //   result = await startPipeline()
-        //   CsMessage.Success('流水线启动成功')
-        // }
-        const result = await startPipeline(args)
-        CsMessage.Success('流水线启动成功')
-        // await that.fetchLastDetail(result.instanceId)
+        const args = {
+          templateId: that.dynamicTemplate.id,
+          instanceName: that.testAppInfo.iterationName,
+          contextName: that.testAppInfo.appName,
+          env: that.testAppInfo.pipelineTemplateEnv
+        }
+        let result
+        const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
+        if (pipelineInstanceId) {
+          result = await restartPipeline({
+            ...args,
+            instanceId: pipelineInstanceId
+          })
+          CsMessage.Success('流水线重启成功')
+        } else {
+          result = await startPipeline(args)
+          CsMessage.Success('流水线启动成功')
+        }
         sessionStorage.setItem('pipelineInstanceId', result.instanceId)
         that.connectWebSocketServer(result.instanceId)
       } catch (e) {
         console.error('error', e)
         that.dynamicStartButtonLoading = false
+        CsMessage.Error('流水线启动失败')
       }
     },
-    onPipelineRetrySuccess(data) {
-      sessionStorage.setItem('pipelineInstanceId', data.instanceId)
+    /**
+     * 停止流水线
+     * @returns {Promise<void>}
+     */
+    async doStopPipeline() {
+      const that = this
+      const args = {
+        templateId: that.dynamicTemplate.id,
+        instanceName: that.testAppInfo.iterationName,
+        contextName: that.testAppInfo.appName,
+        env: that.testAppInfo.pipelineTemplateEnv
+      }
+      const pipelineInstanceId = sessionStorage.getItem('pipelineInstanceId')
+      if (pipelineInstanceId) {
+        await stopPipeline({
+          ...args,
+          instanceId: pipelineInstanceId
+        })
+        CsMessage.Success('流水线停止成功')
+      }
+    },
+    onPipelineNodeClick(data) {
+      console.log('data', data)
+      this.currentNodeData = data
+      this.$refs.detailDrawer.show()
+    },
+    async onPipelineNodeRetryClick(data) {
+      console.log('data', data)
+      const result = await retryPipeline({
+        instanceId: data.instanceId,
+        code: data.code
+      })
+      sessionStorage.setItem('pipelineInstanceId', result.instanceId)
       this.connectWebSocketServer(data.instanceId)
+    },
+    async onPipelineNodeOperationClick(data, buttonInfo) {
+      console.log('data', data, buttonInfo)
     }
   }
 }

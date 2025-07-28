@@ -2,7 +2,7 @@ package cn.odboy.system.util;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.mybatisplus.config.DataTypeEnum;
-import cn.odboy.util.CloseUtil;
+import cn.odboy.util.CsCloseUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariDataSource;
@@ -71,7 +71,7 @@ public final class SqlUtil {
             log.error("create connection error, jdbcUrl: {}", jdbcUrl);
             throw new BadRequestException("create connection error, jdbcUrl: " + jdbcUrl);
         } finally {
-            CloseUtil.close(connection);
+            CsCloseUtil.close(connection);
         }
         return connection;
     }
@@ -135,7 +135,7 @@ public final class SqlUtil {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
-            CloseUtil.close(st);
+            CsCloseUtil.close(st);
         }
     }
 

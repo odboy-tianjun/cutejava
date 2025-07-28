@@ -1,8 +1,23 @@
+/*
+ *  Copyright 2021-2025 Odboy
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cn.odboy.framework.doc;
 
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.util.AnonTagUtil;
+import cn.odboy.util.CsAnonTagUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,7 +95,7 @@ public class SwaggerConfig {
     }
 
     private SecurityContext getContextByPath() {
-        Set<String> urls = AnonTagUtil.getAllAnonymousUrl(applicationContext);
+        Set<String> urls = CsAnonTagUtil.getAllAnonymousUrl(applicationContext);
         urls = urls.stream().filter(url -> !"/".equals(url)).collect(Collectors.toSet());
         String regExp = "^(?!" + apiPath + String.join("|" + apiPath, urls) + ").*$";
         return SecurityContext.builder()

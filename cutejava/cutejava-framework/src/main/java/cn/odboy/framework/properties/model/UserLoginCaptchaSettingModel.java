@@ -1,9 +1,24 @@
+/*
+ *  Copyright 2021-2025 Odboy
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cn.odboy.framework.properties.model;
 
 import cn.odboy.base.CsObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import lombok.Getter;
@@ -84,7 +99,7 @@ public class UserLoginCaptchaSettingModel extends CsObject {
             default:
                 throw new BadRequestException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
         }
-        if (StringUtil.isNotBlank(fontName)) {
+        if (CsStringUtil.isNotBlank(fontName)) {
             captcha.setFont(new Font(fontName, Font.PLAIN, fontSize));
         }
         return captcha;

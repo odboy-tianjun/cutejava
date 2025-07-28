@@ -14,7 +14,7 @@ import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.service.SystemEmailService;
 import cn.odboy.system.service.SystemQuartzJobService;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsStringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -59,20 +59,20 @@ public class ExecutionJobBean extends QuartzJobBean {
             future.get();
             long times = System.currentTimeMillis() - startTime;
             quartzLog.setTime(times);
-            if (StringUtil.isNotBlank(uuid)) {
+            if (CsStringUtil.isNotBlank(uuid)) {
                 redisHelper.set(uuid, true);
             }
             // 任务状态
             quartzLog.setIsSuccess(true);
             log.info("任务执行成功，任务名称：{}, 执行时间：{}毫秒", quartzJob.getJobName(), times);
             // 判断是否存在子任务
-            if (StringUtil.isNotBlank(quartzJob.getSubTask())) {
+            if (CsStringUtil.isNotBlank(quartzJob.getSubTask())) {
                 String[] tasks = quartzJob.getSubTask().split("[,，]");
                 // 执行子任务
                 systemQuartzJobService.startSubQuartJob(tasks);
             }
         } catch (Exception e) {
-            if (StringUtil.isNotBlank(uuid)) {
+            if (CsStringUtil.isNotBlank(uuid)) {
                 redisHelper.set(uuid, false);
             }
             log.error("任务执行失败，任务名称：{}", quartzJob.getJobName(), e);
@@ -90,7 +90,7 @@ public class ExecutionJobBean extends QuartzJobBean {
             if (quartzJob.getEmail() != null) {
                 SystemEmailService emailService = CsSpringBeanHolder.getBean(SystemEmailService.class);
                 // 邮箱报警
-                if (StringUtil.isNoneBlank(quartzJob.getEmail())) {
+                if (CsStringUtil.isNoneBlank(quartzJob.getEmail())) {
                     SystemSendEmailArgs sendEmailRequest = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
                     emailService.sendEmail(sendEmailRequest);
                 }

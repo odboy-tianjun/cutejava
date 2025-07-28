@@ -4,7 +4,7 @@ import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsResultVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
-import cn.odboy.util.DesEncryptUtil;
+import cn.odboy.util.CsDesEncryptUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -50,7 +50,7 @@ public class SystemOnlineController {
     public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
         for (String token : keys) {
             // 解密Key
-            token = DesEncryptUtil.desDecrypt(token);
+            token = CsDesEncryptUtil.desDecrypt(token);
             systemUserOnlineInfoDAO.logoutByToken(token);
         }
         return new ResponseEntity<>(HttpStatus.OK);

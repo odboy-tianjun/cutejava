@@ -7,7 +7,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
-import cn.odboy.util.FileUtil;
+import cn.odboy.util.CsFileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,8 +58,8 @@ public class SystemLocalStorageController {
     @PostMapping("/uploadPicture")
     public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
         // 判断文件是否为图片
-        String suffix = FileUtil.getSuffix(file.getOriginalFilename());
-        if (!FileTypeEnum.IMAGE.getCode().equals(FileUtil.getFileType(suffix))) {
+        String suffix = CsFileUtil.getSuffix(file.getOriginalFilename());
+        if (!FileTypeEnum.IMAGE.getCode().equals(CsFileUtil.getFileType(suffix))) {
             throw new BadRequestException("只能上传图片");
         }
         SystemLocalStorageTb localStorage = localStorageService.uploadFile(null, file);

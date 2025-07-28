@@ -9,15 +9,16 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.SystemProductLineTreeVo;
 import cn.odboy.system.dal.model.SystemProductLineVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
-import cn.odboy.util.ClassUtil;
-import cn.odboy.util.FileUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsClassUtil;
+import cn.odboy.util.CsFileUtil;
+import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -100,7 +101,7 @@ public class SystemDeptService {
             map.put("创建日期", dept.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
 
@@ -148,7 +149,7 @@ public class SystemDeptService {
             if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {
                 criteria.setPidIsNull(true);
             }
-            List<Field> fields = ClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
+            List<Field> fields = CsClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
             List<String> fieldNames = new ArrayList<>() {{
                 add("pidIsNull");
                 add("enabled");
@@ -170,7 +171,7 @@ public class SystemDeptService {
         criteria.setIds(CsSecurityHelper.getCurrentUserDataScope());
         List<SystemDeptTb> list = systemDeptMapper.selectDeptByArgs(criteria);
         // 如果为空, 就代表为自定义权限或者本级权限, 就需要去重, 不理解可以注释掉，看查询结果
-        if (StringUtil.isBlank(dataScopeType)) {
+        if (CsStringUtil.isBlank(dataScopeType)) {
             return deduplication(list);
         }
         return list;
@@ -384,7 +385,7 @@ public class SystemDeptService {
         List<String> pathNames = new ArrayList<>();
         buildDeptNamePath(dept, deptMap, pathNames);
         Collections.reverse(pathNames);
-        return String.join("/", pathNames);
+        return String.join(" / ", pathNames);
     }
 
     private void buildDeptNamePath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap, List<String> pathNames) {
@@ -396,5 +397,53 @@ public class SystemDeptService {
 
     private List<SystemDeptTb> findEnabledDepts() {
         return systemDeptMapper.selectList(new LambdaQueryWrapper<SystemDeptTb>().eq(SystemDeptTb::getEnabled, 1));
+    }
+
+    public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
+        List<SystemDeptTb> depts = findEnabledDepts();
+        // 获取所有部门并按父子关系组织
+        Map<Long, SystemDeptTb> deptMap = depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
+        List<SystemProductLineTreeVo> options = new ArrayList<>();
+        // 构建树形结构
+        for (SystemDeptTb dept : depts) {
+            // 只处理顶级部门（pid为null或0的部门）
+            if (dept.getPid() == null || dept.getPid() == 0) {
+                SystemProductLineTreeVo vo = buildDeptTreePro(dept, deptMap);
+                options.add(vo);
+            }
+        }
+        // 按排序字段排序
+        options.sort(Comparator.comparingInt(o -> {
+            Long id = Long.valueOf(o.getValue());
+            return deptMap.get(id) != null ? deptMap.get(id).getDeptSort() : 0;
+        }));
+        return options;
+    }
+
+    /**
+     * 递归构建部门树
+     *
+     * @param dept    当前部门
+     * @param deptMap 部门映射
+     * @return SystemProductLineTreeVo 树节点
+     */
+    private SystemProductLineTreeVo buildDeptTreePro(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap) {
+        SystemProductLineTreeVo vo = new SystemProductLineTreeVo();
+        vo.setValue(String.valueOf(dept.getId()));
+        vo.setLabel(dept.getName());
+        // 查找子部门
+        List<SystemProductLineTreeVo> children = new ArrayList<>();
+        for (SystemDeptTb childDept : deptMap.values()) {
+            if (dept.getId().equals(childDept.getPid())) {
+                children.add(buildDeptTreePro(childDept, deptMap));
+            }
+        }
+        // 子部门按排序字段排序
+        children.sort(Comparator.comparingInt(o -> {
+            Long id = Long.valueOf(o.getValue());
+            return deptMap.get(id) != null ? deptMap.get(id).getDeptSort() : 0;
+        }));
+        vo.setChildren(children);
+        return vo;
     }
 }

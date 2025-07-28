@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Slf4j
 @UtilityClass
-public final class StringUtil extends org.apache.commons.lang3.StringUtils {
+public final class CsStringUtil extends org.apache.commons.lang3.StringUtils {
 
     private static final char SEPARATOR = '_';
 

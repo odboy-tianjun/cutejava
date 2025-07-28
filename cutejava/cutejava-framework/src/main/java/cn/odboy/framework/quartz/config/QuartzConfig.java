@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2021-2025 Odboy
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cn.odboy.framework.quartz.config;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,24 +38,23 @@ public class QuartzConfig {
     @Component("quartzJobFactory")
     public static class QuartzJobFactory extends AdaptableJobFactory {
 
-        private final AutowireCapableBeanFactory capableBeanFactory;
+        private final AutowireCapableBeanFactory autowireCapableBeanFactory;
 
         @Autowired
-        public QuartzJobFactory(AutowireCapableBeanFactory capableBeanFactory) {
-            this.capableBeanFactory = capableBeanFactory;
+        public QuartzJobFactory(AutowireCapableBeanFactory autowireCapableBeanFactory) {
+            this.autowireCapableBeanFactory = autowireCapableBeanFactory;
         }
 
         @NonNull
         @Override
-        protected Object createJobInstance(@NonNull TriggerFiredBundle bundle) throws Exception {
+        protected Object createJobInstance(@NonNull TriggerFiredBundle triggerFiredBundle) throws Exception {
             try {
-                // 调用父类的方法, 把Job注入到spring中
-                Object jobInstance = super.createJobInstance(bundle);
-                capableBeanFactory.autowireBean(jobInstance);
-                log.debug("Job instance created and autowired: {}", jobInstance.getClass().getName());
+                // 调用父类的方法, 把Job注入Spring中
+                Object jobInstance = super.createJobInstance(triggerFiredBundle);
+                autowireCapableBeanFactory.autowireBean(jobInstance);
                 return jobInstance;
             } catch (Exception e) {
-                log.error("Error creating job instance for bundle: {}", bundle, e);
+                log.error("Job注入Spring失败, {}", triggerFiredBundle, e);
                 throw e;
             }
         }

@@ -18,7 +18,7 @@ package cn.odboy.framework.mybatisplus.core;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsBaseUserTimeTb;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.util.FileUtil;
+import cn.odboy.util.CsFileUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -193,7 +193,7 @@ public class CsMpCmdGenUtil {
     }
 
     private static Consumer<GlobalConfig.Builder> getGlobalConfigConsumer() {
-        String outputDir = FileUtil.getTmpDirPath() + "CodeGen";
+        String outputDir = CsFileUtil.getTmpDirPath() + "CodeGen";
         return globalConfigBuilder -> globalConfigBuilder
                 .enableSwagger()
                 .outputDir(outputDir)

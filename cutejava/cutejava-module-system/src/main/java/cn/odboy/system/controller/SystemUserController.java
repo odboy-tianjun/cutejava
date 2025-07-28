@@ -15,7 +15,7 @@ import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.service.*;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.RsaEncryptUtil;
+import cn.odboy.util.CsRsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -134,8 +134,8 @@ public class SystemUserController {
     @ApiOperation("修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
     public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo) throws Exception {
-        String oldPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
-        String newPass = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
+        String oldPass = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
+        String newPass = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
@@ -164,7 +164,7 @@ public class SystemUserController {
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb resources) throws Exception {
-        String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), resources.getPassword());
+        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), resources.getPassword());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");

@@ -1,8 +1,25 @@
+/*
+ *  Copyright 2021-2025 Odboy
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cn.odboy.devops.controller;
 
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.dataobject.PipelineTemplateTb;
-import cn.odboy.devops.dal.model.DevOpsQueryLastPipelineDetailArgs;
+import cn.odboy.devops.dal.model.QueryLastPipelineDetailArgs;
+import cn.odboy.devops.dal.model.RestartPipelineArgs;
+import cn.odboy.devops.dal.model.StartPipelineArgs;
 import cn.odboy.devops.framework.pipeline.model.PipelineInstanceVo;
 import cn.odboy.devops.service.core.PipelineInstanceService;
 import cn.odboy.devops.service.core.PipelineTemplateService;
@@ -36,31 +53,39 @@ public class DevopsPipelineInstanceController {
     @ApiOperation("启动流水线")
     @PostMapping(value = "/start")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> startPipeline(@RequestBody PipelineTemplateTb args) {
-        // 输入参数
-        String appName = "cuteops";
-        String envCode = "daily";
+    public ResponseEntity<?> startPipeline(@Validated @RequestBody StartPipelineArgs args) {
         // 获取模板
-        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(args.getId());
+        PipelineTemplateTb pipelineTemplateTb = pipelineTemplateService.getPipelineTemplateById(args.getTemplateId());
         // 创建流水线实例
         PipelineInstanceTb pipelineInstanceTb = new PipelineInstanceTb();
         pipelineInstanceTb.setTemplateId(pipelineTemplateTb.getId());
-        pipelineInstanceTb.setInstanceName("流水线测试");
         pipelineInstanceTb.setTemplateType(pipelineTemplateTb.getType());
-        pipelineInstanceTb.setContextName(appName);
-        pipelineInstanceTb.setEnv(envCode);
         pipelineInstanceTb.setTemplateContent(pipelineTemplateTb.getTemplate());
+        pipelineInstanceTb.setInstanceName(args.getInstanceName());
+        pipelineInstanceTb.setContextName(args.getContextName());
+        pipelineInstanceTb.setEnv(args.getEnv());
         return ResponseEntity.ok(pipelineInstanceService.startPipeline(pipelineInstanceTb));
     }
 
     /**
-     * TODO 待实现
+     * 已验证流程
      */
     @ApiOperation("重启流水线")
     @PostMapping(value = "/restart")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> restartPipeline(@RequestBody PipelineTemplateTb args) {
-        return ResponseEntity.ok("功能开发中");
+    public ResponseEntity<?> restartPipeline(@RequestBody RestartPipelineArgs args) {
+        return ResponseEntity.ok(pipelineInstanceService.restartPipeline(args));
+    }
+
+    /**
+     * 已验证流程
+     */
+    @ApiOperation("停止流水线")
+    @PostMapping(value = "/stop")
+    @PreAuthorize("@el.check()")
+    public ResponseEntity<?> stopPipeline(@RequestBody RestartPipelineArgs args) {
+        pipelineInstanceService.stopPipeline(args);
+        return ResponseEntity.ok("流水线停止成功");
     }
 
     /**
@@ -76,14 +101,14 @@ public class DevopsPipelineInstanceController {
     @ApiOperation("查询流水线明细")
     @PostMapping(value = "/last")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> queryLastPipelineDetail(@Validated @RequestBody DevOpsQueryLastPipelineDetailArgs args) {
+    public ResponseEntity<?> queryLastPipelineDetail(@Validated @RequestBody QueryLastPipelineDetailArgs args) {
         return ResponseEntity.ok(pipelineInstanceService.queryLastPipelineDetail(args.getInstanceId()));
     }
 
     @ApiOperation("查询流水线明细Ws")
     @PostMapping(value = "/lastWs")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<?> queryLastPipelineDetailWs(@Validated @RequestBody DevOpsQueryLastPipelineDetailArgs args) {
+    public ResponseEntity<?> queryLastPipelineDetailWs(@Validated @RequestBody QueryLastPipelineDetailArgs args) {
         pipelineInstanceService.queryLastPipelineDetailWs(args.getInstanceId());
         return ResponseEntity.ok("开始推送流水线明细");
     }

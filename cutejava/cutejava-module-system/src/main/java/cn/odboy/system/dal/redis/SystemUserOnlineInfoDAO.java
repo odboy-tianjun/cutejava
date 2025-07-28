@@ -36,10 +36,10 @@ public class SystemUserOnlineInfoDAO {
 
     public void saveUserJwtModelByToken(SystemUserJwtVo userJwtVo, String token, HttpServletRequest request) {
         String dept = userJwtVo.getUser().getDept().getName();
-        String ip = BrowserUtil.getIp(request);
+        String ip = CsBrowserUtil.getIp(request);
         String id = tokenProvider.getId(token);
-        String version = BrowserUtil.getVersion(request);
-        String address = IpUtil.getCityInfo(ip);
+        String version = CsBrowserUtil.getVersion(request);
+        String address = CsIPUtil.getCityInfo(ip);
         SystemUserOnlineVo userOnlineVo = null;
         try {
             userOnlineVo = new SystemUserOnlineVo();
@@ -50,7 +50,7 @@ public class SystemUserOnlineInfoDAO {
             userOnlineVo.setBrowser(version);
             userOnlineVo.setIp(ip);
             userOnlineVo.setAddress(address);
-            userOnlineVo.setKey(DesEncryptUtil.desEncrypt(token));
+            userOnlineVo.setKey(CsDesEncryptUtil.desEncrypt(token));
             userOnlineVo.setLoginTime(new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -90,7 +90,7 @@ public class SystemUserOnlineInfoDAO {
             map.put("登录日期", user.getLoginTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -130,7 +130,7 @@ public class SystemUserOnlineInfoDAO {
      */
 
     public List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username) {
-        String loginKey = SystemRedisKey.ONLINE_USER + (StringUtil.isBlank(username) ? "" : "*" + username);
+        String loginKey = SystemRedisKey.ONLINE_USER + (CsStringUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
         List<SystemUserOnlineVo> onlineUserList = new ArrayList<>();

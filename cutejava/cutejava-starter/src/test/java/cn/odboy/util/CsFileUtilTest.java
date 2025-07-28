@@ -3,10 +3,10 @@ package cn.odboy.util;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-import static cn.odboy.util.FileUtil.*;
+import static cn.odboy.util.CsFileUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FileUtilTest {
+public class CsFileUtilTest {
 
     @Test
     public void testToFile() {

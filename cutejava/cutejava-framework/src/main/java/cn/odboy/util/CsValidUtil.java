@@ -20,8 +20,10 @@ import lombok.experimental.UtilityClass;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.groups.Default;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Bean验证工具
@@ -31,16 +33,22 @@ import java.util.Set;
  */
 @UtilityClass
 public final class CsValidUtil {
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+    private static final Validator VALIDATOR;
+
+    static {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            VALIDATOR = factory.getValidator();
+        }
+    }
 
     public static <T> void validate(T object) {
         Set<ConstraintViolation<T>> violations = VALIDATOR.validate(object, Default.class);
         if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<T> violation : violations) {
-                sb.append(violation.getMessage()).append(", ");
-            }
-            throw new IllegalArgumentException(sb.toString());
+            throw new IllegalArgumentException(violations
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(","))
+            );
         }
     }
 }

@@ -2,7 +2,7 @@ package cn.odboy.system.framework.storage.local;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.server.core.FileUploadPathHelper;
+import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public class MultipartConfig {
     @Value("${spring.application.name}")
     private String name;
     @Autowired
-    private FileUploadPathHelper fileUploadPathHelper;
+    private CsFileLocalUploadHelper fileUploadPathHelper;
     @Autowired
     private AppProperties properties;
 
