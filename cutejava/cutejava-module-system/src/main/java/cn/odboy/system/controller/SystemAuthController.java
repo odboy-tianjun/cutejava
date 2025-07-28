@@ -16,8 +16,8 @@ import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
-import cn.odboy.util.RsaEncryptUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsRsaEncryptUtil;
+import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.base.Captcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,15 +60,15 @@ public class SystemAuthController {
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = RsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
         redisHelper.del(loginRequest.getUuid());
-        if (StringUtil.isBlank(code)) {
+        if (CsStringUtil.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
-        if (StringUtil.isBlank(loginRequest.getCode()) || !loginRequest.getCode().equalsIgnoreCase(code)) {
+        if (CsStringUtil.isBlank(loginRequest.getCode()) || !loginRequest.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
         // 获取用户信息

@@ -3,11 +3,11 @@ package cn.odboy.util;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
-import static cn.odboy.util.DesEncryptUtil.desDecrypt;
-import static cn.odboy.util.DesEncryptUtil.desEncrypt;
+import static cn.odboy.util.CsDesEncryptUtil.desDecrypt;
+import static cn.odboy.util.CsDesEncryptUtil.desEncrypt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DesEncryptUtilTest {
+public class CsDesEncryptUtilTest {
 
     @SneakyThrows
     public static void main(String[] args) {

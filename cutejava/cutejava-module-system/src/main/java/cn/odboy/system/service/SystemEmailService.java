@@ -11,8 +11,8 @@ import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
+import cn.odboy.util.CsDesEncryptUtil;
 import cn.odboy.util.CsResourceTemplateUtil;
-import cn.odboy.util.DesEncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,7 @@ public class SystemEmailService {
         SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
         if (!emailConfig.getPassword().equals(systemEmailConfigTb.getPassword())) {
             // 对称加密
-            systemEmailConfigTb.setPassword(DesEncryptUtil.desEncrypt(emailConfig.getPassword()));
+            systemEmailConfigTb.setPassword(CsDesEncryptUtil.desEncrypt(emailConfig.getPassword()));
         }
         systemEmailConfigTb.setId(1L);
         systemEmailConfigMapper.insertOrUpdate(systemEmailConfigTb);
@@ -72,7 +72,7 @@ public class SystemEmailService {
         account.setAuth(true);
         try {
             // 对称解密
-            account.setPass(DesEncryptUtil.desDecrypt(systemEmailConfigTb.getPassword()));
+            account.setPass(CsDesEncryptUtil.desDecrypt(systemEmailConfigTb.getPassword()));
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
         }

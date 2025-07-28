@@ -73,40 +73,15 @@
       </el-col>
       <div style="clear: both" />
     </el-row>
-    <cute-preview-drawer ref="detailDrawer" :title="currentTemplateData.name">
-      <el-timeline>
-        <el-timeline-item timestamp="2018/4/12" placement="top">
-          <el-card>
-            <h4>更新 Github 模板</h4>
-            <p>王小虎 提交于 2018/4/12 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/3" placement="top">
-          <el-card>
-            <h4>更新 Github 模板</h4>
-            <p>王小虎 提交于 2018/4/3 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/2" placement="top">
-          <el-card>
-            <h4>更新 Github 模板</h4>
-            <p>王小虎 提交于 2018/4/2 20:46</p>
-          </el-card>
-        </el-timeline-item>
-      </el-timeline>
-    </cute-preview-drawer>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-import CutePreviewDrawer from '@/views/components/dev/CutePreviewDrawer'
 import { mapGetters } from 'vuex'
 import CsMessage from '@/utils/elementui/CsMessage'
-import { retryPipeline } from '@/api/devops/pipelineInstance'
 export default {
   name: 'CutePipelineNode',
-  components: { CutePreviewDrawer },
   props: {
     templateData: {
       type: Object,
@@ -309,8 +284,7 @@ export default {
         CsMessage.Warning('当前流水线节点不支持查看明细')
         return
       }
-      console.log('templateData', this.templateData)
-      this.$refs.detailDrawer.show()
+      this.$emit('node-click', this.templateData)
     },
     onNodeRetryClick() {
       const currentTemplateData = this.currentTemplateData || { retry: false }
@@ -322,12 +296,11 @@ export default {
         ...this.currentInstanceData,
         code: this.currentTemplateData.code
       }
-      // console.error('data', data)
-      retryPipeline(data)
-      this.$emit('retry', data)
+      this.$emit('node-retry', data)
     },
     onNodeOperationClick(buttonInfo) {
-      console.log('buttonInfo', buttonInfo)
+      const currentTemplateData = this.currentTemplateData || {}
+      this.$emit('node-opera', currentTemplateData, buttonInfo)
     }
   }
 }

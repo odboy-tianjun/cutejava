@@ -13,9 +13,9 @@ import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
+import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.FileUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronExpression;
@@ -60,7 +60,7 @@ public class SystemQuartzJobService {
         if (!CronExpression.isValidExpression(resources.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
-        if (StringUtil.isNotBlank(resources.getSubTask())) {
+        if (CsStringUtil.isNotBlank(resources.getSubTask())) {
             List<String> tasks = Arrays.asList(resources.getSubTask().split("[,，]"));
             if (tasks.contains(resources.getId().toString())) {
                 throw new BadRequestException("子任务中不能添加当前任务ID");
@@ -175,7 +175,7 @@ public class SystemQuartzJobService {
             map.put("创建日期", quartzJob.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -201,7 +201,7 @@ public class SystemQuartzJobService {
             map.put("创建日期", quartzLog.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     /**

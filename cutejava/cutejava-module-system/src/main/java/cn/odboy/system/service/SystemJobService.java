@@ -8,8 +8,8 @@ import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
+import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -85,7 +85,7 @@ public class SystemJobService {
             map.put("创建日期", job.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     /**

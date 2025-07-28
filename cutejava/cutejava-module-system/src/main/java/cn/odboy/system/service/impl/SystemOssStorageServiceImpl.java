@@ -6,7 +6,7 @@ import cn.odboy.base.CsResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
-import cn.odboy.framework.server.core.FileUploadPathHelper;
+import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
@@ -14,8 +14,8 @@ import cn.odboy.system.dal.mysql.SystemOssStorageMapper;
 import cn.odboy.system.framework.storage.minio.MinioRepository;
 import cn.odboy.system.service.SystemOssStorageService;
 import cn.odboy.util.CsDateUtil;
+import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -45,14 +45,14 @@ import java.util.Map;
 public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb> implements SystemOssStorageService {
     private final MinioRepository minioRepository;
     private final AppProperties properties;
-    private final FileUploadPathHelper fileUploadPathHelper;
+    private final CsFileLocalUploadHelper fileUploadPathHelper;
 
     @Override
     public CsResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
         IPage<SystemOssStorageTb> ossStorageTbs = baseMapper.selectOssStorageByArgs(criteria, page);
         IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
             SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
-            storageVo.setFileSizeDesc(FileUtil.getSize(storageVo.getFileSize()));
+            storageVo.setFileSizeDesc(CsFileUtil.getSize(storageVo.getFileSize()));
             return storageVo;
         });
         return CsPageUtil.toPage(convert);
@@ -80,7 +80,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
             map.put("创建日期", ossStorage.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     @Override
@@ -93,16 +93,16 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
         StorageOSSModel ossConfig = properties.getOss();
         long fileSize = file.getSize();
         String contentType = file.getContentType();
-        FileUtil.checkSize(ossConfig.getMaxSize(), fileSize);
+        CsFileUtil.checkSize(ossConfig.getMaxSize(), fileSize);
         // 按天分组
         String nowDateStr = CsDateUtil.getNowDateStr();
         // 上传到本地临时目录
-        File tempFile = FileUtil.upload(file, fileUploadPathHelper.getPath() + nowDateStr + File.separator);
+        File tempFile = CsFileUtil.upload(file, fileUploadPathHelper.getPath() + nowDateStr + File.separator);
         if (tempFile == null) {
             throw new BadRequestException("上传失败");
         }
         // 校验文件md5, 看是否已存在云端（不确定, 可能云端已经删除, 但是正常来说云端是不允许私自删除的, 所以这里忽略云端不存在的情况）
-        String md5 = FileUtil.getMd5(tempFile);
+        String md5 = CsFileUtil.getMd5(tempFile);
         SystemOssStorageTb systemOssStorageTb = getByMd5(md5);
         if (systemOssStorageTb != null) {
             // 重新生成7天链接

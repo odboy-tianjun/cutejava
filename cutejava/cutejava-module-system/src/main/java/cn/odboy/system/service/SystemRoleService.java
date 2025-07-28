@@ -15,9 +15,9 @@ import cn.odboy.system.dal.mysql.SystemRoleDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
+import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.FileUtil;
-import cn.odboy.util.StringUtil;
+import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -129,7 +129,7 @@ public class SystemRoleService {
             map.put("创建日期", role.getCreateTime());
             list.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        CsFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -216,7 +216,7 @@ public class SystemRoleService {
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                 .map(SystemMenuTb::getPermission)
-                .filter(StringUtil::isNotBlank).collect(Collectors.toSet());
+                .filter(CsStringUtil::isNotBlank).collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new)
                 .collect(Collectors.toList());
     }

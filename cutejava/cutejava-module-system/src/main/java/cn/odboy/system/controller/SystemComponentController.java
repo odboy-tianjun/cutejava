@@ -24,4 +24,11 @@ public class SystemComponentController {
     public ResponseEntity<?> queryDeptSelectDataSource() {
         return new ResponseEntity<>(systemDeptService.queryDeptSelectDataSource(), HttpStatus.OK);
     }
+
+    @ApiOperation("查询部门下拉选择Pro数据源")
+    @PostMapping(value = "/queryDeptSelectProDataSource")
+    @PreAuthorize("@el.check()")
+    public ResponseEntity<?> queryDeptSelectProDataSource() {
+        return new ResponseEntity<>(systemDeptService.queryDeptSelectProDataSource(), HttpStatus.OK);
+    }
 }

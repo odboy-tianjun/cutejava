@@ -13,7 +13,7 @@ import cn.odboy.framework.properties.model.OSSConfigModel;
 import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.util.CsDateUtil;
-import cn.odboy.util.FileUtil;
+import cn.odboy.util.CsFileUtil;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
@@ -123,8 +123,8 @@ public class MinioRepository {
         StorageOSSModel ossConfig = properties.getOss();
         OSSConfigModel ossMinioConfig = ossConfig.getMinio();
         String type = FileTypeUtil.getType(tempFile);
-        String prefix = FileUtil.getPrefix(tempFile);
-        String suffix = FileUtil.getSuffix(tempFile);
+        String prefix = CsFileUtil.getPrefix(tempFile);
+        String suffix = CsFileUtil.getSuffix(tempFile);
 
         String fileCode = IdUtil.fastSimpleUUID();
         String fileName = fileCode + getFileExtension(originalFilename);
@@ -146,7 +146,7 @@ public class MinioRepository {
         systemOssStorageTb.setFileCode(fileCode);
         systemOssStorageTb.setObjectName(objectName);
 
-        try (InputStream fileInputStream = FileUtil.getInputStream(tempFile)) {
+        try (InputStream fileInputStream = CsFileUtil.getInputStream(tempFile)) {
             PutObjectArgs objectArgs = PutObjectArgs.builder()
                     .bucket(ossMinioConfig.getBucketName())
                     .object(objectName)
@@ -160,7 +160,7 @@ public class MinioRepository {
             log.error("文件上传失败，文件名：{}，错误信息", originalFilename, e);
         } finally {
             try {
-                FileUtil.del(tempFile);
+                CsFileUtil.del(tempFile);
             } catch (IORuntimeException e) {
                 // 删除失败忽略
             }

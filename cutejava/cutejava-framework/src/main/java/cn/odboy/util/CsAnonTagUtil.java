@@ -16,7 +16,7 @@ import java.util.*;
  * 匿名标记工具
  */
 @UtilityClass
-public class AnonTagUtil {
+public class CsAnonTagUtil {
 
     /**
      * 获取匿名标记的URL

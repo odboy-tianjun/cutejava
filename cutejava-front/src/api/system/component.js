@@ -6,3 +6,10 @@ export function queryDeptSelectDataSource() {
     method: 'post'
   })
 }
+
+export function queryDeptSelectProDataSource() {
+  return request({
+    url: 'api/component/queryDeptSelectProDataSource',
+    method: 'post'
+  })
+}

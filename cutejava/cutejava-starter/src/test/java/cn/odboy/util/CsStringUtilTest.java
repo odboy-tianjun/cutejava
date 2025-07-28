@@ -7,11 +7,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static cn.odboy.util.StringUtil.*;
+import static cn.odboy.util.CsStringUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class StringUtilTest {
+public class CsStringUtilTest {
 
     @Test
     public void testToCamelCase() {
@@ -20,13 +20,13 @@ public class StringUtilTest {
 
     @Test
     public void testToCapitalizeCamelCase() {
-        assertNull(StringUtil.toCapitalizeCamelCase(null));
+        assertNull(CsStringUtil.toCapitalizeCamelCase(null));
         assertEquals("HelloWorld", toCapitalizeCamelCase("hello_world"));
     }
 
     @Test
     public void testToUnderScoreCase() {
-        assertNull(StringUtil.toUnderScoreCase(null));
+        assertNull(CsStringUtil.toUnderScoreCase(null));
         assertEquals("hello_world", toUnderScoreCase("helloWorld"));
         assertEquals("\u0000\u0000", toUnderScoreCase("\u0000\u0000"));
         assertEquals("\u0000_a", toUnderScoreCase("\u0000A"));
@@ -40,6 +40,6 @@ public class StringUtilTest {
 
     @Test
     public void testGetIP() {
-        Assertions.assertEquals("127.0.0.1", BrowserUtil.getIp(new MockHttpServletRequest()));
+        Assertions.assertEquals("127.0.0.1", CsBrowserUtil.getIp(new MockHttpServletRequest()));
     }
 }

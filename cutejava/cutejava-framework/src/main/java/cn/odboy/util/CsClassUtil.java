@@ -10,7 +10,7 @@ import java.util.List;
  * 类 相关
  */
 @UtilityClass
-public final class ClassUtil {
+public final class CsClassUtil {
     @SuppressWarnings({"unchecked", "all"})
     public static List<Field> getAllFields(Class clazz, List<Field> fields) {
         if (clazz != null) {
