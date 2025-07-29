@@ -74,13 +74,13 @@ https://github.com/odboy-tianjun/cutejava
 - CuteProductLineSelect 产品线选择框
 - CuteProductLineSelectPro 产品线级联选择框
 - CuteUserSelect 用户多选框
-  ![CuteBusiness](./doc/images/CuteBusiness.png)
+  ![CuteBusiness](./cutejava-front/docs/images/CuteBusiness.png)
 - CuteFileUpload 上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
-  ![CuteFileUpload](./doc/images/CuteFileUpload.png)
+  ![CuteFileUpload](./cutejava-front/docs/images/CuteFileUpload.png)
 - CuteFileDragUpload 支持拖拽上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
-  ![CuteFileDragUpload](./doc/images/CuteFileDragUpload.png)
+  ![CuteFileDragUpload](./cutejava-front/docs/images/CuteFileDragUpload.png)
 - CutePipelineNode 流水线节点组件
-  ![CutePipelineNode](./doc/images/CutePipelineNode.png)
+  ![CutePipelineNode](./cutejava-front/docs/images/CutePipelineNode.png)
 
 #### 系统模块
 
