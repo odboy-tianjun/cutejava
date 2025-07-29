@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>cn.odboy</groupId>
-            <artifactId>cutejava-module-devops</artifactId>
+            <artifactId>cutejava-module-pipeline</artifactId>
             <version>1.4.1</version>
         </dependency>
     </dependencies>

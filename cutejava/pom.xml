@@ -10,7 +10,7 @@
     <modules>
         <module>cutejava-framework</module>
         <module>cutejava-module-system</module>
-        <module>cutejava-module-devops</module>
+        <module>cutejava-module-pipeline</module>
         <module>cutejava-starter</module>
     </modules>
 
