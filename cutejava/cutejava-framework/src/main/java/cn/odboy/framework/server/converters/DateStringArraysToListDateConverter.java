@@ -35,14 +35,12 @@ public class DateStringArraysToListDateConverter implements Converter<String[], 
         if (source.length == 0) {
             return Collections.emptyList();
         }
-        return Arrays.stream(source)
-                .map(s -> {
-                    try {
-                        return sdf.parse(s);
-                    } catch (ParseException e) {
-                        throw new IllegalArgumentException("Invalid date string: " + s);
-                    }
-                })
-                .collect(Collectors.toList());
+        return Arrays.stream(source).map(s -> {
+            try {
+                return sdf.parse(s);
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("Invalid date string: " + s);
+            }
+        }).collect(Collectors.toList());
     }
 }

@@ -15,7 +15,7 @@
  */
 package cn.odboy.devops.service.core;
 
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import com.anwen.mongo.service.IService;

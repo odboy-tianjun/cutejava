@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
@@ -103,7 +103,6 @@ public class SystemDeptService {
         }
         CsFileUtil.downloadExcel(list, response);
     }
-
 
     /**
      * 更新父节点中子节点数目
@@ -274,7 +273,7 @@ public class SystemDeptService {
      * @return /
      */
 
-    public CsResultVo<Set<SystemDeptTb>> buildDeptTree(List<SystemDeptTb> deptList) {
+    public CsPageResultVo<Set<SystemDeptTb>> buildDeptTree(List<SystemDeptTb> deptList) {
         Set<SystemDeptTb> trees = new LinkedHashSet<>();
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
@@ -302,7 +301,7 @@ public class SystemDeptService {
         if (CollectionUtil.isEmpty(trees)) {
             trees = deptSet;
         }
-        CsResultVo<Set<SystemDeptTb>> baseResult = new CsResultVo<>();
+        CsPageResultVo<Set<SystemDeptTb>> baseResult = new CsPageResultVo<>();
         baseResult.setContent(CollectionUtil.isEmpty(trees) ? deptSet : trees);
         baseResult.setTotalElements(deptSet.size());
         return baseResult;

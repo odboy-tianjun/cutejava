@@ -4,7 +4,6 @@ import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
-
 /**
  * 邮件配置 Mapper
  *

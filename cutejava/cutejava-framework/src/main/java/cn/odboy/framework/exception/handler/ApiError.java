@@ -17,7 +17,6 @@ package cn.odboy.framework.exception.handler;
 
 import lombok.Data;
 
-
 @Data
 public final class ApiError {
 

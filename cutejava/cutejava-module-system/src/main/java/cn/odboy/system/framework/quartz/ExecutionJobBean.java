@@ -36,7 +36,7 @@ public class ExecutionJobBean extends QuartzJobBean {
     @Override
     public void executeInternal(JobExecutionContext context) {
         // 获取任务
-        SystemQuartzJobTb quartzJob = (SystemQuartzJobTb) context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
+        SystemQuartzJobTb quartzJob = (SystemQuartzJobTb)context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
         // 获取spring bean
         SystemQuartzLogMapper quartzLogMapper = CsSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
         SystemQuartzJobService systemQuartzJobService = CsSpringBeanHolder.getBean(SystemQuartzJobService.class);

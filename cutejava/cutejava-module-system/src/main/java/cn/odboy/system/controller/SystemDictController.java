@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
@@ -45,7 +45,7 @@ public class SystemDictController {
     @ApiOperation("查询字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<CsResultVo<List<SystemDictTb>>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemDictTb>>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
         Page<SystemDictTb> page;
         SystemQueryDictArgs criteria = args.getArgs();
         if (args.getSize() != null) {

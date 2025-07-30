@@ -3,7 +3,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -161,13 +161,12 @@ public class SystemRoleService {
      * @return
      */
 
-    public CsResultVo<List<SystemRoleTb>> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
+    public CsPageResultVo<List<SystemRoleTb>> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByArgs(criteria);
         Long total = systemRoleMapper.countRoleByArgs(criteria);
         return CsPageUtil.toPage(roles, total);
     }
-
 
     /**
      * 根据用户ID查询
@@ -210,15 +209,12 @@ public class SystemRoleService {
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {
             permissions.add("admin");
-            return permissions.stream().map(SystemRoleCodeVo::new)
-                    .collect(Collectors.toList());
+            return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
         }
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
-        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                .map(SystemMenuTb::getPermission)
-                .filter(CsStringUtil::isNotBlank).collect(Collectors.toSet());
-        return permissions.stream().map(SystemRoleCodeVo::new)
-                .collect(Collectors.toList());
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission).filter(CsStringUtil::isNotBlank)
+            .collect(Collectors.toSet());
+        return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
 
     /**

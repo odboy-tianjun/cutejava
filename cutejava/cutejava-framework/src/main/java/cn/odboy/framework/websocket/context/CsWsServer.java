@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 @Slf4j
 @Component
 @ServerEndpoint("/websocket/{sid}")
@@ -82,7 +81,7 @@ public class CsWsServer {
 
     @OnError
     public void onError(Session session, Throwable error) {
-//        log.error("WebSocket sid={} 发生错误", this.sid, error);
+        //        log.error("WebSocket sid={} 发生错误", this.sid, error);
         try {
             CsWsClientManager.removeClient(this.sid);
         } catch (Exception e) {
@@ -102,7 +101,7 @@ public class CsWsServer {
      */
     public void sendMessage(CsWsMessage message, @PathParam("sid") String sid) throws IOException {
         String body = JSON.toJSONString(message);
-//        log.info("推送消息到{}, 推送内容:{}", sid, message);
+        //        log.info("推送消息到{}, 推送内容:{}", sid, message);
         try {
             if (sid == null) {
                 sendToAll(body);
@@ -138,7 +137,7 @@ public class CsWsServer {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CsWsServer that = (CsWsServer) o;
+        CsWsServer that = (CsWsServer)o;
         return Objects.equals(session, that.session) && Objects.equals(sid, that.sid);
     }
 

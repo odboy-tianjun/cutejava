@@ -31,8 +31,7 @@ public class SystemUserInfoDAO {
     }
 
     /**
-     * 清理用户缓存信息
-     * 用户信息变更时
+     * 清理用户缓存信息 用户信息变更时
      *
      * @param userName 用户名
      */

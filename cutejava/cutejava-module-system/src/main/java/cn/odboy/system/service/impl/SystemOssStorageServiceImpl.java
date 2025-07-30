@@ -2,7 +2,7 @@ package cn.odboy.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
@@ -48,7 +48,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     private final CsFileLocalUploadHelper fileUploadPathHelper;
 
     @Override
-    public CsResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
+    public CsPageResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
         IPage<SystemOssStorageTb> ossStorageTbs = baseMapper.selectOssStorageByArgs(criteria, page);
         IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
             SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);

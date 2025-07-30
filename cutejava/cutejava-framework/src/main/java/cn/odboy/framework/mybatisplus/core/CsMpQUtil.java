@@ -124,7 +124,7 @@ public class CsMpQUtil {
     }
 
     private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
-        Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
+        Collection<?> wrapNotInVal = (Collection<?>)fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
             if (anyValOptional.isPresent()) {
@@ -150,7 +150,7 @@ public class CsMpQUtil {
 
     private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
         if (fieldVal instanceof List) {
-            List<Object> between = new ArrayList<>((List<?>) fieldVal);
+            List<Object> between = new ArrayList<>((List<?>)fieldVal);
             int minLength = 2;
             if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
                 queryWrapper.between(finalAttributeName, between.get(0), between.get(1));

@@ -17,8 +17,8 @@ package cn.odboy.devops.framework.pipeline.core;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.devops.constant.pipeline.PipelineConst;
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.dal.mysql.PipelineInstanceMapper;
@@ -54,7 +54,7 @@ public class PipelineJobBean implements InterruptableJob {
 
         // 参数解析
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
-        PipelineInstanceTb pipelineInstanceTb = (PipelineInstanceTb) jobDataMap.get(PipelineConst.INSTANCE);
+        PipelineInstanceTb pipelineInstanceTb = (PipelineInstanceTb)jobDataMap.get(PipelineConst.INSTANCE);
         pipelineInstanceTb.setStatus(PipelineStatusEnum.PENDING.getCode());
         // 获取服务
         PipelineJobManage pipelineJobManage = CsSpringBeanHolder.getBean(PipelineJobManage.class);
@@ -156,7 +156,8 @@ public class PipelineJobBean implements InterruptableJob {
                         }
                         // 检查实例节点状态
                         ThreadUtil.safeSleep(3000);
-                        PipelineInstanceNodeTb runningInstanceNode = pipelineInstanceNodeService.getPipelineInstanceNodeByArgs(instanceId, pipelineNodeTemplateVo.getCode());
+                        PipelineInstanceNodeTb runningInstanceNode =
+                            pipelineInstanceNodeService.getPipelineInstanceNodeByArgs(instanceId, pipelineNodeTemplateVo.getCode());
                         if (PipelineStatusEnum.SUCCESS.getCode().equals(runningInstanceNode.getCurrentNodeStatus())) {
                             pipelineStatusEnum = PipelineStatusEnum.SUCCESS;
                             pipelineInstanceTb.setCurrentNodeStatus(pipelineStatusEnum.getCode());
@@ -236,13 +237,8 @@ public class PipelineJobBean implements InterruptableJob {
                     pipelineInstanceTb.setCurrentNodeStatus(PipelineStatusEnum.FAIL.getCode());
                     // 更新节点状态
                     PipelineInstanceNodeService pipelineInstanceNodeService = CsSpringBeanHolder.getBean(PipelineInstanceNodeService.class);
-                    pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(
-                            this.currentInstanceId,
-                            this.currentNodeCode,
-                            PipelineStatusEnum.FAIL,
-                            "用户主动停止",
-                            new Date()
-                    );
+                    pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(this.currentInstanceId, this.currentNodeCode, PipelineStatusEnum.FAIL,
+                        "用户主动停止", new Date());
                 }
                 pipelineInstanceTb.setStatus(PipelineStatusEnum.FAIL.getCode());
                 // 更新实例状态

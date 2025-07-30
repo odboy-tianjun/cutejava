@@ -19,11 +19,11 @@ public final class CsBigDecimalUtil {
      */
     private static BigDecimal toBigDecimal(Object obj) {
         if (obj instanceof BigDecimal) {
-            return (BigDecimal) obj;
+            return (BigDecimal)obj;
         } else if (obj instanceof Long) {
-            return BigDecimal.valueOf((Long) obj);
+            return BigDecimal.valueOf((Long)obj);
         } else if (obj instanceof Integer) {
-            return BigDecimal.valueOf((Integer) obj);
+            return BigDecimal.valueOf((Integer)obj);
         } else if (obj instanceof Double) {
             return new BigDecimal(String.valueOf(obj));
         } else {

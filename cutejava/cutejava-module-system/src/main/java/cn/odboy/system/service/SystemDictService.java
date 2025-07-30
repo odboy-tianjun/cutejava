@@ -2,7 +2,7 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
@@ -111,7 +111,7 @@ public class SystemDictService {
      * @return /
      */
 
-    public CsResultVo<List<SystemDictTb>> queryDictByArgs(SystemQueryDictArgs criteria, Page<SystemDictTb> page) {
+    public CsPageResultVo<List<SystemDictTb>> queryDictByArgs(SystemQueryDictArgs criteria, Page<SystemDictTb> page) {
         return CsPageUtil.toPage(systemDictMapper.selectDictByArgs(criteria, page));
     }
 

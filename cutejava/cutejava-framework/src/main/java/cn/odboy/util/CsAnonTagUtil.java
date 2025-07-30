@@ -25,7 +25,7 @@ public class CsAnonTagUtil {
      * @return /
      */
     public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
-        RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
+        RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping)applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
         // 获取匿名标记

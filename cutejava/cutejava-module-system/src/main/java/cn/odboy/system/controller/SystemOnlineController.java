@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.util.CsDesEncryptUtil;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user/online")
@@ -32,7 +31,7 @@ public class SystemOnlineController {
     @ApiOperation("查询在线用户")
     @PostMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<CsResultVo<List<SystemUserOnlineVo>>> queryOnlineUser(@Validated @RequestBody CsPageArgs<SystemUserOnlineVo> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemUserOnlineVo>>> queryOnlineUser(@Validated @RequestBody CsPageArgs<SystemUserOnlineVo> args) {
         IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
         return new ResponseEntity<>(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page), HttpStatus.OK);
     }

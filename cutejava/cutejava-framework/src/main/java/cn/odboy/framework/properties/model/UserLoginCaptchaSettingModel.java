@@ -117,7 +117,7 @@ public class UserLoginCaptchaSettingModel extends CsObject {
             int opt = num(3);
 
             // 计算结果
-            int res = new int[]{n1 + n2, n1 - n2, n1 * n2}[opt];
+            int res = new int[] {n1 + n2, n1 - n2, n1 * n2}[opt];
             // 转换为字符运算符
             char optChar = "+-x".charAt(opt);
 

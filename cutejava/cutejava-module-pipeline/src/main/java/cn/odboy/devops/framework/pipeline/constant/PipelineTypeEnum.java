@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.devops.constant.pipeline;
+package cn.odboy.devops.framework.pipeline.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,11 +24,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PipelineTypeEnum {
-    BACKEND("backend", "后端"),
-    FRONT("front", "前端"),
-    MOBILE("mobile", "移动端"),
-    ANDROID("pc", "PC端"),
-    UN_SUPPORT("un_support", "不支持的类型");
+    BACKEND("backend", "后端"), FRONT("front", "前端"), MOBILE("mobile", "移动端"), ANDROID("pc", "PC端"), UN_SUPPORT("un_support", "不支持的类型");
     /**
      * 类型编码
      */

@@ -142,7 +142,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
             try {
                 Field field = m.getClass().getDeclaredField(elementName);
                 field.setAccessible(true);
-                that = (BigDecimal) field.get(m);
+                that = (BigDecimal)field.get(m);
             } catch (Exception e) {
                 // 忽略异常
                 that = BigDecimal.ZERO;
@@ -160,10 +160,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @return /
      */
     public static BigDecimal streamBigDecimalMax(List<BigDecimal> data) {
-        return data.stream()
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal::max)
-                .orElse(null);
+        return data.stream().filter(Objects::nonNull).reduce(BigDecimal::max).orElse(null);
     }
 
     /**
@@ -175,10 +172,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @return /
      */
     public static BigDecimal streamBigDecimalMin(List<BigDecimal> data) {
-        return data.stream()
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal::min)
-                .orElse(null);
+        return data.stream().filter(Objects::nonNull).reduce(BigDecimal::min).orElse(null);
     }
 
     /**
@@ -190,10 +184,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @return /
      */
     public static BigDecimal streamBigDecimalAvg(List<BigDecimal> data) {
-        return data.stream()
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
+        return data.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
     }
 
     public static void main(String[] args) {

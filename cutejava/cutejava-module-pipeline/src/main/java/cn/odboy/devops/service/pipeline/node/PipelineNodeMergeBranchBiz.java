@@ -20,7 +20,6 @@ import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.framework.pipeline.log.PipelineNodeStepLog;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
-import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -30,17 +29,20 @@ import java.util.List;
 @Service
 public class PipelineNodeMergeBranchBiz {
     @PipelineNodeStepLog("分支合并开始")
-    public void mergeBranchStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void mergeBranchStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(1000);
     }
 
     @PipelineNodeStepLog("集成区分支合并到release分支")
-    public void integrationAreaBranchMergeRelease(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void integrationAreaBranchMergeRelease(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env,
+        List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("分支合并完成")
-    public void mergeBranchFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void mergeBranchFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(1000);
     }
 }

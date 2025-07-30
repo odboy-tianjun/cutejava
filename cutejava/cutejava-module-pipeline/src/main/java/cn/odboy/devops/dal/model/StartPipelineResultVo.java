@@ -21,7 +21,6 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 public class StartPipelineResultVo extends CsObject {

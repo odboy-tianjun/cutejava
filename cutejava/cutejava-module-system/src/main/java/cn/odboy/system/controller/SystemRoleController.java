@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -58,7 +57,7 @@ public class SystemRoleController {
     @ApiOperation("查询角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsResultVo<List<SystemRoleTb>>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemRoleTb>>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
         SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemRoleService.queryRoleByArgs(criteria, page), HttpStatus.OK);
@@ -118,7 +117,8 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        List<Integer> levels =
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

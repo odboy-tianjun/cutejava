@@ -59,7 +59,7 @@ public class SystemRoleTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemRoleTb role = (SystemRoleTb) o;
+        SystemRoleTb role = (SystemRoleTb)o;
         return Objects.equals(id, role.id);
     }
 

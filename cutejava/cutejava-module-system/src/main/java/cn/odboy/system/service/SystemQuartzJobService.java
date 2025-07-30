@@ -3,7 +3,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.redis.RedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
@@ -212,7 +212,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsResultVo<List<SystemQuartzJobTb>> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+    public CsPageResultVo<List<SystemQuartzJobTb>> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
         return CsPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
     }
 
@@ -224,7 +224,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsResultVo<List<SystemQuartzLogTb>> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+    public CsPageResultVo<List<SystemQuartzLogTb>> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
         return CsPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
     }
 

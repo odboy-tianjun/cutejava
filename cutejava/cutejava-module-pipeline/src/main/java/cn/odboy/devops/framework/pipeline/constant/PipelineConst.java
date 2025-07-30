@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.devops.constant.pipeline;
+package cn.odboy.devops.framework.pipeline.constant;
 
 /**
  * 流水线 常量
@@ -25,17 +25,17 @@ public interface PipelineConst {
     String INSTANCE_PREFIX = "pipeline_instance_";
     String EXECUTOR_PREFIX = "pipeline_executor_";
     //    /**
-//     * 流水线实例Key
-//     */
-//    String INSTANCE_KEY = "pipelineInstance";
-//    /**
-//     * 流水线实例节点相关Key
-//     */
-//    String INSTANCE_NODE_INDEX_KEY = "pipelineInstanceNodeIndex";
-//    String INSTANCE_NODE_CODE_KEY = "pipelineInstanceNodeCode";
-//    String INSTANCE_NODE_NAME_KEY = "pipelineInstanceNodeName";
-//    String INSTANCE_NODE_TEMPLATE_ARGS_KEY = "pipelineInstanceNodeTemplateArgs";
-//    String INSTANCE_RETRY_NODE_INDEX_KEY = "pipelineInstanceRetryNodeIndex";
+    //     * 流水线实例Key
+    //     */
+    //    String INSTANCE_KEY = "pipelineInstance";
+    //    /**
+    //     * 流水线实例节点相关Key
+    //     */
+    //    String INSTANCE_NODE_INDEX_KEY = "pipelineInstanceNodeIndex";
+    //    String INSTANCE_NODE_CODE_KEY = "pipelineInstanceNodeCode";
+    //    String INSTANCE_NODE_NAME_KEY = "pipelineInstanceNodeName";
+    //    String INSTANCE_NODE_TEMPLATE_ARGS_KEY = "pipelineInstanceNodeTemplateArgs";
+    //    String INSTANCE_RETRY_NODE_INDEX_KEY = "pipelineInstanceRetryNodeIndex";
     // 以下为标准常量
     String INSTANCE = "Instance";
     String INSTANCE_ID = "InstanceId";

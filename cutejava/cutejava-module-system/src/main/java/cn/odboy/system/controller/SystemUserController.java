@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.base.CsSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
@@ -59,7 +59,7 @@ public class SystemUserController {
     @ApiOperation("查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<CsResultVo<List<SystemUserTb>>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemUserTb>>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
         Page<Object> page = new Page<>(args.getPage(), args.getSize());
         SystemQueryUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
@@ -121,7 +121,8 @@ public class SystemUserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(
+                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
@@ -180,7 +181,8 @@ public class SystemUserController {
      * @param resources /
      */
     private void checkLevel(SystemUserTb resources) {
-        Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        Integer currentLevel = Collections.min(
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
         Integer optLevel = systemRoleService.getDeptLevelByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
@@ -203,18 +205,13 @@ public class SystemUserController {
             c.or();
             c.like(SystemUserTb::getNickName, criteria.getBlurry());
         });
-        return new ResponseEntity<>(systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)
-        ).getRecords().stream().map(m -> {
+        return new ResponseEntity<>(systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
             Map<String, Object> ext = new HashMap<>(1);
             ext.put("id", m.getId());
             ext.put("deptId", m.getDeptId());
             ext.put("email", m.getEmail());
             ext.put("phone", m.getPhone());
-            return CsSelectOptionVo.builder()
-                    .label(m.getNickName())
-                    .value(m.getUsername())
-                    .ext(ext)
-                    .build();
+            return CsSelectOptionVo.builder().label(m.getNickName()).value(m.getUsername()).ext(ext).build();
         }).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

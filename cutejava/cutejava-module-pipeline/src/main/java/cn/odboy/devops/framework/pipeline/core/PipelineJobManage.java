@@ -16,7 +16,7 @@
 package cn.odboy.devops.framework.pipeline.core;
 
 import cn.hutool.core.util.IdUtil;
-import cn.odboy.devops.constant.pipeline.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
@@ -85,8 +85,7 @@ public class PipelineJobManage {
     }
 
     /**
-     * 中断正在执行的任务<br/>
-     * 任务终止需要配合响应中断或停止信号
+     * 中断正在执行的任务<br/> 任务终止需要配合响应中断或停止信号
      */
     public void interruptJob(Long instanceId) throws SchedulerException {
         JobKey jobKey = JobKey.jobKey(String.format(JOB_KEY, instanceId));

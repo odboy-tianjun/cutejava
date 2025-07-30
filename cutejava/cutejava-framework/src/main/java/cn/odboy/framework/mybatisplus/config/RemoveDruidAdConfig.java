@@ -34,13 +34,11 @@ import java.io.IOException;
 @SuppressWarnings({"unchecked", "all"})
 @ConditionalOnWebApplication
 @AutoConfigureAfter(DruidDataSourceAutoConfigure.class)
-@ConditionalOnProperty(name = "spring.datasource.druid.stat-view-servlet.enabled",
-        havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "spring.datasource.druid.stat-view-servlet.enabled", havingValue = "true", matchIfMissing = true)
 public class RemoveDruidAdConfig {
 
     /**
-     * 方法名: removeDruidAdFilterRegistrationBean
-     * 方法描述 除去页面底部的广告
+     * 方法名: removeDruidAdFilterRegistrationBean 方法描述 除去页面底部的广告
      *
      * @param properties com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties
      * @return org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -64,8 +62,8 @@ public class RemoveDruidAdConfig {
 
             @Override
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                HttpServletRequest httpRequest = (HttpServletRequest) request;
-                HttpServletResponse httpResponse = (HttpServletResponse) response;
+                HttpServletRequest httpRequest = (HttpServletRequest)request;
+                HttpServletResponse httpResponse = (HttpServletResponse)response;
                 if (httpRequest.getRequestURI().endsWith("js/common.js")) {
                     // 获取common.js
                     String text = Utils.readFromResource(filePath);

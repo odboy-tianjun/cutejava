@@ -58,25 +58,14 @@ public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(properties.getSwagger().getEnabled())
-                .pathMapping("/")
-                .apiInfo(apiInfo())
-                .select()
-                .paths(PathSelectors.regex("^(?!/error).*"))
-                .paths(PathSelectors.any())
-                .build()
-                //添加登陆认证
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+        return new Docket(DocumentationType.SWAGGER_2).enable(properties.getSwagger().getEnabled()).pathMapping("/").apiInfo(apiInfo()).select()
+            .paths(PathSelectors.regex("^(?!/error).*")).paths(PathSelectors.any()).build()
+            //添加登陆认证
+            .securitySchemes(securitySchemes()).securityContexts(securityContexts());
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .description("一个简单且易上手的 Spring boot 后台管理框架")
-                .title("CuteJava 接口文档")
-                .version("1.4.1")
-                .build();
+        return new ApiInfoBuilder().description("一个简单且易上手的 Spring boot 后台管理框架").title("CuteJava 接口文档").version("1.4.1").build();
     }
 
     private List<SecurityScheme> securitySchemes() {
@@ -98,12 +87,9 @@ public class SwaggerConfig {
         Set<String> urls = CsAnonTagUtil.getAllAnonymousUrl(applicationContext);
         urls = urls.stream().filter(url -> !"/".equals(url)).collect(Collectors.toSet());
         String regExp = "^(?!" + apiPath + String.join("|" + apiPath, urls) + ").*$";
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .operationSelector(o -> o.requestMappingPattern()
-                        // 排除不需要认证的接口
-                        .matches(regExp))
-                .build();
+        return SecurityContext.builder().securityReferences(defaultAuth()).operationSelector(o -> o.requestMappingPattern()
+            // 排除不需要认证的接口
+            .matches(regExp)).build();
     }
 
     private List<SecurityReference> defaultAuth() {
@@ -134,9 +120,7 @@ public class SwaggerConfig {
             }
 
             private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
-                List<T> filteredMappings = mappings.stream()
-                        .filter(mapping -> mapping.getPatternParser() == null)
-                        .collect(Collectors.toList());
+                List<T> filteredMappings = mappings.stream().filter(mapping -> mapping.getPatternParser() == null).collect(Collectors.toList());
                 mappings.clear();
                 mappings.addAll(filteredMappings);
             }
@@ -146,7 +130,7 @@ public class SwaggerConfig {
                 if (field != null) {
                     field.setAccessible(true);
                     try {
-                        return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
+                        return (List<RequestMappingInfoHandlerMapping>)field.get(bean);
                     } catch (IllegalAccessException e) {
                         throw new IllegalStateException("Failed to access handlerMappings field", e);
                     }

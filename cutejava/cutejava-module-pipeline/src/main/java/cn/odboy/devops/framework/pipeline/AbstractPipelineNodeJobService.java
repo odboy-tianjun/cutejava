@@ -15,7 +15,7 @@
  */
 package cn.odboy.devops.framework.pipeline;
 
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.service.core.PipelineInstanceNodeDetailService;
 import cn.odboy.devops.service.core.PipelineInstanceNodeService;
@@ -33,7 +33,8 @@ public abstract class AbstractPipelineNodeJobService {
         return pipelineInstanceNodeService.getPipelineInstanceNodeByArgs(instanceId, code);
     }
 
-    public void addPipelineInstanceNodeDetailLog(PipelineInstanceNodeTb pipelineInstanceNode, String stepName, PipelineStatusEnum stepStatus, String stepMsg, Date finishTime) {
+    public void addPipelineInstanceNodeDetailLog(PipelineInstanceNodeTb pipelineInstanceNode, String stepName, PipelineStatusEnum stepStatus, String stepMsg,
+        Date finishTime) {
         if (pipelineInstanceNode != null) {
             pipelineInstanceNodeDetailService.addLog(pipelineInstanceNode.getId(), pipelineInstanceNode.getCode(), stepName, stepStatus, stepMsg, finishTime);
         }

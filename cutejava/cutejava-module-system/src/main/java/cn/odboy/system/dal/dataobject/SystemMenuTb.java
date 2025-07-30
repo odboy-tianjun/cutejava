@@ -81,7 +81,7 @@ public class SystemMenuTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemMenuTb menu = (SystemMenuTb) o;
+        SystemMenuTb menu = (SystemMenuTb)o;
         return Objects.equals(id, menu.id);
     }
 

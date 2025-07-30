@@ -43,11 +43,6 @@ public class BootApplication {
         String port = env.getProperty("server.port");
         String path = StrUtil.isEmpty(env.getProperty("config.servlet.context-path")) ? "" : env.getProperty("config.servlet.context-path");
         log.info(
-                "\n----------------------------------------------------------\n\t"
-                        + "Application is running! Access URLs:\n\t"
-                        + "Local: \t\thttp://localhost:" + port + path + "/\n\t"
-                        + "External: \thttp://" + ip + ":" + port + path + "/\n\t"
-                        + "Swagger文档: \thttp://" + ip + ":" + port + path + "/doc.html\n"
-                        + "----------------------------------------------------------");
+            "\n----------------------------------------------------------\n\t" + "Application is running! Access URLs:\n\t" + "Local: \t\thttp://localhost:" + port + path + "/\n\t" + "External: \thttp://" + ip + ":" + port + path + "/\n\t" + "Swagger文档: \thttp://" + ip + ":" + port + path + "/doc.html\n" + "----------------------------------------------------------");
     }
 }

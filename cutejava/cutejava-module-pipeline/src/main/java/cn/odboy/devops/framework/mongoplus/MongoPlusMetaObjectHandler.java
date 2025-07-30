@@ -23,23 +23,23 @@ import java.util.Date;
 
 @Component
 public class MongoPlusMetaObjectHandler implements MetaObjectHandler {
-//    @Override
-//    public void insertFill(Map<String, Object> insertFillMap, Document document) {
-//        insertFillMap.keySet().forEach(key -> {
-//            if (key.equals("createTime")){
-//                document.put(key, LocalDateTime.now());
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void updateFill(Map<String, Object> insertFillMap, Document document) {
-//        insertFillMap.keySet().forEach(key -> {
-//            if (key.equals("createTime")){
-//                document.put(key, LocalDateTime.now());
-//            }
-//        });
-//    }
+    //    @Override
+    //    public void insertFill(Map<String, Object> insertFillMap, Document document) {
+    //        insertFillMap.keySet().forEach(key -> {
+    //            if (key.equals("createTime")){
+    //                document.put(key, LocalDateTime.now());
+    //            }
+    //        });
+    //    }
+    //
+    //    @Override
+    //    public void updateFill(Map<String, Object> insertFillMap, Document document) {
+    //        insertFillMap.keySet().forEach(key -> {
+    //            if (key.equals("createTime")){
+    //                document.put(key, LocalDateTime.now());
+    //            }
+    //        });
+    //    }
 
     @Override
     public void insertFill(AutoFillMetaObject insertAutoFillMetaObject) {

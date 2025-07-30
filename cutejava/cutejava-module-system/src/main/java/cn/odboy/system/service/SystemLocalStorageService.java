@@ -3,7 +3,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
@@ -24,14 +24,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-
 @Service
 @RequiredArgsConstructor
 public class SystemLocalStorageService {
     private final SystemLocalStorageMapper systemLocalStorageMapper;
     private final CsFileLocalUploadHelper fileUploadPathHelper;
     private final AppProperties properties;
-
 
     /**
      * 上传
@@ -129,7 +127,7 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public CsResultVo<List<SystemLocalStorageTb>> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+    public CsPageResultVo<List<SystemLocalStorageTb>> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
         return CsPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 

@@ -55,12 +55,8 @@ public class RedissonConfiguration {
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-        config.useSingleServer()
-                .setAddress("redis://" + redisHost + ":" + redisPort)
-                .setDatabase(redisDatabase)
-                .setTimeout(timeout)
-                .setConnectionPoolSize(connectionPoolSize)
-                .setConnectionMinimumIdleSize(connectionMinimumIdleSize);
+        config.useSingleServer().setAddress("redis://" + redisHost + ":" + redisPort).setDatabase(redisDatabase).setTimeout(timeout)
+            .setConnectionPoolSize(connectionPoolSize).setConnectionMinimumIdleSize(connectionMinimumIdleSize);
         if (StrUtil.isNotBlank(redisPassword)) {
             config.useSingleServer().setPassword(redisPassword);
         }

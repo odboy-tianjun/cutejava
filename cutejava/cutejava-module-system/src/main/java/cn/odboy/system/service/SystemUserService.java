@@ -1,7 +1,7 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
@@ -273,7 +273,7 @@ public class SystemUserService {
      * @return /
      */
 
-    public CsResultVo<List<SystemUserTb>> queryUserByArgs(SystemQueryUserArgs criteria, Page<Object> page) {
+    public CsPageResultVo<List<SystemUserTb>> queryUserByArgs(SystemQueryUserArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, CsPageUtil.getCount(systemUserMapper)).getRecords();
         Long total = systemUserMapper.countUserByArgs(criteria);

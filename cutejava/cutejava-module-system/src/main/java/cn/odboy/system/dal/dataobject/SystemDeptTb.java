@@ -60,9 +60,8 @@ public class SystemDeptTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemDeptTb dept = (SystemDeptTb) o;
-        return Objects.equals(id, dept.id) &&
-                Objects.equals(name, dept.name);
+        SystemDeptTb dept = (SystemDeptTb)o;
+        return Objects.equals(id, dept.id) && Objects.equals(name, dept.name);
     }
 
     @Override
@@ -74,7 +73,6 @@ public class SystemDeptTb extends CsBaseUserTimeTb {
     public Boolean getHasChildren() {
         return subCount > 0;
     }
-
 
     @ApiModelProperty(value = "是否为叶子")
     public Boolean getLeaf() {

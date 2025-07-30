@@ -1,6 +1,5 @@
 package cn.odboy.system.framework.storage.minio;
 
-
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -147,11 +146,8 @@ public class MinioRepository {
         systemOssStorageTb.setObjectName(objectName);
 
         try (InputStream fileInputStream = CsFileUtil.getInputStream(tempFile)) {
-            PutObjectArgs objectArgs = PutObjectArgs.builder()
-                    .bucket(ossMinioConfig.getBucketName())
-                    .object(objectName)
-                    .stream(fileInputStream, fileSize, -1)
-                    .contentType(contentType)
+            PutObjectArgs objectArgs =
+                PutObjectArgs.builder().bucket(ossMinioConfig.getBucketName()).object(objectName).stream(fileInputStream, fileSize, -1).contentType(contentType)
                     .build();
             minioClient.putObject(objectArgs);
             log.info("文件上传成功，并删除临时文件，文件名：{}", originalFilename);
@@ -168,10 +164,8 @@ public class MinioRepository {
         return null;
     }
 
-
     /**
-     * 优化文件上传
-     * 文件上传：优化版
+     * 优化文件上传 文件上传：优化版
      *
      * @param file
      * @return {@link String }
@@ -192,7 +186,9 @@ public class MinioRepository {
 
         log.info("准备上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         try (InputStream fileInputStream = file.getInputStream()) {
-            PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(objectName).stream(fileInputStream, file.getSize(), -1).contentType(file.getContentType()).build();
+            PutObjectArgs objectArgs =
+                PutObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(objectName).stream(fileInputStream, file.getSize(), -1)
+                    .contentType(file.getContentType()).build();
             // 使用重试机制进行上传
             uploadWithRetry(objectArgs, 3);
             log.info("文件上传成功，objectName: {}", objectName);
@@ -240,8 +236,7 @@ public class MinioRepository {
     }
 
     /**
-     * 验证文件大小
-     * 限制上传的文件大小
+     * 验证文件大小 限制上传的文件大小
      *
      * @param file 文件
      * @return boolean
@@ -266,10 +261,8 @@ public class MinioRepository {
             return null;
         }
         try {
-            GetPresignedObjectUrlArgs presignedUrlArgs = GetPresignedObjectUrlArgs.builder()
-                    .bucket(properties.getOss().getMinio().getBucketName())
-                    .object(fullFileName)
-                    .method(Method.GET)
+            GetPresignedObjectUrlArgs presignedUrlArgs =
+                GetPresignedObjectUrlArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fullFileName).method(Method.GET)
                     // 设置 URL 过期时间为 7 天, 最大 7 天, 别挣扎了
                     .expiry(3600 * 24 * 7).build();
             String url = minioClient.getPresignedObjectUrl(presignedUrlArgs);
@@ -280,7 +273,6 @@ public class MinioRepository {
         }
         return null;
     }
-
 
     /**
      * 下载文件
@@ -345,7 +337,6 @@ public class MinioRepository {
             log.error("下载文件失败，fileName: {}, 错误信息", fileName, e);
         }
     }
-
 
     /**
      * 查看文件对象列表

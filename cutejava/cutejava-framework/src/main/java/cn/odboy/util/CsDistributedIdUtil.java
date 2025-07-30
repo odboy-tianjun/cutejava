@@ -144,17 +144,12 @@ public final class CsDistributedIdUtil {
                 // 序列号溢出，等待下一毫秒
                 currentTimestamp = waitNextMillis(lastTimestampValue);
             }
-            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) |
-                    (dataCenterId << dataCenterIdShift) |
-                    (workerId << workerIdShift) |
-                    seq;
+            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift) | seq;
         } else {
             // 时间戳改变，重置序列号
             sequence.set(0L);
             lastTimestamp.set(currentTimestamp);
-            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) |
-                    (dataCenterId << dataCenterIdShift) |
-                    (workerId << workerIdShift);
+            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift);
         }
     }
 

@@ -88,19 +88,19 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
         // 开启引用检测, 枚举支持
         config.setWriterFeatures(
-                // 是否输出值为null的字段
-                // SerializerFeature.WriteMapNullValue,
-                // 字段如果为null,输出为false,而非null
-//                JSONWriter.Feature.WriteNullBooleanAsFalse,
-                // 字段如果为null,输出为[],而非null
-//                JSONWriter.Feature.WriteNullListAsEmpty,
-                // 字符类型字段如果为null,输出为"",而非null
-//                JSONWriter.Feature.WriteNullStringAsEmpty,
-                // 太具体的数值会直接影响逻辑本身, 所以不要这个
-                // SerializerFeature.WriteNullNumberAsZero,
-                JSONWriter.Feature.WriteEnumUsingToString,
-//                SerializerFeature.DisableCircularReferenceDetect,
-                JSONWriter.Feature.ReferenceDetection);
+            // 是否输出值为null的字段
+            // SerializerFeature.WriteMapNullValue,
+            // 字段如果为null,输出为false,而非null
+            //                JSONWriter.Feature.WriteNullBooleanAsFalse,
+            // 字段如果为null,输出为[],而非null
+            //                JSONWriter.Feature.WriteNullListAsEmpty,
+            // 字符类型字段如果为null,输出为"",而非null
+            //                JSONWriter.Feature.WriteNullStringAsEmpty,
+            // 太具体的数值会直接影响逻辑本身, 所以不要这个
+            // SerializerFeature.WriteNullNumberAsZero,
+            JSONWriter.Feature.WriteEnumUsingToString,
+            //                SerializerFeature.DisableCircularReferenceDetect,
+            JSONWriter.Feature.ReferenceDetection);
         fastJsonConverter.setFastJsonConfig(config);
         fastJsonConverter.setSupportedMediaTypes(supportMediaTypeList);
         fastJsonConverter.setDefaultCharset(StandardCharsets.UTF_8);

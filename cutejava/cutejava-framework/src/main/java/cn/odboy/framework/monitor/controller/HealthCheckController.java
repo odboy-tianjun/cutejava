@@ -51,11 +51,11 @@ public class HealthCheckController {
         return healthCheckPointService.doLiveness();
     }
 
-//    /**
-//     * 访问首页提示
-//     */
-//    @AnonymousGetMapping("/")
-//    public String index() {
-//        return "success";
-//    }
+    //    /**
+    //     * 访问首页提示
+    //     */
+    //    @AnonymousGetMapping("/")
+    //    public String index() {
+    //        return "success";
+    //    }
 }
