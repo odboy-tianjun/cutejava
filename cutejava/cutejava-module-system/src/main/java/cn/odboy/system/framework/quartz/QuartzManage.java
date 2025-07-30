@@ -22,20 +22,16 @@ public class QuartzManage {
     public void addJob(SystemQuartzJobTb quartzJob) {
         try {
             // 构建job信息
-            JobDetail jobDetail = JobBuilder.newJob(ExecutionJobBean.class).
-                    withIdentity(JOB_NAME + quartzJob.getId()).build();
+            JobDetail jobDetail = JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
 
             // 通过触发器名和cron 表达式创建 Trigger
-            Trigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(JOB_NAME + quartzJob.getId())
-                    .startNow()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression()))
-                    .build();
+            Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME + quartzJob.getId()).startNow()
+                .withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression())).build();
 
             cronTrigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
 
             // 重置启动时间
-            ((CronTriggerImpl) cronTrigger).setStartTime(new Date());
+            ((CronTriggerImpl)cronTrigger).setStartTime(new Date());
 
             // 执行定时任务，如果是持久化的，这里会报错，捕获输出
             try {
@@ -62,16 +58,16 @@ public class QuartzManage {
     public void updateJobCron(SystemQuartzJobTb quartzJob) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
-            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+            CronTrigger trigger = (CronTrigger)scheduler.getTrigger(triggerKey);
             // 如果不存在则创建一个定时任务
             if (trigger == null) {
                 addJob(quartzJob);
-                trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+                trigger = (CronTrigger)scheduler.getTrigger(triggerKey);
             }
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression());
             trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
             // 重置启动时间
-            ((CronTriggerImpl) trigger).setStartTime(new Date());
+            ((CronTriggerImpl)trigger).setStartTime(new Date());
             trigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
 
             scheduler.rescheduleJob(triggerKey, trigger);
@@ -110,7 +106,7 @@ public class QuartzManage {
     public void resumeJob(SystemQuartzJobTb quartzJob) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
-            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+            CronTrigger trigger = (CronTrigger)scheduler.getTrigger(triggerKey);
             // 如果不存在则创建一个定时任务
             if (trigger == null) {
                 addJob(quartzJob);
@@ -131,7 +127,7 @@ public class QuartzManage {
     public void runJobNow(SystemQuartzJobTb quartzJob) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
-            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+            CronTrigger trigger = (CronTrigger)scheduler.getTrigger(triggerKey);
             // 如果不存在则创建一个定时任务
             if (trigger == null) {
                 addJob(quartzJob);

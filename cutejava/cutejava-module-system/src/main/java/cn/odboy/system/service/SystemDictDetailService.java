@@ -1,7 +1,7 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
@@ -64,7 +64,7 @@ public class SystemDictDetailService {
      * @return /
      */
 
-    public CsResultVo<List<SystemDictDetailTb>> queryDictDetailByArgs(SystemQueryDictDetailArgs criteria, Page<Object> page) {
+    public CsPageResultVo<List<SystemDictDetailTb>> queryDictDetailByArgs(SystemQueryDictDetailArgs criteria, Page<Object> page) {
         return CsPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(criteria, page));
     }
 

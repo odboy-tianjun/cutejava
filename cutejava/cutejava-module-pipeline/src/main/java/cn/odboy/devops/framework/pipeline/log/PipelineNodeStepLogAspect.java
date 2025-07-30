@@ -15,7 +15,7 @@
  */
 package cn.odboy.devops.framework.pipeline.log;
 
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.framework.pipeline.AbstractPipelineNodeJobService;
 import cn.odboy.framework.exception.BadRequestException;
@@ -55,20 +55,22 @@ public class PipelineNodeStepLogAspect extends AbstractPipelineNodeJobService {
      */
     @Around("logPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         Method method = signature.getMethod();
         PipelineInstanceNodeTb currentNodeInfo = null;
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof PipelineInstanceNodeTb) {
-                currentNodeInfo = (PipelineInstanceNodeTb) arg;
+                currentNodeInfo = (PipelineInstanceNodeTb)arg;
                 break;
             }
         }
         PipelineNodeStepLog pipelineNodeStepLog = method.getAnnotation(PipelineNodeStepLog.class);
         try {
-            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.RUNNING, PipelineStatusEnum.RUNNING.getDesc(), null);
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.RUNNING, PipelineStatusEnum.RUNNING.getDesc(),
+                null);
             Object result = joinPoint.proceed();
-            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.SUCCESS, PipelineStatusEnum.SUCCESS.getDesc(), new Date());
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.SUCCESS, PipelineStatusEnum.SUCCESS.getDesc(),
+                new Date());
             return result;
         } catch (BadRequestException e) {
             log.error("执行失败", e);
@@ -76,7 +78,8 @@ public class PipelineNodeStepLogAspect extends AbstractPipelineNodeJobService {
             throw e;
         } catch (Throwable e) {
             log.error("执行失败", e);
-            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.FAIL, PipelineStatusEnum.FAIL.getDesc(), new Date());
+            addPipelineInstanceNodeDetailLog(currentNodeInfo, pipelineNodeStepLog.value(), PipelineStatusEnum.FAIL, PipelineStatusEnum.FAIL.getDesc(),
+                new Date());
             throw e;
         }
     }

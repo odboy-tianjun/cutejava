@@ -18,7 +18,7 @@ package cn.odboy.framework.mybatisplus.core.interfaces;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -136,16 +136,16 @@ public interface CsMpMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> CsResultVo<List<T>> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
+    default <T> CsPageResultVo<List<T>> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
         pageSize = pageSize <= 0 ? 10 : pageSize;
         IPage<E> pageInfo = this.selectPage(new Page<>(pageNumber, pageSize), wrapper);
         if (CollUtil.isEmpty(pageInfo.getRecords())) {
-            return new CsResultVo<>(new ArrayList<>(), pageInfo.getTotal());
+            return new CsPageResultVo<>(new ArrayList<>(), pageInfo.getTotal());
         }
-        return new CsResultVo<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+        return new CsPageResultVo<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
     }
 
     /**
@@ -156,7 +156,7 @@ public interface CsMpMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> CsResultVo<List<T>> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    default <T> CsPageResultVo<List<T>> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
@@ -165,7 +165,7 @@ public interface CsMpMapper<E> extends BaseMapper<E> {
         if (CollUtil.isEmpty(pageInfo.getRecords())) {
             return CsPageUtil.emptyListData();
         }
-        return new CsResultVo<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+        return new CsPageResultVo<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
     }
 
     /**

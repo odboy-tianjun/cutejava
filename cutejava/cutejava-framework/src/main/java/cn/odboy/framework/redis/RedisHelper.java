@@ -202,8 +202,8 @@ public class RedisHelper {
     public void scanDel(String pattern) {
         ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
         try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
-                (RedisCallback<Cursor<byte[]>>) connection -> (Cursor<byte[]>) new ConvertingCursor<>(
-                        connection.scan(options), redisTemplate.getKeySerializer()::deserialize))) {
+            (RedisCallback<Cursor<byte[]>>)connection -> (Cursor<byte[]>)new ConvertingCursor<>(connection.scan(options),
+                redisTemplate.getKeySerializer()::deserialize))) {
             while (cursor.hasNext()) {
                 redisTemplate.delete(cursor.next());
             }
@@ -256,7 +256,7 @@ public class RedisHelper {
             return null;
         }
         if (value instanceof List<?>) {
-            List<?> list = (List<?>) value;
+            List<?> list = (List<?>)value;
             // 检查每个元素是否为指定类型
             if (list.stream().allMatch(clazz::isInstance)) {
                 return list.stream().map(clazz::cast).collect(Collectors.toList());
@@ -264,7 +264,6 @@ public class RedisHelper {
         }
         return null;
     }
-
 
     /**
      * 普通缓存获取

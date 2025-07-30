@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
         ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
         String message = objectError.getDefaultMessage();
         if (objectError instanceof FieldError) {
-            message = ((FieldError) objectError).getField() + ": " + message;
+            message = ((FieldError)objectError).getField() + ": " + message;
         }
         return buildResponseEntity(ApiError.error(message));
     }

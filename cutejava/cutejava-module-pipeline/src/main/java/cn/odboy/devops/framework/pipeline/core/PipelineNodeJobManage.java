@@ -15,7 +15,7 @@
  */
 package cn.odboy.devops.framework.pipeline.core;
 
-import cn.odboy.devops.constant.pipeline.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.framework.exception.BadRequestException;
@@ -49,16 +49,10 @@ public class PipelineNodeJobManage {
             String keyName = String.format(JOB_KEY, instanceId, pipelineNodeTemplate.getCode());
             // 构建 JobDetail
             JobKey jobKey = JobKey.jobKey(keyName);
-            JobDetail jobDetail = JobBuilder
-                    .newJob(PipelineNodeJobBean.class)
-                    .withIdentity(jobKey)
-                    .build();
+            JobDetail jobDetail = JobBuilder.newJob(PipelineNodeJobBean.class).withIdentity(jobKey).build();
             // 构建Trigger
             TriggerKey triggerKey = TriggerKey.triggerKey(keyName);
-            Trigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(triggerKey)
-                    .startNow()
-                    .build();
+            Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).startNow().build();
             // 任务参数
             JobDataMap jobDataMap = cronTrigger.getJobDataMap();
             jobDataMap.put(PipelineConst.INSTANCE_ID, pipelineInstance.getInstanceId());
@@ -94,8 +88,7 @@ public class PipelineNodeJobManage {
     }
 
     /**
-     * 中断正在执行的任务<br/>
-     * 任务终止需要配合响应中断或停止信号
+     * 中断正在执行的任务<br/> 任务终止需要配合响应中断或停止信号
      */
     public void interruptJob(@NotNull String instanceId, @NotNull String nodeCode) throws SchedulerException {
         JobKey jobKey = JobKey.jobKey(String.format(JOB_KEY, instanceId, nodeCode));

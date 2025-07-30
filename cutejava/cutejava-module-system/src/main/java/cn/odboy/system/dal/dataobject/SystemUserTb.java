@@ -89,9 +89,8 @@ public class SystemUserTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemUserTb user = (SystemUserTb) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(username, user.username);
+        SystemUserTb user = (SystemUserTb)o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username);
     }
 
     @Override

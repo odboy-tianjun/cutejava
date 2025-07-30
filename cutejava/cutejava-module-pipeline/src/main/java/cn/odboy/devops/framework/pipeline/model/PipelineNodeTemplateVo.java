@@ -57,9 +57,7 @@ public class PipelineNodeTemplateVo extends CsObject {
      */
     protected String detailType = "";
     /**
-     * 默认参数<br/>
-     * execute: 执行调用
-     * describe: 明细调用
+     * 默认参数<br/> execute: 执行调用 describe: 明细调用
      */
     protected Map<String, Object> parameters = new HashMap<>();
     /**

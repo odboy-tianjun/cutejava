@@ -15,8 +15,8 @@
  */
 package cn.odboy.devops.framework.pipeline.core;
 
-import cn.odboy.devops.constant.pipeline.PipelineConst;
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.devops.service.core.PipelineInstanceNodeService;
@@ -44,22 +44,25 @@ public class PipelineNodeJobBean implements Job {
 
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
         long instanceId = jobDataMap.getLong(PipelineConst.INSTANCE_ID);
-        PipelineNodeTemplateVo currentNodeTemplate = (PipelineNodeTemplateVo) jobDataMap.get(PipelineConst.CURRENT_NODE_TEMPLATE);
+        PipelineNodeTemplateVo currentNodeTemplate = (PipelineNodeTemplateVo)jobDataMap.get(PipelineConst.CURRENT_NODE_TEMPLATE);
         String nodeCode = currentNodeTemplate.getCode();
 
         try {
             String serviceName = PipelineConst.EXECUTOR_PREFIX + nodeCode;
             PipelineNodeJobExecutor pipelineNodeJobExecutor = CsSpringBeanHolder.getBean(serviceName);
-            pipelineInstanceNodeService.updatePipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.RUNNING, PipelineStatusEnum.RUNNING.getDesc());
+            pipelineInstanceNodeService.updatePipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.RUNNING,
+                PipelineStatusEnum.RUNNING.getDesc());
             PipelineNodeJobExecuteResult executeResult = pipelineNodeJobExecutor.execute(jobDataMap);
             jobExecutionContext.getMergedJobDataMap().put(PipelineConst.LAST_NODE_RESULT, executeResult);
-            pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.SUCCESS, PipelineStatusEnum.SUCCESS.getDesc(), new Date());
+            pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.SUCCESS, PipelineStatusEnum.SUCCESS.getDesc(),
+                new Date());
         } catch (BadRequestException e) {
             log.error("流水线节点执行异常", e);
             pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.FAIL, e.getMessage(), new Date());
         } catch (Exception e) {
             log.error("流水线节点执行异常", e);
-            pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.FAIL, PipelineStatusEnum.FAIL.getDesc(), new Date());
+            pipelineInstanceNodeService.finishPipelineInstanceNodeByArgs(instanceId, nodeCode, PipelineStatusEnum.FAIL, PipelineStatusEnum.FAIL.getDesc(),
+                new Date());
         }
     }
 }

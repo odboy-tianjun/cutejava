@@ -15,7 +15,7 @@
  */
 package cn.odboy.devops.dal.redis;
 
-import cn.odboy.devops.constant.pipeline.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.framework.redis.RedisHelper;
 import lombok.RequiredArgsConstructor;

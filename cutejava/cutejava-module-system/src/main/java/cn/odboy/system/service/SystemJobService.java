@@ -1,7 +1,7 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
@@ -96,8 +96,7 @@ public class SystemJobService {
      * @return
      */
 
-
-    public CsResultVo<List<SystemJobTb>> queryJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
+    public CsPageResultVo<List<SystemJobTb>> queryJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
         return CsPageUtil.toPage(systemJobMapper.selectJobByArgs(criteria, page));
     }
 

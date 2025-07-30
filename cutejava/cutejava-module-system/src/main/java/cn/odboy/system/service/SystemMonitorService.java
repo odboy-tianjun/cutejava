@@ -82,7 +82,7 @@ public class SystemMonitorService {
         diskInfo.put("available", CsFileUtil.getSize(available));
         diskInfo.put("used", CsFileUtil.getSize(used));
         if (total != 0) {
-            diskInfo.put("usageRate", df.format(used / (double) total * 100));
+            diskInfo.put("usageRate", df.format(used / (double)total * 100));
         } else {
             diskInfo.put("usageRate", 0);
         }
@@ -106,7 +106,7 @@ public class SystemMonitorService {
         if (used == 0) {
             swapInfo.put("usageRate", 0);
         } else {
-            swapInfo.put("usageRate", df.format(used / (double) total * 100));
+            swapInfo.put("usageRate", df.format(used / (double)total * 100));
         }
         return swapInfo;
     }
@@ -122,7 +122,7 @@ public class SystemMonitorService {
         memoryInfo.put("total", FormatUtil.formatBytes(memory.getTotal()));
         memoryInfo.put("available", FormatUtil.formatBytes(memory.getAvailable()));
         memoryInfo.put("used", FormatUtil.formatBytes(memory.getTotal() - memory.getAvailable()));
-        memoryInfo.put("usageRate", df.format((memory.getTotal() - memory.getAvailable()) / (double) memory.getTotal() * 100));
+        memoryInfo.put("usageRate", df.format((memory.getTotal() - memory.getAvailable()) / (double)memory.getTotal() * 100));
         return memoryInfo;
     }
 

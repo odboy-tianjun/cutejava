@@ -1,6 +1,5 @@
 package cn.odboy;
 
-
 import cn.odboy.framework.mybatisplus.core.CsMpCmdGenUtil;
 
 import java.util.List;
@@ -22,21 +21,15 @@ public class GenCode {
         generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
         generator.setDatabaseUsername(DATABASE_USER);
         generator.setDatabasePassword(DATABASE_PWD);
-//        genPipeline(generator);
+        //        genPipeline(generator);
         genSystem(generator);
     }
 
     private static void genPipeline(CsMpCmdGenUtil generator) {
-        generator.gen("devops", "", List.of(
-                "pipeline_template",
-                "pipeline_instance",
-                "pipeline_instance_node_detail"
-        ));
+        generator.gen("devops", "", List.of("pipeline_template", "pipeline_instance", "pipeline_instance_node_detail"));
     }
 
     private static void genSystem(CsMpCmdGenUtil generator) {
-        generator.gen("system", "", List.of(
-                "system_oss_storage"
-        ));
+        generator.gen("system", "", List.of("system_oss_storage"));
     }
 }

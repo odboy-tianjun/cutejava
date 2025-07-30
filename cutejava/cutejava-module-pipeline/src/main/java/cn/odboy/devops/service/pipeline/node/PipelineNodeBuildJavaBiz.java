@@ -30,22 +30,26 @@ import java.util.List;
 public class PipelineNodeBuildJavaBiz {
 
     @PipelineNodeStepLog("构建开始")
-    public void buildJavaStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void buildJavaStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(1000);
     }
 
     @PipelineNodeStepLog("构建中")
-    public void startGitlabPipeline(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void startGitlabPipeline(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("上传包到OSS")
-    public void uploadPackageToOss(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void uploadPackageToOss(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("构建完成")
-    public void buildJavaFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void buildJavaFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(1000);
     }
 }

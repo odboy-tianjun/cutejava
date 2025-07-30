@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -68,14 +67,14 @@ public class SystemMenuController {
     @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<CsPageResultVo<List<SystemMenuTb>>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
         return queryAllMenu(args);
     }
 
     @PostMapping(value = "/queryMenuByArgs")
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<CsPageResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
         SystemQueryMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(menuList), HttpStatus.OK);

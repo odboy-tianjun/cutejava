@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.devops.constant.pipeline;
+package cn.odboy.devops.framework.pipeline.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +24,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PipelineStatusEnum {
-    PENDING("pending", "#C0C4CC", "未开始"),
-    RUNNING("running", "#409EFF", "运行中"),
-    SUCCESS("success", "#67C23A", "执行成功"),
+    PENDING("pending", "#C0C4CC", "未开始"), RUNNING("running", "#409EFF", "运行中"), SUCCESS("success", "#67C23A", "执行成功"),
     FAIL("fail", "#F56C6C", "执行失败");
     /**
      * 状态码

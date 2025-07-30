@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -49,14 +48,12 @@ public class TokenProvider implements InitializingBean {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getJwt().getBase64Secret());
         signingKey = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
-                // 使用预生成的签名密钥
-                .setSigningKey(signingKey)
-                .build();
+            // 使用预生成的签名密钥
+            .setSigningKey(signingKey).build();
     }
 
     /**
-     * 创建Token 设置永不过期，
-     * Token 的时间有效性转到Redis 维护
+     * 创建Token 设置永不过期， Token 的时间有效性转到Redis 维护
      *
      * @param user /
      * @return /
@@ -70,13 +67,12 @@ public class TokenProvider implements InitializingBean {
         claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
         // 直接调用 Jwts.builder() 创建新实例Add commentMore actions
         return Jwts.builder()
-                // 设置自定义 Claims
-                .setClaims(claims)
-                // 设置主题
-                .setSubject(user.getUsername())
-                // 使用预生成的签名密钥和算法签名
-                .signWith(signingKey, SignatureAlgorithm.HS512)
-                .compact();
+            // 设置自定义 Claims
+            .setClaims(claims)
+            // 设置主题
+            .setSubject(user.getUsername())
+            // 使用预生成的签名密钥和算法签名
+            .signWith(signingKey, SignatureAlgorithm.HS512).compact();
     }
 
     /**
@@ -92,9 +88,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     public Claims getClaims(String token) {
-        return jwtParser
-                .parseClaimsJws(token)
-                .getBody();
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 
     /**
@@ -104,7 +98,7 @@ public class TokenProvider implements InitializingBean {
         // 判断是否续期token,计算token的过期时间
         String loginKey = loginKey(token);
         long time = redisHelper.getExpire(loginKey) * 1000;
-        Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
+        Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int)time);
         // 判断当前时间与过期时间的时间差
         long differ = expireDate.getTime() - System.currentTimeMillis();
         // 如果在续期检查的范围内，则续期

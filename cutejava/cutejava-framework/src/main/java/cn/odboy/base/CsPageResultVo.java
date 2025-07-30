@@ -15,6 +15,7 @@
  */
 package cn.odboy.base;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,14 +31,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CsResultVo<T> extends CsObject {
+public class CsPageResultVo<T> extends CsObject {
     private T content;
     private long totalElements;
 
-    public static <T> CsResultVo<List<T>> emptyListData() {
-        CsResultVo<List<T>> result = new CsResultVo<>();
+    public static <T> CsPageResultVo<List<T>> emptyListData() {
+        CsPageResultVo<List<T>> result = new CsPageResultVo<>();
         result.setTotalElements(0);
         result.setContent(new ArrayList<>());
+        return result;
+    }
+
+    public static <T> CsPageResultVo<List<T>> listData(IPage<T> page) {
+        CsPageResultVo<List<T>> result = new CsPageResultVo<>();
+        result.setTotalElements(page.getTotal());
+        result.setContent(page.getRecords());
         return result;
     }
 }

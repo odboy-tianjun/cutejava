@@ -14,7 +14,6 @@ import org.springframework.util.unit.DataSize;
 import javax.servlet.MultipartConfigElement;
 import java.io.File;
 
-
 @Slf4j
 @Configuration
 public class MultipartConfig {

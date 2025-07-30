@@ -44,11 +44,7 @@ public final class CsValidUtil {
     public static <T> void validate(T object) {
         Set<ConstraintViolation<T>> violations = VALIDATOR.validate(object, Default.class);
         if (!violations.isEmpty()) {
-            throw new IllegalArgumentException(violations
-                    .stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(","))
-            );
+            throw new IllegalArgumentException(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
         }
     }
 }

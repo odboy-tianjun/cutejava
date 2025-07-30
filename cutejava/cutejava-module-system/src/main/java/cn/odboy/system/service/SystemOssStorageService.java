@@ -1,6 +1,6 @@
 package cn.odboy.system.service;
 
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2025-07-15
  */
 public interface SystemOssStorageService extends IService<SystemOssStorageTb> {
-    CsResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page);
+    CsPageResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page);
 
     List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria);
 

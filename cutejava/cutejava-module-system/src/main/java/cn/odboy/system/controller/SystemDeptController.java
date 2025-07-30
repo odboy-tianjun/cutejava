@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
@@ -40,7 +40,7 @@ public class SystemDeptController {
     @ApiOperation("查询部门")
     @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsResultVo<List<SystemDeptTb>>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args) throws Exception {
+    public ResponseEntity<CsPageResultVo<List<SystemDeptTb>>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args) throws Exception {
         SystemQueryDeptArgs criteria = args.getArgs();
         List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(depts), HttpStatus.OK);
@@ -49,7 +49,8 @@ public class SystemDeptController {
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsResultVo<Set<SystemDeptTb>>> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
+    public ResponseEntity<CsPageResultVo<Set<SystemDeptTb>>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
+        @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             // 同级数据

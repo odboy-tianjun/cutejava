@@ -54,9 +54,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * 系统临时目录
      * <br>
-     * windows 包含路径分割符, 但Linux 不包含,
-     * 在windows \\==\ 前提下,
-     * 为安全起见 同意拼装 路径分割符,
+     * windows 包含路径分割符, 但Linux 不包含, 在windows \\==\ 前提下, 为安全起见 同意拼装 路径分割符,
      * <pre>
      *       java.io.tmpdir
      *       windows : C:\Users/xxx\AppData\Local\Temp\
@@ -109,13 +107,13 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         String resultSize;
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
-            resultSize = DF.format(size / (float) GB) + " GB";
+            resultSize = DF.format(size / (float)GB) + " GB";
         } else if (size / MB >= 1) {
             //如果当前Byte的值大于等于1MB
-            resultSize = DF.format(size / (float) MB) + " MB";
+            resultSize = DF.format(size / (float)MB) + " MB";
         } else if (size / KB >= 1) {
             //如果当前Byte的值大于等于1KB
-            resultSize = DF.format(size / (float) KB) + " KB";
+            resultSize = DF.format(size / (float)KB) + " KB";
         } else {
             resultSize = size + " B";
         }
@@ -190,10 +188,10 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
             Map<String, Object> sanitizedMap = new LinkedHashMap<>();
             map.forEach((key, value) -> {
                 if (value instanceof String) {
-                    String strValue = (String) value;
+                    String strValue = (String)value;
                     // 检查并处理以特殊字符开头的值
-                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD)
-                            || strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(SYMBOL_AT)) {
+                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) || strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(
+                        SYMBOL_AT)) {
                         // 添加单引号前缀
                         strValue = "'" + strValue;
                     }
@@ -206,7 +204,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         }).collect(Collectors.toList());
         // 一次性写出内容, 使用默认样式，强制输出标题
         writer.write(sanitizedList, true);
-        SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
+        SXSSFSheet sheet = (SXSSFSheet)writer.getSheet();
         //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法
         sheet.trackAllColumnsForAutoSizing();
         //列宽自适应
@@ -278,7 +276,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
      * 获取文件字节数组 -> ok
      */
     private static byte[] getByte(File file) {
-        byte[] b = new byte[(int) file.length()];
+        byte[] b = new byte[(int)file.length()];
         InputStream in = null;
         try {
             in = Files.newInputStream(file.toPath());
@@ -382,8 +380,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         fileName = fileName.replaceAll("^\\.+/", "");
 
         // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
-        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
-                fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
+        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") + fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
 
         return fileName;
     }

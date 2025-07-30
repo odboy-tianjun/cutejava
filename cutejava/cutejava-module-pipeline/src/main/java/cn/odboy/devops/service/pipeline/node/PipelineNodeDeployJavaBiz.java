@@ -30,17 +30,20 @@ import java.util.List;
 @Service
 public class PipelineNodeDeployJavaBiz {
     @PipelineNodeStepLog("部署开始")
-    public void deployStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void deployStart(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(1000);
     }
 
     @PipelineNodeStepLog("部署中")
-    public void deployJavaByWithContextName(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult, PipelineTemplateTb templateType) {
+    public void deployJavaByWithContextName(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env,
+        List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult, PipelineTemplateTb templateType) {
         ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("部署完成")
-    public void deployFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void deployFinish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(1000);
     }
 }

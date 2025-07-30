@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 @Slf4j
 @SuppressWarnings({"unchecked", "all"})
 public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBean {
@@ -37,8 +36,7 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
     private static boolean addCallback = true;
 
     /**
-     * 针对 某些初始化方法, 在SpringContextHolder 未初始化时 提交回调方法。
-     * 在SpringContextHolder 初始化后, 进行回调使用
+     * 针对 某些初始化方法, 在SpringContextHolder 未初始化时 提交回调方法。 在SpringContextHolder 初始化后, 进行回调使用
      *
      * @param callBack 回调函数
      */
@@ -56,7 +54,7 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
      */
     public static <T> T getBean(String name) {
         assertContextInjected();
-        return (T) applicationContext.getBean(name);
+        return (T)applicationContext.getBean(name);
     }
 
     /**
@@ -110,7 +108,8 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
      */
     private static void assertContextInjected() {
         if (applicationContext == null) {
-            throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" + ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
+            throw new IllegalStateException(
+                "applicaitonContext属性未注入, 请在applicationContext" + ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
         }
     }
 

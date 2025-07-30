@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "系统：岗位管理")
@@ -39,7 +38,7 @@ public class SystemJobController {
     @ApiOperation("查询岗位")
     @PostMapping(value = "/queryAllEnableJob")
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJobByArgs(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemJobTb>>> queryJobByArgs(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
         SystemQueryJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemJobService.queryJobByArgs(criteria, page), HttpStatus.OK);
@@ -48,7 +47,7 @@ public class SystemJobController {
     @ApiOperation("查询岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsResultVo<List<SystemJobTb>>> queryJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemJobTb>>> queryJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
         return queryJobByArgs(args);
     }
 

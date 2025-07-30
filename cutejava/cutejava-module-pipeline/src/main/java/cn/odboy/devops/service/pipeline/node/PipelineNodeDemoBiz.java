@@ -30,12 +30,14 @@ import java.util.List;
 public class PipelineNodeDemoBiz {
 
     @PipelineNodeStepLog("开始")
-    public void start(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void start(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(2000);
     }
 
     @PipelineNodeStepLog("完成")
-    public void finish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList, PipelineNodeJobExecuteResult lastNodeResult) {
+    public void finish(PipelineInstanceNodeTb pipelineInstanceNode, String contextName, String env, List<PipelineNodeTemplateVo> templateList,
+        PipelineNodeJobExecuteResult lastNodeResult) {
         ThreadUtil.safeSleep(2000);
     }
 }

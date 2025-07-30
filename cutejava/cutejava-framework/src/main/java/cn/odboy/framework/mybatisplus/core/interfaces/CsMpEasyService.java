@@ -15,7 +15,7 @@
  */
 package cn.odboy.framework.mybatisplus.core.interfaces;
 
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -56,13 +56,13 @@ public interface CsMpEasyService<T> extends IService<T> {
 
     <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
 
-    CsResultVo<List<T>> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
+    CsPageResultVo<List<T>> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
 
-    <G> CsResultVo<List<G>> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
+    <G> CsPageResultVo<List<G>> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
 
-    <G, Q> CsResultVo<List<G>> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
+    <G, Q> CsPageResultVo<List<G>> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
 
-    <Q> CsResultVo<List<T>> queryClazzPageByArgs(Q criteria, IPage<T> pageable);
+    <Q> CsPageResultVo<List<T>> queryClazzPageByArgs(Q criteria, IPage<T> pageable);
 
     int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity);
 

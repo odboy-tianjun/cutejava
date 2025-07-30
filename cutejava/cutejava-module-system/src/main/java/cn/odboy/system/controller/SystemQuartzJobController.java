@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsResultVo;
+import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +36,7 @@ public class SystemQuartzJobController {
     @ApiOperation("查询定时任务")
     @PostMapping
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
+    public ResponseEntity<CsPageResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
         SystemQueryQuartzJobArgs criteria = args.getArgs();
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobByArgs(criteria, page), HttpStatus.OK);
@@ -60,7 +59,7 @@ public class SystemQuartzJobController {
     @ApiOperation("查询任务执行日志")
     @PostMapping(value = "/logs")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(SystemQueryQuartzJobArgs criteria) {
+    public ResponseEntity<CsPageResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(SystemQueryQuartzJobArgs criteria) {
         Page<SystemQuartzLogTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogByArgs(criteria, page), HttpStatus.OK);
     }

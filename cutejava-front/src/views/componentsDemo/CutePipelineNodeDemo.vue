@@ -68,14 +68,14 @@
 <script>
 
 import CutePipelineNode from '@/views/components/dev/CutePipelineNode'
-import { getPipelineTemplate } from '@/api/devops/pipelineTemplate'
+import { getPipelineTemplate } from '@/api/pipeline/pipelineTemplate'
 import {
   queryLastPipelineDetailWs,
   restartPipeline,
   retryPipeline,
   startPipeline,
   stopPipeline
-} from '@/api/devops/pipelineInstance'
+} from '@/api/pipeline/pipelineInstance'
 import { CountArraysObjectByPropKey } from '@/utils/CsUtil'
 import CsMessage from '@/utils/elementui/CsMessage'
 import CsWsClient from '@/utils/CsWsClient'

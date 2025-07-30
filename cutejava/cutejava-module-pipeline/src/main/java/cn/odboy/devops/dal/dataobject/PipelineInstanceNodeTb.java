@@ -16,7 +16,7 @@
 package cn.odboy.devops.dal.dataobject;
 
 import cn.odboy.base.CsObject;
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeOperateButtonVo;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.anwen.mongo.annotation.ID;

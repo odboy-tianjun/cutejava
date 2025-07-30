@@ -56,7 +56,6 @@ public class SystemEmailService {
      * @param sendEmailRequest 邮件发送的内容
      */
 
-
     public void sendEmail(SystemSendEmailArgs sendEmailRequest) {
         SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
         if (systemEmailConfigTb.getId() == null) {
@@ -87,14 +86,10 @@ public class SystemEmailService {
         // 发送
         try {
             int size = sendEmailRequest.getTos().size();
-            Mail.create(account)
-                    .setTos(sendEmailRequest.getTos().toArray(new String[size]))
-                    .setTitle(sendEmailRequest.getSubject())
-                    .setContent(content)
-                    .setHtml(true)
-                    // 关闭session
-                    .setUseGlobalSession(false)
-                    .send();
+            Mail.create(account).setTos(sendEmailRequest.getTos().toArray(new String[size])).setTitle(sendEmailRequest.getSubject()).setContent(content)
+                .setHtml(true)
+                // 关闭session
+                .setUseGlobalSession(false).send();
         } catch (Exception e) {
             log.error("邮件发送失败", e);
             throw new BadRequestException("邮件发送失败");
@@ -140,7 +135,6 @@ public class SystemEmailService {
         SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
         sendEmail(sendEmailRequest);
     }
-
 
     public SystemEmailConfigTb getLastEmailConfig() {
         SystemEmailConfigTb systemEmailConfigTb = systemEmailConfigMapper.selectById(1L);

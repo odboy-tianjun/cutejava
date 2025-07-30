@@ -16,7 +16,7 @@
 package cn.odboy.devops.service.core.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
@@ -75,10 +75,8 @@ public class PipelineInstanceNodeServiceImpl extends ServiceImpl<PipelineInstanc
     }
 
     public PipelineInstanceNodeTb getPipelineInstanceNodeByArgs(Long instanceId, String code) {
-        return one(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class)
-                .eq(PipelineInstanceNodeTb::getInstanceId, instanceId)
-                .eq(PipelineInstanceNodeTb::getCode, code)
-        );
+        return one(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class).eq(PipelineInstanceNodeTb::getInstanceId, instanceId)
+            .eq(PipelineInstanceNodeTb::getCode, code));
     }
 
     @Override
@@ -93,10 +91,9 @@ public class PipelineInstanceNodeServiceImpl extends ServiceImpl<PipelineInstanc
             }
         }
         // 更新节点状态
-        List<PipelineInstanceNodeTb> instanceNodeList = list(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class)
-                .eq(PipelineInstanceNodeTb::getInstanceId, pipelineInstanceTb.getInstanceId())
-                .eq(PipelineInstanceNodeTb::getCode, penddingNodeList)
-        );
+        List<PipelineInstanceNodeTb> instanceNodeList = list(
+            new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class).eq(PipelineInstanceNodeTb::getInstanceId,
+                pipelineInstanceTb.getInstanceId()).eq(PipelineInstanceNodeTb::getCode, penddingNodeList));
         if (CollUtil.isNotEmpty(instanceNodeList)) {
             Date nowTime = new Date();
             for (PipelineInstanceNodeTb pipelineInstanceNodeTb : instanceNodeList) {
@@ -107,20 +104,15 @@ public class PipelineInstanceNodeServiceImpl extends ServiceImpl<PipelineInstanc
             }
             updateBatchByIds(instanceNodeList);
             // 删除节点明细数据
-            List<Long> nodeIds = instanceNodeList.stream()
-                    .map(PipelineInstanceNodeTb::getId)
-                    .distinct()
-                    .collect(Collectors.toList());
+            List<Long> nodeIds = instanceNodeList.stream().map(PipelineInstanceNodeTb::getId).distinct().collect(Collectors.toList());
             pipelineInstanceNodeDetailService.removeByNodeIds(nodeIds);
         }
     }
 
     @Override
     public List<PipelineInstanceNodeTb> queryPipelineInstanceNodeListByInstanceId(Long instanceId) {
-        return list(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class)
-                .eq(PipelineInstanceNodeTb::getInstanceId, instanceId)
-                .orderByAsc(PipelineInstanceNodeTb::getId)
-        );
+        return list(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class).eq(PipelineInstanceNodeTb::getInstanceId, instanceId)
+            .orderByAsc(PipelineInstanceNodeTb::getId));
     }
 
     @Override

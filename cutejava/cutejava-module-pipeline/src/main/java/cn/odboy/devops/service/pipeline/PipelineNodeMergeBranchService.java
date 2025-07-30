@@ -15,7 +15,7 @@
  */
 package cn.odboy.devops.service.pipeline;
 
-import cn.odboy.devops.constant.pipeline.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.framework.pipeline.AbstractPipelineNodeJobService;
 import cn.odboy.devops.framework.pipeline.core.PipelineNodeJobExecutor;
@@ -44,12 +44,12 @@ public class PipelineNodeMergeBranchService extends AbstractPipelineNodeJobServi
     public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws Exception {
         // 参数列表
         long instanceId = jobDataMap.getLong(PipelineConst.INSTANCE_ID);
-        PipelineNodeTemplateVo currentNodeTemplate = (PipelineNodeTemplateVo) jobDataMap.get(PipelineConst.CURRENT_NODE_TEMPLATE);
+        PipelineNodeTemplateVo currentNodeTemplate = (PipelineNodeTemplateVo)jobDataMap.get(PipelineConst.CURRENT_NODE_TEMPLATE);
         PipelineInstanceNodeTb pipelineInstanceNode = getCurrentNodeInfo(instanceId, currentNodeTemplate.getCode());
         String contextName = jobDataMap.getString(PipelineConst.CONTEXT_NAME);
         String env = jobDataMap.getString(PipelineConst.ENV);
         List<PipelineNodeTemplateVo> templateList = JSON.parseArray(jobDataMap.getString(PipelineConst.TEMPLATE), PipelineNodeTemplateVo.class);
-        PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult) jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
+        PipelineNodeJobExecuteResult lastNodeResult = (PipelineNodeJobExecuteResult)jobDataMap.get(PipelineConst.LAST_NODE_RESULT);
         // 步骤执行
         pipelineNodeMergeBranchBiz.mergeBranchStart(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);
         pipelineNodeMergeBranchBiz.integrationAreaBranchMergeRelease(pipelineInstanceNode, contextName, env, templateList, lastNodeResult);

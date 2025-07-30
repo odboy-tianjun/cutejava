@@ -44,7 +44,7 @@ public class CsSecurityHelper {
     public static List<Long> getCurrentUserDataScope() {
         UserDetails userDetails = getCurrentUser();
         // 将 Java 对象转换为 JSONObject 对象
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(userDetails);
+        JSONObject jsonObject = (JSONObject)JSON.toJSON(userDetails);
         JSONArray jsonArray = jsonObject.getJSONArray("dataScopes");
         return JSON.parseArray(jsonArray.toJSONString(), Long.class);
     }
@@ -106,8 +106,7 @@ public class CsSecurityHelper {
      * @return /
      */
     public static String getToken() {
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
-                .getRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes)Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
         if (bearerToken != null && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
             // 去掉令牌前缀

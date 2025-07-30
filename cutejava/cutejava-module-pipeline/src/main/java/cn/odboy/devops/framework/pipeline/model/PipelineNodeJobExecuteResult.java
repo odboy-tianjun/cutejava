@@ -16,7 +16,7 @@
 package cn.odboy.devops.framework.pipeline.model;
 
 import cn.odboy.base.CsObject;
-import cn.odboy.devops.constant.pipeline.PipelineStatusEnum;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 

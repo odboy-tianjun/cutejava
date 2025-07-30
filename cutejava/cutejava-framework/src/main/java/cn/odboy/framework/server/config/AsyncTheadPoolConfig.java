@@ -48,7 +48,8 @@ public class AsyncTheadPoolConfig implements AsyncConfigurer {
         // 自定义工厂
         ThreadFactory factory = r -> new Thread(r, "default-async-" + new AtomicInteger(1).getAndIncrement());
         // 自定义线程池
-        return new ThreadPoolExecutor(asyncTaskPool.getCorePoolSize(), asyncTaskPool.getMaxPoolSize(), asyncTaskPool.getKeepAliveSeconds(), TimeUnit.SECONDS, new ArrayBlockingQueue<>(asyncTaskPool.getQueueCapacity()), factory, new ThreadPoolExecutor.CallerRunsPolicy());
+        return new ThreadPoolExecutor(asyncTaskPool.getCorePoolSize(), asyncTaskPool.getMaxPoolSize(), asyncTaskPool.getKeepAliveSeconds(), TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(asyncTaskPool.getQueueCapacity()), factory, new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     /**
