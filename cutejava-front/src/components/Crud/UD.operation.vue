@@ -1,14 +1,14 @@
 <template>
   <div>
+    <slot />
     <el-button
       v-permission="permission.edit"
       :loading="crud.status.cu === 2"
       :disabled="disabledEdit"
       size="mini"
-      type="primary"
-      icon="el-icon-edit"
+      type="text"
       @click.stop="crud.toEdit(data)"
-    />
+    >编辑</el-button>
     <el-popover
       v-model="pop"
       v-permission="permission.del"
@@ -26,17 +26,16 @@
           type="primary"
           size="mini"
           @click="crud.doDelete(data)"
-        >确定
+        >确 定
         </el-button>
       </div>
       <el-button
         slot="reference"
         :disabled="disabledDle"
-        type="danger"
-        icon="el-icon-delete"
+        type="text"
         size="mini"
         @click.stop="toDelete"
-      />
+      >删除</el-button>
     </el-popover>
   </div>
 </template>

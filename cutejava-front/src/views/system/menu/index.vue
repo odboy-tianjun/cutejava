@@ -181,7 +181,7 @@
       <el-table-column
         v-if="checkPer(['admin','menu:edit','menu:del'])"
         label="操作"
-        width="130px"
+        width="150px"
         align="center"
         fixed="right"
       >
@@ -190,7 +190,15 @@
             :data="scope.row"
             :permission="permission"
             msg="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！"
-          />
+          >
+            <el-button
+              v-permission="permission.edit"
+              size="mini"
+              type="text"
+              @click.stop="onCopyClick(scope.row)"
+            >复制
+            </el-button>
+          </udOperation>
         </template>
       </el-table-column>
     </el-table>
@@ -207,6 +215,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
+import CsMessage from '@/utils/elementui/CsMessage'
 
 // crud交由presenter持有
 const defaultForm = {
@@ -304,6 +313,71 @@ export default {
     // 选中图标
     selected(name) {
       this.form.icon = name
+    },
+    onCopyClick(row) {
+      let data = {}
+      if (row.type === 0) {
+        // 目录
+        data = {
+          id: null,
+          title: row.title + 'Copy',
+          menuSort: 1,
+          path: row.path + 'Copy',
+          component: null,
+          componentName: null,
+          iFrame: row.IFrame,
+          roles: [],
+          pid: 0,
+          icon: row.icon,
+          cache: row.cache,
+          hidden: row.hidden,
+          type: row.type,
+          permission: null
+        }
+      } else if (row.type === 1) {
+        // 菜单
+        data = {
+          id: null,
+          title: row.title + 'Copy',
+          menuSort: row.menuSort,
+          path: row.path + 'Copy',
+          component: row.component,
+          componentName: row.componentName + 'Copy',
+          iFrame: row.IFrame,
+          roles: [],
+          pid: row.pid,
+          icon: row.icon,
+          cache: row.cache,
+          hidden: row.hidden,
+          type: row.type,
+          permission: row.permission
+        }
+      } else if (row.type === 2) {
+        // 按钮
+        data = {
+          id: null,
+          title: row.title + 'Copy',
+          menuSort: row.menuSort,
+          path: null,
+          component: null,
+          componentName: null,
+          iFrame: row.IFrame,
+          roles: [],
+          pid: row.pid,
+          icon: null,
+          cache: row.cache,
+          hidden: row.hidden,
+          type: row.type,
+          permission: row.permission
+        }
+      }
+      const that = this
+      crudMenu.add(data).then(() => {
+        setTimeout(() => {
+          CsMessage.Success('复制成功')
+          that.crud.toQuery()
+        }, 1000)
+      })
     }
   }
 }
