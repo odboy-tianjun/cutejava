@@ -9,8 +9,8 @@
       fit
       :data="crud.dataSource"
       style="width: 100%;"
-      height="450"
-      max-height="450"
+      :height="height"
+      :max-height="height"
       @selection-change="onTableSelectionChange"
     >
       <el-table-column v-if="mode === 'multi'" type="selection" width="55" />
@@ -114,6 +114,11 @@ export default {
           this.refresh()
         }
       }
+    }
+  },
+  computed: {
+    height() {
+      return document.documentElement.clientHeight - 250
     }
   },
   mounted() {
