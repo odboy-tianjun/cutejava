@@ -2,7 +2,7 @@ package cn.odboy.system.dal.redis;
 
 import cn.odboy.base.CsPageResultVo;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class SystemUserOnlineInfoDAO {
     private final AppProperties properties;
     private final TokenProvider tokenProvider;
-    private final RedisHelper redisHelper;
+    private final CsRedisHelper redisHelper;
 
     /**
      * 保存在线用户信息

@@ -7,7 +7,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.quartz.core.QuartzRunnable;
-import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
@@ -40,7 +40,7 @@ public class ExecutionJobBean extends QuartzJobBean {
         // 获取spring bean
         SystemQuartzLogMapper quartzLogMapper = CsSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
         SystemQuartzJobService systemQuartzJobService = CsSpringBeanHolder.getBean(SystemQuartzJobService.class);
-        RedisHelper redisHelper = CsSpringBeanHolder.getBean(RedisHelper.class);
+        CsRedisHelper redisHelper = CsSpringBeanHolder.getBean(CsRedisHelper.class);
 
         String uuid = quartzJob.getUuid();
 

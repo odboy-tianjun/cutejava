@@ -8,6 +8,7 @@
     :close-on-press-escape="false"
     :destroy-on-close="true"
     :show-close="false"
+    :modal="false"
   >
     <div class="container-form">
       <el-form ref="form" :model="form.model" :rules="form.rules">

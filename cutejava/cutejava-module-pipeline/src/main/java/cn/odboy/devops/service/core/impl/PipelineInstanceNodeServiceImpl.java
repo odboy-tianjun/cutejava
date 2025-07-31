@@ -74,6 +74,7 @@ public class PipelineInstanceNodeServiceImpl extends ServiceImpl<PipelineInstanc
         updateById(pipelineInstanceNode);
     }
 
+    @Override
     public PipelineInstanceNodeTb getPipelineInstanceNodeByArgs(Long instanceId, String code) {
         return one(new LambdaQueryChainWrapper<>(getBaseMapper(), PipelineInstanceNodeTb.class).eq(PipelineInstanceNodeTb::getInstanceId, instanceId)
             .eq(PipelineInstanceNodeTb::getCode, code));

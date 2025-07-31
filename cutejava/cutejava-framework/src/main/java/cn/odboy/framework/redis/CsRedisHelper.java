@@ -33,12 +33,12 @@ import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
-public class RedisHelper {
-    private static final Logger log = LoggerFactory.getLogger(RedisHelper.class);
+public class CsRedisHelper {
+    private static final Logger log = LoggerFactory.getLogger(CsRedisHelper.class);
 
     private RedisTemplate<Object, Object> redisTemplate;
 
-    public RedisHelper(RedisTemplate<Object, Object> redisTemplate) {
+    public CsRedisHelper(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.redisTemplate.setKeySerializer(new StringRedisSerializer());
         this.redisTemplate.setHashKeySerializer(new StringRedisSerializer());

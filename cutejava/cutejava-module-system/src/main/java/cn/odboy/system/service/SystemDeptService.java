@@ -363,8 +363,8 @@ public class SystemDeptService {
             SystemProductLineVo dto = new SystemProductLineVo();
             dto.setValue(dept.getId());
             dto.setIdPath(pathIds.stream().map(String::valueOf).collect(Collectors.joining("-")));
-            dto.setLabel(buildNamePath(dept, deptMap)); // 保留名称路径用于显示
-
+            // 保留名称路径用于显示
+            dto.setLabel(buildNamePath(dept, deptMap));
             options.add(dto);
         }
 

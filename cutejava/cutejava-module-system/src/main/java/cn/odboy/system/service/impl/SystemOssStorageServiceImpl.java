@@ -122,6 +122,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
      *
      * @param ids /
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeFileByIds(Long[] ids) {
         for (Long id : ids) {

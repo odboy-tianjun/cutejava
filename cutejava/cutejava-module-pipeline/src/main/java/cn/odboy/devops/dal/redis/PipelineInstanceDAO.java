@@ -17,14 +17,14 @@ package cn.odboy.devops.dal.redis;
 
 import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
-import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.framework.redis.CsRedisHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class PipelineInstanceDAO {
-    private final RedisHelper redisHelper;
+    private final CsRedisHelper redisHelper;
 
     /**
      * 全局锁，对应上下文，只能有一次
