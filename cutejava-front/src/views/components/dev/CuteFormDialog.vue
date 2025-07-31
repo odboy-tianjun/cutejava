@@ -5,6 +5,7 @@
     :width="width"
     :fullscreen="fullscreen"
     :before-close="beforeClose"
+    :modal="false"
   >
     <div class="container-form">
       <el-form ref="form" :model="form.model" :rules="form.rules">

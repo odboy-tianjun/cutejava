@@ -8,6 +8,7 @@
     :close-on-press-escape="false"
     :destroy-on-close="true"
     :show-close="false"
+    :modal="false"
   >
     <!-- 这里是插槽，用于渲染传入的组件 -->
     <slot />

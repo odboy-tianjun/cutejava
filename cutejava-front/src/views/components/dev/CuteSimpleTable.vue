@@ -19,7 +19,11 @@
         :key="index"
         :label="column.label"
         :prop="column.prop"
+        :fixed="column.fixed ? column.fixed:false"
         :formatter="column.formatter ? column.formatter : null"
+        :width="column.width ? column.width:null"
+        :min-width="column.width ? column.width:null"
+        :show-overflow-tooltip="true"
       />
       <el-table-column
         v-if="crud.operateColumn"
@@ -57,7 +61,7 @@ export default {
       default: null
     },
     operateColumn: {
-      type: Object,
+      type: [Object, Boolean],
       required: true,
       default: null
     },

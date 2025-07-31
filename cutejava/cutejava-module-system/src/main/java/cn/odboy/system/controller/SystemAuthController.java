@@ -7,7 +7,7 @@ import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserLoginArgs;
@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Api(tags = "系统：系统授权接口")
 public class SystemAuthController {
-    private final RedisHelper redisHelper;
+    private final CsRedisHelper redisHelper;
     private final SystemUserOnlineInfoDAO onlineUserService;
     private final TokenProvider tokenProvider;
     private final AppProperties properties;

@@ -6,7 +6,7 @@ import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
@@ -26,7 +26,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SystemEmailService {
     private final SystemEmailConfigMapper systemEmailConfigMapper;
-    private final RedisHelper redisHelper;
+    private final CsRedisHelper redisHelper;
     private final AppProperties properties;
     @Value("${spring.application.title}")
     private String applicationTitle;

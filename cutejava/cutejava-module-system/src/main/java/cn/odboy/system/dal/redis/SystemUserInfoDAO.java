@@ -1,7 +1,7 @@
 package cn.odboy.system.dal.redis;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.odboy.framework.redis.RedisHelper;
+import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.util.CsStringUtil;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class SystemUserInfoDAO {
-    private final RedisHelper redisHelper;
+    private final CsRedisHelper redisHelper;
 
     /**
      * 添加缓存到Redis
