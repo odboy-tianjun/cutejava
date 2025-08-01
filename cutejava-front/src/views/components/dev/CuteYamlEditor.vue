@@ -68,7 +68,6 @@ export default {
     this.editor.setOption('readOnly', this.readOnly)
     this.editor.on('change', cm => {
       this.$emit('change', cm.getValue())
-      this.$emit('input', cm.getValue())
     })
   },
   methods: {
