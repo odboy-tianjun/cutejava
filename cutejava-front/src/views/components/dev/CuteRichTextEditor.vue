@@ -108,6 +108,7 @@ export default {
       // 纯文本内容
       const text = editor.getText()
       this.$emit('change', html, text)
+      this.$emit('input', html, text)
     },
     /**
      * 编辑器销毁时的回调函数。调用 editor.destroy() 即可销毁编辑器
