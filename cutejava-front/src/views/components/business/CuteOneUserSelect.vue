@@ -2,7 +2,6 @@
   <el-select
     v-model="users"
     style="width: 100%"
-    multiple
     filterable
     remote
     reserve-keyword
@@ -25,10 +24,10 @@
 import UserService from '@/api/system/user'
 
 export default {
-  name: 'CuteUserSelect',
+  name: 'CuteOneUserSelect',
   props: {
     value: {
-      type: Array,
+      type: String,
       required: false,
       default: null
     }
