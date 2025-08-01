@@ -112,6 +112,9 @@ export default {
         return
       }
       this.editor.setValue(val)
+    },
+    resetField() {
+      this.editor.setValue('')
     }
   }
 }

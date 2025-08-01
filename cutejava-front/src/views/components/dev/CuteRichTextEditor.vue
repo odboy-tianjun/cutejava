@@ -289,6 +289,9 @@ export default {
         return
       }
       this.editor.insertText(text)
+    },
+    resetField() {
+      this.setHtml('')
     }
   }
 }
