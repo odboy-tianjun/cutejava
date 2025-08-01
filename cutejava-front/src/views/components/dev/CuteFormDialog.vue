@@ -8,7 +8,7 @@
     :modal="false"
   >
     <div class="container-form">
-      <el-form ref="form" :model="form.model" :rules="form.rules">
+      <el-form ref="form" :model="model" :rules="rules">
         <!-- 这里是插槽，用于渲染传入的 el-form-item -->
         <slot />
       </el-form>
@@ -42,7 +42,12 @@ export default {
       required: false,
       default: false
     },
-    form: {
+    model: {
+      type: Object,
+      required: true,
+      default: null
+    },
+    rules: {
       type: Object,
       required: true,
       default: null
@@ -64,7 +69,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$emit('submit', this.form.model)
+          this.$emit('submit', this.model)
         } else {
           return false
         }
