@@ -17,8 +17,8 @@ import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,10 +32,11 @@ import java.util.List;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class MinioRepository {
-    private final AppProperties properties;
-    private final MinioClient minioClient;
+    @Autowired
+    private AppProperties properties;
+    @Autowired
+    private MinioClient minioClient;
 
     /**
      * 检查存储bucket是否存在

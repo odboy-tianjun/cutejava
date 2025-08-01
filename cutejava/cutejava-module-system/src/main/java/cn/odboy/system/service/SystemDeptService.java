@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
@@ -20,7 +20,7 @@ import cn.odboy.util.CsClassUtil;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +32,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SystemDeptService {
-    private final SystemDeptMapper systemDeptMapper;
-    private final SystemUserMapper systemUserMapper;
-    private final SystemRoleMapper systemRoleMapper;
+    @Autowired
+    private SystemDeptMapper systemDeptMapper;
+    @Autowired
+    private SystemUserMapper systemUserMapper;
+    @Autowired
+    private SystemRoleMapper systemRoleMapper;
 
     /**
      * 创建
@@ -273,7 +275,7 @@ public class SystemDeptService {
      * @return /
      */
 
-    public CsPageResultVo<Set<SystemDeptTb>> buildDeptTree(List<SystemDeptTb> deptList) {
+    public CsPageResult<SystemDeptTb> buildDeptTree(List<SystemDeptTb> deptList) {
         Set<SystemDeptTb> trees = new LinkedHashSet<>();
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
@@ -301,8 +303,8 @@ public class SystemDeptService {
         if (CollectionUtil.isEmpty(trees)) {
             trees = deptSet;
         }
-        CsPageResultVo<Set<SystemDeptTb>> baseResult = new CsPageResultVo<>();
-        baseResult.setContent(CollectionUtil.isEmpty(trees) ? deptSet : trees);
+        CsPageResult<SystemDeptTb> baseResult = new CsPageResult<>();
+        baseResult.setContent(CollectionUtil.isEmpty(trees) ? new ArrayList<>(deptSet) : new ArrayList<>(trees));
         baseResult.setTotalElements(deptSet.size());
         return baseResult;
     }

@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
@@ -9,8 +9,8 @@ import cn.odboy.system.service.SystemOssStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,20 +20,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "工具：OSS存储管理")
 @RequestMapping("/api/ossStorage")
 public class SystemOssStorageController {
-    private final SystemOssStorageService systemOssStorageService;
+    @Autowired
+    private SystemOssStorageService systemOssStorageService;
 
     @ApiOperation("查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemOssStorageVo>>> queryOssStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
+    public ResponseEntity<CsPageResult<SystemOssStorageVo>> queryOssStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
         SystemQueryStorageArgs criteria = args.getArgs();
         Page<SystemOssStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemOssStorageService.queryOssStorage(criteria, page), HttpStatus.OK);

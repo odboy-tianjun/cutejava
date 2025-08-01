@@ -21,8 +21,8 @@ import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.base.Captcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,15 +46,20 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 @Api(tags = "系统：系统授权接口")
 public class SystemAuthController {
-    private final CsRedisHelper redisHelper;
-    private final SystemUserOnlineInfoDAO onlineUserService;
-    private final TokenProvider tokenProvider;
-    private final AppProperties properties;
-    private final PasswordEncoder passwordEncoder;
-    private final UserDetailsHandler userDetailsService;
+    @Autowired
+    private CsRedisHelper redisHelper;
+    @Autowired
+    private SystemUserOnlineInfoDAO onlineUserService;
+    @Autowired
+    private TokenProvider tokenProvider;
+    @Autowired
+    private AppProperties properties;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserDetailsHandler userDetailsService;
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")

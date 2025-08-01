@@ -1,7 +1,7 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
@@ -11,7 +11,7 @@ import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +20,11 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class SystemJobService {
-    private final SystemJobMapper systemJobMapper;
-    private final SystemUserMapper systemUserMapper;
+    @Autowired
+    private SystemJobMapper systemJobMapper;
+    @Autowired
+    private SystemUserMapper systemUserMapper;
 
     /**
      * 创建
@@ -96,7 +97,7 @@ public class SystemJobService {
      * @return
      */
 
-    public CsPageResultVo<List<SystemJobTb>> queryJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
+    public CsPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
         return CsPageUtil.toPage(systemJobMapper.selectJobByArgs(criteria, page));
     }
 

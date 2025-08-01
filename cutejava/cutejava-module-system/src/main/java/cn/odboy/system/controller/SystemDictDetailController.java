@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
@@ -9,7 +9,7 @@ import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,21 +21,21 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "系统：字典详情管理")
 @RequestMapping("/api/dictDetail")
 public class SystemDictDetailController {
-    private final SystemDictDetailService systemDictDetailService;
+    @Autowired
+    private SystemDictDetailService systemDictDetailService;
 
     @ApiOperation("查询字典详情")
     @PostMapping
-    public ResponseEntity<CsPageResultVo<List<SystemDictDetailTb>>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
+    public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
         return queryDictDetailByArgs(args);
     }
 
     @ApiOperation("查询字典详情")
     @PostMapping(value = "/queryDictDetailByArgs")
-    public ResponseEntity<CsPageResultVo<List<SystemDictDetailTb>>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
+    public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
         SystemQueryDictDetailArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemDictDetailService.queryDictDetailByArgs(criteria, page), HttpStatus.OK);

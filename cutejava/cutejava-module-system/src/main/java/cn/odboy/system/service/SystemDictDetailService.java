@@ -1,23 +1,23 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class SystemDictDetailService {
-    private final SystemDictDetailMapper systemDictDetailMapper;
+    @Autowired
+    private SystemDictDetailMapper systemDictDetailMapper;
 
     /**
      * 创建
@@ -64,7 +64,7 @@ public class SystemDictDetailService {
      * @return /
      */
 
-    public CsPageResultVo<List<SystemDictDetailTb>> queryDictDetailByArgs(SystemQueryDictDetailArgs criteria, Page<Object> page) {
+    public CsPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs criteria, Page<Object> page) {
         return CsPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(criteria, page));
     }
 

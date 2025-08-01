@@ -14,9 +14,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -32,13 +32,13 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class TokenProvider implements InitializingBean {
-
+    @Autowired
+    private CsRedisHelper redisHelper;
+    @Autowired
+    private AppProperties properties;
     private Key signingKey;
     private JwtParser jwtParser;
-    private final CsRedisHelper redisHelper;
-    private final AppProperties properties;
     public static final String AUTHORITIES_UUID_KEY = "uid";
     public static final String AUTHORITIES_UID_KEY = "userId";
 

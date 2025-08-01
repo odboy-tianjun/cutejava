@@ -2,7 +2,7 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
@@ -13,7 +13,7 @@ import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +22,11 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class SystemDictService {
-    private final SystemDictMapper systemDictMapper;
-    private final SystemDictDetailMapper systemDictDetailMapper;
+    @Autowired
+    private SystemDictMapper systemDictMapper;
+    @Autowired
+    private SystemDictDetailMapper systemDictDetailMapper;
 
     /**
      * 创建
@@ -111,7 +112,7 @@ public class SystemDictService {
      * @return /
      */
 
-    public CsPageResultVo<List<SystemDictTb>> queryDictByArgs(SystemQueryDictArgs criteria, Page<SystemDictTb> page) {
+    public CsPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs criteria, Page<SystemDictTb> page) {
         return CsPageUtil.toPage(systemDictMapper.selectDictByArgs(criteria, page));
     }
 

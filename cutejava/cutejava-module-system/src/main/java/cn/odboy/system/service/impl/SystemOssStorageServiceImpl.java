@@ -2,7 +2,7 @@ package cn.odboy.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
@@ -19,7 +19,7 @@ import cn.odboy.util.CsPageUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,14 +41,16 @@ import java.util.Map;
  * @since 2025-07-15
  */
 @Service
-@RequiredArgsConstructor
 public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb> implements SystemOssStorageService {
-    private final MinioRepository minioRepository;
-    private final AppProperties properties;
-    private final CsFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired
+    private MinioRepository minioRepository;
+    @Autowired
+    private AppProperties properties;
+    @Autowired
+    private CsFileLocalUploadHelper fileLocalUploadHelper;
 
     @Override
-    public CsPageResultVo<List<SystemOssStorageVo>> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
+    public CsPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
         IPage<SystemOssStorageTb> ossStorageTbs = baseMapper.selectOssStorageByArgs(criteria, page);
         IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
             SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
@@ -97,7 +99,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
         // 按天分组
         String nowDateStr = CsDateUtil.getNowDateStr();
         // 上传到本地临时目录
-        File tempFile = CsFileUtil.upload(file, fileUploadPathHelper.getPath() + nowDateStr + File.separator);
+        File tempFile = CsFileUtil.upload(file, fileLocalUploadHelper.getPath() + nowDateStr + File.separator);
         if (tempFile == null) {
             throw new BadRequestException("上传失败");
         }

@@ -13,8 +13,8 @@ import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
 import cn.odboy.util.CsDesEncryptUtil;
 import cn.odboy.util.CsResourceTemplateUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +23,13 @@ import java.util.Collections;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class SystemEmailService {
-    private final SystemEmailConfigMapper systemEmailConfigMapper;
-    private final CsRedisHelper redisHelper;
-    private final AppProperties properties;
+    @Autowired
+    private SystemEmailConfigMapper systemEmailConfigMapper;
+    @Autowired
+    private CsRedisHelper redisHelper;
+    @Autowired
+    private AppProperties properties;
     @Value("${spring.application.title}")
     private String applicationTitle;
 

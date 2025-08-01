@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
@@ -9,7 +9,7 @@ import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class SystemDeptController {
-    private final SystemDeptService systemDeptService;
+    @Autowired
+    private SystemDeptService systemDeptService;
 
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
@@ -40,7 +40,7 @@ public class SystemDeptController {
     @ApiOperation("查询部门")
     @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemDeptTb>>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args) throws Exception {
+    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args) throws Exception {
         SystemQueryDeptArgs criteria = args.getArgs();
         List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(depts), HttpStatus.OK);
@@ -49,7 +49,7 @@ public class SystemDeptController {
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsPageResultVo<Set<SystemDeptTb>>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
+    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
         @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {

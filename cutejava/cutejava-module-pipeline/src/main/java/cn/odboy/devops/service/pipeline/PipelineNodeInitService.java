@@ -15,18 +15,18 @@
  */
 package cn.odboy.devops.service.pipeline;
 
-import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.framework.pipeline.AbstractPipelineNodeJobService;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.framework.pipeline.core.PipelineNodeJobExecutor;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.devops.service.pipeline.node.PipelineNodeInitBiz;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDataMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,9 +39,9 @@ import java.util.List;
  */
 @Slf4j
 @Service(value = PipelineConst.EXECUTOR_PREFIX + "node_init")
-@RequiredArgsConstructor
 public class PipelineNodeInitService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
-    private final PipelineNodeInitBiz pipelineNodeInitBiz;
+    @Autowired
+    private PipelineNodeInitBiz pipelineNodeInitBiz;
 
     @Override
     public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws BadRequestException {

@@ -17,7 +17,7 @@ package cn.odboy.framework.mybatisplus.core.interfaces;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.mybatisplus.core.CsMpQUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -193,12 +193,12 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param wrapper  制造条件
      * @param pageable 分页参数
      */
-    public CsPageResultVo<List<T>> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
+    public CsPageResult<T> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-        return new CsPageResultVo<>(originPageData.getRecords(), originPageData.getTotal());
+        return new CsPageResult<>(originPageData.getRecords(), originPageData.getTotal());
     }
 
     /**
@@ -208,24 +208,24 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param pageable    分页参数
      * @param targetClazz 目标类型
      */
-    public <G> CsPageResultVo<List<G>> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
+    public <G> CsPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-        return new CsPageResultVo<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
+        return new CsPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
     }
 
-    public <G, Q> CsPageResultVo<List<G>> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
+    public <G, Q> CsPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
         QueryWrapper<T> wrapper = CsMpQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-        return new CsPageResultVo<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
+        return new CsPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
     }
 
-    public <Q> CsPageResultVo<List<T>> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {
+    public <Q> CsPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {
         QueryWrapper<T> wrapper = CsMpQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-        return new CsPageResultVo<>(originPageData.getRecords(), originPageData.getTotal());
+        return new CsPageResult<>(originPageData.getRecords(), originPageData.getTotal());
     }
 
     /**

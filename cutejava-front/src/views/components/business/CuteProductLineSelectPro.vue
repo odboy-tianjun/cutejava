@@ -3,6 +3,7 @@
     v-model="value"
     :disabled="disabled"
     :options="deptOptions"
+    style="width: 100%"
     @change="handleChange"
   />
 </template>

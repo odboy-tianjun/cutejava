@@ -3,7 +3,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -19,7 +19,7 @@ import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +29,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SystemRoleService {
-    private final SystemRoleMapper systemRoleMapper;
-    private final SystemRoleDeptMapper systemRoleDeptMapper;
-    private final SystemRoleMenuMapper systemRoleMenuMapper;
-    private final SystemUserMapper systemUserMapper;
+    @Autowired
+    private SystemRoleMapper systemRoleMapper;
+    @Autowired
+    private SystemRoleDeptMapper systemRoleDeptMapper;
+    @Autowired
+    private SystemRoleMenuMapper systemRoleMenuMapper;
+    @Autowired
+    private SystemUserMapper systemUserMapper;
 
     /**
      * 创建
@@ -161,7 +164,7 @@ public class SystemRoleService {
      * @return
      */
 
-    public CsPageResultVo<List<SystemRoleTb>> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
+    public CsPageResult<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByArgs(criteria);
         Long total = systemRoleMapper.countRoleByArgs(criteria);

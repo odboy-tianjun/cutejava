@@ -16,9 +16,9 @@
 package cn.odboy.devops.service.core.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeDetailTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.service.core.PipelineInstanceNodeDetailService;
 import com.anwen.mongo.conditions.query.LambdaQueryChainWrapper;
 import com.anwen.mongo.conditions.update.LambdaUpdateChainWrapper;

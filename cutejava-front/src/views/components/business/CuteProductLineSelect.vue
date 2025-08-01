@@ -5,6 +5,7 @@
     clearable
     placeholder="请选择产品线"
     :disabled="disabled"
+    style="width: 100%"
     @change="handleChange"
   >
     <el-option

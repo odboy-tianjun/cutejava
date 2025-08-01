@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
@@ -12,8 +12,8 @@ import cn.odboy.system.service.SystemQuartzJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,21 +22,20 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/quartzJob")
 @Api(tags = "系统:定时任务管理")
 public class SystemQuartzJobController {
-    private final SystemQuartzJobService systemQuartzJobService;
+    @Autowired
+    private SystemQuartzJobService systemQuartzJobService;
 
     @ApiOperation("查询定时任务")
     @PostMapping
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemQuartzJobTb>>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
+    public ResponseEntity<CsPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
         SystemQueryQuartzJobArgs criteria = args.getArgs();
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzJobByArgs(criteria, page), HttpStatus.OK);
@@ -59,7 +58,7 @@ public class SystemQuartzJobController {
     @ApiOperation("查询任务执行日志")
     @PostMapping(value = "/logs")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemQuartzLogTb>>> queryQuartzJobLog(SystemQueryQuartzJobArgs criteria) {
+    public ResponseEntity<CsPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs criteria) {
         Page<SystemQuartzLogTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogByArgs(criteria, page), HttpStatus.OK);
     }

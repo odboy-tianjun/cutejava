@@ -8,21 +8,24 @@ import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemRoleService;
 import cn.odboy.system.service.SystemUserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service("userDetailsService")
 public class UserDetailsHandler implements UserDetailsService {
-    private final SystemRoleService systemRoleService;
-    private final SystemUserService systemUserService;
-    private final SystemDataService systemDataService;
-    private final SystemUserInfoDAO systemUserInfoDAO;
+    @Autowired
+    private SystemRoleService systemRoleService;
+    @Autowired
+    private SystemUserService systemUserService;
+    @Autowired
+    private SystemDataService systemDataService;
+    @Autowired
+    private SystemUserInfoDAO systemUserInfoDAO;
 
     @Override
     public SystemUserJwtVo loadUserByUsername(String username) {

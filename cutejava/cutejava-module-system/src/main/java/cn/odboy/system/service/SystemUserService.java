@@ -1,9 +1,8 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -21,7 +20,7 @@ import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,15 +32,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SystemUserService {
-    private final SystemUserMapper systemUserMapper;
-    private final SystemUserJobMapper systemUserJobMapper;
-    private final SystemUserRoleMapper systemUserRoleMapper;
-    private final AppProperties properties;
-    private final SystemUserInfoDAO systemUserInfoDAO;
-    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
-    private final CsFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired
+    private SystemUserMapper systemUserMapper;
+    @Autowired
+    private SystemUserJobMapper systemUserJobMapper;
+    @Autowired
+    private SystemUserRoleMapper systemUserRoleMapper;
+    @Autowired
+    private SystemUserInfoDAO systemUserInfoDAO;
+    @Autowired
+    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired
+    private CsFileLocalUploadHelper fileUploadPathHelper;
 
     /**
      * 新增用户
@@ -273,7 +276,7 @@ public class SystemUserService {
      * @return /
      */
 
-    public CsPageResultVo<List<SystemUserTb>> queryUserByArgs(SystemQueryUserArgs criteria, Page<Object> page) {
+    public CsPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, CsPageUtil.getCount(systemUserMapper)).getRecords();
         Long total = systemUserMapper.countUserByArgs(criteria);

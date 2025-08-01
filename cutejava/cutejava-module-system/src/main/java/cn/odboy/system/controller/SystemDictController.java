@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
@@ -9,7 +9,7 @@ import cn.odboy.system.service.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "系统：字典管理")
 @RequestMapping("/api/dict")
 public class SystemDictController {
-    private final SystemDictService systemDictService;
+    @Autowired
+    private SystemDictService systemDictService;
 
     @ApiOperation("导出字典数据")
     @GetMapping(value = "/download")
@@ -45,7 +45,7 @@ public class SystemDictController {
     @ApiOperation("查询字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemDictTb>>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
+    public ResponseEntity<CsPageResult<SystemDictTb>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
         Page<SystemDictTb> page;
         SystemQueryDictArgs criteria = args.getArgs();
         if (args.getSize() != null) {

@@ -1,6 +1,6 @@
 package cn.odboy.system.dal.redis;
 
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
@@ -112,7 +112,7 @@ public class SystemUserOnlineInfoDAO {
      * @return /
      */
 
-    public CsPageResultVo<List<SystemUserOnlineVo>> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
+    public CsPageResult<SystemUserOnlineVo> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
         String username = null;
         if (onlineVo != null) {
             username = onlineVo.getUserName();
