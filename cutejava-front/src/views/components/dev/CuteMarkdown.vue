@@ -64,6 +64,9 @@ export default {
     },
     onSave(value, render) {
       this.$emit('save', value, render)
+    },
+    resetField() {
+      this.content = ''
     }
   }
 }
