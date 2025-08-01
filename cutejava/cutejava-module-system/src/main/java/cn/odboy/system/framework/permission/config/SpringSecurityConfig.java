@@ -6,7 +6,7 @@ import cn.odboy.system.framework.permission.core.handler.JwtAccessDeniedHandler;
 import cn.odboy.system.framework.permission.core.handler.JwtAuthenticationEntryPoint;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.util.CsAnonTagUtil;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +24,20 @@ import java.util.Map;
 import java.util.Set;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SpringSecurityConfig {
-
-    private final TokenProvider tokenProvider;
-    private final CorsFilter corsFilter;
-    private final JwtAuthenticationEntryPoint authenticationErrorHandler;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final ApplicationContext applicationContext;
-    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired
+    private TokenProvider tokenProvider;
+    @Autowired
+    private CorsFilter corsFilter;
+    @Autowired
+    private JwtAuthenticationEntryPoint authenticationErrorHandler;
+    @Autowired
+    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    @Autowired
+    private ApplicationContext applicationContext;
+    @Autowired
+    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {

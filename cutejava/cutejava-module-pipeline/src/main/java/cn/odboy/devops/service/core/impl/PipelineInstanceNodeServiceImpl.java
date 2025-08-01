@@ -16,17 +16,17 @@
 package cn.odboy.devops.service.core.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
 import cn.odboy.devops.service.core.PipelineInstanceNodeDetailService;
 import cn.odboy.devops.service.core.PipelineInstanceNodeService;
 import com.alibaba.fastjson2.JSON;
 import com.anwen.mongo.conditions.query.LambdaQueryChainWrapper;
 import com.anwen.mongo.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class PipelineInstanceNodeServiceImpl extends ServiceImpl<PipelineInstanceNodeTb> implements PipelineInstanceNodeService {
-    private final PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
+    @Autowired
+    private PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
 
     @Override
     public void createPipelineInstanceDetail(PipelineInstanceTb pipelineInstanceTb) {

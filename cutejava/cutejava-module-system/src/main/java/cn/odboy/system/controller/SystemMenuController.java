@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
@@ -12,7 +12,7 @@ import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +24,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "系统：菜单管理")
 @RequestMapping("/api/menu")
 public class SystemMenuController {
-    private final SystemMenuService systemMenuService;
+    @Autowired
+    private SystemMenuService systemMenuService;
 
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
@@ -67,14 +67,14 @@ public class SystemMenuController {
     @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemMenuTb>>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<CsPageResult<SystemMenuTb>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
         return queryAllMenu(args);
     }
 
     @PostMapping(value = "/queryMenuByArgs")
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemMenuTb>>> queryAllMenu(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<CsPageResult<SystemMenuTb>> queryAllMenu(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
         SystemQueryMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
         return new ResponseEntity<>(CsPageUtil.toPage(menuList), HttpStatus.OK);

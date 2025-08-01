@@ -15,7 +15,7 @@
  */
 package cn.odboy.util;
 
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -52,36 +52,36 @@ public final class CsPageUtil extends cn.hutool.core.util.PageUtil {
     /**
      * Page 数据处理
      */
-    public static <T> CsPageResultVo<List<T>> toPage(IPage<T> page) {
-        return new CsPageResultVo<>(page.getRecords(), page.getTotal());
+    public static <T> CsPageResult<T> toPage(IPage<T> page) {
+        return new CsPageResult<>(page.getRecords(), page.getTotal());
     }
 
     /**
      * 自定义分页
      */
-    public static <T> CsPageResultVo<List<T>> toPage(List<T> list) {
-        return new CsPageResultVo<>(list, list.size());
+    public static <T> CsPageResult<T> toPage(List<T> list) {
+        return new CsPageResult<>(list, list.size());
     }
 
     /**
      * 返回空数据
      */
-    public static <T> CsPageResultVo<List<T>> emptyListData() {
-        return new CsPageResultVo<>(new ArrayList<>(), 0);
+    public static <T> CsPageResult<T> emptyListData() {
+        return new CsPageResult<>(new ArrayList<>(), 0);
     }
 
     /**
      * 返回空数据
      */
-    public static <T> CsPageResultVo<T> emptyData() {
-        return new CsPageResultVo<>(null, 0);
+    public static <T> CsPageResult<T> emptyData() {
+        return new CsPageResult<>(null, 0);
     }
 
     /**
      * 自定义分页
      */
-    public static <T> CsPageResultVo<List<T>> toPage(List<T> list, long totalElements) {
-        return new CsPageResultVo<>(list, totalElements);
+    public static <T> CsPageResult<T> toPage(List<T> list, long totalElements) {
+        return new CsPageResult<>(list, totalElements);
     }
 
     public static <T> Page<T> getCount(BaseMapper<T> baseMapper) {

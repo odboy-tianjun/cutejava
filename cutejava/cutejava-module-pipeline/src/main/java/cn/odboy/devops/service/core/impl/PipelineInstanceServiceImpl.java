@@ -18,8 +18,6 @@ package cn.odboy.devops.service.core.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
-import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeDetailTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceTb;
@@ -27,6 +25,8 @@ import cn.odboy.devops.dal.model.RestartPipelineArgs;
 import cn.odboy.devops.dal.model.StartPipelineResultVo;
 import cn.odboy.devops.dal.mysql.PipelineInstanceMapper;
 import cn.odboy.devops.dal.redis.PipelineInstanceDAO;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
+import cn.odboy.devops.framework.pipeline.constant.PipelineStatusEnum;
 import cn.odboy.devops.framework.pipeline.core.PipelineJobManage;
 import cn.odboy.devops.framework.pipeline.model.PipelineInstanceNodeVo;
 import cn.odboy.devops.framework.pipeline.model.PipelineInstanceVo;
@@ -40,8 +40,8 @@ import cn.odboy.framework.websocket.context.CsWsServer;
 import cn.odboy.framework.websocket.model.WsSidVo;
 import cn.odboy.framework.websocket.util.WsMessageUtil;
 import com.alibaba.fastjson2.JSON;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,13 +49,17 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class PipelineInstanceServiceImpl implements PipelineInstanceService {
-    private final PipelineJobManage pipelineJobManage;
-    private final PipelineInstanceMapper pipelineInstanceMapper;
-    private final PipelineInstanceDAO pipelineInstanceDAO;
-    private final PipelineInstanceNodeService pipelineInstanceNodeService;
-    private final PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
+    @Autowired
+    private PipelineJobManage pipelineJobManage;
+    @Autowired
+    private PipelineInstanceMapper pipelineInstanceMapper;
+    @Autowired
+    private PipelineInstanceDAO pipelineInstanceDAO;
+    @Autowired
+    private PipelineInstanceNodeService pipelineInstanceNodeService;
+    @Autowired
+    private PipelineInstanceNodeDetailService pipelineInstanceNodeDetailService;
 
     @Override
     public StartPipelineResultVo startPipeline(PipelineInstanceTb pipelineInstanceTb) {

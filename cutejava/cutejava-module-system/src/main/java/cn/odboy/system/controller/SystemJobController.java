@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
@@ -9,7 +9,7 @@ import cn.odboy.system.service.SystemJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,15 +18,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "系统：岗位管理")
 @RequestMapping("/api/job")
 public class SystemJobController {
-    private final SystemJobService systemJobService;
+    @Autowired
+    private SystemJobService systemJobService;
 
     @ApiOperation("导出岗位数据")
     @GetMapping(value = "/download")
@@ -38,7 +37,7 @@ public class SystemJobController {
     @ApiOperation("查询岗位")
     @PostMapping(value = "/queryAllEnableJob")
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemJobTb>>> queryJobByArgs(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<CsPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
         SystemQueryJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemJobService.queryJobByArgs(criteria, page), HttpStatus.OK);
@@ -47,7 +46,7 @@ public class SystemJobController {
     @ApiOperation("查询岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemJobTb>>> queryJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<CsPageResult<SystemJobTb>> queryJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
         return queryJobByArgs(args);
     }
 

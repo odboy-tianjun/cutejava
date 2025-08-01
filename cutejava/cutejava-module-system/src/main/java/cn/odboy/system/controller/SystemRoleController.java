@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
@@ -12,7 +12,7 @@ import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,11 +27,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "系统：角色管理")
 @RequestMapping("/api/role")
 public class SystemRoleController {
-    private final SystemRoleService systemRoleService;
+    @Autowired
+    private SystemRoleService systemRoleService;
 
     @ApiOperation("获取单个role")
     @PostMapping(value = "/queryRoleById")
@@ -57,7 +57,7 @@ public class SystemRoleController {
     @ApiOperation("查询角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemRoleTb>>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
+    public ResponseEntity<CsPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
         SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(systemRoleService.queryRoleByArgs(criteria, page), HttpStatus.OK);

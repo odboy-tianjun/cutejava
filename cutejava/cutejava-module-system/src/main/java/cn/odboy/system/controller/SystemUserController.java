@@ -2,7 +2,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.base.CsSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,15 +39,21 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：用户管理")
 @RestController
 @RequestMapping("/api/user")
-@RequiredArgsConstructor
 public class SystemUserController {
-    private final PasswordEncoder passwordEncoder;
-    private final SystemUserService systemUserService;
-    private final SystemDataService systemDataService;
-    private final SystemDeptService systemDeptService;
-    private final SystemRoleService systemRoleService;
-    private final SystemEmailService systemEmailService;
-    private final AppProperties properties;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private SystemUserService systemUserService;
+    @Autowired
+    private SystemDataService systemDataService;
+    @Autowired
+    private SystemDeptService systemDeptService;
+    @Autowired
+    private SystemRoleService systemRoleService;
+    @Autowired
+    private SystemEmailService systemEmailService;
+    @Autowired
+    private AppProperties properties;
 
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
@@ -59,7 +65,7 @@ public class SystemUserController {
     @ApiOperation("查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemUserTb>>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
+    public ResponseEntity<CsPageResult<SystemUserTb>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
         Page<Object> page = new Page<>(args.getPage(), args.getSize());
         SystemQueryUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {

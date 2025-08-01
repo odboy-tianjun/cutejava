@@ -15,7 +15,7 @@ import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.CsClassUtil;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsStringUtil;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +26,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SystemMenuService {
-    private final SystemMenuMapper systemMenuMapper;
-    private final SystemRoleMenuMapper systemRoleMenuMapper;
-    private final SystemRoleService systemRoleService;
+    @Autowired
+    private SystemMenuMapper systemMenuMapper;
+    @Autowired
+    private SystemRoleMenuMapper systemRoleMenuMapper;
+    @Autowired
+    private SystemRoleService systemRoleService;
 
     private static final String YES_STR = "是";
     private static final String NO_STR = "否";

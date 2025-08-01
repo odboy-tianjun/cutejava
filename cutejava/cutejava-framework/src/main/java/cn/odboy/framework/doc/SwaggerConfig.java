@@ -18,8 +18,8 @@ package cn.odboy.framework.doc;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.util.CsAnonTagUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -49,12 +49,13 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @EnableSwagger2
-@RequiredArgsConstructor
 public class SwaggerConfig {
     @Value("${server.servlet.context-path:}")
     private String apiPath;
-    private final AppProperties properties;
-    private final ApplicationContext applicationContext;
+    @Autowired
+    private AppProperties properties;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Bean
     public Docket createRestApi() {

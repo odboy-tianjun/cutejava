@@ -1,7 +1,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
@@ -11,7 +11,7 @@ import cn.odboy.util.CsFileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,19 +21,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @Api(tags = "工具：本地存储管理")
 @RequestMapping("/api/localStorage")
 public class SystemLocalStorageController {
-    private final SystemLocalStorageService localStorageService;
+    @Autowired
+    private SystemLocalStorageService localStorageService;
 
     @ApiOperation("查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<CsPageResultVo<List<SystemLocalStorageTb>>> queryLocalStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
+    public ResponseEntity<CsPageResult<SystemLocalStorageTb>> queryLocalStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
         SystemQueryStorageArgs criteria = args.getArgs();
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return new ResponseEntity<>(localStorageService.queryLocalStorage(criteria, page), HttpStatus.OK);

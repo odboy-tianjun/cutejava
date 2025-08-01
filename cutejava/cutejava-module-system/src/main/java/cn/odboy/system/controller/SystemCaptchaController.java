@@ -5,18 +5,18 @@ import cn.odboy.system.dal.model.SystemCheckEmailCaptchaArgs;
 import cn.odboy.system.service.SystemEmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/captcha")
 @Api(tags = "系统：验证码管理")
 public class SystemCaptchaController {
-    private final SystemEmailService systemEmailService;
+    @Autowired
+    private SystemEmailService systemEmailService;
 
     @ApiOperation("重置邮箱, 发送验证码")
     @PostMapping(value = "/sendResetEmailCaptcha")

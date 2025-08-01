@@ -31,19 +31,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CsPageResultVo<T> extends CsObject {
-    private T content;
+public class CsPageResult<T> extends CsObject {
+    private List<T> content;
     private long totalElements;
 
-    public static <T> CsPageResultVo<List<T>> emptyListData() {
-        CsPageResultVo<List<T>> result = new CsPageResultVo<>();
+    public static <T> CsPageResult<T> emptyListData() {
+        CsPageResult<T> result = new CsPageResult<>();
         result.setTotalElements(0);
         result.setContent(new ArrayList<>());
         return result;
     }
 
-    public static <T> CsPageResultVo<List<T>> listData(IPage<T> page) {
-        CsPageResultVo<List<T>> result = new CsPageResultVo<>();
+    public static <T> CsPageResult<T> listData(IPage<T> page) {
+        CsPageResult<T> result = new CsPageResult<>();
         result.setTotalElements(page.getTotal());
         result.setContent(page.getRecords());
         return result;

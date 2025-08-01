@@ -13,31 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cn.odboy.base;
+package cn.odboy.system.framework.operalog.annotaions;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
+import java.lang.annotation.*;
 
 /**
- * 通用参数
+ * 捕捉操作日志
  *
  * @author odboy
- * @date 2025-07-23
+ * @date 2025-05-12
  */
-public class CsArgs {
-    @Getter
-    @Setter
-    public static class FindByLongId extends CsObject {
-        @NotNull(message = "id必填")
-        private Long id;
-    }
-
-    @Getter
-    @Setter
-    public static class DeleteById extends CsObject {
-        @NotNull(message = "id必填")
-        private Long id;
-    }
+@Inherited
+@Documented
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface OperationLog {
+    String bizName() default "";
 }

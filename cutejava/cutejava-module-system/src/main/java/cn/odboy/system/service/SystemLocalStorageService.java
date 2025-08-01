@@ -3,7 +3,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
@@ -14,7 +14,7 @@ import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,11 +25,13 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class SystemLocalStorageService {
-    private final SystemLocalStorageMapper systemLocalStorageMapper;
-    private final CsFileLocalUploadHelper fileUploadPathHelper;
-    private final AppProperties properties;
+    @Autowired
+    private SystemLocalStorageMapper systemLocalStorageMapper;
+    @Autowired
+    private CsFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired
+    private AppProperties properties;
 
     /**
      * 上传
@@ -127,7 +129,7 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public CsPageResultVo<List<SystemLocalStorageTb>> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+    public CsPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
         return CsPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 

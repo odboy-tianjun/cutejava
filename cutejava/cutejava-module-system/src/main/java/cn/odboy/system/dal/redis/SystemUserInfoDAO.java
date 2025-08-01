@@ -4,7 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.util.CsStringUtil;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
  * 用户缓存管理
  */
 @Component
-@RequiredArgsConstructor
 public class SystemUserInfoDAO {
-    private final CsRedisHelper redisHelper;
+    @Autowired
+    private CsRedisHelper redisHelper;
 
     /**
      * 添加缓存到Redis

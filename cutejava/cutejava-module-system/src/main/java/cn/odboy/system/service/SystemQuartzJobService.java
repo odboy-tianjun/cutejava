@@ -3,7 +3,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResultVo;
+import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
@@ -17,8 +17,8 @@ import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.RequiredArgsConstructor;
 import org.quartz.CronExpression;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +27,15 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class SystemQuartzJobService {
-    private final SystemQuartzJobMapper systemQuartzJobMapper;
-    private final SystemQuartzLogMapper systemQuartzLogMapper;
-    private final QuartzManage quartzManage;
-    private final CsRedisHelper redisHelper;
+    @Autowired
+    private SystemQuartzJobMapper systemQuartzJobMapper;
+    @Autowired
+    private SystemQuartzLogMapper systemQuartzLogMapper;
+    @Autowired
+    private QuartzManage quartzManage;
+    @Autowired
+    private CsRedisHelper redisHelper;
 
     /**
      * 创建
@@ -212,7 +215,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResultVo<List<SystemQuartzJobTb>> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+    public CsPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
         return CsPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
     }
 
@@ -224,7 +227,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResultVo<List<SystemQuartzLogTb>> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+    public CsPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
         return CsPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
     }
 

@@ -5,7 +5,7 @@ import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,10 +19,11 @@ import java.util.stream.Collectors;
  * @author odboy
  */
 @Service
-@RequiredArgsConstructor
 public class SystemDataService {
-    private final SystemRoleService systemRoleService;
-    private final SystemDeptService systemDeptService;
+    @Autowired
+    private SystemRoleService systemRoleService;
+    @Autowired
+    private SystemDeptService systemDeptService;
 
     /**
      * 获取数据权限

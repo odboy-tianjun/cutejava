@@ -15,9 +15,9 @@
  */
 package cn.odboy.devops.service.pipeline;
 
-import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.dal.dataobject.PipelineInstanceNodeTb;
 import cn.odboy.devops.framework.pipeline.AbstractPipelineNodeJobService;
+import cn.odboy.devops.framework.pipeline.constant.PipelineConst;
 import cn.odboy.devops.framework.pipeline.core.PipelineNodeJobExecutor;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeJobExecuteResult;
 import cn.odboy.devops.framework.pipeline.model.PipelineNodeTemplateVo;
@@ -25,8 +25,8 @@ import cn.odboy.devops.service.core.PipelineTemplateService;
 import cn.odboy.devops.service.pipeline.node.PipelineNodeDemoBiz;
 import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
-import lombok.RequiredArgsConstructor;
 import org.quartz.JobDataMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,11 +37,12 @@ import java.util.List;
  * @author odboy
  * @date 2025-07-24
  */
-@RequiredArgsConstructor
 @Service(value = PipelineConst.EXECUTOR_PREFIX + "node_deploy_api")
 public class PipelineNodeDeployApiService extends AbstractPipelineNodeJobService implements PipelineNodeJobExecutor {
-    private final PipelineNodeDemoBiz pipelineNodeDemoBiz;
-    private final PipelineTemplateService pipelineTemplateService;
+    @Autowired
+    private PipelineNodeDemoBiz pipelineNodeDemoBiz;
+    @Autowired
+    private PipelineTemplateService pipelineTemplateService;
 
     @Override
     public PipelineNodeJobExecuteResult execute(JobDataMap jobDataMap) throws BadRequestException {
