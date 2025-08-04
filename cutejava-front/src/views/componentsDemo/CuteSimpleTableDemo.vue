@@ -28,8 +28,6 @@
     <!-- params-transform: 组装查询参数 -->
     <!-- responseTransform: 组装表格对象。对响应结果做处理 -->
     <!-- primary-key: 主键 -->
-    <!-- columns: 表格列 -->
-    <!-- operate-column: 表格操作列 -->
     <!-- mode: 模式。不传默认，传multi为多选 -->
     <!-- @selection-change: 当且仅当mode为multi时启用 -->
     <cute-simple-table
@@ -37,10 +35,21 @@
       :fetch="curd.fetch"
       :params-transform="curd.paramsTransform"
       primary-key="id"
-      :columns="curd.columns"
-      :operate-column="curd.operateColumn"
       :page-props="curd.pageProps"
-    />
+    >
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="createTime" label="创建时间" :formatter="FormatRowDateTimeStr" />
+      <el-table-column prop="createBy" label="创建人" />
+      <el-table-column label="操作" width="150" min-width="150" fixed="right">
+        <template slot-scope="scope">
+          <div>
+            <el-button type="text" @click="onTableEditClick(scope.row)">编辑</el-button>
+            <el-button type="text" @click="onTableDeleteClick(scope.row)">删除</el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </cute-simple-table>
     <cute-form-dialog ref="dialogForm" :model="createFormModel" :rules="createFormRules" title="演示:表单对话框" @submit="onDialogFormSubmit">
       <el-form-item label="活动名称" prop="name" label-width="100px">
         <el-input v-model="createFormModel.name" placeholder="请输入" style="width: 100%" />
@@ -145,6 +154,7 @@ export default {
     this.initData()
   },
   methods: {
+    FormatRowDateTimeStr,
     initData() {
       this.$refs.instance.refresh()
     },
@@ -176,6 +186,12 @@ export default {
     },
     onDrawerFormSubmit(values) {
       console.log('onDrawerFormSubmit', values)
+    },
+    onTableEditClick(row) {
+      console.log('编辑', row)
+    },
+    onTableDeleteClick(row) {
+      console.log('删除', row)
     }
   }
 }
