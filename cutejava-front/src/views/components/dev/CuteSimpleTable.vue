@@ -14,24 +14,7 @@
       @selection-change="onTableSelectionChange"
     >
       <el-table-column v-if="mode === 'multi'" type="selection" width="55" />
-      <el-table-column
-        v-for="(column, index) in crud.columns"
-        :key="index"
-        :label="column.label"
-        :prop="column.prop"
-        :fixed="column.fixed ? column.fixed:false"
-        :formatter="column.formatter ? column.formatter : null"
-        :width="column.width ? column.width:null"
-        :min-width="column.width ? column.width:null"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        v-if="crud.operateColumn"
-        :width="crud.operateColumn.width"
-        label="操作"
-        :formatter="crud.operateColumn.formatter"
-        :fixed="crud.operateColumn.fixed"
-      />
+      <slot />
     </el-table>
     <el-pagination
       :current-page="pageProps.current"
@@ -52,16 +35,6 @@ export default {
   props: {
     primaryKey: {
       type: String,
-      required: true,
-      default: null
-    },
-    columns: {
-      type: Array,
-      required: true,
-      default: null
-    },
-    operateColumn: {
-      type: [Object, Boolean],
       required: true,
       default: null
     },
@@ -102,8 +75,6 @@ export default {
       crud: {
         loading: false,
         primaryKey: this.primaryKey ? this.primaryKey : 'id',
-        columns: this.columns && this.columns.length > 0 ? this.columns : [],
-        operateColumn: this.operateColumn,
         fetchUrl: null,
         dataSource: [],
         onPageChange: (currentPage, pageSize) => {

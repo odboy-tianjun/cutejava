@@ -24,8 +24,6 @@
     <!-- params-transform: 组装查询参数 -->
     <!-- responseTransform: 组装表格对象。对响应结果做处理 -->
     <!-- primary-key: 主键 -->
-    <!-- columns: 表格列 -->
-    <!-- operate-column: 表格操作列 -->
     <!-- data-source: 数据源。当data-source不为空时，以data-source的数据为主 -->
     <!-- mode: 模式。不传默认，传multi为多选 -->
     <!-- @selection-change: 当且仅当mode为multi时启用 -->
@@ -34,10 +32,21 @@
       :fetch="curd.fetch"
       :params-transform="curd.paramsTransform"
       primary-key="id"
-      :columns="curd.columns"
-      :operate-column="curd.operateColumn"
       :page-props="curd.pageProps"
-    />
+    >
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="createTime" label="创建时间" :formatter="FormatRowDateTimeStr" />
+      <el-table-column prop="createBy" label="创建人" />
+      <el-table-column label="操作" width="150" min-width="150" fixed="right">
+        <template slot-scope="scope">
+          <div>
+            <el-button type="text" @click="onTableEditClick(scope.row)">编辑</el-button>
+            <el-button type="text" @click="onTableDeleteClick(scope.row)">删除</el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </cute-drag-table>
   </div>
 </template>
 
@@ -71,28 +80,6 @@ export default {
         fetch: async(queryParams) => {
           return DictService.queryPageDict(queryParams)
         },
-        columns: [
-          { prop: 'name', label: '名称' },
-          { prop: 'description', label: '描述' },
-          { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
-          { prop: 'createBy', label: '创建人' }
-        ],
-        operateColumn: {
-          width: '150',
-          fixed: 'right',
-          formatter: (row, column, cellValue, index) => {
-            return (<div>
-              <el-button type='text' onClick={() => {
-                console.log('编辑')
-              }}>编辑
-              </el-button>
-              <el-button type='text' onClick={() => {
-                console.log('删除')
-              }}>删除
-              </el-button>
-            </div>)
-          }
-        },
         pageProps: {
           current: 1,
           pageSize: 10,
@@ -105,6 +92,7 @@ export default {
     this.initData()
   },
   methods: {
+    FormatRowDateTimeStr,
     initData() {
       this.$refs.instance.refresh()
     },
@@ -124,6 +112,12 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+    onTableEditClick(row) {
+      console.log('编辑', row)
+    },
+    onTableDeleteClick(row) {
+      console.log('删除', row)
     }
   }
 }
