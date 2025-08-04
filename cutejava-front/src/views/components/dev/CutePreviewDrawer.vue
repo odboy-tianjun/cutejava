@@ -53,7 +53,7 @@ export default {
 .container-form {
   overflow-y: scroll; /* 启用滚动 */
   scrollbar-width: none; /* Firefox */
-  height: 88%;
+  height: 85%;
   padding-right: 20px;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
 }

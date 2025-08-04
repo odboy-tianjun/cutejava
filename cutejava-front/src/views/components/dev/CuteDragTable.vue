@@ -119,7 +119,7 @@ export default {
   },
   computed: {
     height() {
-      return document.documentElement.clientHeight - 250
+      return document.documentElement.clientHeight - 300
     }
   },
   mounted() {
