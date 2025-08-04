@@ -41,23 +41,23 @@
       :operate-column="curd.operateColumn"
       :page-props="curd.pageProps"
     />
-    <cute-form-dialog ref="dialogForm" :form="createForm" title="演示:表单对话框" @submit="onDialogFormSubmit">
+    <cute-form-dialog ref="dialogForm" :model="createFormModel" :rules="createFormRules" title="演示:表单对话框" @submit="onDialogFormSubmit">
       <el-form-item label="活动名称" prop="name" label-width="100px">
-        <el-input v-model="createForm.model.name" placeholder="请输入" style="width: 100%" />
+        <el-input v-model="createFormModel.name" placeholder="请输入" style="width: 100%" />
       </el-form-item>
       <el-form-item label="活动区域" prop="region" label-width="100px">
-        <el-select v-model="createForm.model.region" placeholder="请选择" style="width: 100%">
+        <el-select v-model="createFormModel.region" placeholder="请选择" style="width: 100%">
           <el-option label="区域一" value="shanghai" />
           <el-option label="区域二" value="beijing" />
         </el-select>
       </el-form-item>
     </cute-form-dialog>
-    <cute-form-drawer ref="drawerFrom" :form="createForm" title="演示:表单抽屉" @submit="onDrawerFormSubmit">
+    <cute-form-drawer ref="drawerFrom" :model="createFormModel" :rules="createFormRules" title="演示:表单抽屉" @submit="onDrawerFormSubmit">
       <el-form-item label="活动名称" prop="name" label-width="100px">
-        <el-input v-model="createForm.model.name" placeholder="请输入" style="width: 100%" />
+        <el-input v-model="createFormModel.name" placeholder="请输入" style="width: 100%" />
       </el-form-item>
       <el-form-item label="活动区域" prop="region" label-width="100px">
-        <el-select v-model="createForm.model.region" placeholder="请选择" style="width: 100%">
+        <el-select v-model="createFormModel.region" placeholder="请选择" style="width: 100%">
           <el-option label="区域一" value="shanghai" />
           <el-option label="区域二" value="beijing" />
         </el-select>
@@ -126,20 +126,18 @@ export default {
           total: 0
         }
       },
-      createForm: {
-        model: {
-          name: '',
-          region: ''
-        },
-        rules: {
-          name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
-          region: [
-            { required: true, message: '请选择活动区域', trigger: 'change' }
-          ]
-        }
+      createFormModel: {
+        name: '',
+        region: ''
+      },
+      createFormRules: {
+        name: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        region: [
+          { required: true, message: '请选择活动区域', trigger: 'change' }
+        ]
       }
     }
   },
