@@ -1,7 +1,9 @@
-<!--Yaml编辑器 基于-->
-<!--<a href="https://github.com/codemirror/CodeMirror" target="_blank">CodeMirror</a>，-->
-<!--主题预览地址 <a href="https://codemirror.net/demo/theme.html#idea" target="_blank">Theme</a>-->
-<!--</p>-->
+<!--
+ * YAML编辑器
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <textarea ref="textarea" />
 </template>

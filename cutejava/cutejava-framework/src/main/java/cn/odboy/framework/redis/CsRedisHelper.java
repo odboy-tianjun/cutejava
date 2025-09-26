@@ -1,20 +1,22 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.framework.redis;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
@@ -182,8 +184,9 @@ public class CsRedisHelper {
             } else {
                 Set<Object> keySet = new HashSet<>();
                 for (String key : keys) {
-                    if (redisTemplate.hasKey(key))
+                    if (redisTemplate.hasKey(key)) {
                         keySet.add(key);
+                    }
                 }
                 long count = redisTemplate.delete(keySet);
                 log.debug("--------------------------------------------");
@@ -202,8 +205,9 @@ public class CsRedisHelper {
     public void scanDel(String pattern) {
         ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
         try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
-            (RedisCallback<Cursor<byte[]>>)connection -> (Cursor<byte[]>)new ConvertingCursor<>(connection.scan(options),
-                redisTemplate.getKeySerializer()::deserialize))) {
+                (RedisCallback<Cursor<byte[]>>) connection -> (Cursor<byte[]>) new ConvertingCursor<>(
+                        connection.scan(options),
+                        redisTemplate.getKeySerializer()::deserialize))) {
             while (cursor.hasNext()) {
                 redisTemplate.delete(cursor.next());
             }
@@ -256,7 +260,7 @@ public class CsRedisHelper {
             return null;
         }
         if (value instanceof List<?>) {
-            List<?> list = (List<?>)value;
+            List<?> list = (List<?>) value;
             // 检查每个元素是否为指定类型
             if (list.stream().allMatch(clazz::isInstance)) {
                 return list.stream().map(clazz::cast).collect(Collectors.toList());
@@ -383,7 +387,6 @@ public class CsRedisHelper {
      */
     public Map<Object, Object> hmget(String key) {
         return redisTemplate.opsForHash().entries(key);
-
     }
 
     /**
@@ -804,5 +807,37 @@ public class CsRedisHelper {
      */
     public Long decrement(String key) {
         return redisTemplate.opsForValue().decrement(key);
+    }
+
+    // ============================校验=============================
+    public boolean isHealth() {
+        try {
+            redisTemplate.getConnectionFactory().getConnection().ping();
+            return true;
+        } catch (Exception e) {
+            log.error("Redis health check failed: {}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    /**
+     * 仅当键不存在时设置值（原子操作）
+     *
+     * @param key     键
+     * @param value   值
+     * @param timeout 过期时间
+     * @param unit    时间单位
+     * @return 如果设置成功返回true，否则返回false
+     */
+    public Boolean setIfAbsent(String key, Object value, long timeout, TimeUnit unit) {
+        try {
+            String stringValue = ObjUtil.toString(value);
+            // 使用Redis的SETNX命令实现原子性操作
+            Boolean success = redisTemplate.opsForValue().setIfAbsent(key, stringValue, timeout, unit);
+            return success != null && success;
+        } catch (Exception e) {
+            log.error("Redis setIfAbsent操作失败, key: {}", key, e);
+            return false;
+        }
     }
 }

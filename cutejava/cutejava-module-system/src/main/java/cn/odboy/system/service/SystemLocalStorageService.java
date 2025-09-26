@@ -1,10 +1,26 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
@@ -73,12 +89,12 @@ public class SystemLocalStorageService {
     /**
      * 编辑
      *
-     * @param resources 文件信息
+     * @param args 文件信息
      */
     @Transactional(rollbackFor = Exception.class)
-    public void modifyLocalStorageById(SystemLocalStorageTb resources) {
-        SystemLocalStorageTb localStorage = systemLocalStorageMapper.selectById(resources.getId());
-        localStorage.copy(resources);
+    public void modifyLocalStorageById(SystemLocalStorageTb args) {
+        SystemLocalStorageTb localStorage = systemLocalStorageMapper.selectById(args.getId());
+        localStorage.copy(args);
         systemLocalStorageMapper.insertOrUpdate(localStorage);
     }
 
@@ -107,7 +123,8 @@ public class SystemLocalStorageService {
      * @param response      /
      * @throws IOException /
      */
-    public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response) throws IOException {
+    public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response)
+            throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemLocalStorageTb localStorage : localStorages) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -129,7 +146,9 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public CsPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+    public CsPageResult<SystemLocalStorageTb> queryLocalStorage(
+            SystemQueryStorageArgs criteria,
+            Page<SystemLocalStorageTb> page) {
         return CsPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 
@@ -140,6 +159,7 @@ public class SystemLocalStorageService {
      * @return /
      */
     public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
-        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, CsPageUtil.getCount(systemLocalStorageMapper)).getRecords();
+        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, CsPageUtil.getCount(systemLocalStorageMapper))
+                .getRecords();
     }
 }

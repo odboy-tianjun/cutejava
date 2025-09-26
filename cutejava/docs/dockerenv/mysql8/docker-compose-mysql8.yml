@@ -13,7 +13,7 @@ services:
     environment: # 设置环境变量,相当于docker run命令中的-e
       TZ: Asia/Shanghai
       LANG: en_US.UTF-8
-      MYSQL_ROOT_PASSWORD: lm,101208..,.         # 设置root用户密码
+      MYSQL_ROOT_PASSWORD: kd123456         # 设置root用户密码
       MYSQL_DATABASE: demo              # 初始化的数据库名称
     privileged: true
     user: root

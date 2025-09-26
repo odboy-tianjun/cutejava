@@ -1,7 +1,14 @@
 <!--<p class="warn-content">-->
 <!--Markdown 基于-->
-<!--<el-link type="primary" href="https://github.com/hinesboy/mavonEditor" target="_blank">MavonEditor</el-link>-->
+<!--<el-link type="primary" href="" target="_blank">MavonEditor</el-link>-->
 <!--</p>-->
+<!--
+ * Markdown编辑器
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ * @description 基于MavonEditor https://github.com/hinesboy/mavonEditor
+ -->
 <template>
   <mavon-editor
     ref="md"

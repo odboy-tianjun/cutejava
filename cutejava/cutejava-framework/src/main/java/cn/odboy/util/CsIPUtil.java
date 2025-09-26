@@ -1,18 +1,19 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.util;
 
 import cn.odboy.framework.context.CsSpringBeanHolder;
@@ -54,10 +55,12 @@ public final class CsIPUtil {
         try {
             InetAddress candidateAddress = null;
             // 遍历所有的网络接口
-            for (Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements(); ) {
+            for (Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+                 interfaces.hasMoreElements(); ) {
                 NetworkInterface anInterface = interfaces.nextElement();
                 // 在所有的接口下再遍历IP
-                for (Enumeration<InetAddress> inetAddresses = anInterface.getInetAddresses(); inetAddresses.hasMoreElements(); ) {
+                for (Enumeration<InetAddress> inetAddresses = anInterface.getInetAddresses();
+                     inetAddresses.hasMoreElements(); ) {
                     InetAddress inetAddr = inetAddresses.nextElement();
                     // 排除loopback类型地址
                     if (!inetAddr.isLoopbackAddress()) {

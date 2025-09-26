@@ -24,7 +24,7 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
-            active-color="#409EFF"
+            active-color="#67C23A"
             inactive-color="#F56C6C"
             @change="changeEnabled(scope.row, scope.row.enabled)"
           />

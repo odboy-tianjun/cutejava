@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
@@ -82,7 +98,7 @@ public class SystemMonitorService {
         diskInfo.put("available", CsFileUtil.getSize(available));
         diskInfo.put("used", CsFileUtil.getSize(used));
         if (total != 0) {
-            diskInfo.put("usageRate", df.format(used / (double)total * 100));
+            diskInfo.put("usageRate", df.format(used / (double) total * 100));
         } else {
             diskInfo.put("usageRate", 0);
         }
@@ -106,7 +122,7 @@ public class SystemMonitorService {
         if (used == 0) {
             swapInfo.put("usageRate", 0);
         } else {
-            swapInfo.put("usageRate", df.format(used / (double)total * 100));
+            swapInfo.put("usageRate", df.format(used / (double) total * 100));
         }
         return swapInfo;
     }
@@ -122,7 +138,9 @@ public class SystemMonitorService {
         memoryInfo.put("total", FormatUtil.formatBytes(memory.getTotal()));
         memoryInfo.put("available", FormatUtil.formatBytes(memory.getAvailable()));
         memoryInfo.put("used", FormatUtil.formatBytes(memory.getTotal() - memory.getAvailable()));
-        memoryInfo.put("usageRate", df.format((memory.getTotal() - memory.getAvailable()) / (double)memory.getTotal() * 100));
+        memoryInfo.put(
+                "usageRate",
+                df.format((memory.getTotal() - memory.getAvailable()) / (double) memory.getTotal() * 100));
         return memoryInfo;
     }
 
@@ -153,12 +171,16 @@ public class SystemMonitorService {
         }
         long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
         long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
-        long sys = ticks[CentralProcessor.TickType.SYSTEM.getIndex()] - prevTicks[CentralProcessor.TickType.SYSTEM.getIndex()];
+        long sys =
+                ticks[CentralProcessor.TickType.SYSTEM.getIndex()] - prevTicks[CentralProcessor.TickType.SYSTEM.getIndex()];
         long idle = ticks[CentralProcessor.TickType.IDLE.getIndex()] - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
-        long ioWait = ticks[CentralProcessor.TickType.IOWAIT.getIndex()] - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
+        long ioWait =
+                ticks[CentralProcessor.TickType.IOWAIT.getIndex()] - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
         long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];
-        long softIrq = ticks[CentralProcessor.TickType.SOFTIRQ.getIndex()] - prevTicks[CentralProcessor.TickType.SOFTIRQ.getIndex()];
-        long steal = ticks[CentralProcessor.TickType.STEAL.getIndex()] - prevTicks[CentralProcessor.TickType.STEAL.getIndex()];
+        long softIrq =
+                ticks[CentralProcessor.TickType.SOFTIRQ.getIndex()] - prevTicks[CentralProcessor.TickType.SOFTIRQ.getIndex()];
+        long steal =
+                ticks[CentralProcessor.TickType.STEAL.getIndex()] - prevTicks[CentralProcessor.TickType.STEAL.getIndex()];
         long totalCpu = user + nice + sys + idle + ioWait + irq + softIrq + steal;
         cpuInfo.put("used", df.format(100d * user / totalCpu + 100d * sys / totalCpu));
         cpuInfo.put("idle", df.format(100d * idle / totalCpu));

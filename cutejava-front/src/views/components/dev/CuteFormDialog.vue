@@ -1,3 +1,9 @@
+<!--
+ * 简单表单弹窗：封装了常用方法和参数
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <el-dialog
     :title="title"
@@ -17,7 +23,7 @@
     <div class="dialog-footer" style="padding-right: 30px;text-align: right">
       <el-button type="danger" @click="hidden">取 消</el-button>
       <!--<el-button @click="resetForm('form')">重 置</el-button>-->
-      <el-button type="primary" @click="submitForm('form')">提 交</el-button>
+      <el-button v-prevent-re-click type="primary" @click="submitForm('form')">提 交</el-button>
     </div>
   </el-dialog>
 </template>

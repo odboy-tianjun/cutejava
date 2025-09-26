@@ -1,18 +1,19 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.framework.server.core;
 
 import cn.odboy.framework.server.converters.DateStringArraysToListDateConverter;
@@ -90,19 +91,19 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
         // 开启引用检测, 枚举支持
         config.setWriterFeatures(
-            // 是否输出值为null的字段
-            // SerializerFeature.WriteMapNullValue,
-            // 字段如果为null,输出为false,而非null
-            //                JSONWriter.Feature.WriteNullBooleanAsFalse,
-            // 字段如果为null,输出为[],而非null
-            //                JSONWriter.Feature.WriteNullListAsEmpty,
-            // 字符类型字段如果为null,输出为"",而非null
-            //                JSONWriter.Feature.WriteNullStringAsEmpty,
-            // 太具体的数值会直接影响逻辑本身, 所以不要这个
-            // SerializerFeature.WriteNullNumberAsZero,
-            JSONWriter.Feature.WriteEnumUsingToString,
-            //                SerializerFeature.DisableCircularReferenceDetect,
-            JSONWriter.Feature.ReferenceDetection);
+                // 是否输出值为null的字段
+                // SerializerFeature.WriteMapNullValue,
+                // 字段如果为null,输出为false,而非null
+                //                JSONWriter.Feature.WriteNullBooleanAsFalse,
+                // 字段如果为null,输出为[],而非null
+                //                JSONWriter.Feature.WriteNullListAsEmpty,
+                // 字符类型字段如果为null,输出为"",而非null
+                //                JSONWriter.Feature.WriteNullStringAsEmpty,
+                // 太具体的数值会直接影响逻辑本身, 所以不要这个
+                // SerializerFeature.WriteNullNumberAsZero,
+                JSONWriter.Feature.WriteEnumUsingToString,
+                //                SerializerFeature.DisableCircularReferenceDetect,
+                JSONWriter.Feature.ReferenceDetection);
         fastJsonConverter.setFastJsonConfig(config);
         fastJsonConverter.setSupportedMediaTypes(supportMediaTypeList);
         fastJsonConverter.setDefaultCharset(StandardCharsets.UTF_8);

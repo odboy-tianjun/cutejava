@@ -1,3 +1,9 @@
+<!--
+ * 多用户选择组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-07
+ -->
 <template>
   <el-select
     v-model="users"
@@ -31,6 +37,11 @@ export default {
       type: Array,
       required: false,
       default: null
+    },
+    dataSource: {
+      type: Array,
+      required: false,
+      default: null
     }
   },
   data() {
@@ -43,6 +54,11 @@ export default {
   watch: {
     value(newVal) {
       this.users = newVal
+    }
+  },
+  mounted() {
+    if (this.dataSource && this.dataSource.length > 0) {
+      this.options = this.dataSource
     }
   },
   methods: {

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -22,27 +38,25 @@ public class SystemDictDetailService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
-    public void saveDictDetail(SystemCreateDictDetailArgs resources) {
-        SystemDictDetailTb dictDetail = BeanUtil.copyProperties(resources, SystemDictDetailTb.class);
-        dictDetail.setDictId(resources.getDict().getId());
+    public void saveDictDetail(SystemCreateDictDetailArgs args) {
+        SystemDictDetailTb dictDetail = BeanUtil.copyProperties(args, SystemDictDetailTb.class);
+        dictDetail.setDictId(args.getDict().getId());
         systemDictDetailMapper.insert(dictDetail);
     }
 
     /**
      * 编辑
      *
-     * @param resources /
+     * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
-    public void modifyDictDetailById(SystemDictDetailTb resources) {
-        SystemDictDetailTb dictDetail = systemDictDetailMapper.selectById(resources.getId());
-        resources.setId(dictDetail.getId());
-        systemDictDetailMapper.insertOrUpdate(resources);
+    public void modifyDictDetailById(SystemDictDetailTb args) {
+        SystemDictDetailTb dictDetail = systemDictDetailMapper.selectById(args.getId());
+        args.setId(dictDetail.getId());
+        systemDictDetailMapper.insertOrUpdate(args);
     }
 
     /**
@@ -59,13 +73,13 @@ public class SystemDictDetailService {
     /**
      * 分页查询
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param args 条件
+     * @param page 分页参数
      * @return /
      */
 
-    public CsPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs criteria, Page<Object> page) {
-        return CsPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(criteria, page));
+    public CsPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs args, Page<Object> page) {
+        return CsPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(args, page));
     }
 
     /**
@@ -76,8 +90,8 @@ public class SystemDictDetailService {
      */
 
     public List<SystemDictDetailTb> queryDictDetailByName(String name) {
-        SystemQueryDictDetailArgs criteria = new SystemQueryDictDetailArgs();
-        criteria.setDictName(name);
-        return systemDictDetailMapper.selectDictDetailByArgs(criteria);
+        SystemQueryDictDetailArgs args = new SystemQueryDictDetailArgs();
+        args.setDictName(name);
+        return systemDictDetailMapper.selectDictDetailByArgs(args);
     }
 }

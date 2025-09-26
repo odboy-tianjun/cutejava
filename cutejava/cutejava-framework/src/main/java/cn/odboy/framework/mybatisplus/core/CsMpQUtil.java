@@ -1,25 +1,26 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.framework.mybatisplus.core;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsBaseUserTimeTb;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.mybatisplus.config.CsMpQuery;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -77,7 +78,11 @@ public class CsMpQUtil {
         return StrUtil.toUnderlineCase(attributeName);
     }
 
-    private static <R> void handleWrapper(CsMpQuery q, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+    private static <R> void handleWrapper(
+            CsMpQuery q,
+            QueryWrapper<R> queryWrapper,
+            String attributeName,
+            Object fieldVal) {
         switch (q.type()) {
             case EQUAL:
                 queryWrapper.eq(attributeName, fieldVal);
@@ -123,8 +128,12 @@ public class CsMpQUtil {
         }
     }
 
-    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
-        Collection<?> wrapNotInVal = (Collection<?>)fieldVal;
+    private static <R> void handleInOrNotQuery(
+            boolean b,
+            QueryWrapper<R> queryWrapper,
+            String attributeName,
+            Object fieldVal) {
+        Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
             if (anyValOptional.isPresent()) {
@@ -150,7 +159,7 @@ public class CsMpQUtil {
 
     private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
         if (fieldVal instanceof List) {
-            List<Object> between = new ArrayList<>((List<?>)fieldVal);
+            List<Object> between = new ArrayList<>((List<?>) fieldVal);
             int minLength = 2;
             if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
                 queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
@@ -171,7 +180,8 @@ public class CsMpQUtil {
      * @param <R>          /
      */
     private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
-        List<String> blurryList = Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
+        List<String> blurryList =
+                Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
         queryWrapper.and(wrapper -> {
             for (String blurryItem : blurryList) {
                 String column = StrUtil.toUnderlineCase(blurryItem);

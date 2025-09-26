@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -31,25 +47,25 @@ public class SystemDictService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveDict(SystemCreateDictArgs resources) {
-        systemDictMapper.insert(BeanUtil.copyProperties(resources, SystemDictTb.class));
+    public void saveDict(SystemCreateDictArgs args) {
+        systemDictMapper.insert(BeanUtil.copyProperties(args, SystemDictTb.class));
     }
 
     /**
      * 编辑
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyDictById(SystemDictTb resources) {
-        SystemDictTb dict = systemDictMapper.selectById(resources.getId());
-        dict.setName(resources.getName());
-        dict.setDescription(resources.getDescription());
+    public void modifyDictById(SystemDictTb args) {
+        SystemDictTb dict = systemDictMapper.selectById(args.getId());
+        dict.setName(args.getName());
+        dict.setDescription(args.getDescription());
         systemDictMapper.insertOrUpdate(dict);
     }
 
@@ -78,9 +94,9 @@ public class SystemDictService {
     public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemDictTb dict : dicts) {
-            SystemQueryDictDetailArgs criteria = new SystemQueryDictDetailArgs();
-            criteria.setDictName(dict.getName());
-            List<SystemDictDetailTb> dictDetails = systemDictDetailMapper.selectDictDetailByArgs(criteria);
+            SystemQueryDictDetailArgs args = new SystemQueryDictDetailArgs();
+            args.setDictName(dict.getName());
+            List<SystemDictDetailTb> dictDetails = systemDictDetailMapper.selectDictDetailByArgs(args);
             if (CollectionUtil.isNotEmpty(dictDetails)) {
                 for (SystemDictDetailTb dictDetail : dictDetails) {
                     Map<String, Object> map = new LinkedHashMap<>();
@@ -107,24 +123,24 @@ public class SystemDictService {
     /**
      * 分页查询
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param args 条件
+     * @param page 分页参数
      * @return /
      */
 
-    public CsPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs criteria, Page<SystemDictTb> page) {
-        return CsPageUtil.toPage(systemDictMapper.selectDictByArgs(criteria, page));
+    public CsPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+        return CsPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
     }
 
     /**
      * 查询全部数据
      *
-     * @param criteria /
+     * @param args /
      * @return /
      */
 
-    public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs criteria) {
-        return systemDictMapper.selectDictByArgs(criteria);
+    public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
+        return systemDictMapper.selectDictByArgs(args);
     }
 
     public SystemDictTb getById(int id) {

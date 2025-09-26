@@ -17,15 +17,11 @@
             <artifactId>cutejava-module-system</artifactId>
             <version>1.4.1</version>
         </dependency>
-        <dependency>
-            <groupId>cn.odboy</groupId>
-            <artifactId>cutejava-module-pipeline</artifactId>
-            <version>1.4.1</version>
-        </dependency>
     </dependencies>
 
     <!-- 打包 -->
     <build>
+        <!-- 和应用名一致 -->
         <finalName>cutejava</finalName>
         <plugins>
             <plugin>

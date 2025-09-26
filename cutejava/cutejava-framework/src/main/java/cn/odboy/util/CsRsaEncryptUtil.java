@@ -1,18 +1,19 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.util;
 
 import lombok.experimental.UtilityClass;
@@ -182,8 +183,8 @@ public final class CsRsaEncryptUtil {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        RSAPublicKey rsaPublicKey = (RSAPublicKey)keyPair.getPublic();
-        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey)keyPair.getPrivate();
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
         String publicKeyString = Base64.encodeBase64String(rsaPublicKey.getEncoded());
         String privateKeyString = Base64.encodeBase64String(rsaPrivateKey.getEncoded());
         return new RsaKeyPair(publicKeyString, privateKeyString);
@@ -209,6 +210,5 @@ public final class CsRsaEncryptUtil {
         public String getPrivateKey() {
             return privateKey;
         }
-
     }
 }

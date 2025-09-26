@@ -1,5 +1,10 @@
-<!-- 一键复制组件 -->
-<!-- 使用方式： <one-key-copy style="margin-left: 10pt" :content.sync="data" /> -->
+<!--
+ * 一键复制组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ * @description 使用方式：<cute-one-key-copy style="margin-left: 10pt" :content.sync="data" />
+ -->
 <template>
   <el-button
     v-clipboard:copy="content"

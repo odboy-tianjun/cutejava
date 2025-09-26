@@ -50,8 +50,8 @@ export default {
         '  shutdown: graceful\n' +
         'spring:\n' +
         '  application:\n' +
-        '    name: kenaito-devops\n' +
-        '    title: Kenaito DevOps\n' +
+        '    name: cutejava\n' +
+        '    title: CuteJava\n' +
         '  lifecycle:\n' +
         '    # 采用java.time.Duration格式的值,如果在这个时间内，优雅停机没有停掉应用，超过这个时间就会强制停止应用\n' +
         '    timeout-per-shutdown-phase: 30s\n' +

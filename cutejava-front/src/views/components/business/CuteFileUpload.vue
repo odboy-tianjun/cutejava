@@ -1,3 +1,9 @@
+<!--
+ * 文件上传组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-07-29
+ -->
 <template>
   <el-upload
     ref="upload"

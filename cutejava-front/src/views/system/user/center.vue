@@ -149,7 +149,7 @@ import updatePass from './center/updatePass'
 import updateEmail from './center/updateEmail'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
-import { isvalidPhone } from '@/utils/CsValidateUtil'
+import { IsValidPhone } from '@/utils/CsValidateUtil'
 import crud from '@/mixins/crud'
 import { editUser } from '@/api/system/user'
 import Avatar from '@/assets/images/avatar.png'
@@ -163,7 +163,7 @@ export default {
     const validPhone = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入电话号码'))
-      } else if (!isvalidPhone(value)) {
+      } else if (!IsValidPhone(value)) {
         callback(new Error('请输入正确的11位手机号码'))
       } else {
         callback()

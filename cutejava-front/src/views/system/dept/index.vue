@@ -73,7 +73,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button @click="crud.cancelCU">取消</el-button>
         <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
@@ -98,7 +98,7 @@
           <el-switch
             v-model="scope.row.enabled"
             :disabled="scope.row.id === 1"
-            active-color="#409EFF"
+            active-color="#67C23A"
             inactive-color="#F56C6C"
             @change="changeEnabled(scope.row, scope.row.enabled,)"
           />

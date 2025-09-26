@@ -1,10 +1,26 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
@@ -42,46 +58,46 @@ public class SystemRoleService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveRole(SystemCreateRoleArgs resources) {
-        if (systemRoleMapper.getRoleByName(resources.getName()) != null) {
+    public void saveRole(SystemCreateRoleArgs args) {
+        if (systemRoleMapper.getRoleByName(args.getName()) != null) {
             throw new BadRequestException("角色名称已存在");
         }
-        systemRoleMapper.insert(BeanUtil.copyProperties(resources, SystemRoleTb.class));
+        systemRoleMapper.insert(BeanUtil.copyProperties(args, SystemRoleTb.class));
         // 判断是否有部门数据, 若有, 则需创建关联
-        if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            systemRoleDeptMapper.batchInsertRoleDept(resources.getDepts(), resources.getId());
+        if (CollectionUtil.isNotEmpty(args.getDepts())) {
+            systemRoleDeptMapper.batchInsertRoleDept(args.getDepts(), args.getId());
         }
     }
 
     /**
      * 修改
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyRoleById(SystemRoleTb resources) {
-        SystemRoleTb role = systemRoleMapper.selectById(resources.getId());
-        SystemRoleTb role1 = systemRoleMapper.getRoleByName(resources.getName());
+    public void modifyRoleById(SystemRoleTb args) {
+        SystemRoleTb role = systemRoleMapper.selectById(args.getId());
+        SystemRoleTb role1 = systemRoleMapper.getRoleByName(args.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new BadRequestException("角色名称已存在");
         }
-        role.setName(resources.getName());
-        role.setDescription(resources.getDescription());
-        role.setDataScope(resources.getDataScope());
-        role.setDepts(resources.getDepts());
-        role.setLevel(resources.getLevel());
+        role.setName(args.getName());
+        role.setDescription(args.getDescription());
+        role.setDataScope(args.getDataScope());
+        role.setDepts(args.getDepts());
+        role.setLevel(args.getLevel());
         // 更新
         systemRoleMapper.insertOrUpdate(role);
         // 删除关联部门数据
-        systemRoleDeptMapper.batchDeleteRoleDept(Collections.singleton(resources.getId()));
+        systemRoleDeptMapper.batchDeleteRoleDept(Collections.singleton(args.getId()));
         // 判断是否有部门数据, 若有, 则需更新关联
-        if (CollectionUtil.isNotEmpty(resources.getDepts())) {
-            systemRoleDeptMapper.batchInsertRoleDept(resources.getDepts(), resources.getId());
+        if (CollectionUtil.isNotEmpty(args.getDepts())) {
+            systemRoleDeptMapper.batchInsertRoleDept(args.getDepts(), args.getId());
         }
     }
 
@@ -215,8 +231,11 @@ public class SystemRoleService {
             return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
         }
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
-        permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission).filter(CsStringUtil::isNotBlank)
-            .collect(Collectors.toSet());
+        permissions = roles.stream()
+                .flatMap(role -> role.getMenus().stream())
+                .map(SystemMenuTb::getPermission)
+                .filter(CsStringUtil::isNotBlank)
+                .collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
 

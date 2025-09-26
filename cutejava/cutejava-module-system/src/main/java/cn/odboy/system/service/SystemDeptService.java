@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -5,7 +21,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
@@ -43,32 +59,32 @@ public class SystemDeptService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveDept(SystemCreateDeptArgs resources) {
-        systemDeptMapper.insert(BeanUtil.copyProperties(resources, SystemDeptTb.class));
-        this.updateDeptSubCnt(resources.getPid());
+    public void saveDept(SystemCreateDeptArgs args) {
+        systemDeptMapper.insert(BeanUtil.copyProperties(args, SystemDeptTb.class));
+        this.updateDeptSubCnt(args.getPid());
     }
 
     /**
      * 编辑
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyDept(SystemDeptTb resources) {
+    public void modifyDept(SystemDeptTb args) {
         // 旧的部门
-        Long oldPid = queryDeptById(resources.getId()).getPid();
-        Long newPid = resources.getPid();
-        if (resources.getPid() != null && resources.getId().equals(resources.getPid())) {
+        Long oldPid = queryDeptById(args.getId()).getPid();
+        Long newPid = args.getPid();
+        if (args.getPid() != null && args.getId().equals(args.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
-        SystemDeptTb dept = systemDeptMapper.selectById(resources.getId());
-        resources.setId(dept.getId());
-        systemDeptMapper.insertOrUpdate(resources);
+        SystemDeptTb dept = systemDeptMapper.selectById(args.getId());
+        args.setId(dept.getId());
+        systemDeptMapper.insertOrUpdate(args);
         this.updateDeptSubCnt(oldPid);
         this.updateDeptSubCnt(newPid);
     }
@@ -352,7 +368,8 @@ public class SystemDeptService {
 
     private List<SystemProductLineVo> buildDeptSelectOptions(List<SystemDeptTb> depts) {
         // 获取所有部门并按父子关系组织
-        Map<Long, SystemDeptTb> deptMap = depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
+        Map<Long, SystemDeptTb> deptMap =
+                depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
         List<SystemProductLineVo> options = new ArrayList<>();
         for (SystemDeptTb dept : depts) {
             // 构建部门ID路径
@@ -403,7 +420,8 @@ public class SystemDeptService {
     public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
         List<SystemDeptTb> depts = findEnabledDepts();
         // 获取所有部门并按父子关系组织
-        Map<Long, SystemDeptTb> deptMap = depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
+        Map<Long, SystemDeptTb> deptMap =
+                depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
         List<SystemProductLineTreeVo> options = new ArrayList<>();
         // 构建树形结构
         for (SystemDeptTb dept : depts) {

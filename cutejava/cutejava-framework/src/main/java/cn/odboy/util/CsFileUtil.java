@@ -1,18 +1,19 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.util;
 
 import cn.hutool.core.io.IoUtil;
@@ -21,7 +22,7 @@ import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
@@ -81,7 +82,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     private static final DecimalFormat DF = new DecimalFormat("0.00");
 
     /**
-     * MultipartFile转File -> ok
+     * MultipartFile转File
      */
     public static File toFile(MultipartFile multipartFile) {
         // 获取文件名
@@ -107,13 +108,13 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         String resultSize;
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
-            resultSize = DF.format(size / (float)GB) + " GB";
+            resultSize = DF.format(size / (float) GB) + " GB";
         } else if (size / MB >= 1) {
             //如果当前Byte的值大于等于1MB
-            resultSize = DF.format(size / (float)MB) + " MB";
+            resultSize = DF.format(size / (float) MB) + " MB";
         } else if (size / KB >= 1) {
             //如果当前Byte的值大于等于1KB
-            resultSize = DF.format(size / (float)KB) + " KB";
+            resultSize = DF.format(size / (float) KB) + " KB";
         } else {
             resultSize = size + " B";
         }
@@ -121,7 +122,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * inputStream 转 File -> ok
+     * inputStream 转 File
      */
     public static File inputStreamToFile(InputStream ins, String name) {
         File file = new File(SYS_TEM_DIR + name);
@@ -147,7 +148,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 将文件名解析成文件的上传路径 -> ok
+     * 将文件名解析成文件的上传路径
      */
     public static File upload(MultipartFile file, String filePath) {
         Date date = new Date();
@@ -177,7 +178,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 导出excel -> ok
+     * 导出excel
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
         String tempPath = SYS_TEM_DIR + IdUtil.fastSimpleUUID() + ".xlsx";
@@ -188,10 +189,11 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
             Map<String, Object> sanitizedMap = new LinkedHashMap<>();
             map.forEach((key, value) -> {
                 if (value instanceof String) {
-                    String strValue = (String)value;
+                    String strValue = (String) value;
                     // 检查并处理以特殊字符开头的值
-                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) || strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(
-                        SYMBOL_AT)) {
+                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) ||
+                            strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(
+                            SYMBOL_AT)) {
                         // 添加单引号前缀
                         strValue = "'" + strValue;
                     }
@@ -204,7 +206,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         }).collect(Collectors.toList());
         // 一次性写出内容, 使用默认样式，强制输出标题
         writer.write(sanitizedList, true);
-        SXSSFSheet sheet = (SXSSFSheet)writer.getSheet();
+        SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
         //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法
         sheet.trackAllColumnsForAutoSizing();
         //列宽自适应
@@ -222,7 +224,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 获取文件类型 -> ok
+     * 获取文件类型
      */
     public static String getFileType(String type) {
         String documents = "txt doc pdf ppt pps xlsx xls docx";
@@ -243,7 +245,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 检查文件大小是否超出最大值 -> ok
+     * 检查文件大小是否超出最大值
      */
     public static void checkSize(long maxSize, long size) {
         // 1M
@@ -254,7 +256,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 判断两个文件是否相同 -> ok
+     * 判断两个文件是否相同
      */
     public static boolean check(File file1, File file2) {
         String img1Md5 = getMd5(file1);
@@ -266,17 +268,17 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 判断两个文件是否相同 -> ok
+     * 判断两个文件是否相同
      */
     public static boolean check(String file1Md5, String file2Md5) {
         return file1Md5.equals(file2Md5);
     }
 
     /**
-     * 获取文件字节数组 -> ok
+     * 获取文件字节数组
      */
     private static byte[] getByte(File file) {
-        byte[] b = new byte[(int)file.length()];
+        byte[] b = new byte[(int) file.length()];
         InputStream in = null;
         try {
             in = Files.newInputStream(file.toPath());
@@ -292,7 +294,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 获取文件MD5值 -> ok
+     * 获取文件MD5值
      */
     private static String getMd5(byte[] bytes) {
         // 16进制字符
@@ -323,7 +325,11 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
      * @param response /
      * @param file     /
      */
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit) {
+    public static void downloadFile(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            File file,
+            boolean deleteOnExit) {
         response.setCharacterEncoding(request.getCharacterEncoding());
         response.setContentType("application/octet-stream");
         FileInputStream fis = null;
@@ -380,7 +386,8 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         fileName = fileName.replaceAll("^\\.+/", "");
 
         // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
-        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") + fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
+        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
+                fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
 
         return fileName;
     }

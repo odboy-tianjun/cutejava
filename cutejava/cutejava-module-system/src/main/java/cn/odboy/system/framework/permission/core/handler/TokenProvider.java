@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.framework.permission.core.handler;
 
 import cn.hutool.core.date.DateField;
@@ -7,11 +23,10 @@ import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
-import cn.odboy.system.dal.redis.SystemRedisKey;
+import cn.odboy.system.dal.redis.SystemCacheKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +37,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +52,10 @@ public class TokenProvider implements InitializingBean {
     private CsRedisHelper redisHelper;
     @Autowired
     private AppProperties properties;
-    private Key signingKey;
+    // 0.11.x版本
+    // private Key signingKey;
+    // 0.12.x版本
+    private SecretKey signingKey;
     private JwtParser jwtParser;
     public static final String AUTHORITIES_UUID_KEY = "uid";
     public static final String AUTHORITIES_UID_KEY = "userId";
@@ -47,9 +65,12 @@ public class TokenProvider implements InitializingBean {
         // 解码Base64密钥并创建签名密钥
         byte[] keyBytes = Decoders.BASE64.decode(properties.getJwt().getBase64Secret());
         signingKey = Keys.hmacShaKeyFor(keyBytes);
-        jwtParser = Jwts.parserBuilder()
-            // 使用预生成的签名密钥
-            .setSigningKey(signingKey).build();
+        // 0.11.x版本
+        // jwtParser = Jwts.parserBuilder()
+        // // 使用预生成的签名密钥
+        // .setSigningKey(signingKey).build();
+        // 0.12.x版本
+        jwtParser = Jwts.parser().verifyWith(signingKey).build();
     }
 
     /**
@@ -65,14 +86,17 @@ public class TokenProvider implements InitializingBean {
         claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
         // 设置UUID，确保每次Token不一样
         claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
+        // 0.11.x版本
         // 直接调用 Jwts.builder() 创建新实例Add commentMore actions
-        return Jwts.builder()
-            // 设置自定义 Claims
-            .setClaims(claims)
-            // 设置主题
-            .setSubject(user.getUsername())
-            // 使用预生成的签名密钥和算法签名
-            .signWith(signingKey, SignatureAlgorithm.HS512).compact();
+        // return Jwts.builder()
+        //     // 设置自定义 Claims
+        //     .setClaims(claims)
+        //     // 设置主题
+        //     .setSubject(user.getUsername())
+        //     // 使用预生成的签名密钥和算法签名
+        //     .signWith(signingKey, SignatureAlgorithm.HS512).compact();
+        // 0.12.x版本
+        return Jwts.builder().claims(claims).subject(user.getUsername()).signWith(signingKey).compact();
     }
 
     /**
@@ -88,7 +112,10 @@ public class TokenProvider implements InitializingBean {
     }
 
     public Claims getClaims(String token) {
-        return jwtParser.parseClaimsJws(token).getBody();
+        // 0.11.x版本
+        // return jwtParser.parseClaimsJws(token).getBody();
+        // 0.12.x版本
+        return jwtParser.parseSignedClaims(token).getPayload();
     }
 
     /**
@@ -98,7 +125,7 @@ public class TokenProvider implements InitializingBean {
         // 判断是否续期token,计算token的过期时间
         String loginKey = loginKey(token);
         long time = redisHelper.getExpire(loginKey) * 1000;
-        Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int)time);
+        Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
         // 判断当前时间与过期时间的时间差
         long differ = expireDate.getTime() - System.currentTimeMillis();
         // 如果在续期检查的范围内，则续期
@@ -124,7 +151,7 @@ public class TokenProvider implements InitializingBean {
      */
     public String loginKey(String token) {
         Claims claims = getClaims(token);
-        return SystemRedisKey.ONLINE_USER + claims.getSubject() + ":" + getId(token);
+        return SystemCacheKey.ONLINE_USER + claims.getSubject() + ":" + getId(token);
     }
 
     /**

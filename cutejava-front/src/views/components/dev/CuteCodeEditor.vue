@@ -1,8 +1,11 @@
-<!--Yaml编辑器 基于-->
-<!--<a href="https://github.com/codemirror/CodeMirror" target="_blank">CodeMirror</a>，-->
-<!--主题预览地址 <a href="https://codemirror.net/demo/theme.html#idea" target="_blank">Theme</a>-->
-<!--</p>-->
-<!-- mode取值如下：yaml、java、go、swift、dockerfile、groovy、lua、perl、python、ruby、sql、xml、vue -->
+<!--
+ * 代码编辑器
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ * @description 基于Yaml编辑器 https://github.com/codemirror/CodeMirror，主题预览地址 https://codemirror.net/demo/theme.html#idea
+ * @参数mode取值范围 yaml、java、go、swift、dockerfile、groovy、lua、perl、python、ruby、sql、xml、vue
+ -->
 <template>
   <textarea ref="textarea" />
 </template>
