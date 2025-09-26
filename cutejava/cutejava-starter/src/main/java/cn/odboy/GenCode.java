@@ -41,17 +41,9 @@ public class GenCode {
     }
 
     private static void genCode(CsMpCmdGenUtil generator) {
-        generator.gen("devops", "", List.of(
-                //                "devops_host_cidr",
-                //                "devops_host_info",
-                //                "devops_app_info",
-                //                "devops_config",
-                //                "devops_app_init_resource_config",
-                //                "devops_app_role",
-                // "devops_pipeline_template_config",
-                // "devops_app_branch"
-                // "devops_app_iteration",
-                "devops_app_iteration_instance"
+        generator.gen("task", "", List.of(
+                "task_instance_info",
+                "task_instance_detail"
         ));
     }
 }

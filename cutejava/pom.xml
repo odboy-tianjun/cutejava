@@ -11,6 +11,7 @@
         <!-- 基础设施 -->
         <module>cutejava-framework</module>
         <module>cutejava-module-system</module>
+        <module>cutejava-module-task</module>
         <module>cutejava-starter</module>
     </modules>
 
