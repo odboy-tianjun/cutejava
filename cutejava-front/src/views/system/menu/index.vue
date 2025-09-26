@@ -128,7 +128,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button @click="crud.cancelCU">取消</el-button>
         <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
@@ -146,7 +146,7 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="title" />
+      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="220px" prop="title" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />

@@ -69,7 +69,8 @@ export default {
         dept: null,
         productLine: null,
         productLinePro: null
-      }
+      },
+      searchFormModel: {}
     }
   },
   methods: {

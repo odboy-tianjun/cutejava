@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
@@ -59,16 +75,16 @@ public class SystemDictController {
     @ApiOperation("新增字典")
     @PostMapping(value = "/saveDict")
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs resources) {
-        systemDictService.saveDict(resources);
+    public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs args) {
+        systemDictService.saveDict(args);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改字典")
     @PostMapping(value = "/modifyDictById")
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb resources) {
-        systemDictService.modifyDictById(resources);
+    public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
+        systemDictService.modifyDictById(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

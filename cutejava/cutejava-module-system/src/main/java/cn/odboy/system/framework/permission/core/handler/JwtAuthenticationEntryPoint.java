@@ -1,6 +1,22 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.framework.permission.core.handler;
 
-import cn.odboy.framework.exception.handler.ApiError;
+import cn.odboy.framework.exception.web.handler.ApiError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,13 +33,15 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException {
         // 当用户尝试访问安全的REST资源而不提供任何凭据时，将调用此方法发送401 响应
         int code = HttpStatus.UNAUTHORIZED.value();
         response.setStatus(code);
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(ApiError.error(HttpStatus.UNAUTHORIZED.value(), "登录状态已过期，请重新登录"));
+        String jsonResponse =
+                objectMapper.writeValueAsString(ApiError.error(HttpStatus.UNAUTHORIZED.value(), "登录状态已过期，请重新登录"));
         response.getWriter().write(jsonResponse);
     }
 }

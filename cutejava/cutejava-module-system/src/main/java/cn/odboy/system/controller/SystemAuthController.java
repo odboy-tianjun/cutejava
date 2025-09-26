@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.controller;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -5,14 +21,14 @@ import cn.hutool.core.util.IdUtil;
 import cn.odboy.annotation.AnonymousPostMapping;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserLoginArgs;
-import cn.odboy.system.dal.redis.SystemRedisKey;
-import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
+import cn.odboy.system.dal.redis.SystemCacheKey;
+import cn.odboy.system.dal.redis.SystemUserOnlineInfoRedis;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
@@ -51,7 +67,7 @@ public class SystemAuthController {
     @Autowired
     private CsRedisHelper redisHelper;
     @Autowired
-    private SystemUserOnlineInfoDAO onlineUserService;
+    private SystemUserOnlineInfoRedis onlineUserService;
     @Autowired
     private TokenProvider tokenProvider;
     @Autowired
@@ -63,9 +79,12 @@ public class SystemAuthController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
+    public ResponseEntity<Map<String, Object>> login(
+            @Validated @RequestBody SystemUserLoginArgs loginRequest,
+            HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+        String password =
+                CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
@@ -104,7 +123,7 @@ public class SystemAuthController {
     @ApiOperation("获取用户信息")
     @PostMapping(value = "/info")
     public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-        SystemUserJwtVo jwtUser = (SystemUserJwtVo)CsSecurityHelper.getCurrentUser();
+        SystemUserJwtVo jwtUser = (SystemUserJwtVo) CsSecurityHelper.getCurrentUser();
         SystemUserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, SystemUserInfoVo.class);
         return ResponseEntity.ok(userInfoVo);
     }
@@ -114,10 +133,11 @@ public class SystemAuthController {
     public ResponseEntity<Map<String, Object>> getCode() {
         // 获取运算的结果
         Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
-        String uuid = SystemRedisKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
+        String uuid = SystemCacheKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
         //当验证码类型为 arithmetic时且长度 >= 2 时, captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
-        if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() && captchaValue.contains(SystemConst.SYMBOL_DOT)) {
+        if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() &&
+                captchaValue.contains(SystemConst.SYMBOL_DOT)) {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存

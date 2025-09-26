@@ -147,16 +147,12 @@ export function IsValidTelephone(rule, value, callback) {
 }
 
 /* 是否手机号码*/
-export function IsValidPhone(rule, value, callback) {
+export function IsValidPhone(value) {
   const reg = /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/
   if (value === '' || value === undefined || value == null) {
-    callback()
+    return false
   } else {
-    if ((!reg.test(value)) && value !== '') {
-      callback(new Error('请输入正确的电话号码'))
-    } else {
-      callback()
-    }
+    return !((!reg.test(value)) && value !== '')
   }
 }
 

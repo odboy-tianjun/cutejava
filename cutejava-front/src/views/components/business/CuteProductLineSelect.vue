@@ -1,6 +1,12 @@
+<!--
+ * 产品线选择组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <el-select
-    v-model="selectedValue"
+    v-model="productLine"
     filterable
     clearable
     placeholder="请选择产品线"
@@ -37,12 +43,12 @@ export default {
   data() {
     return {
       deptOptions: [],
-      selectedValue: this.value
+      productLine: this.value
     }
   },
   watch: {
     value(newVal) {
-      this.selectedValue = newVal
+      this.productLine = newVal
     }
   },
   created() {
@@ -58,7 +64,7 @@ export default {
       })
     },
     handleChange(value) {
-      this.selectedValue = value
+      this.productLine = value
       for (const item of this.deptOptions) {
         if (item.value === value) {
           this.$emit('detail', item)

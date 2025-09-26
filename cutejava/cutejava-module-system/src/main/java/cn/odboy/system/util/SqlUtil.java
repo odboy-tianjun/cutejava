@@ -1,6 +1,22 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.util;
 
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.mybatisplus.config.DataTypeEnum;
 import cn.odboy.util.CsCloseUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -149,7 +165,9 @@ public final class SqlUtil {
     private static List<String> readSqlList(File sqlFile) throws Exception {
         List<String> sqlList = Lists.newArrayList();
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(sqlFile.toPath()), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                Files.newInputStream(sqlFile.toPath()),
+                StandardCharsets.UTF_8))) {
             String tmp;
             while ((tmp = reader.readLine()) != null) {
                 log.info("line:{}", tmp);

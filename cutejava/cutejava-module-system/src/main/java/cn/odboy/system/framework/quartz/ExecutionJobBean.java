@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.framework.quartz;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
@@ -36,7 +52,7 @@ public class ExecutionJobBean extends QuartzJobBean {
     @Override
     public void executeInternal(JobExecutionContext context) {
         // 获取任务
-        SystemQuartzJobTb quartzJob = (SystemQuartzJobTb)context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
+        SystemQuartzJobTb quartzJob = (SystemQuartzJobTb) context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
         // 获取spring bean
         SystemQuartzLogMapper quartzLogMapper = CsSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
         SystemQuartzJobService systemQuartzJobService = CsSpringBeanHolder.getBean(SystemQuartzJobService.class);
@@ -53,7 +69,8 @@ public class ExecutionJobBean extends QuartzJobBean {
         quartzLog.setCronExpression(quartzJob.getCronExpression());
         try {
             // 执行任务
-            QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
+            QuartzRunnable task =
+                    new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
             Future<?> future = executor.submit(task);
             // 忽略任务执行结果
             future.get();
@@ -106,7 +123,8 @@ public class ExecutionJobBean extends QuartzJobBean {
         Map<String, Object> data = new HashMap<>(16);
         data.put("task", quartzJob);
         data.put("msg", msg);
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        TemplateEngine engine =
+                TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("SystemQuartzJobTaskAlarmTemplate.ftl");
         sendEmailRequest.setContent(template.render(data));
         List<String> emails = Arrays.asList(quartzJob.getEmail().split("[,，]"));

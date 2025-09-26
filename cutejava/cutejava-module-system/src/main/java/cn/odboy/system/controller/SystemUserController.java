@@ -1,10 +1,26 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.base.CsSelectOptionVo;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
@@ -66,7 +82,7 @@ public class SystemUserController {
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
     public ResponseEntity<CsPageResult<SystemUserTb>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
-        Page<Object> page = new Page<>(args.getPage(), args.getSize());
+        Page<SystemUserTb> page = new Page<>(args.getPage(), args.getSize());
         SystemQueryUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
@@ -95,30 +111,30 @@ public class SystemUserController {
     @ApiOperation("新增用户")
     @PostMapping(value = "/saveUser")
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserTb resources) {
-        checkLevel(resources);
+    public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserTb args) {
+        checkLevel(args);
         // 默认密码 123456
-        resources.setPassword(passwordEncoder.encode("123456"));
-        systemUserService.saveUser(resources);
+        args.setPassword(passwordEncoder.encode("123456"));
+        systemUserService.saveUser(args);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改用户")
     @PostMapping(value = "/modifyUserById")
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb resources) throws Exception {
-        checkLevel(resources);
-        systemUserService.modifyUserById(resources);
+    public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
+        checkLevel(args);
+        systemUserService.modifyUserById(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("修改用户：个人中心")
     @PostMapping(value = "modifyUserCenterInfoById")
-    public ResponseEntity<Object> modifyUserCenterInfoById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb resources) {
-        if (!resources.getId().equals(CsSecurityHelper.getCurrentUserId())) {
+    public ResponseEntity<Object> modifyUserCenterInfoById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
+        if (!args.getId().equals(CsSecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
-        systemUserService.modifyUserCenterInfoById(resources);
+        systemUserService.modifyUserCenterInfoById(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -127,8 +143,7 @@ public class SystemUserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(
-                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
@@ -170,26 +185,25 @@ public class SystemUserController {
 
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
-    public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb resources) throws Exception {
-        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), resources.getPassword());
+    public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args) throws Exception {
+        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
         }
-        systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, resources.getEmail(), code);
-        systemUserService.modifyUserEmailByUsername(user.getUsername(), resources.getEmail());
+        systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
+        systemUserService.modifyUserEmailByUsername(user.getUsername(), args.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
      *
-     * @param resources /
+     * @param args /
      */
-    private void checkLevel(SystemUserTb resources) {
-        Integer currentLevel = Collections.min(
-            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
-        Integer optLevel = systemRoleService.getDeptLevelByRoles(resources.getRoles());
+    private void checkLevel(SystemUserTb args) {
+        Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
         }
@@ -211,13 +225,14 @@ public class SystemUserController {
             c.or();
             c.like(SystemUserTb::getNickName, criteria.getBlurry());
         });
-        return new ResponseEntity<>(systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
+        List<CsSelectOptionVo> collect = systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
             Map<String, Object> ext = new HashMap<>(1);
             ext.put("id", m.getId());
             ext.put("deptId", m.getDeptId());
             ext.put("email", m.getEmail());
             ext.put("phone", m.getPhone());
-            return CsSelectOptionVo.builder().label(m.getNickName()).value(m.getUsername()).ext(ext).build();
-        }).collect(Collectors.toList()), HttpStatus.OK);
+            return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
+        }).collect(Collectors.toList());
+        return new ResponseEntity<>(collect, HttpStatus.OK);
     }
 }

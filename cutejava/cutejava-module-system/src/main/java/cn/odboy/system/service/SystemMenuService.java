@@ -1,9 +1,25 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -40,84 +56,84 @@ public class SystemMenuService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
     @Transactional(rollbackFor = Exception.class)
-    public void saveMenu(SystemMenuTb resources) {
-        if (systemMenuMapper.getMenuByTitle(resources.getTitle()) != null) {
+    public void saveMenu(SystemMenuTb args) {
+        if (systemMenuMapper.getMenuByTitle(args.getTitle()) != null) {
             throw new BadRequestException("菜单标题已存在");
         }
-        if (CsStringUtil.isNotBlank(resources.getComponentName())) {
-            if (systemMenuMapper.getMenuByComponentName(resources.getComponentName()) != null) {
+        if (CsStringUtil.isNotBlank(args.getComponentName())) {
+            if (systemMenuMapper.getMenuByComponentName(args.getComponentName()) != null) {
                 throw new BadRequestException("菜单组件名称已存在");
             }
         }
-        if (Long.valueOf(0L).equals(resources.getPid())) {
-            resources.setPid(null);
+        if (Long.valueOf(0L).equals(args.getPid())) {
+            args.setPid(null);
         }
-        if (resources.getIFrame()) {
-            if (!(resources.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || resources.getPath().toLowerCase()
-                .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+        if (args.getIFrame()) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
+                    .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
-        systemMenuMapper.insert(resources);
+        systemMenuMapper.insert(args);
         // 计算子节点数目
-        resources.setSubCount(0);
+        args.setSubCount(0);
         // 更新父节点菜单数目
-        this.updateMenuSubCnt(resources.getPid());
+        this.updateMenuSubCnt(args.getPid());
     }
 
     /**
      * 编辑
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyMenuById(SystemMenuTb resources) {
-        if (resources.getId().equals(resources.getPid())) {
+    public void modifyMenuById(SystemMenuTb args) {
+        if (args.getId().equals(args.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
-        SystemMenuTb menu = systemMenuMapper.selectById(resources.getId());
-        if (resources.getIFrame()) {
-            if (!(resources.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || resources.getPath().toLowerCase()
-                .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+        SystemMenuTb menu = systemMenuMapper.selectById(args.getId());
+        if (args.getIFrame()) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
+                    .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
-        SystemMenuTb menu1 = systemMenuMapper.getMenuByTitle(resources.getTitle());
+        SystemMenuTb menu1 = systemMenuMapper.getMenuByTitle(args.getTitle());
 
         if (menu1 != null && !menu1.getId().equals(menu.getId())) {
             throw new BadRequestException("菜单标题已存在");
         }
 
-        if (resources.getPid().equals(0L)) {
-            resources.setPid(null);
+        if (args.getPid().equals(0L)) {
+            args.setPid(null);
         }
 
         // 记录的父节点ID
         Long oldPid = menu.getPid();
-        Long newPid = resources.getPid();
+        Long newPid = args.getPid();
 
-        if (CsStringUtil.isNotBlank(resources.getComponentName())) {
-            menu1 = systemMenuMapper.getMenuByComponentName(resources.getComponentName());
+        if (CsStringUtil.isNotBlank(args.getComponentName())) {
+            menu1 = systemMenuMapper.getMenuByComponentName(args.getComponentName());
             if (menu1 != null && !menu1.getId().equals(menu.getId())) {
                 throw new BadRequestException("菜单组件名称已存在");
             }
         }
-        menu.setTitle(resources.getTitle());
-        menu.setComponent(resources.getComponent());
-        menu.setPath(resources.getPath());
-        menu.setIcon(resources.getIcon());
-        menu.setIFrame(resources.getIFrame());
-        menu.setPid(resources.getPid());
-        menu.setMenuSort(resources.getMenuSort());
-        menu.setCache(resources.getCache());
-        menu.setHidden(resources.getHidden());
-        menu.setComponentName(resources.getComponentName());
-        menu.setPermission(resources.getPermission());
-        menu.setType(resources.getType());
+        menu.setTitle(args.getTitle());
+        menu.setComponent(args.getComponent());
+        menu.setPath(args.getPath());
+        menu.setIcon(args.getIcon());
+        menu.setIFrame(args.getIFrame());
+        menu.setPid(args.getPid());
+        menu.setMenuSort(args.getMenuSort());
+        menu.setCache(args.getCache());
+        menu.setHidden(args.getHidden());
+        menu.setComponentName(args.getComponentName());
+        menu.setPermission(args.getPermission());
+        menu.setType(args.getType());
         // auto fill
         menu.setUpdateBy(null);
         menu.setUpdateTime(null);

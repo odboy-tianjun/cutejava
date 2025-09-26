@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy;
 
 import cn.odboy.framework.mybatisplus.core.CsMpCmdGenUtil;
@@ -12,7 +28,7 @@ public class GenCode {
     private static final Integer PORT = 23306;
     private static final String DATABASE_NAME = "cutejava";
     private static final String DATABASE_USER = "root";
-    private static final String DATABASE_PWD = "lm,101208..,.";
+    private static final String DATABASE_PWD = "kd123456";
     private static final String URL = String.format("jdbc:mysql://%s:%s/%s", ADDR, PORT, DATABASE_NAME);
 
     public static void main(String[] args) {
@@ -21,15 +37,21 @@ public class GenCode {
         generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
         generator.setDatabaseUsername(DATABASE_USER);
         generator.setDatabasePassword(DATABASE_PWD);
-        //        genPipeline(generator);
-        genSystem(generator);
+        genCode(generator);
     }
 
-    private static void genPipeline(CsMpCmdGenUtil generator) {
-        generator.gen("devops", "", List.of("pipeline_template", "pipeline_instance", "pipeline_instance_node_detail"));
-    }
-
-    private static void genSystem(CsMpCmdGenUtil generator) {
-        generator.gen("system", "", List.of("system_oss_storage"));
+    private static void genCode(CsMpCmdGenUtil generator) {
+        generator.gen("devops", "", List.of(
+                //                "devops_host_cidr",
+                //                "devops_host_info",
+                //                "devops_app_info",
+                //                "devops_config",
+                //                "devops_app_init_resource_config",
+                //                "devops_app_role",
+                // "devops_pipeline_template_config",
+                // "devops_app_branch"
+                // "devops_app_iteration",
+                "devops_app_iteration_instance"
+        ));
     }
 }

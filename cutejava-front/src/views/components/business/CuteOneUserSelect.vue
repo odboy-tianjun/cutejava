@@ -1,9 +1,16 @@
+<!--
+ * 单用户选择组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-07-29
+ -->
 <template>
   <el-select
-    v-model="users"
+    v-model="user"
     style="width: 100%"
     filterable
     remote
+    clearable
     reserve-keyword
     placeholder="支持用户姓名、手机号、邮箱、用户名查询"
     :remote-method="remoteMethod"
@@ -34,14 +41,14 @@ export default {
   },
   data() {
     return {
-      users: this.value,
+      user: this.value,
       loading: false,
       options: []
     }
   },
   watch: {
     value(newVal) {
-      this.users = newVal
+      this.user = newVal
     }
   },
   methods: {

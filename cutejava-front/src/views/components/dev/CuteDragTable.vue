@@ -1,3 +1,9 @@
+<!--
+ * 拖拽表格组件：封装自定义逻辑与参数，表格支持拖拽排序
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <div>
     <el-table
@@ -151,6 +157,9 @@ export default {
       data.forEach((item, index) => {
         item.orderNum = index + 1
       })
+    },
+    getDataSource() {
+      return this.crud.dataSource
     }
   }
 }

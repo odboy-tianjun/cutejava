@@ -134,19 +134,19 @@
         from system_user u
                  left join system_dept d on u.dept_id = d.dept_id
         where u.username = #{username}
-        and u.enabled = 1
+          and u.enabled = 1
     </select>
     <select id="getUserByEmail" resultType="cn.odboy.system.dal.dataobject.SystemUserTb">
         select user_id as id, username
         from system_user
         where email = #{email}
-          and u.enabled = 1
+          and enabled = 1
     </select>
     <select id="getUserByPhone" resultType="cn.odboy.system.dal.dataobject.SystemUserTb">
         select user_id as id, username
         from system_user
         where phone = #{phone}
-          and u.enabled = 1
+          and enabled = 1
     </select>
     <update id="updateUserPasswordByUsername">
         update system_user

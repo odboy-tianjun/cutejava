@@ -1,19 +1,22 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.util;
+
+import cn.odboy.framework.exception.web.BadRequestException;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -100,7 +103,12 @@ public final class CsDistributedIdUtil {
      * @param workerIdBits     机器 ID 所占位数
      * @param sequenceBits     序列号所占位数
      */
-    public CsDistributedIdUtil(long dataCenterId, long workerId, long dataCenterIdBits, long workerIdBits, long sequenceBits) {
+    public CsDistributedIdUtil(
+            long dataCenterId,
+            long workerId,
+            long dataCenterIdBits,
+            long workerIdBits,
+            long sequenceBits) {
         this.dataCenterIdBits = dataCenterIdBits;
         this.workerIdBits = workerIdBits;
         this.sequenceBits = sequenceBits;
@@ -133,7 +141,9 @@ public final class CsDistributedIdUtil {
 
         // 如果当前时间戳小于上一次生成 ID 的时间戳, 说明时钟回拨，抛出异常
         if (currentTimestamp < lastTimestamp.get()) {
-            throw new RuntimeException("Clock moved backwards. Refusing to generate id for " + (lastTimestamp.get() - currentTimestamp) + " milliseconds");
+            throw new BadRequestException(
+                    "Clock moved backwards. Refusing to generate id for " + (lastTimestamp.get() - currentTimestamp) +
+                            " milliseconds");
         }
 
         long lastTimestampValue = lastTimestamp.get();
@@ -144,12 +154,14 @@ public final class CsDistributedIdUtil {
                 // 序列号溢出，等待下一毫秒
                 currentTimestamp = waitNextMillis(lastTimestampValue);
             }
-            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift) | seq;
+            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) |
+                    (workerId << workerIdShift) | seq;
         } else {
             // 时间戳改变，重置序列号
             sequence.set(0L);
             lastTimestamp.set(currentTimestamp);
-            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift);
+            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) |
+                    (workerId << workerIdShift);
         }
     }
 

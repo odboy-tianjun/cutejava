@@ -1,3 +1,9 @@
+<!--
+ * 预览抽屉：封装了常用的方法和属性
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <el-drawer
     :title="title"
@@ -6,8 +12,9 @@
     :before-close="beforeClose"
     :append-to-body="true"
     :close-on-press-escape="false"
+    :wrapper-closable="wrapperClosable"
     :destroy-on-close="true"
-    :show-close="false"
+    :show-close="true"
     :modal="false"
   >
     <!-- 这里是插槽，用于渲染传入的组件 -->
@@ -29,6 +36,11 @@ export default {
       type: String,
       required: false,
       default: '40%'
+    },
+    wrapperClosable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {

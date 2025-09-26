@@ -1,9 +1,25 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.context.CsSpringBeanHolder;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
@@ -58,31 +74,31 @@ public class SystemQuartzJobController {
     @ApiOperation("查询任务执行日志")
     @PostMapping(value = "/logs")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs criteria) {
-        Page<SystemQuartzLogTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogByArgs(criteria, page), HttpStatus.OK);
+    public ResponseEntity<CsPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
+        Page<SystemQuartzLogTb> page = new Page<>(args.getPage(), args.getSize());
+        return new ResponseEntity<>(systemQuartzJobService.queryQuartzLogByArgs(args, page), HttpStatus.OK);
     }
 
     @ApiOperation("新增定时任务")
     @PostMapping(value = "/createQuartzJob")
     @PreAuthorize("@el.check('quartzJob:add')")
-    public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb resources) {
-        if (resources.getId() != null) {
+    public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb args) {
+        if (args.getId() != null) {
             throw new BadRequestException("无效参数id");
         }
         // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
-        checkBean(resources.getBeanName());
-        systemQuartzJobService.createJob(resources);
+        checkBean(args.getBeanName());
+        systemQuartzJobService.createJob(args);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改定时任务")
     @PutMapping
     @PreAuthorize("@el.check('quartzJob:edit')")
-    public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs resources) {
+    public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {
         // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
-        checkBean(resources.getBeanName());
-        systemQuartzJobService.modifyQuartzJobResumeCron(resources);
+        checkBean(args.getBeanName());
+        systemQuartzJobService.modifyQuartzJobResumeCron(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

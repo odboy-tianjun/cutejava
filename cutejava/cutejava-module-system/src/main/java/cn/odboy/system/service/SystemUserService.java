@@ -1,8 +1,24 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -11,8 +27,8 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.mysql.SystemUserJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
-import cn.odboy.system.dal.redis.SystemUserInfoDAO;
-import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
+import cn.odboy.system.dal.redis.SystemUserInfoRedis;
+import cn.odboy.system.dal.redis.SystemUserOnlineInfoRedis;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
@@ -40,50 +56,50 @@ public class SystemUserService {
     @Autowired
     private SystemUserRoleMapper systemUserRoleMapper;
     @Autowired
-    private SystemUserInfoDAO systemUserInfoDAO;
+    private SystemUserInfoRedis systemUserInfoRedis;
     @Autowired
-    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    private SystemUserOnlineInfoRedis systemUserOnlineInfoRedis;
     @Autowired
     private CsFileLocalUploadHelper fileUploadPathHelper;
 
     /**
      * 新增用户
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveUser(SystemUserTb resources) {
-        resources.setDeptId(resources.getDept().getId());
-        if (systemUserMapper.getUserByUsername(resources.getUsername()) != null) {
+    public void saveUser(SystemUserTb args) {
+        args.setDeptId(args.getDept().getId());
+        if (systemUserMapper.getUserByUsername(args.getUsername()) != null) {
             throw new BadRequestException("用户名已存在");
         }
-        if (systemUserMapper.getUserByEmail(resources.getEmail()) != null) {
+        if (systemUserMapper.getUserByEmail(args.getEmail()) != null) {
             throw new BadRequestException("邮箱已存在");
         }
-        if (systemUserMapper.getUserByPhone(resources.getPhone()) != null) {
+        if (systemUserMapper.getUserByPhone(args.getPhone()) != null) {
             throw new BadRequestException("手机号已存在");
         }
-        systemUserMapper.insert(resources);
+        systemUserMapper.insert(args);
         // 保存用户岗位
-        systemUserJobMapper.batchInsertUserJob(resources.getJobs(), resources.getId());
+        systemUserJobMapper.batchInsertUserJob(args.getJobs(), args.getId());
         // 保存用户角色
-        systemUserRoleMapper.batchInsertUserRole(resources.getRoles(), resources.getId());
+        systemUserRoleMapper.batchInsertUserRole(args.getRoles(), args.getId());
     }
 
     /**
      * 编辑用户
      *
-     * @param resources /
+     * @param args /
      * @throws Exception /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyUserById(SystemUserTb resources) {
-        SystemUserTb user = systemUserMapper.selectById(resources.getId());
-        SystemUserTb user1 = systemUserMapper.getUserByUsername(resources.getUsername());
-        SystemUserTb user2 = systemUserMapper.getUserByEmail(resources.getEmail());
-        SystemUserTb user3 = systemUserMapper.getUserByPhone(resources.getPhone());
+    public void modifyUserById(SystemUserTb args) {
+        SystemUserTb user = systemUserMapper.selectById(args.getId());
+        SystemUserTb user1 = systemUserMapper.getUserByUsername(args.getUsername());
+        SystemUserTb user2 = systemUserMapper.getUserByEmail(args.getEmail());
+        SystemUserTb user3 = systemUserMapper.getUserByPhone(args.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
             throw new BadRequestException("用户名已存在");
         }
@@ -94,48 +110,48 @@ public class SystemUserService {
             throw new BadRequestException("手机号已存在");
         }
         // 如果用户被禁用, 则清除用户登录信息
-        if (!resources.getEnabled()) {
-            systemUserOnlineInfoDAO.kickOutByUsername(resources.getUsername());
+        if (!args.getEnabled()) {
+            systemUserOnlineInfoRedis.kickOutByUsername(args.getUsername());
         }
-        user.setDeptId(resources.getDept().getId());
-        user.setUsername(resources.getUsername());
-        user.setEmail(resources.getEmail());
-        user.setEnabled(resources.getEnabled());
-        user.setRoles(resources.getRoles());
-        user.setDept(resources.getDept());
-        user.setJobs(resources.getJobs());
-        user.setPhone(resources.getPhone());
-        user.setNickName(resources.getNickName());
-        user.setGender(resources.getGender());
+        user.setDeptId(args.getDept().getId());
+        user.setUsername(args.getUsername());
+        user.setEmail(args.getEmail());
+        user.setEnabled(args.getEnabled());
+        user.setRoles(args.getRoles());
+        user.setDept(args.getDept());
+        user.setJobs(args.getJobs());
+        user.setPhone(args.getPhone());
+        user.setNickName(args.getNickName());
+        user.setGender(args.getGender());
         systemUserMapper.insertOrUpdate(user);
         // 清除用户登录缓存
-        systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
+        systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
         // 更新用户岗位
-        systemUserJobMapper.batchDeleteUserJob(Collections.singleton(resources.getId()));
-        systemUserJobMapper.batchInsertUserJob(resources.getJobs(), resources.getId());
+        systemUserJobMapper.batchDeleteUserJob(Collections.singleton(args.getId()));
+        systemUserJobMapper.batchInsertUserJob(args.getJobs(), args.getId());
         // 更新用户角色
-        systemUserRoleMapper.batchDeleteUserRole(Collections.singleton(resources.getId()));
-        systemUserRoleMapper.batchInsertUserRole(resources.getRoles(), resources.getId());
+        systemUserRoleMapper.batchDeleteUserRole(Collections.singleton(args.getId()));
+        systemUserRoleMapper.batchInsertUserRole(args.getRoles(), args.getId());
     }
 
     /**
      * 用户自助修改资料
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyUserCenterInfoById(SystemUserTb resources) {
-        SystemUserTb user = systemUserMapper.selectById(resources.getId());
-        SystemUserTb user1 = systemUserMapper.getUserByPhone(resources.getPhone());
+    public void modifyUserCenterInfoById(SystemUserTb args) {
+        SystemUserTb user = systemUserMapper.selectById(args.getId());
+        SystemUserTb user1 = systemUserMapper.getUserByPhone(args.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
             throw new BadRequestException("手机号已存在");
         }
-        user.setNickName(resources.getNickName());
-        user.setPhone(resources.getPhone());
-        user.setGender(resources.getGender());
+        user.setNickName(args.getNickName());
+        user.setPhone(args.getPhone());
+        user.setGender(args.getGender());
         systemUserMapper.insertOrUpdate(user);
-        systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
+        systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
     }
 
     /**
@@ -149,7 +165,7 @@ public class SystemUserService {
         for (Long id : ids) {
             // 清理缓存
             SystemUserTb user = systemUserMapper.selectById(id);
-            systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
+            systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
         }
         systemUserMapper.deleteByIds(ids);
         // 删除用户岗位
@@ -168,7 +184,7 @@ public class SystemUserService {
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserPasswordByUsername(String username, String encryptPassword) {
         systemUserMapper.updateUserPasswordByUsername(username, encryptPassword);
-        systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
+        systemUserInfoRedis.deleteUserLoginInfoByUserName(username);
     }
 
     /**
@@ -184,9 +200,9 @@ public class SystemUserService {
         // 清除缓存
         users.forEach(user -> {
             // 清除缓存
-            systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
+            systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
             // 强制退出
-            systemUserOnlineInfoDAO.kickOutByUsername(user.getUsername());
+            systemUserOnlineInfoRedis.kickOutByUsername(user.getUsername());
         });
         // 重置密码
         systemUserMapper.batchUpdatePassword(password, ids);
@@ -222,7 +238,7 @@ public class SystemUserService {
         if (CsStringUtil.isNotBlank(oldPath)) {
             CsFileUtil.del(oldPath);
         }
-        systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
+        systemUserInfoRedis.deleteUserLoginInfoByUserName(username);
         return new HashMap<>(1) {{
             put("avatar", file.getName());
         }};
@@ -238,7 +254,7 @@ public class SystemUserService {
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserEmailByUsername(String username, String email) {
         systemUserMapper.updateUserEmailByUsername(username, email);
-        systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
+        systemUserInfoRedis.deleteUserLoginInfoByUserName(username);
     }
 
     /**
@@ -276,11 +292,11 @@ public class SystemUserService {
      * @return /
      */
 
-    public CsPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<Object> page) {
+    public CsPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
+        // 子查询优化
         criteria.setOffset(page.offset());
-        List<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, CsPageUtil.getCount(systemUserMapper)).getRecords();
-        Long total = systemUserMapper.countUserByArgs(criteria);
-        return CsPageUtil.toPage(users, total);
+        IPage<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, page);
+        return CsPageUtil.toPage(users);
     }
 
     /**
@@ -291,7 +307,7 @@ public class SystemUserService {
      */
 
     public List<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria) {
-        return systemUserMapper.selectUserByArgs(criteria, CsPageUtil.getCount(systemUserMapper)).getRecords();
+        return systemUserMapper.selectUserByArgs(criteria);
     }
 
     /**
@@ -311,7 +327,6 @@ public class SystemUserService {
      * @param username /
      * @return /
      */
-
     public SystemUserTb getUserByUsername(String username) {
         return systemUserMapper.getUserByUsername(username);
     }
@@ -325,5 +340,9 @@ public class SystemUserService {
      */
     public IPage<SystemUserTb> queryUserByBlurry(LambdaQueryWrapper<SystemUserTb> wrapper, Page<SystemUserTb> page) {
         return systemUserMapper.selectPage(page, wrapper);
+    }
+
+    public List<SystemUserTb> queryUserByUserIds(List<Long> userIds) {
+        return systemUserMapper.selectByIds(userIds);
     }
 }

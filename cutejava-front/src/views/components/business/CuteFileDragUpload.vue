@@ -1,3 +1,9 @@
+<!--
+ * 文件上传组件：支持拖拽上传
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-07-29
+ -->
 <template>
   <el-upload
     ref="upload"

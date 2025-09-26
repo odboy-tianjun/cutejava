@@ -1,18 +1,19 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.util;
 
 import cn.odboy.base.CsSelectOptionVo;
@@ -60,7 +61,9 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @param <U>          /
      * @return /
      */
-    public static <T, U extends Comparable<? super U>> List<T> streamAscSort(List<T> data, Function<? super T, ? extends U> keyExtractor) {
+    public static <T, U extends Comparable<? super U>> List<T> streamAscSort(
+            List<T> data,
+            Function<? super T, ? extends U> keyExtractor) {
         return data.stream().sorted(Comparator.comparing(keyExtractor)).collect(Collectors.toList());
     }
 
@@ -75,7 +78,9 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @param <U>          /
      * @return /
      */
-    public static <T, U extends Comparable<? super U>> List<T> streamDescSort(List<T> data, Function<? super T, ? extends U> keyExtractor) {
+    public static <T, U extends Comparable<? super U>> List<T> streamDescSort(
+            List<T> data,
+            Function<? super T, ? extends U> keyExtractor) {
         return data.stream().sorted(Comparator.comparing(keyExtractor).reversed()).collect(Collectors.toList());
     }
 
@@ -92,7 +97,10 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @param <U>         /
      * @return /
      */
-    public static <T, K, U> Map<K, U> streamToMap(List<T> data, Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+    public static <T, K, U> Map<K, U> streamToMap(
+            List<T> data,
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper) {
         // 根据key去重再并流
         return streamDistinct(data, keyMapper).stream().collect(Collectors.toMap(keyMapper, valueMapper));
     }
@@ -142,7 +150,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
             try {
                 Field field = m.getClass().getDeclaredField(elementName);
                 field.setAccessible(true);
-                that = (BigDecimal)field.get(m);
+                that = (BigDecimal) field.get(m);
             } catch (Exception e) {
                 // 忽略异常
                 that = BigDecimal.ZERO;
@@ -184,7 +192,10 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * @return /
      */
     public static BigDecimal streamBigDecimalAvg(List<BigDecimal> data) {
-        return data.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
+        return data.stream()
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
     }
 
     public static void main(String[] args) {
@@ -203,7 +214,8 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
         System.out.println(JSON.toJSONString(selectOptions2));
         List<CsSelectOptionVo> selectOptions3 = CsCollUtil.streamDistinct(testData, CsSelectOptionVo::getValue);
         System.out.println(JSON.toJSONString(selectOptions3));
-        Map<String, String> selectMap1 = CsCollUtil.streamToMap(testData, CsSelectOptionVo::getValue, CsSelectOptionVo::getLabel);
+        Map<String, String> selectMap1 =
+                CsCollUtil.streamToMap(testData, CsSelectOptionVo::getValue, CsSelectOptionVo::getLabel);
         System.out.println(JSON.toJSONString(selectMap1));
         // 这只是一个示范
         BigDecimal total1 = CsCollUtil.streamBigDecimalAdd(testData, "value");

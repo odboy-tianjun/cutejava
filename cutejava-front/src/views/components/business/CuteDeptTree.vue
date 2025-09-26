@@ -1,3 +1,9 @@
+<!--
+ * 部门树组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-07-29
+ -->
 <template>
   <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
     <div class="head-container">

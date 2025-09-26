@@ -70,8 +70,21 @@ export function DeepCopyObject(obj) {
  * @returns {*|number}
  */
 export function CountArraysObjectByPropKey(arr, propKey, targetValue) {
-  if (!Array.isArray(arr)) return 0
-  return arr.filter(item => item[propKey] === targetValue).length
+  if (!Array.isArray(arr)) {
+    return 0
+  }
+  let cnt = 0
+  for (const element of arr) {
+    if (element.hasOwnProperty(propKey)) {
+      // console.error('that.pipelineInstance.propKey', propKey)
+      // console.error('that.pipelineInstance.element[propKey]', element[propKey])
+      // console.error('that.pipelineInstance.targetValue', targetValue)
+      if (element[propKey] === targetValue) {
+        cnt = cnt + 1
+      }
+    }
+  }
+  return cnt
 }
 
 /**
@@ -290,6 +303,7 @@ export function MergeObject(target, source) {
   })
   return target
 }
+
 /**
  * 防抖动
  * @param {Function} func
@@ -327,4 +341,47 @@ export function DeBounce(func, wait, immediate = false) {
 
     return result
   }
+}
+
+/**
+ * 格式化表格行列中的环境字符串
+ * @param row
+ * @param column
+ * @param cellValue
+ * @param index
+ * @returns {string}
+ * @constructor
+ */
+export function FormatRowEnvStr(row, column, cellValue, index) {
+  if (cellValue === undefined) {
+    return ''
+  }
+  const data = {
+    daily: '日常环境',
+    stage: '预发环境',
+    gray: '灰度环境',
+    production: '生产环境'
+  }
+  const title = data[cellValue]
+  if (title) {
+    return title
+  }
+  return ''
+}
+
+export function IsEmpty(obj) {
+  if (obj === undefined) {
+    // console.error('is undefined')
+    return true
+  }
+  if (obj === '') {
+    // console.error('is ""')
+    return true
+  }
+  if (obj === 'undefined') {
+    // console.error('is "undefined"')
+    return true
+  }
+  // console.error('is null')
+  return obj === null
 }

@@ -1,3 +1,20 @@
+
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.util;
 
 import cn.odboy.annotation.AnonymousAccess;
@@ -25,7 +42,8 @@ public class CsAnonTagUtil {
      * @return /
      */
     public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
-        RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping)applicationContext.getBean("requestMappingHandlerMapping");
+        RequestMappingHandlerMapping requestMappingHandlerMapping =
+                (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
         // 获取匿名标记
@@ -40,7 +58,9 @@ public class CsAnonTagUtil {
             AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
             if (null != anonymousAccess && infoEntry.getKey() != null) {
                 List<RequestMethod> requestMethods = new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
-                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
+                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ?
+                        RequestMethodEnum.ALL.getType() :
+                        requestMethods.get(0).name());
                 PatternsRequestCondition patternsCondition = infoEntry.getKey().getPatternsCondition();
                 if (patternsCondition != null) {
                     switch (Objects.requireNonNull(request)) {

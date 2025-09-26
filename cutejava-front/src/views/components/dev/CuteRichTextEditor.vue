@@ -1,5 +1,9 @@
-<!--富文本基于-->
-<!--<el-link type="primary" href="https://www.wangeditor.com/v5/getting-started.html" target="_blank">wangEditor</el-link>-->
+<!--
+ * 富文本编辑器
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <div ref="editor" style="border: 1px solid #ccc;">
     <Toolbar

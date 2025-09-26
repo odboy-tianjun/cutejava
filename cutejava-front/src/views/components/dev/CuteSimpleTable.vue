@@ -1,3 +1,9 @@
+<!--
+ * 简单表格组件：封装自定义逻辑与参数
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <div>
     <el-table
@@ -68,6 +74,11 @@ export default {
           total: 0
         }
       }
+    },
+    customHeight: {
+      type: Number,
+      required: false,
+      default: null
     }
   },
   data() {
@@ -89,6 +100,9 @@ export default {
   },
   computed: {
     height() {
+      if (this.customHeight) {
+        return this.customHeight
+      }
       return document.documentElement.clientHeight - 300
     }
   },

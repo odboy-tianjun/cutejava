@@ -1,3 +1,9 @@
+<!--
+ * 简单表单抽屉：封装了常用方法和参数
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <el-drawer
     :title="title"
@@ -6,8 +12,9 @@
     :before-close="beforeClose"
     :append-to-body="true"
     :close-on-press-escape="false"
+    :wrapper-closable="false"
     :destroy-on-close="true"
-    :show-close="false"
+    :show-close="true"
     :modal="false"
   >
     <div class="container-form">
@@ -19,7 +26,7 @@
     <el-divider />
     <div class="dialog-footer" style="padding-right: 30px;text-align: right">
       <el-button type="danger" @click="hidden">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')">提 交</el-button>
+      <el-button v-prevent-re-click type="primary" @click="submitForm('form')">提 交</el-button>
     </div>
   </el-drawer>
 </template>

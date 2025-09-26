@@ -1,9 +1,25 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.controller;
 
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
@@ -72,28 +88,28 @@ public class SystemRoleController {
     @ApiOperation("新增角色")
     @PostMapping(value = "/saveRole")
     @PreAuthorize("@el.check('roles:add')")
-    public ResponseEntity<Void> saveRole(@Validated @RequestBody SystemCreateRoleArgs resources) {
-        checkRoleLevels(resources.getLevel());
-        systemRoleService.saveRole(resources);
+    public ResponseEntity<Void> saveRole(@Validated @RequestBody SystemCreateRoleArgs args) {
+        checkRoleLevels(args.getLevel());
+        systemRoleService.saveRole(args);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改角色")
     @PostMapping(value = "/modifyRoleById")
     @PreAuthorize("@el.check('roles:edit')")
-    public ResponseEntity<Void> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleTb resources) {
-        checkRoleLevels(resources.getLevel());
-        systemRoleService.modifyRoleById(resources);
+    public ResponseEntity<Void> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleTb args) {
+        checkRoleLevels(args.getLevel());
+        systemRoleService.modifyRoleById(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation("修改角色菜单")
     @PostMapping(value = "/modifyBindMenuById")
     @PreAuthorize("@el.check('roles:edit')")
-    public ResponseEntity<Void> modifyBindMenuById(@RequestBody SystemRoleTb resources) {
-        SystemRoleTb role = systemRoleService.getRoleById(resources.getId());
+    public ResponseEntity<Void> modifyBindMenuById(@RequestBody SystemRoleTb args) {
+        SystemRoleTb role = systemRoleService.getRoleById(args.getId());
         checkRoleLevels(role.getLevel());
-        systemRoleService.modifyBindMenuById(resources);
+        systemRoleService.modifyBindMenuById(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -118,7 +134,10 @@ public class SystemRoleController {
      */
     private int checkRoleLevels(Integer level) {
         List<Integer> levels =
-            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId())
+                        .stream()
+                        .map(SystemRoleTb::getLevel)
+                        .collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

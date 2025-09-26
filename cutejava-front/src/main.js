@@ -88,6 +88,19 @@ Vue.filter('priceFormat', function(data) {
 
 Vue.config.productionTip = false
 
+Vue.config.errorHandler = function(err, vm, info) {
+  // err: 错误对象
+  // vm: 发生错误的 Vue 实例
+  // info: Vue 特定的错误信息，如生命周期钩子、事件等
+
+  console.error('Global Vue error:', err)
+  console.log('Component:', vm)
+  console.log('Error info:', info)
+
+  // 可以在这里发送错误日志到服务器
+  // logErrorToServer(err, vm, info);
+}
+
 new Vue({
   el: '#app',
   router,

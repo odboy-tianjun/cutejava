@@ -34,6 +34,7 @@
         :disabled="disabledDle"
         type="text"
         size="mini"
+        style="color: #F56C6C"
         @click.stop="toDelete"
       >删除</el-button>
     </el-popover>

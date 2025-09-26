@@ -32,7 +32,7 @@ server:
 spring:
   application:
     name: cutejava
-    title: CuteJava后台管理系统
+    title: CuteJava
   lifecycle:
     # 采用java.time.Duration格式的值,如果在这个时间内，优雅停机没有停掉应用，超过这个时间就会强制停止应用
     timeout-per-shutdown-phase: 30s
@@ -52,10 +52,13 @@ spring:
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: com.p6spy.engine.spy.P6SpyDriver
-      url: jdbc:p6spy:mysql://192.168.100.128:23306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      # sql监控
+      #      driverClassName: com.p6spy.engine.spy.P6SpyDriver
+      #      url: jdbc:p6spy:mysql://192.168.100.128:23306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.100.128:23306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       username: root
-      password: lm,101208..,.
+      password: kd123456
       # 初始连接数，建议设置为与最小空闲连接数相同
       initial-size: 2
       # 最小空闲连接数，保持足够的空闲连接以应对请求
@@ -110,7 +113,7 @@ spring:
     database: ${REDIS_DB:1}
     host: ${REDIS_HOST:192.168.100.128}
     port: ${REDIS_PORT:26379}
-    password: ${REDIS_PWD:lm,101208..,.}
+    password: ${REDIS_PWD:kd123456}
     # 连接超时时间
     timeout: 5000
     # 连接池配置
@@ -124,6 +127,7 @@ spring:
         max-idle: 20
         # 连接池中的最小空闲连接数
         min-idle: 1
+# 集成mybatis-plus
 mybatis-plus:
   configuration:
     # 开启 Mybatis 二级缓存，默认为 true
@@ -154,6 +158,7 @@ mybatis-plus:
       table-underline: true
     # 是否控制台 print mybatisplus-plus 的 LOGO
     banner: true
+# 框架配置
 app:
   # 密码加密传输，前端公钥加密，后端私钥解密
   rsa:
@@ -201,15 +206,6 @@ app:
     keep-alive-seconds: 60
     # 队列容量
     queue-capacity: 50
-  pipeline-task-pool:
-    # 核心线程池大小
-    core-pool-size: 10
-    # 最大线程数
-    max-pool-size: 200
-    # 活跃时间
-    keep-alive-seconds: 60
-    # 队列容量
-    queue-capacity: 300
   # oss
   oss:
     max-size: 100
@@ -220,26 +216,15 @@ app:
       secretKey: 8BiK5UbmvXGJNVQ98CGiohHzT1N1FMRZqHRdJllj
   captcha:
     expireTime: 300
-## 启用debug
+# debug
 #debug: true
-#logging:
-#  level:
-#    root: debug
-mongo-plus:
-  data:
-    mongodb:
-      database: cutejava
-      connectTimeoutMS: 50000
-      host: 192.168.100.128
-      port: 27017
-      retry-writes: false
-      username: cutejava
-      password: 123456
-      authentication-database: cutejava
-  log: false
-  pretty: false
-  configuration:
-    field:
-      ignoring-null: false
-    auto-create-index: true
-    auto-convert-object-id: true
+# 日志配置
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 7
+      total-size-cap: 1GB
+  level:
+    #    root: debug
+    cn.odboy: info

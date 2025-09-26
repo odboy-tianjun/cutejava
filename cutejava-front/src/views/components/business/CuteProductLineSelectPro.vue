@@ -1,6 +1,12 @@
+<!--
+ * 产品线级联选择组件
+ * @author odboy
+ * @email tianjun@odboy.cn
+ * @created 2025-08-01
+ -->
 <template>
   <el-cascader
-    v-model="value"
+    v-model="productLine"
     :disabled="disabled"
     :options="deptOptions"
     style="width: 100%"
@@ -28,12 +34,12 @@ export default {
   data() {
     return {
       deptOptions: [],
-      selectedValue: this.value
+      productLine: this.value
     }
   },
   watch: {
     value(newVal) {
-      this.selectedValue = newVal
+      this.productLine = newVal
     }
   },
   created() {
@@ -57,14 +63,15 @@ export default {
     fetchDeptData() {
       queryDeptSelectProDataSource().then(data => {
         this.deptOptions = this.cleanEmptyChildren(data)
-        console.error('deptOptions', this.deptOptions)
+        // console.error('deptOptions', this.deptOptions)
       }).catch(error => {
         console.error('获取部门数据失败:', error)
         CsMessage.Error('获取部门数据失败')
       })
     },
     handleChange(value) {
-      this.selectedValue = value
+      this.productLine = value
+      // console.error('value', value)
       // 绑定change事件
       this.$emit('change', value)
       // 绑定form value

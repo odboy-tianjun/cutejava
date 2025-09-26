@@ -58,7 +58,7 @@
           :before-close="crud.cancelCU"
           :visible.sync="crud.status.cu > 0"
           :title="crud.status.title"
-          width="555px"
+          width="640px"
         >
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
             <el-form-item label="用户名" prop="username">
@@ -119,7 +119,6 @@
               <el-select
                 v-model="roleDatas"
                 :disabled="form.id === user.id"
-                style="width: 426px"
                 multiple
                 placeholder="请选择"
                 @remove-tag="deleteTag"
@@ -136,7 +135,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="text" @click="crud.cancelCU">取消</el-button>
+            <el-button @click="crud.cancelCU">取消</el-button>
             <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
           </div>
         </el-dialog>
@@ -164,7 +163,7 @@
               <el-switch
                 v-model="scope.row.enabled"
                 :disabled="user.id === scope.row.id"
-                active-color="#409EFF"
+                active-color="#67C23A"
                 inactive-color="#F56C6C"
                 @change="changeEnabled(scope.row, scope.row.enabled)"
               />
@@ -196,7 +195,7 @@
 
 <script>
 import crudUser from '@/api/system/user'
-import { isvalidPhone } from '@/utils/CsValidateUtil'
+import { IsValidPhone } from '@/utils/CsValidateUtil'
 import { queryDeptList, queryDeptSuperiorTree } from '@/api/system/dept'
 import { getLevel, queryRoleList } from '@/api/system/role'
 import { queryAllEnableJob } from '@/api/system/job'
@@ -239,7 +238,7 @@ export default {
     const validPhone = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入电话号码'))
-      } else if (!isvalidPhone(value)) {
+      } else if (!IsValidPhone(value)) {
         callback(new Error('请输入正确的11位手机号码'))
       } else {
         callback()

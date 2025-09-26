@@ -1,9 +1,25 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.controller;
 
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.constant.FileTypeEnum;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
@@ -68,8 +84,8 @@ public class SystemLocalStorageController {
     @ApiOperation("修改文件")
     @PostMapping(value = "/modifyLocalStorageById")
     @PreAuthorize("@el.check('storage:edit')")
-    public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb resources) {
-        localStorageService.modifyLocalStorageById(resources);
+    public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
+        localStorageService.modifyLocalStorageById(args);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

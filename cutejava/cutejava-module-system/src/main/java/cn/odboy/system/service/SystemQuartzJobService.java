@@ -1,10 +1,26 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
@@ -40,36 +56,36 @@ public class SystemQuartzJobService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void createJob(SystemQuartzJobTb resources) {
-        if (!CronExpression.isValidExpression(resources.getCronExpression())) {
+    public void createJob(SystemQuartzJobTb args) {
+        if (!CronExpression.isValidExpression(args.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
-        systemQuartzJobMapper.insert(resources);
-        quartzManage.addJob(resources);
+        systemQuartzJobMapper.insert(args);
+        quartzManage.addJob(args);
     }
 
     /**
      * 修改任务并重新调度
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyQuartzJobResumeCron(SystemUpdateQuartzJobArgs resources) {
-        if (!CronExpression.isValidExpression(resources.getCronExpression())) {
+    public void modifyQuartzJobResumeCron(SystemUpdateQuartzJobArgs args) {
+        if (!CronExpression.isValidExpression(args.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
-        if (CsStringUtil.isNotBlank(resources.getSubTask())) {
-            List<String> tasks = Arrays.asList(resources.getSubTask().split("[,，]"));
-            if (tasks.contains(resources.getId().toString())) {
+        if (CsStringUtil.isNotBlank(args.getSubTask())) {
+            List<String> tasks = Arrays.asList(args.getSubTask().split("[,，]"));
+            if (tasks.contains(args.getId().toString())) {
                 throw new BadRequestException("子任务中不能添加当前任务ID");
             }
         }
-        SystemQuartzJobTb quartzJob = BeanUtil.copyProperties(resources, SystemQuartzJobTb.class);
+        SystemQuartzJobTb quartzJob = BeanUtil.copyProperties(args, SystemQuartzJobTb.class);
         systemQuartzJobMapper.insertOrUpdate(quartzJob);
         quartzManage.updateJobCron(quartzJob);
     }
@@ -164,7 +180,8 @@ public class SystemQuartzJobService {
      * @throws IOException /
      */
 
-    public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response) throws IOException {
+    public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response)
+            throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemQuartzJobTb quartzJob : quartzJobs) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -189,7 +206,8 @@ public class SystemQuartzJobService {
      * @throws IOException /
      */
 
-    public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response) throws IOException {
+    public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response)
+            throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemQuartzLogTb quartzLog : queryAllLog) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -215,7 +233,9 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+    public CsPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(
+            SystemQueryQuartzJobArgs criteria,
+            Page<SystemQuartzJobTb> page) {
         return CsPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
     }
 
@@ -227,7 +247,9 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+    public CsPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(
+            SystemQueryQuartzJobArgs criteria,
+            Page<SystemQuartzLogTb> page) {
         return CsPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
     }
 
@@ -239,7 +261,8 @@ public class SystemQuartzJobService {
      */
 
     public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, CsPageUtil.getCount(systemQuartzJobMapper)).getRecords();
+        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, CsPageUtil.getCount(systemQuartzJobMapper))
+                .getRecords();
     }
 
     /**
@@ -250,7 +273,8 @@ public class SystemQuartzJobService {
      */
 
     public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, CsPageUtil.getCount(systemQuartzLogMapper)).getRecords();
+        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, CsPageUtil.getCount(systemQuartzLogMapper))
+                .getRecords();
     }
 
     public SystemQuartzJobTb getQuartzJobById(Long id) {

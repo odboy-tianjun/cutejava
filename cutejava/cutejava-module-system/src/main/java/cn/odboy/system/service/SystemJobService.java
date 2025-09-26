@@ -1,8 +1,24 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
@@ -29,33 +45,33 @@ public class SystemJobService {
     /**
      * 创建
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveJob(SystemCreateJobArgs resources) {
-        SystemJobTb job = systemJobMapper.getJobByName(resources.getName());
+    public void saveJob(SystemCreateJobArgs args) {
+        SystemJobTb job = systemJobMapper.getJobByName(args.getName());
         if (job != null) {
             throw new BadRequestException("职位名称已存在");
         }
-        systemJobMapper.insert(BeanUtil.copyProperties(resources, SystemJobTb.class));
+        systemJobMapper.insert(BeanUtil.copyProperties(args, SystemJobTb.class));
     }
 
     /**
      * 编辑
      *
-     * @param resources /
+     * @param args /
      */
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyJobById(SystemJobTb resources) {
-        SystemJobTb job = systemJobMapper.selectById(resources.getId());
-        SystemJobTb old = systemJobMapper.getJobByName(resources.getName());
-        if (old != null && !old.getId().equals(resources.getId())) {
+    public void modifyJobById(SystemJobTb args) {
+        SystemJobTb job = systemJobMapper.selectById(args.getId());
+        SystemJobTb old = systemJobMapper.getJobByName(args.getName());
+        if (old != null && !old.getId().equals(args.getId())) {
             throw new BadRequestException("职位名称已存在");
         }
-        resources.setId(job.getId());
-        systemJobMapper.insertOrUpdate(resources);
+        args.setId(job.getId());
+        systemJobMapper.insertOrUpdate(args);
     }
 
     /**
@@ -92,24 +108,24 @@ public class SystemJobService {
     /**
      * 分页查询
      *
-     * @param criteria 条件
-     * @param page     分页参数
+     * @param args 条件
+     * @param page 分页参数
      * @return
      */
 
-    public CsPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
-        return CsPageUtil.toPage(systemJobMapper.selectJobByArgs(criteria, page));
+    public CsPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
+        return CsPageUtil.toPage(systemJobMapper.selectJobByArgs(args, page));
     }
 
     /**
      * 查询全部数据
      *
-     * @param criteria /
+     * @param args /
      * @return /
      */
 
-    public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs criteria) {
-        return systemJobMapper.selectJobByArgs(criteria, CsPageUtil.getCount(systemJobMapper)).getRecords();
+    public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
+        return systemJobMapper.selectJobByArgs(args, CsPageUtil.getCount(systemJobMapper)).getRecords();
     }
 
     /**

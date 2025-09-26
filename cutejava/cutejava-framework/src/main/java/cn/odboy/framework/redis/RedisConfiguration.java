@@ -1,18 +1,19 @@
 /*
- *  Copyright 2021-2025 Odboy
+ * Copyright 2021-2025 Odboy
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package cn.odboy.framework.redis;
 
 import com.alibaba.fastjson2.JSON;
@@ -53,8 +54,9 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/> 未配置可能导致, 登录失败, 反复登录等问题
      */
     private static final String[] WHITELIST_STR =
-        {"org.springframework", "cn.odboy.system.dal.dataobject", "cn.odboy.system.dal.model", "cn.odboy.pipeline.dal.dataobject",
-            "cn.odboy.pipeline.dal.model", "cn.odboy.pipeline.framework.pipeline.model"};
+            {"org.springframework", "cn.odboy.system.dal.dataobject", "cn.odboy.system.dal.model",
+                    "cn.odboy.pipeline" + ".dal.dataobject", "cn.odboy.pipeline.dal.model",
+                    "cn.odboy.pipeline.framework.pipeline.model", "cn.odboy.framework.exception.thirdapi.vo"};
 
     /**
      * 设置 redis 数据默认过期时间，默认2小时 设置@cacheable 序列化方式
@@ -63,8 +65,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     public RedisCacheConfiguration redisCacheConfiguration() {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer))
-            .entryTtl(Duration.ofHours(2));
+        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 

@@ -1,10 +1,26 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cn.odboy.system.service;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
-import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.CsRedisHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
@@ -88,10 +104,14 @@ public class SystemEmailService {
         // 发送
         try {
             int size = sendEmailRequest.getTos().size();
-            Mail.create(account).setTos(sendEmailRequest.getTos().toArray(new String[size])).setTitle(sendEmailRequest.getSubject()).setContent(content)
-                .setHtml(true)
-                // 关闭session
-                .setUseGlobalSession(false).send();
+            Mail.create(account)
+                    .setTos(sendEmailRequest.getTos().toArray(new String[size]))
+                    .setTitle(sendEmailRequest.getSubject())
+                    .setContent(content)
+                    .setHtml(true)
+                    // 关闭session
+                    .setUseGlobalSession(false)
+                    .send();
         } catch (Exception e) {
             log.error("邮件发送失败", e);
             throw new BadRequestException("邮件发送失败");
@@ -134,7 +154,8 @@ public class SystemEmailService {
         } else {
             content = CsResourceTemplateUtil.render("system", biEnum.getTemplateName(), Dict.create().set("code", oldCode));
         }
-        SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
+        SystemSendEmailArgs sendEmailRequest =
+                new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
         sendEmail(sendEmailRequest);
     }
 

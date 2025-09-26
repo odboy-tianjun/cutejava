@@ -6,16 +6,16 @@
               value="%red(%contextName) - %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n"/>
 
     <!--输出到控制台-->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${log.pattern}</pattern>
             <charset>${log.charset}</charset>
         </encoder>
     </appender>
 
-    <!--普通日志输出到控制台-->
     <root level="info">
-        <appender-ref ref="console"/>
+        <!--普通日志输出到控制台-->
+        <appender-ref ref="CONSOLE"/>
     </root>
 
     <!-- Spring 日志级别控制 -->
