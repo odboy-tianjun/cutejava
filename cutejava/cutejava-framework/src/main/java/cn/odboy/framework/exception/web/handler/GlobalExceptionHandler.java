@@ -27,7 +27,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+/**
+ * 全局异常处理
+ *
+ * @author odboy
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
