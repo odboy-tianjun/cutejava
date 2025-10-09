@@ -16,7 +16,10 @@
 package cn.odboy.task.dal.dataobject;
 
 import cn.odboy.base.CsObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -54,10 +57,12 @@ public class TaskInstanceInfoTb extends CsObject {
     private Date updateTime;
 
     /**
-     * id
+     * id, @JsonSerialize和@JSONField，用于处理大数精度丢失问题
      */
     @ApiModelProperty("id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
+    @JSONField(format = "string")
     private Long id;
 
     /**
@@ -110,16 +115,16 @@ public class TaskInstanceInfoTb extends CsObject {
     private String reason;
 
     /**
-     * QuartzJob的key名称
-     */
-    @TableField("bind_job_key")
-    @ApiModelProperty("QuartzJob的key名称")
-    private String bindJobKey;
-
-    /**
      * QuartzJob参数
      */
-    @TableField("bind_job_data")
+    @TableField("job_data")
     @ApiModelProperty("QuartzJob参数")
-    private String bindJobData;
+    private String jobData;
+
+    /**
+     * 异常信息
+     */
+    @TableField("error_message")
+    @ApiModelProperty("异常信息")
+    private String errorMessage;
 }

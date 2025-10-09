@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.task.service;
+package cn.odboy.task.core;
 
-import cn.odboy.task.dal.dataobject.TaskInstanceDetailTb;
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.quartz.JobDataMap;
+public interface TaskStepCallback {
+    void onStart();
 
-/**
- * <p>
- * 任务实例明细 服务类
- * </p>
- *
- * @author codegen
- * @since 2025-09-26
- */
-public interface TaskInstanceDetailService extends IService<TaskInstanceDetailTb> {
-    void fastFailWithInfo(Long instanceId, String code, String message);
-
-    void fastSuccessWithInfo(Long id, String code, String executeInfo);
-
-    void fastStart(Long id, String code, JobDataMap dataMap);
+    void onFinish(String executeInfo);
 }

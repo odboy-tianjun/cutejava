@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.task.service;
+package cn.odboy.task.constant;
 
-import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.quartz.JobDataMap;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
- * <p>
- * 任务实例 服务类
- * </p>
+ * 任务状态(固定值)
  *
- * @author codegen
- * @since 2025-09-26
+ * @author odboy
+ * @date 2025-09-26
  */
-public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
-    TaskInstanceInfoTb getRunningById(Long instanceId);
-
-    void fastFailWithMessage(Long id, String errorMessage);
-
-    void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap);
-
-    void fastSuccessWithData(Long id, JobDataMap dataMap);
-
+@Getter
+@AllArgsConstructor
+public enum TaskStatusEnum {
+    Running("running", "运行中"),
+    Success("success", "执行成功"),
+    Fail("fail", "执行失败");
+    private final String code;
+    private final String name;
 }

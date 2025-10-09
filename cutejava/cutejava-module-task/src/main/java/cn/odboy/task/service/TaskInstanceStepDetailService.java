@@ -15,25 +15,31 @@
  */
 package cn.odboy.task.service;
 
-import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
+import cn.odboy.task.dal.dataobject.TaskInstanceStepDetailTb;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.quartz.JobDataMap;
 
 /**
  * <p>
- * 任务实例 服务类
+ * 任务实例步骤明细 服务类
  * </p>
  *
  * @author codegen
- * @since 2025-09-26
+ * @since 2025-09-28
  */
-public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
-    TaskInstanceInfoTb getRunningById(Long instanceId);
+public interface TaskInstanceStepDetailService extends IService<TaskInstanceStepDetailTb> {
+    /**
+     * 步骤执行成功
+     *
+     * @param instanceDetailId 任务实例明细id
+     * @param stepDesc         步骤描述
+     */
+    void success(Long instanceDetailId, String stepDesc);
 
-    void fastFailWithMessage(Long id, String errorMessage);
-
-    void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap);
-
-    void fastSuccessWithData(Long id, JobDataMap dataMap);
-
+    /**
+     * 步骤执行失败
+     *
+     * @param instanceDetailId 任务实例明细id
+     * @param stepDesc         步骤描述
+     */
+    void fail(Long instanceDetailId, String stepDesc);
 }

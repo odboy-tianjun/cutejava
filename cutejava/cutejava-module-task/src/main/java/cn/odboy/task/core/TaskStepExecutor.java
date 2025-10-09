@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.task.service;
+package cn.odboy.task.core;
 
-import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
-import com.baomidou.mybatisplus.extension.service.IService;
+import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import org.quartz.JobDataMap;
 
-/**
- * <p>
- * 任务实例 服务类
- * </p>
- *
- * @author codegen
- * @since 2025-09-26
- */
-public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
-    TaskInstanceInfoTb getRunningById(Long instanceId);
+import javax.validation.constraints.NotNull;
 
-    void fastFailWithMessage(Long id, String errorMessage);
-
-    void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap);
-
-    void fastSuccessWithData(Long id, JobDataMap dataMap);
-
+public interface TaskStepExecutor {
+    /**
+     * @param instanceDetailId 任务实例明细id
+     * @param jobDataMap       执行参数
+     * @param taskTemplateNode 任务节点信息
+     * @param callback         执行成功回调
+     */
+    void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode, @NotNull TaskStepCallback callback) throws BadRequestException;
 }

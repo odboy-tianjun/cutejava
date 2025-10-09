@@ -28,20 +28,21 @@ import lombok.ToString;
 
 import java.util.Date;
 
+
 /**
  * <p>
- * 任务实例明细
+ * 任务实例步骤明细
  * </p>
  *
  * @author codegen
- * @since 2025-09-26
+ * @since 2025-09-28
  */
 @Getter
 @Setter
 @ToString
-@TableName("task_instance_detail")
-@ApiModel(value = "TaskInstanceDetailTb对象", description = "任务实例明细")
-public class TaskInstanceDetailTb extends CsObject {
+@TableName("task_instance_step_detail")
+@ApiModel(value = "TaskInstanceStepDetailTb对象", description = "")
+public class TaskInstanceStepDetailTb extends CsObject {
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
@@ -56,58 +57,23 @@ public class TaskInstanceDetailTb extends CsObject {
     private Long id;
 
     /**
-     * 任务实例id
+     * task_instance_detail表id
      */
-    @TableField("instance_id")
-    @ApiModelProperty("任务实例id")
-    private Long instanceId;
+    @TableField("instance_detail_id")
+    @ApiModelProperty("task_instance_detail表id")
+    private Long instanceDetailId;
 
     /**
-     * 开始时间
+     * 步骤描述
      */
-    @ApiModelProperty("开始时间")
-    @TableField("start_time")
-    private Date startTime;
+    @TableField("step_desc")
+    @ApiModelProperty("步骤描述")
+    private String stepDesc;
 
     /**
-     * 结束时间
+     * 状态(success成功 fail失败)
      */
-    @ApiModelProperty("结束时间")
-    @TableField("finish_time")
-    private Date finishTime;
-
-    /**
-     * 业务编码
-     */
-    @TableField("biz_code")
-    @ApiModelProperty("业务编码")
-    private String bizCode;
-
-    /**
-     * 业务名称(步骤)
-     */
-    @TableField("biz_name")
-    @ApiModelProperty("业务名称(步骤)")
-    private String bizName;
-
-    /**
-     * 执行参数
-     */
-    @ApiModelProperty("执行参数")
-    @TableField("execute_params")
-    private String executeParams;
-
-    /**
-     * 执行信息
-     */
-    @ApiModelProperty("执行信息")
-    @TableField("execute_info")
-    private String executeInfo;
-
-    /**
-     * 执行状态(running进行中 success成功 fail失败)
-     */
-    @TableField("execute_status")
-    @ApiModelProperty("执行状态(running进行中 success成功 fail失败)")
-    private String executeStatus;
+    @TableField("step_status")
+    @ApiModelProperty("状态(success成功 fail失败)")
+    private String stepStatus;
 }
