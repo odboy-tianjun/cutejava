@@ -55,7 +55,7 @@ public class SystemDictController {
     @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<SystemDictTb>> queryAllDict() {
-        return new ResponseEntity<>(systemDictService.queryDictByArgs(new SystemQueryDictArgs()), HttpStatus.OK);
+        return ResponseEntity.ok(systemDictService.queryDictByArgs(new SystemQueryDictArgs()));
     }
 
     @ApiOperation("查询字典")
@@ -69,7 +69,7 @@ public class SystemDictController {
         } else {
             page = new Page<>(criteria.getPage(), criteria.getSize());
         }
-        return new ResponseEntity<>(systemDictService.queryDictByArgs(criteria, page), HttpStatus.OK);
+        return ResponseEntity.ok(systemDictService.queryDictByArgs(criteria, page));
     }
 
     @ApiOperation("新增字典")
@@ -77,7 +77,7 @@ public class SystemDictController {
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs args) {
         systemDictService.saveDict(args);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改字典")
@@ -85,7 +85,7 @@ public class SystemDictController {
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
         systemDictService.modifyDictById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("删除字典")
@@ -93,6 +93,6 @@ public class SystemDictController {
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {
         systemDictService.removeDictByIds(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

@@ -51,7 +51,7 @@ public class SystemLocalStorageController {
     public ResponseEntity<CsPageResult<SystemLocalStorageTb>> queryLocalStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
         SystemQueryStorageArgs criteria = args.getArgs();
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(localStorageService.queryLocalStorage(criteria, page), HttpStatus.OK);
+        return ResponseEntity.ok(localStorageService.queryLocalStorage(criteria, page));
     }
 
     @ApiOperation("导出数据")
@@ -66,7 +66,7 @@ public class SystemLocalStorageController {
     @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Void> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
         localStorageService.uploadFile(name, file);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("上传图片")
@@ -78,7 +78,7 @@ public class SystemLocalStorageController {
             throw new BadRequestException("只能上传图片");
         }
         SystemLocalStorageTb localStorage = localStorageService.uploadFile(null, file);
-        return new ResponseEntity<>(localStorage, HttpStatus.OK);
+        return ResponseEntity.ok(localStorage);
     }
 
     @ApiOperation("修改文件")
@@ -86,13 +86,13 @@ public class SystemLocalStorageController {
     @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
         localStorageService.modifyLocalStorageById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("多选删除")
     @PostMapping(value = "/removeFileByIds")
     public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
         localStorageService.removeFileByIds(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

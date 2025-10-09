@@ -38,12 +38,10 @@ public class QuartzManage {
     public void addJob(SystemQuartzJobTb quartzJob) {
         try {
             // 构建job信息
-            JobDetail jobDetail =
-                    JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
+            JobDetail jobDetail = JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
 
             // 通过触发器名和cron 表达式创建 Trigger
-            Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME + quartzJob.getId()).startNow()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression())).build();
+            Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME + quartzJob.getId()).startNow().withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression())).build();
 
             cronTrigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
 

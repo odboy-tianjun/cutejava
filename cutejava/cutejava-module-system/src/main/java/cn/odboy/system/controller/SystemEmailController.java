@@ -43,7 +43,7 @@ public class SystemEmailController {
     @ApiOperation("查询配置")
     @PostMapping(value = "/getLastEmailConfig")
     public ResponseEntity<SystemEmailConfigTb> getLastEmailConfig() {
-        return new ResponseEntity<>(systemEmailService.getLastEmailConfig(), HttpStatus.OK);
+        return ResponseEntity.ok(systemEmailService.getLastEmailConfig());
     }
 
     @ApiOperation("配置邮件")
@@ -51,13 +51,13 @@ public class SystemEmailController {
     public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
             throws Exception {
         systemEmailService.modifyEmailConfig(emailConfig);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("发送邮件")
     @PostMapping(value = "/sendEmail")
     public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
         systemEmailService.sendEmail(sendEmailRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

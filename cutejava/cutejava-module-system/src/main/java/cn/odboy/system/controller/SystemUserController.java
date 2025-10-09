@@ -37,7 +37,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -98,14 +97,14 @@ public class SystemUserController {
             // 取交集
             criteria.getDeptIds().retainAll(dataScopes);
             if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-                return new ResponseEntity<>(systemUserService.queryUserByArgs(criteria, page), HttpStatus.OK);
+                return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
             }
         } else {
             // 否则取并集
             criteria.getDeptIds().addAll(dataScopes);
-            return new ResponseEntity<>(systemUserService.queryUserByArgs(criteria, page), HttpStatus.OK);
+            return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
         }
-        return new ResponseEntity<>(CsPageUtil.emptyData(), HttpStatus.OK);
+        return ResponseEntity.ok(CsPageUtil.emptyData());
     }
 
     @ApiOperation("新增用户")
@@ -116,7 +115,7 @@ public class SystemUserController {
         // 默认密码 123456
         args.setPassword(passwordEncoder.encode("123456"));
         systemUserService.saveUser(args);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改用户")
@@ -125,7 +124,7 @@ public class SystemUserController {
     public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
         checkLevel(args);
         systemUserService.modifyUserById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改用户：个人中心")
@@ -135,7 +134,7 @@ public class SystemUserController {
             throw new BadRequestException("不能修改他人资料");
         }
         systemUserService.modifyUserCenterInfoById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("删除用户")
@@ -150,7 +149,7 @@ public class SystemUserController {
             }
         }
         systemUserService.removeUserByIds(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改密码")
@@ -166,7 +165,7 @@ public class SystemUserController {
             throw new BadRequestException("新密码不能与旧密码相同");
         }
         systemUserService.modifyUserPasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("重置密码")
@@ -174,13 +173,13 @@ public class SystemUserController {
     public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
         String defaultPwd = passwordEncoder.encode("123456");
         systemUserService.resetUserPasswordByIds(ids, defaultPwd);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改头像")
     @PostMapping(value = "/modifyUserAvatar")
     public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
-        return new ResponseEntity<>(systemUserService.modifyUserAvatar(avatar), HttpStatus.OK);
+        return ResponseEntity.ok(systemUserService.modifyUserAvatar(avatar));
     }
 
     @ApiOperation("修改邮箱")
@@ -193,7 +192,7 @@ public class SystemUserController {
         }
         systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
         systemUserService.modifyUserEmailByUsername(user.getUsername(), args.getEmail());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     /**
@@ -233,6 +232,6 @@ public class SystemUserController {
             ext.put("phone", m.getPhone());
             return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
         }).collect(Collectors.toList());
-        return new ResponseEntity<>(collect, HttpStatus.OK);
+        return ResponseEntity.ok(collect);
     }
 }

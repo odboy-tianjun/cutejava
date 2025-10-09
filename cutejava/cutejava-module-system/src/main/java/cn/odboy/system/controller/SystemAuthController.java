@@ -79,12 +79,9 @@ public class SystemAuthController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Map<String, Object>> login(
-            @Validated @RequestBody SystemUserLoginArgs loginRequest,
-            HttpServletRequest request) throws Exception {
+    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
-        String password =
-                CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
@@ -136,8 +133,7 @@ public class SystemAuthController {
         String uuid = SystemCacheKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
         //当验证码类型为 arithmetic时且长度 >= 2 时, captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
-        if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() &&
-                captchaValue.contains(SystemConst.SYMBOL_DOT)) {
+        if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() && captchaValue.contains(SystemConst.SYMBOL_DOT)) {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存
@@ -155,6 +151,6 @@ public class SystemAuthController {
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         String token = tokenProvider.getToken(request);
         onlineUserService.logoutByToken(token);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

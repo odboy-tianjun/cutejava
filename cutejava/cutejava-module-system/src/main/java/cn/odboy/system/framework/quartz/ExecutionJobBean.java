@@ -69,8 +69,7 @@ public class ExecutionJobBean extends QuartzJobBean {
         quartzLog.setCronExpression(quartzJob.getCronExpression());
         try {
             // 执行任务
-            QuartzRunnable task =
-                    new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
+            QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
             Future<?> future = executor.submit(task);
             // 忽略任务执行结果
             future.get();
@@ -123,8 +122,7 @@ public class ExecutionJobBean extends QuartzJobBean {
         Map<String, Object> data = new HashMap<>(16);
         data.put("task", quartzJob);
         data.put("msg", msg);
-        TemplateEngine engine =
-                TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("SystemQuartzJobTaskAlarmTemplate.ftl");
         sendEmailRequest.setContent(template.render(data));
         List<String> emails = Arrays.asList(quartzJob.getEmail().split("[,，]"));

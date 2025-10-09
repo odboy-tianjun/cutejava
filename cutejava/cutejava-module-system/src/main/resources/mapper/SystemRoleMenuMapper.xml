@@ -20,9 +20,4 @@
         from system_roles_menus
         where role_id = #{roleId}
     </delete>
-    <delete id="deleteRoleMenuByMenuId">
-        delete
-        from system_roles_menus
-        where menu_id = #{menuId}
-    </delete>
 </mapper>

@@ -34,9 +34,7 @@ import java.util.Set;
  */
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
-    IPage<SystemDictDetailTb> selectDictDetailByArgs(
-            @Param("criteria") SystemQueryDictDetailArgs criteria,
-            Page<Object> page);
+    IPage<SystemDictDetailTb> selectDictDetailByArgs(@Param("criteria") SystemQueryDictDetailArgs criteria, Page<Object> page);
 
     List<SystemDictDetailTb> selectDictDetailByArgs(@Param("criteria") SystemQueryDictDetailArgs criteria);
 
