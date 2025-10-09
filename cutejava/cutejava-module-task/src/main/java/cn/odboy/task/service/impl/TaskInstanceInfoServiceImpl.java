@@ -15,11 +15,17 @@
  */
 package cn.odboy.task.service.impl;
 
+import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
 import cn.odboy.task.dal.mysql.TaskInstanceInfoMapper;
 import cn.odboy.task.service.TaskInstanceInfoService;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.quartz.JobDataMap;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * <p>
@@ -32,4 +38,46 @@ import org.springframework.stereotype.Service;
 @Service
 public class TaskInstanceInfoServiceImpl extends ServiceImpl<TaskInstanceInfoMapper, TaskInstanceInfoTb> implements TaskInstanceInfoService {
 
+    @Override
+    public TaskInstanceInfoTb getRunningById(Long id) {
+        return lambdaQuery()
+                .eq(TaskInstanceInfoTb::getId, id)
+                .eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode())
+                .orderByDesc(TaskInstanceInfoTb::getId)
+                .one();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void fastFailWithMessage(Long id, String errorMessage) {
+        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+        updRecord.setId(id);
+        updRecord.setFinishTime(new Date());
+        updRecord.setStatus(TaskStatusEnum.Fail.getCode());
+        updRecord.setErrorMessage(errorMessage);
+        updateById(updRecord);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap) {
+        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+        updRecord.setId(id);
+        updRecord.setFinishTime(new Date());
+        updRecord.setStatus(TaskStatusEnum.Fail.getCode());
+        updRecord.setErrorMessage(errorMessage);
+        updRecord.setJobData(JSON.toJSONString(dataMap));
+        updateById(updRecord);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void fastSuccessWithData(Long id, JobDataMap dataMap) {
+        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+        updRecord.setId(id);
+        updRecord.setFinishTime(new Date());
+        updRecord.setStatus(TaskStatusEnum.Success.getCode());
+        updRecord.setJobData(JSON.toJSONString(dataMap));
+        updateById(updRecord);
+    }
 }

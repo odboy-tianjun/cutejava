@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.task.service;
+package cn.odboy.task.dal.mysql;
 
-import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.quartz.JobDataMap;
+import cn.odboy.task.dal.dataobject.TaskInstanceStepDetailTb;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- * 任务实例 服务类
+ * 任务实例步骤明细 Mapper 接口
  * </p>
  *
  * @author codegen
- * @since 2025-09-26
+ * @since 2025-09-28
  */
-public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
-    TaskInstanceInfoTb getRunningById(Long instanceId);
-
-    void fastFailWithMessage(Long id, String errorMessage);
-
-    void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap);
-
-    void fastSuccessWithData(Long id, JobDataMap dataMap);
+@Mapper
+public interface TaskInstanceStepDetailMapper extends BaseMapper<TaskInstanceStepDetailTb> {
 
 }
