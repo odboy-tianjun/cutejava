@@ -37,13 +37,15 @@ public class GenCode {
         generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
         generator.setDatabaseUsername(DATABASE_USER);
         generator.setDatabasePassword(DATABASE_PWD);
-        genCode(generator);
+        genTaskCode(generator);
     }
 
-    private static void genCode(CsMpCmdGenUtil generator) {
+    private static void genTaskCode(CsMpCmdGenUtil generator) {
         generator.gen("task", "", List.of(
                 "task_instance_info",
-                "task_instance_detail"
+                "task_instance_detail",
+                "task_template_info",
+                "task_instance_step_detail"
         ));
     }
 }

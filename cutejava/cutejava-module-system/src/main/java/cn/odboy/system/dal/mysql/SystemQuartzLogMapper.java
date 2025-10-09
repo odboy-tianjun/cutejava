@@ -31,7 +31,5 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemQuartzLogMapper extends BaseMapper<SystemQuartzLogTb> {
-    IPage<SystemQuartzLogTb> selectQuartzLogByArgs(
-            @Param("criteria") SystemQueryQuartzJobArgs criteria,
-            Page<SystemQuartzLogTb> page);
+    IPage<SystemQuartzLogTb> selectQuartzLogByArgs(@Param("criteria") SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page);
 }

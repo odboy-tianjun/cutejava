@@ -38,14 +38,14 @@ public class SystemCaptchaController {
     @PostMapping(value = "/sendResetEmailCaptcha")
     public ResponseEntity<Void> sendResetEmailCaptcha(@RequestParam String email) {
         systemEmailService.sendCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, email);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("重置密码，发送验证码")
     @PostMapping(value = "/sendResetPasswordCaptcha")
     public ResponseEntity<Void> sendResetPasswordCaptcha(@RequestParam String email) {
         systemEmailService.sendCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_PWD_CODE, email);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("验证码验证")
@@ -53,6 +53,6 @@ public class SystemCaptchaController {
     public ResponseEntity<Void> checkEmailCaptcha(@Validated @RequestBody SystemCheckEmailCaptchaArgs args) {
         SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(args.getBizCode());
         systemEmailService.checkEmailCaptcha(biEnum, args.getEmail(), args.getCode());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

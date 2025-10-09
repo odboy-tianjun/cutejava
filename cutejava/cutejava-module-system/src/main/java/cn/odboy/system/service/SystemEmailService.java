@@ -53,8 +53,6 @@ public class SystemEmailService {
      * 更新邮件配置
      *
      * @param emailConfig 邮箱配置
-     * @return /
-     * @throws Exception /
      */
 
     @Transactional(rollbackFor = Exception.class)
@@ -150,9 +148,9 @@ public class SystemEmailService {
                 throw new BadRequestException("服务异常, 请联系网站负责人");
             }
             // 存在就再次发送原来的验证码
-            content = CsResourceTemplateUtil.render("system", biEnum.getTemplateName(), Dict.create().set("code", code));
+            content = CsResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", code));
         } else {
-            content = CsResourceTemplateUtil.render("system", biEnum.getTemplateName(), Dict.create().set("code", oldCode));
+            content = CsResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
         }
         SystemSendEmailArgs sendEmailRequest =
                 new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);

@@ -19,9 +19,11 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
+import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
@@ -31,6 +33,7 @@ import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.CsClassUtil;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsStringUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,8 +75,7 @@ public class SystemMenuService {
             args.setPid(null);
         }
         if (args.getIFrame()) {
-            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
-                    .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
@@ -97,8 +99,7 @@ public class SystemMenuService {
         }
         SystemMenuTb menu = systemMenuMapper.selectById(args.getId());
         if (args.getIFrame()) {
-            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
-                    .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
@@ -145,17 +146,28 @@ public class SystemMenuService {
 
     /**
      * 删除
-     *
-     * @param menuSet /
      */
-
     @Transactional(rollbackFor = Exception.class)
-    public void removeMenuByIds(Set<SystemMenuTb> menuSet) {
+    public void removeMenuByIds(Set<Long> ids) {
+        Set<SystemMenuTb> menuSet = new HashSet<>();
+        for (Long id : ids) {
+            List<SystemMenuTb> menuList = this.queryMenuByPid(id);
+            menuSet.add(systemMenuMapper.selectById(id));
+            menuSet = this.queryChildMenu(menuList, menuSet);
+        }
+        List<Long> menuIds = menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(menuIds)) {
+            CsSpringBeanHolder.getBean(SystemMenuService.class).removeRoleMenuByMenuIds(menuIds);
+            systemMenuMapper.deleteByIds(menuIds);
+        }
         for (SystemMenuTb menu : menuSet) {
-            systemRoleMenuMapper.deleteRoleMenuByMenuId(menu.getId());
-            systemMenuMapper.deleteById(menu.getId());
             this.updateMenuSubCnt(menu.getPid());
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void removeRoleMenuByMenuIds(List<Long> menuIds) {
+        systemRoleMenuMapper.delete(new LambdaQueryWrapper<SystemRoleMenuTb>().in(SystemRoleMenuTb::getMenuId, menuIds));
     }
 
     /**
@@ -221,17 +233,6 @@ public class SystemMenuService {
     }
 
     /**
-     * 根据ID查询
-     *
-     * @param id /
-     * @return /
-     */
-
-    public SystemMenuTb getMenuById(long id) {
-        return systemMenuMapper.selectById(id);
-    }
-
-    /**
      * 根据当前用户获取菜单
      *
      * @param currentUserId /
@@ -294,7 +295,7 @@ public class SystemMenuService {
             return menus;
         }
         menus.addAll(systemMenuMapper.selectMenuByPidOrderByMenuSort(menu.getPid()));
-        return querySuperiorMenuList(getMenuById(menu.getPid()), menus);
+        return querySuperiorMenuList(systemMenuMapper.selectById(menu.getPid()), menus);
     }
 
     /**
@@ -395,5 +396,9 @@ public class SystemMenuService {
             menuVo1.setPath(menu.getPath());
         }
         return menuVo1;
+    }
+
+    public List<SystemMenuTb> queryMenuByIds(List<Long> ids) {
+        return systemMenuMapper.selectByIds(ids);
     }
 }

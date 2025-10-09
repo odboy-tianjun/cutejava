@@ -26,7 +26,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +53,7 @@ public class SystemDictDetailController {
     public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
         SystemQueryDictDetailArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemDictDetailService.queryDictDetailByArgs(criteria, page), HttpStatus.OK);
+        return ResponseEntity.ok(systemDictDetailService.queryDictDetailByArgs(criteria, page));
     }
 
     @ApiOperation("查询多个字典详情")
@@ -65,7 +64,7 @@ public class SystemDictDetailController {
         for (String name : names) {
             dictMap.put(name, systemDictDetailService.queryDictDetailByName(name));
         }
-        return new ResponseEntity<>(dictMap, HttpStatus.OK);
+        return ResponseEntity.ok(dictMap);
     }
 
     @ApiOperation("新增字典详情")
@@ -73,7 +72,7 @@ public class SystemDictDetailController {
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody SystemCreateDictDetailArgs args) {
         systemDictDetailService.saveDictDetail(args);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改字典详情")
@@ -81,7 +80,7 @@ public class SystemDictDetailController {
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Void> modifyDictDetailById(@Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
         systemDictDetailService.modifyDictDetailById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("删除字典详情")
@@ -89,6 +88,6 @@ public class SystemDictDetailController {
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
         systemDictDetailService.removeDictDetailById(args.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

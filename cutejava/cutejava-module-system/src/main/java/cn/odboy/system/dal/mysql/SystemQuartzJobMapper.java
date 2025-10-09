@@ -33,9 +33,7 @@ import java.util.List;
  */
 @Mapper
 public interface SystemQuartzJobMapper extends BaseMapper<SystemQuartzJobTb> {
-    IPage<SystemQuartzJobTb> selectQuartzJobByArgs(
-            @Param("criteria") SystemQueryQuartzJobArgs criteria,
-            Page<SystemQuartzJobTb> page);
+    IPage<SystemQuartzJobTb> selectQuartzJobByArgs(@Param("criteria") SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page);
 
     List<SystemQuartzJobTb> selectAllEnableQuartzJob();
 }

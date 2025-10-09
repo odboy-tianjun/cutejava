@@ -122,8 +122,7 @@ public class CsSecurityHelper {
      * @return /
      */
     public static String getToken() {
-        HttpServletRequest request =
-                ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
         if (bearerToken != null && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
             // 去掉令牌前缀

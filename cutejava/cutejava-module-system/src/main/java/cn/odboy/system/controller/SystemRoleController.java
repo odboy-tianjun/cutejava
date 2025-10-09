@@ -53,7 +53,7 @@ public class SystemRoleController {
     @PostMapping(value = "/queryRoleById")
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity<SystemRoleTb> queryRoleById(@RequestBody SystemRoleTb args) {
-        return new ResponseEntity<>(systemRoleService.getRoleById(args.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(systemRoleService.getRoleById(args.getId()));
     }
 
     @ApiOperation("导出角色数据")
@@ -67,7 +67,7 @@ public class SystemRoleController {
     @PostMapping(value = "/queryRoleList")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
     public ResponseEntity<List<SystemRoleTb>> queryRoleList() {
-        return new ResponseEntity<>(systemRoleService.queryAllRole(), HttpStatus.OK);
+        return ResponseEntity.ok(systemRoleService.queryAllRole());
     }
 
     @ApiOperation("查询角色")
@@ -76,13 +76,13 @@ public class SystemRoleController {
     public ResponseEntity<CsPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
         SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemRoleService.queryRoleByArgs(criteria, page), HttpStatus.OK);
+        return ResponseEntity.ok(systemRoleService.queryRoleByArgs(criteria, page));
     }
 
     @ApiOperation("获取用户级别")
     @PostMapping(value = "/queryRoleLevel")
     public ResponseEntity<Dict> queryRoleLevel() {
-        return new ResponseEntity<>(Dict.create().set("level", checkRoleLevels(null)), HttpStatus.OK);
+        return ResponseEntity.ok(Dict.create().set("level", checkRoleLevels(null)));
     }
 
     @ApiOperation("新增角色")
@@ -91,7 +91,7 @@ public class SystemRoleController {
     public ResponseEntity<Void> saveRole(@Validated @RequestBody SystemCreateRoleArgs args) {
         checkRoleLevels(args.getLevel());
         systemRoleService.saveRole(args);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改角色")
@@ -100,7 +100,7 @@ public class SystemRoleController {
     public ResponseEntity<Void> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleTb args) {
         checkRoleLevels(args.getLevel());
         systemRoleService.modifyRoleById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改角色菜单")
@@ -110,7 +110,7 @@ public class SystemRoleController {
         SystemRoleTb role = systemRoleService.getRoleById(args.getId());
         checkRoleLevels(role.getLevel());
         systemRoleService.modifyBindMenuById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("删除角色")
@@ -124,7 +124,7 @@ public class SystemRoleController {
         // 验证是否被用户关联
         systemRoleService.verifyBindRelationByIds(ids);
         systemRoleService.removeRoleByIds(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     /**

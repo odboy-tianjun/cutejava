@@ -36,9 +36,7 @@ public interface SystemMenuMapper extends BaseMapper<SystemMenuTb> {
 
     List<SystemMenuTb> selectMenuByArgs(@Param("criteria") SystemQueryMenuArgs criteria);
 
-    LinkedHashSet<SystemMenuTb> selectMenuByRoleIdsAndType(
-            @Param("roleIds") Set<Long> roleIds,
-            @Param("type") Integer type);
+    LinkedHashSet<SystemMenuTb> selectMenuByRoleIdsAndType(@Param("roleIds") Set<Long> roleIds, @Param("type") Integer type);
 
     List<SystemMenuTb> selectMenuByPidIsNullOrderByMenuSort();
 

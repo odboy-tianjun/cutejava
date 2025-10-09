@@ -31,7 +31,5 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemLocalStorageMapper extends BaseMapper<SystemLocalStorageTb> {
-    IPage<SystemLocalStorageTb> selectLocalStorageByArgs(
-            @Param("criteria") SystemQueryStorageArgs criteria,
-            Page<SystemLocalStorageTb> page);
+    IPage<SystemLocalStorageTb> selectLocalStorageByArgs(@Param("criteria") SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page);
 }

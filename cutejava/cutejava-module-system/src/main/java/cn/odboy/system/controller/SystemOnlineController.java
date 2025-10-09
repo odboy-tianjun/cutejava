@@ -48,9 +48,7 @@ public class SystemOnlineController {
     @PreAuthorize("@el.check()")
     public ResponseEntity<CsPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody CsPageArgs<SystemUserOnlineVo> args) {
         IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
-        return new ResponseEntity<>(
-                systemUserOnlineInfoRedis.queryUserOnlineModelPage(args.getArgs(), page),
-                HttpStatus.OK);
+        return ResponseEntity.ok(systemUserOnlineInfoRedis.queryUserOnlineModelPage(args.getArgs(), page));
     }
 
     @ApiOperation("导出数据")
@@ -70,6 +68,6 @@ public class SystemOnlineController {
             token = CsDesEncryptUtil.desDecrypt(token);
             systemUserOnlineInfoRedis.logoutByToken(token);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

@@ -56,19 +56,16 @@ public class SystemDeptController {
     @ApiOperation("查询部门")
     @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args)
-            throws Exception {
+    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDept(@Validated @RequestBody CsPageArgs<SystemQueryDeptArgs> args) throws Exception {
         SystemQueryDeptArgs criteria = args.getArgs();
         List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
-        return new ResponseEntity<>(CsPageUtil.toPage(depts), HttpStatus.OK);
+        return ResponseEntity.ok(CsPageUtil.toPage(depts));
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDeptSuperiorTree(
-            @RequestBody List<Long> ids,
-            @RequestParam(defaultValue = "false") Boolean exclude) {
+    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             // 同级数据
@@ -86,7 +83,7 @@ public class SystemDeptController {
             }
             deptSet.addAll(depts);
         }
-        return new ResponseEntity<>(systemDeptService.buildDeptTree(new ArrayList<>(deptSet)), HttpStatus.OK);
+        return ResponseEntity.ok(systemDeptService.buildDeptTree(new ArrayList<>(deptSet)));
     }
 
     @ApiOperation("新增部门")
@@ -94,7 +91,7 @@ public class SystemDeptController {
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<Void> saveDept(@Validated @RequestBody SystemCreateDeptArgs args) {
         systemDeptService.saveDept(args);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改部门")
@@ -102,7 +99,7 @@ public class SystemDeptController {
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
         systemDeptService.modifyDept(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("删除部门")
@@ -114,6 +111,6 @@ public class SystemDeptController {
         // 验证是否被角色或用户关联
         systemDeptService.verifyBindRelationByIds(depts);
         systemDeptService.removeDeptByIds(depts);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

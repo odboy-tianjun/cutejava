@@ -56,7 +56,7 @@ public class SystemJobController {
     public ResponseEntity<CsPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
         SystemQueryJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(systemJobService.queryJobByArgs(criteria, page), HttpStatus.OK);
+        return ResponseEntity.ok(systemJobService.queryJobByArgs(criteria, page));
     }
 
     @ApiOperation("查询岗位")
@@ -71,7 +71,7 @@ public class SystemJobController {
     @PreAuthorize("@el.check('job:add')")
     public ResponseEntity<Void> saveJob(@Validated @RequestBody SystemCreateJobArgs args) {
         systemJobService.saveJob(args);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("修改岗位")
@@ -79,7 +79,7 @@ public class SystemJobController {
     @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity<Void> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb args) {
         systemJobService.modifyJobById(args);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation("删除岗位")
@@ -89,6 +89,6 @@ public class SystemJobController {
         // 验证是否被用户关联
         systemJobService.verifyBindRelationByIds(ids);
         systemJobService.removeJobByIds(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 }

@@ -135,12 +135,7 @@ public class MinioRepository {
      * @param md5              文件md5
      * @return String 上传后的文件名，上传失败返回 null
      */
-    public SystemOssStorageTb upload(
-            File tempFile,
-            String originalFilename,
-            long fileSize,
-            String contentType,
-            String md5) {
+    public SystemOssStorageTb upload(File tempFile, String originalFilename, long fileSize, String contentType, String md5) {
         StorageOSSModel ossConfig = properties.getOss();
         OSSConfigModel ossMinioConfig = ossConfig.getMinio();
         String type = FileTypeUtil.getType(tempFile);
@@ -168,13 +163,7 @@ public class MinioRepository {
         systemOssStorageTb.setObjectName(objectName);
 
         try (InputStream fileInputStream = CsFileUtil.getInputStream(tempFile)) {
-            PutObjectArgs objectArgs =
-                    PutObjectArgs.builder()
-                            .bucket(ossMinioConfig.getBucketName())
-                            .object(objectName)
-                            .stream(fileInputStream, fileSize, -1)
-                            .contentType(contentType)
-                            .build();
+            PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(ossMinioConfig.getBucketName()).object(objectName).stream(fileInputStream, fileSize, -1).contentType(contentType).build();
             minioClient.putObject(objectArgs);
             log.info("文件上传成功，并删除临时文件，文件名：{}", originalFilename);
             return systemOssStorageTb;
@@ -212,13 +201,7 @@ public class MinioRepository {
 
         log.info("准备上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         try (InputStream fileInputStream = file.getInputStream()) {
-            PutObjectArgs objectArgs =
-                    PutObjectArgs.builder()
-                            .bucket(properties.getOss().getMinio().getBucketName())
-                            .object(objectName)
-                            .stream(fileInputStream, file.getSize(), -1)
-                            .contentType(file.getContentType())
-                            .build();
+            PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(objectName).stream(fileInputStream, file.getSize(), -1).contentType(file.getContentType()).build();
             // 使用重试机制进行上传
             uploadWithRetry(objectArgs, 3);
             log.info("文件上传成功，objectName: {}", objectName);
@@ -291,14 +274,9 @@ public class MinioRepository {
             return null;
         }
         try {
-            GetPresignedObjectUrlArgs presignedUrlArgs =
-                    GetPresignedObjectUrlArgs.builder()
-                            .bucket(properties.getOss().getMinio().getBucketName())
-                            .object(fullFileName)
-                            .method(Method.GET)
-                            // 设置 URL 过期时间为 7 天, 最大 7 天, 别挣扎了
-                            .expiry(3600 * 24 * 7)
-                            .build();
+            GetPresignedObjectUrlArgs presignedUrlArgs = GetPresignedObjectUrlArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fullFileName).method(Method.GET)
+                    // 设置 URL 过期时间为 7 天, 最大 7 天, 别挣扎了
+                    .expiry(3600 * 24 * 7).build();
             String url = minioClient.getPresignedObjectUrl(presignedUrlArgs);
             log.info("生成预签名 URL 成功，fileName: {}, url: {}", fullFileName, url);
             return url;
@@ -315,11 +293,9 @@ public class MinioRepository {
      * @param res      HTTP 响应
      */
     public void download(String fileName, HttpServletResponse res) {
-        GetObjectArgs objectArgs =
-                GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
+        GetObjectArgs objectArgs = GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
 
-        try (GetObjectResponse response = minioClient.getObject(objectArgs);
-             FastByteArrayOutputStream os = new FastByteArrayOutputStream()) {
+        try (GetObjectResponse response = minioClient.getObject(objectArgs); FastByteArrayOutputStream os = new FastByteArrayOutputStream()) {
 
             byte[] buf = new byte[1024];
             int len;
@@ -347,8 +323,7 @@ public class MinioRepository {
      * @param res      HTTP 响应
      */
     public void downloadOptimizedVersion(String fileName, HttpServletResponse res) {
-        GetObjectArgs objectArgs =
-                GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
+        GetObjectArgs objectArgs = GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
 
         try (GetObjectResponse response = minioClient.getObject(objectArgs)) {
             // 增大缓冲区
@@ -382,9 +357,7 @@ public class MinioRepository {
      */
     public List<Item> listObjects() {
         try {
-            Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
-                    .bucket(properties.getOss().getMinio().getBucketName())
-                    .build());
+            Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).build());
             List<Item> items = new ArrayList<>();
             for (Result<Item> result : results) {
                 items.add(result.get());
@@ -404,10 +377,7 @@ public class MinioRepository {
      */
     public boolean remove(String fileName) {
         try {
-            minioClient.removeObject(RemoveObjectArgs.builder()
-                    .bucket(properties.getOss().getMinio().getBucketName())
-                    .object(fileName)
-                    .build());
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build());
             log.info("删除文件成功，fileName: {}", fileName);
             return true;
         } catch (Exception e) {
