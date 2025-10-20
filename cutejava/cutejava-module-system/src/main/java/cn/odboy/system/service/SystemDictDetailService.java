@@ -23,6 +23,7 @@ import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.util.CsPageUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
