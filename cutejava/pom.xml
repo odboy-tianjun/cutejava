@@ -106,12 +106,12 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-            <version>3.50.0</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.redisson/redisson &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.redisson</groupId>-->
+<!--            <artifactId>redisson</artifactId>-->
+<!--            <version>3.50.0</version>-->
+<!--        </dependency>-->
 
         <!-- Spring boot websocket -->
         <dependency>

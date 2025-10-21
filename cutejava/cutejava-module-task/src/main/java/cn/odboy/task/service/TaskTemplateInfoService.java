@@ -28,5 +28,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2025-09-28
  */
 public interface TaskTemplateInfoService extends IService<TaskTemplateInfoTb> {
-    TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language);
+    TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language, String changeType);
 }

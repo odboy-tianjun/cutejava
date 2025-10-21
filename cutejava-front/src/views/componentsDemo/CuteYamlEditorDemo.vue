@@ -68,81 +68,6 @@ export default {
         '      repositories:\n' +
         '        # 是否启用Redis存储(关闭防止出现 Multiple Spring Data modules found, entering strict repository configuration mode)\n' +
         '        enabled: false\n' +
-        '  datasource:\n' +
-        '    druid:\n' +
-        '      db-type: com.alibaba.druid.pool.DruidDataSource\n' +
-        '      driverClassName: com.p6spy.engine.spy.P6SpyDriver\n' +
-        '      url: jdbc:p6spy:mysql://192.168.100.128:23306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true\n' +
-        '      username: root\n' +
-        '      password: lm,101208..,.\n' +
-        '      # 初始连接数，建议设置为与最小空闲连接数相同\n' +
-        '      initial-size: 2\n' +
-        '      # 最小空闲连接数，保持足够的空闲连接以应对请求\n' +
-        '      min-idle: 2\n' +
-        '      # 最大连接数，根据并发需求适当增加\n' +
-        '      max-active: 8\n' +
-        '      # 获取连接超时时间（毫秒），调整以满足响应时间要求\n' +
-        '      max-wait: 3000\n' +
-        '      # 启用KeepAlive机制，保持长连接\n' +
-        '      keep-alive: true\n' +
-        '      # 连接有效性检测间隔时间（毫秒），定期检查连接的健康状态\n' +
-        '      time-between-eviction-runs-millis: 60000\n' +
-        '      # 连接在池中最小生存时间（毫秒），确保连接在池中至少存在一段时间\n' +
-        '      min-evictable-idle-time-millis: 300000\n' +
-        '      # 连接在池中最大生存时间（毫秒），防止连接在池中停留过长\n' +
-        '      max-evictable-idle-time-millis: 900000\n' +
-        '      # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除\n' +
-        '      test-while-idle: true\n' +
-        '      # 指明是否在从池中取出连接前进行检验,如果检验失败, 则从池中去除连接并尝试取出另一个\n' +
-        '      test-on-borrow: true\n' +
-        '      # 是否在归还到池中前进行检验\n' +
-        '      test-on-return: false\n' +
-        '      # 停用 com_ping 探活机制\n' +
-        '      use-ping-method: false\n' +
-        '      # 检测连接是否有效\n' +
-        '      validation-query: SELECT 1\n' +
-        '      # 配置监控统计\n' +
-        '      web-stat-filter:\n' +
-        '        enabled: true\n' +
-        '        url-pattern: /*\n' +
-        '        # 开启session统计功能\n' +
-        '        session-stat-enable: true\n' +
-        '        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"\n' +
-        '        # 缺省sessionStatMaxCount是1000个\n' +
-        '        session-stat-max-count: 1000\n' +
-        '      stat-view-servlet:\n' +
-        '        enabled: true\n' +
-        '        url-pattern: /druid/*\n' +
-        '        reset-enable: false\n' +
-        '      filter:\n' +
-        '        stat:\n' +
-        '          enabled: true\n' +
-        '          # 记录慢SQL\n' +
-        '          log-slow-sql: true\n' +
-        '          slow-sql-millis: 2000\n' +
-        '          merge-sql: true\n' +
-        '        wall:\n' +
-        '          config:\n' +
-        '            multi-statement-allow: true\n' +
-        '      aop-patterns: "cn.odboy.mapper.*,cn.odboy.service.*,cn.odboy.*.mapper.*,cn.odboy.*.service.*"\n' +
-        '  redis:\n' +
-        '    database: ${REDIS_DB:1}\n' +
-        '    host: ${REDIS_HOST:192.168.100.128}\n' +
-        '    port: ${REDIS_PORT:26379}\n' +
-        '    password: ${REDIS_PWD:lm,101208..,.}\n' +
-        '    # 连接超时时间\n' +
-        '    timeout: 5000\n' +
-        '    # 连接池配置\n' +
-        '    lettuce:\n' +
-        '      pool:\n' +
-        '        # 连接池最大连接数\n' +
-        '        max-active: 30\n' +
-        '        # 连接池最大阻塞等待时间（毫秒），负值表示没有限制\n' +
-        '        max-wait: -1\n' +
-        '        # 连接池中的最大空闲连接数\n' +
-        '        max-idle: 20\n' +
-        '        # 连接池中的最小空闲连接数\n' +
-        '        min-idle: 1\n' +
         'mybatis-plus:\n' +
         '  configuration:\n' +
         '    # 开启 Mybatis 二级缓存，默认为 true\n' +
@@ -174,19 +99,6 @@ export default {
         '    # 是否控制台 print mybatisplus-plus 的 LOGO\n' +
         '    banner: true\n' +
         'app:\n' +
-        '  # 密码加密传输，前端公钥加密，后端私钥解密\n' +
-        '  rsa:\n' +
-        '    private-key: MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEA0vfvyTdGJkdbHkB8mp0f3FE0GYP3AYPaJF7jUd1M0XxFSE2ceK3k2kw20YvQ09NJKk+OMjWQl9WitG9pB6tSCQIDAQABAkA2SimBrWC2/wvauBuYqjCFwLvYiRYqZKThUS3MZlebXJiLB+Ue/gUifAAKIg1avttUZsHBHrop4qfJCwAI0+YRAiEA+W3NK/RaXtnRqmoUUkb59zsZUBLpvZgQPfj1MhyHDz0CIQDYhsAhPJ3mgS64NbUZmGWuuNKp5coY2GIj/zYDMJp6vQIgUueLFXv/eZ1ekgz2Oi67MNCk5jeTF2BurZqNLR3MSmUCIFT3Q6uHMtsB9Eha4u7hS31tj1UWE+D+ADzp59MGnoftAiBeHT7gDMuqeJHPL4b+kC+gzV4FGTfhR9q3tTbklZkD2A==\n' +
-        '  # 鉴权\n' +
-        '  jwt:\n' +
-        '    # 必须使用最少88位的Base64对该令牌进行编码\n' +
-        '    base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=\n' +
-        '    # 令牌过期时间 此处单位/毫秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html\n' +
-        '    token-validity-in-seconds: 14400000\n' +
-        '    # token 续期检查时间范围（默认30分钟，单位毫秒），在token即将过期的一段时间内用户操作了，则给用户的token续期\n' +
-        '    detect: 1800000\n' +
-        '    # 续期时间范围，默认1小时，单位毫秒\n' +
-        '    renew: 3600000\n' +
         '  # 登录\n' +
         '  login:\n' +
         '    # 是否限制单用户登录\n' +
@@ -235,8 +147,8 @@ export default {
         '    minio:\n' +
         '      endpoint: http://192.168.100.128:9000\n' +
         '      bucketName: cutejava\n' +
-        '      accessKey: 8o5oVzqvKby5TzaGcfmx\n' +
-        '      secretKey: 8BiK5UbmvXGJNVQ98CGiohHzT1N1FMRZqHRdJllj\n' +
+        '      accessKey: xxxxxx\n' +
+        '      secretKey: xxxxxx\n' +
         '  captcha:\n' +
         '    expireTime: 300\n' +
         '## 启用debug\n' +

@@ -32,4 +32,13 @@ public enum TaskStatusEnum {
     Fail("fail", "执行失败");
     private final String code;
     private final String name;
+
+    public static String getDesc(String code) {
+        for (TaskStatusEnum taskStatusEnum : TaskStatusEnum.values()) {
+            if (taskStatusEnum.code.equals(code)) {
+                return taskStatusEnum.getName();
+            }
+        }
+        return code;
+    }
 }

@@ -19,6 +19,8 @@ import cn.odboy.task.dal.dataobject.TaskInstanceDetailTb;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.quartz.JobDataMap;
 
+import java.util.List;
+
 /**
  * <p>
  * 任务实例明细 服务类
@@ -30,7 +32,11 @@ import org.quartz.JobDataMap;
 public interface TaskInstanceDetailService extends IService<TaskInstanceDetailTb> {
     void fastFailWithInfo(Long instanceId, String code, String message);
 
-    void fastSuccessWithInfo(Long id, String code, String executeInfo);
+    void fastSuccessWithInfo(Long instanceId, String code, String executeInfo);
 
-    void fastStart(Long id, String code, JobDataMap dataMap);
+    void fastStart(Long instanceId, String code, JobDataMap dataMap);
+
+    List<TaskInstanceDetailTb> queryByInstanceIdAndBizCodeList(Long instanceId, List<String> bizCodes);
+
+    List<TaskInstanceDetailTb> queryByInstanceId(Long instanceId);
 }

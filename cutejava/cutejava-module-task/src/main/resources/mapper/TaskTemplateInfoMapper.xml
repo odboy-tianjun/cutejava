@@ -14,5 +14,6 @@
         WHERE t1.context_name = #{contextName}
           AND t2.env_alias = #{envAlias}
           AND t2.`language` = #{language}
+          AND t2.`change_type` = #{changeType}
     </select>
 </mapper>

@@ -80,17 +80,9 @@ https://github.com/odboy-tianjun/cutejava
   ![CuteFileUpload](./cutejava-front/docs/images/CuteFileUpload.png)
 - CuteFileDragUpload 支持拖拽上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
   ![CuteFileDragUpload](./cutejava-front/docs/images/CuteFileDragUpload.png)
-- CutePipelineNode 流水线节点组件
-  ![CutePipelineNode](./cutejava-front/docs/images/CutePipelineNode.png)
 
 #### 系统模块
 
 - cutejava-framework：系统基础框架。提供核心功能，如：权限、数据权限、异常处理、缓存、工具类、接口限流、接口防重、接口幂等。
-- cutejava-system：系统功能模块。提供用户、角色、菜单、部门、岗位、字典、定时任务、邮件、Minio存储、服务监控等功能
-- cutejava-devops：devops模块，已实现流水线功能。参考阿里云云效，提供流水线功能，可配置流水线任务，并支持任务依赖、任务参数、任务参数校验、任务参数回填。
-
-#### 特别鸣谢
-
-- 感谢 [elunez](https://github.com/elunez/eladmin-mp) 大佬提供的基础框架
-- 感谢 [aizuda](https://mongoplus.com/) 大佬提供的Mongodb框架
-  - 建表参考 'cutejava/doc/mongodb.md'
+- cutejava-module-system：系统功能模块。提供用户、角色、菜单、部门、岗位、字典、定时任务、邮件、Minio存储、服务监控等功能
+- cutejava-module-task：串行任务模块，已实现流水线功能。参考阿里云云效，提供流水线功能，可配置流水线任务，并支持任务依赖、任务参数、任务参数校验、任务参数回填。

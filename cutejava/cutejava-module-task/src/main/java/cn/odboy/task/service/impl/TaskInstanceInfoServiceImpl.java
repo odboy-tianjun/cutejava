@@ -80,4 +80,28 @@ public class TaskInstanceInfoServiceImpl extends ServiceImpl<TaskInstanceInfoMap
         updRecord.setJobData(JSON.toJSONString(dataMap));
         updateById(updRecord);
     }
+
+    @Override
+    public TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias, String changeType) {
+        return lambdaQuery()
+                .eq(TaskInstanceInfoTb::getContextName, contextName)
+                .eq(TaskInstanceInfoTb::getLanguage, language)
+                .eq(TaskInstanceInfoTb::getEnvAlias, envAlias)
+                .eq(TaskInstanceInfoTb::getChangeType, changeType)
+                .eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode())
+                .orderByDesc(TaskInstanceInfoTb::getId)
+                .one();
+    }
+
+    @Override
+    public TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias, String changeType) {
+        return lambdaQuery()
+                .eq(TaskInstanceInfoTb::getContextName, contextName)
+                .eq(TaskInstanceInfoTb::getLanguage, language)
+                .eq(TaskInstanceInfoTb::getEnvAlias, envAlias)
+                .eq(TaskInstanceInfoTb::getChangeType, changeType)
+                .orderByDesc(TaskInstanceInfoTb::getId)
+                .last("LIMIT 1")
+                .one();
+    }
 }
