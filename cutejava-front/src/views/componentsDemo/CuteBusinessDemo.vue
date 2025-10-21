@@ -16,7 +16,7 @@
           <cute-product-line-select v-model="form.productLine" @detail="onProductLineDetailChange" />
         </el-form-item>
         <el-form-item label="产品线Pro" prop="productLinePro">
-          <cute-product-line-select-pro v-model="form.productLine" @detail="onProductLineDetailProChange" />
+          <cute-product-line-select-pro v-model="form.productLinePro" @detail="onProductLineDetailProChange" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('form')">提 交</el-button>

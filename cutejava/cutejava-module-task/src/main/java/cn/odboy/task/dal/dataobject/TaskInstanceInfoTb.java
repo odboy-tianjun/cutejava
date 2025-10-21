@@ -73,6 +73,13 @@ public class TaskInstanceInfoTb extends CsObject {
     private String contextName;
 
     /**
+     * 语言
+     */
+    @ApiModelProperty("语言")
+    @TableField("`language`")
+    private String language;
+
+    /**
      * 变更类型
      */
     @ApiModelProperty("变更类型")
@@ -113,6 +120,13 @@ public class TaskInstanceInfoTb extends CsObject {
     @TableField("reason")
     @ApiModelProperty("变更原因")
     private String reason;
+
+    /**
+     * 任务模板
+     */
+    @TableField("template")
+    @ApiModelProperty("template")
+    private String template;
 
     /**
      * QuartzJob参数

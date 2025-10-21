@@ -15,13 +15,17 @@
  */
 package cn.odboy.task.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceStepDetailTb;
 import cn.odboy.task.dal.mysql.TaskInstanceStepDetailMapper;
 import cn.odboy.task.service.TaskInstanceStepDetailService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -51,5 +55,15 @@ public class TaskInstanceStepDetailServiceImpl extends ServiceImpl<TaskInstanceS
         stepDetail.setStepStatus(TaskStatusEnum.Fail.getCode());
         save(stepDetail);
         throw new BadRequestException(stepDesc);
+    }
+
+    @Override
+    public void removeByInstanceDetailIds(List<Long> instanceDetailIds) {
+        if (CollUtil.isEmpty(instanceDetailIds)) {
+            return;
+        }
+        remove(new LambdaQueryWrapper<TaskInstanceStepDetailTb>()
+                .in(TaskInstanceStepDetailTb::getInstanceDetailId, instanceDetailIds)
+        );
     }
 }

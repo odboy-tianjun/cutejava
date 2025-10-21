@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 public class TaskTemplateInfoServiceImpl extends ServiceImpl<TaskTemplateInfoMapper, TaskTemplateInfoTb> implements TaskTemplateInfoService {
 
     @Override
-    public TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language) {
-        return baseMapper.selectTemplateInfoByECL(envAlias, contextName, language);
+    public TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language, String changeType) {
+        return baseMapper.selectTemplateInfoByECL(envAlias, contextName, language, changeType);
     }
 }

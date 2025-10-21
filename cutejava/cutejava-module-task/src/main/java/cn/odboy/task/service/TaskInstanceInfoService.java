@@ -36,4 +36,7 @@ public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
 
     void fastSuccessWithData(Long id, JobDataMap dataMap);
 
+    TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias, String changeType);
+
+    TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias, String changeType);
 }

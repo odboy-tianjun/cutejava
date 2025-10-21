@@ -10,8 +10,6 @@
  Target Server Type    : MySQL
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
-
- Date: 09/10/2025 12:25:16
 */
 
 SET NAMES utf8mb4;
@@ -26,7 +24,7 @@ CREATE TABLE `demo_time_table_copy1`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_time_table_copy1
@@ -44,7 +42,7 @@ CREATE TABLE `demo_user_time_logic_table`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `available` tinyint(1) NOT NULL DEFAULT 1 COMMENT '数据有效性',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_user_time_logic_table
@@ -61,7 +59,7 @@ CREATE TABLE `demo_user_time_table`  (
   `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_user_time_table
@@ -221,7 +219,7 @@ CREATE TABLE `qrtz_scheduler_state`  (
 -- Records of qrtz_scheduler_state
 -- ----------------------------
 INSERT INTO `qrtz_scheduler_state` VALUES ('ClusteredScheduler', 'DESKTOP-FM44BLS1742558233429', 1742558255052, 20000);
-INSERT INTO `qrtz_scheduler_state` VALUES ('cutejava', 'auto', 1759044047208, 10000);
+INSERT INTO `qrtz_scheduler_state` VALUES ('cutejava', 'auto', 1760951912083, 10000);
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
@@ -355,7 +353,7 @@ CREATE TABLE `system_dict`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_dict
@@ -363,6 +361,7 @@ CREATE TABLE `system_dict`  (
 INSERT INTO `system_dict` VALUES (1, 'user_status', '用户状态', 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_dict` VALUES (4, 'dept_status', '部门状态', 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_dict` VALUES (5, 'job_status', '岗位状态', 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict` VALUES (8, 'test_status', '测试状态', 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 
 -- ----------------------------
 -- Table structure for system_dict_detail
@@ -380,7 +379,7 @@ CREATE TABLE `system_dict_detail`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_dict_id`(`dict_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典详情' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典详情' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_dict_detail
@@ -391,6 +390,28 @@ INSERT INTO `system_dict_detail` VALUES (3, 4, '启用', 'true', 1, 'admin', 'ad
 INSERT INTO `system_dict_detail` VALUES (4, 4, '停用', 'false', 2, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_dict_detail` VALUES (5, 5, '启用', 'true', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_dict_detail` VALUES (6, 5, '停用', 'false', 2, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (7, 8, '打瞌睡01', 'ks01', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (8, 8, '打瞌睡2', 'ks02', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (9, 8, '打瞌睡3', 'ks03', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (10, 8, '打瞌睡4', 'ks04', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (11, 8, '打瞌睡5', 'ks05', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (12, 8, '打瞌睡6', 'ks06', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (13, 8, '打瞌睡7', 'ks07', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (14, 8, '打瞌睡8', 'ks08', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (15, 8, '打瞌睡9', 'ks09', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (16, 8, '打瞌睡10', 'ks10', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (17, 8, '打瞌睡11', 'ks11', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (18, 8, '打瞌睡12', 'ks12', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (19, 8, '打瞌睡13', 'ks13', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (20, 8, '打瞌睡14', 'ks14', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (21, 8, '打瞌睡15', 'ks15', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (22, 8, '打瞌睡16', 'ks16', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (23, 8, '打瞌睡17', 'ks17', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (24, 8, '打瞌睡18', 'ks18', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (25, 8, '打瞌睡19', 'ks19', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (26, 8, '打瞌睡20', 'ks20', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (27, 8, '打瞌睡21', 'ks21', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_dict_detail` VALUES (28, 8, '打瞌睡22', 'ks22', 1, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 
 -- ----------------------------
 -- Table structure for system_email_config
@@ -571,7 +592,7 @@ CREATE TABLE `system_operation_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '审计日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '审计日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_operation_log
@@ -654,7 +675,7 @@ CREATE TABLE `system_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常详情',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_quartz_log
@@ -793,12 +814,19 @@ INSERT INTO `system_roles_menus` VALUES (121, 2);
 INSERT INTO `system_roles_menus` VALUES (122, 1);
 INSERT INTO `system_roles_menus` VALUES (122, 2);
 INSERT INTO `system_roles_menus` VALUES (125, 1);
+INSERT INTO `system_roles_menus` VALUES (125, 2);
 INSERT INTO `system_roles_menus` VALUES (126, 1);
+INSERT INTO `system_roles_menus` VALUES (126, 2);
 INSERT INTO `system_roles_menus` VALUES (127, 1);
+INSERT INTO `system_roles_menus` VALUES (127, 2);
 INSERT INTO `system_roles_menus` VALUES (128, 1);
+INSERT INTO `system_roles_menus` VALUES (128, 2);
 INSERT INTO `system_roles_menus` VALUES (129, 1);
+INSERT INTO `system_roles_menus` VALUES (129, 2);
 INSERT INTO `system_roles_menus` VALUES (130, 1);
+INSERT INTO `system_roles_menus` VALUES (130, 2);
 INSERT INTO `system_roles_menus` VALUES (132, 1);
+INSERT INTO `system_roles_menus` VALUES (132, 2);
 
 -- ----------------------------
 -- Table structure for system_user
@@ -1203,12 +1231,14 @@ CREATE TABLE `task_instance_info`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `context_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
+  `language` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '语言',
   `change_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '变更类型',
   `env_alias` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '环境别名',
   `status` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '状态(running进行中 success成功 fail失败)',
   `finish_time` datetime NULL DEFAULT NULL COMMENT '完成时间',
   `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '来源',
   `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '变更原因',
+  `template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '任务模板',
   `job_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'QuartzJob参数',
   `error_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常信息',
   PRIMARY KEY (`id`) USING BTREE

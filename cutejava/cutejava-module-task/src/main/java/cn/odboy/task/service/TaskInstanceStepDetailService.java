@@ -18,6 +18,8 @@ package cn.odboy.task.service;
 import cn.odboy.task.dal.dataobject.TaskInstanceStepDetailTb;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 任务实例步骤明细 服务类
@@ -42,4 +44,11 @@ public interface TaskInstanceStepDetailService extends IService<TaskInstanceStep
      * @param stepDesc         步骤描述
      */
     void fail(Long instanceDetailId, String stepDesc);
+
+    /**
+     * 根据明细ID删除步骤明细
+     *
+     * @param instanceDetailIds
+     */
+    void removeByInstanceDetailIds(List<Long> instanceDetailIds);
 }

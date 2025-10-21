@@ -31,5 +31,17 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface TaskTemplateInfoMapper extends BaseMapper<TaskTemplateInfoTb> {
-    TaskTemplateInfoVo selectTemplateInfoByECL(@Param("envAlias") String envAlias, @Param("contextName") String contextName, @Param("language") String language);
+    /**
+     * @param envAlias    环境别称
+     * @param contextName 应用名称、资源类型
+     * @param language    语言、版本
+     * @param changeType  变更类型
+     * @return /
+     */
+    TaskTemplateInfoVo selectTemplateInfoByECL(
+            @Param("envAlias") String envAlias,
+            @Param("contextName") String contextName,
+            @Param("language") String language,
+            @Param("changeType") String changeType
+    );
 }

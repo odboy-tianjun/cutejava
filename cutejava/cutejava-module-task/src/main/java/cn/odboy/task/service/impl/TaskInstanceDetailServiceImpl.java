@@ -15,6 +15,7 @@
  */
 package cn.odboy.task.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceDetailTb;
 import cn.odboy.task.dal.mysql.TaskInstanceDetailMapper;
@@ -25,6 +26,7 @@ import org.quartz.JobDataMap;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -40,12 +42,10 @@ public class TaskInstanceDetailServiceImpl extends ServiceImpl<TaskInstanceDetai
     @Override
     public void fastFailWithInfo(Long instanceId, String code, String executeInfo) {
         TaskInstanceDetailTb updRecord = new TaskInstanceDetailTb();
+        updRecord.setFinishTime(new Date());
         updRecord.setExecuteInfo(executeInfo);
         updRecord.setExecuteStatus(TaskStatusEnum.Fail.getCode());
-        lambdaUpdate()
-                .eq(TaskInstanceDetailTb::getInstanceId, instanceId)
-                .eq(TaskInstanceDetailTb::getBizCode, code)
-                .update(updRecord);
+        lambdaUpdate().eq(TaskInstanceDetailTb::getInstanceId, instanceId).eq(TaskInstanceDetailTb::getBizCode, code).update(updRecord);
     }
 
     @Override
@@ -54,10 +54,7 @@ public class TaskInstanceDetailServiceImpl extends ServiceImpl<TaskInstanceDetai
         updRecord.setFinishTime(new Date());
         updRecord.setExecuteInfo(executeInfo);
         updRecord.setExecuteStatus(TaskStatusEnum.Success.getCode());
-        lambdaUpdate()
-                .eq(TaskInstanceDetailTb::getInstanceId, instanceId)
-                .eq(TaskInstanceDetailTb::getBizCode, code)
-                .update(updRecord);
+        lambdaUpdate().eq(TaskInstanceDetailTb::getInstanceId, instanceId).eq(TaskInstanceDetailTb::getBizCode, code).update(updRecord);
     }
 
     @Override
@@ -67,9 +64,19 @@ public class TaskInstanceDetailServiceImpl extends ServiceImpl<TaskInstanceDetai
         updRecord.setExecuteInfo("运行中");
         updRecord.setExecuteParams(JSON.toJSONString(dataMap));
         updRecord.setExecuteStatus(TaskStatusEnum.Running.getCode());
-        lambdaUpdate()
-                .eq(TaskInstanceDetailTb::getInstanceId, instanceId)
-                .eq(TaskInstanceDetailTb::getBizCode, code)
-                .update(updRecord);
+        lambdaUpdate().eq(TaskInstanceDetailTb::getInstanceId, instanceId).eq(TaskInstanceDetailTb::getBizCode, code).update(updRecord);
+    }
+
+    @Override
+    public List<TaskInstanceDetailTb> queryByInstanceIdAndBizCodeList(Long instanceId, List<String> bizCodeList) {
+        if (CollUtil.isEmpty(bizCodeList)) {
+            return CollUtil.newArrayList();
+        }
+        return lambdaQuery().eq(TaskInstanceDetailTb::getInstanceId, instanceId).in(TaskInstanceDetailTb::getBizCode, bizCodeList).list();
+    }
+
+    @Override
+    public List<TaskInstanceDetailTb> queryByInstanceId(Long instanceId) {
+        return lambdaQuery().eq(TaskInstanceDetailTb::getInstanceId, instanceId).orderByAsc(TaskInstanceDetailTb::getId).list();
     }
 }
