@@ -193,6 +193,7 @@
           >
             <el-button
               v-permission="permission.edit"
+              style="margin-right: -8px"
               size="mini"
               type="text"
               @click.stop="onCopyClick(scope.row)"
