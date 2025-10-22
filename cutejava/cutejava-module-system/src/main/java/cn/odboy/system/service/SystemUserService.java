@@ -293,8 +293,6 @@ public class SystemUserService {
      */
 
     public CsPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
-        // 子查询优化
-        criteria.setOffset(page.offset());
         IPage<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, page);
         return CsPageUtil.toPage(users);
     }

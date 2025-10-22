@@ -51,8 +51,6 @@ public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
 
     Long countUserByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
-    Long countUserByArgs(@Param("criteria") SystemQueryUserArgs criteria);
-
     void updateUserPasswordByUsername(@Param("username") String username, @Param("password") String password);
 
     void updateUserEmailByUsername(@Param("username") String username, @Param("email") String email);

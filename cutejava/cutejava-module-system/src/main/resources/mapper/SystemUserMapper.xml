@@ -34,48 +34,36 @@
             <result column="role_data_scope" property="dataScope"/>
         </collection>
     </resultMap>
-    <select id="countUserByArgs" resultType="java.lang.Long">
-        select count(*)
-        from system_user u
-        <where>
-            <if test="criteria.id != null">
-                and u.user_id = #{criteria.id}
-            </if>
-            <if test="criteria.enabled != null">
-                and u.enabled = #{criteria.enabled}
-            </if>
-            <if test="criteria.deptIds != null and criteria.deptIds.size() != 0">
-                and u.dept_id in
-                <foreach collection="criteria.deptIds" item="deptId" open="(" separator="," close=")">
-                    #{deptId}
-                </foreach>
-            </if>
-            <if test="criteria.blurry != null and criteria.blurry != ''">
-                and (
-                u.username like concat('%', #{criteria.blurry}, '%')
-                or u.nick_name like concat('%', #{criteria.blurry}, '%')
-                or u.email like concat('%', #{criteria.blurry}, '%')
-                )
-            </if>
-            <if test="criteria.createTime != null and criteria.createTime.size() != 0">
-                and u.create_time between #{criteria.createTime[0]} and #{criteria.createTime[1]}
-            </if>
-        </where>
-    </select>
     <select id="selectUserByArgs" resultMap="BaseResultMap">
-        select u.*,
-        j.id as job_id, j.name as job_name,
-        r.role_id as role_id, r.name as role_name, r.level as role_level, r.data_scope as role_data_scope
-        from (
-        select
-        u.user_id as user_user_id, u.dept_id as user_dept_id, u.username as user_username,
-        u.nick_name as user_nick_name, u.email as user_email, u.phone as user_phone,
-        u.gender as user_gender, u.avatar_name as user_avatar_name, u.avatar_path as user_avatar_path,
-        u.enabled as user_enabled, u.pwd_reset_time as user_pwd_reset_time, u.create_by as user_create_by,
-        u.update_by as user_update_by, u.create_time as user_create_time, u.update_time as user_update_time,
-        d.dept_id as dept_id, d.name as dept_name
+        select u.user_id as user_user_id, 
+        u.dept_id as user_dept_id, 
+        u.username as user_username,
+        u.nick_name as user_nick_name, 
+        u.email as user_email, 
+        u.phone as user_phone,
+        u.gender as user_gender, 
+        u.avatar_name as user_avatar_name, 
+        u.avatar_path as user_avatar_path,
+        u.enabled as user_enabled, 
+        u.pwd_reset_time as user_pwd_reset_time, 
+        u.create_by as user_create_by,
+        u.update_by as user_update_by, 
+        u.create_time as user_create_time, 
+        u.update_time as user_update_time,
+        d.dept_id as dept_id, 
+        d.name as dept_name,
+        j.id as job_id, 
+        j.name as job_name,
+        r.role_id as role_id, 
+        r.name as role_name, 
+        r.level as role_level, 
+        r.data_scope as role_data_scope
         from system_user u
         left join system_dept d on u.dept_id = d.dept_id
+        left join system_users_jobs suj on u.user_id = suj.user_id
+        left join system_job j on suj.job_id = j.id
+        left join system_users_roles sur on u.user_id = sur.user_id
+        left join system_role r on sur.role_id = r.role_id
         <where>
             <if test="criteria.id != null">
                 and u.user_id = #{criteria.id}
@@ -101,15 +89,6 @@
             </if>
         </where>
         order by u.user_id desc
-        <if test="criteria.offset != null">
-            limit #{criteria.offset}, #{criteria.size}
-        </if>
-        ) u
-        left join system_users_jobs suj on u.user_user_id = suj.user_id
-        left join system_job j on suj.job_id = j.id
-        left join system_users_roles sur on u.user_user_id = sur.user_id
-        left join system_role r on sur.role_id = r.role_id
-        order by u.user_user_id desc
     </select>
     <select id="getUserByUsername" resultMap="BaseResultMap">
         select u.password          user_password,
