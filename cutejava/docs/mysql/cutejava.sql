@@ -24,7 +24,7 @@ CREATE TABLE `demo_time_table_copy1`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_time_table_copy1
@@ -42,7 +42,7 @@ CREATE TABLE `demo_user_time_logic_table`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `available` tinyint(1) NOT NULL DEFAULT 1 COMMENT '数据有效性',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_user_time_logic_table
@@ -59,7 +59,7 @@ CREATE TABLE `demo_user_time_table`  (
   `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_user_time_table
@@ -219,7 +219,7 @@ CREATE TABLE `qrtz_scheduler_state`  (
 -- Records of qrtz_scheduler_state
 -- ----------------------------
 INSERT INTO `qrtz_scheduler_state` VALUES ('ClusteredScheduler', 'DESKTOP-FM44BLS1742558233429', 1742558255052, 20000);
-INSERT INTO `qrtz_scheduler_state` VALUES ('cutejava', 'auto', 1760951912083, 10000);
+INSERT INTO `qrtz_scheduler_state` VALUES ('cutejava', 'auto', 1761211053605, 10000);
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
@@ -509,7 +509,7 @@ CREATE TABLE `system_menu`  (
   UNIQUE INDEX `uniq_title`(`title` ASC) USING BTREE,
   INDEX `idx_pid`(`pid` ASC) USING BTREE,
   INDEX `idx_sys_menu_menu_id`(`menu_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 150 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 151 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
@@ -520,7 +520,7 @@ INSERT INTO `system_menu` VALUES (3, 1, 3, 1, '角色管理', 'Role', 'system/ro
 INSERT INTO `system_menu` VALUES (5, 1, 3, 1, '菜单管理', 'Menu', 'system/menu/index', 5, 'menu', 'menu', b'0', b'0', b'0', 'menu:list', 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (6, 1, 3, 0, '系统监控', NULL, NULL, 11, 'monitor', 'monitor', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (9, 6, 0, 1, 'SQL监控', 'DruidSqlConsole', 'system/druidSql/index', 18, 'sqlMonitor', 'druid-console', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
-INSERT INTO `system_menu` VALUES (10, NULL, 15, 0, '组件管理', NULL, NULL, 999, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_menu` VALUES (10, NULL, 16, 0, '组件管理', NULL, NULL, 999, 'zujian', 'components', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (11, 10, 0, 1, '图标库', 'Icons', 'components/icons/index', 51, 'icon', 'icon', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (14, 36, 0, 1, '邮件工具', 'Email', 'system/email/index', 35, 'email', 'email', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'system/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
@@ -574,6 +574,7 @@ INSERT INTO `system_menu` VALUES (128, 10, 0, 1, '演示:Markdown编辑器', 'Cu
 INSERT INTO `system_menu` VALUES (129, 10, 0, 1, '演示:富文本编辑器', 'CuteRichTextEditorDemo', 'componentsDemo/CuteRichTextEditorDemo', 999, 'menu', 'cuteRichTextEditorDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (130, 10, 0, 1, '演示:文件上传', 'CuteFileUploadDemo', 'componentsDemo/CuteFileUploadDemo', 999, 'menu', 'cuteFileUploadDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 INSERT INTO `system_menu` VALUES (132, 10, 0, 1, '演示:文件拖拽上传', 'CuteFileDragUploadDemo', 'componentsDemo/CuteFileDragUploadDemo', 999, 'menu', 'cuteFileDragUploadDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
+INSERT INTO `system_menu` VALUES (150, 10, 0, 1, '演示:其他基础组件', 'CuteOtherDemo', 'componentsDemo/CuteOtherDemo', 999, 'menu', 'cuteOtherDemo', b'0', b'0', b'0', NULL, 'admin', 'admin', '2021-03-20 22:04:13', '2021-03-20 22:04:13');
 
 -- ----------------------------
 -- Table structure for system_operation_log
@@ -592,7 +593,7 @@ CREATE TABLE `system_operation_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '审计日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '审计日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_operation_log
@@ -675,7 +676,7 @@ CREATE TABLE `system_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常详情',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_quartz_log
@@ -827,6 +828,7 @@ INSERT INTO `system_roles_menus` VALUES (130, 1);
 INSERT INTO `system_roles_menus` VALUES (130, 2);
 INSERT INTO `system_roles_menus` VALUES (132, 1);
 INSERT INTO `system_roles_menus` VALUES (132, 2);
+INSERT INTO `system_roles_menus` VALUES (150, 1);
 
 -- ----------------------------
 -- Table structure for system_user

@@ -312,6 +312,7 @@ export default {
   },
   created() {
     this.crud.msg.add = '新增成功，默认密码：123456'
+    console.log('======== this.dict', this.dict)
   },
   mounted: function() {
     const that = this

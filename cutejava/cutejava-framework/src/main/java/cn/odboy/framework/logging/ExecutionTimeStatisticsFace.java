@@ -36,5 +36,5 @@ public @interface ExecutionTimeStatisticsFace {
     /**
      * 是否展示异常日志
      */
-    boolean errorLog() default false;
+    boolean showErrLog() default true;
 }

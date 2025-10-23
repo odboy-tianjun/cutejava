@@ -3,7 +3,7 @@
     <!-- @change 编辑区发生变化的回调事件 -->
     <!-- @save ctrl + s 的回调事件(保存按键,同样触发该回调) -->
     <cute-markdown
-      :content="markdown.content"
+      :content="content"
       @change="onChange"
       @save="onSave"
     />
@@ -18,10 +18,7 @@ export default {
   components: { CuteMarkdown },
   data() {
     return {
-      markdown: {
-        height: '200px',
-        content: '初始化内容'
-      }
+      content: '初始化内容'
     }
   },
   methods: {

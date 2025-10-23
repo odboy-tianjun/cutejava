@@ -15,7 +15,7 @@ export default {
   props: {
     desc: {
       type: String,
-      required: true,
+      required: false,
       default: '暂无匹配数据'
     }
   }

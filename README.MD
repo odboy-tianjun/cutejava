@@ -8,7 +8,10 @@
 
 #### 项目源码
 
-https://github.com/odboy-tianjun/cutejava
+[https://github.com/odboy-tianjun/cutejava](https://github.com/odboy-tianjun/cutejava)
+
+#### 项目文档
+[https://cutejava-doc.odboy.cn/](https://cutejava-doc.odboy.cn/)
 
 #### 编码规范
 
@@ -51,35 +54,6 @@ https://github.com/odboy-tianjun/cutejava
 - 邮件工具：配合富文本，发送html格式的邮件
 - 存储管理：本地存储、Minio存储
 - 服务监控：监控服务器的负载情况
-
-#### 前端基础组件
-
-> 组件所在路径：cutejava-front/src/views/components/dev
-
-- CuteSimpleTable 简单表格
-- CuteDragTable 支持拖拽的表格
-- CuteFormDialog 支持表单的对话框
-- CuteFormDrawer 支持表单的抽屉
-- CuteRichTextEditor 富文本编辑器
-- CuteOneKeyCopy 一键复制
-- CuteMarkdown Markdown编辑器
-- CuteJavaEditor Java编辑器（已弃用）
-- CuteYamlEditor Yaml编辑器（已弃用）
-- CuteCodeEditor 多语言编辑器（支持yaml、java、go、swift、dockerfile、groovy、lua、perl、python、ruby、sql、xml、vue）
-
-#### 前端业务组件
-
-> 组件所在路径：cutejava-front/src/views/components/business
-
-- CuteDeptTree 部门树
-- CuteProductLineSelect 产品线选择框
-- CuteProductLineSelectPro 产品线级联选择框
-- CuteUserSelect 用户多选框
-  ![CuteBusiness](./cutejava-front/docs/images/CuteBusiness.png)
-- CuteFileUpload 上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
-  ![CuteFileUpload](./cutejava-front/docs/images/CuteFileUpload.png)
-- CuteFileDragUpload 支持拖拽上传文件到OSS, 必须结合Minio使用（上传完成后必须销毁组件）
-  ![CuteFileDragUpload](./cutejava-front/docs/images/CuteFileDragUpload.png)
 
 #### 系统模块
 

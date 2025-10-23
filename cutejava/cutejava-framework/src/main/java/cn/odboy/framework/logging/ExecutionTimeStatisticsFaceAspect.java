@@ -24,7 +24,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 /**
- * DingtalkApi调用异常
+ * 执行时间统计
  *
  * @author odboy
  * @date 2025-05-07
@@ -41,7 +41,7 @@ public class ExecutionTimeStatisticsFaceAspect {
             log.info("[{}] 接口执行成功，耗时: {} ms", executionTimeStatisticsFace.description(), timeInterval.intervalMs());
             return proceed;
         } catch (Exception e) {
-            if (executionTimeStatisticsFace.errorLog()) {
+            if (executionTimeStatisticsFace.showErrLog()) {
                 log.info("[{}] 接口执行失败，耗时: {} ms", executionTimeStatisticsFace.description(), timeInterval.intervalMs());
             }
             throw e;
