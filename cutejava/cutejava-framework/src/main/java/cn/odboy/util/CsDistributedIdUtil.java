@@ -21,7 +21,7 @@ import cn.odboy.framework.exception.web.BadRequestException;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 分布式id生成工具
+ * 分布式id生成工具（不建议用，仅供参考）
  *
  * @author odboy
  * @date 2025-04-05

@@ -27,11 +27,17 @@ public class HealthCheckPointer implements CsHealthCheckPointService {
     @Autowired
     private SystemDictService systemDictService;
 
+    /**
+     * 系统准备就绪
+     */
     @Override
     public ResponseEntity<?> doReadiness() {
         return ResponseEntity.ok(null);
     }
 
+    /**
+     * 系统是否正常
+     */
     @Override
     public ResponseEntity<?> doLiveness() {
         return ResponseEntity.ok(systemDictService.getById(1));

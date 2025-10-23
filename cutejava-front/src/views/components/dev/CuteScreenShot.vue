@@ -17,7 +17,7 @@
         截图并下载
       </el-button>
     </div>
-    <div id="elementIdSelector">
+    <div id="elementIdSelector" style="padding: 15px">
       <slot />
     </div>
   </div>

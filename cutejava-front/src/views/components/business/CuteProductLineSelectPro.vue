@@ -10,6 +10,7 @@
     :disabled="disabled"
     :options="deptOptions"
     style="width: 100%"
+    placeholder="请选择产品线"
     @change="handleChange"
   />
 </template>
