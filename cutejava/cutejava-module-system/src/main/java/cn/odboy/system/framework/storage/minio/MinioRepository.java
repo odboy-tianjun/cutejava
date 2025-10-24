@@ -191,9 +191,8 @@ public class MinioRepository {
             throw new BadRequestException("文件名不能为空");
         }
 
-        if (file.getSize() > properties.getOss().getMaxSize()) {
-            throw new BadRequestException("文件大小超出限制，最大允许上传 100 MB");
-        }
+        long size = file.getSize();
+        CsFileUtil.checkSize(properties.getOss().getMaxSize(), size);
 
         String fileName = UUID.randomUUID() + getFileExtension(originalFilename);
         // yyyy/MM/dd/fileName.xxx
@@ -246,20 +245,6 @@ public class MinioRepository {
     private String getFileExtension(String fileName) {
         int lastIndex = fileName.lastIndexOf(".");
         return lastIndex == -1 ? "" : fileName.substring(lastIndex);
-    }
-
-    /**
-     * 验证文件大小 限制上传的文件大小
-     *
-     * @param file 文件
-     * @return boolean
-     */
-    public boolean validateFileSize(MultipartFile file) {
-        if (file.getSize() > properties.getOss().getMaxSize()) {
-            log.warn("文件超出大小限制，最大允许上传 100 MB，当前文件大小: {}", file.getSize());
-            return false;
-        }
-        return true;
     }
 
     /**
