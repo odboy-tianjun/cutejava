@@ -145,7 +145,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     public void removeFileByIds(Long[] ids) {
         for (Long id : ids) {
             SystemOssStorageTb storage = getById(id);
-            minioRepository.remove(storage.getObjectName());
+            minioRepository.removeBucketFile(storage.getObjectName());
             removeById(storage);
         }
     }
