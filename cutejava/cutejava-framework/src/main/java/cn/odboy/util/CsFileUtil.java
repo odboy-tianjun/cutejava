@@ -152,7 +152,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
      */
     public static File upload(MultipartFile file, String filePath) {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmssS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssS");
         // 过滤非法文件名
         String name = getPrefix(verifyFilename(file.getOriginalFilename()));
         String suffix = getSuffix(file.getOriginalFilename());

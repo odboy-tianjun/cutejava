@@ -42,7 +42,7 @@ public class ExecutionTimeStatisticsFaceAspect {
             return proceed;
         } catch (Exception e) {
             if (executionTimeStatisticsFace.showErrLog()) {
-                log.info("[{}] 接口执行失败，耗时: {} ms", executionTimeStatisticsFace.description(), timeInterval.intervalMs());
+                log.error("[{}] 接口执行失败，耗时: {} ms", executionTimeStatisticsFace.description(), timeInterval.intervalMs(), e);
             }
             throw e;
         }

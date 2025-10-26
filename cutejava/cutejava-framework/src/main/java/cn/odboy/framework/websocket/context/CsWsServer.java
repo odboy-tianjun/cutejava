@@ -169,11 +169,7 @@ public class CsWsServer {
     public void stopTask(String sid) {
         Thread thread = getTaskThread(this.sid);
         if (thread != null) {
-            try {
-                thread.stop();
-            } catch (Exception e) {
-                // ignore
-            }
+            thread.stop();
         }
     }
 }

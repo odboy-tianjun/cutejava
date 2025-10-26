@@ -39,7 +39,6 @@ public class BadRequestException extends RuntimeException {
     }
 
     public BadRequestException(Throwable cause) {
-        // FIXME 20250827 修复完整异常链暴露给用户的问题
         super(cause.getMessage());
         this.status = BAD_REQUEST.value();
     }
