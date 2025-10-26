@@ -45,6 +45,9 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
     private Thread workThread = null;
 
     private String getBeanAlias(String code) {
+        if (StrUtil.isBlank(code)) {
+            throw new ServerException("参数code必填");
+        }
         // node_init
         String[] s = code.split("_");
         return Arrays.stream(s).map(StrUtil::upperFirst).collect(Collectors.joining());
@@ -172,6 +175,7 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
                     executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
                     taskInstanceDetailService.fastSuccessWithInfo(id, code, null);
                 } catch (Exception e) {
+                    log.error("任务节点执行失败", e);
                     taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
                     throw new ServerException(e);
                 }
