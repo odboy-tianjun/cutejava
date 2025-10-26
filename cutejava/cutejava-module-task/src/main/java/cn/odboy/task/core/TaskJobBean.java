@@ -19,6 +19,7 @@ package cn.odboy.task.core;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.task.constant.TaskJobKeys;
 import cn.odboy.task.dal.dataobject.TaskInstanceDetailTb;
 import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
-    private Thread subMainThread = null;
+    private Thread workThread = null;
 
     private String getBeanAlias(String code) {
         // node_init
@@ -50,19 +51,19 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
 
     @Override
     public void executeInternal(JobExecutionContext context) {
-        this.subMainThread = Thread.currentThread();
+        this.workThread = Thread.currentThread();
         // ========================== 获取代理类 ==========================
         TaskInstanceInfoService taskInstanceInfoService = CsSpringBeanHolder.getBean(TaskInstanceInfoService.class);
         TaskInstanceDetailService taskInstanceDetailService = CsSpringBeanHolder.getBean(TaskInstanceDetailService.class);
         // ========================== 获取参数 ==========================
         JobDataMap dataMap = context.getMergedJobDataMap();
-        long id = dataMap.getLong("id");
+        long id = dataMap.getLong(TaskJobKeys.ID);
         // ========================== 获取任务编排模板 ==========================
         TaskInstanceInfoTb taskInstanceInfoVo = taskInstanceInfoService.getById(id);
         String templateInfo = taskInstanceInfoVo.getTemplate();
         List<TaskTemplateNodeVo> taskTemplateNodeVos = JSON.parseArray(templateInfo, TaskTemplateNodeVo.class);
         // ========================== 判断是否重试任务 ==========================
-        String retryNodeCode = dataMap.getString("retryNodeCode");
+        String retryNodeCode = dataMap.getString(TaskJobKeys.RETRY_NODE_CODE);
         if (StrUtil.isBlank(retryNodeCode)) {
             executeNormalTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos);
         } else {
@@ -191,151 +192,8 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
 
     @Override
     public void interrupt() {
-        if (subMainThread != null) {
-            subMainThread.stop();
+        if (workThread != null) {
+            workThread.stop();
         }
     }
 }
-
-
-//@Slf4j
-//public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
-//    private Thread subMainThread = null;
-//
-//    private String getBeanAlias(String code) {
-//        // node_init
-//        String[] s = code.split("_");
-//        return Arrays.stream(s).map(StrUtil::upperFirst).collect(Collectors.joining());
-//    }
-//
-//    @Override
-//    public void executeInternal(JobExecutionContext context) {
-//        this.subMainThread = Thread.currentThread();
-//        // ========================== 获取代理类 ==========================
-//        TaskInstanceInfoService taskInstanceInfoService = CsSpringBeanHolder.getBean(TaskInstanceInfoService.class);
-//        TaskInstanceDetailService taskInstanceDetailService = CsSpringBeanHolder.getBean(TaskInstanceDetailService.class);
-//        // ========================== 获取参数 ==========================
-//        JobDataMap dataMap = context.getMergedJobDataMap();
-//        long id = dataMap.getLong("id");
-//        // ========================== 获取任务编排模板 ==========================
-//        TaskInstanceInfoTb taskInstanceInfoVo = taskInstanceInfoService.getById(id);
-//        String templateInfo = taskInstanceInfoVo.getTemplate();
-//        List<TaskTemplateNodeVo> taskTemplateNodeVos = JSON.parseArray(templateInfo, TaskTemplateNodeVo.class);
-//        // ========================== 判断是否重试任务 ==========================
-//        String retryNodeCode = dataMap.getString("retryNodeCode");
-//        if (StrUtil.isBlank(retryNodeCode)) {
-//            // ========================== 初始化执行明细 ==========================
-//            List<TaskInstanceDetailTb> taskInstanceDetails = new ArrayList<>();
-//            for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodeVos) {
-//                TaskInstanceDetailTb taskInstanceDetail = new TaskInstanceDetailTb();
-//                taskInstanceDetail.setInstanceId(id);
-//                taskInstanceDetail.setFinishTime(null);
-//                taskInstanceDetail.setBizCode(taskTemplateNodeVo.getCode());
-//                taskInstanceDetail.setBizName(taskTemplateNodeVo.getName());
-//                taskInstanceDetail.setExecuteInfo("未开始");
-//                taskInstanceDetail.setExecuteStatus("pending");
-//                taskInstanceDetails.add(taskInstanceDetail);
-//            }
-//            taskInstanceDetailService.saveBatch(taskInstanceDetails);
-//            Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
-//            // ========================== 顺序执行 ==========================
-//            try {
-//                for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodeVos) {
-//                    String code = taskTemplateNodeVo.getCode();
-//                    try {
-//                        TaskStepExecutor executor = CsSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
-//                        executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo, new TaskStepCallback() {
-//                            @Override
-//                            public void onStart() {
-//                                taskInstanceDetailService.fastStart(id, code, dataMap);
-//                            }
-//
-//                            @Override
-//                            public void onFinish(String executeInfo) {
-//                                taskInstanceDetailService.fastSuccessWithInfo(id, code, executeInfo);
-//                            }
-//                        });
-//                    } catch (Exception e) {
-//                        taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//                taskInstanceInfoService.fastSuccessWithData(id, dataMap);
-//            } catch (Exception e) {
-//                log.error("任务执行失败", e);
-//                taskInstanceInfoService.fastFailWithMessageData(id, e.getMessage(), dataMap);
-//            }
-//        } else {
-//            boolean isFound = false;
-//            // ========================== 初始化执行明细 ==========================
-//            List<TaskInstanceDetailTb> taskInstanceDetails = new ArrayList<>();
-//            List<TaskTemplateNodeVo> taskTemplateNodeRetrys = new ArrayList<>();
-//            for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodeVos) {
-//                if (isFound) {
-//                    TaskInstanceDetailTb taskInstanceDetail = new TaskInstanceDetailTb();
-//                    taskInstanceDetail.setInstanceId(id);
-//                    taskInstanceDetail.setFinishTime(null);
-//                    taskInstanceDetail.setBizCode(taskTemplateNodeVo.getCode());
-//                    taskInstanceDetail.setBizName(taskTemplateNodeVo.getName());
-//                    taskInstanceDetail.setExecuteInfo("未开始");
-//                    taskInstanceDetail.setExecuteStatus("pending");
-//                    taskInstanceDetails.add(taskInstanceDetail);
-//                    taskTemplateNodeRetrys.add(taskTemplateNodeVo);
-//                    continue;
-//                }
-//                if (taskTemplateNodeVo.getCode().equals(retryNodeCode)) {
-//                    if (!taskTemplateNodeVo.getRetry()) {
-//                        throw new BadRequestException("节点 " + retryNodeCode + "不支持重试");
-//                    }
-//                    TaskInstanceDetailTb taskInstanceDetail = new TaskInstanceDetailTb();
-//                    taskInstanceDetail.setInstanceId(id);
-//                    taskInstanceDetail.setFinishTime(null);
-//                    taskInstanceDetail.setBizCode(taskTemplateNodeVo.getCode());
-//                    taskInstanceDetail.setBizName(taskTemplateNodeVo.getName());
-//                    taskInstanceDetail.setExecuteInfo("未开始");
-//                    taskInstanceDetail.setExecuteStatus("pending");
-//                    taskInstanceDetails.add(taskInstanceDetail);
-//                    taskTemplateNodeRetrys.add(taskTemplateNodeVo);
-//                    isFound = true;
-//                }
-//            }
-//            taskInstanceDetailService.removeByInstanceIdAndBizCodeList(id, taskInstanceDetails.stream().map(TaskInstanceDetailTb::getBizCode).distinct().collect(Collectors.toList()));
-//            taskInstanceDetailService.saveBatch(taskInstanceDetails);
-//            Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
-//            // ========================== 顺序执行 ==========================
-//            try {
-//                for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodeRetrys) {
-//                    String code = taskTemplateNodeVo.getCode();
-//                    try {
-//                        TaskStepExecutor executor = CsSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
-//                        executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo, new TaskStepCallback() {
-//                            @Override
-//                            public void onStart() {
-//                                taskInstanceDetailService.fastStart(id, code, dataMap);
-//                            }
-//
-//                            @Override
-//                            public void onFinish(String executeInfo) {
-//                                taskInstanceDetailService.fastSuccessWithInfo(id, code, executeInfo);
-//                            }
-//                        });
-//                    } catch (Exception e) {
-//                        taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//                taskInstanceInfoService.fastSuccessWithData(id, dataMap);
-//            } catch (Exception e) {
-//                log.error("任务执行失败", e);
-//                taskInstanceInfoService.fastFailWithMessageData(id, e.getMessage(), dataMap);
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void interrupt() {
-//        if (subMainThread != null) {
-//            subMainThread.stop();
-//        }
-//    }
-//}

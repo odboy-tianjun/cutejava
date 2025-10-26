@@ -16,8 +16,11 @@
 package cn.odboy.task.core;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.web.BadRequestException;
 import cn.odboy.task.constant.TaskChangeTypeEnum;
+import cn.odboy.task.constant.TaskJobKeys;
 import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceDetailTb;
 import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
@@ -30,34 +33,29 @@ import cn.odboy.task.service.TaskInstanceInfoService;
 import cn.odboy.task.service.TaskTemplateInfoService;
 import cn.odboy.util.CsDateUtil;
 import com.alibaba.fastjson2.JSON;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Slf4j
-@Component
+@RequiredArgsConstructor
 public class TaskManage {
-    @Resource
-    private Scheduler scheduler;
-    @Autowired
-    private TaskTemplateInfoService taskTemplateInfoService;
-    @Autowired
-    private TaskInstanceInfoService taskInstanceInfoService;
-    @Autowired
-    private TaskInstanceDetailService taskInstanceDetailService;
+    private final Scheduler scheduler;
+    private final TaskTemplateInfoService taskTemplateInfoService;
+    private final TaskInstanceInfoService taskInstanceInfoService;
+    private final TaskInstanceDetailService taskInstanceDetailService;
 
     /**
-     * 创建任务单
+     * 创建任务单(注：同一应用同一变更类型无法并发多实例)
      *
      * @param contextName    上下文名称，这里特指应用名
      * @param changeTypeEnum 变更类型
+     * @param language       开发语言、资源版本
      * @param envAlias       环境别名
      * @param source         来源
      * @param reason         变更原因
@@ -65,6 +63,21 @@ public class TaskManage {
      */
     @Transactional(rollbackFor = Exception.class)
     public TaskInstanceInfoTb createJob(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source, String reason, JobDataMap dataMap) {
+        if (StrUtil.isBlank(contextName)) {
+            throw new BadRequestException("参数contextName必填");
+        }
+        if (changeTypeEnum == null) {
+            throw new BadRequestException("参数changeTypeEnum必填");
+        }
+        if (StrUtil.isBlank(language)) {
+            throw new BadRequestException("参数language必填");
+        }
+        if (StrUtil.isBlank(envAlias)) {
+            throw new BadRequestException("参数envAlias必填");
+        }
+        if (StrUtil.isBlank(source)) {
+            throw new BadRequestException("参数source必填");
+        }
         if (dataMap == null) {
             dataMap = new JobDataMap();
         }
@@ -74,19 +87,33 @@ public class TaskManage {
             throw new BadRequestException("没有查询到任务编排模板");
         }
         String templateInfo = taskInstanceInfoVo.getTemplateInfo();
-        List<TaskTemplateNodeVo> taskTemplateNodeVos = JSON.parseArray(templateInfo, TaskTemplateNodeVo.class);
+        List<TaskTemplateNodeVo> taskTemplateNodeVos;
+        try {
+            taskTemplateNodeVos = JSON.parseArray(templateInfo, TaskTemplateNodeVo.class);
+        } catch (Exception e) {
+            log.error("任务编排模板解析失败", e);
+            throw new BadRequestException("任务编排模板解析失败");
+        }
         if (taskTemplateNodeVos == null || taskTemplateNodeVos.isEmpty()) {
             throw new BadRequestException("没有查询到任务编排明细");
         }
-        // ========================== 传递参数 ==========================
-        // 应用名、资源类型
-        dataMap.put("contextName", contextName);
-        // 开发语言、资源版本
-        dataMap.put("language", language);
-        dataMap.put("envAlias", envAlias);
-        // 变更类型
-        dataMap.put("changeType", changeTypeEnum.getCode());
         // ========================== 创建任务 ==========================
+        TaskManage taskManage = CsSpringBeanHolder.getBean(TaskManage.class);
+        TaskInstanceInfoTb newInstance = taskManage.saveTaskInstanceInfoTb(contextName, changeTypeEnum, language, envAlias, source, reason, dataMap, templateInfo);
+        dataMap.put(TaskJobKeys.ID, newInstance.getId());
+        // 应用名、资源类型
+        dataMap.put(TaskJobKeys.CONTEXT_NAME, contextName);
+        // 开发语言、资源版本
+        dataMap.put(TaskJobKeys.LANGUAGE, language);
+        dataMap.put(TaskJobKeys.ENV_ALIAS, envAlias);
+        // 变更类型
+        dataMap.put(TaskJobKeys.CHANGE_TYPE, changeTypeEnum.getCode());
+        buildAndSchedule(changeTypeEnum.getCode(), contextName, dataMap);
+        return newInstance;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public TaskInstanceInfoTb saveTaskInstanceInfoTb(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source, String reason, JobDataMap dataMap, String templateInfo) {
         TaskInstanceInfoTb newInstance = new TaskInstanceInfoTb();
         newInstance.setContextName(contextName);
         newInstance.setLanguage(language);
@@ -99,21 +126,24 @@ public class TaskManage {
         newInstance.setTemplate(templateInfo);
         newInstance.setJobData(JSON.toJSONString(dataMap));
         taskInstanceInfoService.save(newInstance);
-        dataMap.put("id", newInstance.getId());
+        return newInstance;
+    }
+
+    private void buildAndSchedule(String changeTypeEnum, String contextName, JobDataMap dataMap) {
         // ========================== 执行任务 ==========================
-        JobKey jobKey = JobKey.jobKey(changeTypeEnum.getCode(), contextName);
-        TriggerKey triggerKey = TriggerKey.triggerKey(changeTypeEnum.getCode(), contextName);
+        JobKey jobKey = JobKey.jobKey(changeTypeEnum, contextName);
+        TriggerKey triggerKey = TriggerKey.triggerKey(changeTypeEnum, contextName);
         JobDetail jobDetail = JobBuilder.newJob(TaskJobBean.class).withIdentity(jobKey).usingJobData(dataMap).build();
-        Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).startNow().build();
+        Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).startNow().build();
         try {
-            scheduler.scheduleJob(jobDetail, cronTrigger);
+            scheduler.scheduleJob(jobDetail, trigger);
         } catch (ObjectAlreadyExistsException e) {
+            log.error("任务jobKey={},triggerKey={}任务已存在，跳过加载", jobKey.getName(), triggerKey.getName(), e);
             throw new BadRequestException("任务已存在，跳过加载");
         } catch (SchedulerException e) {
-            log.error("任务执行失败", e);
+            log.error("任务jobKey={},triggerKey={}执行失败", jobKey.getName(), triggerKey.getName(), e);
             throw new BadRequestException(e);
         }
-        return newInstance;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -132,7 +162,7 @@ public class TaskManage {
             JobKey jobKey = JobKey.jobKey(changeType, contextName);
             TriggerKey triggerKey = TriggerKey.triggerKey(changeType, contextName);
             // 停止触发器
-            scheduler.resumeTrigger(triggerKey);
+            scheduler.pauseTrigger(triggerKey);
             // 移除触发器
             scheduler.unscheduleJob(triggerKey);
             // 删除并中断任务
@@ -164,21 +194,10 @@ public class TaskManage {
         taskInstanceInfoTb.setFinishTime(null);
         taskInstanceInfoService.updateById(taskInstanceInfoTb);
         // ========================== 执行任务 ==========================
-        dataMap.put("retryNodeCode", retryNodeCode);
+        dataMap.put(TaskJobKeys.RETRY_NODE_CODE, retryNodeCode);
         String changeType = taskInstanceInfoTb.getChangeType();
         String contextName = taskInstanceInfoTb.getContextName();
-        JobKey jobKey = JobKey.jobKey(changeType, contextName);
-        TriggerKey triggerKey = TriggerKey.triggerKey(changeType, contextName);
-        JobDetail jobDetail = JobBuilder.newJob(TaskJobBean.class).withIdentity(jobKey).usingJobData(dataMap).build();
-        Trigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).startNow().build();
-        try {
-            scheduler.scheduleJob(jobDetail, cronTrigger);
-        } catch (ObjectAlreadyExistsException e) {
-            throw new BadRequestException("任务已存在，跳过加载");
-        } catch (SchedulerException e) {
-            log.error("任务执行失败", e);
-            throw new BadRequestException(e);
-        }
+        buildAndSchedule(changeType, contextName, dataMap);
         return taskInstanceInfoTb;
     }
 
@@ -189,6 +208,9 @@ public class TaskManage {
         if (historyInstance == null) {
             // 仅返回模板
             TaskTemplateInfoVo templateInfo = taskTemplateInfoService.getTemplateInfoByECL(envAlias, contextName, language, changeType);
+            if (templateInfo == null) {
+                throw new BadRequestException("没有查询到任务编排模板");
+            }
             record.setTemplate(templateInfo.getTemplateInfo());
             return record;
         }
