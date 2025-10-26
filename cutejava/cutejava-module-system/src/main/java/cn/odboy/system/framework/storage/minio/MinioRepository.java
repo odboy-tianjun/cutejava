@@ -61,7 +61,7 @@ public class MinioRepository {
      * @param bucketName Bucket 名称
      * @return boolean 存在返回 true，否则返回 false
      */
-    public boolean bucketExists(String bucketName) {
+    public boolean existsBucket(String bucketName) {
         try {
             return minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
@@ -76,9 +76,9 @@ public class MinioRepository {
      * @param bucketName Bucket 名称
      * @return boolean 创建成功返回 true，否则返回 false
      */
-    public boolean makeBucket(String bucketName) {
+    public boolean createBucket(String bucketName) {
         try {
-            if (!bucketExists(bucketName)) {
+            if (!existsBucket(bucketName)) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
                 log.info("Bucket 创建成功，bucketName: {}", bucketName);
                 return true;
@@ -99,7 +99,7 @@ public class MinioRepository {
      */
     public boolean removeBucket(String bucketName) {
         try {
-            if (bucketExists(bucketName)) {
+            if (existsBucket(bucketName)) {
                 minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
                 log.info("Bucket 删除成功，bucketName: {}", bucketName);
                 return true;
@@ -186,7 +186,7 @@ public class MinioRepository {
      * @param file
      * @return {@link String }
      */
-    public String optimizedFileUpload(MultipartFile file) {
+    public String optimizedUpload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         if (StrUtil.isBlank(originalFilename)) {
             throw new BadRequestException("文件名不能为空");
@@ -330,7 +330,7 @@ public class MinioRepository {
      *
      * @return List<Item> 文件对象列表
      */
-    public List<Item> listObjects() {
+    public List<Item> queryAllObjects() {
         try {
             Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).build());
             List<Item> items = new ArrayList<>();
@@ -350,7 +350,7 @@ public class MinioRepository {
      * @param fileName 文件名
      * @return boolean 删除成功返回 true，否则返回 false
      */
-    public boolean remove(String fileName) {
+    public boolean removeBucketFile(String fileName) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build());
             log.info("删除文件成功，fileName: {}", fileName);
