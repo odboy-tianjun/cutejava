@@ -26,7 +26,7 @@ import java.util.Date;
 
 @Component
 public class DateStringToDateConverter implements Converter<String, Date> {
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final ThreadLocal<SimpleDateFormat> SDF = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
     @Override
     public Date convert(String source) {
@@ -34,7 +34,7 @@ public class DateStringToDateConverter implements Converter<String, Date> {
             return null;
         }
         try {
-            return sdf.parse(source);
+            return SDF.get().parse(source);
         } catch (ParseException e) {
             throw new IllegalArgumentException("Invalid date string: " + source);
         }

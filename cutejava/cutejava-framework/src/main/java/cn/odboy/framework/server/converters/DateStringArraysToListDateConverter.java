@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class DateStringArraysToListDateConverter implements Converter<String[], List<Date>> {
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final ThreadLocal<SimpleDateFormat> SDF = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
     @Override
     public List<Date> convert(String[] source) {
@@ -38,7 +38,7 @@ public class DateStringArraysToListDateConverter implements Converter<String[], 
         }
         return Arrays.stream(source).map(s -> {
             try {
-                return sdf.parse(s);
+                return SDF.get().parse(s);
             } catch (ParseException e) {
                 throw new IllegalArgumentException("Invalid date string: " + s);
             }
