@@ -76,7 +76,7 @@ public class CsWsServer {
         try {
             CsWsClientManager.removeClient(this.sid);
         } catch (Exception e) {
-            // ignore
+            log.error("WebSocket onClose error, sid={}", this.sid, e);
         }
     }
 
@@ -86,7 +86,7 @@ public class CsWsServer {
         try {
             CsWsClientManager.removeClient(this.sid);
         } catch (Exception e) {
-            // ignore
+            log.error("WebSocket onClose error, sid={}", this.sid, e);
         }
     }
 
