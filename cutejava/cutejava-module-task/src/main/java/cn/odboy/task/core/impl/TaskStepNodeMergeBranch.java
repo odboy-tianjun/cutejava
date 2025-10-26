@@ -17,7 +17,6 @@ package cn.odboy.task.core.impl;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.task.core.TaskStepCallback;
 import cn.odboy.task.core.TaskStepExecutor;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import cn.odboy.task.service.TaskInstanceStepDetailService;
@@ -33,10 +32,8 @@ public class TaskStepNodeMergeBranch implements TaskStepExecutor {
     private TaskInstanceStepDetailService service;
 
     @Override
-    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode, TaskStepCallback callback) throws BadRequestException {
-        callback.onStart();
+    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException {
         ThreadUtil.sleep(3000);
         service.fail(instanceDetailId, "执行失败测试");
-        callback.onFinish("执行成功");
     }
 }

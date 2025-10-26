@@ -32,6 +32,8 @@ import java.util.List;
 public interface TaskInstanceDetailService extends IService<TaskInstanceDetailTb> {
     void fastFailWithInfo(Long instanceId, String code, String message);
 
+    void fastSuccess(Long instanceId, String code);
+
     void fastSuccessWithInfo(Long instanceId, String code, String executeInfo);
 
     void fastStart(Long instanceId, String code, JobDataMap dataMap);

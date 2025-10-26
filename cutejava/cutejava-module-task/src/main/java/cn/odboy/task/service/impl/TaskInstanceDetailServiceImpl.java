@@ -49,10 +49,19 @@ public class TaskInstanceDetailServiceImpl extends ServiceImpl<TaskInstanceDetai
     }
 
     @Override
+    public void fastSuccess(Long instanceId, String code) {
+        TaskInstanceDetailTb updRecord = new TaskInstanceDetailTb();
+        updRecord.setFinishTime(new Date());
+        updRecord.setExecuteInfo("执行成功");
+        updRecord.setExecuteStatus(TaskStatusEnum.Success.getCode());
+        lambdaUpdate().eq(TaskInstanceDetailTb::getInstanceId, instanceId).eq(TaskInstanceDetailTb::getBizCode, code).update(updRecord);
+    }
+
+    @Override
     public void fastSuccessWithInfo(Long instanceId, String code, String executeInfo) {
         TaskInstanceDetailTb updRecord = new TaskInstanceDetailTb();
         updRecord.setFinishTime(new Date());
-        updRecord.setExecuteInfo(executeInfo);
+        updRecord.setExecuteInfo(executeInfo == null ? "执行成功" : executeInfo);
         updRecord.setExecuteStatus(TaskStatusEnum.Success.getCode());
         lambdaUpdate().eq(TaskInstanceDetailTb::getInstanceId, instanceId).eq(TaskInstanceDetailTb::getBizCode, code).update(updRecord);
     }

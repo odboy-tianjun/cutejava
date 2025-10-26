@@ -168,17 +168,9 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
                 String code = taskTemplateNodeVo.getCode();
                 try {
                     TaskStepExecutor executor = CsSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
-                    executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo, new TaskStepCallback() {
-                        @Override
-                        public void onStart() {
-                            taskInstanceDetailService.fastStart(id, code, dataMap);
-                        }
-
-                        @Override
-                        public void onFinish(String executeInfo) {
-                            taskInstanceDetailService.fastSuccessWithInfo(id, code, executeInfo);
-                        }
-                    });
+                    taskInstanceDetailService.fastStart(id, code, dataMap);
+                    executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
+                    taskInstanceDetailService.fastSuccessWithInfo(id, code, null);
                 } catch (Exception e) {
                     taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
                     throw new ServerException(e);

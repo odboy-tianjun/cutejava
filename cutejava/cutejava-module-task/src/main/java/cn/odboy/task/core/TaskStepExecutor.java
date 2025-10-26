@@ -19,14 +19,11 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import org.quartz.JobDataMap;
 
-import javax.validation.constraints.NotNull;
-
 public interface TaskStepExecutor {
     /**
      * @param instanceDetailId 任务实例明细id
      * @param jobDataMap       执行参数
      * @param taskTemplateNode 任务节点信息
-     * @param callback         执行成功回调
      */
-    void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode, @NotNull TaskStepCallback callback) throws BadRequestException;
+    void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException;
 }

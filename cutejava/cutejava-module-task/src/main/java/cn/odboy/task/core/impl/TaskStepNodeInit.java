@@ -16,7 +16,6 @@
 package cn.odboy.task.core.impl;
 
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.task.core.TaskStepCallback;
 import cn.odboy.task.core.TaskStepExecutor;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import cn.odboy.task.service.TaskInstanceStepDetailService;
@@ -29,14 +28,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskStepNodeInit implements TaskStepExecutor {
     @Autowired
-    private TaskInstanceStepDetailService service;
+    private TaskInstanceStepDetailService stepDetailService;
 
     @Override
-    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode, TaskStepCallback callback) throws BadRequestException {
-        callback.onStart();
-        service.success(instanceDetailId, "开始初始化");
-        service.success(instanceDetailId, "初始化完毕后，放入了一些参数");
+    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException {
+        stepDetailService.success(instanceDetailId, "开始初始化");
+        stepDetailService.success(instanceDetailId, "初始化完毕后，放入了一些参数");
         jobDataMap.put("ExcuseMe", "Hello World!");
-        callback.onFinish("执行成功");
     }
 }
