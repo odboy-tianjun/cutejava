@@ -17,7 +17,6 @@ package cn.odboy.task.core.impl;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.task.core.TaskStepCallback;
 import cn.odboy.task.core.TaskStepExecutor;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +28,7 @@ import org.springframework.stereotype.Component;
 public class TaskStepNodeDeployJava implements TaskStepExecutor {
 
     @Override
-    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode, TaskStepCallback callback) throws BadRequestException {
-        callback.onStart();
+    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException {
         ThreadUtil.sleep(5000);
-        callback.onFinish("执行成功");
     }
 }

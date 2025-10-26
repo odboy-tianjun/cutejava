@@ -48,7 +48,7 @@ public interface TaskInstanceStepDetailService extends IService<TaskInstanceStep
     /**
      * 根据明细ID删除步骤明细
      *
-     * @param instanceDetailIds
+     * @param instanceDetailIds 任务实例明细id集合
      */
     void removeByInstanceDetailIds(List<Long> instanceDetailIds);
 }
