@@ -18,6 +18,7 @@ package cn.odboy.system.framework.storage.minio;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileTypeUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
@@ -143,7 +144,7 @@ public class MinioRepository {
         String suffix = CsFileUtil.getSuffix(tempFile);
 
         String fileCode = IdUtil.fastSimpleUUID();
-        String fileName = fileCode + getFileExtension(originalFilename);
+        String fileName = fileCode + FileUtil.getSuffix(originalFilename);
         String objectName = CsDateUtil.getNowDateStr() + "/" + fileName;
         log.info("上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
@@ -194,7 +195,7 @@ public class MinioRepository {
         long size = file.getSize();
         CsFileUtil.checkSize(properties.getOss().getMaxSize(), size);
 
-        String fileName = UUID.randomUUID() + getFileExtension(originalFilename);
+        String fileName = UUID.randomUUID() + FileUtil.getSuffix(originalFilename);
         // yyyy/MM/dd/fileName.xxx
         String objectName = CsDateUtil.getNowDateTimeStr() + "/" + fileName;
 
@@ -234,17 +235,6 @@ public class MinioRepository {
                 Thread.sleep(2000);
             }
         }
-    }
-
-    /**
-     * 获取文件扩展名
-     *
-     * @param fileName 文件名
-     * @return String 文件扩展名
-     */
-    private String getFileExtension(String fileName) {
-        int lastIndex = fileName.lastIndexOf(".");
-        return lastIndex == -1 ? "" : fileName.substring(lastIndex);
     }
 
     /**
