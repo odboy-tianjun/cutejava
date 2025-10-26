@@ -16,7 +16,7 @@
 
 package cn.odboy.framework.websocket.util;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.websocket.model.WsSidVo;
 import lombok.experimental.UtilityClass;
 

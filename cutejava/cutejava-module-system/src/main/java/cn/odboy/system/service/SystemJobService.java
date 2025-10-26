@@ -18,7 +18,7 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;

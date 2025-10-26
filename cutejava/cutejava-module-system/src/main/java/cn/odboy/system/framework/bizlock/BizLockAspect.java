@@ -16,7 +16,7 @@
 
 package cn.odboy.system.framework.bizlock;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.redis.CsRedisHelper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

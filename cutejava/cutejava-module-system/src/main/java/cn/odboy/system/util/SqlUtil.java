@@ -16,7 +16,7 @@
 
 package cn.odboy.system.util;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.mybatisplus.config.DataTypeEnum;
 import cn.odboy.util.CsCloseUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;

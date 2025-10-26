@@ -16,7 +16,7 @@
 package cn.odboy.task.core.impl;
 
 import cn.hutool.core.thread.ThreadUtil;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.task.core.TaskStepCallback;
 import cn.odboy.task.core.TaskStepExecutor;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;

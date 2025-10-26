@@ -16,7 +16,7 @@
 
 package cn.odboy.system.framework.permission.core.handler;
 
-import cn.odboy.framework.exception.web.handler.ApiError;
+import cn.odboy.framework.exception.handler.ApiError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

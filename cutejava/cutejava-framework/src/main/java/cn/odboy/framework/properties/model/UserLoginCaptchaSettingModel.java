@@ -18,7 +18,7 @@ package cn.odboy.framework.properties.model;
 
 import cn.odboy.base.CsObject;
 import cn.odboy.constant.CaptchaCodeEnum;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;

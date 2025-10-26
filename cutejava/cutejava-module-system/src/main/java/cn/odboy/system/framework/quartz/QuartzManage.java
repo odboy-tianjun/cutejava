@@ -16,7 +16,7 @@
 
 package cn.odboy.system.framework.quartz;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;

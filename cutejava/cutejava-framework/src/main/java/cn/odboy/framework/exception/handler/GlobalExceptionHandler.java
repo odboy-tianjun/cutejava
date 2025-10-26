@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package cn.odboy.framework.exception.web.handler;
+package cn.odboy.framework.exception.handler;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

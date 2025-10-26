@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.odboy.framework.exception.web.handler;
+package cn.odboy.framework.exception.handler;
 
 import lombok.Data;
 

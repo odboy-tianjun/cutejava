@@ -18,7 +18,7 @@ package cn.odboy.framework.mybatisplus.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsBaseUserTimeTb;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;

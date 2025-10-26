@@ -15,7 +15,7 @@
  */
 package cn.odboy.task.core;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import org.quartz.JobDataMap;
 
