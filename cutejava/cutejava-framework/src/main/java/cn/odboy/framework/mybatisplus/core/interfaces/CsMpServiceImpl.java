@@ -19,7 +19,7 @@ package cn.odboy.framework.mybatisplus.core.interfaces;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.mybatisplus.core.CsMpQUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

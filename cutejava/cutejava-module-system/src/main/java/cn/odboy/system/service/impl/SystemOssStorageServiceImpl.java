@@ -19,7 +19,7 @@ package cn.odboy.system.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;

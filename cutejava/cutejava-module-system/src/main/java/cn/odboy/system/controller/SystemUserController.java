@@ -20,7 +20,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.base.CsSelectOptionVo;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;

@@ -22,7 +22,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.OSSConfigModel;
 import cn.odboy.framework.properties.model.StorageOSSModel;

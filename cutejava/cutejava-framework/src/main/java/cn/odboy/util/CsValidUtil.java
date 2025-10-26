@@ -16,7 +16,7 @@
 
 package cn.odboy.util;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import lombok.experimental.UtilityClass;
 
 import javax.validation.ConstraintViolation;

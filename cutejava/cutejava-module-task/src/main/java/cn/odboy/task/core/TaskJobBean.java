@@ -18,7 +18,8 @@ package cn.odboy.task.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.CsSpringBeanHolder;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.exception.ServerException;
 import cn.odboy.task.constant.TaskJobKeys;
 import cn.odboy.task.dal.dataobject.TaskInstanceDetailTb;
 import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
@@ -180,7 +181,7 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
                     });
                 } catch (Exception e) {
                     taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
-                    throw new RuntimeException(e);
+                    throw new ServerException(e);
                 }
             }
             taskInstanceInfoService.fastSuccessWithData(id, dataMap);

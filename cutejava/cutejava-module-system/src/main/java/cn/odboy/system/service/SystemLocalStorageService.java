@@ -20,7 +20,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;

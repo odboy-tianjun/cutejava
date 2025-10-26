@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.odboy.framework.exception.web;
+package cn.odboy.framework.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

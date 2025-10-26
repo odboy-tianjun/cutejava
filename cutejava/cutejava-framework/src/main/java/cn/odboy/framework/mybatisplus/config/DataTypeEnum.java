@@ -16,7 +16,7 @@
 
 package cn.odboy.framework.mybatisplus.config;
 
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 
 /**

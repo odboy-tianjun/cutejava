@@ -16,7 +16,7 @@
 package cn.odboy.task.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceStepDetailTb;
 import cn.odboy.task.dal.mysql.TaskInstanceStepDetailMapper;

@@ -18,7 +18,7 @@ package cn.odboy.task.core;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.CsSpringBeanHolder;
-import cn.odboy.framework.exception.web.BadRequestException;
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.task.constant.TaskChangeTypeEnum;
 import cn.odboy.task.constant.TaskJobKeys;
 import cn.odboy.task.constant.TaskStatusEnum;
