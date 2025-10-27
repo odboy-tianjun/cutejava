@@ -8,7 +8,7 @@
   <el-row>
     <el-col :span="12">
       <h4>
-        <i class="el-icon-s-help" style="color: #409EFF;font-size: 20px" />
+        <i class="el-icon-s-help" style="color: #409EFF;font-size: 18px" />
         <i style="color: #303133;">{{ title }}</i>
       </h4>
     </el-col>
