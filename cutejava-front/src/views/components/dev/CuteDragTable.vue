@@ -22,6 +22,7 @@
       <el-table-column v-if="mode === 'multi'" type="selection" width="55" />
       <slot />
       <el-pagination
+        v-if="paging"
         :current-page="pageProps.current"
         :page-sizes="[10, 20, 50]"
         :page-size="pageProps.pageSize"
@@ -63,6 +64,11 @@ export default {
       type: String,
       required: false,
       default: 'none'
+    },
+    paging: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     pageProps: {
       type: Object,
