@@ -5,7 +5,7 @@
  * @created 2025-08-20
  -->
 <template>
-  <div class="overflow-panel">
+  <div class="overflow-panel" :style="{height: height}">
     <slot />
   </div>
 </template>
@@ -13,13 +13,19 @@
 <script>
 
 export default {
-  name: 'CuteVerticalScrollBar'
+  name: 'CuteVerticalScrollBar',
+  props: {
+    height: {
+      type: String,
+      required: true,
+      default: '100px'
+    }
+  }
 }
 </script>
 
 <style scoped>
 .overflow-panel {
-  height: 800px;
   overflow-y: scroll;
 }
 
