@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 50px">
     <el-divider>CuteSearchForm</el-divider>
-    <cute-search-form :model="searchFormModel" @submit="handleSearchFormSubmit" @reset="handleSearchFormReset">
+    <cute-search-form :model="searchFormModel" @submit="handleSearchFormSubmit">
       <template v-slot:suffix>
         <el-form-item label="模糊查询" prop="blurry">
           <el-input v-model="searchFormModel.blurry" clearable />
