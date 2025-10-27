@@ -42,7 +42,9 @@
     </cute-screen-shot>
     <el-divider>CuteSectionTitle</el-divider>
     <cute-section-title title="段落标题">
-      <el-button type="danger">操作按钮</el-button>
+      <el-button type="danger" size="mini">操作按钮1</el-button>
+      <el-button type="danger" size="mini">操作按钮2</el-button>
+      <el-button type="danger" size="mini">操作按钮3</el-button>
     </cute-section-title>
   </div>
 </template>
