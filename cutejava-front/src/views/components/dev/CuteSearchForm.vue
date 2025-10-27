@@ -11,6 +11,7 @@
     :model.sync="model"
     label-position="right"
     label-width="90px"
+    :disabled="disabled"
   >
     <slot name="suffix" />
     <el-form-item>
@@ -30,6 +31,11 @@ export default {
     model: {
       type: Object,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   methods: {
@@ -46,7 +52,8 @@ export default {
     onFormReset(formName) {
       try {
         this.$refs[formName].resetFields()
-        this.$emit('reset')
+        this.onFormSubmit(formName)
+        // this.$emit('reset')
       } catch (e) {
         console.error(e)
       }
