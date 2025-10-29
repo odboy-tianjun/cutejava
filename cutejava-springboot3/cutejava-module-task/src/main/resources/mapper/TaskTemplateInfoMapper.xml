@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.odboy.task.dal.mysql.TaskTemplateInfoMapper">
+    <select id="selectTemplateInfoByECL" resultType="cn.odboy.task.dal.model.TaskTemplateInfoVo">
+        SELECT t2.change_type,
+               t2.`name`,
+               t2.description,
+               t2.env_alias,
+               t2.`language`,
+               t1.context_name,
+               t1.template_info
+        FROM task_pipeline_config t1
+                 LEFT JOIN task_template_info t2 ON t1.template_info_id = t2.id
+        WHERE t1.context_name = #{contextName}
+          AND t2.env_alias = #{envAlias}
+          AND t2.`language` = #{language}
+          AND t2.`change_type` = #{changeType}
+    </select>
+</mapper>
