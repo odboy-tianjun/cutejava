@@ -1,0 +1,42 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package cn.odboy.task.service;
+
+import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
+import com.baomidou.mybatisplus.extension.service.IService;
+import org.quartz.JobDataMap;
+
+/**
+ * <p>
+ * 任务实例 服务类
+ * </p>
+ *
+ * @author codegen
+ * @since 2025-09-26
+ */
+public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
+    TaskInstanceInfoTb getRunningById(Long instanceId);
+
+    void fastFailWithMessage(Long id, String errorMessage);
+
+    void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap);
+
+    void fastSuccessWithData(Long id, JobDataMap dataMap);
+
+    TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias, String changeType);
+
+    TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias, String changeType);
+}

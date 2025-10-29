@@ -1,0 +1,150 @@
+/*
+ * Copyright 2021-2025 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cn.odboy.util;
+
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import lombok.experimental.UtilityClass;
+
+import java.util.Date;
+
+/**
+ * 时间相关工具
+ *
+ * @author odboy
+ * @date 2025-10-01
+ */
+@UtilityClass
+public class CsDateUtil {
+    /**
+     * 获取当前时间毫秒数
+     *
+     * @return /
+     */
+    public static String getNowDateTimeMsStr() {
+        return DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN);
+    }
+
+    /**
+     * 获取当前时间,但不包括毫秒数
+     *
+     * @return /
+     */
+    public static String getNowDateTimeStr() {
+        return DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
+    }
+
+    /**
+     * 获取当前时间,但不包括毫秒数
+     *
+     * @return /
+     */
+    public static String getNowDateStr() {
+        return DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
+    }
+
+    /**
+     * 格式化到毫秒
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 格式化后的时间，X天X时X分X秒X毫秒
+     */
+    public static String formatMillsDuration(Date startTime, Date endTime) {
+        if (startTime == null || endTime == null) {
+            // 什么都不返回
+            return "";
+        }
+
+        long betweenSeconds = DateUtil.between(startTime, endTime, cn.hutool.core.date.DateUnit.SECOND);
+
+        long days = betweenSeconds / (24 * 60 * 60);
+        long hours = (betweenSeconds % (24 * 60 * 60)) / (60 * 60);
+        long minutes = (betweenSeconds % (60 * 60)) / 60;
+        long seconds = betweenSeconds % 60;
+
+        StringBuilder result = new StringBuilder();
+
+        if (days > 0) {
+            result.append(days).append("天");
+        }
+
+        if (hours > 0) {
+            result.append(hours).append("时");
+        }
+
+        if (minutes > 0) {
+            result.append(minutes).append("分");
+        }
+
+        if (seconds > 0 || result.length() == 0) {
+            result.append(seconds).append("秒");
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * 格式化到秒
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 格式化后的时间，X天X时X分X秒
+     */
+    public static String formatSecondsDuration(Date startTime, Date endTime) {
+        if (startTime == null || endTime == null) {
+            // 什么都不返回
+            return "";
+        }
+
+        long betweenMs = DateUtil.betweenMs(startTime, endTime);
+        long days = betweenMs / (24 * 60 * 60 * 1000);
+        long hours = (betweenMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
+        long minutes = (betweenMs % (60 * 60 * 1000)) / (60 * 1000);
+        long seconds = (betweenMs % (60 * 1000)) / 1000;
+        long milliseconds = betweenMs % 1000;
+
+        StringBuilder result = new StringBuilder();
+
+        if (days > 0) {
+            result.append(days).append("天");
+        }
+
+        if (hours > 0) {
+            result.append(hours).append("时");
+        }
+
+        if (minutes > 0) {
+            result.append(minutes).append("分");
+        }
+
+        if (seconds > 0) {
+            result.append(seconds).append("秒");
+        }
+
+        if (milliseconds > 0) {
+            result.append(milliseconds).append("毫秒");
+        }
+
+        // 如果所有单位都是0，则显示0毫秒
+        if (result.length() == 0) {
+            result.append("0毫秒");
+        }
+
+        return result.toString();
+    }
+}
