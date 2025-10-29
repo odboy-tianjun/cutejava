@@ -12,6 +12,7 @@
 </template>
 <script>
 import CsWsClient from '@/utils/CsWsClient'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -21,7 +22,11 @@ export default {
       responseTxt: ''
     }
   },
-  // mounted() {},
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
+  },
   destroyed() {
     if (this.client) {
       this.client.close()
@@ -29,10 +34,9 @@ export default {
   },
   methods: {
     onConnectClick() {
-      // 获取mapGetters中的值
-      // console.error('userInfo', this.user)
       const that = this
-      that.client = new CsWsClient(that)
+      // console.error('userInfo', that.user)
+      that.client = new CsWsClient(that.user.username)
       that.client.connect(function(event) {
         console.info('=============== MyWebSocket:event', event)
       }, function(msgEvent) {
