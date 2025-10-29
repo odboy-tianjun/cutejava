@@ -154,19 +154,19 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!--监控sql日志-->
+        <!-- 监控sql日志 -->
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
             <version>3.9.1</version>
         </dependency>
 
-        <!-- Swagger UI 相关 -->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-            <version>4.5.0</version>
-        </dependency>
+        <!-- Spring Boot 3 只支持OpenAPI3规范，暂时不接 -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.xiaoymin</groupId>-->
+<!--            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>-->
+<!--            <version>4.4.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
