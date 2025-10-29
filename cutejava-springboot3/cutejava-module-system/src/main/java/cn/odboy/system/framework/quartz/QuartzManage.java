@@ -18,12 +18,11 @@ package cn.odboy.system.framework.quartz;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 import java.util.Date;
 
 @Slf4j

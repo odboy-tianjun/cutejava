@@ -20,6 +20,7 @@ import cn.odboy.constant.RequestMethodEnum;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.handler.JwtAccessDeniedHandler;
 import cn.odboy.system.framework.permission.core.handler.JwtAuthenticationEntryPoint;
+import cn.odboy.system.framework.permission.core.handler.TokenFilter;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.util.CsAnonTagUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +28,23 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Map;
 import java.util.Set;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SpringSecurityConfig {
     @Autowired
     private TokenProvider tokenProvider;
@@ -71,43 +75,71 @@ public class SpringSecurityConfig {
     protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // 获取匿名标记
         Map<String, Set<String>> anonymousUrls = CsAnonTagUtil.getAnonymousUrl(applicationContext);
+        
+        // 创建TokenFilter实例
+        TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineInfoDAO);
+        
         return httpSecurity
                 // 禁用 CSRF
-                .csrf().disable().addFilter(corsFilter)
+                .csrf(AbstractHttpConfigurer::disable)
+                .addFilter(corsFilter)
+                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
                 // 授权异常
-                .exceptionHandling().authenticationEntryPoint(authenticationErrorHandler).accessDeniedHandler(jwtAccessDeniedHandler)
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(authenticationErrorHandler)
+                        .accessDeniedHandler(jwtAccessDeniedHandler))
                 // 防止iframe 造成跨域
-                .and().headers().frameOptions().disable()
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 // 不创建会话
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                // 静态资源等等
-                .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/websocket/**").permitAll()
-                // swagger 文档
-                .antMatchers("/swagger-ui.html").permitAll().antMatchers("/swagger-resources/**").permitAll().antMatchers("/webjars/**").permitAll().antMatchers("/*/api-docs").permitAll()
-                // 文件
-                .antMatchers("/avatar/**").permitAll().antMatchers("/file/**").permitAll()
-                // 阿里巴巴 druid
-                .antMatchers("/druid/**").permitAll()
-                // 放行OPTIONS请求
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // 自定义匿名访问所有url放行：允许匿名和带Token访问，细腻化到每个 Request 类型
-                // GET
-                .antMatchers(HttpMethod.GET, anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0])).permitAll()
-                // POST
-                .antMatchers(HttpMethod.POST, anonymousUrls.get(RequestMethodEnum.POST.getType()).toArray(new String[0])).permitAll()
-                // PUT
-                .antMatchers(HttpMethod.PUT, anonymousUrls.get(RequestMethodEnum.PUT.getType()).toArray(new String[0])).permitAll()
-                // PATCH
-                .antMatchers(HttpMethod.PATCH, anonymousUrls.get(RequestMethodEnum.PATCH.getType()).toArray(new String[0])).permitAll()
-                // DELETE
-                .antMatchers(HttpMethod.DELETE, anonymousUrls.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0])).permitAll()
-                // 所有类型的接口都放行
-                .antMatchers(anonymousUrls.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
-                // 所有请求都需要认证
-                .anyRequest().authenticated().and().apply(securityConfigurerAdapter()).and().build();
-    }
-
-    private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, systemUserOnlineInfoDAO);
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        // 静态资源等等
+                        .requestMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/websocket/**")
+                        .permitAll()
+                        // swagger 文档
+                        .requestMatchers("/swagger-ui.html")
+                        .permitAll()
+                        .requestMatchers("/swagger-resources/**")
+                        .permitAll()
+                        .requestMatchers("/webjars/**")
+                        .permitAll()
+                        .requestMatchers("/*/api-docs")
+                        .permitAll()
+                        // 文件
+                        .requestMatchers("/avatar/**")
+                        .permitAll()
+                        .requestMatchers("/file/**")
+                        .permitAll()
+                        // 阿里巴巴 druid
+                        .requestMatchers("/druid/**")
+                        .permitAll()
+                        // 放行OPTIONS请求
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+                        // 自定义匿名访问所有url放行：允许匿名和带Token访问，细腻化到每个 Request 类型
+                        // GET
+                        .requestMatchers(HttpMethod.GET, anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0]))
+                        .permitAll()
+                        // POST
+                        .requestMatchers(HttpMethod.POST, anonymousUrls.get(RequestMethodEnum.POST.getType()).toArray(new String[0]))
+                        .permitAll()
+                        // PUT
+                        .requestMatchers(HttpMethod.PUT, anonymousUrls.get(RequestMethodEnum.PUT.getType()).toArray(new String[0]))
+                        .permitAll()
+                        // PATCH
+                        .requestMatchers(HttpMethod.PATCH, anonymousUrls.get(RequestMethodEnum.PATCH.getType()).toArray(new String[0]))
+                        .permitAll()
+                        // DELETE
+                        .requestMatchers(HttpMethod.DELETE, anonymousUrls.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0]))
+                        .permitAll()
+                        // 所有类型的接口都放行
+                        .requestMatchers(anonymousUrls.get(RequestMethodEnum.ALL.getType()).toArray(new String[0]))
+                        .permitAll()
+                        // 所有请求都需要认证
+                        .anyRequest()
+                        .authenticated())
+                .build();
     }
 }

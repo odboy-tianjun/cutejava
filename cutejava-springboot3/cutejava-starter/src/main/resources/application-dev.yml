@@ -46,6 +46,12 @@ spring:
     type: redis
   data:
     redis:
+      database: ${REDIS_DB:1}
+      host: ${REDIS_HOST:192.168.100.128}
+      port: ${REDIS_PORT:26379}
+      password: ${REDIS_PWD:kd123456}
+      # 连接超时时间
+      timeout: 5000
       repositories:
         # 是否启用Redis存储(关闭防止出现 Multiple Spring Data modules found, entering strict repository configuration mode)
         enabled: false
@@ -109,24 +115,6 @@ spring:
           config:
             multi-statement-allow: true
       aop-patterns: "cn.odboy.mapper.*,cn.odboy.service.*,cn.odboy.*.mapper.*,cn.odboy.*.service.*"
-  redis:
-    database: ${REDIS_DB:1}
-    host: ${REDIS_HOST:192.168.100.128}
-    port: ${REDIS_PORT:26379}
-    password: ${REDIS_PWD:kd123456}
-    # 连接超时时间
-    timeout: 5000
-    # 连接池配置
-    lettuce:
-      pool:
-        # 连接池最大连接数
-        max-active: 30
-        # 连接池最大阻塞等待时间（毫秒），负值表示没有限制
-        max-wait: -1
-        # 连接池中的最大空闲连接数
-        max-idle: 20
-        # 连接池中的最小空闲连接数
-        min-idle: 1
   # 数据库一定不能区分大小写
   quartz:
     # 必需，指定使用 JDBC 存储

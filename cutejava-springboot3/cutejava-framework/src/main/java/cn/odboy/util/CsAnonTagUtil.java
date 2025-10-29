@@ -23,7 +23,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -42,8 +42,7 @@ public class CsAnonTagUtil {
      * @return /
      */
     public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
-        RequestMappingHandlerMapping requestMappingHandlerMapping =
-                (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
+        RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
         // 获取匿名标记
@@ -58,29 +57,27 @@ public class CsAnonTagUtil {
             AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
             if (null != anonymousAccess && infoEntry.getKey() != null) {
                 List<RequestMethod> requestMethods = new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
-                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ?
-                        RequestMethodEnum.ALL.getType() :
-                        requestMethods.get(0).name());
-                PatternsRequestCondition patternsCondition = infoEntry.getKey().getPatternsCondition();
-                if (patternsCondition != null) {
+                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
+                PathPatternsRequestCondition pathPatternsCondition = infoEntry.getKey().getPathPatternsCondition();
+                if (pathPatternsCondition != null) {
                     switch (Objects.requireNonNull(request)) {
                         case GET:
-                            get.addAll(patternsCondition.getPatterns());
+                            get.addAll(pathPatternsCondition.getPatternValues());
                             break;
                         case POST:
-                            post.addAll(patternsCondition.getPatterns());
+                            post.addAll(pathPatternsCondition.getPatternValues());
                             break;
                         case PUT:
-                            put.addAll(patternsCondition.getPatterns());
+                            put.addAll(pathPatternsCondition.getPatternValues());
                             break;
                         case PATCH:
-                            patch.addAll(patternsCondition.getPatterns());
+                            patch.addAll(pathPatternsCondition.getPatternValues());
                             break;
                         case DELETE:
-                            delete.addAll(patternsCondition.getPatterns());
+                            delete.addAll(pathPatternsCondition.getPatternValues());
                             break;
                         default:
-                            all.addAll(patternsCondition.getPatterns());
+                            all.addAll(pathPatternsCondition.getPatternValues());
                             break;
                     }
                 }
