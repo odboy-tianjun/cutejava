@@ -16,6 +16,7 @@
 
 package cn.odboy.framework.properties.model;
 
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
@@ -100,7 +101,7 @@ public class UserLoginCaptchaSettingModel extends CsObject {
             default:
                 throw new BadRequestException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
         }
-        if (CsStringUtil.isNotBlank(fontName)) {
+        if (StrUtil.isNotBlank(fontName)) {
             captcha.setFont(new Font(fontName, Font.PLAIN, fontSize));
         }
         return captcha;

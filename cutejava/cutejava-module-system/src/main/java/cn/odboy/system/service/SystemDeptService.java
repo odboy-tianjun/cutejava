@@ -20,6 +20,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
@@ -188,7 +189,7 @@ public class SystemDeptService {
         criteria.setIds(CsSecurityHelper.getCurrentUserDataScope());
         List<SystemDeptTb> list = systemDeptMapper.selectDeptByArgs(criteria);
         // 如果为空, 就代表为自定义权限或者本级权限, 就需要去重, 不理解可以注释掉，看查询结果
-        if (CsStringUtil.isBlank(dataScopeType)) {
+        if (StrUtil.isBlank(dataScopeType)) {
             return deduplication(list);
         }
         return list;

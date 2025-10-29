@@ -18,6 +18,7 @@ package cn.odboy.system.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.annotation.AnonymousPostMapping;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.constant.SystemConst;
@@ -85,10 +86,10 @@ public class SystemAuthController {
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
         redisHelper.del(loginRequest.getUuid());
-        if (CsStringUtil.isBlank(code)) {
+        if (StrUtil.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
-        if (CsStringUtil.isBlank(loginRequest.getCode()) || !loginRequest.getCode().equalsIgnoreCase(code)) {
+        if (StrUtil.isBlank(loginRequest.getCode()) || !loginRequest.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
         // 获取用户信息

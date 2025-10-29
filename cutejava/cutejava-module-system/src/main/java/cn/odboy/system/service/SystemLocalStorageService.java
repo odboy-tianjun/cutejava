@@ -19,6 +19,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
@@ -69,7 +70,7 @@ public class SystemLocalStorageService {
         }
         try {
             String formatSize = CsFileUtil.getSize(size);
-            String prefixName = CsStringUtil.isBlank(name) ? CsFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
+            String prefixName = StrUtil.isBlank(name) ? CsFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
             SystemLocalStorageTb localStorage = new SystemLocalStorageTb();
             localStorage.setRealName(file.getName());
             localStorage.setName(prefixName);

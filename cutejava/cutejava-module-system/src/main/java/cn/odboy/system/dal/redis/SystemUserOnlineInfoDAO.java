@@ -1,5 +1,6 @@
 package cn.odboy.system.dal.redis;
 
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.CsRedisHelper;
@@ -130,7 +131,7 @@ public class SystemUserOnlineInfoDAO {
      */
 
     public List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username) {
-        String loginKey = SystemRedisKey.ONLINE_USER + (CsStringUtil.isBlank(username) ? "" : "*" + username);
+        String loginKey = SystemRedisKey.ONLINE_USER + (StrUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
         Collections.reverse(keys);
         List<SystemUserOnlineVo> onlineUserList = new ArrayList<>();
