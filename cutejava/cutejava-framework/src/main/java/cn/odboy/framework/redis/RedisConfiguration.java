@@ -53,7 +53,14 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     /**
      * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/> 未配置可能导致, 登录失败, 反复登录等问题
      */
-    private static final String[] WHITELIST_STR = {"org.springframework", "cn.odboy.system.dal.dataobject", "cn.odboy.system.dal.model", "cn.odboy.pipeline" + ".dal.dataobject", "cn.odboy.pipeline.dal.model", "cn.odboy.pipeline.framework.pipeline.model", "cn.odboy.framework.exception.thirdapi.vo"};
+    private static final String[] WHITELIST_STR =
+        {
+            "org.springframework",
+            "cn.odboy.system.dal.dataobject",
+            "cn.odboy.system.dal.model",
+            "cn.odboy.task.dal.dataobject",
+            "cn.odboy.task.dal.model",
+        };
 
     /**
      * 设置 redis 数据默认过期时间，默认2小时 设置@cacheable 序列化方式
