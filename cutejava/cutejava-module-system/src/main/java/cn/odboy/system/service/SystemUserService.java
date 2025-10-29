@@ -27,8 +27,8 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.mysql.SystemUserJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
-import cn.odboy.system.dal.redis.SystemUserInfoRedis;
-import cn.odboy.system.dal.redis.SystemUserOnlineInfoRedis;
+import cn.odboy.system.dal.redis.SystemUserInfoDAO;
+import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
@@ -56,9 +56,9 @@ public class SystemUserService {
     @Autowired
     private SystemUserRoleMapper systemUserRoleMapper;
     @Autowired
-    private SystemUserInfoRedis systemUserInfoRedis;
+    private SystemUserInfoDAO systemUserInfoDAO;
     @Autowired
-    private SystemUserOnlineInfoRedis systemUserOnlineInfoRedis;
+    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
     @Autowired
     private CsFileLocalUploadHelper fileUploadPathHelper;
 
@@ -111,7 +111,7 @@ public class SystemUserService {
         }
         // 如果用户被禁用, 则清除用户登录信息
         if (!args.getEnabled()) {
-            systemUserOnlineInfoRedis.kickOutByUsername(args.getUsername());
+            systemUserOnlineInfoDAO.kickOutByUsername(args.getUsername());
         }
         user.setDeptId(args.getDept().getId());
         user.setUsername(args.getUsername());
@@ -125,7 +125,7 @@ public class SystemUserService {
         user.setGender(args.getGender());
         systemUserMapper.insertOrUpdate(user);
         // 清除用户登录缓存
-        systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
+        systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
         // 更新用户岗位
         systemUserJobMapper.batchDeleteUserJob(Collections.singleton(args.getId()));
         systemUserJobMapper.batchInsertUserJob(args.getJobs(), args.getId());
@@ -151,7 +151,7 @@ public class SystemUserService {
         user.setPhone(args.getPhone());
         user.setGender(args.getGender());
         systemUserMapper.insertOrUpdate(user);
-        systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
+        systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
     }
 
     /**
@@ -165,7 +165,7 @@ public class SystemUserService {
         for (Long id : ids) {
             // 清理缓存
             SystemUserTb user = systemUserMapper.selectById(id);
-            systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
+            systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
         }
         systemUserMapper.deleteByIds(ids);
         // 删除用户岗位
@@ -184,7 +184,7 @@ public class SystemUserService {
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserPasswordByUsername(String username, String encryptPassword) {
         systemUserMapper.updateUserPasswordByUsername(username, encryptPassword);
-        systemUserInfoRedis.deleteUserLoginInfoByUserName(username);
+        systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
     }
 
     /**
@@ -200,9 +200,9 @@ public class SystemUserService {
         // 清除缓存
         users.forEach(user -> {
             // 清除缓存
-            systemUserInfoRedis.deleteUserLoginInfoByUserName(user.getUsername());
+            systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
             // 强制退出
-            systemUserOnlineInfoRedis.kickOutByUsername(user.getUsername());
+            systemUserOnlineInfoDAO.kickOutByUsername(user.getUsername());
         });
         // 重置密码
         systemUserMapper.batchUpdatePassword(password, ids);
@@ -238,7 +238,7 @@ public class SystemUserService {
         if (CsStringUtil.isNotBlank(oldPath)) {
             CsFileUtil.del(oldPath);
         }
-        systemUserInfoRedis.deleteUserLoginInfoByUserName(username);
+        systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
         return new HashMap<>(1) {{
             put("avatar", file.getName());
         }};
@@ -254,7 +254,7 @@ public class SystemUserService {
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserEmailByUsername(String username, String email) {
         systemUserMapper.updateUserEmailByUsername(username, email);
-        systemUserInfoRedis.deleteUserLoginInfoByUserName(username);
+        systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
     }
 
     /**

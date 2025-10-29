@@ -19,14 +19,13 @@ package cn.odboy.system.controller;
 import cn.odboy.base.CsPageArgs;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
-import cn.odboy.system.dal.redis.SystemUserOnlineInfoRedis;
+import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.util.CsDesEncryptUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,22 +40,21 @@ import java.util.Set;
 @Api(tags = "系统：在线用户管理")
 public class SystemOnlineController {
     @Autowired
-    private SystemUserOnlineInfoRedis systemUserOnlineInfoRedis;
+    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     @ApiOperation("查询在线用户")
     @PostMapping
     @PreAuthorize("@el.check()")
     public ResponseEntity<CsPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody CsPageArgs<SystemUserOnlineVo> args) {
         IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
-        return ResponseEntity.ok(systemUserOnlineInfoRedis.queryUserOnlineModelPage(args.getArgs(), page));
+        return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        systemUserOnlineInfoRedis.downloadUserOnlineModelExcel(systemUserOnlineInfoRedis.queryUserOnlineModelListByUsername(
-                username), response);
+        systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
     }
 
     @ApiOperation("踢出用户")
@@ -66,7 +64,7 @@ public class SystemOnlineController {
         for (String token : keys) {
             // 解密Key
             token = CsDesEncryptUtil.desDecrypt(token);
-            systemUserOnlineInfoRedis.logoutByToken(token);
+            systemUserOnlineInfoDAO.logoutByToken(token);
         }
         return ResponseEntity.ok(null);
     }

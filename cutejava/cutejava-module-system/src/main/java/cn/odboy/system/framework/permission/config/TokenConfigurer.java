@@ -16,7 +16,7 @@
 
 package cn.odboy.system.framework.permission.config;
 
-import cn.odboy.system.dal.redis.SystemUserOnlineInfoRedis;
+import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.handler.TokenFilter;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -26,16 +26,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     private final TokenProvider tokenProvider;
-    private final SystemUserOnlineInfoRedis systemUserOnlineInfoRedis;
+    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    public TokenConfigurer(TokenProvider tokenProvider, SystemUserOnlineInfoRedis systemUserOnlineInfoRedis) {
+    public TokenConfigurer(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
         this.tokenProvider = tokenProvider;
-        this.systemUserOnlineInfoRedis = systemUserOnlineInfoRedis;
+        this.systemUserOnlineInfoDAO = systemUserOnlineInfoDAO;
     }
 
     @Override
     public void configure(HttpSecurity http) {
-        TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineInfoRedis);
+        TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineInfoDAO);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
