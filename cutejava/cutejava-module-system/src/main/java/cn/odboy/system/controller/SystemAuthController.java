@@ -28,7 +28,7 @@ import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserLoginArgs;
 import cn.odboy.system.dal.redis.SystemCacheKey;
-import cn.odboy.system.dal.redis.SystemUserOnlineInfoRedis;
+import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
@@ -66,7 +66,7 @@ public class SystemAuthController {
     @Autowired
     private CsRedisHelper redisHelper;
     @Autowired
-    private SystemUserOnlineInfoRedis onlineUserService;
+    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
     @Autowired
     private TokenProvider tokenProvider;
     @Autowired
@@ -108,10 +108,10 @@ public class SystemAuthController {
         }};
         if (properties.getLogin().isSingle()) {
             // 踢掉之前已经登录的token
-            onlineUserService.kickOutByUsername(loginRequest.getUsername());
+            systemUserOnlineInfoDAO.kickOutByUsername(loginRequest.getUsername());
         }
         // 保存在线信息
-        onlineUserService.saveUserJwtModelByToken(jwtUser, token, request);
+        systemUserOnlineInfoDAO.saveUserJwtModelByToken(jwtUser, token, request);
         // 返回登录信息
         return ResponseEntity.ok(authInfo);
     }
@@ -149,7 +149,7 @@ public class SystemAuthController {
     @AnonymousPostMapping(value = "/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         String token = tokenProvider.getToken(request);
-        onlineUserService.logoutByToken(token);
+        systemUserOnlineInfoDAO.logoutByToken(token);
         return ResponseEntity.ok(null);
     }
 }

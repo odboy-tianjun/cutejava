@@ -20,7 +20,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
-import cn.odboy.system.dal.redis.SystemUserInfoRedis;
+import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemRoleService;
 import cn.odboy.system.service.SystemUserService;
@@ -44,11 +44,11 @@ public class UserDetailsHandler implements UserDetailsService {
     @Autowired
     private SystemDataService systemDataService;
     @Autowired
-    private SystemUserInfoRedis systemUserInfoRedis;
+    private SystemUserInfoDAO systemUserInfoDAO;
 
     @Override
     public SystemUserJwtVo loadUserByUsername(String username) {
-        SystemUserJwtVo userJwtVo = systemUserInfoRedis.getUserLoginInfoByUserName(username);
+        SystemUserJwtVo userJwtVo = systemUserInfoDAO.getUserLoginInfoByUserName(username);
         if (userJwtVo == null) {
             SystemUserTb user = systemUserService.getUserByUsername(username);
             if (user == null) {
@@ -62,7 +62,7 @@ public class UserDetailsHandler implements UserDetailsService {
                 // 初始化JwtUserDto
                 userJwtVo = new SystemUserJwtVo(user, systemDataService.queryDeptIdListByArgs(user), authorities);
                 // 添加缓存数据
-                systemUserInfoRedis.saveUserLoginInfoByUserName(username, userJwtVo);
+                systemUserInfoDAO.saveUserLoginInfoByUserName(username, userJwtVo);
             }
         }
         return userJwtVo;
