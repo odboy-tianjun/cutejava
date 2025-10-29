@@ -235,7 +235,7 @@ public class SystemUserService {
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
         user.setAvatarName(file.getName());
         systemUserMapper.insertOrUpdate(user);
-        if (CsStringUtil.isNotBlank(oldPath)) {
+        if (StrUtil.isNotBlank(oldPath)) {
             CsFileUtil.del(oldPath);
         }
         systemUserInfoDAO.deleteUserLoginInfoByUserName(username);

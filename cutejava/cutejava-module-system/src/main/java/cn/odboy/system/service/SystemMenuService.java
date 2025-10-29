@@ -19,6 +19,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.CsSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.TransferProtocolConst;
@@ -66,7 +67,7 @@ public class SystemMenuService {
         if (systemMenuMapper.getMenuByTitle(args.getTitle()) != null) {
             throw new BadRequestException("菜单标题已存在");
         }
-        if (CsStringUtil.isNotBlank(args.getComponentName())) {
+        if (StrUtil.isNotBlank(args.getComponentName())) {
             if (systemMenuMapper.getMenuByComponentName(args.getComponentName()) != null) {
                 throw new BadRequestException("菜单组件名称已存在");
             }
@@ -117,7 +118,7 @@ public class SystemMenuService {
         Long oldPid = menu.getPid();
         Long newPid = args.getPid();
 
-        if (CsStringUtil.isNotBlank(args.getComponentName())) {
+        if (StrUtil.isNotBlank(args.getComponentName())) {
             menu1 = systemMenuMapper.getMenuByComponentName(args.getComponentName());
             if (menu1 != null && !menu1.getId().equals(menu.getId())) {
                 throw new BadRequestException("菜单组件名称已存在");
@@ -348,11 +349,11 @@ public class SystemMenuService {
                 // 如果不是外链
                 if (!menu.getIFrame()) {
                     if (menu.getPid() == null) {
-                        menuVo.setComponent(CsStringUtil.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
+                        menuVo.setComponent(StrUtil.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
                         // 如果不是一级菜单，并且菜单类型为目录，则代表是多级菜单
                     } else if (menu.getType() == 0) {
-                        menuVo.setComponent(CsStringUtil.isEmpty(menu.getComponent()) ? "ParentView" : menu.getComponent());
-                    } else if (CsStringUtil.isNoneBlank(menu.getComponent())) {
+                        menuVo.setComponent(StrUtil.isEmpty(menu.getComponent()) ? "ParentView" : menu.getComponent());
+                    } else if (StrUtil.isNotBlank(menu.getComponent())) {
                         menuVo.setComponent(menu.getComponent());
                     }
                 }

@@ -19,6 +19,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
@@ -234,7 +235,7 @@ public class SystemRoleService {
         permissions = roles.stream()
                 .flatMap(role -> role.getMenus().stream())
                 .map(SystemMenuTb::getPermission)
-                .filter(CsStringUtil::isNotBlank)
+                .filter(StrUtil::isNotBlank)
                 .collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }

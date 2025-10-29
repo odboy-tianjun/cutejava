@@ -17,6 +17,7 @@
 package cn.odboy.system.framework.quartz;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
@@ -75,20 +76,20 @@ public class ExecutionJobBean extends QuartzJobBean {
             future.get();
             long times = System.currentTimeMillis() - startTime;
             quartzLog.setTime(times);
-            if (CsStringUtil.isNotBlank(uuid)) {
+            if (StrUtil.isNotBlank(uuid)) {
                 redisHelper.set(uuid, true);
             }
             // 任务状态
             quartzLog.setIsSuccess(true);
             log.info("任务执行成功，任务名称：{}, 执行时间：{}毫秒", quartzJob.getJobName(), times);
             // 判断是否存在子任务
-            if (CsStringUtil.isNotBlank(quartzJob.getSubTask())) {
+            if (StrUtil.isNotBlank(quartzJob.getSubTask())) {
                 String[] tasks = quartzJob.getSubTask().split("[,，]");
                 // 执行子任务
                 systemQuartzJobService.startSubQuartJob(tasks);
             }
         } catch (Exception e) {
-            if (CsStringUtil.isNotBlank(uuid)) {
+            if (StrUtil.isNotBlank(uuid)) {
                 redisHelper.set(uuid, false);
             }
             log.error("任务执行失败，任务名称：{}", quartzJob.getJobName(), e);
@@ -106,7 +107,7 @@ public class ExecutionJobBean extends QuartzJobBean {
             if (quartzJob.getEmail() != null) {
                 SystemEmailService emailService = CsSpringBeanHolder.getBean(SystemEmailService.class);
                 // 邮箱报警
-                if (CsStringUtil.isNoneBlank(quartzJob.getEmail())) {
+                if (StrUtil.isNotBlank(quartzJob.getEmail())) {
                     SystemSendEmailArgs sendEmailRequest = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));
                     emailService.sendEmail(sendEmailRequest);
                 }

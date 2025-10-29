@@ -79,7 +79,7 @@ public class SystemQuartzJobService {
         if (!CronExpression.isValidExpression(args.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
-        if (CsStringUtil.isNotBlank(args.getSubTask())) {
+        if (StrUtil.isNotBlank(args.getSubTask())) {
             List<String> tasks = Arrays.asList(args.getSubTask().split("[,，]"));
             if (tasks.contains(args.getId().toString())) {
                 throw new BadRequestException("子任务中不能添加当前任务ID");
