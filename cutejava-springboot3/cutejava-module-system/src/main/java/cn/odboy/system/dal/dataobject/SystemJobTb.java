@@ -35,19 +35,19 @@ public class SystemJobTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @TableId(value = "id", type = IdType.AUTO)
-    @Schema(name ="ID", hidden = true)
+    @Schema(name = "ID", hidden = true)
     private Long id;
 
     @NotBlank
-    @Schema(name ="岗位名称")
+    @Schema(name = "岗位名称")
     private String name;
 
     @NotNull
-    @Schema(name ="岗位排序")
+    @Schema(name = "岗位排序")
     private Long jobSort;
 
     @NotNull
-    @Schema(name ="是否启用")
+    @Schema(name = "是否启用")
     private Boolean enabled;
 
     @Override

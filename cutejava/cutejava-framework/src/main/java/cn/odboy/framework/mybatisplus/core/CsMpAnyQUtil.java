@@ -69,11 +69,7 @@ public class CsMpAnyQUtil {
         return baseMapper.selectPage(page, queryWrapper);
     }
 
-    public static <T, M> Page<M> selectPage(
-            BaseMapper<T> baseMapper,
-            Page<T> page,
-            Object queryParams,
-            Class<M> mapperClazz) {
+    public static <T, M> Page<M> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams, Class<M> mapperClazz) {
         QueryWrapper<T> queryWrapper = CsMpQUtil.build(queryParams);
         Page<T> tPage = baseMapper.selectPage(page, queryWrapper);
         Page<M> mapperTarget = new Page<>();

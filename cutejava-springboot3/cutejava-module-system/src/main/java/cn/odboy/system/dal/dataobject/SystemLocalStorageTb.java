@@ -32,28 +32,28 @@ import lombok.Setter;
 public class SystemLocalStorageTb extends CsBaseUserTimeTb {
 
     @TableId(value = "id", type = IdType.AUTO)
-    @Schema(name ="ID", hidden = true)
+    @Schema(name = "ID", hidden = true)
     private Long id;
 
-    @Schema(name ="真实文件名")
+    @Schema(name = "真实文件名")
     private String realName;
 
-    @Schema(name ="文件名")
+    @Schema(name = "文件名")
     private String name;
 
-    @Schema(name ="后缀")
+    @Schema(name = "后缀")
     private String suffix;
 
-    @Schema(name ="路径")
+    @Schema(name = "路径")
     private String path;
 
-    @Schema(name ="类型")
+    @Schema(name = "类型")
     private String type;
 
-    @Schema(name ="大小")
+    @Schema(name = "大小")
     private String size;
 
-    @Schema(name ="日期分组")
+    @Schema(name = "日期分组")
     private String dateGroup;
 
     public void copy(SystemLocalStorageTb source) {

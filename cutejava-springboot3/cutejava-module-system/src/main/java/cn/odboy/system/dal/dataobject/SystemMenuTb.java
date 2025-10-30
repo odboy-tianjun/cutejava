@@ -38,55 +38,55 @@ public class SystemMenuTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "menu_id", type = IdType.AUTO)
-    @Schema(name ="ID", hidden = true)
+    @Schema(name = "ID", hidden = true)
     private Long id;
 
     @TableField(exist = false)
     @JSONField(serialize = false)
-    @Schema(name ="菜单角色")
+    @Schema(name = "菜单角色")
     private Set<SystemRoleTb> roles;
 
     @TableField(exist = false)
     private List<SystemMenuTb> children;
 
-    @Schema(name ="菜单标题")
+    @Schema(name = "菜单标题")
     private String title;
 
     @TableField(value = "name")
-    @Schema(name ="菜单组件名称")
+    @Schema(name = "菜单组件名称")
     private String componentName;
 
-    @Schema(name ="排序")
+    @Schema(name = "排序")
     private Integer menuSort = 999;
 
-    @Schema(name ="组件路径")
+    @Schema(name = "组件路径")
     private String component;
 
-    @Schema(name ="路由地址")
+    @Schema(name = "路由地址")
     private String path;
 
-    @Schema(name ="菜单类型，目录、菜单、按钮")
+    @Schema(name = "菜单类型，目录、菜单、按钮")
     private Integer type;
 
-    @Schema(name ="权限标识")
+    @Schema(name = "权限标识")
     private String permission;
 
-    @Schema(name ="菜单图标")
+    @Schema(name = "菜单图标")
     private String icon;
 
-    @Schema(name ="缓存")
+    @Schema(name = "缓存")
     private Boolean cache;
 
-    @Schema(name ="是否隐藏")
+    @Schema(name = "是否隐藏")
     private Boolean hidden;
 
-    @Schema(name ="上级菜单")
+    @Schema(name = "上级菜单")
     private Long pid;
 
-    @Schema(name ="子节点数目", hidden = true)
+    @Schema(name = "子节点数目", hidden = true)
     private Integer subCount = 0;
 
-    @Schema(name ="外链菜单")
+    @Schema(name = "外链菜单")
     private Boolean iFrame;
 
     @Override
@@ -106,17 +106,17 @@ public class SystemMenuTb extends CsBaseUserTimeTb {
         return Objects.hash(id);
     }
 
-    @Schema(name ="是否有子节点")
+    @Schema(name = "是否有子节点")
     public Boolean getHasChildren() {
         return subCount > 0;
     }
 
-    @Schema(name ="是否为叶子")
+    @Schema(name = "是否为叶子")
     public Boolean getLeaf() {
         return subCount <= 0;
     }
 
-    @Schema(name ="标签名称")
+    @Schema(name = "标签名称")
     public String getLabel() {
         return title;
     }

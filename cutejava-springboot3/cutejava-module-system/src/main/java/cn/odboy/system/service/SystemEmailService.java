@@ -102,14 +102,10 @@ public class SystemEmailService {
         // 发送
         try {
             int size = sendEmailRequest.getTos().size();
-            Mail.create(account)
-                    .setTos(sendEmailRequest.getTos().toArray(new String[size]))
-                    .setTitle(sendEmailRequest.getSubject())
-                    .setContent(content)
-                    .setHtml(true)
-                    // 关闭session
-                    .setUseGlobalSession(false)
-                    .send();
+            Mail.create(account).setTos(sendEmailRequest.getTos().toArray(new String[size])).setTitle(sendEmailRequest.getSubject()).setContent(content)
+                .setHtml(true)
+                // 关闭session
+                .setUseGlobalSession(false).send();
         } catch (Exception e) {
             log.error("邮件发送失败", e);
             throw new BadRequestException("邮件发送失败");
@@ -152,8 +148,7 @@ public class SystemEmailService {
         } else {
             content = CsResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
         }
-        SystemSendEmailArgs sendEmailRequest =
-                new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
+        SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
         sendEmail(sendEmailRequest);
     }
 

@@ -31,7 +31,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
@@ -205,9 +204,8 @@ public class CsRedisHelper {
     public void scanDel(String pattern) {
         ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
         try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
-                (RedisCallback<Cursor<byte[]>>) connection -> (Cursor<byte[]>) new ConvertingCursor<>(
-                        connection.scan(options),
-                        redisTemplate.getKeySerializer()::deserialize))) {
+            (RedisCallback<Cursor<byte[]>>)connection -> (Cursor<byte[]>)new ConvertingCursor<>(connection.scan(options),
+                redisTemplate.getKeySerializer()::deserialize))) {
             while (cursor.hasNext()) {
                 redisTemplate.delete(cursor.next());
             }

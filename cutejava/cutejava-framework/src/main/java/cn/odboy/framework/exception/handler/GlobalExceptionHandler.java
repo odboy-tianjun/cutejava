@@ -27,6 +27,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 /**
  * 全局异常处理
  *
@@ -77,7 +78,7 @@ public class GlobalExceptionHandler {
         ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
         String message = objectError.getDefaultMessage();
         if (objectError instanceof FieldError) {
-            message = ((FieldError) objectError).getField() + ": " + message;
+            message = ((FieldError)objectError).getField() + ": " + message;
         }
         return buildResponseEntity(ApiError.error(message));
     }

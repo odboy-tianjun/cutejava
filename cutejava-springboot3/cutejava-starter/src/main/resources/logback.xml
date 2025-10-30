@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds" debug="false">
     <contextName>CuteJava</contextName>
-    <property name="log.name" value="cutejava" />
-    <property name="log.home" value="c:/logs" />
+    <property name="log.name" value="cutejava"/>
+    <property name="log.home" value="c:/logs"/>
     <property name="log.charset" value="utf-8"/>
-    <property name="log.pattern" value="%red(%contextName) - %red(%d{yyyy-MM-dd HH:mm:ss.SSS}) - %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n"/>
+    <property name="log.pattern"
+              value="%red(%contextName) - %red(%d{yyyy-MM-dd HH:mm:ss.SSS}) - %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n"/>
 
     <!-- Spring 日志级别控制 -->
     <logger name="org.springframework" level="warn"/>
@@ -38,6 +39,6 @@
         <!--普通日志输出到控制台-->
         <appender-ref ref="CONSOLE"/>
         <!--普通日志输出到文件-->
-        <appender-ref ref="FILE" />
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

@@ -48,6 +48,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class TokenProvider implements InitializingBean {
+    public static final String AUTHORITIES_UUID_KEY = "uid";
+    public static final String AUTHORITIES_UID_KEY = "userId";
     @Autowired
     private CsRedisHelper redisHelper;
     @Autowired
@@ -57,8 +59,6 @@ public class TokenProvider implements InitializingBean {
     // 0.12.x版本
     private SecretKey signingKey;
     private JwtParser jwtParser;
-    public static final String AUTHORITIES_UUID_KEY = "uid";
-    public static final String AUTHORITIES_UID_KEY = "userId";
 
     @Override
     public void afterPropertiesSet() {
@@ -125,7 +125,7 @@ public class TokenProvider implements InitializingBean {
         // 判断是否续期token,计算token的过期时间
         String loginKey = loginKey(token);
         long time = redisHelper.getExpire(loginKey) * 1000;
-        Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
+        Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int)time);
         // 判断当前时间与过期时间的时间差
         long differ = expireDate.getTime() - System.currentTimeMillis();
         // 如果在续期检查的范围内，则续期

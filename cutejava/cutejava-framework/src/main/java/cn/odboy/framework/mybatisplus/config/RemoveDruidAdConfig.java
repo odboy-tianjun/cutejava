@@ -62,10 +62,9 @@ public class RemoveDruidAdConfig {
             }
 
             @Override
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-                    throws IOException, ServletException {
-                HttpServletRequest httpRequest = (HttpServletRequest) request;
-                HttpServletResponse httpResponse = (HttpServletResponse) response;
+            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+                HttpServletRequest httpRequest = (HttpServletRequest)request;
+                HttpServletResponse httpResponse = (HttpServletResponse)response;
                 if (httpRequest.getRequestURI().endsWith("js/common.js")) {
                     // 获取common.js
                     String text = Utils.readFromResource(filePath);

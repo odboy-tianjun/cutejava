@@ -33,11 +33,6 @@ import java.net.UnknownHostException;
  */
 @Slf4j
 public class BootApplication {
-    @Bean
-    public CsSpringBeanHolder springBeanHolder() {
-        return new CsSpringBeanHolder();
-    }
-
     protected static void inited(ConfigurableApplicationContext application) throws UnknownHostException {
         Environment env = application.getEnvironment();
         String ip = InetAddress.getLocalHost().getHostAddress();
@@ -50,5 +45,10 @@ public class BootApplication {
             \tExternal: \thttp://{}:{}{}
             \tSwagger文档: \thttp://{}:{}{}/doc.html
             ----------------------------------------------------------""", port, path, ip, port, path, ip, port, path);
+    }
+
+    @Bean
+    public CsSpringBeanHolder springBeanHolder() {
+        return new CsSpringBeanHolder();
     }
 }

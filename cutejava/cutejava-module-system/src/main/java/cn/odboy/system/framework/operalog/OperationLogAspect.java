@@ -86,7 +86,7 @@ public class OperationLogAspect {
 
     private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, TimeInterval timeInterval) {
         long executeTime = timeInterval.intervalMs();
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         String bizName = annotation.bizName();
         if (StrUtil.isBlank(bizName)) {
             Method method = signature.getMethod();

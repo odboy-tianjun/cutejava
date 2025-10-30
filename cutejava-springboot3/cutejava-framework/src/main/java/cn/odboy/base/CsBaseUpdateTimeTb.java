@@ -29,7 +29,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class CsBaseUpdateTimeTb extends CsObject {
-    @Schema(name ="更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 }

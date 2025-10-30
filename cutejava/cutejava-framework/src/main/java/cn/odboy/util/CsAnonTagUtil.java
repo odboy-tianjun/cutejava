@@ -42,8 +42,7 @@ public class CsAnonTagUtil {
      * @return /
      */
     public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
-        RequestMappingHandlerMapping requestMappingHandlerMapping =
-                (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
+        RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping)applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
         // 获取匿名标记
@@ -58,9 +57,7 @@ public class CsAnonTagUtil {
             AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
             if (null != anonymousAccess && infoEntry.getKey() != null) {
                 List<RequestMethod> requestMethods = new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
-                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ?
-                        RequestMethodEnum.ALL.getType() :
-                        requestMethods.get(0).name());
+                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
                 PatternsRequestCondition patternsCondition = infoEntry.getKey().getPatternsCondition();
                 if (patternsCondition != null) {
                     switch (Objects.requireNonNull(request)) {

@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-
 /**
  * <p>
  * 任务模板
@@ -44,7 +43,7 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
     /**
      * id
      */
-    @Schema(name="id")
+    @Schema(name = "id")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -52,13 +51,13 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
      * 数据有效性
      */
     @TableField("available")
-    @Schema(name="数据有效性")
+    @Schema(name = "数据有效性")
     private Boolean available;
 
     /**
      * 变更类型
      */
-    @Schema(name="变更类型")
+    @Schema(name = "变更类型")
     @TableField("change_type")
     private String changeType;
 
@@ -66,13 +65,13 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
      * 流水线名称
      */
     @TableField("`name`")
-    @Schema(name="流水线名称")
+    @Schema(name = "流水线名称")
     private String name;
 
     /**
      * 流水线描述
      */
-    @Schema(name="流水线描述")
+    @Schema(name = "流水线描述")
     @TableField("`description`")
     private String description;
 
@@ -80,20 +79,20 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
      * 流水线模板内容
      */
     @TableField("template")
-    @Schema(name="流水线模板内容")
+    @Schema(name = "流水线模板内容")
     private String template;
 
     /**
      * 环境别名
      */
     @TableField("env_alias")
-    @Schema(name="环境别名")
+    @Schema(name = "环境别名")
     private String envAlias;
 
     /**
      * 应用为语言，资源为类型
      */
     @TableField("`language`")
-    @Schema(name="应用为语言，资源为类型")
+    @Schema(name = "应用为语言，资源为类型")
     private String language;
 }

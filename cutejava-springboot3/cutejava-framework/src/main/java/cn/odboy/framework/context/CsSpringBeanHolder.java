@@ -32,8 +32,8 @@ import java.util.List;
 @SuppressWarnings({"unchecked", "all"})
 public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBean {
 
-    private static ApplicationContext applicationContext = null;
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
+    private static ApplicationContext applicationContext = null;
     private static boolean addCallback = true;
 
     /**
@@ -55,7 +55,7 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
      */
     public static <T> T getBean(String name) {
         assertContextInjected();
-        return (T) applicationContext.getBean(name);
+        return (T)applicationContext.getBean(name);
     }
 
     /**
@@ -110,8 +110,7 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
     private static void assertContextInjected() {
         if (applicationContext == null) {
             throw new IllegalStateException(
-                    "applicaitonContext属性未注入, 请在applicationContext" +
-                            ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
+                "applicaitonContext属性未注入, 请在applicationContext" + ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
         }
     }
 
@@ -123,6 +122,15 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
         applicationContext = null;
     }
 
+    /**
+     * 获取 @Service 的所有 bean 名称
+     *
+     * @return /
+     */
+    public static List<String> getAllServiceBeanName() {
+        return new ArrayList<>(Arrays.asList(applicationContext.getBeanNamesForAnnotation(Service.class)));
+    }
+
     @Override
     public void destroy() {
         CsSpringBeanHolder.clearHolder();
@@ -131,8 +139,7 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         if (CsSpringBeanHolder.applicationContext != null) {
-            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" +
-                    CsSpringBeanHolder.applicationContext);
+            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + CsSpringBeanHolder.applicationContext);
         }
         CsSpringBeanHolder.applicationContext = applicationContext;
         if (addCallback) {
@@ -142,15 +149,6 @@ public class CsSpringBeanHolder implements ApplicationContextAware, DisposableBe
             CALL_BACKS.clear();
         }
         CsSpringBeanHolder.addCallback = false;
-    }
-
-    /**
-     * 获取 @Service 的所有 bean 名称
-     *
-     * @return /
-     */
-    public static List<String> getAllServiceBeanName() {
-        return new ArrayList<>(Arrays.asList(applicationContext.getBeanNamesForAnnotation(Service.class)));
     }
 
     interface CallBack {

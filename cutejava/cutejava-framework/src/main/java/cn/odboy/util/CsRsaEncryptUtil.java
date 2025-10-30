@@ -183,8 +183,8 @@ public final class CsRsaEncryptUtil {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
+        RSAPublicKey rsaPublicKey = (RSAPublicKey)keyPair.getPublic();
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey)keyPair.getPrivate();
         String publicKeyString = Base64.encodeBase64String(rsaPublicKey.getEncoded());
         String privateKeyString = Base64.encodeBase64String(rsaPrivateKey.getEncoded());
         return new RsaKeyPair(publicKeyString, privateKeyString);

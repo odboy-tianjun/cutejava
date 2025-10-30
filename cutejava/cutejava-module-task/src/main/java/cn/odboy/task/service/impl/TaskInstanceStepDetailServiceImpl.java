@@ -36,7 +36,8 @@ import java.util.List;
  * @since 2025-09-28
  */
 @Service
-public class TaskInstanceStepDetailServiceImpl extends ServiceImpl<TaskInstanceStepDetailMapper, TaskInstanceStepDetailTb> implements TaskInstanceStepDetailService {
+public class TaskInstanceStepDetailServiceImpl extends ServiceImpl<TaskInstanceStepDetailMapper, TaskInstanceStepDetailTb>
+    implements TaskInstanceStepDetailService {
 
     @Override
     public void success(Long instanceDetailId, String stepDesc) {
@@ -62,8 +63,6 @@ public class TaskInstanceStepDetailServiceImpl extends ServiceImpl<TaskInstanceS
         if (CollUtil.isEmpty(instanceDetailIds)) {
             return;
         }
-        remove(new LambdaQueryWrapper<TaskInstanceStepDetailTb>()
-                .in(TaskInstanceStepDetailTb::getInstanceDetailId, instanceDetailIds)
-        );
+        remove(new LambdaQueryWrapper<TaskInstanceStepDetailTb>().in(TaskInstanceStepDetailTb::getInstanceDetailId, instanceDetailIds));
     }
 }

@@ -163,19 +163,6 @@ public class CsMpQUtil {
         return fields;
     }
 
-    @TableName("test_domain")
-    private static class TestDomain {
-        @NotNull(groups = CsBaseUserTimeTb.Update.class)
-        @TableId(value = "user_id", type = IdType.AUTO)
-        private Long id;
-        @TableField(value = "dept_id")
-        private Long deptId;
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String nickName;
-    }
-
     public static void main(String[] args) {
         QueryWrapper<TestDomain> query = new QueryWrapper<>();
         query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
@@ -191,5 +178,18 @@ public class CsMpQUtil {
         System.err.println(query.getSqlSet());
         System.err.println("getTargetSql=================================");
         System.err.println(query.getTargetSql());
+    }
+
+    @TableName("test_domain")
+    private static class TestDomain {
+        @NotNull(groups = CsBaseUserTimeTb.Update.class)
+        @TableId(value = "user_id", type = IdType.AUTO)
+        private Long id;
+        @TableField(value = "dept_id")
+        private Long deptId;
+        @NotBlank
+        private String username;
+        @NotBlank
+        private String nickName;
     }
 }

@@ -142,7 +142,8 @@ public class SystemUserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(
+                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
@@ -201,7 +202,8 @@ public class SystemUserController {
      * @param args /
      */
     private void checkLevel(SystemUserTb args) {
-        Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        Integer currentLevel = Collections.min(
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
         Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
@@ -224,14 +226,15 @@ public class SystemUserController {
             c.or();
             c.like(SystemUserTb::getNickName, criteria.getBlurry());
         });
-        List<CsSelectOptionVo> collect = systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
-            Map<String, Object> ext = new HashMap<>(1);
-            ext.put("id", m.getId());
-            ext.put("deptId", m.getDeptId());
-            ext.put("email", m.getEmail());
-            ext.put("phone", m.getPhone());
-            return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
-        }).collect(Collectors.toList());
+        List<CsSelectOptionVo> collect =
+            systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
+                Map<String, Object> ext = new HashMap<>(1);
+                ext.put("id", m.getId());
+                ext.put("deptId", m.getDeptId());
+                ext.put("email", m.getEmail());
+                ext.put("phone", m.getPhone());
+                return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
+            }).collect(Collectors.toList());
         return ResponseEntity.ok(collect);
     }
 }

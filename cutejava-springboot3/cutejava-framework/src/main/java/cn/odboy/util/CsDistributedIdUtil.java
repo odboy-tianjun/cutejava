@@ -88,13 +88,6 @@ public final class CsDistributedIdUtil {
     private final AtomicLong lastTimestamp = new AtomicLong(-1L);
 
     /**
-     * 单例实例持有者类
-     */
-    private static class InstanceHolder {
-        private static final CsDistributedIdUtil INSTANCE = new CsDistributedIdUtil(20, 12, 5, 5, 12);
-    }
-
-    /**
      * 构造函数, 初始化数据中心 ID 和机器 ID
      *
      * @param dataCenterId     数据中心 ID
@@ -103,12 +96,7 @@ public final class CsDistributedIdUtil {
      * @param workerIdBits     机器 ID 所占位数
      * @param sequenceBits     序列号所占位数
      */
-    public CsDistributedIdUtil(
-            long dataCenterId,
-            long workerId,
-            long dataCenterIdBits,
-            long workerIdBits,
-            long sequenceBits) {
+    public CsDistributedIdUtil(long dataCenterId, long workerId, long dataCenterIdBits, long workerIdBits, long sequenceBits) {
         this.dataCenterIdBits = dataCenterIdBits;
         this.workerIdBits = workerIdBits;
         this.sequenceBits = sequenceBits;
@@ -129,54 +117,6 @@ public final class CsDistributedIdUtil {
         }
         this.dataCenterId = dataCenterId;
         this.workerId = workerId;
-    }
-
-    /**
-     * 生成下一个分布式 ID
-     *
-     * @return 生成的分布式 ID
-     */
-    public long nextId() {
-        long currentTimestamp = System.currentTimeMillis();
-
-        // 如果当前时间戳小于上一次生成 ID 的时间戳, 说明时钟回拨，抛出异常
-        if (currentTimestamp < lastTimestamp.get()) {
-            throw new BadRequestException(
-                    "Clock moved backwards. Refusing to generate id for " + (lastTimestamp.get() - currentTimestamp) +
-                            " milliseconds");
-        }
-
-        long lastTimestampValue = lastTimestamp.get();
-        if (currentTimestamp == lastTimestampValue) {
-            // 同一毫秒内，序列号自增
-            long seq = sequence.incrementAndGet() & sequenceMask;
-            if (seq == 0) {
-                // 序列号溢出，等待下一毫秒
-                currentTimestamp = waitNextMillis(lastTimestampValue);
-            }
-            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) |
-                    (workerId << workerIdShift) | seq;
-        } else {
-            // 时间戳改变，重置序列号
-            sequence.set(0L);
-            lastTimestamp.set(currentTimestamp);
-            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) |
-                    (workerId << workerIdShift);
-        }
-    }
-
-    /**
-     * 等待下一毫秒
-     *
-     * @param lastTimestamp 上一次生成 ID 的时间戳
-     * @return 当前时间戳
-     */
-    private long waitNextMillis(long lastTimestamp) {
-        long timestamp = System.currentTimeMillis();
-        while (timestamp <= lastTimestamp) {
-            timestamp = System.currentTimeMillis();
-        }
-        return timestamp;
     }
 
     /**
@@ -202,5 +142,56 @@ public final class CsDistributedIdUtil {
                 }
             }).start();
         }
+    }
+
+    /**
+     * 生成下一个分布式 ID
+     *
+     * @return 生成的分布式 ID
+     */
+    public long nextId() {
+        long currentTimestamp = System.currentTimeMillis();
+
+        // 如果当前时间戳小于上一次生成 ID 的时间戳, 说明时钟回拨，抛出异常
+        if (currentTimestamp < lastTimestamp.get()) {
+            throw new BadRequestException("Clock moved backwards. Refusing to generate id for " + (lastTimestamp.get() - currentTimestamp) + " milliseconds");
+        }
+
+        long lastTimestampValue = lastTimestamp.get();
+        if (currentTimestamp == lastTimestampValue) {
+            // 同一毫秒内，序列号自增
+            long seq = sequence.incrementAndGet() & sequenceMask;
+            if (seq == 0) {
+                // 序列号溢出，等待下一毫秒
+                currentTimestamp = waitNextMillis(lastTimestampValue);
+            }
+            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift) | seq;
+        } else {
+            // 时间戳改变，重置序列号
+            sequence.set(0L);
+            lastTimestamp.set(currentTimestamp);
+            return ((currentTimestamp - START_TIMESTAMP) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift);
+        }
+    }
+
+    /**
+     * 等待下一毫秒
+     *
+     * @param lastTimestamp 上一次生成 ID 的时间戳
+     * @return 当前时间戳
+     */
+    private long waitNextMillis(long lastTimestamp) {
+        long timestamp = System.currentTimeMillis();
+        while (timestamp <= lastTimestamp) {
+            timestamp = System.currentTimeMillis();
+        }
+        return timestamp;
+    }
+
+    /**
+     * 单例实例持有者类
+     */
+    private static class InstanceHolder {
+        private static final CsDistributedIdUtil INSTANCE = new CsDistributedIdUtil(20, 12, 5, 5, 12);
     }
 }

@@ -29,7 +29,6 @@ import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,8 +123,7 @@ public class SystemLocalStorageService {
      * @param response      /
      * @throws IOException /
      */
-    public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response)
-            throws IOException {
+    public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemLocalStorageTb localStorage : localStorages) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -147,9 +145,7 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public CsPageResult<SystemLocalStorageTb> queryLocalStorage(
-            SystemQueryStorageArgs criteria,
-            Page<SystemLocalStorageTb> page) {
+    public CsPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
         return CsPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 
@@ -160,7 +156,6 @@ public class SystemLocalStorageService {
      * @return /
      */
     public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
-        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, CsPageUtil.getCount(systemLocalStorageMapper))
-                .getRecords();
+        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, CsPageUtil.getCount(systemLocalStorageMapper)).getRecords();
     }
 }

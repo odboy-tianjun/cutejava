@@ -26,7 +26,7 @@ public class CsFileUtilTest {
 
     @Test
     public void testToFile() {
-        long retval = toFile(new MockMultipartFile("foo", (byte[]) null)).getTotalSpace();
+        long retval = toFile(new MockMultipartFile("foo", (byte[])null)).getTotalSpace();
         assertEquals(500695072768L, retval);
     }
 

@@ -41,14 +41,10 @@ public class MyBatisMapperTests {
         systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateTime.now()));
 
         // SELECT * FROM system_user WHERE (create_time > '2025-08-18 14:53:46');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(
-                SystemUserTb::getCreateTime,
-                DateUtil.formatDateTime(new Date())));
+        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDateTime(new Date())));
 
         // SELECT * FROM system_user WHERE (create_time > '2025-08-18');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(
-                SystemUserTb::getCreateTime,
-                DateUtil.formatDate(new Date())));
+        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDate(new Date())));
     }
 }
 

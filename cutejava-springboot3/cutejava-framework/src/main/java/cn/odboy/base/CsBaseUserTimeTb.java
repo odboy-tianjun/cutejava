@@ -36,29 +36,21 @@ public class CsBaseUserTimeTb extends CsObject {
 
     @CreatedBy
     @TableField(fill = FieldFill.INSERT)
-    @Schema(name ="创建人", hidden = true)
+    @Schema(name = "创建人", hidden = true)
     private String createBy;
 
     @LastModifiedBy
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @Schema(name ="更新人", hidden = true)
+    @Schema(name = "更新人", hidden = true)
     private String updateBy;
 
     @TableField(fill = FieldFill.INSERT)
-    @Schema(name ="创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @Schema(name ="更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date updateTime;
-
-    /* 分组校验 */
-    public @interface Create {
-    }
-
-    /* 分组校验 */
-    public @interface Update {
-    }
 
     @Override
     public String toString() {
@@ -73,5 +65,13 @@ public class CsBaseUserTimeTb extends CsObject {
             builder.append("toString builder encounter an error");
         }
         return builder.toString();
+    }
+
+    /* 分组校验 */
+    public @interface Create {
+    }
+
+    /* 分组校验 */
+    public @interface Update {
     }
 }

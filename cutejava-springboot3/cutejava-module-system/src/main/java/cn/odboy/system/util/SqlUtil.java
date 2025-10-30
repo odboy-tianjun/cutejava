@@ -165,9 +165,7 @@ public final class SqlUtil {
     private static List<String> readSqlList(File sqlFile) throws Exception {
         List<String> sqlList = Lists.newArrayList();
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Files.newInputStream(sqlFile.toPath()),
-                StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(sqlFile.toPath()), StandardCharsets.UTF_8))) {
             String tmp;
             while ((tmp = reader.readLine()) != null) {
                 log.info("line:{}", tmp);

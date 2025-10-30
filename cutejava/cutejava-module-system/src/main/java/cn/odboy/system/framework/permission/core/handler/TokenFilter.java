@@ -39,7 +39,7 @@ public class TokenFilter extends GenericFilterBean {
     private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     /**
-     * @param tokenProvider             Token
+     * @param tokenProvider           Token
      * @param systemUserOnlineInfoDAO 用户在线
      */
     public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
@@ -49,7 +49,7 @@ public class TokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
         String token = resolveToken(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis
         if (StrUtil.isNotBlank(token)) {

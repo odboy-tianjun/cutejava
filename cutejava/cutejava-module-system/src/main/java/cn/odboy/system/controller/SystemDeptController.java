@@ -26,7 +26,6 @@ import cn.odboy.util.CsPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -65,7 +64,8 @@ public class SystemDeptController {
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
+    public ResponseEntity<CsPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
+        @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             // 同级数据

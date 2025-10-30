@@ -27,7 +27,6 @@ import lombok.ToString;
 
 import java.util.Date;
 
-
 /**
  * <p>
  * 任务实例步骤明细
@@ -49,7 +48,7 @@ public class TaskInstanceStepDetailTb extends CsObject {
     /**
      * id
      */
-    @Schema(name="id")
+    @Schema(name = "id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     @JSONField(format = "string")
@@ -59,20 +58,20 @@ public class TaskInstanceStepDetailTb extends CsObject {
      * task_instance_detail表id
      */
     @TableField("instance_detail_id")
-    @Schema(name="task_instance_detail表id")
+    @Schema(name = "task_instance_detail表id")
     private Long instanceDetailId;
 
     /**
      * 步骤描述
      */
     @TableField("step_desc")
-    @Schema(name="步骤描述")
+    @Schema(name = "步骤描述")
     private String stepDesc;
 
     /**
      * 状态(success成功 fail失败)
      */
     @TableField("step_status")
-    @Schema(name="状态(success成功 fail失败)")
+    @Schema(name = "状态(success成功 fail失败)")
     private String stepStatus;
 }

@@ -179,8 +179,7 @@ public class SystemQuartzJobService {
      * @throws IOException /
      */
 
-    public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response)
-            throws IOException {
+    public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemQuartzJobTb quartzJob : quartzJobs) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -205,8 +204,7 @@ public class SystemQuartzJobService {
      * @throws IOException /
      */
 
-    public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response)
-            throws IOException {
+    public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemQuartzLogTb quartzLog : queryAllLog) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -232,9 +230,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(
-            SystemQueryQuartzJobArgs criteria,
-            Page<SystemQuartzJobTb> page) {
+    public CsPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
         return CsPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
     }
 
@@ -246,9 +242,7 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(
-            SystemQueryQuartzJobArgs criteria,
-            Page<SystemQuartzLogTb> page) {
+    public CsPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
         return CsPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
     }
 
@@ -260,8 +254,7 @@ public class SystemQuartzJobService {
      */
 
     public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, CsPageUtil.getCount(systemQuartzJobMapper))
-                .getRecords();
+        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, CsPageUtil.getCount(systemQuartzJobMapper)).getRecords();
     }
 
     /**
@@ -272,8 +265,7 @@ public class SystemQuartzJobService {
      */
 
     public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, CsPageUtil.getCount(systemQuartzLogMapper))
-                .getRecords();
+        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, CsPageUtil.getCount(systemQuartzLogMapper)).getRecords();
     }
 
     public SystemQuartzJobTb getQuartzJobById(Long id) {

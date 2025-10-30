@@ -31,7 +31,6 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -92,17 +91,17 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
         // 开启引用检测, 枚举支持
         /// 是否输出值为null的字段
-//        config.setWriterFeatures(JSONWriter.Feature.WriteMapNullValue);
+        //        config.setWriterFeatures(JSONWriter.Feature.WriteMapNullValue);
         /// 字段如果为null,输出为false,而非null
-//        config.setWriterFeatures(JSONWriter.Feature.WriteNullBooleanAsFalse);
+        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullBooleanAsFalse);
         /// 字段如果为null,输出为[],而非null
-//        config.setWriterFeatures(JSONWriter.Feature.WriteNullListAsEmpty);
+        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullListAsEmpty);
         /// 字符类型字段如果为null,输出为"",而非null
-//        config.setWriterFeatures(JSONWriter.Feature.WriteNullStringAsEmpty);
+        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullStringAsEmpty);
         /// 太具体的数值会直接影响逻辑本身, 所以不要这个
-//        config.setWriterFeatures(JSONWriter.Feature.WriteNullNumberAsZero);
+        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullNumberAsZero);
         /// 全局Long转字符串，会导致基础框架本身异常, 所以不要这个
-//        config.setWriterFeatures(JSONWriter.Feature.WriteLongAsString);
+        //        config.setWriterFeatures(JSONWriter.Feature.WriteLongAsString);
         config.setWriterFeatures(JSONWriter.Feature.WriteEnumUsingToString);
         config.setWriterFeatures(JSONWriter.Feature.ReferenceDetection);
         fastJsonConverter.setFastJsonConfig(config);

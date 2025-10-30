@@ -48,7 +48,7 @@ public class TaskInstanceDetailTb extends CsObject {
     /**
      * id
      */
-    @Schema(name="id")
+    @Schema(name = "id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     @JSONField(format = "string")
@@ -58,20 +58,20 @@ public class TaskInstanceDetailTb extends CsObject {
      * 任务实例id
      */
     @TableField("instance_id")
-    @Schema(name="任务实例id")
+    @Schema(name = "任务实例id")
     private Long instanceId;
 
     /**
      * 开始时间
      */
-    @Schema(name="开始时间")
+    @Schema(name = "开始时间")
     @TableField("start_time")
     private Date startTime;
 
     /**
      * 结束时间
      */
-    @Schema(name="结束时间")
+    @Schema(name = "结束时间")
     @TableField("finish_time")
     private Date finishTime;
 
@@ -79,27 +79,27 @@ public class TaskInstanceDetailTb extends CsObject {
      * 业务编码
      */
     @TableField("biz_code")
-    @Schema(name="业务编码")
+    @Schema(name = "业务编码")
     private String bizCode;
 
     /**
      * 业务名称(步骤)
      */
     @TableField("biz_name")
-    @Schema(name="业务名称(步骤)")
+    @Schema(name = "业务名称(步骤)")
     private String bizName;
 
     /**
      * 执行参数
      */
-    @Schema(name="执行参数")
+    @Schema(name = "执行参数")
     @TableField("execute_params")
     private String executeParams;
 
     /**
      * 执行信息
      */
-    @Schema(name="执行信息")
+    @Schema(name = "执行信息")
     @TableField("execute_info")
     private String executeInfo;
 
@@ -107,6 +107,6 @@ public class TaskInstanceDetailTb extends CsObject {
      * 执行状态(running进行中 success成功 fail失败)
      */
     @TableField("execute_status")
-    @Schema(name="执行状态(running进行中 success成功 fail失败)")
+    @Schema(name = "执行状态(running进行中 success成功 fail失败)")
     private String executeStatus;
 }

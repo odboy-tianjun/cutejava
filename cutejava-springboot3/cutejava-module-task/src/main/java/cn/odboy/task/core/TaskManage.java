@@ -64,7 +64,8 @@ public class TaskManage {
      * @param dataMap        任务参数
      */
     @Transactional(rollbackFor = Exception.class)
-    public TaskInstanceInfoTb createJob(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source, String reason, JobDataMap dataMap) {
+    public TaskInstanceInfoTb createJob(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source, String reason,
+        JobDataMap dataMap) {
         if (StrUtil.isBlank(contextName)) {
             throw new BadRequestException("参数contextName必填");
         }
@@ -101,7 +102,8 @@ public class TaskManage {
         }
         // ========================== 创建任务 ==========================
         TaskManage taskManage = CsSpringBeanHolder.getBean(TaskManage.class);
-        TaskInstanceInfoTb newInstance = taskManage.saveTaskInstanceInfoTb(contextName, changeTypeEnum, language, envAlias, source, reason, dataMap, templateInfo);
+        TaskInstanceInfoTb newInstance =
+            taskManage.saveTaskInstanceInfoTb(contextName, changeTypeEnum, language, envAlias, source, reason, dataMap, templateInfo);
         dataMap.put(TaskJobKeys.ID, newInstance.getId());
         // 应用名、资源类型
         dataMap.put(TaskJobKeys.CONTEXT_NAME, contextName);
@@ -115,7 +117,8 @@ public class TaskManage {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public TaskInstanceInfoTb saveTaskInstanceInfoTb(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source, String reason, JobDataMap dataMap, String templateInfo) {
+    public TaskInstanceInfoTb saveTaskInstanceInfoTb(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source,
+        String reason, JobDataMap dataMap, String templateInfo) {
         TaskInstanceInfoTb newInstance = new TaskInstanceInfoTb();
         newInstance.setContextName(contextName);
         newInstance.setLanguage(language);

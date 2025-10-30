@@ -84,9 +84,11 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      * @param dataMap                   数据映射
      * @param taskTemplateNodeVos       模板节点列表
      */
-    private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos) {
+    private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id,
+        JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos) {
         // ========================== 初始化执行明细 ==========================
-        List<TaskInstanceDetailTb> taskInstanceDetails = taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo)).collect(Collectors.toList());
+        List<TaskInstanceDetailTb> taskInstanceDetails =
+            taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo)).collect(Collectors.toList());
         taskInstanceDetailService.saveBatch(taskInstanceDetails);
         Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
         // ========================== 顺序执行 ==========================
@@ -103,7 +105,8 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      * @param taskTemplateNodeVos       模板节点列表
      * @param retryNodeCode             重试节点编码
      */
-    private void executeRetryTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos, String retryNodeCode) {
+    private void executeRetryTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id,
+        JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos, String retryNodeCode) {
         boolean isFound = false;
         // ========================== 初始化执行明细 ==========================
         List<TaskInstanceDetailTb> taskInstanceDetails = new ArrayList<>();
@@ -165,7 +168,8 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      * @param taskTemplateNodes         需要执行的任务节点列表
      * @param codeIdMap                 节点编码与明细ID映射
      */
-    private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, Long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
+    private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, Long id,
+        JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
         try {
             for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodes) {
                 String code = taskTemplateNodeVo.getCode();

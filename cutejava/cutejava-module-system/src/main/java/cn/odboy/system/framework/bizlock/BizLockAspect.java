@@ -60,11 +60,11 @@ public class BizLockAspect {
     private String parseLockKey(ProceedingJoinPoint joinPoint, BizLock bizLock) {
         // 如果key为空，使用默认格式: bizName:方法名
         if (bizLock.key().isEmpty()) {
-            return String.format("%s:%s", bizLock.bizName(), ((MethodSignature) joinPoint.getSignature()).getMethod().getName());
+            return String.format("%s:%s", bizLock.bizName(), ((MethodSignature)joinPoint.getSignature()).getMethod().getName());
         }
 
         // 解析SpEL表达式
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         Method method = signature.getMethod();
 
         // 创建SpEL上下文

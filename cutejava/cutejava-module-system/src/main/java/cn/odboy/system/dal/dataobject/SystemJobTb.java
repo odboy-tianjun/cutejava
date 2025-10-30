@@ -58,7 +58,7 @@ public class SystemJobTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemJobTb job = (SystemJobTb) o;
+        SystemJobTb job = (SystemJobTb)o;
         return Objects.equals(id, job.id);
     }
 

@@ -85,6 +85,7 @@ public enum DataTypeEnum {
      * impala
      */
     IMPALA("impala", "impala", "com.cloudera.impala.jdbc41.Driver", "", "", "'", "'");
+    private static final String JDBC_URL_PREFIX = "jdbc:";
     private String feature;
     private String desc;
     private String driver;
@@ -92,16 +93,8 @@ public enum DataTypeEnum {
     private String keywordSuffix;
     private String aliasPrefix;
     private String aliasSuffix;
-    private static final String JDBC_URL_PREFIX = "jdbc:";
 
-    DataTypeEnum(
-            String feature,
-            String desc,
-            String driver,
-            String keywordPrefix,
-            String keywordSuffix,
-            String aliasPrefix,
-            String aliasSuffix) {
+    DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix, String aliasPrefix, String aliasSuffix) {
         this.feature = feature;
         this.desc = desc;
         this.driver = driver;
