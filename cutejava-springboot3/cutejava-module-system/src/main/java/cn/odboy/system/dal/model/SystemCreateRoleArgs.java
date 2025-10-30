@@ -18,11 +18,11 @@ package cn.odboy.system.dal.model;
 
 import cn.odboy.base.CsObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data

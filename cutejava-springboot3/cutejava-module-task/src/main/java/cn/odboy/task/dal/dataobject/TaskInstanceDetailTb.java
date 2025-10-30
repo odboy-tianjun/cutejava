@@ -20,8 +20,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -40,16 +39,16 @@ import java.util.Date;
 @Setter
 @ToString
 @TableName("task_instance_detail")
-@ApiModel(value = "TaskInstanceDetailTb对象", description = "任务实例明细")
+@Schema(name = "TaskInstanceDetailTb对象", description = "任务实例明细")
 public class TaskInstanceDetailTb extends CsObject {
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
 
     /**
      * id
      */
-    @ApiModelProperty("id")
+    @Schema(name="id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     @JSONField(format = "string")
@@ -59,20 +58,20 @@ public class TaskInstanceDetailTb extends CsObject {
      * 任务实例id
      */
     @TableField("instance_id")
-    @ApiModelProperty("任务实例id")
+    @Schema(name="任务实例id")
     private Long instanceId;
 
     /**
      * 开始时间
      */
-    @ApiModelProperty("开始时间")
+    @Schema(name="开始时间")
     @TableField("start_time")
     private Date startTime;
 
     /**
      * 结束时间
      */
-    @ApiModelProperty("结束时间")
+    @Schema(name="结束时间")
     @TableField("finish_time")
     private Date finishTime;
 
@@ -80,27 +79,27 @@ public class TaskInstanceDetailTb extends CsObject {
      * 业务编码
      */
     @TableField("biz_code")
-    @ApiModelProperty("业务编码")
+    @Schema(name="业务编码")
     private String bizCode;
 
     /**
      * 业务名称(步骤)
      */
     @TableField("biz_name")
-    @ApiModelProperty("业务名称(步骤)")
+    @Schema(name="业务名称(步骤)")
     private String bizName;
 
     /**
      * 执行参数
      */
-    @ApiModelProperty("执行参数")
+    @Schema(name="执行参数")
     @TableField("execute_params")
     private String executeParams;
 
     /**
      * 执行信息
      */
-    @ApiModelProperty("执行信息")
+    @Schema(name="执行信息")
     @TableField("execute_info")
     private String executeInfo;
 
@@ -108,6 +107,6 @@ public class TaskInstanceDetailTb extends CsObject {
      * 执行状态(running进行中 success成功 fail失败)
      */
     @TableField("execute_status")
-    @ApiModelProperty("执行状态(running进行中 success成功 fail失败)")
+    @Schema(name="执行状态(running进行中 success成功 fail失败)")
     private String executeStatus;
 }

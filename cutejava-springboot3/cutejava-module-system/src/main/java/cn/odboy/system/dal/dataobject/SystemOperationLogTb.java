@@ -18,8 +18,7 @@ package cn.odboy.system.dal.dataobject;
 
 import cn.odboy.base.CsObject;
 import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,13 +37,13 @@ import java.util.Date;
 @Setter
 @ToString
 @TableName("system_operation_log")
-@ApiModel(value = "SystemOperationLog对象", description = "审计日志")
+@Schema(name = "SystemOperationLog对象", description = "审计日志")
 public class SystemOperationLogTb extends CsObject {
 
     /**
      * id
      */
-    @ApiModelProperty("id")
+    @Schema(name = "id")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 

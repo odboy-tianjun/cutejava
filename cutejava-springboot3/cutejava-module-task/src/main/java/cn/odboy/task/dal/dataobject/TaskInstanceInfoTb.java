@@ -20,8 +20,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,25 +40,25 @@ import java.util.Date;
 @Setter
 @ToString
 @TableName("task_instance_info")
-@ApiModel(value = "TaskInstanceInfoTb对象", description = "任务实例")
+@Schema(name = "TaskInstanceInfoTb对象", description = "任务实例")
 public class TaskInstanceInfoTb extends CsObject {
     @CreatedBy
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建人", hidden = true)
+    @Schema(name = "创建人", hidden = true)
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date updateTime;
 
     /**
      * id, @JsonSerialize和@JSONField，用于处理大数精度丢失问题
      */
-    @ApiModelProperty("id")
+    @Schema(name="id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     @JSONField(format = "string")
@@ -68,21 +67,21 @@ public class TaskInstanceInfoTb extends CsObject {
     /**
      * 名称
      */
-    @ApiModelProperty("名称")
+    @Schema(name="名称")
     @TableField("context_name")
     private String contextName;
 
     /**
      * 语言
      */
-    @ApiModelProperty("语言")
+    @Schema(name="语言")
     @TableField("`language`")
     private String language;
 
     /**
      * 变更类型
      */
-    @ApiModelProperty("变更类型")
+    @Schema(name="变更类型")
     @TableField("change_type")
     private String changeType;
 
@@ -90,27 +89,27 @@ public class TaskInstanceInfoTb extends CsObject {
      * 环境别名
      */
     @TableField("env_alias")
-    @ApiModelProperty("环境别名")
+    @Schema(name="环境别名")
     private String envAlias;
 
     /**
      * 状态(running进行中 success成功 fail失败)
      */
     @TableField("`status`")
-    @ApiModelProperty("状态(running进行中 success成功 fail失败)")
+    @Schema(name="状态(running进行中 success成功 fail失败)")
     private String status;
 
     /**
      * 完成时间
      */
-    @ApiModelProperty("完成时间")
+    @Schema(name="完成时间")
     @TableField("finish_time")
     private Date finishTime;
 
     /**
      * 来源
      */
-    @ApiModelProperty("来源")
+    @Schema(name="来源")
     @TableField("`source`")
     private String source;
 
@@ -118,27 +117,27 @@ public class TaskInstanceInfoTb extends CsObject {
      * 变更原因
      */
     @TableField("reason")
-    @ApiModelProperty("变更原因")
+    @Schema(name="变更原因")
     private String reason;
 
     /**
      * 任务模板
      */
     @TableField("template")
-    @ApiModelProperty("template")
+    @Schema(name="template")
     private String template;
 
     /**
      * QuartzJob参数
      */
     @TableField("job_data")
-    @ApiModelProperty("QuartzJob参数")
+    @Schema(name="QuartzJob参数")
     private String jobData;
 
     /**
      * 异常信息
      */
     @TableField("error_message")
-    @ApiModelProperty("异常信息")
+    @Schema(name="异常信息")
     private String errorMessage;
 }

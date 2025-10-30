@@ -27,7 +27,8 @@ import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.CsBrowserUtil;
 import cn.odboy.util.CsIPUtil;
 import com.alibaba.fastjson2.JSON;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -36,7 +37,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 /**
@@ -92,9 +92,9 @@ public class SystemOperationLogAspect {
         String bizName = annotation.bizName();
         if (StrUtil.isBlank(bizName)) {
             Method method = signature.getMethod();
-            ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
+            Operation apiOperation = method.getAnnotation(Operation.class);
             if (apiOperation != null) {
-                bizName = apiOperation.value();
+                bizName = apiOperation.summary();
             }
         }
         if (StrUtil.isBlank(bizName)) {

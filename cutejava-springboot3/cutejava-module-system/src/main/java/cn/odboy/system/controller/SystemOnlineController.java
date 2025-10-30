@@ -23,8 +23,8 @@ import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.util.CsDesEncryptUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,12 +37,12 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user/online")
-@Api(tags = "系统：在线用户管理")
+@Tag(name = "系统：在线用户管理")
 public class SystemOnlineController {
     @Autowired
     private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    @ApiOperation("查询在线用户")
+    @Operation(summary = "查询在线用户")
     @PostMapping
     @PreAuthorize("@el.check()")
     public ResponseEntity<CsPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody CsPageArgs<SystemUserOnlineVo> args) {
@@ -50,14 +50,14 @@ public class SystemOnlineController {
         return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
     }
 
-    @ApiOperation("导出数据")
+    @Operation(summary = "导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
         systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
     }
 
-    @ApiOperation("踢出用户")
+    @Operation(summary = "踢出用户")
     @PostMapping(value = "/kickOutUser")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {

@@ -50,7 +50,7 @@ public class BootApplication {
                         "Application is running! Access URLs:\n\t" +
                     "Local: \t\thttp://localhost:" + port + path + "/\n\t" +
                     "External: \thttp://" + ip + ":" + port + path + "/\n\t"
-//                    + "Swagger文档: \thttp://" + ip + ":" + port + path + "/doc.html\n"
+                    + "Swagger文档: \thttp://" + ip + ":" + port + path + "/doc.html\n"
                     + "----------------------------------------------------------");
     }
 }

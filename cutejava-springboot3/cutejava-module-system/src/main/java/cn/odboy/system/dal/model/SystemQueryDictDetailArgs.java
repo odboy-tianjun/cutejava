@@ -17,16 +17,16 @@
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.CsObject;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class SystemQueryDictDetailArgs extends CsObject {
-    @ApiModelProperty(value = "标签")
+    @Schema(name = "标签")
     private String label;
 
-    @ApiModelProperty(value = "字典名称")
+    @Schema(name = "字典名称")
     private String dictName;
 }

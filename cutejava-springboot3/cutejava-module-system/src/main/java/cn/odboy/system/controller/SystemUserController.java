@@ -34,8 +34,9 @@ import cn.odboy.util.CsPageUtil;
 import cn.odboy.util.CsRsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,12 +47,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Api(tags = "系统：用户管理")
+@Tag(name = "系统：用户管理")
 @RestController
 @RequestMapping("/api/user")
 public class SystemUserController {
@@ -70,14 +70,14 @@ public class SystemUserController {
     @Autowired
     private AppProperties properties;
 
-    @ApiOperation("导出用户数据")
+    @Operation(summary = "导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
     public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs criteria) throws IOException {
         systemUserService.exportUserExcel(systemUserService.queryUserByArgs(criteria), response);
     }
 
-    @ApiOperation("查询用户")
+    @Operation(summary = "查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
     public ResponseEntity<CsPageResult<SystemUserTb>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
@@ -107,7 +107,7 @@ public class SystemUserController {
         return ResponseEntity.ok(CsPageUtil.emptyData());
     }
 
-    @ApiOperation("新增用户")
+    @Operation(summary = "新增用户")
     @PostMapping(value = "/saveUser")
     @PreAuthorize("@el.check('user:add')")
     public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserTb args) {
@@ -118,7 +118,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改用户")
+    @Operation(summary = "修改用户")
     @PostMapping(value = "/modifyUserById")
     @PreAuthorize("@el.check('user:edit')")
     public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
@@ -127,7 +127,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改用户：个人中心")
+    @Operation(summary = "修改用户：个人中心")
     @PostMapping(value = "modifyUserCenterInfoById")
     public ResponseEntity<Object> modifyUserCenterInfoById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
         if (!args.getId().equals(CsSecurityHelper.getCurrentUserId())) {
@@ -137,12 +137,13 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("删除用户")
+    @Operation(summary = "删除用户")
     @PostMapping(value = "/removeUserByIds")
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer currentLevel = Collections.min(
+                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
@@ -152,7 +153,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改密码")
+    @Operation(summary = "修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
     public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo) throws Exception {
         String oldPass = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
@@ -168,7 +169,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("重置密码")
+    @Operation(summary = "重置密码")
     @PostMapping(value = "/resetUserPasswordByIds")
     public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
         String defaultPwd = passwordEncoder.encode("123456");
@@ -176,13 +177,13 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改头像")
+    @Operation(summary = "修改头像")
     @PostMapping(value = "/modifyUserAvatar")
     public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
         return ResponseEntity.ok(systemUserService.modifyUserAvatar(avatar));
     }
 
-    @ApiOperation("修改邮箱")
+    @Operation(summary = "修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args) throws Exception {
         String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
@@ -201,14 +202,15 @@ public class SystemUserController {
      * @param args /
      */
     private void checkLevel(SystemUserTb args) {
-        Integer currentLevel = Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        Integer currentLevel = Collections.min(
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
         Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
         }
     }
 
-    @ApiOperation("查询用户基础数据")
+    @Operation(summary = "查询用户基础数据")
     @PostMapping(value = "/queryUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
     public ResponseEntity<List<CsSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
@@ -224,14 +226,15 @@ public class SystemUserController {
             c.or();
             c.like(SystemUserTb::getNickName, criteria.getBlurry());
         });
-        List<CsSelectOptionVo> collect = systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
-            Map<String, Object> ext = new HashMap<>(1);
-            ext.put("id", m.getId());
-            ext.put("deptId", m.getDeptId());
-            ext.put("email", m.getEmail());
-            ext.put("phone", m.getPhone());
-            return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
-        }).collect(Collectors.toList());
+        List<CsSelectOptionVo> collect =
+            systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
+                Map<String, Object> ext = new HashMap<>(1);
+                ext.put("id", m.getId());
+                ext.put("deptId", m.getDeptId());
+                ext.put("email", m.getEmail());
+                ext.put("phone", m.getPhone());
+                return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
+            }).collect(Collectors.toList());
         return ResponseEntity.ok(collect);
     }
 }

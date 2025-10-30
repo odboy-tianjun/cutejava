@@ -17,14 +17,12 @@
 package cn.odboy;
 
 import cn.odboy.framework.context.BootApplication;
-import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 import java.net.UnknownHostException;
 
-@Api(hidden = true)
 @EnableCaching
 @SpringBootApplication
 public class AppRun extends BootApplication {

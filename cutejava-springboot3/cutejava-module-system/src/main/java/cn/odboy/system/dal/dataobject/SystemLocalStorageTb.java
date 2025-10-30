@@ -22,7 +22,7 @@ import cn.odboy.base.CsBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,28 +32,28 @@ import lombok.Setter;
 public class SystemLocalStorageTb extends CsBaseUserTimeTb {
 
     @TableId(value = "id", type = IdType.AUTO)
-    @ApiModelProperty(value = "ID", hidden = true)
+    @Schema(name ="ID", hidden = true)
     private Long id;
 
-    @ApiModelProperty(value = "真实文件名")
+    @Schema(name ="真实文件名")
     private String realName;
 
-    @ApiModelProperty(value = "文件名")
+    @Schema(name ="文件名")
     private String name;
 
-    @ApiModelProperty(value = "后缀")
+    @Schema(name ="后缀")
     private String suffix;
 
-    @ApiModelProperty(value = "路径")
+    @Schema(name ="路径")
     private String path;
 
-    @ApiModelProperty(value = "类型")
+    @Schema(name ="类型")
     private String type;
 
-    @ApiModelProperty(value = "大小")
+    @Schema(name ="大小")
     private String size;
 
-    @ApiModelProperty(value = "日期分组")
+    @Schema(name ="日期分组")
     private String dateGroup;
 
     public void copy(SystemLocalStorageTb source) {

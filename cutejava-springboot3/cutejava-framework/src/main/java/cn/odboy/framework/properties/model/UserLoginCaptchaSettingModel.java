@@ -20,7 +20,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import lombok.Getter;

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
@@ -25,21 +25,21 @@ import java.util.List;
 @Data
 public class SystemQueryDeptArgs {
 
-    @ApiModelProperty(value = "部门id集合")
+    @Schema(name = "部门id集合")
     private List<Long> ids;
 
-    @ApiModelProperty(value = "部门名称")
+    @Schema(name = "部门名称")
     private String name;
 
-    @ApiModelProperty(value = "是否启用")
+    @Schema(name = "是否启用")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "上级部门")
+    @Schema(name = "上级部门")
     private Long pid;
 
-    @ApiModelProperty(value = "PID为空查询")
+    @Schema(name = "PID为空查询")
     private Boolean pidIsNull;
 
-    @ApiModelProperty(value = "创建时间")
+    @Schema(name = "创建时间")
     private List<Date> createTime;
 }

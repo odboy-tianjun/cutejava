@@ -18,7 +18,7 @@ package cn.odboy.framework.monitor.controller;
 
 import cn.odboy.annotation.AnonymousGetMapping;
 import cn.odboy.framework.monitor.service.CsHealthCheckPointService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/healthCheck")
-@Api(tags = "系统：健康检查接口")
+@Tag(name = "系统：健康检查接口")
 public class HealthCheckController {
     @Autowired
     private CsHealthCheckPointService healthCheckPointService;

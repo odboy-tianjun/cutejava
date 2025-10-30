@@ -19,11 +19,10 @@ package cn.odboy.system.dal.dataobject;
 import cn.odboy.base.CsObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import jakarta.validation.constraints.NotBlank;
 
 /**
  * 邮件配置类，数据存覆盖式存入数据存
@@ -37,22 +36,22 @@ public class SystemEmailConfigTb extends CsObject {
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "邮件服务器SMTP地址")
+    @Schema(name ="邮件服务器SMTP地址")
     private String host;
 
     @NotBlank
-    @ApiModelProperty(value = "邮件服务器 SMTP 端口")
+    @Schema(name ="邮件服务器 SMTP 端口")
     private String port;
 
     @NotBlank
-    @ApiModelProperty(value = "发件者用户名")
+    @Schema(name ="发件者用户名")
     private String user;
 
     @NotBlank
-    @ApiModelProperty(value = "密码")
+    @Schema(name ="密码")
     private String password;
 
     @NotBlank
-    @ApiModelProperty(value = "收件人")
+    @Schema(name ="收件人")
     private String fromUser;
 }

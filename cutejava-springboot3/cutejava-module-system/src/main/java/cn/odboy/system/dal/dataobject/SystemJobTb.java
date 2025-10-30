@@ -20,12 +20,12 @@ import cn.odboy.base.CsBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Getter
@@ -35,19 +35,19 @@ public class SystemJobTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @TableId(value = "id", type = IdType.AUTO)
-    @ApiModelProperty(value = "ID", hidden = true)
+    @Schema(name ="ID", hidden = true)
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "岗位名称")
+    @Schema(name ="岗位名称")
     private String name;
 
     @NotNull
-    @ApiModelProperty(value = "岗位排序")
+    @Schema(name ="岗位排序")
     private Long jobSort;
 
     @NotNull
-    @ApiModelProperty(value = "是否启用")
+    @Schema(name ="是否启用")
     private Boolean enabled;
 
     @Override
@@ -58,7 +58,7 @@ public class SystemJobTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemJobTb job = (SystemJobTb) o;
+        SystemJobTb job = (SystemJobTb)o;
         return Objects.equals(id, job.id);
     }
 

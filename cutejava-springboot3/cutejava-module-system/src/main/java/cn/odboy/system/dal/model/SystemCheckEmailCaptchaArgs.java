@@ -17,10 +17,9 @@
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.CsObject;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @Setter
