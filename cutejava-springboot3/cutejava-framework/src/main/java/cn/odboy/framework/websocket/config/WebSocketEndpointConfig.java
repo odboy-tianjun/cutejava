@@ -19,9 +19,14 @@ package cn.odboy.framework.websocket.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
-
+/**
+ * 自动注册使用了 @ServerEndpoint 注解声明的 WebSocket 端点对象
+ *
+ * @author odboy
+ * @date 2025-10-30
+ */
 @Configuration
-public class WsConfig {
+public class WebSocketEndpointConfig {
 
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
