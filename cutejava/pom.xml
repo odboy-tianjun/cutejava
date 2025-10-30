@@ -29,7 +29,7 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <java.version>11</java.version>
         <logback.version>1.2.9</logback.version>
-        <fastjson2.version>2.0.57</fastjson2.version>
+        <fastjson2.version>2.0.60</fastjson2.version>
         <druid.version>1.2.27</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <mybatis-plus.version>3.5.14</mybatis-plus.version>
