@@ -47,7 +47,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
      * 使用方式: list = CollUtil.streamDistinct(list, Object::getXXX)
      */
     public static <T, K> List<T> streamDistinct(List<T> data, Function<? super T, ? extends K> keyMapper) {
-        return data.stream().filter(distinctPredicate(keyMapper)).collect(Collectors.toList());
+        return data.stream().filter(distinctPredicate(keyMapper)).toList();
     }
 
     /**
@@ -64,7 +64,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
     public static <T, U extends Comparable<? super U>> List<T> streamAscSort(
             List<T> data,
             Function<? super T, ? extends U> keyExtractor) {
-        return data.stream().sorted(Comparator.comparing(keyExtractor)).collect(Collectors.toList());
+        return data.stream().sorted(Comparator.comparing(keyExtractor)).toList();
     }
 
     /**
@@ -81,7 +81,7 @@ public final class CsCollUtil extends cn.hutool.core.collection.CollUtil {
     public static <T, U extends Comparable<? super U>> List<T> streamDescSort(
             List<T> data,
             Function<? super T, ? extends U> keyExtractor) {
-        return data.stream().sorted(Comparator.comparing(keyExtractor).reversed()).collect(Collectors.toList());
+        return data.stream().sorted(Comparator.comparing(keyExtractor).reversed()).toList();
     }
 
     /**

@@ -36,7 +36,7 @@
         <jjwt.version>0.12.6</jjwt.version>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.8.0</jna.version>
-        <mail.version>2.1.5</mail.version>
+        <mail.version>1.4.7</mail.version>
         <undertow.version>2.3.20.Final</undertow.version>
         <freemarker.version>2.3.34</freemarker.version>
         <p6spy.version>3.9.1</p6spy.version>
@@ -320,8 +320,8 @@
 
         <!-- 邮件依赖 -->
         <dependency>
-            <groupId>jakarta.mail</groupId>
-            <artifactId>jakarta.mail-api</artifactId>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
             <version>${mail.version}</version>
         </dependency>
 

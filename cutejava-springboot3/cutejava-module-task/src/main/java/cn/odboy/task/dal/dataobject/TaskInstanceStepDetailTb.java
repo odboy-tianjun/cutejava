@@ -40,7 +40,7 @@ import java.util.Date;
 @Setter
 @ToString
 @TableName("task_instance_step_detail")
-@Schema(name = "TaskInstanceStepDetailTb对象", description = "")
+@Schema(name = "TaskInstanceStepDetailTb对象")
 public class TaskInstanceStepDetailTb extends CsObject {
     @TableField(fill = FieldFill.INSERT)
     @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)

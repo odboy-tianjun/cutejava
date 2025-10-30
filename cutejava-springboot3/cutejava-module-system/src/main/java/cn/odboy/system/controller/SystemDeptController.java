@@ -79,7 +79,7 @@ public class SystemDeptController {
                     }
                 }
                 // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
-                depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
+                depts = depts.stream().filter(i -> !ids.contains(i.getId())).toList();
             }
             deptSet.addAll(depts);
         }

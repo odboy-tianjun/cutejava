@@ -42,6 +42,6 @@ public class DateStringArraysToListDateConverter implements Converter<String[], 
             } catch (ParseException e) {
                 throw new IllegalArgumentException("Invalid date string: " + s);
             }
-        }).collect(Collectors.toList());
+        }).toList();
     }
 }

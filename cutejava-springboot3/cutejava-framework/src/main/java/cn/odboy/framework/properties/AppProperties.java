@@ -34,7 +34,6 @@ public class AppProperties {
     private ContentRsaEncodeSettingModel rsa;
     private JwtAuthSettingModel jwt;
     private UserLoginSettingModel login;
-    private SwaggerApiDocSettingModel swagger;
     private ThreadPoolSettingModel asyncTaskPool;
     private CaptchaModel captcha;
     private StorageOSSModel oss;

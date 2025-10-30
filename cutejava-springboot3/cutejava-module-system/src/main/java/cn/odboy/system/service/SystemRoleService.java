@@ -213,7 +213,7 @@ public class SystemRoleService {
         for (SystemRoleTb role : roles) {
             roleSet.add(getRoleById(role.getId()));
         }
-        return Collections.min(roleSet.stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        return Collections.min(roleSet.stream().map(SystemRoleTb::getLevel).toList());
     }
 
     /**
@@ -228,7 +228,7 @@ public class SystemRoleService {
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {
             permissions.add("admin");
-            return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
+            return permissions.stream().map(SystemRoleCodeVo::new).toList();
         }
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
         permissions = roles.stream()
@@ -236,7 +236,7 @@ public class SystemRoleService {
                 .map(SystemMenuTb::getPermission)
                 .filter(StrUtil::isNotBlank)
                 .collect(Collectors.toSet());
-        return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
+        return permissions.stream().map(SystemRoleCodeVo::new).toList();
     }
 
     /**

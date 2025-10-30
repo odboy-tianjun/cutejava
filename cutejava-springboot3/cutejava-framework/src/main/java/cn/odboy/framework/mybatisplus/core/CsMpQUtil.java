@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 查询条件创建工具
@@ -78,62 +77,28 @@ public class CsMpQUtil {
         return StrUtil.toUnderlineCase(attributeName);
     }
 
-    private static <R> void handleWrapper(
-            CsMpQuery q,
-            QueryWrapper<R> queryWrapper,
-            String attributeName,
-            Object fieldVal) {
+    private static <R> void handleWrapper(CsMpQuery q, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
         switch (q.type()) {
-            case EQUAL:
-                queryWrapper.eq(attributeName, fieldVal);
-                break;
-            case GREATER_THAN:
-                queryWrapper.ge(attributeName, fieldVal);
-                break;
-            case LESS_THAN:
-                queryWrapper.le(attributeName, fieldVal);
-                break;
-            case LESS_THAN_NQ:
-                queryWrapper.lt(attributeName, fieldVal);
-                break;
-            case INNER_LIKE:
-                queryWrapper.like(attributeName, fieldVal);
-                break;
-            case LEFT_LIKE:
-                queryWrapper.likeLeft(attributeName, fieldVal);
-                break;
-            case RIGHT_LIKE:
-                queryWrapper.likeRight(attributeName, fieldVal);
-                break;
-            case IN:
-                handleInOrNotQuery(true, queryWrapper, attributeName, fieldVal);
-                break;
-            case NOT_IN:
-                handleInOrNotQuery(false, queryWrapper, attributeName, fieldVal);
-                break;
-            case NOT_EQUAL:
-                queryWrapper.ne(attributeName, fieldVal);
-                break;
-            case NOT_NULL:
-                queryWrapper.isNotNull(attributeName);
-                break;
-            case IS_NULL:
-                queryWrapper.isNull(attributeName);
-                break;
-            case BETWEEN:
-                handleBetweenQuery(queryWrapper, fieldVal, attributeName);
-                break;
-            default:
-                break;
+            case EQUAL -> queryWrapper.eq(attributeName, fieldVal);
+            case GREATER_THAN -> queryWrapper.ge(attributeName, fieldVal);
+            case LESS_THAN -> queryWrapper.le(attributeName, fieldVal);
+            case LESS_THAN_NQ -> queryWrapper.lt(attributeName, fieldVal);
+            case INNER_LIKE -> queryWrapper.like(attributeName, fieldVal);
+            case LEFT_LIKE -> queryWrapper.likeLeft(attributeName, fieldVal);
+            case RIGHT_LIKE -> queryWrapper.likeRight(attributeName, fieldVal);
+            case IN -> handleInOrNotQuery(true, queryWrapper, attributeName, fieldVal);
+            case NOT_IN -> handleInOrNotQuery(false, queryWrapper, attributeName, fieldVal);
+            case NOT_EQUAL -> queryWrapper.ne(attributeName, fieldVal);
+            case NOT_NULL -> queryWrapper.isNotNull(attributeName);
+            case IS_NULL -> queryWrapper.isNull(attributeName);
+            case BETWEEN -> handleBetweenQuery(queryWrapper, fieldVal, attributeName);
+            default -> {
+            }
         }
     }
 
-    private static <R> void handleInOrNotQuery(
-            boolean b,
-            QueryWrapper<R> queryWrapper,
-            String attributeName,
-            Object fieldVal) {
-        Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
+    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+        Collection<?> wrapNotInVal = (Collection<?>)fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
             if (anyValOptional.isPresent()) {
@@ -159,7 +124,7 @@ public class CsMpQUtil {
 
     private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
         if (fieldVal instanceof List) {
-            List<Object> between = new ArrayList<>((List<?>) fieldVal);
+            List<Object> between = new ArrayList<>((List<?>)fieldVal);
             int minLength = 2;
             if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
                 queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
@@ -180,8 +145,7 @@ public class CsMpQUtil {
      * @param <R>          /
      */
     private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
-        List<String> blurryList =
-                Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
+        List<String> blurryList = Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().toList();
         queryWrapper.and(wrapper -> {
             for (String blurryItem : blurryList) {
                 String column = StrUtil.toUnderlineCase(blurryItem);
@@ -213,7 +177,7 @@ public class CsMpQUtil {
     }
 
     public static void main(String[] args) {
-        QueryWrapper<TestDomain> query = new QueryWrapper<TestDomain>();
+        QueryWrapper<TestDomain> query = new QueryWrapper<>();
         query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
         query.eq("id", 1);
         query.orderByDesc("id");

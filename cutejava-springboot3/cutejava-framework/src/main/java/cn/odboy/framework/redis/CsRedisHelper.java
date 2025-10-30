@@ -259,11 +259,10 @@ public class CsRedisHelper {
         if (value == null) {
             return null;
         }
-        if (value instanceof List<?>) {
-            List<?> list = (List<?>) value;
+        if (value instanceof List<?> list) {
             // 检查每个元素是否为指定类型
             if (list.stream().allMatch(clazz::isInstance)) {
-                return list.stream().map(clazz::cast).collect(Collectors.toList());
+                return list.stream().map(clazz::cast).toList();
             }
         }
         return null;

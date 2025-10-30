@@ -155,7 +155,7 @@ public class SystemMenuService {
             menuSet.add(systemMenuMapper.selectById(id));
             menuSet = this.queryChildMenu(menuList, menuSet);
         }
-        List<Long> menuIds = menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        List<Long> menuIds = menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().toList();
         if (CollUtil.isNotEmpty(menuIds)) {
             CsSpringBeanHolder.getBean(SystemMenuService.class).removeRoleMenuByMenuIds(menuIds);
             systemMenuMapper.deleteByIds(menuIds);
@@ -323,7 +323,7 @@ public class SystemMenuService {
             }
         }
         if (CollUtil.isNotEmpty(trees)) {
-            trees = menus.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
+            trees = menus.stream().filter(s -> !ids.contains(s.getId())).toList();
         }
         return trees;
     }

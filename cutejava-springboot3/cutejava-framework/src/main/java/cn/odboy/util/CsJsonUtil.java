@@ -32,12 +32,12 @@ import java.util.Map;
 @UtilityClass
 public final class CsJsonUtil {
     public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> kClass, Class<V> vClass) {
-        return JSON.parseObject(jsonStr, new TypeReference<Map<K, V>>() {
+        return JSON.parseObject(jsonStr, new TypeReference<>() {
         });
     }
 
     public static <V> List<V> toList(String jsonStr, Class<V> vClass) {
-        return JSON.parseObject(jsonStr, new TypeReference<List<V>>() {
+        return JSON.parseObject(jsonStr, new TypeReference<>() {
         });
     }
 

@@ -40,12 +40,7 @@ public final class CsListUtil {
      * @param classifier 对象T属性表达式, 比如: User::getName
      */
     public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
-        return items.stream()
-                .collect(Collectors.groupingBy(classifier))
-                .values()
-                .stream()
-                .map(monitorItem -> monitorItem.iterator().next())
-                .collect(Collectors.toList());
+        return items.stream().collect(Collectors.groupingBy(classifier)).values().stream().map(monitorItem -> monitorItem.iterator().next()).toList();
     }
 
     /**

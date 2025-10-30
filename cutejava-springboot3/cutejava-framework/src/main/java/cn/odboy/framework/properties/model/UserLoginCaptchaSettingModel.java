@@ -75,30 +75,29 @@ public class UserLoginCaptchaSettingModel extends CsObject {
     public Captcha getCaptcha() {
         Captcha captcha;
         switch (codeType) {
-            case ARITHMETIC:
+            case ARITHMETIC -> {
                 // 算术类型 https://gitee.com/whvse/EasyCaptcha
                 captcha = new FixedArithmeticCaptcha(width, height);
                 // 几位数运算, 默认是两位
                 captcha.setLen(length);
-                break;
-            case CHINESE:
+            }
+            case CHINESE -> {
                 captcha = new ChineseCaptcha(width, height);
                 captcha.setLen(length);
-                break;
-            case CHINESE_GIF:
+            }
+            case CHINESE_GIF -> {
                 captcha = new ChineseGifCaptcha(width, height);
                 captcha.setLen(length);
-                break;
-            case GIF:
+            }
+            case GIF -> {
                 captcha = new GifCaptcha(width, height);
                 captcha.setLen(length);
-                break;
-            case SPEC:
+            }
+            case SPEC -> {
                 captcha = new SpecCaptcha(width, height);
                 captcha.setLen(length);
-                break;
-            default:
-                throw new BadRequestException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
+            }
+            default -> throw new BadRequestException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
         }
         if (StrUtil.isNotBlank(fontName)) {
             captcha.setFont(new Font(fontName, Font.PLAIN, fontSize));
@@ -118,7 +117,7 @@ public class UserLoginCaptchaSettingModel extends CsObject {
             int opt = num(3);
 
             // 计算结果
-            int res = new int[]{n1 + n2, n1 - n2, n1 * n2}[opt];
+            int res = new int[] {n1 + n2, n1 - n2, n1 * n2}[opt];
             // 转换为字符运算符
             char optChar = "+-x".charAt(opt);
 

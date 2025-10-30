@@ -16,6 +16,7 @@
 
 package cn.odboy.base;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -25,5 +26,6 @@ import java.io.Serializable;
  * @date 2022-01-12
  */
 public class CsObject implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 }

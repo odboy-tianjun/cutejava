@@ -138,7 +138,7 @@ public class SystemAuthController {
         // 保存
         redisHelper.set(uuid, captchaValue, properties.getLogin().getCaptchaSetting().getExpiration(), TimeUnit.MINUTES);
         // 验证码信息
-        Map<String, Object> imgResult = new HashMap<String, Object>(2) {{
+        Map<String, Object> imgResult = new HashMap<>(2) {{
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};

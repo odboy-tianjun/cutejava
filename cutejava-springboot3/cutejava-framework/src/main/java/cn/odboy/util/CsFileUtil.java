@@ -188,8 +188,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
         List<Map<String, Object>> sanitizedList = list.parallelStream().map(map -> {
             Map<String, Object> sanitizedMap = new LinkedHashMap<>();
             map.forEach((key, value) -> {
-                if (value instanceof String) {
-                    String strValue = (String) value;
+                if (value instanceof String strValue) {
                     // 检查并处理以特殊字符开头的值
                     if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) ||
                             strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(
@@ -203,7 +202,7 @@ public final class CsFileUtil extends cn.hutool.core.io.FileUtil {
                 }
             });
             return sanitizedMap;
-        }).collect(Collectors.toList());
+        }).toList();
         // 一次性写出内容, 使用默认样式，强制输出标题
         writer.write(sanitizedList, true);
         SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();

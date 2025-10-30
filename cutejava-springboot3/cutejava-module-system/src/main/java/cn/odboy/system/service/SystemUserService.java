@@ -267,12 +267,12 @@ public class SystemUserService {
     public void exportUserExcel(List<SystemUserTb> users, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemUserTb user : users) {
-            List<String> roles = user.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.toList());
+            List<String> roles = user.getRoles().stream().map(SystemRoleTb::getName).toList();
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", user.getUsername());
             map.put("角色", roles);
             map.put("部门", user.getDept().getName());
-            map.put("岗位", user.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.toList()));
+            map.put("岗位", user.getJobs().stream().map(SystemJobTb::getName).toList());
             map.put("邮箱", user.getEmail());
             map.put("状态", user.getEnabled() ? "启用" : "禁用");
             map.put("手机号码", user.getPhone());
