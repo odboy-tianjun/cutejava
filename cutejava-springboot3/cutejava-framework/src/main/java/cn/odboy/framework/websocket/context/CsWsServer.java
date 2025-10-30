@@ -25,16 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
 @ServerEndpoint("/websocket/{sid}")
 @Getter
 public class CsWsServer {
-    private static final Map<String, Thread> taskThreadMap = new ConcurrentHashMap<>();
     /**
      * 与某个客户端的连接会话, 需要通过它来给客户端发送数据
      */
@@ -145,31 +142,5 @@ public class CsWsServer {
     @Override
     public int hashCode() {
         return Objects.hash(session, sid);
-    }
-
-    public Thread getTaskThread(String sid) {
-        Thread thread = taskThreadMap.get(sid);
-        if (thread == null) {
-            return null;
-        }
-        if (thread.isInterrupted()) {
-            taskThreadMap.remove(sid);
-            return null;
-        }
-        return thread;
-    }
-
-    public void restartTask(Runnable runnable) {
-        stopTask(this.sid);
-        Thread thread = new Thread(runnable);
-        thread.start();
-        taskThreadMap.put(this.sid, thread);
-    }
-
-    public void stopTask(String sid) {
-        Thread thread = getTaskThread(this.sid);
-        if (thread != null) {
-            thread.stop();
-        }
     }
 }
