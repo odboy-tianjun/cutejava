@@ -16,6 +16,7 @@
 
 package cn.odboy.system.controller;
 
+import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.model.SystemCheckEmailCaptchaArgs;
 import cn.odboy.system.service.SystemEmailService;
@@ -51,6 +52,9 @@ public class SystemCaptchaController {
     @PostMapping(value = "/checkEmailCaptcha")
     public ResponseEntity<Void> checkEmailCaptcha(@Validated @RequestBody SystemCheckEmailCaptchaArgs args) {
         SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(args.getBizCode());
+        if (biEnum == null) {
+            throw new BadRequestException("不支持的业务");
+        }
         systemEmailService.checkEmailCaptcha(biEnum, args.getEmail(), args.getCode());
         return ResponseEntity.ok(null);
     }
