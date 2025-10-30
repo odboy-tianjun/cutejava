@@ -143,8 +143,8 @@ public class SystemUserController {
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
             Integer currentLevel = Collections.min(
-                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
-            Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList());
+            Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).toList());
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
             }
@@ -203,7 +203,7 @@ public class SystemUserController {
      */
     private void checkLevel(SystemUserTb args) {
         Integer currentLevel = Collections.min(
-            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList());
         Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
@@ -234,7 +234,7 @@ public class SystemUserController {
                 ext.put("email", m.getEmail());
                 ext.put("phone", m.getPhone());
                 return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
-            }).collect(Collectors.toList());
+            }).toList();
         return ResponseEntity.ok(collect);
     }
 }

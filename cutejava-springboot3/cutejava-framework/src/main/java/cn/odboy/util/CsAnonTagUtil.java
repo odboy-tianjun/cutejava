@@ -61,24 +61,12 @@ public class CsAnonTagUtil {
                 PathPatternsRequestCondition pathPatternsCondition = infoEntry.getKey().getPathPatternsCondition();
                 if (pathPatternsCondition != null) {
                     switch (Objects.requireNonNull(request)) {
-                        case GET:
-                            get.addAll(pathPatternsCondition.getPatternValues());
-                            break;
-                        case POST:
-                            post.addAll(pathPatternsCondition.getPatternValues());
-                            break;
-                        case PUT:
-                            put.addAll(pathPatternsCondition.getPatternValues());
-                            break;
-                        case PATCH:
-                            patch.addAll(pathPatternsCondition.getPatternValues());
-                            break;
-                        case DELETE:
-                            delete.addAll(pathPatternsCondition.getPatternValues());
-                            break;
-                        default:
-                            all.addAll(pathPatternsCondition.getPatternValues());
-                            break;
+                        case GET -> get.addAll(pathPatternsCondition.getPatternValues());
+                        case POST -> post.addAll(pathPatternsCondition.getPatternValues());
+                        case PUT -> put.addAll(pathPatternsCondition.getPatternValues());
+                        case PATCH -> patch.addAll(pathPatternsCondition.getPatternValues());
+                        case DELETE -> delete.addAll(pathPatternsCondition.getPatternValues());
+                        default -> all.addAll(pathPatternsCondition.getPatternValues());
                     }
                 }
             }

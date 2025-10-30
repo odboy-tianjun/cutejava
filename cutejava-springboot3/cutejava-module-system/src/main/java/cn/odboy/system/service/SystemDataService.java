@@ -55,17 +55,14 @@ public class SystemDataService {
         for (SystemRoleTb role : roleList) {
             SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
             switch (Objects.requireNonNull(dataScopeEnum)) {
-                case THIS_LEVEL:
-                    deptIds.add(user.getDept().getId());
-                    break;
-                case CUSTOMIZE:
-                    deptIds.addAll(queryCustomDataPermissionList(deptIds, role));
-                    break;
-                default:
+                case THIS_LEVEL -> deptIds.add(user.getDept().getId());
+                case CUSTOMIZE -> deptIds.addAll(queryCustomDataPermissionList(deptIds, role));
+                default -> {
                     return new ArrayList<>();
+                }
             }
         }
-        return deptIds.stream().distinct().collect(Collectors.toList());
+        return deptIds.stream().distinct().toList();
     }
 
     /**

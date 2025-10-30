@@ -91,7 +91,7 @@ public class CsDateUtil {
             result.append(minutes).append("分");
         }
 
-        if (seconds > 0 || result.length() == 0) {
+        if (seconds > 0 || result.isEmpty()) {
             result.append(seconds).append("秒");
         }
 
@@ -141,7 +141,7 @@ public class CsDateUtil {
         }
 
         // 如果所有单位都是0，则显示0毫秒
-        if (result.length() == 0) {
+        if (result.isEmpty()) {
             result.append("0毫秒");
         }
 

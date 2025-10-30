@@ -294,7 +294,7 @@ public class SystemDeptService {
     public CsPageResult<SystemDeptTb> buildDeptTree(List<SystemDeptTb> deptList) {
         Set<SystemDeptTb> trees = new LinkedHashSet<>();
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
-        List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
+        List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).toList();
         boolean isChild;
         for (SystemDeptTb dept : deptList) {
             isChild = false;

@@ -100,7 +100,7 @@ public class CsWsServer {
     /**
      * 精准推送消息
      */
-    public void sendMessage(CsWsMessage message, @PathParam("sid") String sid) throws IOException {
+    public void sendMessage(CsWsMessage message, @PathParam("sid") String sid) {
         String body = JSON.toJSONString(message);
         //        log.info("推送消息到{}, 推送内容:{}", sid, message);
         try {
@@ -138,7 +138,7 @@ public class CsWsServer {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CsWsServer that = (CsWsServer) o;
+        CsWsServer that = (CsWsServer)o;
         return Objects.equals(session, that.session) && Objects.equals(sid, that.sid);
     }
 

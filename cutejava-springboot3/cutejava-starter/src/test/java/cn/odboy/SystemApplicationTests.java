@@ -63,8 +63,5 @@ public class SystemApplicationTests {
             systemUserService.saveUser(systemUser);
         }
     }
-
-    public static void main(String[] args) {
-    }
 }
 

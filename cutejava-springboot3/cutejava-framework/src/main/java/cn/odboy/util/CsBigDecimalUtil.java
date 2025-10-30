@@ -35,14 +35,14 @@ public final class CsBigDecimalUtil {
      * @return 转换后的 BigDecimal
      */
     private static BigDecimal toBigDecimal(Object obj) {
-        if (obj instanceof BigDecimal) {
-            return (BigDecimal) obj;
-        } else if (obj instanceof Long) {
-            return BigDecimal.valueOf((Long) obj);
-        } else if (obj instanceof Integer) {
-            return BigDecimal.valueOf((Integer) obj);
-        } else if (obj instanceof Double) {
-            return new BigDecimal(String.valueOf(obj));
+        if (obj instanceof BigDecimal b) {
+            return b;
+        } else if (obj instanceof Long l) {
+            return BigDecimal.valueOf(l);
+        } else if (obj instanceof Integer i) {
+            return BigDecimal.valueOf(i);
+        } else if (obj instanceof Double d) {
+            return new BigDecimal(d);
         } else {
             throw new IllegalArgumentException("Unsupported type");
         }

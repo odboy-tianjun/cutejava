@@ -86,7 +86,7 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      */
     private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos) {
         // ========================== 初始化执行明细 ==========================
-        List<TaskInstanceDetailTb> taskInstanceDetails = taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo)).collect(Collectors.toList());
+        List<TaskInstanceDetailTb> taskInstanceDetails = taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo)).toList();
         taskInstanceDetailService.saveBatch(taskInstanceDetails);
         Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
         // ========================== 顺序执行 ==========================
@@ -124,9 +124,9 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
             }
         }
         TaskInstanceStepDetailService taskInstanceStepDetailService = CsSpringBeanHolder.getBean(TaskInstanceStepDetailService.class);
-        List<String> bizCodeList = taskInstanceDetails.stream().map(TaskInstanceDetailTb::getBizCode).distinct().collect(Collectors.toList());
+        List<String> bizCodeList = taskInstanceDetails.stream().map(TaskInstanceDetailTb::getBizCode).distinct().toList();
         List<TaskInstanceDetailTb> taskInstanceDetailTbs = taskInstanceDetailService.queryByInstanceIdAndBizCodeList(id, bizCodeList);
-        List<Long> taskInstanceDetailIds = taskInstanceDetailTbs.stream().map(TaskInstanceDetailTb::getId).collect(Collectors.toList());
+        List<Long> taskInstanceDetailIds = taskInstanceDetailTbs.stream().map(TaskInstanceDetailTb::getId).toList();
         // 根据ID删除明细
         taskInstanceDetailService.removeByIds(taskInstanceDetailIds);
         // 根据明细删除步骤
