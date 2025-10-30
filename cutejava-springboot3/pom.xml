@@ -37,13 +37,13 @@
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.8.0</jna.version>
         <mail.version>2.1.5</mail.version>
-        <undertow.version>2.3.18.Final</undertow.version>
+        <undertow.version>2.3.20.Final</undertow.version>
         <freemarker.version>2.3.34</freemarker.version>
         <p6spy.version>3.9.1</p6spy.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <mysql.version>9.3.0</mysql.version>
-        <ip2region.version>2.7.18.9</ip2region.version>
-        <aspectjrt.version>1.9.7</aspectjrt.version>
+        <mysql.version>9.4.0</mysql.version>
+        <ip2region.version>3.5.6</ip2region.version>
+        <springaop.version>1.9.7</springaop.version>
         <captcha.version>1.6.2</captcha.version>
         <commons-text.version>1.13.0</commons-text.version>
         <transmittable.version>2.14.5</transmittable.version>
@@ -214,13 +214,13 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>${aspectjrt.version}</version>
+            <version>${springaop.version}</version>
         </dependency>
         <!-- jvm启动参数 javaagent 支持 -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>${aspectjrt.version}</version>
+            <version>${springaop.version}</version>
         </dependency>
 
         <!-- lombok插件 -->
@@ -243,7 +243,6 @@
             <artifactId>fastjson2</artifactId>
             <version>${fastjson2.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2-extension-spring6</artifactId>
