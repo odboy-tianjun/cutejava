@@ -115,34 +115,6 @@ spring:
           config:
             multi-statement-allow: true
       aop-patterns: "cn.odboy.mapper.*,cn.odboy.service.*,cn.odboy.*.mapper.*,cn.odboy.*.service.*"
-  # 数据库一定不能区分大小写
-  quartz:
-    # 必需，指定使用 JDBC 存储
-    job-store-type: jdbc
-    properties:
-      org:
-        quartz:
-          scheduler:
-            # 必需，指定调度器实例的名称
-            instanceName: ${spring.application.name}
-            # 必需，指定调度器实例的 ID
-            instanceId: auto
-          threadPool:
-            # 可选，线程池的线程数量，可以根据需要调整
-            threadCount: 5
-          jobStore:
-            # 可选，如果你不需要集群，可以去掉
-            isClustered: true
-            # 可选，集群检查间隔时间，可以根据需要调整
-            clusterCheckinInterval: 10000
-            # 必需，指定 JDBC 驱动代理类
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-            # 可选，是否使用属性存储，可以根据需要调整
-            useProperties: false
-            # 必需，指定表的前缀
-            tablePrefix: qrtz_
-            # 可选，指定误触发阈值，可以根据需要调整
-            misfireThreshold: 60000
 # 集成mybatis-plus
 mybatis-plus:
   configuration:
@@ -209,9 +181,6 @@ app:
       font-name:
       # 字体大小
       font-size: 25
-  # 是否开启 swagger-ui
-  swagger:
-    enabled: true
   # 针对@Async
   async-task-pool:
     # 核心线程池大小
@@ -244,3 +213,7 @@ logging:
   level:
     #    root: debug
     cn.odboy: info
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
