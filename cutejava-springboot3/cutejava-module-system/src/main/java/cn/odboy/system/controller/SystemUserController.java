@@ -49,7 +49,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Tag(name = "系统：用户管理")
 @RestController
@@ -142,8 +141,8 @@ public class SystemUserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
-            Integer currentLevel = Collections.min(
-                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList());
+            Integer currentLevel =
+                Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList());
             Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).toList());
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
@@ -202,8 +201,8 @@ public class SystemUserController {
      * @param args /
      */
     private void checkLevel(SystemUserTb args) {
-        Integer currentLevel = Collections.min(
-            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList());
+        Integer currentLevel =
+            Collections.min(systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList());
         Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");

@@ -37,11 +37,11 @@ import java.io.Serializable;
 public class CsPageArgs<T> implements Serializable {
     @NotNull(message = "参数page不能为空")
     @Min(value = 1, message = "参数page最小值为1")
-    @Schema(name ="页码", example = "1")
+    @Schema(name = "页码", example = "1")
     private Integer page;
     @NotNull(message = "参数size不能为空")
     @Min(value = 1, message = "参数size最小值为1")
-    @Schema(name ="每页数据量", example = "10")
+    @Schema(name = "每页数据量", example = "10")
     private Integer size;
     private T args;
 }

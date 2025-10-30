@@ -35,7 +35,6 @@ import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.util.CsClassUtil;
 import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -369,8 +368,7 @@ public class SystemDeptService {
 
     private List<SystemProductLineVo> buildDeptSelectOptions(List<SystemDeptTb> depts) {
         // 获取所有部门并按父子关系组织
-        Map<Long, SystemDeptTb> deptMap =
-                depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
+        Map<Long, SystemDeptTb> deptMap = depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
         List<SystemProductLineVo> options = new ArrayList<>();
         for (SystemDeptTb dept : depts) {
             // 构建部门ID路径
@@ -421,8 +419,7 @@ public class SystemDeptService {
     public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
         List<SystemDeptTb> depts = findEnabledDepts();
         // 获取所有部门并按父子关系组织
-        Map<Long, SystemDeptTb> deptMap =
-                depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
+        Map<Long, SystemDeptTb> deptMap = depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
         List<SystemProductLineTreeVo> options = new ArrayList<>();
         // 构建树形结构
         for (SystemDeptTb dept : depts) {

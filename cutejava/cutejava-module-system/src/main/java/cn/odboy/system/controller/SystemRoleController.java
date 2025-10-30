@@ -133,10 +133,7 @@ public class SystemRoleController {
      */
     private int checkRoleLevels(Integer level) {
         List<Integer> levels =
-                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId())
-                        .stream()
-                        .map(SystemRoleTb::getLevel)
-                        .collect(Collectors.toList());
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

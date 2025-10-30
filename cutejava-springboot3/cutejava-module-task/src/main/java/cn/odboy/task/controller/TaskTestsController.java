@@ -40,7 +40,8 @@ public class TaskTestsController {
     @AnonymousAccess
     @GetMapping(value = "/testCreate")
     public ResponseEntity<?> testCreate() {
-        TaskInstanceInfoTb instanceInfo = taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
+        TaskInstanceInfoTb instanceInfo =
+            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
         log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
         return ResponseEntity.ok(instanceInfo);
     }
@@ -48,7 +49,8 @@ public class TaskTestsController {
     @AnonymousAccess
     @GetMapping(value = "/testCreateAfterStop")
     public ResponseEntity<?> testCreateAfterStop() {
-        TaskInstanceInfoTb instanceInfo = taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
+        TaskInstanceInfoTb instanceInfo =
+            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
         log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
         Thread.startVirtualThread(() -> {
             ThreadUtil.safeSleep(5000);

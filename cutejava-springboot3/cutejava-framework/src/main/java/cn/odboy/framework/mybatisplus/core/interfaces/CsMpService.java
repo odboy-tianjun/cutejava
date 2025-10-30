@@ -59,10 +59,7 @@ public interface CsMpService<T> extends IService<T> {
 
     CsPageResult<T> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
 
-    <G> CsPageResult<G> queryFeatureClazzPageByArgs(
-            LambdaQueryWrapper<T> wrapper,
-            IPage<T> pageable,
-            Class<G> targetClazz);
+    <G> CsPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
 
     <G, Q> CsPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
 

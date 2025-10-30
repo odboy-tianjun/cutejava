@@ -36,6 +36,9 @@ public class SystemApplicationTests {
     @Autowired
     private SystemUserService systemUserService;
 
+    public static void main(String[] args) {
+    }
+
     @Test
     public void contextLoads() {
         SystemDeptTb systemDept = new SystemDeptTb();
@@ -62,9 +65,6 @@ public class SystemApplicationTests {
             systemUser.setEnabled(true);
             systemUserService.saveUser(systemUser);
         }
-    }
-
-    public static void main(String[] args) {
     }
 }
 

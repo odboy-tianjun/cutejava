@@ -34,7 +34,7 @@ import java.util.Set;
  */
 public class CsReturnValueHandleUtil {
     public static Object getDefaultValue(ProceedingJoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         Method method = signature.getMethod();
         // 获取目标方法的返回值类型
         Class<?> returnType = method.getReturnType();

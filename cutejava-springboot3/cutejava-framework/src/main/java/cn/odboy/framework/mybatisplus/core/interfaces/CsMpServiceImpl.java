@@ -209,10 +209,7 @@ public class CsMpServiceImpl<M extends CsMpMapper<T>, T> extends ServiceImpl<M, 
      * @param pageable    分页参数
      * @param targetClazz 目标类型
      */
-    public <G> CsPageResult<G> queryFeatureClazzPageByArgs(
-            LambdaQueryWrapper<T> wrapper,
-            IPage<T> pageable,
-            Class<G> targetClazz) {
+    public <G> CsPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }

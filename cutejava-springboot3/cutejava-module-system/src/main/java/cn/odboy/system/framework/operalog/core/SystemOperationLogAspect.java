@@ -17,7 +17,6 @@ package cn.odboy.system.framework.operalog.core;
 
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.CsRequestHolder;
 import cn.odboy.system.dal.dataobject.SystemOperationLogTb;

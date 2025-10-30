@@ -33,7 +33,6 @@ import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.CsClassUtil;
 import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,15 +46,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class SystemMenuService {
+    private static final String YES_STR = "是";
+    private static final String NO_STR = "否";
     @Autowired
     private SystemMenuMapper systemMenuMapper;
     @Autowired
     private SystemRoleMenuMapper systemRoleMenuMapper;
     @Autowired
     private SystemRoleService systemRoleService;
-
-    private static final String YES_STR = "是";
-    private static final String NO_STR = "否";
 
     /**
      * 创建
@@ -76,7 +74,8 @@ public class SystemMenuService {
             args.setPid(null);
         }
         if (args.getIFrame()) {
-            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
+                .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
@@ -100,7 +99,8 @@ public class SystemMenuService {
         }
         SystemMenuTb menu = systemMenuMapper.selectById(args.getId());
         if (args.getIFrame()) {
-            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
+                .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }

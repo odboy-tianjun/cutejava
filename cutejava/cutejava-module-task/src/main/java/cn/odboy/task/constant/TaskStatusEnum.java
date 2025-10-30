@@ -27,9 +27,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TaskStatusEnum {
-    Running("running", "运行中"),
-    Success("success", "执行成功"),
-    Fail("fail", "执行失败");
+    Running("running", "运行中"), Success("success", "执行成功"), Fail("fail", "执行失败");
     private final String code;
     private final String name;
 

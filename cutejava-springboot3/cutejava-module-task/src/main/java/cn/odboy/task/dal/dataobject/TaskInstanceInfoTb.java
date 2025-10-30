@@ -58,7 +58,7 @@ public class TaskInstanceInfoTb extends CsObject {
     /**
      * id, @JsonSerialize和@JSONField，用于处理大数精度丢失问题
      */
-    @Schema(name="id")
+    @Schema(name = "id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     @JSONField(format = "string")
@@ -67,21 +67,21 @@ public class TaskInstanceInfoTb extends CsObject {
     /**
      * 名称
      */
-    @Schema(name="名称")
+    @Schema(name = "名称")
     @TableField("context_name")
     private String contextName;
 
     /**
      * 语言
      */
-    @Schema(name="语言")
+    @Schema(name = "语言")
     @TableField("`language`")
     private String language;
 
     /**
      * 变更类型
      */
-    @Schema(name="变更类型")
+    @Schema(name = "变更类型")
     @TableField("change_type")
     private String changeType;
 
@@ -89,27 +89,27 @@ public class TaskInstanceInfoTb extends CsObject {
      * 环境别名
      */
     @TableField("env_alias")
-    @Schema(name="环境别名")
+    @Schema(name = "环境别名")
     private String envAlias;
 
     /**
      * 状态(running进行中 success成功 fail失败)
      */
     @TableField("`status`")
-    @Schema(name="状态(running进行中 success成功 fail失败)")
+    @Schema(name = "状态(running进行中 success成功 fail失败)")
     private String status;
 
     /**
      * 完成时间
      */
-    @Schema(name="完成时间")
+    @Schema(name = "完成时间")
     @TableField("finish_time")
     private Date finishTime;
 
     /**
      * 来源
      */
-    @Schema(name="来源")
+    @Schema(name = "来源")
     @TableField("`source`")
     private String source;
 
@@ -117,27 +117,27 @@ public class TaskInstanceInfoTb extends CsObject {
      * 变更原因
      */
     @TableField("reason")
-    @Schema(name="变更原因")
+    @Schema(name = "变更原因")
     private String reason;
 
     /**
      * 任务模板
      */
     @TableField("template")
-    @Schema(name="template")
+    @Schema(name = "template")
     private String template;
 
     /**
      * QuartzJob参数
      */
     @TableField("job_data")
-    @Schema(name="QuartzJob参数")
+    @Schema(name = "QuartzJob参数")
     private String jobData;
 
     /**
      * 异常信息
      */
     @TableField("error_message")
-    @Schema(name="异常信息")
+    @Schema(name = "异常信息")
     private String errorMessage;
 }

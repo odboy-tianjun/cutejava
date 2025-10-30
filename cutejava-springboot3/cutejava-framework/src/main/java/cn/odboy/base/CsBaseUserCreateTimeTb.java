@@ -35,20 +35,12 @@ public class CsBaseUserCreateTimeTb extends CsObject {
 
     @CreatedBy
     @TableField(fill = FieldFill.INSERT)
-    @Schema(name ="创建人", hidden = true)
+    @Schema(name = "创建人", hidden = true)
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT)
-    @Schema(name ="创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
-
-    /* 分组校验 */
-    public @interface Create {
-    }
-
-    /* 分组校验 */
-    public @interface Update {
-    }
 
     @Override
     public String toString() {
@@ -63,5 +55,13 @@ public class CsBaseUserCreateTimeTb extends CsObject {
             builder.append("toString builder encounter an error");
         }
         return builder.toString();
+    }
+
+    /* 分组校验 */
+    public @interface Create {
+    }
+
+    /* 分组校验 */
+    public @interface Update {
     }
 }

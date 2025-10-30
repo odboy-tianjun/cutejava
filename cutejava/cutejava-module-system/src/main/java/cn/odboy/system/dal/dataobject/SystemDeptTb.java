@@ -76,7 +76,7 @@ public class SystemDeptTb extends CsBaseUserTimeTb {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SystemDeptTb dept = (SystemDeptTb) o;
+        SystemDeptTb dept = (SystemDeptTb)o;
         return Objects.equals(id, dept.id) && Objects.equals(name, dept.name);
     }
 

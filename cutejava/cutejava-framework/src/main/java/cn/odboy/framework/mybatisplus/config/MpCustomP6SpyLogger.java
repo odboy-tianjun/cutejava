@@ -61,6 +61,7 @@ public class MpCustomP6SpyLogger implements MessageFormattingStrategy {
             sql = sql.replaceAll("\\s+", " ").trim();
         }
         // 格式化并加上颜色
-        return String.format("CuteJava - %s%s%s %s[%s] %sREVIEW_SQL [Interval: %dms]%s -> %s;", RED, now, RESET, GREEN, Thread.currentThread().getName(), BLUE, elapsed, RESET, sql);
+        return String.format("CuteJava - %s%s%s %s[%s] %sREVIEW_SQL [Interval: %dms]%s -> %s;", RED, now, RESET, GREEN, Thread.currentThread().getName(), BLUE,
+            elapsed, RESET, sql);
     }
 }

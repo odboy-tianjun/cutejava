@@ -78,11 +78,7 @@ public class CsMpQUtil {
         return StrUtil.toUnderlineCase(attributeName);
     }
 
-    private static <R> void handleWrapper(
-            CsMpQuery q,
-            QueryWrapper<R> queryWrapper,
-            String attributeName,
-            Object fieldVal) {
+    private static <R> void handleWrapper(CsMpQuery q, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
         switch (q.type()) {
             case EQUAL:
                 queryWrapper.eq(attributeName, fieldVal);
@@ -128,12 +124,8 @@ public class CsMpQUtil {
         }
     }
 
-    private static <R> void handleInOrNotQuery(
-            boolean b,
-            QueryWrapper<R> queryWrapper,
-            String attributeName,
-            Object fieldVal) {
-        Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
+    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+        Collection<?> wrapNotInVal = (Collection<?>)fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
             if (anyValOptional.isPresent()) {
@@ -159,7 +151,7 @@ public class CsMpQUtil {
 
     private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
         if (fieldVal instanceof List) {
-            List<Object> between = new ArrayList<>((List<?>) fieldVal);
+            List<Object> between = new ArrayList<>((List<?>)fieldVal);
             int minLength = 2;
             if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
                 queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
@@ -180,8 +172,7 @@ public class CsMpQUtil {
      * @param <R>          /
      */
     private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
-        List<String> blurryList =
-                Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
+        List<String> blurryList = Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
         queryWrapper.and(wrapper -> {
             for (String blurryItem : blurryList) {
                 String column = StrUtil.toUnderlineCase(blurryItem);
@@ -199,19 +190,6 @@ public class CsMpQUtil {
         return fields;
     }
 
-    @TableName("test_domain")
-    private static class TestDomain {
-        @NotNull(groups = CsBaseUserTimeTb.Update.class)
-        @TableId(value = "user_id", type = IdType.AUTO)
-        private Long id;
-        @TableField(value = "dept_id")
-        private Long deptId;
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String nickName;
-    }
-
     public static void main(String[] args) {
         QueryWrapper<TestDomain> query = new QueryWrapper<TestDomain>();
         query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
@@ -227,5 +205,18 @@ public class CsMpQUtil {
         System.err.println(query.getSqlSet());
         System.err.println("getTargetSql=================================");
         System.err.println(query.getTargetSql());
+    }
+
+    @TableName("test_domain")
+    private static class TestDomain {
+        @NotNull(groups = CsBaseUserTimeTb.Update.class)
+        @TableId(value = "user_id", type = IdType.AUTO)
+        private Long id;
+        @TableField(value = "dept_id")
+        private Long deptId;
+        @NotBlank
+        private String username;
+        @NotBlank
+        private String nickName;
     }
 }

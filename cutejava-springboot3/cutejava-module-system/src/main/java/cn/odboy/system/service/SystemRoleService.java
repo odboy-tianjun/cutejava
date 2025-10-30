@@ -231,11 +231,8 @@ public class SystemRoleService {
             return permissions.stream().map(SystemRoleCodeVo::new).toList();
         }
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
-        permissions = roles.stream()
-                .flatMap(role -> role.getMenus().stream())
-                .map(SystemMenuTb::getPermission)
-                .filter(StrUtil::isNotBlank)
-                .collect(Collectors.toSet());
+        permissions =
+            roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission).filter(StrUtil::isNotBlank).collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new).toList();
     }
 

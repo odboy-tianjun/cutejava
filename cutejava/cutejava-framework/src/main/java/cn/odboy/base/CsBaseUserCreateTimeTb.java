@@ -42,14 +42,6 @@ public class CsBaseUserCreateTimeTb extends CsObject {
     @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
 
-    /* 分组校验 */
-    public @interface Create {
-    }
-
-    /* 分组校验 */
-    public @interface Update {
-    }
-
     @Override
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
@@ -63,5 +55,13 @@ public class CsBaseUserCreateTimeTb extends CsObject {
             builder.append("toString builder encounter an error");
         }
         return builder.toString();
+    }
+
+    /* 分组校验 */
+    public @interface Create {
+    }
+
+    /* 分组校验 */
+    public @interface Update {
     }
 }

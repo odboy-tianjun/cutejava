@@ -29,7 +29,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class CsBaseCreateTimeTb extends CsObject {
-    @Schema(name ="创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 }

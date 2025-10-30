@@ -20,7 +20,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.CsObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import lombok.Getter;
@@ -119,7 +118,7 @@ public class UserLoginCaptchaSettingModel extends CsObject {
             int opt = num(3);
 
             // 计算结果
-            int res = new int[]{n1 + n2, n1 - n2, n1 * n2}[opt];
+            int res = new int[] {n1 + n2, n1 - n2, n1 * n2}[opt];
             // 转换为字符运算符
             char optChar = "+-x".charAt(opt);
 

@@ -41,11 +41,6 @@ public class GenCode {
     }
 
     private static void genTaskCode(CsMpCmdGenUtil generator) {
-        generator.gen("task", "", List.of(
-                "task_instance_info",
-                "task_instance_detail",
-                "task_template_info",
-                "task_instance_step_detail"
-        ));
+        generator.gen("task", "", List.of("task_instance_info", "task_instance_detail", "task_template_info", "task_instance_step_detail"));
     }
 }

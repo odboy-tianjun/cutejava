@@ -36,22 +36,22 @@ public class SystemEmailConfigTb extends CsObject {
     private Long id;
 
     @NotBlank
-    @Schema(name ="邮件服务器SMTP地址")
+    @Schema(name = "邮件服务器SMTP地址")
     private String host;
 
     @NotBlank
-    @Schema(name ="邮件服务器 SMTP 端口")
+    @Schema(name = "邮件服务器 SMTP 端口")
     private String port;
 
     @NotBlank
-    @Schema(name ="发件者用户名")
+    @Schema(name = "发件者用户名")
     private String user;
 
     @NotBlank
-    @Schema(name ="密码")
+    @Schema(name = "密码")
     private String password;
 
     @NotBlank
-    @Schema(name ="收件人")
+    @Schema(name = "收件人")
     private String fromUser;
 }

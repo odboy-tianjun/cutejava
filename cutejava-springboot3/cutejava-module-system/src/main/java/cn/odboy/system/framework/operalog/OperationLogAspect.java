@@ -18,7 +18,6 @@ package cn.odboy.system.framework.operalog;
 
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.CsRequestHolder;
 import cn.odboy.system.dal.dataobject.SystemOperationLogTb;
@@ -86,7 +85,7 @@ public class OperationLogAspect {
 
     private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, TimeInterval timeInterval) {
         long executeTime = timeInterval.intervalMs();
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         String bizName = annotation.bizName();
         if (StrUtil.isBlank(bizName)) {
             Method method = signature.getMethod();

@@ -33,8 +33,7 @@ public class QuartzRunnable implements Callable<Object> {
     private final Method method;
     private final String params;
 
-    public QuartzRunnable(String beanName, String methodName, String params)
-            throws NoSuchMethodException, SecurityException {
+    public QuartzRunnable(String beanName, String methodName, String params) throws NoSuchMethodException, SecurityException {
         this.target = CsSpringBeanHolder.getBean(beanName);
         this.params = params;
         if (StringUtils.isNotBlank(params)) {

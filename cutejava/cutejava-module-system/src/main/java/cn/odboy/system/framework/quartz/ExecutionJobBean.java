@@ -31,7 +31,6 @@ import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.service.SystemEmailService;
 import cn.odboy.system.service.SystemQuartzJobService;
-import cn.odboy.util.CsStringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -53,7 +52,7 @@ public class ExecutionJobBean extends QuartzJobBean {
     @Override
     public void executeInternal(JobExecutionContext context) {
         // 获取任务
-        SystemQuartzJobTb quartzJob = (SystemQuartzJobTb) context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
+        SystemQuartzJobTb quartzJob = (SystemQuartzJobTb)context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
         // 获取spring bean
         SystemQuartzLogMapper quartzLogMapper = CsSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
         SystemQuartzJobService systemQuartzJobService = CsSpringBeanHolder.getBean(SystemQuartzJobService.class);

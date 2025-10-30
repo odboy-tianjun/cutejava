@@ -36,11 +36,7 @@ public @interface BizLock {
     String bizName() default "";
 
     /**
-     * 锁key，支持SpEL表达式
-     * 示例:
-     * #user.id - 获取参数user的id属性
-     * #p0 - 获取第一个参数
-     * #root.methodName - 获取方法名
+     * 锁key，支持SpEL表达式 示例: #user.id - 获取参数user的id属性 #p0 - 获取第一个参数 #root.methodName - 获取方法名
      */
     String key() default "";
 

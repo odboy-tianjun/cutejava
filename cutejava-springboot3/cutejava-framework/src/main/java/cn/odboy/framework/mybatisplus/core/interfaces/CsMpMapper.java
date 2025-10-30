@@ -157,10 +157,7 @@ public interface CsMpMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> CsPageResult<T> queryFeatureClazzPage(
-            Pageable pageable,
-            LambdaQueryChainWrapper<E> wrapper,
-            Class<T> clazz) {
+    default <T> CsPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;

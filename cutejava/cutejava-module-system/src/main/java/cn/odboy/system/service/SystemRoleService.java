@@ -34,7 +34,6 @@ import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.util.CsFileUtil;
 import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.CsStringUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -232,11 +231,8 @@ public class SystemRoleService {
             return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
         }
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
-        permissions = roles.stream()
-                .flatMap(role -> role.getMenus().stream())
-                .map(SystemMenuTb::getPermission)
-                .filter(StrUtil::isNotBlank)
-                .collect(Collectors.toSet());
+        permissions =
+            roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission).filter(StrUtil::isNotBlank).collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
 

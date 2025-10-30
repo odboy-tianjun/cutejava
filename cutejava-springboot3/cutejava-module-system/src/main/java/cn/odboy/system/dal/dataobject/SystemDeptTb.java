@@ -39,33 +39,33 @@ public class SystemDeptTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @TableId(value = "dept_id", type = IdType.AUTO)
-    @Schema(name ="ID", hidden = true)
+    @Schema(name = "ID", hidden = true)
     private Long id;
 
     @TableField(exist = false)
     @JSONField(serialize = false)
-    @Schema(name ="角色")
+    @Schema(name = "角色")
     private Set<SystemRoleTb> roles;
 
     @TableField(exist = false)
-    @Schema(name ="子部门")
+    @Schema(name = "子部门")
     private List<SystemDeptTb> children;
 
-    @Schema(name ="排序")
+    @Schema(name = "排序")
     private Integer deptSort;
 
     @NotBlank
-    @Schema(name ="部门名称")
+    @Schema(name = "部门名称")
     private String name;
 
     @NotNull
-    @Schema(name ="是否启用")
+    @Schema(name = "是否启用")
     private Boolean enabled;
 
-    @Schema(name ="上级部门")
+    @Schema(name = "上级部门")
     private Long pid;
 
-    @Schema(name ="子节点数目", hidden = true)
+    @Schema(name = "子节点数目", hidden = true)
     private Integer subCount = 0;
 
     @Override
@@ -85,17 +85,17 @@ public class SystemDeptTb extends CsBaseUserTimeTb {
         return Objects.hash(id, name);
     }
 
-    @Schema(name ="是否有子节点")
+    @Schema(name = "是否有子节点")
     public Boolean getHasChildren() {
         return subCount > 0;
     }
 
-    @Schema(name ="是否为叶子")
+    @Schema(name = "是否为叶子")
     public Boolean getLeaf() {
         return subCount <= 0;
     }
 
-    @Schema(name ="标签名称")
+    @Schema(name = "标签名称")
     public String getLabel() {
         return name;
     }

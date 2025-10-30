@@ -30,15 +30,15 @@ import lombok.Setter;
 public class SystemDictTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
-    @Schema(name ="ID", hidden = true)
+    @Schema(name = "ID", hidden = true)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @NotBlank
-    @Schema(name ="名称")
+    @Schema(name = "名称")
     private String name;
 
-    @Schema(name ="描述")
+    @Schema(name = "描述")
     @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String description;
 }

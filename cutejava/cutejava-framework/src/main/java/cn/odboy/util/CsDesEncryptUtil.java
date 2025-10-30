@@ -89,7 +89,7 @@ public final class CsDesEncryptUtil {
         byte[] b2 = new byte[b.length / 2];
         for (int n = 0; n < b.length; n += size) {
             String item = new String(b, n, 2);
-            b2[n / 2] = (byte) Integer.parseInt(item, 16);
+            b2[n / 2] = (byte)Integer.parseInt(item, 16);
         }
         return b2;
     }
