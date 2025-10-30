@@ -50,7 +50,7 @@ public class TaskTestsController {
     public ResponseEntity<?> testCreateAfterStop() {
         TaskInstanceInfoTb instanceInfo = taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
         log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
-        ThreadUtil.execAsync(() -> {
+        Thread.startVirtualThread(() -> {
             ThreadUtil.safeSleep(5000);
             taskManage.stopJob(instanceInfo.getId());
         });
