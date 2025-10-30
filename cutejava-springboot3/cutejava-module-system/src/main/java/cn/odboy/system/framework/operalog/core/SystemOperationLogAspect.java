@@ -62,7 +62,7 @@ public class SystemOperationLogAspect {
         try {
             Object result = joinPoint.proceed();
             SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
-            ThreadUtil.execAsync(() -> {
+            Thread.startVirtualThread(() -> {
                 try {
                     systemOperationLogMapper.insert(record);
                 } catch (Exception e) {
@@ -74,7 +74,7 @@ public class SystemOperationLogAspect {
         } catch (Throwable exception) {
             SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
             record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
-            ThreadUtil.execAsync(() -> {
+            Thread.startVirtualThread(() -> {
                 try {
                     systemOperationLogMapper.insert(record);
                 } catch (Exception e) {
