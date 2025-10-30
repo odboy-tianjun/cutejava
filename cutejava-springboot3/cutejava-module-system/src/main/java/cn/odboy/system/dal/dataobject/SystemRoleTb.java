@@ -19,12 +19,12 @@ package cn.odboy.system.dal.dataobject;
 import cn.odboy.base.CsBaseUserTimeTb;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
@@ -38,32 +38,32 @@ public class SystemRoleTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "role_id", type = IdType.AUTO)
-    @ApiModelProperty(value = "ID", hidden = true)
+    @Schema(name = "ID", hidden = true)
     private Long id;
 
     @TableField(exist = false)
-    @ApiModelProperty(value = "用户", hidden = true)
+    @Schema(name = "用户", hidden = true)
     private Set<SystemUserTb> users;
 
     @TableField(exist = false)
-    @ApiModelProperty(value = "菜单", hidden = true)
+    @Schema(name = "菜单", hidden = true)
     private Set<SystemMenuTb> menus;
 
     @TableField(exist = false)
-    @ApiModelProperty(value = "部门", hidden = true)
+    @Schema(name = "部门", hidden = true)
     private Set<SystemDeptTb> depts;
 
     @NotBlank
-    @ApiModelProperty(value = "名称", hidden = true)
+    @Schema(name = "名称", hidden = true)
     private String name;
 
-    @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义")
+    @Schema(name = "数据权限，全部 、 本级 、 自定义")
     private String dataScope = SystemDataScopeEnum.THIS_LEVEL.getValue();
 
-    @ApiModelProperty(value = "级别，数值越小，级别越大")
+    @Schema(name = "级别，数值越小，级别越大")
     private Integer level = 3;
 
-    @ApiModelProperty(value = "描述")
+    @Schema(name = "描述")
     @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String description;
 

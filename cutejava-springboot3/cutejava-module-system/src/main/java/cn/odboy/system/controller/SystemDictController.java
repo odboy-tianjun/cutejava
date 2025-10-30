@@ -23,42 +23,41 @@ import cn.odboy.system.dal.model.SystemCreateDictArgs;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.service.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 @RestController
-@Api(tags = "系统：字典管理")
+@Tag(name = "系统：字典管理")
 @RequestMapping("/api/dict")
 public class SystemDictController {
     @Autowired
     private SystemDictService systemDictService;
 
-    @ApiOperation("导出字典数据")
+    @Operation(summary = "导出字典数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
     public void exportDict(HttpServletResponse response, SystemQueryDictArgs criteria) throws IOException {
         systemDictService.exportDictExcel(systemDictService.queryDictByArgs(criteria), response);
     }
 
-    @ApiOperation("查询字典")
+    @Operation(summary = "查询字典")
     @PostMapping(value = "/queryAllDict")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<List<SystemDictTb>> queryAllDict() {
         return ResponseEntity.ok(systemDictService.queryDictByArgs(new SystemQueryDictArgs()));
     }
 
-    @ApiOperation("查询字典")
+    @Operation(summary = "查询字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<CsPageResult<SystemDictTb>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
@@ -72,7 +71,7 @@ public class SystemDictController {
         return ResponseEntity.ok(systemDictService.queryDictByArgs(criteria, page));
     }
 
-    @ApiOperation("新增字典")
+    @Operation(summary = "新增字典")
     @PostMapping(value = "/saveDict")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs args) {
@@ -80,7 +79,7 @@ public class SystemDictController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改字典")
+    @Operation(summary = "修改字典")
     @PostMapping(value = "/modifyDictById")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
@@ -88,7 +87,7 @@ public class SystemDictController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("删除字典")
+    @Operation(summary = "删除字典")
     @PostMapping(value = "/removeDictByIds")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {

@@ -23,8 +23,8 @@ import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,19 +36,19 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@Api(tags = "系统：字典详情管理")
+@Tag(name = "系统：字典详情管理")
 @RequestMapping("/api/dictDetail")
 public class SystemDictDetailController {
     @Autowired
     private SystemDictDetailService systemDictDetailService;
 
-    @ApiOperation("查询字典详情")
+    @Operation(summary = "查询字典详情")
     @PostMapping
     public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
         return queryDictDetailByArgs(args);
     }
 
-    @ApiOperation("查询字典详情")
+    @Operation(summary = "查询字典详情")
     @PostMapping(value = "/queryDictDetailByArgs")
     public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
         SystemQueryDictDetailArgs criteria = args.getArgs();
@@ -56,7 +56,7 @@ public class SystemDictDetailController {
         return ResponseEntity.ok(systemDictDetailService.queryDictDetailByArgs(criteria, page));
     }
 
-    @ApiOperation("查询多个字典详情")
+    @Operation(summary = "查询多个字典详情")
     @GetMapping(value = "/getDictDetailMaps")
     public ResponseEntity<Map<String, List<SystemDictDetailTb>>> getDictDetailMaps(@RequestParam String dictName) {
         String[] names = dictName.split("[,, ]");
@@ -67,7 +67,7 @@ public class SystemDictDetailController {
         return ResponseEntity.ok(dictMap);
     }
 
-    @ApiOperation("新增字典详情")
+    @Operation(summary = "新增字典详情")
     @PostMapping(value = "/saveDictDetail")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody SystemCreateDictDetailArgs args) {
@@ -75,7 +75,7 @@ public class SystemDictDetailController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改字典详情")
+    @Operation(summary = "修改字典详情")
     @PostMapping(value = "/modifyDictDetailById")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Void> modifyDictDetailById(@Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
@@ -83,7 +83,7 @@ public class SystemDictDetailController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("删除字典详情")
+    @Operation(summary = "删除字典详情")
     @PostMapping(value = "/removeDictDetailById")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {

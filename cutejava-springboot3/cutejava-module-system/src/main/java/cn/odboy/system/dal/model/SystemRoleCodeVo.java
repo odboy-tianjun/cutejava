@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,6 @@ import org.springframework.security.core.GrantedAuthority;
 @AllArgsConstructor
 public class SystemRoleCodeVo implements GrantedAuthority {
 
-    @ApiModelProperty(value = "角色名")
+    @Schema(name = "角色名")
     private String authority;
 }

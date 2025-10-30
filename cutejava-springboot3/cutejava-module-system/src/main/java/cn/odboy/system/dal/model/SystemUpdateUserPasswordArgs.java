@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -25,9 +25,9 @@ import lombok.Data;
 @Data
 public class SystemUpdateUserPasswordArgs {
 
-    @ApiModelProperty(value = "旧密码")
+    @Schema(name = "旧密码")
     private String oldPass;
 
-    @ApiModelProperty(value = "新密码")
+    @Schema(name = "新密码")
     private String newPass;
 }

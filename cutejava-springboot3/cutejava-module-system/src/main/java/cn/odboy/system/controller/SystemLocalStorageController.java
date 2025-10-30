@@ -25,8 +25,9 @@ import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
 import cn.odboy.util.CsFileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,17 +35,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@Api(tags = "工具：本地存储管理")
+@Tag(name = "工具：本地存储管理")
 @RequestMapping("/api/localStorage")
 public class SystemLocalStorageController {
     @Autowired
     private SystemLocalStorageService localStorageService;
 
-    @ApiOperation("查询文件")
+    @Operation(summary = "查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity<CsPageResult<SystemLocalStorageTb>> queryLocalStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
@@ -53,14 +53,14 @@ public class SystemLocalStorageController {
         return ResponseEntity.ok(localStorageService.queryLocalStorage(criteria, page));
     }
 
-    @ApiOperation("导出数据")
+    @Operation(summary = "导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
     public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
         localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorage(criteria), response);
     }
 
-    @ApiOperation("上传文件")
+    @Operation(summary = "上传文件")
     @PostMapping(value = "/uploadFile")
     @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Void> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
@@ -68,7 +68,7 @@ public class SystemLocalStorageController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("上传图片")
+    @Operation(summary = "上传图片")
     @PostMapping("/uploadPicture")
     public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
         // 判断文件是否为图片
@@ -80,7 +80,7 @@ public class SystemLocalStorageController {
         return ResponseEntity.ok(localStorage);
     }
 
-    @ApiOperation("修改文件")
+    @Operation(summary = "修改文件")
     @PostMapping(value = "/modifyLocalStorageById")
     @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
@@ -88,7 +88,7 @@ public class SystemLocalStorageController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("多选删除")
+    @Operation(summary = "多选删除")
     @PostMapping(value = "/removeFileByIds")
     public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
         localStorageService.removeFileByIds(ids);

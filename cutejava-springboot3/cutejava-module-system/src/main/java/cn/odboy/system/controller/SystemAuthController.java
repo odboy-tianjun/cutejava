@@ -34,10 +34,9 @@ import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
 import cn.odboy.util.CsRsaEncryptUtil;
-import cn.odboy.util.CsStringUtil;
 import com.wf.captcha.base.Captcha;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("/auth")
-@Api(tags = "系统：系统授权接口")
+@Tag(name = "系统：系统授权接口")
 public class SystemAuthController {
     @Autowired
     private CsRedisHelper redisHelper;
@@ -77,7 +76,7 @@ public class SystemAuthController {
     @Autowired
     private UserDetailsHandler userDetailsService;
 
-    @ApiOperation("登录授权")
+    @Operation(summary = "登录授权")
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
@@ -117,15 +116,15 @@ public class SystemAuthController {
         return ResponseEntity.ok(authInfo);
     }
 
-    @ApiOperation("获取用户信息")
+    @Operation(summary = "获取用户信息")
     @PostMapping(value = "/info")
     public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-        SystemUserJwtVo jwtUser = (SystemUserJwtVo) CsSecurityHelper.getCurrentUser();
+        SystemUserJwtVo jwtUser = (SystemUserJwtVo)CsSecurityHelper.getCurrentUser();
         SystemUserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, SystemUserInfoVo.class);
         return ResponseEntity.ok(userInfoVo);
     }
 
-    @ApiOperation("获取验证码")
+    @Operation(summary = "获取验证码")
     @AnonymousPostMapping(value = "/captcha/getImage")
     public ResponseEntity<Map<String, Object>> getCode() {
         // 获取运算的结果
@@ -146,7 +145,7 @@ public class SystemAuthController {
         return ResponseEntity.ok(imgResult);
     }
 
-    @ApiOperation("退出登录")
+    @Operation(summary = "退出登录")
     @AnonymousPostMapping(value = "/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         String token = tokenProvider.getToken(request);

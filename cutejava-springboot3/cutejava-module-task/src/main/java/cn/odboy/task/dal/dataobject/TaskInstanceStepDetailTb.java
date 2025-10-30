@@ -20,8 +20,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,16 +40,16 @@ import java.util.Date;
 @Setter
 @ToString
 @TableName("task_instance_step_detail")
-@ApiModel(value = "TaskInstanceStepDetailTb对象", description = "")
+@Schema(name = "TaskInstanceStepDetailTb对象", description = "")
 public class TaskInstanceStepDetailTb extends CsObject {
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
 
     /**
      * id
      */
-    @ApiModelProperty("id")
+    @Schema(name="id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     @JSONField(format = "string")
@@ -60,20 +59,20 @@ public class TaskInstanceStepDetailTb extends CsObject {
      * task_instance_detail表id
      */
     @TableField("instance_detail_id")
-    @ApiModelProperty("task_instance_detail表id")
+    @Schema(name="task_instance_detail表id")
     private Long instanceDetailId;
 
     /**
      * 步骤描述
      */
     @TableField("step_desc")
-    @ApiModelProperty("步骤描述")
+    @Schema(name="步骤描述")
     private String stepDesc;
 
     /**
      * 状态(success成功 fail失败)
      */
     @TableField("step_status")
-    @ApiModelProperty("状态(success成功 fail失败)")
+    @Schema(name="状态(success成功 fail失败)")
     private String stepStatus;
 }

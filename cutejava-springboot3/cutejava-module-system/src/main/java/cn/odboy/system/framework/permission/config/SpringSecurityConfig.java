@@ -92,9 +92,9 @@ public class SpringSecurityConfig {
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 // 静态资源等等
                 .requestMatchers(HttpMethod.GET, "*.html", "*.css", "*.js", "/websocket/**").permitAll()
-//                // Knife4j 和 OpenAPI 相关路径
-//                .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**",
-//                    "/configuration/ui", "/configuration/security").permitAll()
+                // Knife4j 和 OpenAPI 相关路径
+                .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**",
+                    "/configuration/ui", "/configuration/security").permitAll()
                 // 文件
                 .requestMatchers("/avatar/**").permitAll().requestMatchers("/file/**").permitAll()
                 // 阿里巴巴 druid

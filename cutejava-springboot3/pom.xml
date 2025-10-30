@@ -161,16 +161,11 @@
             <version>3.9.1</version>
         </dependency>
 
-        <!-- Spring Boot 3 只支持OpenAPI3规范，暂时不接 -->
-<!--        <dependency>-->
-<!--            <groupId>com.github.xiaoymin</groupId>-->
-<!--            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>-->
-<!--            <version>4.4.0</version>-->
-<!--        </dependency>-->
+        <!-- Spring Boot 3 只支持OpenAPI3规范 -->
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.5.22</version>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>4.5.0</version>
         </dependency>
 
         <!-- Mysql依赖包 -->

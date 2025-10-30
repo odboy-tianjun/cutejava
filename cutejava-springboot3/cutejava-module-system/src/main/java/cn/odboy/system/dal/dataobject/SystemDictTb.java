@@ -18,12 +18,11 @@ package cn.odboy.system.dal.dataobject;
 
 import cn.odboy.base.CsBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -31,15 +30,15 @@ import jakarta.validation.constraints.NotNull;
 public class SystemDictTb extends CsBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
-    @ApiModelProperty(value = "ID", hidden = true)
+    @Schema(name ="ID", hidden = true)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "名称")
+    @Schema(name ="名称")
     private String name;
 
-    @ApiModelProperty(value = "描述")
+    @Schema(name ="描述")
     @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String description;
 }

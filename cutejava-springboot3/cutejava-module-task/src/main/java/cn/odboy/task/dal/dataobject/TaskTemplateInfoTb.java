@@ -20,8 +20,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,13 +38,13 @@ import lombok.ToString;
 @Setter
 @ToString
 @TableName("task_template_info")
-@ApiModel(value = "TaskTemplateInfoTb对象", description = "任务模板")
+@Schema(name = "TaskTemplateInfoTb对象", description = "任务模板")
 public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
 
     /**
      * id
      */
-    @ApiModelProperty("id")
+    @Schema(name="id")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -53,13 +52,13 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
      * 数据有效性
      */
     @TableField("available")
-    @ApiModelProperty("数据有效性")
+    @Schema(name="数据有效性")
     private Boolean available;
 
     /**
      * 变更类型
      */
-    @ApiModelProperty("变更类型")
+    @Schema(name="变更类型")
     @TableField("change_type")
     private String changeType;
 
@@ -67,13 +66,13 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
      * 流水线名称
      */
     @TableField("`name`")
-    @ApiModelProperty("流水线名称")
+    @Schema(name="流水线名称")
     private String name;
 
     /**
      * 流水线描述
      */
-    @ApiModelProperty("流水线描述")
+    @Schema(name="流水线描述")
     @TableField("`description`")
     private String description;
 
@@ -81,20 +80,20 @@ public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
      * 流水线模板内容
      */
     @TableField("template")
-    @ApiModelProperty("流水线模板内容")
+    @Schema(name="流水线模板内容")
     private String template;
 
     /**
      * 环境别名
      */
     @TableField("env_alias")
-    @ApiModelProperty("环境别名")
+    @Schema(name="环境别名")
     private String envAlias;
 
     /**
      * 应用为语言，资源为类型
      */
     @TableField("`language`")
-    @ApiModelProperty("应用为语言，资源为类型")
+    @Schema(name="应用为语言，资源为类型")
     private String language;
 }

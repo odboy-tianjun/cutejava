@@ -16,10 +16,9 @@
 
 package cn.odboy.base;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.validation.constraints.NotNull;
 
 /**
  * 通用参数

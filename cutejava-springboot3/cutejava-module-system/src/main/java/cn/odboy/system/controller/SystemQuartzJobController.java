@@ -26,8 +26,9 @@ import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.service.SystemQuartzJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,19 +36,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/quartzJob")
-@Api(tags = "系统:定时任务管理")
+@Tag(name = "系统:定时任务管理")
 public class SystemQuartzJobController {
     @Autowired
     private SystemQuartzJobService systemQuartzJobService;
 
-    @ApiOperation("查询定时任务")
+    @Operation(summary = "查询定时任务")
     @PostMapping
     @PreAuthorize("@el.check('quartzJob:list')")
     public ResponseEntity<CsPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
@@ -56,21 +56,21 @@ public class SystemQuartzJobController {
         return ResponseEntity.ok(systemQuartzJobService.queryQuartzJobByArgs(criteria, page));
     }
 
-    @ApiOperation("导出任务数据")
+    @Operation(summary = "导出任务数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('quartzJob:list')")
     public void exportQuartzJob(HttpServletResponse response, SystemQueryQuartzJobArgs criteria) throws IOException {
         systemQuartzJobService.exportQuartzJobExcel(systemQuartzJobService.queryQuartzJobByArgs(criteria), response);
     }
 
-    @ApiOperation("导出日志数据")
+    @Operation(summary = "导出日志数据")
     @GetMapping(value = "/logs/download")
     @PreAuthorize("@el.check('quartzJob:list')")
     public void exportQuartzJobLog(HttpServletResponse response, SystemQueryQuartzJobArgs criteria) throws IOException {
         systemQuartzJobService.exportQuartzLogExcel(systemQuartzJobService.queryQuartzLogByArgs(criteria), response);
     }
 
-    @ApiOperation("查询任务执行日志")
+    @Operation(summary = "查询任务执行日志")
     @PostMapping(value = "/logs")
     @PreAuthorize("@el.check('quartzJob:list')")
     public ResponseEntity<CsPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
@@ -78,7 +78,7 @@ public class SystemQuartzJobController {
         return ResponseEntity.ok(systemQuartzJobService.queryQuartzLogByArgs(args, page));
     }
 
-    @ApiOperation("新增定时任务")
+    @Operation(summary = "新增定时任务")
     @PostMapping(value = "/createQuartzJob")
     @PreAuthorize("@el.check('quartzJob:add')")
     public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb args) {
@@ -91,7 +91,7 @@ public class SystemQuartzJobController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("修改定时任务")
+    @Operation(summary = "修改定时任务")
     @PutMapping
     @PreAuthorize("@el.check('quartzJob:edit')")
     public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {
@@ -101,7 +101,7 @@ public class SystemQuartzJobController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("更改定时任务状态")
+    @Operation(summary = "更改定时任务状态")
     @PostMapping(value = "/switchQuartzJobStatus/{id}")
     @PreAuthorize("@el.check('quartzJob:edit')")
     public ResponseEntity<Void> switchQuartzJobStatus(@PathVariable Long id) {
@@ -109,7 +109,7 @@ public class SystemQuartzJobController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("执行定时任务")
+    @Operation(summary = "执行定时任务")
     @PostMapping(value = "/startQuartzJob/{id}")
     @PreAuthorize("@el.check('quartzJob:edit')")
     public ResponseEntity<Void> startQuartzJob(@PathVariable Long id) {
@@ -117,7 +117,7 @@ public class SystemQuartzJobController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation("删除定时任务")
+    @Operation(summary = "删除定时任务")
     @PostMapping(value = "/removeJobByIds")
     @PreAuthorize("@el.check('quartzJob:del')")
     public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {

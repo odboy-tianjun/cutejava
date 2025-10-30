@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
@@ -26,30 +26,30 @@ import java.util.Date;
  */
 @Data
 public class SystemUserOnlineVo {
-    @ApiModelProperty(value = "Token编号")
+    @Schema(name = "Token编号")
     private String uid;
 
-    @ApiModelProperty(value = "用户名")
+    @Schema(name = "用户名")
     private String userName;
 
-    @ApiModelProperty(value = "昵称")
+    @Schema(name = "昵称")
     private String nickName;
 
-    @ApiModelProperty(value = "岗位")
+    @Schema(name = "岗位")
     private String dept;
 
-    @ApiModelProperty(value = "浏览器")
+    @Schema(name = "浏览器")
     private String browser;
 
-    @ApiModelProperty(value = "IP")
+    @Schema(name = "IP")
     private String ip;
 
-    @ApiModelProperty(value = "地址")
+    @Schema(name = "地址")
     private String address;
 
-    @ApiModelProperty(value = "token")
+    @Schema(name = "token")
     private String key;
 
-    @ApiModelProperty(value = "登录时间")
+    @Schema(name = "登录时间")
     private Date loginTime;
 }
