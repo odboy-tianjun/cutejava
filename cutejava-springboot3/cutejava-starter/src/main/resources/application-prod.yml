@@ -123,7 +123,6 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-      aop-patterns: "cn.odboy.mapper.*,cn.odboy.service.*,cn.odboy.*.mapper.*,cn.odboy.*.service.*"
 # 集成mybatis-plus
 mybatis-plus:
   configuration:
