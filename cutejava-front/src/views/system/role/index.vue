@@ -138,7 +138,7 @@
             :default-checked-keys="menuIds"
             :load="getMenuDatas"
             :props="defaultProps"
-            check-strictly
+            :check-strictly="true"
             accordion
             show-checkbox
             node-key="id"
