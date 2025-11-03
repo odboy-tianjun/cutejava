@@ -47,7 +47,7 @@ spring:
   data:
     redis:
       database: ${REDIS_DB:1}
-      host: ${REDIS_HOST:192.168.100.128}
+      host: ${REDIS_HOST:127.0.0.1}
       port: ${REDIS_PORT:26379}
       password: ${REDIS_PWD:kd123456}
       # 连接超时时间
@@ -71,7 +71,7 @@ spring:
       db-type: com.alibaba.druid.pool.DruidDataSource
       # sql监控
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.100.128:23306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://127.0.0.1:23306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: kd123456
       # 初始连接数，建议设置为与最小空闲连接数相同
@@ -203,7 +203,7 @@ app:
   oss:
     max-size: 100
     minio:
-      endpoint: http://192.168.100.128:9000
+      endpoint: http://127.0.0.1:9000
       bucketName: cutejava
       accessKey: 8o5oVzqvKby5TzaGcfmx
       secretKey: 8BiK5UbmvXGJNVQ98CGiohHzT1N1FMRZqHRdJllj
