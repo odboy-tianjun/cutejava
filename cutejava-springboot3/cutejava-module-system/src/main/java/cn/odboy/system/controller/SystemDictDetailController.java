@@ -16,8 +16,8 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
@@ -44,13 +44,13 @@ public class SystemDictDetailController {
 
     @Operation(summary = "查询字典详情")
     @PostMapping
-    public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByCrud(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
+    public ResponseEntity<KitPageResult<SystemDictDetailTb>> queryDictDetailByCrud(@Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
         return queryDictDetailByArgs(args);
     }
 
     @Operation(summary = "查询字典详情")
     @PostMapping(value = "/queryDictDetailByArgs")
-    public ResponseEntity<CsPageResult<SystemDictDetailTb>> queryDictDetailByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictDetailArgs> args) {
+    public ResponseEntity<KitPageResult<SystemDictDetailTb>> queryDictDetailByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
         SystemQueryDictDetailArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(args.getPage(), args.getSize());
         return ResponseEntity.ok(systemDictDetailService.queryDictDetailByArgs(criteria, page));

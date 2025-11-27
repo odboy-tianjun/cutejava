@@ -16,9 +16,9 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
-import cn.odboy.framework.context.CsSpringBeanHolder;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
@@ -50,7 +50,7 @@ public class SystemQuartzJobController {
     @Operation(summary = "查询定时任务")
     @PostMapping
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryQuartzJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(@Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> args) {
         SystemQueryQuartzJobArgs criteria = args.getArgs();
         Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemQuartzJobService.queryQuartzJobByArgs(criteria, page));
@@ -73,7 +73,7 @@ public class SystemQuartzJobController {
     @Operation(summary = "查询任务执行日志")
     @PostMapping(value = "/logs")
     @PreAuthorize("@el.check('quartzJob:list')")
-    public ResponseEntity<CsPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
+    public ResponseEntity<KitPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
         Page<SystemQuartzLogTb> page = new Page<>(args.getPage(), args.getSize());
         return ResponseEntity.ok(systemQuartzJobService.queryQuartzLogByArgs(args, page));
     }
@@ -133,7 +133,7 @@ public class SystemQuartzJobController {
     private void checkBean(String beanName) {
         // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
         // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
-        if (!CsSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
+        if (!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
             throw new BadRequestException("非法的 Bean，请重新输入！");
         }
     }

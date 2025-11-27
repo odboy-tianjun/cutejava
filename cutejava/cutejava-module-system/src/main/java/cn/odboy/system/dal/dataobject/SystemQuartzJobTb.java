@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @TableName("system_quartz_job")
-public class SystemQuartzJobTb extends CsBaseUserTimeTb {
+public class SystemQuartzJobTb extends KitBaseUserTimeTb {
 
     public static final String JOB_KEY = "JOB_KEY";
 

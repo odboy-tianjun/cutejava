@@ -1,9 +1,9 @@
 package cn.odboy.system.dal.redis;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class SystemUserOnlineInfoDAO {
     private final AppProperties properties;
     private final TokenProvider tokenProvider;
-    private final CsRedisHelper redisHelper;
+    private final KitRedisHelper redisHelper;
 
     /**
      * 保存在线用户信息
@@ -37,10 +37,10 @@ public class SystemUserOnlineInfoDAO {
 
     public void saveUserJwtModelByToken(SystemUserJwtVo userJwtVo, String token, HttpServletRequest request) {
         String dept = userJwtVo.getUser().getDept().getName();
-        String ip = CsBrowserUtil.getIp(request);
+        String ip = KitBrowserUtil.getIp(request);
         String id = tokenProvider.getId(token);
-        String version = CsBrowserUtil.getVersion(request);
-        String address = CsIPUtil.getCityInfo(ip);
+        String version = KitBrowserUtil.getVersion(request);
+        String address = KitIPUtil.getCityInfo(ip);
         SystemUserOnlineVo userOnlineVo = null;
         try {
             userOnlineVo = new SystemUserOnlineVo();
@@ -51,7 +51,7 @@ public class SystemUserOnlineInfoDAO {
             userOnlineVo.setBrowser(version);
             userOnlineVo.setIp(ip);
             userOnlineVo.setAddress(address);
-            userOnlineVo.setKey(CsDesEncryptUtil.desEncrypt(token));
+            userOnlineVo.setKey(KitDesEncryptUtil.desEncrypt(token));
             userOnlineVo.setLoginTime(new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -91,7 +91,7 @@ public class SystemUserOnlineInfoDAO {
             map.put("登录日期", user.getLoginTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -113,14 +113,14 @@ public class SystemUserOnlineInfoDAO {
      * @return /
      */
 
-    public CsPageResult<SystemUserOnlineVo> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
+    public KitPageResult<SystemUserOnlineVo> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
         String username = null;
         if (onlineVo != null) {
             username = onlineVo.getUserName();
         }
         List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
-        List<SystemUserOnlineVo> paging = CsPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
-        return CsPageUtil.toPage(paging, onlineUserList.size());
+        List<SystemUserOnlineVo> paging = KitPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
+        return KitPageUtil.toPage(paging, onlineUserList.size());
     }
 
     /**

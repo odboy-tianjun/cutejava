@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemMenuVo extends CsObject {
+public class SystemMenuVo extends KitObject {
 
     @ApiModelProperty(value = "菜单名称")
     private String name;

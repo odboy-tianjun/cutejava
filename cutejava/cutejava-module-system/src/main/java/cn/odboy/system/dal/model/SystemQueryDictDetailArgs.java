@@ -16,14 +16,14 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SystemQueryDictDetailArgs extends CsObject {
+public class SystemQueryDictDetailArgs extends KitObject {
     @ApiModelProperty(value = "标签")
     private String label;
 

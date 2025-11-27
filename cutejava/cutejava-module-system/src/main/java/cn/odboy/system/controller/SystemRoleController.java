@@ -17,8 +17,8 @@
 package cn.odboy.system.controller;
 
 import cn.hutool.core.lang.Dict;
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
@@ -72,7 +72,7 @@ public class SystemRoleController {
     @ApiOperation("查询角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
+    public ResponseEntity<KitPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> args) {
         SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemRoleService.queryRoleByArgs(criteria, page));

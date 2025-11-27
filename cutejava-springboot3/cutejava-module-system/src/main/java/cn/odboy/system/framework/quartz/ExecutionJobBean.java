@@ -22,9 +22,9 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import cn.odboy.framework.context.CsSpringBeanHolder;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.quartz.core.QuartzRunnable;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
@@ -47,16 +47,16 @@ public class ExecutionJobBean extends QuartzJobBean {
     /**
      * 此处仅供参考，可根据任务执行情况自定义线程池参数
      */
-    private final ThreadPoolTaskExecutor executor = CsSpringBeanHolder.getBean("taskAsync");
+    private final ThreadPoolTaskExecutor executor = KitSpringBeanHolder.getBean("taskAsync");
 
     @Override
     public void executeInternal(JobExecutionContext context) {
         // 获取任务
         SystemQuartzJobTb quartzJob = (SystemQuartzJobTb)context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
         // 获取spring bean
-        SystemQuartzLogMapper quartzLogMapper = CsSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
-        SystemQuartzJobService systemQuartzJobService = CsSpringBeanHolder.getBean(SystemQuartzJobService.class);
-        CsRedisHelper redisHelper = CsSpringBeanHolder.getBean(CsRedisHelper.class);
+        SystemQuartzLogMapper quartzLogMapper = KitSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
+        SystemQuartzJobService systemQuartzJobService = KitSpringBeanHolder.getBean(SystemQuartzJobService.class);
+        KitRedisHelper redisHelper = KitSpringBeanHolder.getBean(KitRedisHelper.class);
 
         String uuid = quartzJob.getUuid();
 
@@ -104,7 +104,7 @@ public class ExecutionJobBean extends QuartzJobBean {
                 systemQuartzJobService.switchQuartzJobStatus(quartzJob);
             }
             if (quartzJob.getEmail() != null) {
-                SystemEmailService emailService = CsSpringBeanHolder.getBean(SystemEmailService.class);
+                SystemEmailService emailService = KitSpringBeanHolder.getBean(SystemEmailService.class);
                 // 邮箱报警
                 if (StrUtil.isNotBlank(quartzJob.getEmail())) {
                     SystemSendEmailArgs sendEmailRequest = taskAlarm(quartzJob, ExceptionUtil.stacktraceToString(e));

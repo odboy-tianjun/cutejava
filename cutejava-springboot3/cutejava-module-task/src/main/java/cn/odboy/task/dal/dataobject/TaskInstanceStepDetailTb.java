@@ -15,7 +15,7 @@
  */
 package cn.odboy.task.dal.dataobject;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -40,7 +40,7 @@ import java.util.Date;
 @ToString
 @TableName("task_instance_step_detail")
 @Schema(name = "TaskInstanceStepDetailTb对象")
-public class TaskInstanceStepDetailTb extends CsObject {
+public class TaskInstanceStepDetailTb extends KitObject {
     @TableField(fill = FieldFill.INSERT)
     @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;

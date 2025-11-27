@@ -53,7 +53,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     @Autowired
     private DateStringToDateConverter dateStringToDateConverter;
     @Autowired
-    private CsFileLocalUploadHelper fileUploadPathHelper;
+    private KitFileLocalUploadHelper fileUploadPathHelper;
 
     @Bean
     public CorsFilter corsFilter() {

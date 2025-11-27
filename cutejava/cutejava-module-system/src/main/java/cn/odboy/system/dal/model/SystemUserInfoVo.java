@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemUserInfoVo extends CsObject {
+public class SystemUserInfoVo extends KitObject {
     private SystemSimpleUserVo user;
     private List<Long> dataScopes;
     private List<SystemRoleCodeVo> authorities;

@@ -16,13 +16,13 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SystemProductLineVo extends CsObject {
+public class SystemProductLineVo extends KitObject {
     /**
      * 部门ID（select的value）
      */

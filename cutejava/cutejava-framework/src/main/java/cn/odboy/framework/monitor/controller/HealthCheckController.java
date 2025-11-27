@@ -17,7 +17,7 @@
 package cn.odboy.framework.monitor.controller;
 
 import cn.odboy.annotation.AnonymousGetMapping;
-import cn.odboy.framework.monitor.service.CsHealthCheckPointService;
+import cn.odboy.framework.monitor.service.KitHealthCheckPointService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +32,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "系统：健康检查接口")
 public class HealthCheckController {
     @Autowired
-    private CsHealthCheckPointService healthCheckPointService;
+    private KitHealthCheckPointService kitHealthCheckPointService;
 
     /**
      * 就绪检查
      */
     @AnonymousGetMapping(value = "/readiness")
     public ResponseEntity<?> doReadiness() {
-        return healthCheckPointService.doReadiness();
+        return kitHealthCheckPointService.doReadiness();
     }
 
     /**
@@ -47,7 +47,7 @@ public class HealthCheckController {
      */
     @AnonymousGetMapping(value = "/liveness")
     public ResponseEntity<?> doLiveness() {
-        return healthCheckPointService.doLiveness();
+        return kitHealthCheckPointService.doLiveness();
     }
 
     //    /**

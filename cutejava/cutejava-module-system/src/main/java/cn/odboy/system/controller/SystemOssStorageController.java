@@ -16,8 +16,8 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
@@ -47,7 +47,7 @@ public class SystemOssStorageController {
     @ApiOperation("查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<CsPageResult<SystemOssStorageVo>> queryOssStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
+    public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(@Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
         SystemQueryStorageArgs criteria = args.getArgs();
         Page<SystemOssStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemOssStorageService.queryOssStorage(criteria, page));

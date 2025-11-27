@@ -48,7 +48,7 @@ public class BootApplication {
     }
 
     @Bean
-    public CsSpringBeanHolder springBeanHolder() {
-        return new CsSpringBeanHolder();
+    public KitSpringBeanHolder springBeanHolder() {
+        return new KitSpringBeanHolder();
     }
 }

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @TableName("system_dict")
-public class SystemDictTb extends CsBaseUserTimeTb {
+public class SystemDictTb extends KitBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @ApiModelProperty(value = "ID", hidden = true)

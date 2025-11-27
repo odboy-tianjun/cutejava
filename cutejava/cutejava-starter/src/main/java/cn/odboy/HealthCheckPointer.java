@@ -16,14 +16,14 @@
 
 package cn.odboy;
 
-import cn.odboy.framework.monitor.service.CsHealthCheckPointService;
+import cn.odboy.framework.monitor.service.KitHealthCheckPointService;
 import cn.odboy.system.service.SystemDictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HealthCheckPointer implements CsHealthCheckPointService {
+public class HealthCheckPointer implements KitHealthCheckPointService {
     @Autowired
     private SystemDictService systemDictService;
 

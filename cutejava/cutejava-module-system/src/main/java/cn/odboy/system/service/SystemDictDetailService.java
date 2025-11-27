@@ -17,12 +17,12 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,8 +78,8 @@ public class SystemDictDetailService {
      * @return /
      */
 
-    public CsPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs args, Page<Object> page) {
-        return CsPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(args, page));
+    public KitPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs args, Page<Object> page) {
+        return KitPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(args, page));
     }
 
     /**

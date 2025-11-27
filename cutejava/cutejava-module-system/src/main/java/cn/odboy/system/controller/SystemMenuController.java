@@ -17,8 +17,8 @@
 package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
@@ -26,7 +26,7 @@ import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.service.SystemMenuService;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,17 +85,17 @@ public class SystemMenuController {
     @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsPageResult<SystemMenuTb>> queryAllMenuByCrud(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenuByCrud(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
         return queryAllMenu(args);
     }
 
     @PostMapping(value = "/queryMenuByArgs")
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<CsPageResult<SystemMenuTb>> queryAllMenu(@Validated @RequestBody CsPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
         SystemQueryMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
-        return ResponseEntity.ok(CsPageUtil.toPage(menuList));
+        return ResponseEntity.ok(KitPageUtil.toPage(menuList));
     }
 
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")

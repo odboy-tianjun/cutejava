@@ -17,7 +17,7 @@
 package cn.odboy.task.core;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.framework.context.CsSpringBeanHolder;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.exception.ServerException;
 import cn.odboy.task.constant.TaskJobKeys;
@@ -57,8 +57,8 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
     public void executeInternal(JobExecutionContext context) {
         this.workThread = Thread.currentThread();
         // ========================== 获取代理类 ==========================
-        TaskInstanceInfoService taskInstanceInfoService = CsSpringBeanHolder.getBean(TaskInstanceInfoService.class);
-        TaskInstanceDetailService taskInstanceDetailService = CsSpringBeanHolder.getBean(TaskInstanceDetailService.class);
+        TaskInstanceInfoService taskInstanceInfoService = KitSpringBeanHolder.getBean(TaskInstanceInfoService.class);
+        TaskInstanceDetailService taskInstanceDetailService = KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
         // ========================== 获取参数 ==========================
         JobDataMap dataMap = context.getMergedJobDataMap();
         long id = dataMap.getLong(TaskJobKeys.ID);
@@ -126,7 +126,7 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
                 isFound = true;
             }
         }
-        TaskInstanceStepDetailService taskInstanceStepDetailService = CsSpringBeanHolder.getBean(TaskInstanceStepDetailService.class);
+        TaskInstanceStepDetailService taskInstanceStepDetailService = KitSpringBeanHolder.getBean(TaskInstanceStepDetailService.class);
         List<String> bizCodeList = taskInstanceDetails.stream().map(TaskInstanceDetailTb::getBizCode).distinct().toList();
         List<TaskInstanceDetailTb> taskInstanceDetailTbs = taskInstanceDetailService.queryByInstanceIdAndBizCodeList(id, bizCodeList);
         List<Long> taskInstanceDetailIds = taskInstanceDetailTbs.stream().map(TaskInstanceDetailTb::getId).toList();
@@ -174,7 +174,7 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
             for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodes) {
                 String code = taskTemplateNodeVo.getCode();
                 try {
-                    TaskStepExecutor executor = CsSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
+                    TaskStepExecutor executor = KitSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
                     taskInstanceDetailService.fastStart(id, code, dataMap);
                     executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
                     taskInstanceDetailService.fastSuccessWithInfo(id, code, null);

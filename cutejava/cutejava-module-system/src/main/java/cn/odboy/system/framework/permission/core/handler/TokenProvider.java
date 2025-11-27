@@ -21,7 +21,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.redis.SystemCacheKey;
 import io.jsonwebtoken.Claims;
@@ -51,7 +51,7 @@ public class TokenProvider implements InitializingBean {
     public static final String AUTHORITIES_UUID_KEY = "uid";
     public static final String AUTHORITIES_UID_KEY = "userId";
     @Autowired
-    private CsRedisHelper redisHelper;
+    private KitRedisHelper redisHelper;
     @Autowired
     private AppProperties properties;
     // 0.11.x版本

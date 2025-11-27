@@ -16,14 +16,14 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SystemQueryDictDetailArgs extends CsObject {
+public class SystemQueryDictDetailArgs extends KitObject {
     @Schema(name = "标签")
     private String label;
 

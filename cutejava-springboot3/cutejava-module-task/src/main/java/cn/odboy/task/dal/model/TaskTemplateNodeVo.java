@@ -16,7 +16,7 @@
 
 package cn.odboy.task.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class TaskTemplateNodeVo extends CsObject {
+public class TaskTemplateNodeVo extends KitObject {
     /**
      * 业务编码
      */

@@ -152,7 +152,7 @@ app:
     private-key: MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEA0vfvyTdGJkdbHkB8mp0f3FE0GYP3AYPaJF7jUd1M0XxFSE2ceK3k2kw20YvQ09NJKk+OMjWQl9WitG9pB6tSCQIDAQABAkA2SimBrWC2/wvauBuYqjCFwLvYiRYqZKThUS3MZlebXJiLB+Ue/gUifAAKIg1avttUZsHBHrop4qfJCwAI0+YRAiEA+W3NK/RaXtnRqmoUUkb59zsZUBLpvZgQPfj1MhyHDz0CIQDYhsAhPJ3mgS64NbUZmGWuuNKp5coY2GIj/zYDMJp6vQIgUueLFXv/eZ1ekgz2Oi67MNCk5jeTF2BurZqNLR3MSmUCIFT3Q6uHMtsB9Eha4u7hS31tj1UWE+D+ADzp59MGnoftAiBeHT7gDMuqeJHPL4b+kC+gzV4FGTfhR9q3tTbklZkD2A==
   # 鉴权
   jwt:
-    # 必须使用最少88位的Base64对该令牌进行编码 cn.odboy.util.CsBase64SecretUtil
+    # 必须使用最少88位的Base64对该令牌进行编码 cn.odboy.util.KitBase64SecretUtil
     base64-secret: YzE5ZWNjMjlkMGY4NDc4MDlmYzE0Y2I0MTk4YTQ4YjY5NTU0OGQxODNjNjQ0MmU1YjBmZTYwYjljYzI0M2M4MTJkZjk3Y2ZlYjg3ZTQxMjM4MjEwY2ZiYzE4YmFiYmZlZDVhM2M1YmI3M2FmNDFmNWJmM2MyMTM1ZDNhMmRmYzY=
     # 令牌过期时间 此处单位/毫秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
     token-validity-in-seconds: 14400000

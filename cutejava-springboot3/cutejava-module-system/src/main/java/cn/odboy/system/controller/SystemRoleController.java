@@ -17,13 +17,13 @@
 package cn.odboy.system.controller;
 
 import cn.hutool.core.lang.Dict;
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
-import cn.odboy.system.framework.permission.core.CsSecurityHelper;
+import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,7 +71,7 @@ public class SystemRoleController {
     @Operation(summary = "查询角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<CsPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody CsPageArgs<SystemQueryRoleArgs> args) {
+    public ResponseEntity<KitPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> args) {
         SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemRoleService.queryRoleByArgs(criteria, page));
@@ -131,7 +131,7 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels = systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList();
+        List<Integer> levels = systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).toList();
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

@@ -17,9 +17,9 @@
 package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
-import cn.odboy.base.CsSelectOptionVo;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
+import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
@@ -30,8 +30,8 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.service.*;
-import cn.odboy.util.CsPageUtil;
-import cn.odboy.util.CsRsaEncryptUtil;
+import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitRsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -80,7 +80,7 @@ public class SystemUserController {
     @ApiOperation("查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<CsPageResult<SystemUserTb>> queryUserByArgs(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
+    public ResponseEntity<KitPageResult<SystemUserTb>> queryUserByArgs(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
         Page<SystemUserTb> page = new Page<>(args.getPage(), args.getSize());
         SystemQueryUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
@@ -104,7 +104,7 @@ public class SystemUserController {
             criteria.getDeptIds().addAll(dataScopes);
             return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
         }
-        return ResponseEntity.ok(CsPageUtil.emptyData());
+        return ResponseEntity.ok(KitPageUtil.emptyData());
     }
 
     @ApiOperation("新增用户")
@@ -156,8 +156,8 @@ public class SystemUserController {
     @ApiOperation("修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
     public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo) throws Exception {
-        String oldPass = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
-        String newPass = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
+        String oldPass = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
+        String newPass = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
@@ -186,7 +186,7 @@ public class SystemUserController {
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args) throws Exception {
-        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
+        String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
@@ -213,7 +213,7 @@ public class SystemUserController {
     @ApiOperation("查询用户基础数据")
     @PostMapping(value = "/queryUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<List<CsSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody CsPageArgs<SystemQueryUserArgs> args) {
+    public ResponseEntity<List<KitSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
         int maxPageSize = 50;
         SystemQueryUserArgs criteria = args.getArgs();
         LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
@@ -226,14 +226,14 @@ public class SystemUserController {
             c.or();
             c.like(SystemUserTb::getNickName, criteria.getBlurry());
         });
-        List<CsSelectOptionVo> collect =
+        List<KitSelectOptionVo> collect =
             systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
                 Map<String, Object> ext = new HashMap<>(1);
                 ext.put("id", m.getId());
                 ext.put("deptId", m.getDeptId());
                 ext.put("email", m.getEmail());
                 ext.put("phone", m.getPhone());
-                return CsSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
+                return KitSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
             }).collect(Collectors.toList());
         return ResponseEntity.ok(collect);
     }

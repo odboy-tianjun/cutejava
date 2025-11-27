@@ -16,7 +16,7 @@
 
 package cn.odboy.framework.properties.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +25,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ContentRsaEncodeSettingModel extends CsObject {
+public class ContentRsaEncodeSettingModel extends KitObject {
     private String privateKey;
 }

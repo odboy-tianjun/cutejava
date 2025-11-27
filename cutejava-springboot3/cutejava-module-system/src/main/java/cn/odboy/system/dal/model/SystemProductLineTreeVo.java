@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +24,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SystemProductLineTreeVo extends CsObject {
+public class SystemProductLineTreeVo extends KitObject {
     private String value;
     private String label;
     private List<SystemProductLineTreeVo> children;

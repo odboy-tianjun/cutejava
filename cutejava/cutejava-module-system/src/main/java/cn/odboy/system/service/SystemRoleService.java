@@ -20,7 +20,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -32,8 +32,8 @@ import cn.odboy.system.dal.mysql.SystemRoleDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -148,7 +148,7 @@ public class SystemRoleService {
             map.put("创建日期", role.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -180,11 +180,11 @@ public class SystemRoleService {
      * @return
      */
 
-    public CsPageResult<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
+    public KitPageResult<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByArgs(criteria);
         Long total = systemRoleMapper.countRoleByArgs(criteria);
-        return CsPageUtil.toPage(roles, total);
+        return KitPageUtil.toPage(roles, total);
     }
 
     /**

@@ -16,7 +16,7 @@
 
 package cn.odboy;
 
-import cn.odboy.framework.mybatisplus.core.CsMpCmdGenUtil;
+import cn.odboy.framework.mybatisplus.core.KitMpCmdGenUtil;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class GenCode {
     private static final String URL = String.format("jdbc:mysql://%s:%s/%s", ADDR, PORT, DATABASE_NAME);
 
     public static void main(String[] args) {
-        CsMpCmdGenUtil generator = new CsMpCmdGenUtil();
+        KitMpCmdGenUtil generator = new KitMpCmdGenUtil();
         generator.setDatabaseUrl(URL);
         generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
         generator.setDatabaseUsername(DATABASE_USER);
@@ -40,7 +40,7 @@ public class GenCode {
         genTaskCode(generator);
     }
 
-    private static void genTaskCode(CsMpCmdGenUtil generator) {
+    private static void genTaskCode(KitMpCmdGenUtil generator) {
         generator.gen("task", "", List.of("task_instance_info", "task_instance_detail", "task_template_info", "task_instance_step_detail"));
     }
 }

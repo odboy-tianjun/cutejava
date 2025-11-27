@@ -16,8 +16,8 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
@@ -60,7 +60,7 @@ public class SystemDictController {
     @Operation(summary = "查询字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<CsPageResult<SystemDictTb>> queryDictByArgs(@Validated @RequestBody CsPageArgs<SystemQueryDictArgs> args) {
+    public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictArgs> args) {
         Page<SystemDictTb> page;
         SystemQueryDictArgs criteria = args.getArgs();
         if (args.getSize() != null) {

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("system_dict")
-public class SystemDictTb extends CsBaseUserTimeTb {
+public class SystemDictTb extends KitBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @Schema(name = "ID", hidden = true)

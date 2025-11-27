@@ -17,7 +17,7 @@
 package cn.odboy.system.framework.bizlock;
 
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,10 +33,10 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 public class BizLockAspect {
-    private final CsRedisHelper redisHelper;
+    private final KitRedisHelper redisHelper;
     private final ExpressionParser parser = new SpelExpressionParser();
 
-    public BizLockAspect(CsRedisHelper redisHelper) {
+    public BizLockAspect(KitRedisHelper redisHelper) {
         this.redisHelper = redisHelper;
     }
 

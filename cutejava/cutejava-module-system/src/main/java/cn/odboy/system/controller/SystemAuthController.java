@@ -24,7 +24,7 @@ import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserLoginArgs;
@@ -33,7 +33,7 @@ import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
-import cn.odboy.util.CsRsaEncryptUtil;
+import cn.odboy.util.KitRsaEncryptUtil;
 import com.wf.captcha.base.Captcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,7 +64,7 @@ import java.util.concurrent.TimeUnit;
 @Api(tags = "系统：系统授权接口")
 public class SystemAuthController {
     @Autowired
-    private CsRedisHelper redisHelper;
+    private KitRedisHelper redisHelper;
     @Autowired
     private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
     @Autowired
@@ -80,7 +80,7 @@ public class SystemAuthController {
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = CsRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+        String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码

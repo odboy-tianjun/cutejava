@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemUpdateQuartzJobArgs extends CsObject {
+public class SystemUpdateQuartzJobArgs extends KitObject {
     @NotNull
     private Long id;
     private String uuid;

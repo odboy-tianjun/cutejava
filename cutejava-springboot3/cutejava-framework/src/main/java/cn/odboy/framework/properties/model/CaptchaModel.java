@@ -16,13 +16,13 @@
 
 package cn.odboy.framework.properties.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CaptchaModel extends CsObject {
+public class CaptchaModel extends KitObject {
     /**
      * 验证码有效时间, 单位: 秒
      */

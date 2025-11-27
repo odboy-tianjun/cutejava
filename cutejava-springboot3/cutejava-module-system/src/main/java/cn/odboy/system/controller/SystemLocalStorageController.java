@@ -16,14 +16,14 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
-import cn.odboy.util.CsFileUtil;
+import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +47,7 @@ public class SystemLocalStorageController {
     @Operation(summary = "查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<CsPageResult<SystemLocalStorageTb>> queryLocalStorage(@Validated @RequestBody CsPageArgs<SystemQueryStorageArgs> args) {
+    public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(@Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
         SystemQueryStorageArgs criteria = args.getArgs();
         Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(localStorageService.queryLocalStorage(criteria, page));
@@ -72,8 +72,8 @@ public class SystemLocalStorageController {
     @PostMapping("/uploadPicture")
     public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
         // 判断文件是否为图片
-        String suffix = CsFileUtil.getSuffix(file.getOriginalFilename());
-        if (!FileTypeEnum.IMAGE.getCode().equals(CsFileUtil.getFileType(suffix))) {
+        String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
+        if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
             throw new BadRequestException("只能上传图片");
         }
         SystemLocalStorageTb localStorage = localStorageService.uploadFile(null, file);

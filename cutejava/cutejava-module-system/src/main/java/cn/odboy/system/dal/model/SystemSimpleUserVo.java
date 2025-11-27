@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -29,7 +29,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemSimpleUserVo extends CsObject {
+public class SystemSimpleUserVo extends KitObject {
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
     @ApiModelProperty(value = "用户角色")

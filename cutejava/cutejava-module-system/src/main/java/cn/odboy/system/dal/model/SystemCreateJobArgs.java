@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemCreateJobArgs extends CsObject {
+public class SystemCreateJobArgs extends KitObject {
     @NotBlank(message = "职位名称必填")
     private String name;
     @NotNull(message = "职位排序必填")

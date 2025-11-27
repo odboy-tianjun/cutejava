@@ -16,8 +16,8 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
@@ -52,7 +52,7 @@ public class SystemJobController {
     @Operation(summary = "查询岗位")
     @PostMapping(value = "/queryAllEnableJob")
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
         SystemQueryJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemJobService.queryJobByArgs(criteria, page));
@@ -61,7 +61,7 @@ public class SystemJobController {
     @Operation(summary = "查询岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<CsPageResult<SystemJobTb>> queryJobByCrud(@Validated @RequestBody CsPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
         return queryJobByArgs(args);
     }
 

@@ -21,7 +21,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
@@ -33,8 +33,8 @@ import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
-import cn.odboy.util.CsClassUtil;
-import cn.odboy.util.CsFileUtil;
+import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -119,7 +119,7 @@ public class SystemDeptService {
             map.put("创建日期", dept.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -166,7 +166,7 @@ public class SystemDeptService {
             if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {
                 criteria.setPidIsNull(true);
             }
-            List<Field> fields = CsClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
+            List<Field> fields = KitClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
             List<String> fieldNames = new ArrayList<>() {{
                 add("pidIsNull");
                 add("enabled");
@@ -291,7 +291,7 @@ public class SystemDeptService {
      * @return /
      */
 
-    public CsPageResult<SystemDeptTb> buildDeptTree(List<SystemDeptTb> deptList) {
+    public KitPageResult<SystemDeptTb> buildDeptTree(List<SystemDeptTb> deptList) {
         Set<SystemDeptTb> trees = new LinkedHashSet<>();
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
@@ -319,7 +319,7 @@ public class SystemDeptService {
         if (CollectionUtil.isEmpty(trees)) {
             trees = deptSet;
         }
-        CsPageResult<SystemDeptTb> baseResult = new CsPageResult<>();
+        KitPageResult<SystemDeptTb> baseResult = new KitPageResult<>();
         baseResult.setContent(CollectionUtil.isEmpty(trees) ? new ArrayList<>(deptSet) : new ArrayList<>(trees));
         baseResult.setTotalElements(deptSet.size());
         return baseResult;

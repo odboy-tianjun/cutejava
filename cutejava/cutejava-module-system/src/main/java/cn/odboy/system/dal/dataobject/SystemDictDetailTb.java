@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @TableName("system_dict_detail")
-public class SystemDictDetailTb extends CsBaseUserTimeTb {
+public class SystemDictDetailTb extends KitBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @ApiModelProperty(value = "ID", hidden = true)
