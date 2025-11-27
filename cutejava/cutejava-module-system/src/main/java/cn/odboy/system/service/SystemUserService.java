@@ -17,9 +17,9 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
+import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
@@ -30,8 +30,8 @@ import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -59,7 +59,7 @@ public class SystemUserService {
     @Autowired
     private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
     @Autowired
-    private CsFileLocalUploadHelper fileUploadPathHelper;
+    private KitFileLocalUploadHelper fileUploadPathHelper;
 
     /**
      * 新增用户
@@ -222,20 +222,20 @@ public class SystemUserService {
             throw new BadRequestException("异常用户数据, 请联系管理员处理");
         }
         // 文件大小验证
-        CsFileUtil.checkSize(fileUploadPathHelper.getAvatarMaxSize(), multipartFile.getSize());
+        KitFileUtil.checkSize(fileUploadPathHelper.getAvatarMaxSize(), multipartFile.getSize());
         // 验证文件上传的格式
         String image = "gif jpg png jpeg";
-        String fileType = CsFileUtil.getSuffix(multipartFile.getOriginalFilename());
+        String fileType = KitFileUtil.getSuffix(multipartFile.getOriginalFilename());
         if (fileType != null && !image.contains(fileType)) {
             throw new BadRequestException("文件格式错误！, 仅支持 " + image + " 格式");
         }
         String oldPath = user.getAvatarPath();
-        File file = CsFileUtil.upload(multipartFile, fileUploadPathHelper.getPath());
+        File file = KitFileUtil.upload(multipartFile, fileUploadPathHelper.getPath());
         user.setAvatarPath(Objects.requireNonNull(file).getPath());
         user.setAvatarName(file.getName());
         systemUserMapper.insertOrUpdate(user);
         if (StrUtil.isNotBlank(oldPath)) {
-            CsFileUtil.del(oldPath);
+            KitFileUtil.del(oldPath);
         }
         systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
         return new HashMap<>(1) {{
@@ -280,7 +280,7 @@ public class SystemUserService {
             map.put("创建日期", user.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -291,9 +291,9 @@ public class SystemUserService {
      * @return /
      */
 
-    public CsPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
+    public KitPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
         IPage<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, page);
-        return CsPageUtil.toPage(users);
+        return KitPageUtil.toPage(users);
     }
 
     /**

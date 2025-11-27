@@ -16,11 +16,11 @@
 
 package cn.odboy.system.controller;
 
-import cn.odboy.base.CsPageArgs;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageArgs;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
-import cn.odboy.util.CsDesEncryptUtil;
+import cn.odboy.util.KitDesEncryptUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +45,7 @@ public class SystemOnlineController {
     @Operation(summary = "查询在线用户")
     @PostMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<CsPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody CsPageArgs<SystemUserOnlineVo> args) {
+    public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody KitPageArgs<SystemUserOnlineVo> args) {
         IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
         return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
     }
@@ -63,7 +63,7 @@ public class SystemOnlineController {
     public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
         for (String token : keys) {
             // 解密Key
-            token = CsDesEncryptUtil.desDecrypt(token);
+            token = KitDesEncryptUtil.desDecrypt(token);
             systemUserOnlineInfoDAO.logoutByToken(token);
         }
         return ResponseEntity.ok(null);

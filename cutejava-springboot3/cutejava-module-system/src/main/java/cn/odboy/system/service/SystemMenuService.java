@@ -20,7 +20,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.framework.context.CsSpringBeanHolder;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
@@ -31,8 +31,8 @@ import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
-import cn.odboy.util.CsClassUtil;
-import cn.odboy.util.CsFileUtil;
+import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,7 +158,7 @@ public class SystemMenuService {
         }
         List<Long> menuIds = menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().toList();
         if (CollUtil.isNotEmpty(menuIds)) {
-            CsSpringBeanHolder.getBean(SystemMenuService.class).removeRoleMenuByMenuIds(menuIds);
+            KitSpringBeanHolder.getBean(SystemMenuService.class).removeRoleMenuByMenuIds(menuIds);
             systemMenuMapper.deleteByIds(menuIds);
         }
         for (SystemMenuTb menu : menuSet) {
@@ -192,7 +192,7 @@ public class SystemMenuService {
             map.put("创建日期", menu.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -215,7 +215,7 @@ public class SystemMenuService {
     public List<SystemMenuTb> queryAllMenu(SystemQueryMenuArgs criteria, Boolean isQuery) throws Exception {
         if (Boolean.TRUE.equals(isQuery)) {
             criteria.setPidIsNull(true);
-            List<Field> fields = CsClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
+            List<Field> fields = KitClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
             for (Field field : fields) {
                 //设置对象的访问权限, 保证对private的属性的访问
                 field.setAccessible(true);

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -34,7 +34,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("system_menu")
-public class SystemMenuTb extends CsBaseUserTimeTb {
+public class SystemMenuTb extends KitBaseUserTimeTb {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "menu_id", type = IdType.AUTO)

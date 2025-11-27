@@ -20,15 +20,15 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
+import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ public class SystemLocalStorageService {
     @Autowired
     private SystemLocalStorageMapper systemLocalStorageMapper;
     @Autowired
-    private CsFileLocalUploadHelper fileUploadPathHelper;
+    private KitFileLocalUploadHelper fileUploadPathHelper;
     @Autowired
     private AppProperties properties;
 
@@ -59,17 +59,17 @@ public class SystemLocalStorageService {
     @Transactional(rollbackFor = Exception.class)
     public SystemLocalStorageTb uploadFile(String name, MultipartFile multipartFile) {
         long size = multipartFile.getSize();
-        CsFileUtil.checkSize(properties.getOss().getMaxSize(), size);
-        String suffix = CsFileUtil.getSuffix(multipartFile.getOriginalFilename());
-        String type = CsFileUtil.getFileType(suffix);
+        KitFileUtil.checkSize(properties.getOss().getMaxSize(), size);
+        String suffix = KitFileUtil.getSuffix(multipartFile.getOriginalFilename());
+        String type = KitFileUtil.getFileType(suffix);
         String uploadDateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT);
-        File file = CsFileUtil.upload(multipartFile, fileUploadPathHelper.getPath() + uploadDateStr + File.separator);
+        File file = KitFileUtil.upload(multipartFile, fileUploadPathHelper.getPath() + uploadDateStr + File.separator);
         if (file == null) {
             throw new BadRequestException("上传失败");
         }
         try {
-            String formatSize = CsFileUtil.getSize(size);
-            String prefixName = StrUtil.isBlank(name) ? CsFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
+            String formatSize = KitFileUtil.getSize(size);
+            String prefixName = StrUtil.isBlank(name) ? KitFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
             SystemLocalStorageTb localStorage = new SystemLocalStorageTb();
             localStorage.setRealName(file.getName());
             localStorage.setName(prefixName);
@@ -81,7 +81,7 @@ public class SystemLocalStorageService {
             systemLocalStorageMapper.insert(localStorage);
             return localStorage;
         } catch (Exception e) {
-            CsFileUtil.del(file);
+            KitFileUtil.del(file);
             throw e;
         }
     }
@@ -108,7 +108,7 @@ public class SystemLocalStorageService {
         for (Long id : ids) {
             SystemLocalStorageTb storage = systemLocalStorageMapper.selectById(id);
             try {
-                CsFileUtil.del(storage.getPath());
+                KitFileUtil.del(storage.getPath());
                 systemLocalStorageMapper.deleteById(storage);
             } catch (IORuntimeException e) {
                 throw new BadRequestException("删除文件 " + storage.getName() + " 失败");
@@ -135,7 +135,7 @@ public class SystemLocalStorageService {
             map.put("创建日期", localStorage.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -145,8 +145,8 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public CsPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
-        return CsPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
+    public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+        return KitPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 
     /**
@@ -156,6 +156,6 @@ public class SystemLocalStorageService {
      * @return /
      */
     public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
-        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, CsPageUtil.getCount(systemLocalStorageMapper)).getRecords();
+        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, KitPageUtil.getCount(systemLocalStorageMapper)).getRecords();
     }
 }

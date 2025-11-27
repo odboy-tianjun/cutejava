@@ -16,7 +16,7 @@
 
 package cn.odboy.task.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class TaskTemplateNodeOperateButtonVo extends CsObject {
+public class TaskTemplateNodeOperateButtonVo extends KitObject {
     /**
      * 按钮类型（service:调用某个服务并传递参数 link:带参跳转）
      */

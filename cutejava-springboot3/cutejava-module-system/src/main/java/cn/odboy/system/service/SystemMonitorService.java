@@ -19,8 +19,8 @@ package cn.odboy.system.service;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsIPUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitIPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
@@ -94,9 +94,9 @@ public class SystemMonitorService {
             }
         }
         long used = total - available;
-        diskInfo.put("total", total > 0 ? CsFileUtil.getSize(total) : "?");
-        diskInfo.put("available", CsFileUtil.getSize(available));
-        diskInfo.put("used", CsFileUtil.getSize(used));
+        diskInfo.put("total", total > 0 ? KitFileUtil.getSize(total) : "?");
+        diskInfo.put("available", KitFileUtil.getSize(available));
+        diskInfo.put("used", KitFileUtil.getSize(used));
         if (total != 0) {
             diskInfo.put("usageRate", df.format(used / (double)total * 100));
         } else {
@@ -197,7 +197,7 @@ public class SystemMonitorService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        systemInfo.put("ip", CsIPUtil.getLocalIp());
+        systemInfo.put("ip", KitIPUtil.getLocalIp());
         return systemInfo;
     }
 }

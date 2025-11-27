@@ -15,7 +15,7 @@
  */
 package cn.odboy.task.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -39,7 +39,7 @@ import lombok.ToString;
 @ToString
 @TableName("task_template_info")
 @ApiModel(value = "TaskTemplateInfoTb对象", description = "任务模板")
-public class TaskTemplateInfoTb extends CsBaseUserTimeTb {
+public class TaskTemplateInfoTb extends KitBaseUserTimeTb {
 
     /**
      * id

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +24,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class SystemCheckEmailCaptchaArgs extends CsObject {
+public class SystemCheckEmailCaptchaArgs extends KitObject {
     @NotBlank(message = "邮箱不能为空")
     private String email;
     @NotBlank(message = "验证码不能为空")

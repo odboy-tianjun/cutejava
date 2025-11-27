@@ -16,7 +16,7 @@
 
 package cn.odboy.task.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +29,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class TaskInstanceNodeVo extends CsObject {
+public class TaskInstanceNodeVo extends KitObject {
     /**
      * 业务编码
      */

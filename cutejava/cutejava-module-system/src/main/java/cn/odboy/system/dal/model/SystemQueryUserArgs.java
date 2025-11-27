@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +28,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemQueryUserArgs extends CsObject {
+public class SystemQueryUserArgs extends KitObject {
 
     @ApiModelProperty(value = "ID")
     private Long id;

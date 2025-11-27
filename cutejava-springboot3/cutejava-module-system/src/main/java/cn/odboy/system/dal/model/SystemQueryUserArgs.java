@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +28,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemQueryUserArgs extends CsObject {
+public class SystemQueryUserArgs extends KitObject {
 
     @Schema(name = "ID")
     private Long id;

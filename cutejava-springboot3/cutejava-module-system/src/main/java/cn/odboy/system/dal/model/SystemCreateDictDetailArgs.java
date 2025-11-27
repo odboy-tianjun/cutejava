@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +25,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemCreateDictDetailArgs extends CsObject {
+public class SystemCreateDictDetailArgs extends KitObject {
     @NotNull(message = "参数dict必填")
     private SystemDictTb dict;
     @NotBlank(message = "字典标签必填")

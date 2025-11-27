@@ -22,13 +22,13 @@ import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
-import cn.odboy.util.CsDesEncryptUtil;
-import cn.odboy.util.CsResourceTemplateUtil;
+import cn.odboy.util.KitDesEncryptUtil;
+import cn.odboy.util.KitResourceTemplateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +43,7 @@ public class SystemEmailService {
     @Autowired
     private SystemEmailConfigMapper systemEmailConfigMapper;
     @Autowired
-    private CsRedisHelper redisHelper;
+    private KitRedisHelper redisHelper;
     @Autowired
     private AppProperties properties;
     @Value("${spring.application.title}")
@@ -60,7 +60,7 @@ public class SystemEmailService {
         SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
         if (!emailConfig.getPassword().equals(systemEmailConfigTb.getPassword())) {
             // 对称加密
-            systemEmailConfigTb.setPassword(CsDesEncryptUtil.desEncrypt(emailConfig.getPassword()));
+            systemEmailConfigTb.setPassword(KitDesEncryptUtil.desEncrypt(emailConfig.getPassword()));
         }
         systemEmailConfigTb.setId(1L);
         systemEmailConfigMapper.insertOrUpdate(systemEmailConfigTb);
@@ -87,7 +87,7 @@ public class SystemEmailService {
         account.setAuth(true);
         try {
             // 对称解密
-            account.setPass(CsDesEncryptUtil.desDecrypt(systemEmailConfigTb.getPassword()));
+            account.setPass(KitDesEncryptUtil.desDecrypt(systemEmailConfigTb.getPassword()));
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -144,9 +144,9 @@ public class SystemEmailService {
                 throw new BadRequestException("服务异常, 请联系网站负责人");
             }
             // 存在就再次发送原来的验证码
-            content = CsResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", code));
+            content = KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", code));
         } else {
-            content = CsResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
+            content = KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
         }
         SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
         sendEmail(sendEmailRequest);

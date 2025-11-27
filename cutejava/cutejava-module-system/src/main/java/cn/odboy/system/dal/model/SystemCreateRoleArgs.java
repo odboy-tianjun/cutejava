@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +27,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemCreateRoleArgs extends CsObject {
+public class SystemCreateRoleArgs extends KitObject {
     @NotBlank(message = "角色名称必填")
     private String name;
     @NotNull(message = "角色级别必填")

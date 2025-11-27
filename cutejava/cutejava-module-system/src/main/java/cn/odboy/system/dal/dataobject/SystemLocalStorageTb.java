@@ -18,7 +18,7 @@ package cn.odboy.system.dal.dataobject;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -29,7 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("system_local_storage")
-public class SystemLocalStorageTb extends CsBaseUserTimeTb {
+public class SystemLocalStorageTb extends KitBaseUserTimeTb {
 
     @TableId(value = "id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)

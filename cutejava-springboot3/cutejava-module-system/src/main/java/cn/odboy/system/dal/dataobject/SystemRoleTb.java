@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,7 +34,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("system_role")
-public class SystemRoleTb extends CsBaseUserTimeTb {
+public class SystemRoleTb extends KitBaseUserTimeTb {
 
     @NotNull(groups = {Update.class})
     @TableId(value = "role_id", type = IdType.AUTO)

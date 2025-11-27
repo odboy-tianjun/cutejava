@@ -16,7 +16,7 @@
 
 package cn.odboy.framework.properties.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +25,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class JwtAuthSettingModel extends CsObject {
+public class JwtAuthSettingModel extends KitObject {
     /**
      * 必须使用最少88位的Base64对该令牌进行编码
      */

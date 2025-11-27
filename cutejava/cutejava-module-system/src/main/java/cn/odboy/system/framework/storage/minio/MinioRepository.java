@@ -28,8 +28,8 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.OSSConfigModel;
 import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
-import cn.odboy.util.CsDateUtil;
-import cn.odboy.util.CsFileUtil;
+import cn.odboy.util.KitDateUtil;
+import cn.odboy.util.KitFileUtil;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
@@ -140,12 +140,12 @@ public class MinioRepository {
         StorageOSSModel ossConfig = properties.getOss();
         OSSConfigModel ossMinioConfig = ossConfig.getMinio();
         String type = FileTypeUtil.getType(tempFile);
-        String prefix = CsFileUtil.getPrefix(tempFile);
-        String suffix = CsFileUtil.getSuffix(tempFile);
+        String prefix = KitFileUtil.getPrefix(tempFile);
+        String suffix = KitFileUtil.getSuffix(tempFile);
 
         String fileCode = IdUtil.fastSimpleUUID();
         String fileName = fileCode + FileUtil.getSuffix(originalFilename);
-        String objectName = CsDateUtil.getNowDateStr() + "/" + fileName;
+        String objectName = KitDateUtil.getNowDateStr() + "/" + fileName;
         log.info("上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
 
@@ -163,7 +163,7 @@ public class MinioRepository {
         systemOssStorageTb.setFileCode(fileCode);
         systemOssStorageTb.setObjectName(objectName);
 
-        try (InputStream fileInputStream = CsFileUtil.getInputStream(tempFile)) {
+        try (InputStream fileInputStream = KitFileUtil.getInputStream(tempFile)) {
             PutObjectArgs objectArgs =
                 PutObjectArgs.builder().bucket(ossMinioConfig.getBucketName()).object(objectName).stream(fileInputStream, fileSize, -1).contentType(contentType)
                     .build();
@@ -174,7 +174,7 @@ public class MinioRepository {
             log.error("文件上传失败，文件名：{}，错误信息", originalFilename, e);
         } finally {
             try {
-                CsFileUtil.del(tempFile);
+                KitFileUtil.del(tempFile);
             } catch (IORuntimeException e) {
                 // 删除失败忽略
             }
@@ -195,11 +195,11 @@ public class MinioRepository {
         }
 
         long size = file.getSize();
-        CsFileUtil.checkSize(properties.getOss().getMaxSize(), size);
+        KitFileUtil.checkSize(properties.getOss().getMaxSize(), size);
 
         String fileName = UUID.randomUUID() + FileUtil.getSuffix(originalFilename);
         // yyyy/MM/dd/fileName.xxx
-        String objectName = CsDateUtil.getNowDateTimeStr() + "/" + fileName;
+        String objectName = KitDateUtil.getNowDateTimeStr() + "/" + fileName;
 
         log.info("准备上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         try (InputStream fileInputStream = file.getInputStream()) {

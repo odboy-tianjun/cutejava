@@ -15,13 +15,13 @@
  */
 package cn.odboy.task.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class TaskTemplateInfoVo extends CsObject {
+public class TaskTemplateInfoVo extends KitObject {
     private String changeType;
     private String name;
     private String description;

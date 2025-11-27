@@ -17,7 +17,7 @@
 package cn.odboy.framework.properties.model;
 
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
 import com.wf.captcha.*;
@@ -34,7 +34,7 @@ import java.awt.*;
  */
 @Getter
 @Setter
-public class UserLoginCaptchaSettingModel extends CsObject {
+public class UserLoginCaptchaSettingModel extends KitObject {
     private CaptchaCodeEnum codeType;
 
     /**

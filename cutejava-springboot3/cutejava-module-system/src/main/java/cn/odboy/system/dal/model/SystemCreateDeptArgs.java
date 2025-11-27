@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemCreateDeptArgs extends CsObject {
+public class SystemCreateDeptArgs extends KitObject {
     @NotBlank(message = "部门名称必填")
     private String name;
     @NotNull(message = "部门排序必填")

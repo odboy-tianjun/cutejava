@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -38,7 +38,7 @@ import java.util.Date;
 @ToString
 @TableName("system_operation_log")
 @Schema(name = "SystemOperationLog对象", description = "审计日志")
-public class SystemOperationLogTb extends CsObject {
+public class SystemOperationLogTb extends KitObject {
 
     /**
      * id

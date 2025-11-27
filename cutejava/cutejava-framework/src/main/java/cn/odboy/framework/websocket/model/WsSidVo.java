@@ -16,13 +16,13 @@
 
 package cn.odboy.framework.websocket.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class WsSidVo extends CsObject {
+public class WsSidVo extends KitObject {
     private String username;
     private String bizCode;
     private String param;

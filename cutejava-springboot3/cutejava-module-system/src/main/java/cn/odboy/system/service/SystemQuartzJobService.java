@@ -19,9 +19,9 @@ package cn.odboy.system.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.redis.CsRedisHelper;
+import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
@@ -29,8 +29,8 @@ import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletResponse;
 import org.quartz.CronExpression;
@@ -50,7 +50,7 @@ public class SystemQuartzJobService {
     @Autowired
     private QuartzManage quartzManage;
     @Autowired
-    private CsRedisHelper redisHelper;
+    private KitRedisHelper redisHelper;
 
     /**
      * 创建
@@ -193,7 +193,7 @@ public class SystemQuartzJobService {
             map.put("创建日期", quartzJob.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -219,7 +219,7 @@ public class SystemQuartzJobService {
             map.put("创建日期", quartzLog.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -230,8 +230,8 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
-        return CsPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
+    public KitPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
+        return KitPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
     }
 
     /**
@@ -242,8 +242,8 @@ public class SystemQuartzJobService {
      * @return /
      */
 
-    public CsPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
-        return CsPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
+    public KitPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
+        return KitPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
     }
 
     /**
@@ -254,7 +254,7 @@ public class SystemQuartzJobService {
      */
 
     public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, CsPageUtil.getCount(systemQuartzJobMapper)).getRecords();
+        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, KitPageUtil.getCount(systemQuartzJobMapper)).getRecords();
     }
 
     /**
@@ -265,7 +265,7 @@ public class SystemQuartzJobService {
      */
 
     public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, CsPageUtil.getCount(systemQuartzLogMapper)).getRecords();
+        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, KitPageUtil.getCount(systemQuartzLogMapper)).getRecords();
     }
 
     public SystemQuartzJobTb getQuartzJobById(Long id) {

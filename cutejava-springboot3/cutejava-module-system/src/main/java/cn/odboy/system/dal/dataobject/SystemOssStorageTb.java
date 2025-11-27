@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -37,7 +37,7 @@ import lombok.Setter;
 @Setter
 @TableName("system_oss_storage")
 @Schema(name = "SystemOssStorage对象", description = "OSS存储")
-public class SystemOssStorageTb extends CsBaseUserTimeTb {
+public class SystemOssStorageTb extends KitBaseUserTimeTb {
     @Schema(name = "ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

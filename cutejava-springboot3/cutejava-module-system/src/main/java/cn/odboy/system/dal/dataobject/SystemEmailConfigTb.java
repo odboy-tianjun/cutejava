@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +30,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("system_email_config")
 @EqualsAndHashCode(callSuper = false)
-public class SystemEmailConfigTb extends CsObject {
+public class SystemEmailConfigTb extends KitObject {
 
     @TableId("config_id")
     private Long id;

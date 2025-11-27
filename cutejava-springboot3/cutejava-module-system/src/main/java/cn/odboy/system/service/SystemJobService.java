@@ -17,15 +17,15 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +102,7 @@ public class SystemJobService {
             map.put("创建日期", job.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -113,8 +113,8 @@ public class SystemJobService {
      * @return
      */
 
-    public CsPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
-        return CsPageUtil.toPage(systemJobMapper.selectJobByArgs(args, page));
+    public KitPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
+        return KitPageUtil.toPage(systemJobMapper.selectJobByArgs(args, page));
     }
 
     /**
@@ -125,7 +125,7 @@ public class SystemJobService {
      */
 
     public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
-        return systemJobMapper.selectJobByArgs(args, CsPageUtil.getCount(systemJobMapper)).getRecords();
+        return systemJobMapper.selectJobByArgs(args, KitPageUtil.getCount(systemJobMapper)).getRecords();
     }
 
     /**

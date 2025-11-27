@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,7 +24,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SystemCreateDictArgs extends CsObject {
+public class SystemCreateDictArgs extends KitObject {
     @NotBlank(message = "字典名称必填")
     private String name;
     private String description;

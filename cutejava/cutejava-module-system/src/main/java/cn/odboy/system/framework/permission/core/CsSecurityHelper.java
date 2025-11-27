@@ -20,7 +20,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.framework.context.CsSpringBeanHolder;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
@@ -48,7 +48,7 @@ public class CsSecurityHelper {
      * @return UserDetails
      */
     public static UserDetails getCurrentUser() {
-        UserDetailsService userDetailsService = CsSpringBeanHolder.getBean(UserDetailsService.class);
+        UserDetailsService userDetailsService = KitSpringBeanHolder.getBean(UserDetailsService.class);
         return userDetailsService.loadUserByUsername(getCurrentUsername());
     }
 

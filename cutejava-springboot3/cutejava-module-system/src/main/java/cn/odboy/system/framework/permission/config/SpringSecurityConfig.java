@@ -22,7 +22,7 @@ import cn.odboy.system.framework.permission.core.handler.JwtAccessDeniedHandler;
 import cn.odboy.system.framework.permission.core.handler.JwtAuthenticationEntryPoint;
 import cn.odboy.system.framework.permission.core.handler.TokenFilter;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
-import cn.odboy.util.CsAnonTagUtil;
+import cn.odboy.util.KitAnonTagUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -74,7 +74,7 @@ public class SpringSecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // 获取匿名标记
-        Map<String, Set<String>> anonymousUrls = CsAnonTagUtil.getAnonymousUrl(applicationContext);
+        Map<String, Set<String>> anonymousUrls = KitAnonTagUtil.getAnonymousUrl(applicationContext);
 
         // 创建TokenFilter实例
         TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineInfoDAO);

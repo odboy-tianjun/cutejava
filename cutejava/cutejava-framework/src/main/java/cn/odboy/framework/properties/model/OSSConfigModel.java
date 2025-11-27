@@ -16,13 +16,13 @@
 
 package cn.odboy.framework.properties.model;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class OSSConfigModel extends CsObject {
+public class OSSConfigModel extends KitObject {
     /**
      * 服务地址
      */

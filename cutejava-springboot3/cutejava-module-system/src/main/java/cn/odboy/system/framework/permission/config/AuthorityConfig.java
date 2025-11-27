@@ -16,7 +16,7 @@
 
 package cn.odboy.system.framework.permission.config;
 
-import cn.odboy.system.framework.permission.core.CsSecurityHelper;
+import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class AuthorityConfig {
      */
     public Boolean check(String... permissions) {
         // 获取当前用户的所有权限
-        List<String> roleList = CsSecurityHelper.getCurrentUser().getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        List<String> roleList = KitSecurityHelper.getCurrentUser().getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         // 判断当前用户的所有权限是否包含接口上定义的权限
         return roleList.contains("admin") || Arrays.stream(permissions).anyMatch(roleList::contains);
     }

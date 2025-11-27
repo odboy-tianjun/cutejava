@@ -15,7 +15,7 @@
  */
 package cn.odboy.task.dal.dataobject;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -41,7 +41,7 @@ import java.util.Date;
 @ToString
 @TableName("task_instance_info")
 @Schema(name = "TaskInstanceInfoTb对象", description = "任务实例")
-public class TaskInstanceInfoTb extends CsObject {
+public class TaskInstanceInfoTb extends KitObject {
     @CreatedBy
     @TableField(fill = FieldFill.INSERT)
     @Schema(name = "创建人", hidden = true)

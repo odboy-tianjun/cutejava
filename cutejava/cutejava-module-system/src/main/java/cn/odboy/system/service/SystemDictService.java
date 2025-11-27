@@ -18,7 +18,7 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
@@ -26,8 +26,8 @@ import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,7 +117,7 @@ public class SystemDictService {
                 list.add(map);
             }
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     /**
@@ -128,8 +128,8 @@ public class SystemDictService {
      * @return /
      */
 
-    public CsPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-        return CsPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
+    public KitPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+        return KitPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
     }
 
     /**

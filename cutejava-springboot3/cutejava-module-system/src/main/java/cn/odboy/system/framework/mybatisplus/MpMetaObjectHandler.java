@@ -17,7 +17,7 @@
 package cn.odboy.system.framework.mybatisplus;
 
 import cn.hutool.core.date.DateTime;
-import cn.odboy.system.framework.permission.core.CsSecurityHelper;
+import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class MpMetaObjectHandler implements MetaObjectHandler {
         /* 操作人 */
         String username = "System";
         try {
-            username = CsSecurityHelper.getCurrentUsername();
+            username = KitSecurityHelper.getCurrentUsername();
         } catch (Exception ignored) {
         }
         this.strictInsertFill(metaObject, "createBy", String.class, username);
@@ -50,7 +50,7 @@ public class MpMetaObjectHandler implements MetaObjectHandler {
         /* 操作人 */
         String username = "System";
         try {
-            username = CsSecurityHelper.getCurrentUsername();
+            username = KitSecurityHelper.getCurrentUsername();
         } catch (Exception ignored) {
         }
         this.strictUpdateFill(metaObject, "updateBy", String.class, username);

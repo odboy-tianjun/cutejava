@@ -18,20 +18,20 @@ package cn.odboy.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.CsPageResult;
+import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
-import cn.odboy.framework.server.core.CsFileLocalUploadHelper;
+import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemOssStorageMapper;
 import cn.odboy.system.framework.storage.minio.MinioRepository;
 import cn.odboy.system.service.SystemOssStorageService;
-import cn.odboy.util.CsDateUtil;
-import cn.odboy.util.CsFileUtil;
-import cn.odboy.util.CsPageUtil;
+import cn.odboy.util.KitDateUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -63,17 +63,17 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     @Autowired
     private AppProperties properties;
     @Autowired
-    private CsFileLocalUploadHelper fileLocalUploadHelper;
+    private KitFileLocalUploadHelper fileLocalUploadHelper;
 
     @Override
-    public CsPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
+    public KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
         IPage<SystemOssStorageTb> ossStorageTbs = baseMapper.selectOssStorageByArgs(criteria, page);
         IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
             SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
-            storageVo.setFileSizeDesc(CsFileUtil.getSize(storageVo.getFileSize()));
+            storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
             return storageVo;
         });
-        return CsPageUtil.toPage(convert);
+        return KitPageUtil.toPage(convert);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
             map.put("创建日期", ossStorage.getCreateTime());
             list.add(map);
         }
-        CsFileUtil.downloadExcel(list, response);
+        KitFileUtil.downloadExcel(list, response);
     }
 
     @Override
@@ -111,16 +111,16 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
         StorageOSSModel ossConfig = properties.getOss();
         long fileSize = file.getSize();
         String contentType = file.getContentType();
-        CsFileUtil.checkSize(ossConfig.getMaxSize(), fileSize);
+        KitFileUtil.checkSize(ossConfig.getMaxSize(), fileSize);
         // 按天分组
-        String nowDateStr = CsDateUtil.getNowDateStr();
+        String nowDateStr = KitDateUtil.getNowDateStr();
         // 上传到本地临时目录
-        File tempFile = CsFileUtil.upload(file, fileLocalUploadHelper.getPath() + nowDateStr + File.separator);
+        File tempFile = KitFileUtil.upload(file, fileLocalUploadHelper.getPath() + nowDateStr + File.separator);
         if (tempFile == null) {
             throw new BadRequestException("上传失败");
         }
         // 校验文件md5, 看是否已存在云端（不确定, 可能云端已经删除, 但是正常来说云端是不允许私自删除的, 所以这里忽略云端不存在的情况）
-        String md5 = CsFileUtil.getMd5(tempFile);
+        String md5 = KitFileUtil.getMd5(tempFile);
         SystemOssStorageTb systemOssStorageTb = getByMd5(md5);
         if (systemOssStorageTb != null) {
             // 重新生成7天链接

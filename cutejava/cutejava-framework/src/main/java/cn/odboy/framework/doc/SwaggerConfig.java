@@ -18,7 +18,7 @@ package cn.odboy.framework.doc;
 
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.properties.AppProperties;
-import cn.odboy.util.CsAnonTagUtil;
+import cn.odboy.util.KitAnonTagUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -125,7 +125,7 @@ public class SwaggerConfig {
     }
 
     private SecurityContext getContextByPath() {
-        Set<String> urls = CsAnonTagUtil.getAllAnonymousUrl(applicationContext);
+        Set<String> urls = KitAnonTagUtil.getAllAnonymousUrl(applicationContext);
         urls = urls.stream().filter(url -> !"/".equals(url)).collect(Collectors.toSet());
         String regExp = "^(?!" + apiPath + String.join("|" + apiPath, urls) + ").*$";
         return SecurityContext.builder().securityReferences(defaultAuth()).operationSelector(o -> o.requestMappingPattern()

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsBaseUserTimeTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -35,7 +35,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("system_user")
-public class SystemUserTb extends CsBaseUserTimeTb {
+public class SystemUserTb extends KitBaseUserTimeTb {
 
     @NotNull(groups = Update.class)
     @TableId(value = "user_id", type = IdType.AUTO)

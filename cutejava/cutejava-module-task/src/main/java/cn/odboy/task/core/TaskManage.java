@@ -17,7 +17,7 @@ package cn.odboy.task.core;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.framework.context.CsSpringBeanHolder;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.task.constant.TaskChangeTypeEnum;
 import cn.odboy.task.constant.TaskJobKeys;
@@ -31,7 +31,7 @@ import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import cn.odboy.task.service.TaskInstanceDetailService;
 import cn.odboy.task.service.TaskInstanceInfoService;
 import cn.odboy.task.service.TaskTemplateInfoService;
-import cn.odboy.util.CsDateUtil;
+import cn.odboy.util.KitDateUtil;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,7 +101,7 @@ public class TaskManage {
             throw new BadRequestException("没有查询到任务编排明细");
         }
         // ========================== 创建任务 ==========================
-        TaskManage taskManage = CsSpringBeanHolder.getBean(TaskManage.class);
+        TaskManage taskManage = KitSpringBeanHolder.getBean(TaskManage.class);
         TaskInstanceInfoTb newInstance =
             taskManage.saveTaskInstanceInfoTb(contextName, changeTypeEnum, language, envAlias, source, reason, dataMap, templateInfo);
         dataMap.put(TaskJobKeys.ID, newInstance.getId());
@@ -243,9 +243,9 @@ public class TaskManage {
             instanceNodeVo.setStartTime(taskInstanceDetail.getStartTime());
             instanceNodeVo.setFinishTime(taskInstanceDetail.getFinishTime());
             if (taskInstanceDetail.getFinishTime() == null) {
-                instanceNodeVo.setDurationDesc(CsDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), new Date()));
+                instanceNodeVo.setDurationDesc(KitDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), new Date()));
             } else {
-                instanceNodeVo.setDurationDesc(CsDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), taskInstanceDetail.getFinishTime()));
+                instanceNodeVo.setDurationDesc(KitDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), taskInstanceDetail.getFinishTime()));
             }
             instanceNodeVo.setRunningDesc(taskInstanceDetail.getExecuteInfo());
             instanceNodeVo.setStatus(taskInstanceDetail.getExecuteStatus());

@@ -16,7 +16,7 @@
 
 package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.base.CsObject;
+import cn.odboy.base.KitObject;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -27,7 +27,7 @@ import java.util.Date;
 @Data
 @TableName("system_quartz_log")
 @EqualsAndHashCode(callSuper = false)
-public class SystemQuartzLogTb extends CsObject {
+public class SystemQuartzLogTb extends KitObject {
 
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(name = "ID", hidden = true)
