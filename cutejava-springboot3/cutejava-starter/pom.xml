@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.odboy</groupId>
-            <artifactId>cutejava-module-task</artifactId>
+            <artifactId>cutejava-module-system</artifactId>
             <version>1.4.1</version>
         </dependency>
     </dependencies>
