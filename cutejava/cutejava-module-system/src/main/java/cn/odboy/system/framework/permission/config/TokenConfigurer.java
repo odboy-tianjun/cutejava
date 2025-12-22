@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.permission.config;
 
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;

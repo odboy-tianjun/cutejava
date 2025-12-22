@@ -15,28 +15,101 @@
  */
 package cn.odboy.task.service;
 
+import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
-import com.baomidou.mybatisplus.extension.service.IService;
+import cn.odboy.task.dal.mysql.TaskInstanceInfoMapper;
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import java.util.Date;
 import org.quartz.JobDataMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
- * 任务实例 服务类
+ * 任务实例 服务实现类
  * </p>
  *
  * @author codegen
  * @since 2025-09-26
  */
-public interface TaskInstanceInfoService extends IService<TaskInstanceInfoTb> {
-    TaskInstanceInfoTb getRunningById(Long instanceId);
+@Service
+public class TaskInstanceInfoService {
+    @Autowired private TaskInstanceInfoMapper taskInstanceInfoMapper;
 
-    void fastFailWithMessage(Long id, String errorMessage);
+    public TaskInstanceInfoTb getRunningById(Long id) {
+        LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(TaskInstanceInfoTb::getId, id);
+        wrapper.eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode());
+        wrapper.orderByDesc(TaskInstanceInfoTb::getId);
+        return taskInstanceInfoMapper.selectOne(wrapper);
+    }
 
-    void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap);
+    @Transactional(rollbackFor = Exception.class)
+    public void fastFailWithMessage(Long id, String errorMessage) {
+        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+        updRecord.setId(id);
+        updRecord.setFinishTime(new Date());
+        updRecord.setStatus(TaskStatusEnum.Fail.getCode());
+        updRecord.setErrorMessage(errorMessage);
+        taskInstanceInfoMapper.updateById(updRecord);
+    }
 
-    void fastSuccessWithData(Long id, JobDataMap dataMap);
+    @Transactional(rollbackFor = Exception.class)
+    public void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap) {
+        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+        updRecord.setId(id);
+        updRecord.setFinishTime(new Date());
+        updRecord.setStatus(TaskStatusEnum.Fail.getCode());
+        updRecord.setErrorMessage(errorMessage);
+        updRecord.setJobData(JSON.toJSONString(dataMap));
+        taskInstanceInfoMapper.updateById(updRecord);
+    }
 
-    TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias, String changeType);
+    @Transactional(rollbackFor = Exception.class)
+    public void fastSuccessWithData(Long id, JobDataMap dataMap) {
+        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+        updRecord.setId(id);
+        updRecord.setFinishTime(new Date());
+        updRecord.setStatus(TaskStatusEnum.Success.getCode());
+        updRecord.setJobData(JSON.toJSONString(dataMap));
+        taskInstanceInfoMapper.updateById(updRecord);
+    }
 
-    TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias, String changeType);
+    public TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias,
+        String changeType) {
+        LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(TaskInstanceInfoTb::getContextName, contextName);
+        wrapper.eq(TaskInstanceInfoTb::getLanguage, language);
+        wrapper.eq(TaskInstanceInfoTb::getEnvAlias, envAlias);
+        wrapper.eq(TaskInstanceInfoTb::getChangeType, changeType);
+        wrapper.eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode());
+        wrapper.orderByDesc(TaskInstanceInfoTb::getId);
+        return taskInstanceInfoMapper.selectOne(wrapper);
+    }
+
+    public TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias,
+        String changeType) {
+        LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(TaskInstanceInfoTb::getContextName, contextName);
+        wrapper.eq(TaskInstanceInfoTb::getLanguage, language);
+        wrapper.eq(TaskInstanceInfoTb::getEnvAlias, envAlias);
+        wrapper.eq(TaskInstanceInfoTb::getChangeType, changeType);
+        wrapper.orderByDesc(TaskInstanceInfoTb::getId);
+        wrapper.last("LIMIT 1");
+        return taskInstanceInfoMapper.selectOne(wrapper);
+    }
+
+    public void save(TaskInstanceInfoTb newInstance) {
+        taskInstanceInfoMapper.insert(newInstance);
+    }
+
+    public TaskInstanceInfoTb getById(Long id) {
+        return taskInstanceInfoMapper.selectById(id);
+    }
+
+    public void updateById(TaskInstanceInfoTb taskInstanceInfoTb) {
+        taskInstanceInfoMapper.updateById(taskInstanceInfoTb);
+    }
 }

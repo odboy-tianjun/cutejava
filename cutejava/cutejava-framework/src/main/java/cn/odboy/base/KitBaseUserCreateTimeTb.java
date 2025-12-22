@@ -13,33 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
+import java.lang.reflect.Field;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 
-import java.lang.reflect.Field;
-import java.util.Date;
-
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUserCreateTimeTb extends KitObject {
-
-    @CreatedBy
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建人", hidden = true)
-    private String createBy;
-
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @CreatedBy @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建人", hidden = true) private String
+        createBy;
+    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
 
     @Override
@@ -58,10 +51,8 @@ public class KitBaseUserCreateTimeTb extends KitObject {
     }
 
     /* 分组校验 */
-    public @interface Create {
-    }
+    public @interface Create {}
 
     /* 分组校验 */
-    public @interface Update {
-    }
+    public @interface Update {}
 }

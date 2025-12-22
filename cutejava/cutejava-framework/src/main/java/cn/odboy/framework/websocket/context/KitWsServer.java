@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.websocket.context;
 
 import com.alibaba.fastjson2.JSON;
+import java.io.IOException;
+import java.util.Objects;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -62,7 +64,8 @@ public class KitWsServer {
         KitWsMessage wsMessage = JSON.parseObject(message, KitWsMessage.class);
         String bizCode = wsMessage.getBizCode();
         Object data = wsMessage.getData();
-        log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode, JSON.toJSONString(data));
+        log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode,
+            JSON.toJSONString(data));
     }
 
     /**

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.constant;
 
 /**
@@ -24,22 +23,18 @@ public interface SystemConst {
      * win 系统
      */
     String WIN = "win";
-
     /**
      * mac 系统
      */
     String MAC = "mac";
-
     /**
      * 请求头名称
      */
     String HEADER_NAME = "Authorization";
-
     /**
      * Token前缀
      */
     String TOKEN_PREFIX = "Bearer";
-
     /**
      * 小数点
      */

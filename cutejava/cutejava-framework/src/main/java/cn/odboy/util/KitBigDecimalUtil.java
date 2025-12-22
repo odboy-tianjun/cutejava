@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
-
-import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import lombok.experimental.UtilityClass;
 
 /**
  * 计算类
  */
 @UtilityClass
 public final class KitBigDecimalUtil {
-
     /**
      * 将对象转换为 BigDecimal
      *
@@ -139,15 +135,12 @@ public final class KitBigDecimalUtil {
     public static void main(String[] args) {
         BigDecimal num1 = new BigDecimal("10.123");
         BigDecimal num2 = new BigDecimal("2.456");
-
         System.out.println("加法结果: " + add(num1, num2));
         System.out.println("减法结果: " + subtract(num1, num2));
         System.out.println("乘法结果: " + multiply(num1, num2));
         System.out.println("除法结果: " + divide(num1, num2));
-
         Long cents = 12345L;
         System.out.println("分转元结果: " + centsToYuan(cents));
-
         BigDecimal yuan = new BigDecimal("123.45");
         System.out.println("元转分结果: " + yuanToCents(yuan));
     }

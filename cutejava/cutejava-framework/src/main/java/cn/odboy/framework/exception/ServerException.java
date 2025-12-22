@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.exception;
 
 import lombok.Getter;
@@ -23,7 +22,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Getter
 public class ServerException extends RuntimeException {
-
     private Integer status = INTERNAL_SERVER_ERROR.value();
 
     public ServerException(String msg) {

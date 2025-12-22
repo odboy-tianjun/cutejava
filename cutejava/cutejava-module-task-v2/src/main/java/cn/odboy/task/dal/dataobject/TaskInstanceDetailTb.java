@@ -17,16 +17,19 @@ package cn.odboy.task.dal.dataobject;
 
 import cn.odboy.base.KitObject;
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.Date;
 
 /**
  * <p>
@@ -42,72 +45,44 @@ import java.util.Date;
 @TableName("task_instance_detail")
 @ApiModel(value = "TaskInstanceDetailTb对象", description = "任务实例明细")
 public class TaskInstanceDetailTb extends KitObject {
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
-
     /**
      * id
      */
-    @ApiModelProperty("id")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    @JsonSerialize(using = ToStringSerializer.class)
-    @JSONField(format = "string")
-    private Long id;
-
+    @ApiModelProperty("id") @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class) @JSONField(format = "string") private Long id;
     /**
      * 任务实例id
      */
-    @TableField("instance_id")
-    @ApiModelProperty("任务实例id")
-    private Long instanceId;
-
+    @TableField("instance_id") @ApiModelProperty("任务实例id") private Long instanceId;
     /**
      * 开始时间
      */
-    @ApiModelProperty("开始时间")
-    @TableField("start_time")
-    private Date startTime;
-
+    @ApiModelProperty("开始时间") @TableField("start_time") private Date startTime;
     /**
      * 结束时间
      */
-    @ApiModelProperty("结束时间")
-    @TableField("finish_time")
-    private Date finishTime;
-
+    @ApiModelProperty("结束时间") @TableField("finish_time") private Date finishTime;
     /**
      * 业务编码
      */
-    @TableField("biz_code")
-    @ApiModelProperty("业务编码")
-    private String bizCode;
-
+    @TableField("biz_code") @ApiModelProperty("业务编码") private String bizCode;
     /**
      * 业务名称(步骤)
      */
-    @TableField("biz_name")
-    @ApiModelProperty("业务名称(步骤)")
-    private String bizName;
-
+    @TableField("biz_name") @ApiModelProperty("业务名称(步骤)") private String bizName;
     /**
      * 执行参数
      */
-    @ApiModelProperty("执行参数")
-    @TableField("execute_params")
-    private String executeParams;
-
+    @ApiModelProperty("执行参数") @TableField("execute_params") private String executeParams;
     /**
      * 执行信息
      */
-    @ApiModelProperty("执行信息")
-    @TableField("execute_info")
-    private String executeInfo;
-
+    @ApiModelProperty("执行信息") @TableField("execute_info") private String executeInfo;
     /**
      * 执行状态(running进行中 success成功 fail失败)
      */
-    @TableField("execute_status")
-    @ApiModelProperty("执行状态(running进行中 success成功 fail失败)")
-    private String executeStatus;
+    @TableField("execute_status") @ApiModelProperty("执行状态(running进行中 success成功 fail失败)") private String
+        executeStatus;
 }

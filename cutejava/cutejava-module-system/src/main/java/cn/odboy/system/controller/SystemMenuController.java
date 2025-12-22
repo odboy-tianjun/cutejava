@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -29,24 +28,30 @@ import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "系统：菜单管理")
 @RequestMapping("/api/menu")
 public class SystemMenuController {
-    @Autowired
-    private SystemMenuService systemMenuService;
-    @Autowired
-    private SystemMenuMapper systemMenuMapper;
+    @Autowired private SystemMenuService systemMenuService;
+    @Autowired private SystemMenuMapper systemMenuMapper;
 
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
@@ -85,14 +90,16 @@ public class SystemMenuController {
     @PostMapping
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenuByCrud(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenuByCrud(
+        @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
         return queryAllMenu(args);
     }
 
     @PostMapping(value = "/queryMenuByArgs")
     @ApiOperation("查询菜单")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
+    public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(
+        @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
         SystemQueryMenuArgs criteria = args.getArgs();
         List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
         return ResponseEntity.ok(KitPageUtil.toPage(menuList));

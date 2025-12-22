@@ -28,11 +28,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TaskStepNodeMergeBranch implements TaskStepExecutor {
-    @Autowired
-    private TaskInstanceStepDetailService stepDetailService;
+    @Autowired private TaskInstanceStepDetailService stepDetailService;
 
     @Override
-    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException {
+    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode)
+        throws BadRequestException {
         ThreadUtil.sleep(3000);
         stepDetailService.fail(instanceDetailId, "执行失败测试");
         //        stepDetailService.success(instanceDetailId, "执行成功");

@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class SystemCreateRoleArgs extends KitObject {
-    @NotBlank(message = "角色名称必填")
-    private String name;
-    @NotNull(message = "角色级别必填")
-    private Integer level;
-    @NotBlank(message = "数据范围必填")
-    private String dataScope;
+    @NotBlank(message = "角色名称必填") private String name;
+    @NotNull(message = "角色级别必填") private Integer level;
+    @NotBlank(message = "数据范围必填") private String dataScope;
     private String description;
     /**
      * 关联的部门

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.config;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -22,9 +21,8 @@ import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColumnById;
 import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
-import org.apache.ibatis.session.Configuration;
-
 import java.util.List;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * 批量插入SQL注入器

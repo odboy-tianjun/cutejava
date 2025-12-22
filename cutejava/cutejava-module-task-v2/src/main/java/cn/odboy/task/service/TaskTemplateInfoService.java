@@ -15,18 +15,25 @@
  */
 package cn.odboy.task.service;
 
-import cn.odboy.task.dal.dataobject.TaskTemplateInfoTb;
 import cn.odboy.task.dal.model.TaskTemplateInfoVo;
-import com.baomidou.mybatisplus.extension.service.IService;
+import cn.odboy.task.dal.mysql.TaskTemplateInfoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 任务模板 服务类
+ * 任务模板
  * </p>
  *
  * @author codegen
  * @since 2025-09-28
  */
-public interface TaskTemplateInfoService extends IService<TaskTemplateInfoTb> {
-    TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language, String changeType);
+@Service
+public class TaskTemplateInfoService {
+    @Autowired private TaskTemplateInfoMapper taskTemplateInfoMapper;
+
+    public TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language,
+        String changeType) {
+        return taskTemplateInfoMapper.selectTemplateInfoByECL(envAlias, contextName, language, changeType);
+    }
 }

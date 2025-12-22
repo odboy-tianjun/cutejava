@@ -33,15 +33,23 @@ import cn.odboy.task.service.TaskInstanceInfoService;
 import cn.odboy.task.service.TaskTemplateInfoService;
 import cn.odboy.util.KitDateUtil;
 import com.alibaba.fastjson2.JSON;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.ObjectAlreadyExistsException;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -64,8 +72,8 @@ public class TaskManage {
      * @param dataMap        任务参数
      */
     @Transactional(rollbackFor = Exception.class)
-    public TaskInstanceInfoTb createJob(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source, String reason,
-        JobDataMap dataMap) {
+    public TaskInstanceInfoTb createJob(String contextName, TaskChangeTypeEnum changeTypeEnum, String language,
+        String envAlias, String source, String reason, JobDataMap dataMap) {
         if (StrUtil.isBlank(contextName)) {
             throw new BadRequestException("参数contextName必填");
         }
@@ -85,7 +93,8 @@ public class TaskManage {
             dataMap = new JobDataMap();
         }
         // ========================== 获取任务编排模板 ==========================
-        TaskTemplateInfoVo taskInstanceInfoVo = taskTemplateInfoService.getTemplateInfoByECL(envAlias, contextName, language, changeTypeEnum.getCode());
+        TaskTemplateInfoVo taskInstanceInfoVo =
+            taskTemplateInfoService.getTemplateInfoByECL(envAlias, contextName, language, changeTypeEnum.getCode());
         if (taskInstanceInfoVo == null) {
             throw new BadRequestException("没有查询到任务编排模板");
         }
@@ -103,7 +112,8 @@ public class TaskManage {
         // ========================== 创建任务 ==========================
         TaskManage taskManage = KitSpringBeanHolder.getBean(TaskManage.class);
         TaskInstanceInfoTb newInstance =
-            taskManage.saveTaskInstanceInfoTb(contextName, changeTypeEnum, language, envAlias, source, reason, dataMap, templateInfo);
+            taskManage.saveTaskInstanceInfoTb(contextName, changeTypeEnum, language, envAlias, source, reason, dataMap,
+                templateInfo);
         dataMap.put(TaskJobKeys.ID, newInstance.getId());
         // 应用名、资源类型
         dataMap.put(TaskJobKeys.CONTEXT_NAME, contextName);
@@ -117,8 +127,8 @@ public class TaskManage {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public TaskInstanceInfoTb saveTaskInstanceInfoTb(String contextName, TaskChangeTypeEnum changeTypeEnum, String language, String envAlias, String source,
-        String reason, JobDataMap dataMap, String templateInfo) {
+    public TaskInstanceInfoTb saveTaskInstanceInfoTb(String contextName, TaskChangeTypeEnum changeTypeEnum,
+        String language, String envAlias, String source, String reason, JobDataMap dataMap, String templateInfo) {
         TaskInstanceInfoTb newInstance = new TaskInstanceInfoTb();
         newInstance.setContextName(contextName);
         newInstance.setLanguage(language);
@@ -154,15 +164,12 @@ public class TaskManage {
     @Transactional(rollbackFor = Exception.class)
     public void stopJob(Long instanceId) {
         TaskInstanceInfoTb taskInstanceInfoTb = taskInstanceInfoService.getRunningById(instanceId);
-
         String changeType = taskInstanceInfoTb.getChangeType();
         String contextName = taskInstanceInfoTb.getContextName();
-
         taskInstanceInfoTb.setStatus(TaskStatusEnum.Fail.getCode());
         taskInstanceInfoTb.setErrorMessage("任务被中断");
         taskInstanceInfoTb.setFinishTime(new Date());
         taskInstanceInfoService.updateById(taskInstanceInfoTb);
-
         try {
             JobKey jobKey = JobKey.jobKey(changeType, contextName);
             TriggerKey triggerKey = TriggerKey.triggerKey(changeType, contextName);
@@ -208,22 +215,22 @@ public class TaskManage {
 
     public TaskInstanceInfoVo getLastInfo(String contextName, String language, String envAlias, String changeType) {
         TaskInstanceInfoVo record = new TaskInstanceInfoVo();
-
-        TaskInstanceInfoTb historyInstance = taskInstanceInfoService.getLastHistoryInstance(contextName, language, envAlias, changeType);
+        TaskInstanceInfoTb historyInstance =
+            taskInstanceInfoService.getLastHistoryInstance(contextName, language, envAlias, changeType);
         if (historyInstance == null) {
             // 仅返回模板
-            TaskTemplateInfoVo templateInfo = taskTemplateInfoService.getTemplateInfoByECL(envAlias, contextName, language, changeType);
+            TaskTemplateInfoVo templateInfo =
+                taskTemplateInfoService.getTemplateInfoByECL(envAlias, contextName, language, changeType);
             if (templateInfo == null) {
                 throw new BadRequestException("没有查询到任务编排模板");
             }
             record.setTemplate(templateInfo.getTemplateInfo());
             return record;
         }
-
         record = BeanUtil.copyProperties(historyInstance, TaskInstanceInfoVo.class);
         record.setHistory(buildNodeList(record));
-
-        TaskInstanceInfoTb runningInstance = taskInstanceInfoService.getLastRunningInstance(contextName, language, envAlias, changeType);
+        TaskInstanceInfoTb runningInstance =
+            taskInstanceInfoService.getLastRunningInstance(contextName, language, envAlias, changeType);
         if (runningInstance != null) {
             TaskInstanceInfoVo taskInstanceInfoVo = BeanUtil.copyProperties(runningInstance, TaskInstanceInfoVo.class);
             record.setCurrent(buildNodeList(taskInstanceInfoVo));
@@ -233,7 +240,6 @@ public class TaskManage {
 
     private List<TaskInstanceNodeVo> buildNodeList(TaskInstanceInfoVo record) {
         List<TaskInstanceNodeVo> records = new ArrayList<>();
-
         // 节点明细
         List<TaskInstanceDetailTb> taskInstanceDetails = taskInstanceDetailService.queryByInstanceId(record.getId());
         for (TaskInstanceDetailTb taskInstanceDetail : taskInstanceDetails) {
@@ -243,16 +249,17 @@ public class TaskManage {
             instanceNodeVo.setStartTime(taskInstanceDetail.getStartTime());
             instanceNodeVo.setFinishTime(taskInstanceDetail.getFinishTime());
             if (taskInstanceDetail.getFinishTime() == null) {
-                instanceNodeVo.setDurationDesc(KitDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), new Date()));
+                instanceNodeVo.setDurationDesc(
+                    KitDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), new Date()));
             } else {
-                instanceNodeVo.setDurationDesc(KitDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(), taskInstanceDetail.getFinishTime()));
+                instanceNodeVo.setDurationDesc(KitDateUtil.formatSecondsDuration(taskInstanceDetail.getStartTime(),
+                    taskInstanceDetail.getFinishTime()));
             }
             instanceNodeVo.setRunningDesc(taskInstanceDetail.getExecuteInfo());
             instanceNodeVo.setStatus(taskInstanceDetail.getExecuteStatus());
             instanceNodeVo.setStatusDesc(TaskStatusEnum.getDesc(taskInstanceDetail.getExecuteStatus()));
             records.add(instanceNodeVo);
         }
-
         return records;
     }
 }

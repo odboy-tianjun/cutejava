@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.io.Closeable;
+import lombok.experimental.UtilityClass;
 
 /**
  * 用于关闭各种连接, 缺啥补啥
  */
 @UtilityClass
 public final class KitCloseUtil {
-
     public static void close(Closeable closeable) {
         if (null != closeable) {
             try {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.framework.exception.BadRequestException;
@@ -25,14 +24,17 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/captcha")
 @Api(tags = "系统：验证码管理")
 public class SystemCaptchaController {
-    @Autowired
-    private SystemEmailService systemEmailService;
+    @Autowired private SystemEmailService systemEmailService;
 
     @ApiOperation("重置邮箱, 发送验证码")
     @PostMapping(value = "/sendResetEmailCaptcha")

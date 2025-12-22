@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.config;
 
 import cn.hutool.core.util.StrUtil;
@@ -55,13 +54,14 @@ public class MpCustomP6SpyLogger implements MessageFormattingStrategy {
      * @return 格式化后的sql
      */
     @Override
-    public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
+    public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared,
+        String sql, String url) {
         // 去掉换行和多余空格
         if (StrUtil.isNotBlank(sql)) {
             sql = sql.replaceAll("\\s+", " ").trim();
         }
         // 格式化并加上颜色
-        return String.format("CuteJava - %s%s%s %s[%s] %sREVIEW_SQL [Interval: %dms]%s -> %s;", RED, now, RESET, GREEN, Thread.currentThread().getName(), BLUE,
-            elapsed, RESET, sql);
+        return String.format("CuteJava - %s%s%s %s[%s] %sREVIEW_SQL [Interval: %dms]%s -> %s;", RED, now, RESET, GREEN,
+            Thread.currentThread().getName(), BLUE, elapsed, RESET, sql);
     }
 }

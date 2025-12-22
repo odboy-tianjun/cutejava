@@ -15,27 +15,41 @@
  */
 package cn.odboy.task.service;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.task.constant.TaskStatusEnum;
 import cn.odboy.task.dal.dataobject.TaskInstanceStepDetailTb;
-import com.baomidou.mybatisplus.extension.service.IService;
-
+import cn.odboy.task.dal.mysql.TaskInstanceStepDetailMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 任务实例步骤明细 服务类
+ * 任务实例步骤明细
  * </p>
  *
  * @author codegen
  * @since 2025-09-28
  */
-public interface TaskInstanceStepDetailService extends IService<TaskInstanceStepDetailTb> {
+@Service
+public class TaskInstanceStepDetailService {
+    @Autowired private TaskInstanceStepDetailMapper taskInstanceStepDetailMapper;
+
     /**
      * 步骤执行成功
      *
      * @param instanceDetailId 任务实例明细id
      * @param stepDesc         步骤描述
      */
-    void success(Long instanceDetailId, String stepDesc);
+    public void success(Long instanceDetailId, String stepDesc) {
+        TaskInstanceStepDetailTb stepDetail = new TaskInstanceStepDetailTb();
+        stepDetail.setInstanceDetailId(instanceDetailId);
+        stepDetail.setStepDesc(stepDesc);
+        stepDetail.setStepStatus(TaskStatusEnum.Success.getCode());
+        taskInstanceStepDetailMapper.insert(stepDetail);
+    }
 
     /**
      * 步骤执行失败
@@ -43,12 +57,26 @@ public interface TaskInstanceStepDetailService extends IService<TaskInstanceStep
      * @param instanceDetailId 任务实例明细id
      * @param stepDesc         步骤描述
      */
-    void fail(Long instanceDetailId, String stepDesc);
+    public void fail(Long instanceDetailId, String stepDesc) {
+        TaskInstanceStepDetailTb stepDetail = new TaskInstanceStepDetailTb();
+        stepDetail.setInstanceDetailId(instanceDetailId);
+        stepDetail.setStepDesc(stepDesc);
+        stepDetail.setStepStatus(TaskStatusEnum.Fail.getCode());
+        taskInstanceStepDetailMapper.insert(stepDetail);
+        throw new BadRequestException(stepDesc);
+    }
 
     /**
      * 根据明细ID删除步骤明细
      *
      * @param instanceDetailIds 任务实例明细id集合
      */
-    void removeByInstanceDetailIds(List<Long> instanceDetailIds);
+    public void removeByInstanceDetailIds(List<Long> instanceDetailIds) {
+        if (CollUtil.isEmpty(instanceDetailIds)) {
+            return;
+        }
+        LambdaQueryWrapper<TaskInstanceStepDetailTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(TaskInstanceStepDetailTb::getInstanceDetailId, instanceDetailIds);
+        taskInstanceStepDetailMapper.delete(wrapper);
+    }
 }

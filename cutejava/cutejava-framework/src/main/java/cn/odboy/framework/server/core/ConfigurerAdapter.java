@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.server.core;
 
 import cn.odboy.framework.server.converters.DateStringArraysToListDateConverter;
@@ -21,6 +20,9 @@ import cn.odboy.framework.server.converters.DateStringToDateConverter;
 import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.support.config.FastJsonConfig;
 import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,10 +37,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 跨越、静态资源映射、Http消息转换
  *
@@ -48,12 +46,9 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class ConfigurerAdapter implements WebMvcConfigurer {
-    @Autowired
-    private DateStringArraysToListDateConverter dateStringArraysToListDateConverter;
-    @Autowired
-    private DateStringToDateConverter dateStringToDateConverter;
-    @Autowired
-    private KitFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired private DateStringArraysToListDateConverter dateStringArraysToListDateConverter;
+    @Autowired private DateStringToDateConverter dateStringToDateConverter;
+    @Autowired private KitFileLocalUploadHelper fileUploadPathHelper;
 
     @Bean
     public CorsFilter corsFilter() {

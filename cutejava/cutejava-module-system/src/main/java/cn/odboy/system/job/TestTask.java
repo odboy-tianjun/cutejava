@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.job;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class TestTask {
-
     public void run() {
         log.info("run 执行成功");
     }

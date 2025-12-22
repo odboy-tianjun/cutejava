@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.context;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
@@ -24,14 +26,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Slf4j
 @SuppressWarnings({"unchecked", "all"})
 public class KitSpringBeanHolder implements ApplicationContextAware, DisposableBean {
-
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
     private static ApplicationContext applicationContext = null;
     private static boolean addCallback = true;
@@ -109,8 +106,8 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
      */
     private static void assertContextInjected() {
         if (applicationContext == null) {
-            throw new IllegalStateException(
-                "applicaitonContext属性未注入, 请在applicationContext" + ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
+            throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" +
+                ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
         }
     }
 
@@ -139,7 +136,8 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         if (KitSpringBeanHolder.applicationContext != null) {
-            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + KitSpringBeanHolder.applicationContext);
+            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" +
+                KitSpringBeanHolder.applicationContext);
         }
         KitSpringBeanHolder.applicationContext = applicationContext;
         if (addCallback) {
@@ -152,12 +150,10 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
     }
 
     interface CallBack {
-
         /**
          * 回调执行方法
          */
         void executor();
-
         /**
          * 本回调任务名称
          *

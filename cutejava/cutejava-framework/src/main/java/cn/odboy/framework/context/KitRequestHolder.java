@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.context;
 
+import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
 
 /**
  * 获取 HttpServletRequest
  */
 public class KitRequestHolder {
-
     public static HttpServletRequest getHttpServletRequest() {
-        return ((ServletRequestAttributes)Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        return ((ServletRequestAttributes)Objects.requireNonNull(
+            RequestContextHolder.getRequestAttributes())).getRequest();
     }
 }

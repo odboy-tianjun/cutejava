@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy;
 
 import cn.odboy.framework.context.BootApplication;
 import io.swagger.annotations.Api;
+import java.net.UnknownHostException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-
-import java.net.UnknownHostException;
 
 @Api(hidden = true)
 @EnableCaching
 @SpringBootApplication
 public class AppRun extends BootApplication {
-
     public static void main(String[] args) throws UnknownHostException {
         SpringApplication springApplication = new SpringApplication(AppRun.class);
         inited(springApplication.run(args));

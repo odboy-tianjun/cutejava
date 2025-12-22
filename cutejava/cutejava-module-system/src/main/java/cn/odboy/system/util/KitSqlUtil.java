@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.util;
 
 import cn.odboy.framework.exception.BadRequestException;
@@ -22,9 +21,6 @@ import cn.odboy.util.KitCloseUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -35,6 +31,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class KitSqlUtil {
@@ -165,7 +163,8 @@ public final class KitSqlUtil {
     private static List<String> readSqlList(File sqlFile) throws Exception {
         List<String> sqlList = Lists.newArrayList();
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(sqlFile.toPath()), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(Files.newInputStream(sqlFile.toPath()), StandardCharsets.UTF_8))) {
             String tmp;
             while ((tmp = reader.readLine()) != null) {
                 log.info("line:{}", tmp);

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.operalog;
 
 import cn.hutool.core.date.TimeInterval;
@@ -28,6 +27,8 @@ import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.annotations.ApiOperation;
+import java.lang.reflect.Method;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,9 +36,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 
 /**
  * 捕捉操作日志
@@ -49,8 +47,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 public class OperationLogAspect {
-    @Autowired
-    private SystemOperationLogMapper systemOperationLogMapper;
+    @Autowired private SystemOperationLogMapper systemOperationLogMapper;
 
     @Around("@annotation(operationLog)")
     public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {
@@ -84,7 +81,8 @@ public class OperationLogAspect {
         }
     }
 
-    private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, TimeInterval timeInterval) {
+    private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
+        TimeInterval timeInterval) {
         long executeTime = timeInterval.intervalMs();
         MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         String bizName = annotation.bizName();

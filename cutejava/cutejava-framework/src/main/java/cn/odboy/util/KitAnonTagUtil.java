@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.odboy.annotation.AnonymousAccess;
 import cn.odboy.constant.RequestMethodEnum;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import lombok.experimental.UtilityClass;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,14 +32,11 @@ import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.*;
-
 /**
  * 匿名标记工具
  */
 @UtilityClass
 public class KitAnonTagUtil {
-
     /**
      * 获取匿名标记的URL
      *
@@ -42,7 +44,8 @@ public class KitAnonTagUtil {
      * @return /
      */
     public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
-        RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping)applicationContext.getBean("requestMappingHandlerMapping");
+        RequestMappingHandlerMapping requestMappingHandlerMapping =
+            (RequestMappingHandlerMapping)applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
         // 获取匿名标记
@@ -56,8 +59,10 @@ public class KitAnonTagUtil {
             HandlerMethod handlerMethod = infoEntry.getValue();
             AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
             if (null != anonymousAccess && infoEntry.getKey() != null) {
-                List<RequestMethod> requestMethods = new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
-                RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
+                List<RequestMethod> requestMethods =
+                    new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
+                RequestMethodEnum request = RequestMethodEnum.find(
+                    requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
                 PatternsRequestCondition patternsCondition = infoEntry.getKey().getPatternsCondition();
                 if (patternsCondition != null) {
                     switch (Objects.requireNonNull(request)) {

@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class SystemCreateDeptArgs extends KitObject {
-    @NotBlank(message = "部门名称必填")
-    private String name;
-    @NotNull(message = "部门排序必填")
-    private Integer deptSort;
+    @NotBlank(message = "部门名称必填") private String name;
+    @NotNull(message = "部门排序必填") private Integer deptSort;
     private Boolean enabled;
     private String isTop;
     private Long pid;

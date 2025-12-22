@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.config;
 
 import cn.odboy.framework.exception.BadRequestException;
@@ -94,7 +93,8 @@ public enum DataTypeEnum {
     private String aliasPrefix;
     private String aliasSuffix;
 
-    DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix, String aliasPrefix, String aliasSuffix) {
+    DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix,
+        String aliasPrefix, String aliasSuffix) {
         this.feature = feature;
         this.desc = desc;
         this.driver = driver;

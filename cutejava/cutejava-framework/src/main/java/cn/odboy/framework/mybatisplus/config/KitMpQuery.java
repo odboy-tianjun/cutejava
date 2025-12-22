@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.config;
 
 import java.lang.annotation.ElementType;
@@ -33,12 +32,10 @@ public @interface KitMpQuery {
      * 基本对象的属性名
      */
     String propName() default "";
-
     /**
      * 查询方式
      */
     KitMpQTypeEnum type() default KitMpQTypeEnum.EQUAL;
-
     /**
      * 多字段模糊搜索, 仅支持String类型字段, 多个用逗号隔开, 如@MpQuery(blurry = "email,username")
      */

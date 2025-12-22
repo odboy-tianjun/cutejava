@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.hutool.core.io.IoUtil;
@@ -23,16 +22,11 @@ import cn.hutool.poi.excel.ExcelUtil;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.exception.BadRequestException;
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -42,8 +36,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.springframework.web.multipart.MultipartFile;
 
-import static cn.odboy.constant.SystemConst.*;
+import static cn.odboy.constant.SystemConst.SYMBOL_ADD;
+import static cn.odboy.constant.SystemConst.SYMBOL_AT;
+import static cn.odboy.constant.SystemConst.SYMBOL_EQUAL;
+import static cn.odboy.constant.SystemConst.SYMBOL_SUBTRACT;
 
 /**
  * File工具类, 扩展 hutool 工具包
@@ -51,7 +56,6 @@ import static cn.odboy.constant.SystemConst.*;
 @Slf4j
 @UtilityClass
 public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
-
     /**
      * 系统临时目录
      * <br>
@@ -75,7 +79,6 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
      * 定义KB的计算常量
      */
     private static final int KB = 1024;
-
     /**
      * 格式化小数
      */
@@ -191,8 +194,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
                 if (value instanceof String) {
                     String strValue = (String)value;
                     // 检查并处理以特殊字符开头的值
-                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) || strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(
-                        SYMBOL_AT)) {
+                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) ||
+                        strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(SYMBOL_AT)) {
                         // 添加单引号前缀
                         strValue = "'" + strValue;
                     }
@@ -324,7 +327,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
      * @param response /
      * @param file     /
      */
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit) {
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file,
+        boolean deleteOnExit) {
         response.setCharacterEncoding(request.getCharacterEncoding());
         response.setContentType("application/octet-stream");
         FileInputStream fis = null;
@@ -358,10 +362,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
     public static String verifyFilename(String fileName) {
         // 过滤掉特殊字符
         fileName = fileName.replaceAll("[\\\\/:*?\"<>|~\\s]", "");
-
         // 去掉文件名开头和结尾的空格和点
         fileName = fileName.trim().replaceAll("^[. ]+|[. ]+$", "");
-
         // 不允许文件名超过255（在Mac和Linux中）或260（在Windows中）个字符
         int maxFileNameLength = 255;
         if (System.getProperty(SystemConst.PROPERTY_OS_NAME).startsWith(SystemConst.OS_NAME_WINDOWS)) {
@@ -370,19 +372,15 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
         if (fileName.length() > maxFileNameLength) {
             fileName = fileName.substring(0, maxFileNameLength);
         }
-
         // 过滤掉控制字符
         fileName = fileName.replaceAll("[\\p{Cntrl}]", "");
-
         // 过滤掉 ".." 路径
         fileName = fileName.replaceAll("\\.{2,}", "");
-
         // 去掉文件名开头的 ".."
         fileName = fileName.replaceAll("^\\.+/", "");
-
         // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
-        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") + fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
-
+        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
+            fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
         return fileName;
     }
 

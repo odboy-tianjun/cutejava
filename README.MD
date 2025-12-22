@@ -11,6 +11,7 @@
 [https://github.com/odboy-tianjun/cutejava](https://github.com/odboy-tianjun/cutejava)
 
 #### 项目文档
+
 [https://cutejava-doc.odboy.cn/](https://cutejava-doc.odboy.cn/)
 
 #### 编码规范
@@ -22,12 +23,26 @@
 - 消息队列/Socket传输类名，以`Message`结尾
 - ~~常用的辅助类的类名, 以`Cs`开头~~
 - 常用的辅助类的类名, 以`Kit`开头。Kit有套件、装备等意思。
-- 查询分页、查询列表的方法，一律为同一个方法名
-    - 查询分页：queryUser(args, page)
-    - 查询列表：queryUser(args)
-    - MapperXml：这样mapper.xml文件中的实现方法只需要写一个queryUser
 - 枚举类名，以`Enum`结尾
 - 拒绝过度包装
+- 命名规则(Mapper or Service)
+    - 简单查询：get + 名词
+    - 列表查询：list + 名词
+    - 复杂查询：query + 名词 + By + 条件
+    - 搜索(分页)功能：search + 名词
+    - 统计计数：count + By + 条件
+    - 存在检查：exists + By + 条件
+    - 例子: 查询分页、查询列表的方法
+        - 分页：searchUser(args, page)
+        - 列表：listUser + (args)
+        - 单个：getUser + by + (args)
+    - Mapper
+        - 分页与列表共用
+            - selectUserByArgs(args, page)
+            - selectUserByArgs(args)
+            - MapperXml selectUserByArgs
+        - 单个：getUser + by + (args)
+        - 统计计数：count + By + (args)
 
 #### 主要特性
 

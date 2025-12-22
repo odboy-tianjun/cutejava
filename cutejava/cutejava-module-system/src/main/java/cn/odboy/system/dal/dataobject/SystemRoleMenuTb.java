@@ -1,5 +1,6 @@
 package cn.odboy.system.dal.dataobject;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,6 @@ import lombok.Setter;
 @Setter
 @TableName("system_roles_menus")
 public class SystemRoleMenuTb {
-    private Long menuId;
-    private Long roleId;
+    @TableField(value = "role_id") private Long roleId;
+    @TableField(value = "menu_id") private Long menuId;
 }

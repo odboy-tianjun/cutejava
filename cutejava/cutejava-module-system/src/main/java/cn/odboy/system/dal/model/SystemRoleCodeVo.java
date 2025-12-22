@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -29,7 +28,5 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SystemRoleCodeVo implements GrantedAuthority {
-
-    @ApiModelProperty(value = "角色名")
-    private String authority;
+    @ApiModelProperty(value = "角色名") private String authority;
 }

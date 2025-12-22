@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
@@ -36,8 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/email")
 @Api(tags = "工具：邮件管理")
 public class SystemEmailController {
-    @Autowired
-    private SystemEmailService systemEmailService;
+    @Autowired private SystemEmailService systemEmailService;
 
     @ApiOperation("查询配置")
     @PostMapping(value = "/getLastEmailConfig")
@@ -47,7 +45,8 @@ public class SystemEmailController {
 
     @ApiOperation("配置邮件")
     @PostMapping(value = "/modifyEmailConfig")
-    public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig) throws Exception {
+    public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
+        throws Exception {
         systemEmailService.modifyEmailConfig(emailConfig);
         return ResponseEntity.ok(null);
     }

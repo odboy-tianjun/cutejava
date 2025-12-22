@@ -27,11 +27,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TaskStepNodeInit implements TaskStepExecutor {
-    @Autowired
-    private TaskInstanceStepDetailService stepDetailService;
+    @Autowired private TaskInstanceStepDetailService stepDetailService;
 
     @Override
-    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException {
+    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode)
+        throws BadRequestException {
         stepDetailService.success(instanceDetailId, "开始初始化");
         stepDetailService.success(instanceDetailId, "初始化完毕后，放入了一些参数");
         jobDataMap.put("ExcuseMe", "Hello World!");

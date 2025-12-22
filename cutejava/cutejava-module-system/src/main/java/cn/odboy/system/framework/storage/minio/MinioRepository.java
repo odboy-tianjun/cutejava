@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.storage.minio;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
@@ -30,30 +29,37 @@ import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.util.KitDateUtil;
 import cn.odboy.util.KitFileUtil;
-import io.minio.*;
+import io.minio.BucketExistsArgs;
+import io.minio.GetObjectArgs;
+import io.minio.GetObjectResponse;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.ListObjectsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveBucketArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.Result;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
 public class MinioRepository {
-    @Autowired
-    private AppProperties properties;
-    @Autowired
-    private MinioClient minioClient;
+    @Autowired private AppProperties properties;
+    @Autowired private MinioClient minioClient;
 
     /**
      * 检查存储bucket是否存在
@@ -136,19 +142,18 @@ public class MinioRepository {
      * @param md5              文件md5
      * @return String 上传后的文件名，上传失败返回 null
      */
-    public SystemOssStorageTb upload(File tempFile, String originalFilename, long fileSize, String contentType, String md5) {
+    public SystemOssStorageTb upload(File tempFile, String originalFilename, long fileSize, String contentType,
+        String md5) {
         StorageOSSModel ossConfig = properties.getOss();
         OSSConfigModel ossMinioConfig = ossConfig.getMinio();
         String type = FileTypeUtil.getType(tempFile);
         String prefix = KitFileUtil.getPrefix(tempFile);
         String suffix = KitFileUtil.getSuffix(tempFile);
-
         String fileCode = IdUtil.fastSimpleUUID();
         String fileName = fileCode + FileUtil.getSuffix(originalFilename);
         String objectName = KitDateUtil.getNowDateStr() + "/" + fileName;
         log.info("上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
-
         SystemOssStorageTb systemOssStorageTb = new SystemOssStorageTb();
         systemOssStorageTb.setServiceType("minio");
         systemOssStorageTb.setEndpoint(ossMinioConfig.getEndpoint());
@@ -162,11 +167,9 @@ public class MinioRepository {
         systemOssStorageTb.setFileUrl(fileUrl);
         systemOssStorageTb.setFileCode(fileCode);
         systemOssStorageTb.setObjectName(objectName);
-
         try (InputStream fileInputStream = KitFileUtil.getInputStream(tempFile)) {
-            PutObjectArgs objectArgs =
-                PutObjectArgs.builder().bucket(ossMinioConfig.getBucketName()).object(objectName).stream(fileInputStream, fileSize, -1).contentType(contentType)
-                    .build();
+            PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(ossMinioConfig.getBucketName()).object(objectName)
+                .stream(fileInputStream, fileSize, -1).contentType(contentType).build();
             minioClient.putObject(objectArgs);
             log.info("文件上传成功，并删除临时文件，文件名：{}", originalFilename);
             return systemOssStorageTb;
@@ -193,19 +196,16 @@ public class MinioRepository {
         if (StrUtil.isBlank(originalFilename)) {
             throw new BadRequestException("文件名不能为空");
         }
-
         long size = file.getSize();
         KitFileUtil.checkSize(properties.getOss().getMaxSize(), size);
-
         String fileName = UUID.randomUUID() + FileUtil.getSuffix(originalFilename);
         // yyyy/MM/dd/fileName.xxx
         String objectName = KitDateUtil.getNowDateTimeStr() + "/" + fileName;
-
         log.info("准备上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
         try (InputStream fileInputStream = file.getInputStream()) {
             PutObjectArgs objectArgs =
-                PutObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(objectName).stream(fileInputStream, file.getSize(), -1)
-                    .contentType(file.getContentType()).build();
+                PutObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(objectName)
+                    .stream(fileInputStream, file.getSize(), -1).contentType(file.getContentType()).build();
             // 使用重试机制进行上传
             uploadWithRetry(objectArgs, 3);
             log.info("文件上传成功，objectName: {}", objectName);
@@ -254,7 +254,8 @@ public class MinioRepository {
         }
         try {
             GetPresignedObjectUrlArgs presignedUrlArgs =
-                GetPresignedObjectUrlArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fullFileName).method(Method.GET)
+                GetPresignedObjectUrlArgs.builder().bucket(properties.getOss().getMinio().getBucketName())
+                    .object(fullFileName).method(Method.GET)
                     // 设置 URL 过期时间为 7 天, 最大 7 天, 别挣扎了
                     .expiry(3600 * 24 * 7).build();
             String url = minioClient.getPresignedObjectUrl(presignedUrlArgs);
@@ -273,17 +274,16 @@ public class MinioRepository {
      * @param res      HTTP 响应
      */
     public void download(String fileName, HttpServletResponse res) {
-        GetObjectArgs objectArgs = GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
-
-        try (GetObjectResponse response = minioClient.getObject(objectArgs); FastByteArrayOutputStream os = new FastByteArrayOutputStream()) {
-
+        GetObjectArgs objectArgs =
+            GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
+        try (GetObjectResponse response = minioClient.getObject(objectArgs);
+            FastByteArrayOutputStream os = new FastByteArrayOutputStream()) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = response.read(buf)) != -1) {
                 os.write(buf, 0, len);
             }
             os.flush();
-
             byte[] bytes = os.toByteArray();
             res.setCharacterEncoding("utf-8");
             res.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -303,13 +303,12 @@ public class MinioRepository {
      * @param res      HTTP 响应
      */
     public void downloadOptimizedVersion(String fileName, HttpServletResponse res) {
-        GetObjectArgs objectArgs = GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
-
+        GetObjectArgs objectArgs =
+            GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
         try (GetObjectResponse response = minioClient.getObject(objectArgs)) {
             // 增大缓冲区
             byte[] buf = new byte[1024 * 4];
             int len;
-
             // 分块下载并输出到响应流
             try (ServletOutputStream stream = res.getOutputStream()) {
                 res.setCharacterEncoding("utf-8");
@@ -317,7 +316,6 @@ public class MinioRepository {
                 res.setHeader("Cache-Control", "no-store");
                 res.setHeader("Pragma", "no-cache");
                 res.setHeader("Expires", "0");
-
                 while ((len = response.read(buf)) != -1) {
                     stream.write(buf, 0, len);
                     // 确保实时写入
@@ -337,7 +335,8 @@ public class MinioRepository {
      */
     public List<Item> queryAllObjects() {
         try {
-            Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).build());
+            Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).build());
             List<Item> items = new ArrayList<>();
             for (Result<Item> result : results) {
                 items.add(result.get());
@@ -357,7 +356,9 @@ public class MinioRepository {
      */
     public boolean removeBucketFile(String fileName) {
         try {
-            minioClient.removeObject(RemoveObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build());
+            minioClient.removeObject(
+                RemoveObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName)
+                    .build());
             log.info("删除文件成功，fileName: {}", fileName);
             return true;
         } catch (Exception e) {

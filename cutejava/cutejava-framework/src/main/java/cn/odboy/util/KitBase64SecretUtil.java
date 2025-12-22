@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.util.IdUtil;
-import lombok.experimental.UtilityClass;
-
 import java.nio.charset.StandardCharsets;
+import lombok.experimental.UtilityClass;
 
 /**
  * 加密令牌生成工具
@@ -30,7 +28,6 @@ import java.nio.charset.StandardCharsets;
  */
 @UtilityClass
 public final class KitBase64SecretUtil {
-
     public static String build() {
         // 128位uuid
         return Base64Encoder.encode(getLongUuid(4).getBytes(StandardCharsets.UTF_8));

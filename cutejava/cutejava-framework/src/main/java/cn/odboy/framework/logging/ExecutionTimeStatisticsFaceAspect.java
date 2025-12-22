@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.logging;
 
 import cn.hutool.core.date.TimeInterval;
@@ -34,15 +33,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExecutionTimeStatisticsFaceAspect {
     @Around("@annotation(executionTimeStatisticsFace)")
-    public Object aroundFace(ProceedingJoinPoint joinPoint, ExecutionTimeStatisticsFace executionTimeStatisticsFace) throws Throwable {
+    public Object aroundFace(ProceedingJoinPoint joinPoint, ExecutionTimeStatisticsFace executionTimeStatisticsFace)
+        throws Throwable {
         TimeInterval timeInterval = new TimeInterval();
         try {
             Object proceed = joinPoint.proceed();
-            log.info("[{}] 接口执行成功，耗时: {} ms", executionTimeStatisticsFace.description(), timeInterval.intervalMs());
+            log.info("[{}] 接口执行成功，耗时: {} ms", executionTimeStatisticsFace.description(),
+                timeInterval.intervalMs());
             return proceed;
         } catch (Exception e) {
             if (executionTimeStatisticsFace.showErrLog()) {
-                log.error("[{}] 接口执行失败，耗时: {} ms", executionTimeStatisticsFace.description(), timeInterval.intervalMs(), e);
+                log.error("[{}] 接口执行失败，耗时: {} ms", executionTimeStatisticsFace.description(),
+                    timeInterval.intervalMs(), e);
             }
             throw e;
         }

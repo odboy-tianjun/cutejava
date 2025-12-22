@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemOperationLogTb;
@@ -21,5 +20,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface SystemOperationLogMapper extends BaseMapper<SystemOperationLogTb> {
-}
+public interface SystemOperationLogMapper extends BaseMapper<SystemOperationLogTb> {}

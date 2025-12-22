@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.system.service.SystemDeptService;
@@ -30,8 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "系统：组件数据源")
 @RequestMapping("/api/component")
 public class SystemComponentController {
-    @Autowired
-    private SystemDeptService systemDeptService;
+    @Autowired private SystemDeptService systemDeptService;
 
     @ApiOperation("查询部门下拉选择数据源")
     @PostMapping(value = "/queryDeptSelectDataSource")

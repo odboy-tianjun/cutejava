@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
@@ -25,39 +24,43 @@ import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class SystemDeptController {
-    @Autowired
-    private SystemDeptService systemDeptService;
+    @Autowired private SystemDeptService systemDeptService;
 
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, SystemQueryDeptArgs criteria) throws Exception {
-        systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
+        systemDeptService.exportDeptExcel(systemDeptService.findAllDept(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
     @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(@Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
+    public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
+        @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
         SystemQueryDeptArgs criteria = args.getArgs();
-        List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
+        List<SystemDeptTb> depts = systemDeptService.findAllDept(criteria, true);
         return ResponseEntity.ok(KitPageUtil.toPage(depts));
     }
 
@@ -65,11 +68,11 @@ public class SystemDeptController {
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
-                                                                             @RequestParam(defaultValue = "false") Boolean exclude) {
+        @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             // 同级数据
-            SystemDeptTb dept = systemDeptService.queryDeptById(id);
+            SystemDeptTb dept = systemDeptService.getDeptById(id);
             // 上级数据
             List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
@@ -98,7 +101,7 @@ public class SystemDeptController {
     @PostMapping(value = "/modifyDept")
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
-        systemDeptService.modifyDept(args);
+        systemDeptService.updateDept(args);
         return ResponseEntity.ok(null);
     }
 

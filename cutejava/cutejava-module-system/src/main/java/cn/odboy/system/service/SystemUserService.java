@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.util.StrUtil;
+import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
+import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
-import cn.odboy.system.dal.mysql.SystemUserJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
@@ -35,38 +34,37 @@ import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Service
 public class SystemUserService {
-    @Autowired
-    private SystemUserMapper systemUserMapper;
-    @Autowired
-    private SystemUserJobMapper systemUserJobMapper;
-    @Autowired
-    private SystemUserRoleMapper systemUserRoleMapper;
-    @Autowired
-    private SystemUserInfoDAO systemUserInfoDAO;
-    @Autowired
-    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
-    @Autowired
-    private KitFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired private SystemUserMapper systemUserMapper;
+    @Autowired private SystemUserJobService systemUserJobService;
+    @Autowired private SystemUserRoleService systemUserRoleService;
+    @Autowired private SystemUserInfoDAO systemUserInfoDAO;
+    @Autowired private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired private KitFileLocalUploadHelper fileUploadPathHelper;
 
     /**
      * 新增用户
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void saveUser(SystemUserTb args) {
         args.setDeptId(args.getDept().getId());
@@ -81,9 +79,9 @@ public class SystemUserService {
         }
         systemUserMapper.insert(args);
         // 保存用户岗位
-        systemUserJobMapper.batchInsertUserJob(args.getJobs(), args.getId());
+        systemUserJobService.batchInsertUserJob(args.getJobs(), args.getId());
         // 保存用户角色
-        systemUserRoleMapper.batchInsertUserRole(args.getRoles(), args.getId());
+        systemUserRoleService.batchInsertUserRole(args.getRoles(), args.getId());
     }
 
     /**
@@ -92,7 +90,6 @@ public class SystemUserService {
      * @param args /
      * @throws Exception /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserById(SystemUserTb args) {
         SystemUserTb user = systemUserMapper.selectById(args.getId());
@@ -126,11 +123,11 @@ public class SystemUserService {
         // 清除用户登录缓存
         systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
         // 更新用户岗位
-        systemUserJobMapper.batchDeleteUserJob(Collections.singleton(args.getId()));
-        systemUserJobMapper.batchInsertUserJob(args.getJobs(), args.getId());
+        systemUserJobService.batchDeleteUserJob(Collections.singleton(args.getId()));
+        systemUserJobService.batchInsertUserJob(args.getJobs(), args.getId());
         // 更新用户角色
-        systemUserRoleMapper.batchDeleteUserRole(Collections.singleton(args.getId()));
-        systemUserRoleMapper.batchInsertUserRole(args.getRoles(), args.getId());
+        systemUserRoleService.batchDeleteUserRole(Collections.singleton(args.getId()));
+        systemUserRoleService.batchInsertUserRole(args.getRoles(), args.getId());
     }
 
     /**
@@ -138,7 +135,6 @@ public class SystemUserService {
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserCenterInfoById(SystemUserTb args) {
         SystemUserTb user = systemUserMapper.selectById(args.getId());
@@ -158,7 +154,6 @@ public class SystemUserService {
      *
      * @param ids /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void removeUserByIds(Set<Long> ids) {
         for (Long id : ids) {
@@ -168,9 +163,9 @@ public class SystemUserService {
         }
         systemUserMapper.deleteByIds(ids);
         // 删除用户岗位
-        systemUserJobMapper.batchDeleteUserJob(ids);
+        systemUserJobService.batchDeleteUserJob(ids);
         // 删除用户角色
-        systemUserRoleMapper.batchDeleteUserRole(ids);
+        systemUserRoleService.batchDeleteUserRole(ids);
     }
 
     /**
@@ -179,7 +174,6 @@ public class SystemUserService {
      * @param username        用户名
      * @param encryptPassword 密码
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserPasswordByUsername(String username, String encryptPassword) {
         systemUserMapper.updateUserPasswordByUsername(username, encryptPassword);
@@ -192,7 +186,6 @@ public class SystemUserService {
      * @param ids      用户id
      * @param password 密码
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void resetUserPasswordByIds(Set<Long> ids, String password) {
         List<SystemUserTb> users = systemUserMapper.selectByIds(ids);
@@ -204,7 +197,7 @@ public class SystemUserService {
             systemUserOnlineInfoDAO.kickOutByUsername(user.getUsername());
         });
         // 重置密码
-        systemUserMapper.batchUpdatePassword(password, ids);
+        systemUserMapper.updateUserPasswordByUserIds(password, ids);
     }
 
     /**
@@ -213,7 +206,6 @@ public class SystemUserService {
      * @param multipartFile 文件
      * @return /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public Map<String, String> modifyUserAvatar(MultipartFile multipartFile) {
         SystemUserTb user = systemUserMapper.getUserByUsername(CsSecurityHelper.getCurrentUsername());
@@ -249,7 +241,6 @@ public class SystemUserService {
      * @param username 用户名
      * @param email    邮箱
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyUserEmailByUsername(String username, String email) {
         systemUserMapper.updateUserEmailByUsername(username, email);
@@ -263,7 +254,6 @@ public class SystemUserService {
      * @param response /
      * @throws IOException /
      */
-
     public void exportUserExcel(List<SystemUserTb> users, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemUserTb user : users) {
@@ -290,7 +280,6 @@ public class SystemUserService {
      * @param page     分页参数
      * @return /
      */
-
     public KitPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
         IPage<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, page);
         return KitPageUtil.toPage(users);
@@ -302,7 +291,6 @@ public class SystemUserService {
      * @param criteria 条件
      * @return /
      */
-
     public List<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria) {
         return systemUserMapper.selectUserByArgs(criteria);
     }
@@ -313,7 +301,6 @@ public class SystemUserService {
      * @param id ID
      * @return /
      */
-
     public SystemUserTb getUserById(long id) {
         return systemUserMapper.selectById(id);
     }
@@ -328,18 +315,26 @@ public class SystemUserService {
         return systemUserMapper.getUserByUsername(username);
     }
 
-    /**
-     * 分页模糊查询
-     *
-     * @param wrapper
-     * @param page
-     * @return
-     */
-    public IPage<SystemUserTb> queryUserByBlurry(LambdaQueryWrapper<SystemUserTb> wrapper, Page<SystemUserTb> page) {
-        return systemUserMapper.selectPage(page, wrapper);
-    }
-
-    public List<SystemUserTb> queryUserByUserIds(List<Long> userIds) {
-        return systemUserMapper.selectByIds(userIds);
+    public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> args) {
+        SystemQueryUserArgs criteria = args.getArgs();
+        LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(SystemUserTb::getId, SystemUserTb::getDeptId, SystemUserTb::getEmail, SystemUserTb::getPhone);
+        wrapper.and(c -> {
+            c.eq(SystemUserTb::getPhone, criteria.getBlurry());
+            c.or();
+            c.eq(SystemUserTb::getEmail, criteria.getBlurry());
+            c.or();
+            c.like(SystemUserTb::getUsername, criteria.getBlurry());
+            c.or();
+            c.like(SystemUserTb::getNickName, criteria.getBlurry());
+        });
+        return systemUserMapper.selectPage(new Page<>(criteria.getPage(), 50), wrapper).getRecords().stream().map(m -> {
+            Map<String, Object> ext = new HashMap<>(1);
+            ext.put("id", m.getId());
+            ext.put("deptId", m.getDeptId());
+            ext.put("email", m.getEmail());
+            ext.put("phone", m.getPhone());
+            return KitSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
+        }).collect(Collectors.toList());
     }
 }

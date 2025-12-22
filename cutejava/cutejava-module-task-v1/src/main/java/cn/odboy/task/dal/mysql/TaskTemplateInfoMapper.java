@@ -38,6 +38,7 @@ public interface TaskTemplateInfoMapper extends BaseMapper<TaskTemplateInfoTb> {
      * @param changeType  变更类型
      * @return /
      */
-    TaskTemplateInfoVo selectTemplateInfoByECL(@Param("envAlias") String envAlias, @Param("contextName") String contextName, @Param("language") String language,
+    TaskTemplateInfoVo selectTemplateInfoByECL(@Param("envAlias") String envAlias,
+        @Param("contextName") String contextName, @Param("language") String language,
         @Param("changeType") String changeType);
 }

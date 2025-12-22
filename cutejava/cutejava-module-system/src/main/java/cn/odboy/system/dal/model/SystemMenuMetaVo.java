@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
@@ -26,13 +25,7 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class SystemMenuMetaVo extends KitObject {
-
-    @ApiModelProperty(value = "菜单标题")
-    private String title;
-
-    @ApiModelProperty(value = "菜单图标")
-    private String icon;
-
-    @ApiModelProperty(value = "缓存")
-    private Boolean noCache;
+    @ApiModelProperty(value = "菜单标题") private String title;
+    @ApiModelProperty(value = "菜单图标") private String icon;
+    @ApiModelProperty(value = "缓存") private Boolean noCache;
 }

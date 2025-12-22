@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.base;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 通用参数
@@ -31,14 +29,12 @@ public class KitArgs {
     @Getter
     @Setter
     public static class FindByLongId extends KitObject {
-        @NotNull(message = "id必填")
-        private Long id;
+        @NotNull(message = "id必填") private Long id;
     }
 
     @Getter
     @Setter
     public static class DeleteById extends KitObject {
-        @NotNull(message = "id必填")
-        private Long id;
+        @NotNull(message = "id必填") private Long id;
     }
 }

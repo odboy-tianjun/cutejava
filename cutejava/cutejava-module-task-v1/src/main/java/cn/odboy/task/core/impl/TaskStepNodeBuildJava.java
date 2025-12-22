@@ -26,9 +26,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TaskStepNodeBuildJava implements TaskStepExecutor {
-
     @Override
-    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException {
+    public void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode)
+        throws BadRequestException {
         ThreadUtil.sleep(2000);
     }
 }

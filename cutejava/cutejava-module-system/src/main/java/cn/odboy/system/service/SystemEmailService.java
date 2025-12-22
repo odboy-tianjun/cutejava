@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.lang.Dict;
@@ -29,32 +28,26 @@ import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
 import cn.odboy.util.KitDesEncryptUtil;
 import cn.odboy.util.KitResourceTemplateUtil;
+import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-
 @Slf4j
 @Service
 public class SystemEmailService {
-    @Autowired
-    private SystemEmailConfigMapper systemEmailConfigMapper;
-    @Autowired
-    private KitRedisHelper redisHelper;
-    @Autowired
-    private AppProperties properties;
-    @Value("${spring.application.title}")
-    private String applicationTitle;
+    @Autowired private SystemEmailConfigMapper systemEmailConfigMapper;
+    @Autowired private KitRedisHelper redisHelper;
+    @Autowired private AppProperties properties;
+    @Value("${spring.application.title}") private String applicationTitle;
 
     /**
      * 更新邮件配置
      *
      * @param emailConfig 邮箱配置
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyEmailConfig(SystemEmailConfigTb emailConfig) throws Exception {
         SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
@@ -71,7 +64,6 @@ public class SystemEmailService {
      *
      * @param sendEmailRequest 邮件发送的内容
      */
-
     public void sendEmail(SystemSendEmailArgs sendEmailRequest) {
         SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
         if (systemEmailConfigTb.getId() == null) {
@@ -102,8 +94,8 @@ public class SystemEmailService {
         // 发送
         try {
             int size = sendEmailRequest.getTos().size();
-            Mail.create(account).setTos(sendEmailRequest.getTos().toArray(new String[size])).setTitle(sendEmailRequest.getSubject()).setContent(content)
-                .setHtml(true)
+            Mail.create(account).setTos(sendEmailRequest.getTos().toArray(new String[size]))
+                .setTitle(sendEmailRequest.getSubject()).setContent(content).setHtml(true)
                 // 关闭session
                 .setUseGlobalSession(false).send();
         } catch (Exception e) {
@@ -115,7 +107,6 @@ public class SystemEmailService {
     /**
      * 校验邮箱验证码
      */
-
     public void checkEmailCaptcha(SystemCaptchaBizEnum biEnum, String email, String code) {
         String redisKey = biEnum.getRedisKey() + email;
         String value = redisHelper.get(redisKey, String.class);
@@ -129,7 +120,6 @@ public class SystemEmailService {
     /**
      * 发送给邮箱验证码
      */
-
     public void sendCaptcha(SystemCaptchaBizEnum biEnum, String email) {
         if (biEnum == null) {
             throw new BadRequestException("biEnum必填");
@@ -146,9 +136,11 @@ public class SystemEmailService {
             // 存在就再次发送原来的验证码
             content = KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", code));
         } else {
-            content = KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
+            content =
+                KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
         }
-        SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
+        SystemSendEmailArgs sendEmailRequest =
+            new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
         sendEmail(sendEmailRequest);
     }
 

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.exception.handler;
 
 import lombok.Data;
 
 @Data
 public final class ApiError {
-
     private Integer status = 400;
     private Long timestamp;
     private String message;
@@ -42,5 +40,3 @@ public final class ApiError {
         return apiError;
     }
 }
-
-

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 字典 Mapper
@@ -33,7 +31,20 @@ import java.util.List;
  */
 @Mapper
 public interface SystemDictMapper extends BaseMapper<SystemDictTb> {
-    IPage<SystemDictTb> selectDictByArgs(@Param("criteria") SystemQueryDictArgs criteria, Page<SystemDictTb> page);
-
-    List<SystemDictTb> selectDictByArgs(@Param("criteria") SystemQueryDictArgs criteria);
+    default void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
+        if (args != null) {
+            wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+                .like(SystemDictTb::getDescription, args.getBlurry()));
+        }
+    }
+    default List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args) {
+        LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+        injectQueryParams(args, wrapper);
+        return selectList(wrapper);
+    }
+    default List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+        LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+        injectQueryParams(args, wrapper);
+        return selectList(page, wrapper);
+    }
 }

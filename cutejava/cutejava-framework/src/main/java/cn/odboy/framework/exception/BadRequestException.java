@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.exception;
 
 import lombok.Getter;
@@ -26,7 +25,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
  */
 @Getter
 public class BadRequestException extends RuntimeException {
-
     private Integer status = BAD_REQUEST.value();
 
     public BadRequestException(String msg) {

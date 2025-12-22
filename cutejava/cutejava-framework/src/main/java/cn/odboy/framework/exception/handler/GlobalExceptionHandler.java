@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.exception.handler;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
@@ -36,7 +35,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     /**
      * 处理所有不可知的异常
      */

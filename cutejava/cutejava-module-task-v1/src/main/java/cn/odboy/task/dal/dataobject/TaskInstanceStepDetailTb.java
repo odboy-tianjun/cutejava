@@ -17,16 +17,19 @@ package cn.odboy.task.dal.dataobject;
 
 import cn.odboy.base.KitObject;
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.Date;
 
 /**
  * <p>
@@ -42,37 +45,23 @@ import java.util.Date;
 @TableName("task_instance_step_detail")
 @ApiModel(value = "TaskInstanceStepDetailTb对象", description = "")
 public class TaskInstanceStepDetailTb extends KitObject {
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
-
     /**
      * id
      */
-    @ApiModelProperty("id")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    @JsonSerialize(using = ToStringSerializer.class)
-    @JSONField(format = "string")
-    private Long id;
-
+    @ApiModelProperty("id") @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class) @JSONField(format = "string") private Long id;
     /**
      * task_instance_detail表id
      */
-    @TableField("instance_detail_id")
-    @ApiModelProperty("task_instance_detail表id")
-    private Long instanceDetailId;
-
+    @TableField("instance_detail_id") @ApiModelProperty("task_instance_detail表id") private Long instanceDetailId;
     /**
      * 步骤描述
      */
-    @TableField("step_desc")
-    @ApiModelProperty("步骤描述")
-    private String stepDesc;
-
+    @TableField("step_desc") @ApiModelProperty("步骤描述") private String stepDesc;
     /**
      * 状态(success成功 fail失败)
      */
-    @TableField("step_status")
-    @ApiModelProperty("状态(success成功 fail失败)")
-    private String stepStatus;
+    @TableField("step_status") @ApiModelProperty("状态(success成功 fail失败)") private String stepStatus;
 }

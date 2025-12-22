@@ -164,15 +164,12 @@ public class TaskManage {
     @Transactional(rollbackFor = Exception.class)
     public void stopJob(Long instanceId) {
         TaskInstanceInfoTb taskInstanceInfoTb = taskInstanceInfoService.getRunningById(instanceId);
-
         String changeType = taskInstanceInfoTb.getChangeType();
         String contextName = taskInstanceInfoTb.getContextName();
-
         taskInstanceInfoTb.setStatus(TaskStatusEnum.Fail.getCode());
         taskInstanceInfoTb.setErrorMessage("任务被中断");
         taskInstanceInfoTb.setFinishTime(new Date());
         taskInstanceInfoService.updateById(taskInstanceInfoTb);
-
         try {
             JobKey jobKey = JobKey.jobKey(changeType, contextName);
             TriggerKey triggerKey = TriggerKey.triggerKey(changeType, contextName);
@@ -218,7 +215,6 @@ public class TaskManage {
 
     public TaskInstanceInfoVo getLastInfo(String contextName, String language, String envAlias, String changeType) {
         TaskInstanceInfoVo record = new TaskInstanceInfoVo();
-
         TaskInstanceInfoTb historyInstance =
             taskInstanceInfoService.getLastHistoryInstance(contextName, language, envAlias, changeType);
         if (historyInstance == null) {
@@ -231,10 +227,8 @@ public class TaskManage {
             record.setTemplate(templateInfo.getTemplateInfo());
             return record;
         }
-
         record = BeanUtil.copyProperties(historyInstance, TaskInstanceInfoVo.class);
         record.setHistory(buildNodeList(record));
-
         TaskInstanceInfoTb runningInstance =
             taskInstanceInfoService.getLastRunningInstance(contextName, language, envAlias, changeType);
         if (runningInstance != null) {
@@ -246,7 +240,6 @@ public class TaskManage {
 
     private List<TaskInstanceNodeVo> buildNodeList(TaskInstanceInfoVo record) {
         List<TaskInstanceNodeVo> records = new ArrayList<>();
-
         // 节点明细
         List<TaskInstanceDetailTb> taskInstanceDetails = taskInstanceDetailService.queryByInstanceId(record.getId());
         for (TaskInstanceDetailTb taskInstanceDetail : taskInstanceDetails) {
@@ -267,7 +260,6 @@ public class TaskManage {
             instanceNodeVo.setStatusDesc(TaskStatusEnum.getDesc(taskInstanceDetail.getExecuteStatus()));
             records.add(instanceNodeVo);
         }
-
         return records;
     }
 }

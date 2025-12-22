@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
-import lombok.experimental.UtilityClass;
-
+import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-import java.nio.charset.StandardCharsets;
+import lombok.experimental.UtilityClass;
 
 /**
  * DES加密
  */
 @UtilityClass
 public final class KitDesEncryptUtil {
-
     private static final String STR_PARAM = "Passw0rd";
     private static final IvParameterSpec IV = new IvParameterSpec(STR_PARAM.getBytes(StandardCharsets.UTF_8));
 
@@ -94,4 +91,3 @@ public final class KitDesEncryptUtil {
         return b2;
     }
 }
-

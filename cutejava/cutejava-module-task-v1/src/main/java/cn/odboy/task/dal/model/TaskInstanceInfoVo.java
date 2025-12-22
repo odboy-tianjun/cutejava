@@ -1,10 +1,9 @@
 package cn.odboy.task.dal.model;
 
 import cn.odboy.task.dal.dataobject.TaskInstanceInfoTb;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * 任务实例数据

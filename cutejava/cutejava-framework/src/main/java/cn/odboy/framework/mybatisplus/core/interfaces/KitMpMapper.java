@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.core.interfaces;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -26,15 +25,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 公共抽象Mapper接口类
@@ -50,7 +48,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
      * @return 影响的行数
      */
     int insertBatchSomeColumn(List<E> entityList);
-
     /**
      * 根据id全量更新
      *
@@ -58,7 +55,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
      * @return 影响的行数
      */
     int alwaysUpdateSomeColumnById(@Param("et") E entity);
-
     /**
      * 获取字典
      *
@@ -98,7 +94,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
         }
         return result;
     }
-
     /**
      * 条件查询列表, 并返回期望的对象
      *
@@ -113,7 +108,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
         }
         return BeanUtil.copyToList(list, clazz);
     }
-
     /**
      * 条件查询列表, 并返回期望的对象
      *
@@ -128,7 +122,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
         }
         return BeanUtil.copyToList(list, clazz);
     }
-
     /**
      * 条件查询分页列表, 并返回期望的对象
      *
@@ -137,7 +130,8 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
+    default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper,
+        Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
@@ -148,7 +142,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
         }
         return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
     }
-
     /**
      * 条件查询分页列表, 并返回期望的对象
      *
@@ -157,7 +150,8 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
      * @param clazz    期望的对象类型
      * @return IPage<T>
      */
-    default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper,
+        Class<T> clazz) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
@@ -168,7 +162,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
         }
         return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
     }
-
     /**
      * 获取目标类
      *

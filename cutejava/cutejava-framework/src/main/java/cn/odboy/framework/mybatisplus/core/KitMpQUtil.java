@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.core;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -27,13 +26,16 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.extern.slf4j.Slf4j;
-
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 查询条件创建工具
@@ -78,7 +80,8 @@ public class KitMpQUtil {
         return StrUtil.toUnderlineCase(attributeName);
     }
 
-    private static <R> void handleWrapper(KitMpQuery q, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+    private static <R> void handleWrapper(KitMpQuery q, QueryWrapper<R> queryWrapper, String attributeName,
+        Object fieldVal) {
         switch (q.type()) {
             case EQUAL:
                 queryWrapper.eq(attributeName, fieldVal);
@@ -124,7 +127,8 @@ public class KitMpQUtil {
         }
     }
 
-    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName,
+        Object fieldVal) {
         Collection<?> wrapNotInVal = (Collection<?>)fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
@@ -149,7 +153,8 @@ public class KitMpQUtil {
         }
     }
 
-    private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
+    private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal,
+        String finalAttributeName) {
         if (fieldVal instanceof List) {
             List<Object> between = new ArrayList<>((List<?>)fieldVal);
             int minLength = 2;
@@ -172,7 +177,8 @@ public class KitMpQUtil {
      * @param <R>          /
      */
     private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
-        List<String> blurryList = Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
+        List<String> blurryList =
+            Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
         queryWrapper.and(wrapper -> {
             for (String blurryItem : blurryList) {
                 String column = StrUtil.toUnderlineCase(blurryItem);
@@ -209,14 +215,10 @@ public class KitMpQUtil {
 
     @TableName("test_domain")
     private static class TestDomain {
-        @NotNull(groups = KitBaseUserTimeTb.Update.class)
-        @TableId(value = "user_id", type = IdType.AUTO)
-        private Long id;
-        @TableField(value = "dept_id")
-        private Long deptId;
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String nickName;
+        @NotNull(groups = KitBaseUserTimeTb.Update.class) @TableId(value = "user_id", type = IdType.AUTO) private Long
+            id;
+        @TableField(value = "dept_id") private Long deptId;
+        @NotBlank private String username;
+        @NotBlank private String nickName;
     }
 }

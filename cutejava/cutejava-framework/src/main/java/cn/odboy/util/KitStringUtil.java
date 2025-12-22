@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
-
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Calendar;
 import java.util.Date;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
@@ -29,26 +26,23 @@ import java.util.Date;
 @Slf4j
 @UtilityClass
 public final class KitStringUtil {
-
     private static final char SEPARATOR = '_';
 
     /**
      * 驼峰命名法工具
      *
-     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
+     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     *     toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toCamelCase(String s) {
         if (s == null) {
             return null;
         }
-
         s = s.toLowerCase();
-
         StringBuilder sb = new StringBuilder(s.length());
         boolean upperCase = false;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-
             if (c == SEPARATOR) {
                 upperCase = true;
             } else if (upperCase) {
@@ -58,14 +52,14 @@ public final class KitStringUtil {
                 sb.append(c);
             }
         }
-
         return sb.toString();
     }
 
     /**
      * 驼峰命名法工具
      *
-     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
+     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     *     toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toCapitalizeCamelCase(String s) {
         if (s == null) {
@@ -78,24 +72,21 @@ public final class KitStringUtil {
     /**
      * 驼峰命名法工具
      *
-     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
+     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     *     toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toUnderScoreCase(String s) {
         if (s == null) {
             return null;
         }
-
         StringBuilder sb = new StringBuilder();
         boolean upperCase = false;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-
             boolean nextUpperCase = true;
-
             if (i < (s.length() - 1)) {
                 nextUpperCase = Character.isUpperCase(s.charAt(i + 1));
             }
-
             if ((i > 0) && Character.isUpperCase(c)) {
                 if (!upperCase || !nextUpperCase) {
                     sb.append(SEPARATOR);
@@ -104,10 +95,8 @@ public final class KitStringUtil {
             } else {
                 upperCase = false;
             }
-
             sb.append(Character.toLowerCase(c));
         }
-
         return sb.toString();
     }
 

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
@@ -32,21 +32,21 @@ import cn.odboy.system.service.SystemOssStorageService;
 import cn.odboy.util.KitDateUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -57,23 +57,41 @@ import java.util.Map;
  * @since 2025-07-15
  */
 @Service
-public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb> implements SystemOssStorageService {
-    @Autowired
-    private MinioRepository minioRepository;
-    @Autowired
-    private AppProperties properties;
-    @Autowired
-    private KitFileLocalUploadHelper fileLocalUploadHelper;
+public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb>
+    implements SystemOssStorageService {
+    @Autowired private MinioRepository minioRepository;
+    @Autowired private AppProperties properties;
+    @Autowired private KitFileLocalUploadHelper fileLocalUploadHelper;
+    @Autowired private SystemOssStorageMapper systemOssStorageMapper;
 
     @Override
-    public KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page) {
-        IPage<SystemOssStorageTb> ossStorageTbs = baseMapper.selectOssStorageByArgs(criteria, page);
+    public KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria,
+        Page<SystemOssStorageTb> page) {
+        IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(criteria, page);
         IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
             SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
             storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
             return storageVo;
         });
         return KitPageUtil.toPage(convert);
+    }
+
+    private IPage<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs criteria,
+        Page<SystemOssStorageTb> page) {
+        LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
+        if (criteria != null) {
+            wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
+                c -> c.like(SystemOssStorageTb::getFileName, criteria.getBlurry()).or()
+                    .like(SystemOssStorageTb::getFilePrefix, criteria.getBlurry()).or()
+                    .like(SystemOssStorageTb::getFileMime, criteria.getBlurry()).or()
+                    .like(SystemOssStorageTb::getFileMd5, criteria.getBlurry()));
+            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+                wrapper.between(SystemOssStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
+                    criteria.getCreateTime().get(1));
+            }
+        }
+        wrapper.orderByAsc(SystemOssStorageTb::getId);
+        return systemOssStorageMapper.selectPage(page, wrapper);
     }
 
     @Override
@@ -84,7 +102,8 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     }
 
     @Override
-    public void exportOssStorageExcel(List<SystemOssStorageVo> ossStorages, HttpServletResponse response) throws IOException {
+    public void exportOssStorageExcel(List<SystemOssStorageVo> ossStorages, HttpServletResponse response)
+        throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemOssStorageVo ossStorage : ossStorages) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -121,7 +140,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
         }
         // 校验文件md5, 看是否已存在云端（不确定, 可能云端已经删除, 但是正常来说云端是不允许私自删除的, 所以这里忽略云端不存在的情况）
         String md5 = KitFileUtil.getMd5(tempFile);
-        SystemOssStorageTb systemOssStorageTb = getByMd5(md5);
+        SystemOssStorageTb systemOssStorageTb = this.getByMd5(md5);
         if (systemOssStorageTb != null) {
             // 重新生成7天链接
             return minioRepository.generatePreviewUrl(systemOssStorageTb.getObjectName());
@@ -150,8 +169,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
         }
     }
 
-    @Override
-    public SystemOssStorageTb getByMd5(String md5) {
+    private SystemOssStorageTb getByMd5(String md5) {
         return lambdaQuery().eq(SystemOssStorageTb::getFileMd5, md5).one();
     }
 }

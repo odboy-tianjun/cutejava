@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.server.config;
 
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.ThreadPoolSettingModel;
 import com.alibaba.ttl.TtlRunnable;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,17 +31,13 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * 创建自定义的线程池
  */
 @EnableAsync
 @Configuration
 public class AsyncTheadPoolConfig implements AsyncConfigurer {
-    @Autowired
-    private AppProperties properties;
+    @Autowired private AppProperties properties;
 
     /**
      * 自定义线程池, 用法 @Async
@@ -49,8 +50,10 @@ public class AsyncTheadPoolConfig implements AsyncConfigurer {
         // 自定义工厂
         ThreadFactory factory = r -> new Thread(r, "DefaultAsync-" + new AtomicInteger(1).getAndIncrement());
         // 自定义线程池
-        return new ThreadPoolExecutor(asyncTaskPool.getCorePoolSize(), asyncTaskPool.getMaxPoolSize(), asyncTaskPool.getKeepAliveSeconds(), TimeUnit.SECONDS,
-            new ArrayBlockingQueue<>(asyncTaskPool.getQueueCapacity()), factory, new ThreadPoolExecutor.CallerRunsPolicy());
+        return new ThreadPoolExecutor(asyncTaskPool.getCorePoolSize(), asyncTaskPool.getMaxPoolSize(),
+            asyncTaskPool.getKeepAliveSeconds(), TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(asyncTaskPool.getQueueCapacity()), factory,
+            new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     /**

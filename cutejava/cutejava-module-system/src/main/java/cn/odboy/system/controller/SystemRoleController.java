@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.hutool.core.lang.Dict;
@@ -28,25 +27,27 @@ import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "系统：角色管理")
 @RequestMapping("/api/role")
 public class SystemRoleController {
-    @Autowired
-    private SystemRoleService systemRoleService;
+    @Autowired private SystemRoleService systemRoleService;
 
     @ApiOperation("获取单个role")
     @PostMapping(value = "/queryRoleById")
@@ -72,7 +73,8 @@ public class SystemRoleController {
     @ApiOperation("查询角色")
     @PostMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<KitPageResult<SystemRoleTb>> queryRoleByArgs(@Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> args) {
+    public ResponseEntity<KitPageResult<SystemRoleTb>> queryRoleByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> args) {
         SystemQueryRoleArgs criteria = args.getArgs();
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemRoleService.queryRoleByArgs(criteria, page));
@@ -132,8 +134,8 @@ public class SystemRoleController {
      * @return /
      */
     private int checkRoleLevels(Integer level) {
-        List<Integer> levels =
-            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        List<Integer> levels = systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream()
+            .map(SystemRoleTb::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
         if (level != null) {
             if (level < min) {

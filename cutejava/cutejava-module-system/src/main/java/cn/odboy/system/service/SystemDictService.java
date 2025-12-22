@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -29,27 +28,28 @@ import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-
 @Service
 public class SystemDictService {
-    @Autowired
-    private SystemDictMapper systemDictMapper;
-    @Autowired
-    private SystemDictDetailMapper systemDictDetailMapper;
+    @Autowired private SystemDictMapper systemDictMapper;
+    @Autowired private SystemDictDetailMapper systemDictDetailMapper;
+    @Autowired private SystemDictDetailService systemDictDetailService;
 
     /**
      * 创建
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void saveDict(SystemCreateDictArgs args) {
         systemDictMapper.insert(BeanUtil.copyProperties(args, SystemDictTb.class));
@@ -60,7 +60,6 @@ public class SystemDictService {
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyDictById(SystemDictTb args) {
         SystemDictTb dict = systemDictMapper.selectById(args.getId());
@@ -74,13 +73,12 @@ public class SystemDictService {
      *
      * @param ids /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void removeDictByIds(Set<Long> ids) {
         // 删除字典
         systemDictMapper.deleteByIds(ids);
         // 删除字典详情
-        systemDictDetailMapper.deleteDictDetailByDictIds(ids);
+        systemDictDetailService.deleteDictDetailByDictIds(ids);
     }
 
     /**
@@ -90,7 +88,6 @@ public class SystemDictService {
      * @param response /
      * @throws IOException /
      */
-
     public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemDictTb dict : dicts) {
@@ -127,7 +124,6 @@ public class SystemDictService {
      * @param page 分页参数
      * @return /
      */
-
     public KitPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
         return KitPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
     }
@@ -138,7 +134,6 @@ public class SystemDictService {
      * @param args /
      * @return /
      */
-
     public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
         return systemDictMapper.selectDictByArgs(args);
     }

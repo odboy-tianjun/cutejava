@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -31,33 +31,33 @@ import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-
 @Service
 public class SystemQuartzJobService {
-    @Autowired
-    private SystemQuartzJobMapper systemQuartzJobMapper;
-    @Autowired
-    private SystemQuartzLogMapper systemQuartzLogMapper;
-    @Autowired
-    private QuartzManage quartzManage;
-    @Autowired
-    private KitRedisHelper redisHelper;
+    @Autowired private SystemQuartzJobMapper systemQuartzJobMapper;
+    @Autowired private SystemQuartzLogMapper systemQuartzLogMapper;
+    @Autowired private QuartzManage quartzManage;
+    @Autowired private KitRedisHelper redisHelper;
 
     /**
      * 创建
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void createJob(SystemQuartzJobTb args) {
         if (!CronExpression.isValidExpression(args.getCronExpression())) {
@@ -72,7 +72,6 @@ public class SystemQuartzJobService {
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyQuartzJobResumeCron(SystemUpdateQuartzJobArgs args) {
         if (!CronExpression.isValidExpression(args.getCronExpression())) {
@@ -94,7 +93,6 @@ public class SystemQuartzJobService {
      *
      * @param quartzJob /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void switchQuartzJobStatus(SystemQuartzJobTb quartzJob) {
         // 置换暂停状态
@@ -113,7 +111,6 @@ public class SystemQuartzJobService {
      *
      * @param quartzJob /
      */
-
     public void startQuartzJob(SystemQuartzJobTb quartzJob) {
         quartzManage.runJobNow(quartzJob);
     }
@@ -123,7 +120,6 @@ public class SystemQuartzJobService {
      *
      * @param ids /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void removeJobByIds(Set<Long> ids) {
         for (Long id : ids) {
@@ -139,7 +135,6 @@ public class SystemQuartzJobService {
      * @param tasks /
      * @throws InterruptedException /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void startSubQuartJob(String[] tasks) throws InterruptedException {
         for (String id : tasks) {
@@ -178,8 +173,8 @@ public class SystemQuartzJobService {
      * @param response   /
      * @throws IOException /
      */
-
-    public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response) throws IOException {
+    public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response)
+        throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemQuartzJobTb quartzJob : quartzJobs) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -203,8 +198,8 @@ public class SystemQuartzJobService {
      * @param response    /
      * @throws IOException /
      */
-
-    public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response) throws IOException {
+    public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response)
+        throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemQuartzLogTb quartzLog : queryAllLog) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -229,9 +224,38 @@ public class SystemQuartzJobService {
      * @param page     分页参数
      * @return /
      */
+    public KitPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria,
+        Page<SystemQuartzJobTb> page) {
+        LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
+        this.injectQuartzJobQueryParams(criteria, wrapper);
+        return KitPageUtil.toPage(systemQuartzJobMapper.selectPage(page, wrapper));
+    }
 
-    public KitPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzJobTb> page) {
-        return KitPageUtil.toPage(systemQuartzJobMapper.selectQuartzJobByArgs(criteria, page));
+    private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs criteria,
+        LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
+        if (criteria != null) {
+            wrapper.like(StrUtil.isNotBlank(criteria.getJobName()), SystemQuartzJobTb::getJobName,
+                criteria.getJobName());
+            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+                wrapper.between(SystemQuartzJobTb::getUpdateTime, criteria.getCreateTime().get(0),
+                    criteria.getCreateTime().get(1));
+            }
+        }
+        wrapper.orderByDesc(SystemQuartzJobTb::getId);
+    }
+
+    private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs criteria,
+        LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
+        if (criteria != null) {
+            wrapper.like(StrUtil.isNotBlank(criteria.getJobName()), SystemQuartzLogTb::getJobName,
+                criteria.getJobName());
+            wrapper.eq(criteria.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, criteria.getIsSuccess());
+            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+                wrapper.between(SystemQuartzLogTb::getCreateTime, criteria.getCreateTime().get(0),
+                    criteria.getCreateTime().get(1));
+            }
+        }
+        wrapper.orderByDesc(SystemQuartzLogTb::getId);
     }
 
     /**
@@ -241,9 +265,11 @@ public class SystemQuartzJobService {
      * @param page     分页参数
      * @return /
      */
-
-    public KitPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria, Page<SystemQuartzLogTb> page) {
-        return KitPageUtil.toPage(systemQuartzLogMapper.selectQuartzLogByArgs(criteria, page));
+    public KitPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria,
+        Page<SystemQuartzLogTb> page) {
+        LambdaQueryWrapper<SystemQuartzLogTb> wrapper = new LambdaQueryWrapper<>();
+        this.injectQuartzLogQueryParams(criteria, wrapper);
+        return KitPageUtil.toPage(systemQuartzLogMapper.selectPage(page, wrapper));
     }
 
     /**
@@ -252,9 +278,10 @@ public class SystemQuartzJobService {
      * @param criteria 条件
      * @return /
      */
-
     public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzJobMapper.selectQuartzJobByArgs(criteria, KitPageUtil.getCount(systemQuartzJobMapper)).getRecords();
+        LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
+        this.injectQuartzJobQueryParams(criteria, wrapper);
+        return systemQuartzJobMapper.selectList(wrapper);
     }
 
     /**
@@ -263,12 +290,19 @@ public class SystemQuartzJobService {
      * @param criteria 条件
      * @return /
      */
-
     public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria) {
-        return systemQuartzLogMapper.selectQuartzLogByArgs(criteria, KitPageUtil.getCount(systemQuartzLogMapper)).getRecords();
+        LambdaQueryWrapper<SystemQuartzLogTb> wrapper = new LambdaQueryWrapper<>();
+        this.injectQuartzLogQueryParams(criteria, wrapper);
+        return systemQuartzLogMapper.selectList(wrapper);
     }
 
     public SystemQuartzJobTb getQuartzJobById(Long id) {
         return systemQuartzJobMapper.selectById(id);
+    }
+
+    public List<SystemQuartzJobTb> queryEnableQuartzJob() {
+        LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemQuartzJobTb::getIsPause, 0);
+        return systemQuartzJobMapper.selectList(wrapper);
     }
 }

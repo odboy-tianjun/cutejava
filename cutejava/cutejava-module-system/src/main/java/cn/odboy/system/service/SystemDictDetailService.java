@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class SystemDictDetailService {
-    @Autowired
-    private SystemDictDetailMapper systemDictDetailMapper;
+    @Autowired private SystemDictDetailMapper systemDictDetailMapper;
 
     /**
      * 创建
@@ -64,7 +64,6 @@ public class SystemDictDetailService {
      *
      * @param id /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void removeDictDetailById(Long id) {
         systemDictDetailMapper.deleteById(id);
@@ -77,8 +76,7 @@ public class SystemDictDetailService {
      * @param page 分页参数
      * @return /
      */
-
-    public KitPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs args, Page<Object> page) {
+    public KitPageResult<SystemDictDetailTb> queryDictDetailByArgs(SystemQueryDictDetailArgs args, Page<SystemDictDetailTb> page) {
         return KitPageUtil.toPage(systemDictDetailMapper.selectDictDetailByArgs(args, page));
     }
 
@@ -88,10 +86,18 @@ public class SystemDictDetailService {
      * @param name 字典名称
      * @return /
      */
-
     public List<SystemDictDetailTb> queryDictDetailByName(String name) {
         SystemQueryDictDetailArgs args = new SystemQueryDictDetailArgs();
         args.setDictName(name);
         return systemDictDetailMapper.selectDictDetailByArgs(args);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteDictDetailByDictIds(Set<Long> ids) {
+        if (CollUtil.isNotEmpty(ids)) {
+            LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(SystemDictDetailTb::getDictId, ids);
+            systemDictDetailMapper.delete(wrapper);
+        }
     }
 }

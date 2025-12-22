@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.quartz;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
@@ -31,16 +30,15 @@ import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.service.SystemEmailService;
 import cn.odboy.system.service.SystemQuartzJobService;
-import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobExecutionContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.quartz.QuartzJobBean;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobExecutionContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 @Slf4j
 public class ExecutionJobBean extends QuartzJobBean {
@@ -57,9 +55,7 @@ public class ExecutionJobBean extends QuartzJobBean {
         SystemQuartzLogMapper quartzLogMapper = KitSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
         SystemQuartzJobService systemQuartzJobService = KitSpringBeanHolder.getBean(SystemQuartzJobService.class);
         KitRedisHelper redisHelper = KitSpringBeanHolder.getBean(KitRedisHelper.class);
-
         String uuid = quartzJob.getUuid();
-
         SystemQuartzLogTb quartzLog = new SystemQuartzLogTb();
         quartzLog.setJobName(quartzJob.getJobName());
         quartzLog.setBeanName(quartzJob.getBeanName());
@@ -69,7 +65,8 @@ public class ExecutionJobBean extends QuartzJobBean {
         quartzLog.setCronExpression(quartzJob.getCronExpression());
         try {
             // 执行任务
-            QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
+            QuartzRunnable task =
+                new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(), quartzJob.getParams());
             Future<?> future = executor.submit(task);
             // 忽略任务执行结果
             future.get();
@@ -122,7 +119,8 @@ public class ExecutionJobBean extends QuartzJobBean {
         Map<String, Object> data = new HashMap<>(16);
         data.put("task", quartzJob);
         data.put("msg", msg);
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        TemplateEngine engine =
+            TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("SystemQuartzJobTaskAlarmTemplate.ftl");
         sendEmailRequest.setContent(template.render(data));
         List<String> emails = Arrays.asList(quartzJob.getEmail().split("[,，]"));

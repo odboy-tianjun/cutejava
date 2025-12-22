@@ -7,17 +7,25 @@ import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
-import cn.odboy.util.*;
+import cn.odboy.util.KitBrowserUtil;
+import cn.odboy.util.KitDesEncryptUtil;
+import cn.odboy.util.KitFileUtil;
+import cn.odboy.util.KitIPUtil;
+import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -34,7 +42,6 @@ public class SystemUserOnlineInfoDAO {
      * @param token     /
      * @param request   /
      */
-
     public void saveUserJwtModelByToken(SystemUserJwtVo userJwtVo, String token, HttpServletRequest request) {
         String dept = userJwtVo.getUser().getDept().getName();
         String ip = KitBrowserUtil.getIp(request);
@@ -65,7 +72,6 @@ public class SystemUserOnlineInfoDAO {
      *
      * @param token /
      */
-
     public void logoutByToken(String token) {
         String loginKey = tokenProvider.loginKey(token);
         redisHelper.del(loginKey);
@@ -78,8 +84,8 @@ public class SystemUserOnlineInfoDAO {
      * @param response /
      * @throws IOException /
      */
-
-    public void downloadUserOnlineModelExcel(List<SystemUserOnlineVo> all, HttpServletResponse response) throws IOException {
+    public void downloadUserOnlineModelExcel(List<SystemUserOnlineVo> all, HttpServletResponse response)
+        throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemUserOnlineVo user : all) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -99,7 +105,6 @@ public class SystemUserOnlineInfoDAO {
      *
      * @param username /
      */
-
     public void kickOutByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + username + "*";
         redisHelper.scanDel(loginKey);
@@ -112,14 +117,15 @@ public class SystemUserOnlineInfoDAO {
      * @param pageable /
      * @return /
      */
-
-    public KitPageResult<SystemUserOnlineVo> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
+    public KitPageResult<SystemUserOnlineVo> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo,
+        IPage<SystemUserOnlineVo> pageable) {
         String username = null;
         if (onlineVo != null) {
             username = onlineVo.getUserName();
         }
         List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
-        List<SystemUserOnlineVo> paging = KitPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
+        List<SystemUserOnlineVo> paging =
+            KitPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
         return KitPageUtil.toPage(paging, onlineUserList.size());
     }
 
@@ -129,7 +135,6 @@ public class SystemUserOnlineInfoDAO {
      * @param username /
      * @return /
      */
-
     public List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username) {
         String loginKey = SystemRedisKey.ONLINE_USER + (StrUtil.isBlank(username) ? "" : "*" + username);
         List<String> keys = redisHelper.scan(loginKey + "*");
@@ -148,7 +153,6 @@ public class SystemUserOnlineInfoDAO {
      * @param key /
      * @return /
      */
-
     public SystemUserOnlineVo queryUserOnlineModelByKey(String key) {
         return redisHelper.get(key, SystemUserOnlineVo.class);
     }

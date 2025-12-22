@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.properties.model;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
-import com.wf.captcha.*;
+import com.wf.captcha.ArithmeticCaptcha;
+import com.wf.captcha.ChineseCaptcha;
+import com.wf.captcha.ChineseGifCaptcha;
+import com.wf.captcha.GifCaptcha;
+import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
+import java.awt.Font;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.awt.*;
 
 /**
  * 验证码配置
@@ -36,32 +38,26 @@ import java.awt.*;
 @Setter
 public class UserLoginCaptchaSettingModel extends KitObject {
     private CaptchaCodeEnum codeType;
-
     /**
      * 验证码有效期 分钟
      */
     private Long expiration = 5L;
-
     /**
      * 验证码内容长度
      */
     private int length = 4;
-
     /**
      * 验证码宽度
      */
     private int width = 111;
-
     /**
      * 验证码高度
      */
     private int height = 36;
-
     /**
      * 验证码字体
      */
     private String fontName;
-
     /**
      * 字体大小
      */
@@ -116,15 +112,12 @@ public class UserLoginCaptchaSettingModel extends KitObject {
             // 生成随机数字和运算符
             int n1 = num(1, 10), n2 = num(1, 10);
             int opt = num(3);
-
             // 计算结果
             int res = new int[] {n1 + n2, n1 - n2, n1 * n2}[opt];
             // 转换为字符运算符
             char optChar = "+-x".charAt(opt);
-
             this.setArithmeticString(String.format("%s%c%s=?", n1, optChar, n2));
             this.chars = String.valueOf(res);
-
             return chars.toCharArray();
         }
     }

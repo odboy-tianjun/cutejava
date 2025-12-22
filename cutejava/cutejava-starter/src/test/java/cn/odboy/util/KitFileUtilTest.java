@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-import static cn.odboy.util.KitFileUtil.*;
+import static cn.odboy.util.KitFileUtil.getPrefix;
+import static cn.odboy.util.KitFileUtil.getSize;
+import static cn.odboy.util.KitFileUtil.getSuffix;
+import static cn.odboy.util.KitFileUtil.toFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class KitFileUtilTest {
-
     @Test
     public void testToFile() {
         long retval = toFile(new MockMultipartFile("foo", (byte[])null)).getTotalSpace();

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -28,49 +27,54 @@ import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
-import cn.odboy.system.dal.mysql.SystemRoleDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
-import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Service
 public class SystemRoleService {
-    @Autowired
-    private SystemRoleMapper systemRoleMapper;
-    @Autowired
-    private SystemRoleDeptMapper systemRoleDeptMapper;
-    @Autowired
-    private SystemRoleMenuMapper systemRoleMenuMapper;
-    @Autowired
-    private SystemUserMapper systemUserMapper;
+    @Autowired private SystemRoleMapper systemRoleMapper;
+    @Autowired private SystemRoleMenuService systemRoleMenuService;
+    @Autowired private SystemUserMapper systemUserMapper;
+    @Autowired private SystemRoleDeptService systemRoleDeptService;
 
     /**
      * 创建
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void saveRole(SystemCreateRoleArgs args) {
-        if (systemRoleMapper.getRoleByName(args.getName()) != null) {
+        if (this.getRoleByName(args.getName()) != null) {
             throw new BadRequestException("角色名称已存在");
         }
         systemRoleMapper.insert(BeanUtil.copyProperties(args, SystemRoleTb.class));
         // 判断是否有部门数据, 若有, 则需创建关联
         if (CollectionUtil.isNotEmpty(args.getDepts())) {
-            systemRoleDeptMapper.batchInsertRoleDept(args.getDepts(), args.getId());
+            systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
         }
+    }
+
+    private SystemRoleTb getRoleByName(String name) {
+        LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemRoleTb::getName, name);
+        return systemRoleMapper.selectOne(wrapper);
     }
 
     /**
@@ -78,11 +82,10 @@ public class SystemRoleService {
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyRoleById(SystemRoleTb args) {
         SystemRoleTb role = systemRoleMapper.selectById(args.getId());
-        SystemRoleTb role1 = systemRoleMapper.getRoleByName(args.getName());
+        SystemRoleTb role1 = this.getRoleByName(args.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new BadRequestException("角色名称已存在");
         }
@@ -94,10 +97,10 @@ public class SystemRoleService {
         // 更新
         systemRoleMapper.insertOrUpdate(role);
         // 删除关联部门数据
-        systemRoleDeptMapper.batchDeleteRoleDept(Collections.singleton(args.getId()));
+        systemRoleDeptService.batchDeleteRoleDept(Collections.singleton(args.getId()));
         // 判断是否有部门数据, 若有, 则需更新关联
         if (CollectionUtil.isNotEmpty(args.getDepts())) {
-            systemRoleDeptMapper.batchInsertRoleDept(args.getDepts(), args.getId());
+            systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
         }
     }
 
@@ -106,13 +109,12 @@ public class SystemRoleService {
      *
      * @param role /
      */
-
     public void modifyBindMenuById(SystemRoleTb role) {
         // 更新菜单
-        systemRoleMenuMapper.deleteRoleMenuByRoleId(role.getId());
+        systemRoleMenuService.deleteRoleMenuByRoleId(role.getId());
         // 判断是否为空
         if (CollUtil.isNotEmpty(role.getMenus())) {
-            systemRoleMenuMapper.batchInsertRoleMenu(role.getMenus(), role.getId());
+            systemRoleMenuService.batchInsertRoleMenu(role.getMenus(), role.getId());
         }
     }
 
@@ -121,13 +123,12 @@ public class SystemRoleService {
      *
      * @param ids /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void removeRoleByIds(Set<Long> ids) {
         systemRoleMapper.deleteByIds(ids);
         // 删除角色部门关联数据、角色菜单关联数据
-        systemRoleDeptMapper.batchDeleteRoleDept(ids);
-        systemRoleMenuMapper.batchDeleteRoleMenu(ids);
+        systemRoleDeptService.batchDeleteRoleDept(ids);
+        systemRoleMenuService.batchDeleteRoleMenu(ids);
     }
 
     /**
@@ -137,7 +138,6 @@ public class SystemRoleService {
      * @param response /
      * @throws IOException
      */
-
     public void exportRoleExcel(List<SystemRoleTb> roles, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemRoleTb role : roles) {
@@ -156,9 +156,14 @@ public class SystemRoleService {
      *
      * @return
      */
-
     public List<SystemRoleTb> queryAllRole() {
-        return systemRoleMapper.selectAllRole();
+        return this.selectAllRole();
+    }
+
+    private List<SystemRoleTb> selectAllRole() {
+        LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByAsc(SystemRoleTb::getLevel);
+        return systemRoleMapper.selectList(wrapper);
     }
 
     /**
@@ -167,7 +172,6 @@ public class SystemRoleService {
      * @param criteria 条件
      * @return
      */
-
     public List<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria) {
         return systemRoleMapper.selectRoleByArgs(criteria);
     }
@@ -179,7 +183,6 @@ public class SystemRoleService {
      * @param page     分页参数
      * @return
      */
-
     public KitPageResult<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByArgs(criteria);
@@ -193,7 +196,6 @@ public class SystemRoleService {
      * @param userId 用户ID
      * @return /
      */
-
     public List<SystemRoleTb> queryRoleByUsersId(Long userId) {
         return systemRoleMapper.selectRoleByUserId(userId);
     }
@@ -204,7 +206,6 @@ public class SystemRoleService {
      * @param roles /
      * @return /
      */
-
     public Integer getDeptLevelByRoles(Set<SystemRoleTb> roles) {
         if (CollUtil.isEmpty(roles)) {
             return Integer.MAX_VALUE;
@@ -222,7 +223,6 @@ public class SystemRoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-
     public List<SystemRoleCodeVo> buildUserRolePermissions(SystemUserTb user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
@@ -231,8 +231,8 @@ public class SystemRoleService {
             return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
         }
         List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
-        permissions =
-            roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission).filter(StrUtil::isNotBlank).collect(Collectors.toSet());
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission)
+            .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
 
@@ -241,7 +241,6 @@ public class SystemRoleService {
      *
      * @param ids /
      */
-
     public void verifyBindRelationByIds(Set<Long> ids) {
         if (systemUserMapper.countUserByRoleIds(ids) > 0) {
             throw new BadRequestException("所选角色存在用户关联, 请解除关联再试！");

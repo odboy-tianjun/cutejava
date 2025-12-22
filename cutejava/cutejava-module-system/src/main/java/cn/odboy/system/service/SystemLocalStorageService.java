@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.date.DatePattern;
@@ -30,24 +29,24 @@ import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
 @Service
 public class SystemLocalStorageService {
-    @Autowired
-    private SystemLocalStorageMapper systemLocalStorageMapper;
-    @Autowired
-    private KitFileLocalUploadHelper fileUploadPathHelper;
-    @Autowired
-    private AppProperties properties;
+    @Autowired private SystemLocalStorageMapper systemLocalStorageMapper;
+    @Autowired private KitFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired private AppProperties properties;
 
     /**
      * 上传
@@ -69,7 +68,8 @@ public class SystemLocalStorageService {
         }
         try {
             String formatSize = KitFileUtil.getSize(size);
-            String prefixName = StrUtil.isBlank(name) ? KitFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
+            String prefixName =
+                StrUtil.isBlank(name) ? KitFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
             SystemLocalStorageTb localStorage = new SystemLocalStorageTb();
             localStorage.setRealName(file.getName());
             localStorage.setName(prefixName);
@@ -123,7 +123,8 @@ public class SystemLocalStorageService {
      * @param response      /
      * @throws IOException /
      */
-    public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response) throws IOException {
+    public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response)
+        throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemLocalStorageTb localStorage : localStorages) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -145,7 +146,8 @@ public class SystemLocalStorageService {
      * @param page     分页参数
      * @return /
      */
-    public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page) {
+    public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria,
+        Page<SystemLocalStorageTb> page) {
         return KitPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
     }
 
@@ -156,6 +158,6 @@ public class SystemLocalStorageService {
      * @return /
      */
     public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
-        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria, KitPageUtil.getCount(systemLocalStorageMapper)).getRecords();
+        return systemLocalStorageMapper.selectLocalStorageByArgs(criteria);
     }
 }

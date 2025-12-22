@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.monitor.controller;
 
 import cn.odboy.annotation.AnonymousGetMapping;
@@ -31,8 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/healthCheck")
 @Api(tags = "系统：健康检查接口")
 public class HealthCheckController {
-    @Autowired
-    private KitHealthCheckPointService kitHealthCheckPointService;
+    @Autowired private KitHealthCheckPointService kitHealthCheckPointService;
 
     /**
      * 就绪检查
@@ -49,7 +47,6 @@ public class HealthCheckController {
     public ResponseEntity<?> doLiveness() {
         return kitHealthCheckPointService.doLiveness();
     }
-
     //    /**
     //     * 访问首页提示
     //     */

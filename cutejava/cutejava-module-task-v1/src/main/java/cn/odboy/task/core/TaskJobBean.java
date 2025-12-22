@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.task.core;
 
 import cn.hutool.core.util.StrUtil;
@@ -29,17 +28,16 @@ import cn.odboy.task.service.TaskInstanceDetailService;
 import cn.odboy.task.service.TaskInstanceInfoService;
 import cn.odboy.task.service.TaskInstanceStepDetailService;
 import com.alibaba.fastjson2.JSON;
-import lombok.extern.slf4j.Slf4j;
-import org.quartz.InterruptableJob;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.springframework.scheduling.quartz.QuartzJobBean;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.InterruptableJob;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 @Slf4j
 public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
@@ -59,7 +57,8 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
         this.workThread = Thread.currentThread();
         // ========================== 获取代理类 ==========================
         TaskInstanceInfoService taskInstanceInfoService = KitSpringBeanHolder.getBean(TaskInstanceInfoService.class);
-        TaskInstanceDetailService taskInstanceDetailService = KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
+        TaskInstanceDetailService taskInstanceDetailService =
+            KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
         // ========================== 获取参数 ==========================
         JobDataMap dataMap = context.getMergedJobDataMap();
         long id = dataMap.getLong(TaskJobKeys.ID);
@@ -72,7 +71,8 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
         if (StrUtil.isBlank(retryNodeCode)) {
             executeNormalTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos);
         } else {
-            executeRetryTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos, retryNodeCode);
+            executeRetryTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos,
+                retryNodeCode);
         }
     }
 
@@ -85,15 +85,19 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      * @param dataMap                   数据映射
      * @param taskTemplateNodeVos       模板节点列表
      */
-    private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id,
-        JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos) {
+    private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService,
+        TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap,
+        List<TaskTemplateNodeVo> taskTemplateNodeVos) {
         // ========================== 初始化执行明细 ==========================
         List<TaskInstanceDetailTb> taskInstanceDetails =
-            taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo)).collect(Collectors.toList());
+            taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo))
+                .collect(Collectors.toList());
         taskInstanceDetailService.saveBatch(taskInstanceDetails);
-        Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
+        Map<String, Long> codeIdMap = taskInstanceDetails.stream()
+            .collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
         // ========================== 顺序执行 ==========================
-        executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos, codeIdMap);
+        executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos,
+            codeIdMap);
     }
 
     /**
@@ -106,8 +110,9 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      * @param taskTemplateNodeVos       模板节点列表
      * @param retryNodeCode             重试节点编码
      */
-    private void executeRetryTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id,
-        JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos, String retryNodeCode) {
+    private void executeRetryTask(TaskInstanceInfoService taskInstanceInfoService,
+        TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap,
+        List<TaskTemplateNodeVo> taskTemplateNodeVos, String retryNodeCode) {
         boolean isFound = false;
         // ========================== 初始化执行明细 ==========================
         List<TaskInstanceDetailTb> taskInstanceDetails = new ArrayList<>();
@@ -127,18 +132,24 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
                 isFound = true;
             }
         }
-        TaskInstanceStepDetailService taskInstanceStepDetailService = KitSpringBeanHolder.getBean(TaskInstanceStepDetailService.class);
-        List<String> bizCodeList = taskInstanceDetails.stream().map(TaskInstanceDetailTb::getBizCode).distinct().collect(Collectors.toList());
-        List<TaskInstanceDetailTb> taskInstanceDetailTbs = taskInstanceDetailService.queryByInstanceIdAndBizCodeList(id, bizCodeList);
-        List<Long> taskInstanceDetailIds = taskInstanceDetailTbs.stream().map(TaskInstanceDetailTb::getId).collect(Collectors.toList());
+        TaskInstanceStepDetailService taskInstanceStepDetailService =
+            KitSpringBeanHolder.getBean(TaskInstanceStepDetailService.class);
+        List<String> bizCodeList =
+            taskInstanceDetails.stream().map(TaskInstanceDetailTb::getBizCode).distinct().collect(Collectors.toList());
+        List<TaskInstanceDetailTb> taskInstanceDetailTbs =
+            taskInstanceDetailService.queryByInstanceIdAndBizCodeList(id, bizCodeList);
+        List<Long> taskInstanceDetailIds =
+            taskInstanceDetailTbs.stream().map(TaskInstanceDetailTb::getId).collect(Collectors.toList());
         // 根据ID删除明细
         taskInstanceDetailService.removeByIds(taskInstanceDetailIds);
         // 根据明细删除步骤
         taskInstanceStepDetailService.removeByInstanceDetailIds(taskInstanceDetailIds);
         taskInstanceDetailService.saveBatch(taskInstanceDetails);
-        Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
+        Map<String, Long> codeIdMap = taskInstanceDetails.stream()
+            .collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
         // ========================== 顺序执行 ==========================
-        executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeRetryList, codeIdMap);
+        executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeRetryList,
+            codeIdMap);
     }
 
     /**
@@ -169,8 +180,9 @@ public class TaskJobBean extends QuartzJobBean implements InterruptableJob {
      * @param taskTemplateNodes         需要执行的任务节点列表
      * @param codeIdMap                 节点编码与明细ID映射
      */
-    private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, Long id,
-        JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
+    private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService,
+        TaskInstanceDetailService taskInstanceDetailService, Long id, JobDataMap dataMap,
+        List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
         try {
             for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodes) {
                 String code = taskTemplateNodeVo.getCode();

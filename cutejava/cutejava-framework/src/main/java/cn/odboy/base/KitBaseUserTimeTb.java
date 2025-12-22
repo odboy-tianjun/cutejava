@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
+import java.lang.reflect.Field;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,31 +27,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
-import java.lang.reflect.Field;
-import java.util.Date;
-
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUserTimeTb extends KitObject {
-
-    @CreatedBy
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建人", hidden = true)
-    private String createBy;
-
-    @LastModifiedBy
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新人", hidden = true)
+    @CreatedBy @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建人", hidden = true) private String
+        createBy;
+    @LastModifiedBy @TableField(fill = FieldFill.INSERT_UPDATE) @ApiModelProperty(value = "更新人", hidden = true)
     private String updateBy;
-
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
-
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    private Date updateTime;
+    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true) private Date updateTime;
 
     @Override
     public String toString() {
@@ -68,10 +56,8 @@ public class KitBaseUserTimeTb extends KitObject {
     }
 
     /* 分组校验 */
-    public @interface Create {
-    }
+    public @interface Create {}
 
     /* 分组校验 */
-    public @interface Update {
-    }
+    public @interface Update {}
 }

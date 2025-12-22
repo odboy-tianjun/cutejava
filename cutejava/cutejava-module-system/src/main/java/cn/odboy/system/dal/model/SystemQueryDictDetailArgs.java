@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
@@ -24,9 +23,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemQueryDictDetailArgs extends KitObject {
-    @ApiModelProperty(value = "标签")
-    private String label;
-
-    @ApiModelProperty(value = "字典名称")
-    private String dictName;
+    @ApiModelProperty(value = "标签") private String label;
+    @ApiModelProperty(value = "字典名称") private String dictName;
 }

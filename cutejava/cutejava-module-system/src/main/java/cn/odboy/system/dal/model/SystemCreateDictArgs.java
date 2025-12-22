@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class SystemCreateDictArgs extends KitObject {
-    @NotBlank(message = "字典名称必填")
-    private String name;
+    @NotBlank(message = "字典名称必填") private String name;
     private String description;
 }

@@ -40,60 +40,36 @@ import lombok.ToString;
 @TableName("task_template_info")
 @ApiModel(value = "TaskTemplateInfoTb对象", description = "任务模板")
 public class TaskTemplateInfoTb extends KitBaseUserTimeTb {
-
     /**
      * id
      */
-    @ApiModelProperty("id")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
+    @ApiModelProperty("id") @TableId(value = "id", type = IdType.AUTO) private Long id;
     /**
      * 数据有效性
      */
-    @TableField("available")
-    @ApiModelProperty("数据有效性")
-    private Boolean available;
-
+    @TableField("available") @ApiModelProperty("数据有效性") private Boolean available;
     /**
      * 变更类型
      */
-    @ApiModelProperty("变更类型")
-    @TableField("change_type")
-    private String changeType;
-
+    @ApiModelProperty("变更类型") @TableField("change_type") private String changeType;
     /**
      * 流水线名称
      */
-    @TableField("`name`")
-    @ApiModelProperty("流水线名称")
-    private String name;
-
+    @TableField("`name`") @ApiModelProperty("流水线名称") private String name;
     /**
      * 流水线描述
      */
-    @ApiModelProperty("流水线描述")
-    @TableField("`description`")
-    private String description;
-
+    @ApiModelProperty("流水线描述") @TableField("`description`") private String description;
     /**
      * 流水线模板内容
      */
-    @TableField("template")
-    @ApiModelProperty("流水线模板内容")
-    private String template;
-
+    @TableField("template") @ApiModelProperty("流水线模板内容") private String template;
     /**
      * 环境别名
      */
-    @TableField("env_alias")
-    @ApiModelProperty("环境别名")
-    private String envAlias;
-
+    @TableField("env_alias") @ApiModelProperty("环境别名") private String envAlias;
     /**
      * 应用为语言，资源为类型
      */
-    @TableField("`language`")
-    @ApiModelProperty("应用为语言，资源为类型")
-    private String language;
+    @TableField("`language`") @ApiModelProperty("应用为语言，资源为类型") private String language;
 }

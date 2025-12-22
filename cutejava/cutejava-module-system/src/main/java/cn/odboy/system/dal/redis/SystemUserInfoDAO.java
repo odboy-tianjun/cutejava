@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SystemUserInfoDAO {
-    @Autowired
-    private KitRedisHelper redisHelper;
+    @Autowired private KitRedisHelper redisHelper;
 
     /**
      * 添加缓存到Redis
@@ -49,7 +48,6 @@ public class SystemUserInfoDAO {
      * @param username 用户名
      * @return UserJwtVo
      */
-
     public SystemUserJwtVo getUserLoginInfoByUserName(String username) {
         if (StrUtil.isNotEmpty(username)) {
             // 获取数据

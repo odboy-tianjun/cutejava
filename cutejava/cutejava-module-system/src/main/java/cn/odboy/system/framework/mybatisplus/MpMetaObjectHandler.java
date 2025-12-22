@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.mybatisplus;
 
 import cn.hutool.core.date.DateTime;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import java.util.Date;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 public class MpMetaObjectHandler implements MetaObjectHandler {
-
     @Override
     public void insertFill(MetaObject metaObject) {
         DateTime now = DateTime.now();
@@ -56,4 +53,3 @@ public class MpMetaObjectHandler implements MetaObjectHandler {
         this.strictUpdateFill(metaObject, "updateBy", String.class, username);
     }
 }
-

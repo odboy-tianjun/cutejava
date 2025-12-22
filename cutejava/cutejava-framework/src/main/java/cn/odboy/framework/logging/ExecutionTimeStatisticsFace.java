@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.logging;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 统计执行时长
@@ -32,7 +36,6 @@ public @interface ExecutionTimeStatisticsFace {
      * 接口描述
      */
     String description();
-
     /**
      * 是否展示异常日志
      */

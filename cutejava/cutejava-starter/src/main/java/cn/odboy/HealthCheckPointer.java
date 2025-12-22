@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy;
 
 import cn.odboy.framework.monitor.service.KitHealthCheckPointService;
@@ -24,8 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HealthCheckPointer implements KitHealthCheckPointService {
-    @Autowired
-    private SystemDictService systemDictService;
+    @Autowired private SystemDictService systemDictService;
 
     /**
      * 系统准备就绪

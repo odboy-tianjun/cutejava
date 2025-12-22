@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
-import cn.odboy.system.dal.dataobject.SystemJobTb;
+import cn.odboy.system.dal.dataobject.SystemUserJobTb;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Set;
 
 /**
  * 用户职位关联 Mapper
@@ -28,8 +25,4 @@ import java.util.Set;
  * @author odboy
  */
 @Mapper
-public interface SystemUserJobMapper {
-    void batchInsertUserJob(@Param("jobs") Set<SystemJobTb> jobs, @Param("userId") Long userId);
-
-    void batchDeleteUserJob(@Param("userIds") Set<Long> userIds);
-}
+public interface SystemUserJobMapper extends BaseMapper<SystemUserJobTb> {}

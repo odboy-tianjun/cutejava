@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -29,13 +28,25 @@ import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.framework.permission.core.CsSecurityHelper;
-import cn.odboy.system.service.*;
+import cn.odboy.system.service.SystemDataService;
+import cn.odboy.system.service.SystemDeptService;
+import cn.odboy.system.service.SystemEmailService;
+import cn.odboy.system.service.SystemRoleService;
+import cn.odboy.system.service.SystemUserService;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,32 +54,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Api(tags = "系统：用户管理")
 @RestController
 @RequestMapping("/api/user")
 public class SystemUserController {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private SystemUserService systemUserService;
-    @Autowired
-    private SystemDataService systemDataService;
-    @Autowired
-    private SystemDeptService systemDeptService;
-    @Autowired
-    private SystemRoleService systemRoleService;
-    @Autowired
-    private SystemEmailService systemEmailService;
-    @Autowired
-    private AppProperties properties;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private SystemUserService systemUserService;
+    @Autowired private SystemDataService systemDataService;
+    @Autowired private SystemDeptService systemDeptService;
+    @Autowired private SystemRoleService systemRoleService;
+    @Autowired private SystemEmailService systemEmailService;
+    @Autowired private AppProperties properties;
 
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
@@ -80,7 +85,8 @@ public class SystemUserController {
     @ApiOperation("查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<KitPageResult<SystemUserTb>> queryUserByArgs(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
+    public ResponseEntity<KitPageResult<SystemUserTb>> queryUserByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
         Page<SystemUserTb> page = new Page<>(args.getPage(), args.getSize());
         SystemQueryUserArgs criteria = args.getArgs();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
@@ -91,7 +97,8 @@ public class SystemUserController {
             criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdListByDeptIds(data));
         }
         // 数据权限
-        List<Long> dataScopes = systemDataService.queryDeptIdListByArgs(systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername()));
+        List<Long> dataScopes = systemDataService.findDeptIdListByArgs(
+            systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
             // 取交集
@@ -129,7 +136,8 @@ public class SystemUserController {
 
     @ApiOperation("修改用户：个人中心")
     @PostMapping(value = "modifyUserCenterInfoById")
-    public ResponseEntity<Object> modifyUserCenterInfoById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
+    public ResponseEntity<Object> modifyUserCenterInfoById(
+        @Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
         if (!args.getId().equals(CsSecurityHelper.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
@@ -143,10 +151,14 @@ public class SystemUserController {
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
         for (Long id : ids) {
             Integer currentLevel = Collections.min(
-                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
-            Integer optLevel = Collections.min(systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+                systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream()
+                    .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer optLevel = Collections.min(
+                systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel)
+                    .collect(Collectors.toList()));
             if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
+                throw new BadRequestException(
+                    "角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
             }
         }
         systemUserService.removeUserByIds(ids);
@@ -155,9 +167,12 @@ public class SystemUserController {
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
-    public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo) throws Exception {
-        String oldPass = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
-        String newPass = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
+    public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo)
+        throws Exception {
+        String oldPass =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
+        String newPass =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
@@ -185,8 +200,10 @@ public class SystemUserController {
 
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
-    public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args) throws Exception {
-        String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
+    public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args)
+        throws Exception {
+        String password =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
         SystemUserTb user = systemUserService.getUserByUsername(CsSecurityHelper.getCurrentUsername());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("密码错误");
@@ -203,7 +220,8 @@ public class SystemUserController {
      */
     private void checkLevel(SystemUserTb args) {
         Integer currentLevel = Collections.min(
-            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            systemRoleService.queryRoleByUsersId(CsSecurityHelper.getCurrentUserId()).stream()
+                .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
         Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
@@ -214,27 +232,7 @@ public class SystemUserController {
     @PostMapping(value = "/queryUserMetadataOptions")
     @PreAuthorize("@el.check('user:list')")
     public ResponseEntity<List<KitSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
-        int maxPageSize = 50;
-        SystemQueryUserArgs criteria = args.getArgs();
-        LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.and(c -> {
-            c.eq(SystemUserTb::getPhone, criteria.getBlurry());
-            c.or();
-            c.eq(SystemUserTb::getEmail, criteria.getBlurry());
-            c.or();
-            c.like(SystemUserTb::getUsername, criteria.getBlurry());
-            c.or();
-            c.like(SystemUserTb::getNickName, criteria.getBlurry());
-        });
-        List<KitSelectOptionVo> collect =
-            systemUserService.queryUserByBlurry(wrapper, new Page<>(criteria.getPage(), maxPageSize)).getRecords().stream().map(m -> {
-                Map<String, Object> ext = new HashMap<>(1);
-                ext.put("id", m.getId());
-                ext.put("deptId", m.getDeptId());
-                ext.put("email", m.getEmail());
-                ext.put("phone", m.getPhone());
-                return KitSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
-            }).collect(Collectors.toList());
+        List<KitSelectOptionVo> collect = systemUserService.queryUserMetadataOptions(args);
         return ResponseEntity.ok(collect);
     }
 }

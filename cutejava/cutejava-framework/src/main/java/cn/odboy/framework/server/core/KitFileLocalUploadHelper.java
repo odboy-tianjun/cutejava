@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.server.core;
 
 import cn.odboy.constant.SystemConst;
@@ -34,8 +33,7 @@ public class KitFileLocalUploadHelper {
     private static final String PATH_WINDOWS = "C:\\${appName}\\file\\";
     private static final String PATH_MAC = "/Users/odboy/${appName}/file/";
     private static final String PATH_LINUX = "/home/${appName}/file/";
-    @Value("${spring.application.name}")
-    private String appName;
+    @Value("${spring.application.name}") private String appName;
 
     public String getPath() {
         String os = System.getProperty("os.name");

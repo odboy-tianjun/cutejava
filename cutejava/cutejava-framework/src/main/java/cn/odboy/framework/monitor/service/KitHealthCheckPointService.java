@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.monitor.service;
 
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ public interface KitHealthCheckPointService {
      * 就绪检查
      */
     ResponseEntity<?> doReadiness();
-
     /**
      * 存活检查
      */

@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.properties;
 
-import cn.odboy.framework.properties.model.*;
+import cn.odboy.framework.properties.model.CaptchaModel;
+import cn.odboy.framework.properties.model.ContentRsaEncodeSettingModel;
+import cn.odboy.framework.properties.model.JwtAuthSettingModel;
+import cn.odboy.framework.properties.model.StorageOSSModel;
+import cn.odboy.framework.properties.model.SwaggerApiDocSettingModel;
+import cn.odboy.framework.properties.model.ThreadPoolSettingModel;
+import cn.odboy.framework.properties.model.UserLoginSettingModel;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -39,5 +44,3 @@ public class AppProperties {
     private CaptchaModel captcha;
     private StorageOSSModel oss;
 }
-
-

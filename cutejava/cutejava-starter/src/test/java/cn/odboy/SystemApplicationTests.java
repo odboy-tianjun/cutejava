@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy;
 
 import cn.hutool.core.collection.CollUtil;
@@ -22,19 +21,16 @@ import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.service.SystemUserService;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Set;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SystemApplicationTests {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private SystemUserService systemUserService;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private SystemUserService systemUserService;
 
     public static void main(String[] args) {
     }
@@ -43,15 +39,12 @@ public class SystemApplicationTests {
     public void contextLoads() {
         SystemDeptTb systemDept = new SystemDeptTb();
         systemDept.setId(2L);
-
         SystemJobTb systemJob = new SystemJobTb();
         systemJob.setId(11L);
         Set<SystemJobTb> systemJobs = CollUtil.newHashSet(systemJob);
-
         SystemRoleTb systemRole = new SystemRoleTb();
         systemRole.setId(2L);
         Set<SystemRoleTb> systemRoles = CollUtil.newHashSet(systemRole);
-
         String pwd = passwordEncoder.encode("123456");
         for (int i = 100; i < 200; i++) {
             SystemUserTb systemUser = new SystemUserTb();
@@ -67,4 +60,3 @@ public class SystemApplicationTests {
         }
     }
 }
-

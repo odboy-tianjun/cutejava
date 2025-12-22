@@ -34,14 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/task")
 public class TaskTestsController {
-    @Autowired
-    private TaskManage taskManage;
+    @Autowired private TaskManage taskManage;
 
     @AnonymousAccess
     @GetMapping(value = "/testCreate")
     public ResponseEntity<?> testCreate() {
         TaskInstanceInfoTb instanceInfo =
-            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
+            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava",
+                "功能测试", null);
         log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
         return ResponseEntity.ok(instanceInfo);
     }
@@ -50,7 +50,8 @@ public class TaskTestsController {
     @GetMapping(value = "/testCreateAfterStop")
     public ResponseEntity<?> testCreateAfterStop() {
         TaskInstanceInfoTb instanceInfo =
-            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava", "功能测试", null);
+            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava",
+                "功能测试", null);
         log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
         ThreadUtil.execAsync(() -> {
             ThreadUtil.safeSleep(5000);

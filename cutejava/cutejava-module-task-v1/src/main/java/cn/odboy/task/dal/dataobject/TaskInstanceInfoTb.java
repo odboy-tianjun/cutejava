@@ -17,17 +17,20 @@ package cn.odboy.task.dal.dataobject;
 
 import cn.odboy.base.KitObject;
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
-
-import java.util.Date;
 
 /**
  * <p>
@@ -43,102 +46,59 @@ import java.util.Date;
 @TableName("task_instance_info")
 @ApiModel(value = "TaskInstanceInfoTb对象", description = "任务实例")
 public class TaskInstanceInfoTb extends KitObject {
-    @CreatedBy
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建人", hidden = true)
-    private String createBy;
-
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @CreatedBy @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建人", hidden = true) private String
+        createBy;
+    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
     private Date createTime;
-
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    private Date updateTime;
-
+    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true) private Date updateTime;
     /**
      * id, @JsonSerialize和@JSONField，用于处理大数精度丢失问题
      */
-    @ApiModelProperty("id")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    @JsonSerialize(using = ToStringSerializer.class)
-    @JSONField(format = "string")
-    private Long id;
-
+    @ApiModelProperty("id") @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class) @JSONField(format = "string") private Long id;
     /**
      * 名称
      */
-    @ApiModelProperty("名称")
-    @TableField("context_name")
-    private String contextName;
-
+    @ApiModelProperty("名称") @TableField("context_name") private String contextName;
     /**
      * 语言
      */
-    @ApiModelProperty("语言")
-    @TableField("`language`")
-    private String language;
-
+    @ApiModelProperty("语言") @TableField("`language`") private String language;
     /**
      * 变更类型
      */
-    @ApiModelProperty("变更类型")
-    @TableField("change_type")
-    private String changeType;
-
+    @ApiModelProperty("变更类型") @TableField("change_type") private String changeType;
     /**
      * 环境别名
      */
-    @TableField("env_alias")
-    @ApiModelProperty("环境别名")
-    private String envAlias;
-
+    @TableField("env_alias") @ApiModelProperty("环境别名") private String envAlias;
     /**
      * 状态(running进行中 success成功 fail失败)
      */
-    @TableField("`status`")
-    @ApiModelProperty("状态(running进行中 success成功 fail失败)")
-    private String status;
-
+    @TableField("`status`") @ApiModelProperty("状态(running进行中 success成功 fail失败)") private String status;
     /**
      * 完成时间
      */
-    @ApiModelProperty("完成时间")
-    @TableField("finish_time")
-    private Date finishTime;
-
+    @ApiModelProperty("完成时间") @TableField("finish_time") private Date finishTime;
     /**
      * 来源
      */
-    @ApiModelProperty("来源")
-    @TableField("`source`")
-    private String source;
-
+    @ApiModelProperty("来源") @TableField("`source`") private String source;
     /**
      * 变更原因
      */
-    @TableField("reason")
-    @ApiModelProperty("变更原因")
-    private String reason;
-
+    @TableField("reason") @ApiModelProperty("变更原因") private String reason;
     /**
      * 任务模板
      */
-    @TableField("template")
-    @ApiModelProperty("template")
-    private String template;
-
+    @TableField("template") @ApiModelProperty("template") private String template;
     /**
      * QuartzJob参数
      */
-    @TableField("job_data")
-    @ApiModelProperty("QuartzJob参数")
-    private String jobData;
-
+    @TableField("job_data") @ApiModelProperty("QuartzJob参数") private String jobData;
     /**
      * 异常信息
      */
-    @TableField("error_message")
-    @ApiModelProperty("异常信息")
-    private String errorMessage;
+    @TableField("error_message") @ApiModelProperty("异常信息") private String errorMessage;
 }

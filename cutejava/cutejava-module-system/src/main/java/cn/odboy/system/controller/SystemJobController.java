@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
@@ -25,22 +24,24 @@ import cn.odboy.system.service.SystemJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Set;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "系统：岗位管理")
 @RequestMapping("/api/job")
 public class SystemJobController {
-    @Autowired
-    private SystemJobService systemJobService;
+    @Autowired private SystemJobService systemJobService;
 
     @ApiOperation("导出岗位数据")
     @GetMapping(value = "/download")
@@ -52,7 +53,8 @@ public class SystemJobController {
     @ApiOperation("查询岗位")
     @PostMapping(value = "/queryAllEnableJob")
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
         SystemQueryJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemJobService.queryJobByArgs(criteria, page));
@@ -61,7 +63,8 @@ public class SystemJobController {
     @ApiOperation("查询岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(
+        @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
         return queryJobByArgs(args);
     }
 
