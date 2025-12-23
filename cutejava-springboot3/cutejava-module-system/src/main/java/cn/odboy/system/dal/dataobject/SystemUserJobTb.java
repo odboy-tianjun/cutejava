@@ -10,8 +10,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("system_roles_menus")
-public class SystemRoleMenuTb {
-    @TableField(value = "role_id") private Long roleId;
-    @TableField(value = "menu_id") private Long menuId;
+@TableName("system_users_jobs")
+public class SystemUserJobTb {
+    @TableField(value = "user_id") private Long userId;
+    @TableField(value = "job_id") private Long jobId;
 }

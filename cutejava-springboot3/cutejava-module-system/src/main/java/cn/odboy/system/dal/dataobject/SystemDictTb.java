@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.dataobject;
 
 import cn.odboy.base.KitBaseUserTimeTb;
-import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -28,17 +31,8 @@ import lombok.Setter;
 @Setter
 @TableName("system_dict")
 public class SystemDictTb extends KitBaseUserTimeTb {
-
-    @NotNull(groups = Update.class)
-    @Schema(name = "ID", hidden = true)
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    @NotBlank
-    @Schema(name = "名称")
-    private String name;
-
-    @Schema(name = "描述")
-    @TableField(updateStrategy = FieldStrategy.ALWAYS)
-    private String description;
+    @NotNull(groups = Update.class) @ApiModelProperty(value = "ID", hidden = true)
+    @TableId(value = "id", type = IdType.AUTO) private Long id;
+    @NotBlank @ApiModelProperty(value = "名称") private String name;
+    @ApiModelProperty(value = "描述") @TableField(updateStrategy = FieldStrategy.ALWAYS) private String description;
 }

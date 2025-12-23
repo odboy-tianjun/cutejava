@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Set;
 
 /**
  * 角色菜单关联 Mapper
@@ -30,10 +25,4 @@ import java.util.Set;
  * @author odboy
  */
 @Mapper
-public interface SystemRoleMenuMapper extends BaseMapper<SystemRoleMenuTb> {
-    void batchInsertRoleMenu(@Param("menus") Set<SystemMenuTb> menus, @Param("roleId") Long roleId);
-
-    void batchDeleteRoleMenu(@Param("roleIds") Set<Long> roleIds);
-
-    void deleteRoleMenuByRoleId(@Param("roleId") Long roleId);
-}
+public interface SystemRoleMenuMapper extends BaseMapper<SystemRoleMenuTb> {}

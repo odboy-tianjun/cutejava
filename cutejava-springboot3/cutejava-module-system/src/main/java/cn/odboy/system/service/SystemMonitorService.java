@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
@@ -21,6 +20,13 @@ import cn.hutool.core.date.DateUtil;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitIPUtil;
+import java.lang.management.ManagementFactory;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
@@ -33,10 +39,6 @@ import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import oshi.util.FormatUtil;
 import oshi.util.Util;
-
-import java.lang.management.ManagementFactory;
-import java.text.DecimalFormat;
-import java.util.*;
 
 @Slf4j
 @Service
@@ -138,7 +140,8 @@ public class SystemMonitorService {
         memoryInfo.put("total", FormatUtil.formatBytes(memory.getTotal()));
         memoryInfo.put("available", FormatUtil.formatBytes(memory.getAvailable()));
         memoryInfo.put("used", FormatUtil.formatBytes(memory.getTotal() - memory.getAvailable()));
-        memoryInfo.put("usageRate", df.format((memory.getTotal() - memory.getAvailable()) / (double)memory.getTotal() * 100));
+        memoryInfo.put("usageRate",
+            df.format((memory.getTotal() - memory.getAvailable()) / (double)memory.getTotal() * 100));
         return memoryInfo;
     }
 
@@ -167,14 +170,22 @@ public class SystemMonitorService {
             Util.sleep(25);
             ticks = processor.getSystemCpuLoadTicks();
         }
-        long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
-        long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
-        long sys = ticks[CentralProcessor.TickType.SYSTEM.getIndex()] - prevTicks[CentralProcessor.TickType.SYSTEM.getIndex()];
-        long idle = ticks[CentralProcessor.TickType.IDLE.getIndex()] - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
-        long ioWait = ticks[CentralProcessor.TickType.IOWAIT.getIndex()] - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
-        long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];
-        long softIrq = ticks[CentralProcessor.TickType.SOFTIRQ.getIndex()] - prevTicks[CentralProcessor.TickType.SOFTIRQ.getIndex()];
-        long steal = ticks[CentralProcessor.TickType.STEAL.getIndex()] - prevTicks[CentralProcessor.TickType.STEAL.getIndex()];
+        long user =
+            ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
+        long nice =
+            ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
+        long sys =
+            ticks[CentralProcessor.TickType.SYSTEM.getIndex()] - prevTicks[CentralProcessor.TickType.SYSTEM.getIndex()];
+        long idle =
+            ticks[CentralProcessor.TickType.IDLE.getIndex()] - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
+        long ioWait =
+            ticks[CentralProcessor.TickType.IOWAIT.getIndex()] - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
+        long irq =
+            ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];
+        long softIrq = ticks[CentralProcessor.TickType.SOFTIRQ.getIndex()] -
+            prevTicks[CentralProcessor.TickType.SOFTIRQ.getIndex()];
+        long steal =
+            ticks[CentralProcessor.TickType.STEAL.getIndex()] - prevTicks[CentralProcessor.TickType.STEAL.getIndex()];
         long totalCpu = user + nice + sys + idle + ioWait + irq + softIrq + steal;
         cpuInfo.put("used", df.format(100d * user / totalCpu + 100d * sys / totalCpu));
         cpuInfo.put("idle", df.format(100d * idle / totalCpu));

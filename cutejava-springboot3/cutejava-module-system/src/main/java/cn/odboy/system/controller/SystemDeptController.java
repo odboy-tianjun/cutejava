@@ -68,7 +68,7 @@ public class SystemDeptController {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             // 同级数据
-            SystemDeptTb dept = systemDeptService.queryDeptById(id);
+            SystemDeptTb dept = systemDeptService.getDeptById(id);
             // 上级数据
             List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
             if (exclude) {
@@ -97,7 +97,7 @@ public class SystemDeptController {
     @PostMapping(value = "/modifyDept")
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
-        systemDeptService.modifyDept(args);
+        systemDeptService.updateDept(args);
         return ResponseEntity.ok(null);
     }
 

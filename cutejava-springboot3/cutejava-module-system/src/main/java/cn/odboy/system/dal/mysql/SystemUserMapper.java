@@ -13,47 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 import java.util.Set;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
     List<SystemUserTb> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria);
-
     IPage<SystemUserTb> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria, Page<SystemUserTb> page);
-
-    SystemUserTb getUserByUsername(@Param("username") String username);
-
-    SystemUserTb getUserByEmail(@Param("email") String email);
-
-    SystemUserTb getUserByPhone(@Param("phone") String phone);
-
     List<SystemUserTb> selectUserByRoleId(@Param("roleId") Long roleId);
-
     List<SystemUserTb> selectUserByDeptId(@Param("deptId") Long deptId);
-
     List<SystemUserTb> selectUserByMenuId(@Param("menuId") Long menuId);
-
     Long countUserByJobIds(@Param("jobIds") Set<Long> jobIds);
-
-    Long countUserByDeptIds(@Param("deptIds") Set<Long> deptIds);
-
     Long countUserByRoleIds(@Param("roleIds") Set<Long> roleIds);
-
-    void updateUserPasswordByUsername(@Param("username") String username, @Param("password") String password);
-
-    void updateUserEmailByUsername(@Param("username") String username, @Param("email") String email);
-
-    void batchUpdatePassword(@Param("password") String password, @Param("userIds") Set<Long> userIds);
+    SystemUserTb getUserByUsername(@Param("username") String username);
+    default long countUserByDeptIds(Set<Long> deptIds) {
+        LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(SystemUserTb::getDeptId, deptIds);
+        return selectCount(wrapper);
+    }
+    default SystemUserTb getUserByEmail(String email) {
+        LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemUserTb::getEmail, email);
+        wrapper.eq(SystemUserTb::getEnabled, 1);
+        return selectOne(wrapper);
+    }
+    default SystemUserTb getUserByPhone(String phone) {
+        LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemUserTb::getPhone, phone);
+        wrapper.eq(SystemUserTb::getEnabled, 1);
+        return selectOne(wrapper);
+    }
+    default void updateUserPasswordByUsername(String username, String password) {
+        LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(SystemUserTb::getUsername, username);
+        wrapper.set(SystemUserTb::getPassword, password);
+        update(null, wrapper);
+    }
+    default void updateUserEmailByUsername(String username, String email) {
+        LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(SystemUserTb::getUsername, username);
+        wrapper.set(SystemUserTb::getEmail, email);
+        update(null, wrapper);
+    }
+    default void updateUserPasswordByUserIds(String password, Set<Long> userIds) {
+        LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.in(SystemUserTb::getId, userIds);
+        wrapper.set(SystemUserTb::getPassword, password);
+        update(null, wrapper);
+    }
 }

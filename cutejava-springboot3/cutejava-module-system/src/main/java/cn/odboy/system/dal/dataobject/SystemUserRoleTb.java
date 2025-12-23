@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.system.dal.mysql;
+package cn.odboy.system.dal.dataobject;
 
-import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import cn.odboy.base.KitObject;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * <p>
- * OSS存储 Mapper 接口
- * </p>
- *
- * @author codegen
- * @since 2025-07-15
- */
-@Mapper
-public interface SystemOssStorageMapper extends BaseMapper<SystemOssStorageTb> {}
+@Getter
+@Setter
+@TableName("system_users_roles")
+public class SystemUserRoleTb extends KitObject {
+    @TableField(value = "user_id") private Long userId;
+    @TableField(value = "role_id") private Long roleId;
+}

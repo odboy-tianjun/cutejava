@@ -30,11 +30,4 @@
         </if>
         order by dd.dict_sort
     </select>
-    <delete id="deleteDictDetailByDictIds">
-        delete from system_dict_detail
-        where dict_id in
-        <foreach collection="dictIds" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </delete>
 </mapper>

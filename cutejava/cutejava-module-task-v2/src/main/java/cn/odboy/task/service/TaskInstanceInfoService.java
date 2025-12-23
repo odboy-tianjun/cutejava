@@ -99,4 +99,16 @@ public class TaskInstanceInfoService {
         wrapper.last("LIMIT 1");
         return taskInstanceInfoMapper.selectOne(wrapper);
     }
+
+    public void save(TaskInstanceInfoTb newInstance) {
+        taskInstanceInfoMapper.insert(newInstance);
+    }
+
+    public void updateById(TaskInstanceInfoTb taskInstanceInfoTb) {
+        taskInstanceInfoMapper.updateById(taskInstanceInfoTb);
+    }
+
+    public TaskInstanceInfoTb getById(Long id) {
+        return taskInstanceInfoMapper.selectById(id);
+    }
 }

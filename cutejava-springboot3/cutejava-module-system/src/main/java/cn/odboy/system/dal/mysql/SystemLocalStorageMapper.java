@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * 本地存储记录 Mapper
@@ -31,5 +33,31 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemLocalStorageMapper extends BaseMapper<SystemLocalStorageTb> {
-    IPage<SystemLocalStorageTb> selectLocalStorageByArgs(@Param("criteria") SystemQueryStorageArgs criteria, Page<SystemLocalStorageTb> page);
+    default void injectQueryParams(SystemQueryStorageArgs criteria, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
+        if (criteria != null) {
+            wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
+                c -> c.like(SystemLocalStorageTb::getName, criteria.getBlurry()).or()
+                    .like(SystemLocalStorageTb::getSuffix, criteria.getBlurry()).or()
+                    .like(SystemLocalStorageTb::getType, criteria.getBlurry()).or()
+                    .like(SystemLocalStorageTb::getCreateBy, criteria.getBlurry()));
+            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+                wrapper.between(SystemLocalStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
+                    criteria.getCreateTime().get(1));
+            }
+        }
+        wrapper.orderByDesc(SystemLocalStorageTb::getId);
+    }
+
+    default List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria) {
+        LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+        injectQueryParams(criteria, wrapper);
+        return selectList(wrapper);
+    }
+
+    default IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria,
+        Page<SystemLocalStorageTb> page) {
+        LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+        injectQueryParams(criteria, wrapper);
+        return selectPage(page, wrapper);
+    }
 }

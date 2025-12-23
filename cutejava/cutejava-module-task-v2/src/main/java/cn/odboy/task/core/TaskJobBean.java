@@ -60,7 +60,7 @@ public class TaskJobBean extends QuartzJobBean {
         JobDataMap dataMap = context.getMergedJobDataMap();
         long id = dataMap.getLong(TaskJobKeys.ID);
         // ========================== 获取任务编排模板 ==========================
-        TaskInstanceInfoTb taskInstanceInfoVo = taskInstanceInfoService.getById(id);
+        TaskInstanceInfoTb taskInstanceInfoVo = taskInstanceInfoService.getRunningById(id);
         String templateInfo = taskInstanceInfoVo.getTemplate();
         List<TaskTemplateNodeVo> taskTemplateNodeVos = JSON.parseArray(templateInfo, TaskTemplateNodeVo.class);
         // ========================== 判断是否重试任务 ==========================

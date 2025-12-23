@@ -132,16 +132,8 @@ public class SystemDeptService {
     public void updateDeptSubCnt(Long deptId) {
         if (deptId != null) {
             long count = systemDeptMapper.countDeptByPid(deptId);
-            KitSpringBeanHolder.getBean(SystemDeptService.class).updateDeptSubCountById(count, deptId);
+            systemDeptMapper.updateDeptSubCountById(count, deptId);
         }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void updateDeptSubCountById(long count, Long deptId) {
-        LambdaUpdateWrapper<SystemDeptTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(SystemDeptTb::getId, deptId);
-        wrapper.set(SystemDeptTb::getSubCount, count);
-        systemDeptMapper.update(null, wrapper);
     }
 
     /**
@@ -168,7 +160,7 @@ public class SystemDeptService {
      * @return /
      * @throws Exception /
      */
-    public List<SystemDeptTb> findAllDept(SystemQueryDeptArgs criteria, Boolean isQuery) throws Exception {
+    public List<SystemDeptTb> queryAllDept(SystemQueryDeptArgs criteria, Boolean isQuery) throws Exception {
         String dataScopeType = CsSecurityHelper.getDataScopeType();
         if (isQuery) {
             if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {

@@ -13,33 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class SystemQueryDeptArgs {
-
-    @Schema(name = "部门id集合")
-    private List<Long> ids;
-
-    @Schema(name = "部门名称")
-    private String name;
-
-    @Schema(name = "是否启用")
-    private Boolean enabled;
-
-    @Schema(name = "上级部门")
-    private Long pid;
-
-    @Schema(name = "PID为空查询")
-    private Boolean pidIsNull;
-
-    @Schema(name = "创建时间")
-    private List<Date> createTime;
+    @ApiModelProperty(value = "部门id集合") private List<Long> ids;
+    @ApiModelProperty(value = "部门名称") private String name;
+    @ApiModelProperty(value = "是否启用") private Boolean enabled;
+    @ApiModelProperty(value = "上级部门") private Long pid;
+    @ApiModelProperty(value = "PID为空查询") private Boolean pidIsNull;
+    @ApiModelProperty(value = "创建时间") private List<Date> createTime;
 }

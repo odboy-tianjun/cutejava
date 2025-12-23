@@ -60,7 +60,7 @@ public class UserDetailsHandler implements UserDetailsService {
                 // 获取用户的权限
                 List<SystemRoleCodeVo> authorities = systemRoleService.buildUserRolePermissions(user);
                 // 初始化JwtUserDto
-                userJwtVo = new SystemUserJwtVo(user, systemDataService.queryDeptIdListByArgs(user), authorities);
+                userJwtVo = new SystemUserJwtVo(user, systemDataService.findDeptIdListByArgs(user), authorities);
                 // 添加缓存数据
                 systemUserInfoDAO.saveUserLoginInfoByUserName(username, userJwtVo);
             }

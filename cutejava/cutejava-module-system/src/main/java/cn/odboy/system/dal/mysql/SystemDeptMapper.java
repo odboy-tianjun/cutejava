@@ -20,6 +20,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
@@ -66,5 +67,11 @@ public interface SystemDeptMapper extends BaseMapper<SystemDeptTb> {
         LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SystemDeptTb::getPid, pid);
         return selectList(wrapper);
+    }
+    default void updateDeptSubCountById(long count, Long deptId) {
+        LambdaUpdateWrapper<SystemDeptTb> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(SystemDeptTb::getId, deptId);
+        wrapper.set(SystemDeptTb::getSubCount, count);
+        update(null, wrapper);
     }
 }

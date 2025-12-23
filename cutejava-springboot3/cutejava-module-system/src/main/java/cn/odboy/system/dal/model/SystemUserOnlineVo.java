@@ -13,43 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 在线用户
  */
 @Data
 public class SystemUserOnlineVo {
-    @Schema(name = "Token编号")
-    private String uid;
-
-    @Schema(name = "用户名")
-    private String userName;
-
-    @Schema(name = "昵称")
-    private String nickName;
-
-    @Schema(name = "岗位")
-    private String dept;
-
-    @Schema(name = "浏览器")
-    private String browser;
-
-    @Schema(name = "IP")
-    private String ip;
-
-    @Schema(name = "地址")
-    private String address;
-
-    @Schema(name = "token")
-    private String key;
-
-    @Schema(name = "登录时间")
-    private Date loginTime;
+    @ApiModelProperty(value = "Token编号") private String uid;
+    @ApiModelProperty(value = "用户名") private String userName;
+    @ApiModelProperty(value = "昵称") private String nickName;
+    @ApiModelProperty(value = "岗位") private String dept;
+    @ApiModelProperty(value = "浏览器") private String browser;
+    @ApiModelProperty(value = "IP") private String ip;
+    @ApiModelProperty(value = "地址") private String address;
+    @ApiModelProperty(value = "token") private String key;
+    @ApiModelProperty(value = "登录时间") private Date loginTime;
 }

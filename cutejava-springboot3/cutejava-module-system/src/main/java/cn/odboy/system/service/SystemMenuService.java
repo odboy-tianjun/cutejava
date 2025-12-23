@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
@@ -35,25 +34,29 @@ import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SystemMenuService {
     private static final String YES_STR = "是";
     private static final String NO_STR = "否";
-    @Autowired
-    private SystemMenuMapper systemMenuMapper;
-    @Autowired
-    private SystemRoleMenuMapper systemRoleMenuMapper;
-    @Autowired
-    private SystemRoleService systemRoleService;
+    @Autowired private SystemMenuMapper systemMenuMapper;
+    @Autowired private SystemRoleMenuMapper systemRoleMenuMapper;
+    @Autowired private SystemRoleService systemRoleService;
+    @Autowired private SystemRoleMenuService systemRoleMenuService;
 
     /**
      * 创建
@@ -74,8 +77,8 @@ public class SystemMenuService {
             args.setPid(null);
         }
         if (args.getIFrame()) {
-            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
-                .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) ||
+                args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
@@ -91,7 +94,6 @@ public class SystemMenuService {
      *
      * @param args /
      */
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyMenuById(SystemMenuTb args) {
         if (args.getId().equals(args.getPid())) {
@@ -99,25 +101,21 @@ public class SystemMenuService {
         }
         SystemMenuTb menu = systemMenuMapper.selectById(args.getId());
         if (args.getIFrame()) {
-            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) || args.getPath().toLowerCase()
-                .startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
+            if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) ||
+                args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
                 throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
             }
         }
         SystemMenuTb menu1 = systemMenuMapper.getMenuByTitle(args.getTitle());
-
         if (menu1 != null && !menu1.getId().equals(menu.getId())) {
             throw new BadRequestException("菜单标题已存在");
         }
-
         if (args.getPid().equals(0L)) {
             args.setPid(null);
         }
-
         // 记录的父节点ID
         Long oldPid = menu.getPid();
         Long newPid = args.getPid();
-
         if (StrUtil.isNotBlank(args.getComponentName())) {
             menu1 = systemMenuMapper.getMenuByComponentName(args.getComponentName());
             if (menu1 != null && !menu1.getId().equals(menu.getId())) {
@@ -156,7 +154,8 @@ public class SystemMenuService {
             menuSet.add(systemMenuMapper.selectById(id));
             menuSet = this.queryChildMenu(menuList, menuSet);
         }
-        List<Long> menuIds = menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().toList();
+        List<Long> menuIds =
+            menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
         if (CollUtil.isNotEmpty(menuIds)) {
             KitSpringBeanHolder.getBean(SystemMenuService.class).removeRoleMenuByMenuIds(menuIds);
             systemMenuMapper.deleteByIds(menuIds);
@@ -168,7 +167,11 @@ public class SystemMenuService {
 
     @Transactional(rollbackFor = Exception.class)
     public void removeRoleMenuByMenuIds(List<Long> menuIds) {
-        systemRoleMenuMapper.delete(new LambdaQueryWrapper<SystemRoleMenuTb>().in(SystemRoleMenuTb::getMenuId, menuIds));
+        if (CollUtil.isNotEmpty(menuIds)) {
+            LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
+            systemRoleMenuMapper.delete(wrapper);
+        }
     }
 
     /**
@@ -178,7 +181,6 @@ public class SystemMenuService {
      * @param response /
      * @throws IOException /
      */
-
     public void exportMenuExcel(List<SystemMenuTb> menus, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemMenuTb menu : menus) {
@@ -198,7 +200,7 @@ public class SystemMenuService {
     @Transactional(rollbackFor = Exception.class)
     public void updateMenuSubCnt(Long menuId) {
         if (menuId != null) {
-            int count = systemMenuMapper.countMenuByPid(menuId);
+            long count = systemMenuMapper.countMenuByPid(menuId);
             systemMenuMapper.updateMenuSubCntByMenuId(count, menuId);
         }
     }
@@ -211,7 +213,6 @@ public class SystemMenuService {
      * @return /
      * @throws Exception /
      */
-
     public List<SystemMenuTb> queryAllMenu(SystemQueryMenuArgs criteria, Boolean isQuery) throws Exception {
         if (Boolean.TRUE.equals(isQuery)) {
             criteria.setPidIsNull(true);
@@ -239,11 +240,10 @@ public class SystemMenuService {
      * @param currentUserId /
      * @return /
      */
-
     public List<SystemMenuTb> queryMenuListByUserId(Long currentUserId) {
         List<SystemRoleTb> roles = systemRoleService.queryRoleByUsersId(currentUserId);
         Set<Long> roleIds = roles.stream().map(SystemRoleTb::getId).collect(Collectors.toSet());
-        return new ArrayList<>(systemMenuMapper.selectMenuByRoleIdsAndType(roleIds, 2));
+        return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIdsAndType(roleIds, 2));
     }
 
     /**
@@ -253,11 +253,10 @@ public class SystemMenuService {
      * @param menuSet  /
      * @return /
      */
-
     public Set<SystemMenuTb> queryChildMenu(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
         for (SystemMenuTb menu : menuList) {
             menuSet.add(menu);
-            List<SystemMenuTb> menus = systemMenuMapper.selectMenuByPidOrderByMenuSort(menu.getId());
+            List<SystemMenuTb> menus = systemMenuMapper.selectMenuByPid(menu.getId());
             if (CollUtil.isNotEmpty(menus)) {
                 queryChildMenu(menus, menuSet);
             }
@@ -271,13 +270,12 @@ public class SystemMenuService {
      * @param pid /
      * @return /
      */
-
     public List<SystemMenuTb> queryMenuByPid(Long pid) {
         List<SystemMenuTb> menus;
         if (pid != null && !pid.equals(0L)) {
-            menus = systemMenuMapper.selectMenuByPidOrderByMenuSort(pid);
+            menus = systemMenuMapper.selectMenuByPid(pid);
         } else {
-            menus = systemMenuMapper.selectMenuByPidIsNullOrderByMenuSort();
+            menus = systemMenuMapper.selectMenuByPidIsNull();
         }
         return menus;
     }
@@ -289,13 +287,12 @@ public class SystemMenuService {
      * @param menus /
      * @return /
      */
-
     public List<SystemMenuTb> querySuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> menus) {
         if (menu.getPid() == null) {
-            menus.addAll(systemMenuMapper.selectMenuByPidIsNullOrderByMenuSort());
+            menus.addAll(systemMenuMapper.selectMenuByPidIsNull());
             return menus;
         }
-        menus.addAll(systemMenuMapper.selectMenuByPidOrderByMenuSort(menu.getPid()));
+        menus.addAll(systemMenuMapper.selectMenuByPid(menu.getPid()));
         return querySuperiorMenuList(systemMenuMapper.selectById(menu.getPid()), menus);
     }
 
@@ -305,7 +302,6 @@ public class SystemMenuService {
      * @param menus 原始数据
      * @return /
      */
-
     public List<SystemMenuTb> buildMenuTree(List<SystemMenuTb> menus) {
         List<SystemMenuTb> trees = new ArrayList<>();
         Set<Long> ids = new HashSet<>();
@@ -324,7 +320,7 @@ public class SystemMenuService {
             }
         }
         if (CollUtil.isNotEmpty(trees)) {
-            trees = menus.stream().filter(s -> !ids.contains(s.getId())).toList();
+            trees = menus.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
         }
         return trees;
     }
@@ -335,14 +331,14 @@ public class SystemMenuService {
      * @param menus /
      * @return /
      */
-
     public List<SystemMenuVo> buildMenuVo(List<SystemMenuTb> menus) {
         List<SystemMenuVo> list = new LinkedList<>();
         menus.forEach(menu -> {
             if (menu != null) {
                 List<SystemMenuTb> menuList = menu.getChildren();
                 SystemMenuVo menuVo = new SystemMenuVo();
-                menuVo.setName(ObjectUtil.isNotEmpty(menu.getComponentName()) ? menu.getComponentName() : menu.getTitle());
+                menuVo.setName(
+                    ObjectUtil.isNotEmpty(menu.getComponentName()) ? menu.getComponentName() : menu.getTitle());
                 // 一级目录需要加斜杠, 不然会报警告
                 menuVo.setPath(menu.getPid() == null ? "/" + menu.getPath() : menu.getPath());
                 menuVo.setHidden(menu.getHidden());

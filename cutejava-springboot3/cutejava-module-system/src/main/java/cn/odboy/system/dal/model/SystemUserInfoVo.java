@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

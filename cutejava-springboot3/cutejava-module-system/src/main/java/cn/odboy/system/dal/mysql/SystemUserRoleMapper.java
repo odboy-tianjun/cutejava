@@ -13,18 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
-import cn.odboy.system.dal.dataobject.SystemRoleTb;
+import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Set;
 
 @Mapper
-public interface SystemUserRoleMapper {
-    void batchInsertUserRole(@Param("roles") Set<SystemRoleTb> roles, @Param("userId") Long userId);
-
-    void batchDeleteUserRole(@Param("userIds") Set<Long> userIds);
-}
+public interface SystemUserRoleMapper extends BaseMapper<SystemUserRoleTb> {}

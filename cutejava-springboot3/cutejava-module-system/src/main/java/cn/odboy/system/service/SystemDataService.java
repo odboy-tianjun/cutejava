@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
@@ -21,12 +20,12 @@ import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 数据权限 Service
@@ -35,10 +34,9 @@ import java.util.Objects;
  */
 @Service
 public class SystemDataService {
-    @Autowired
-    private SystemRoleService systemRoleService;
-    @Autowired
-    private SystemDeptService systemDeptService;
+    @Autowired private SystemRoleService systemRoleService;
+    @Autowired private SystemDeptService systemDeptService;
+    @Autowired private SystemRoleDeptService systemRoleDeptService;
 
     /**
      * 获取数据权限
@@ -46,7 +44,7 @@ public class SystemDataService {
      * @param user /
      * @return /
      */
-    public List<Long> queryDeptIdListByArgs(SystemUserTb user) {
+    public List<Long> findDeptIdListByArgs(SystemUserTb user) {
         List<Long> deptIds = new ArrayList<>();
         // 查询用户角色
         List<SystemRoleTb> roleList = systemRoleService.queryRoleByUsersId(user.getId());
@@ -54,14 +52,17 @@ public class SystemDataService {
         for (SystemRoleTb role : roleList) {
             SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
             switch (Objects.requireNonNull(dataScopeEnum)) {
-                case THIS_LEVEL -> deptIds.add(user.getDept().getId());
-                case CUSTOMIZE -> deptIds.addAll(queryCustomDataPermissionList(deptIds, role));
-                default -> {
+                case THIS_LEVEL:
+                    deptIds.add(user.getDept().getId());
+                    break;
+                case CUSTOMIZE:
+                    deptIds.addAll(this.findCustomDataPermissionList(deptIds, role));
+                    break;
+                default:
                     return new ArrayList<>();
-                }
             }
         }
-        return deptIds.stream().distinct().toList();
+        return deptIds.stream().distinct().collect(Collectors.toList());
     }
 
     /**
@@ -71,8 +72,8 @@ public class SystemDataService {
      * @param role    角色
      * @return 数据权限ID
      */
-    private List<Long> queryCustomDataPermissionList(List<Long> deptIds, SystemRoleTb role) {
-        List<SystemDeptTb> deptList = systemDeptService.queryDeptByRoleId(role.getId());
+    private List<Long> findCustomDataPermissionList(List<Long> deptIds, SystemRoleTb role) {
+        List<SystemDeptTb> deptList = systemRoleDeptService.selectDeptByRoleId(role.getId());
         for (SystemDeptTb dept : deptList) {
             deptIds.add(dept.getId());
             List<SystemDeptTb> deptChildren = systemDeptService.queryDeptByPid(dept.getId());

@@ -13,32 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import com.alibaba.fastjson2.annotation.JSONField;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Getter
 @AllArgsConstructor
 public class SystemUserJwtVo implements UserDetails {
-
-    @Schema(name = "用户")
-    private final SystemUserTb user;
-
-    @Schema(name = "数据权限")
-    private final List<Long> dataScopes;
-
-    @Schema(name = "角色")
-    private final List<SystemRoleCodeVo> authorities;
+    @ApiModelProperty(value = "用户") private final SystemUserTb user;
+    @ApiModelProperty(value = "数据权限") private final List<Long> dataScopes;
+    @ApiModelProperty(value = "角色") private final List<SystemRoleCodeVo> authorities;
 
     public Set<String> getRoles() {
         return authorities.stream().map(SystemRoleCodeVo::getAuthority).collect(Collectors.toSet());

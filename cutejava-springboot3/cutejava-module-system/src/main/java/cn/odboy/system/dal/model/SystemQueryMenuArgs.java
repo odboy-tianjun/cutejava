@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class SystemQueryMenuArgs {
-
-    @Schema(name = "模糊查询")
-    private String blurry;
-
-    @Schema(name = "创建时间")
-    private List<Date> createTime;
-
-    @Schema(name = "PID为空查询")
-    private Boolean pidIsNull;
-
-    @Schema(name = "PID")
-    private Long pid;
+    @ApiModelProperty(value = "模糊查询") private String blurry;
+    @ApiModelProperty(value = "创建时间") private List<Date> createTime;
+    @ApiModelProperty(value = "PID为空查询") private Boolean pidIsNull;
+    @ApiModelProperty(value = "PID") private Long pid;
 }

@@ -51,7 +51,7 @@ public class SystemDeptController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void exportDept(HttpServletResponse response, SystemQueryDeptArgs criteria) throws Exception {
-        systemDeptService.exportDeptExcel(systemDeptService.findAllDept(criteria, false), response);
+        systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
     }
 
     @ApiOperation("查询部门")
@@ -60,7 +60,7 @@ public class SystemDeptController {
     public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
         @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
         SystemQueryDeptArgs criteria = args.getArgs();
-        List<SystemDeptTb> depts = systemDeptService.findAllDept(criteria, true);
+        List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
         return ResponseEntity.ok(KitPageUtil.toPage(depts));
     }
 

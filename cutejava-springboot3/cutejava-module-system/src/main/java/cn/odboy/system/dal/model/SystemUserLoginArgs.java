@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.annotations.ApiModelProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,18 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemUserLoginArgs {
-
-    @NotBlank
-    @Schema(name = "用户名")
-    private String username;
-
-    @NotBlank
-    @Schema(name = "密码")
-    private String password;
-
-    @Schema(name = "验证码")
-    private String code;
-
-    @Schema(name = "验证码的key")
-    private String uuid = "";
+    @NotBlank @ApiModelProperty(value = "用户名") private String username;
+    @NotBlank @ApiModelProperty(value = "密码") private String password;
+    @ApiModelProperty(value = "验证码") private String code;
+    @ApiModelProperty(value = "验证码的key") private String uuid = "";
 }

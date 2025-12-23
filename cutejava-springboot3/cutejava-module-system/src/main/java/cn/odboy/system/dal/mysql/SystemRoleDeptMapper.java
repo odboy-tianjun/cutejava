@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
-import cn.odboy.system.dal.dataobject.SystemDeptTb;
+import cn.odboy.system.dal.dataobject.SystemRoleDeptTb;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Set;
 
 /**
  * 角色部门关联 Mapper
@@ -28,8 +25,4 @@ import java.util.Set;
  * @author odboy
  */
 @Mapper
-public interface SystemRoleDeptMapper {
-    void batchInsertRoleDept(@Param("depts") Set<SystemDeptTb> depts, @Param("roleId") Long roleId);
-
-    void batchDeleteRoleDept(@Param("roleIds") Set<Long> roleIds);
-}
+public interface SystemRoleDeptMapper extends BaseMapper<SystemRoleDeptTb> {}

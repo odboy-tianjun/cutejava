@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
@@ -26,5 +25,4 @@ import org.apache.ibatis.annotations.Mapper;
  * @author odboy
  */
 @Mapper
-public interface SystemEmailConfigMapper extends BaseMapper<SystemEmailConfigTb> {
-}
+public interface SystemEmailConfigMapper extends BaseMapper<SystemEmailConfigTb> {}

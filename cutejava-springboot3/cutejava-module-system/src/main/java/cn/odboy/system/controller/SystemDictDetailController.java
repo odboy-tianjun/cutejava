@@ -52,7 +52,7 @@ public class SystemDictDetailController {
     @PostMapping(value = "/queryDictDetailByArgs")
     public ResponseEntity<KitPageResult<SystemDictDetailTb>> queryDictDetailByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
         SystemQueryDictDetailArgs criteria = args.getArgs();
-        Page<Object> page = new Page<>(args.getPage(), args.getSize());
+        Page<SystemDictDetailTb> page = new Page<>(args.getPage(), args.getSize());
         return ResponseEntity.ok(systemDictDetailService.queryDictDetailByArgs(criteria, page));
     }
 

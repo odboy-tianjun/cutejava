@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.dal.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -24,10 +23,6 @@ import lombok.Data;
  */
 @Data
 public class SystemUpdateUserPasswordArgs {
-
-    @Schema(name = "旧密码")
-    private String oldPass;
-
-    @Schema(name = "新密码")
-    private String newPass;
+    @ApiModelProperty(value = "旧密码") private String oldPass;
+    @ApiModelProperty(value = "新密码") private String newPass;
 }
