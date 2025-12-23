@@ -377,6 +377,14 @@
             <artifactId>rhino</artifactId>
             <version>1.8.0</version>
         </dependency>
+        <!--        Expression expression = new Expression("2 + 3 * 4");-->
+        <!--        EvaluationValue result = expression.evaluate();-->
+        <!--        System.out.println(result.getNumberValue()); // 输出 14-->
+        <dependency>
+            <groupId>com.ezylang</groupId>
+            <artifactId>EvalEx</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>
