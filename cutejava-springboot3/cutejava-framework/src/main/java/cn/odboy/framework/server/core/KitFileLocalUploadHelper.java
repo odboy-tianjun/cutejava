@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.server.core;
 
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.constant.SystemConst;
+import cn.odboy.util.KitSystemUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -32,17 +33,25 @@ public class KitFileLocalUploadHelper {
      */
     private static final int AVATAR_MAX_SIZE = 5;
     private static final String PATH_WINDOWS = "C:\\${appName}\\file\\";
-    private static final String PATH_MAC = "/Users/odboy/${appName}/file/";
+    private static final String PATH_MAC = "/Users${username}/${appName}/file/";
     private static final String PATH_LINUX = "/home/${appName}/file/";
-    @Value("${spring.application.name}")
-    private String appName;
+    @Value("${spring.application.name}") private String appName;
 
     public String getPath() {
         String os = System.getProperty("os.name");
-        if (os.toLowerCase().startsWith(SystemConst.WIN)) {
+        if (os == null) {
+            // 默认使用 Linux 路径作为兜底方案
+            return PATH_LINUX.replace("${appName}", appName);
+        }
+        String lowerOs = os.toLowerCase();
+        if (lowerOs.startsWith(SystemConst.WIN)) {
             return PATH_WINDOWS.replace("${appName}", appName);
-        } else if (os.toLowerCase().startsWith(SystemConst.MAC)) {
-            return PATH_MAC.replace("${appName}", appName);
+        } else if (lowerOs.startsWith(SystemConst.MAC)) {
+            String currentUserName = KitSystemUtil.getCurrentUserName();
+            if (StrUtil.isBlank(currentUserName)) {
+                return PATH_MAC.replace("${appName}", appName).replace("${username}", "");
+            }
+            return PATH_MAC.replace("${appName}", appName).replace("${username}", currentUserName);
         }
         return PATH_LINUX.replace("${appName}", appName);
     }

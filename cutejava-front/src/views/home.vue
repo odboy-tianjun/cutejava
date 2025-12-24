@@ -3,6 +3,10 @@
     <div class="dashboard-editor-container">
       <github-corner class="github-corner" />
 
+      <el-row :gutter="40" style="background-color: white;margin-left: 2px;margin-right: 2px;padding: 6px">
+        <el-col>系统API文档：<el-link type="primary" :href="swaggerApi" target="_blank">{{ swaggerApi }}</el-link></el-col>
+      </el-row>
+
       <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
@@ -36,6 +40,7 @@ import LineChart from './dashboard/LineChart'
 import RadarChart from '@/components/Echarts/RadarChart'
 import PieChart from '@/components/Echarts/PieChart'
 import BarChart from '@/components/Echarts/BarChart'
+import store from '@/store'
 
 const lineChartData = {
   newVisitis: {
@@ -68,6 +73,7 @@ export default {
   },
   data() {
     return {
+      swaggerApi: store.getters.swaggerApi,
       lineChartData: lineChartData.newVisitis
     }
   },

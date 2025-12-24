@@ -30,4 +30,11 @@ public class KitSystemUtil {
         CentralProcessor processor = systemInfo.getHardware().getProcessor();
         return processor.getPhysicalProcessorCount();
     }
+
+    /**
+     * 获取当前系统的用户名
+     */
+    public static String getCurrentUserName() {
+        return System.getProperty("user.name");
+    }
 }
