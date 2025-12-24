@@ -19,6 +19,7 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
+import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -46,14 +47,14 @@ public class SystemDictDetailController {
 
     @ApiOperation("查询字典详情")
     @PostMapping
-    public ResponseEntity<KitPageResult<SystemDictDetailTb>> queryDictDetailByCrud(
+    public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByCrud(
         @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
         return queryDictDetailByArgs(args);
     }
 
     @ApiOperation("查询字典详情")
     @PostMapping(value = "/queryDictDetailByArgs")
-    public ResponseEntity<KitPageResult<SystemDictDetailTb>> queryDictDetailByArgs(
+    public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
         @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
         SystemQueryDictDetailArgs criteria = args.getArgs();
         Page<SystemDictDetailTb> page = new Page<>(args.getPage(), args.getSize());
@@ -62,9 +63,9 @@ public class SystemDictDetailController {
 
     @ApiOperation("查询多个字典详情")
     @GetMapping(value = "/getDictDetailMaps")
-    public ResponseEntity<Map<String, List<SystemDictDetailTb>>> getDictDetailMaps(@RequestParam String dictName) {
+    public ResponseEntity<Map<String, List<SystemDictDetailVo>>> getDictDetailMaps(@RequestParam String dictName) {
         String[] names = dictName.split("[,, ]");
-        Map<String, List<SystemDictDetailTb>> dictMap = new HashMap<>(16);
+        Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
         for (String name : names) {
             dictMap.put(name, systemDictDetailService.queryDictDetailByName(name));
         }

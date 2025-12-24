@@ -21,9 +21,8 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
+import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
-import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
-import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
@@ -42,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SystemDictService {
     @Autowired private SystemDictMapper systemDictMapper;
-    @Autowired private SystemDictDetailMapper systemDictDetailMapper;
+    // @Autowired private SystemDictDetailMapper systemDictDetailMapper;
     @Autowired private SystemDictDetailService systemDictDetailService;
 
     /**
@@ -91,9 +90,7 @@ public class SystemDictService {
     public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SystemDictTb dict : dicts) {
-            SystemQueryDictDetailArgs args = new SystemQueryDictDetailArgs();
-            args.setDictName(dict.getName());
-            List<SystemDictDetailTb> dictDetails = systemDictDetailMapper.selectDictDetailByArgs(args);
+            List<SystemDictDetailVo> dictDetails = systemDictDetailService.queryDictDetailByName(dict.getName());
             if (CollectionUtil.isNotEmpty(dictDetails)) {
                 for (SystemDictDetailTb dictDetail : dictDetails) {
                     Map<String, Object> map = new LinkedHashMap<>();

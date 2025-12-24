@@ -47,4 +47,9 @@ public interface SystemDictMapper extends BaseMapper<SystemDictTb> {
         injectQueryParams(args, wrapper);
         return selectList(page, wrapper);
     }
+    default SystemDictTb getByName(String name) {
+        LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemDictTb::getName, name);
+        return selectOne(wrapper);
+    }
 }

@@ -15,14 +15,14 @@
  */
 package cn.odboy.system.dal.mysql;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
-import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * 字典明细 Mapper
@@ -31,6 +31,14 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
-    IPage<SystemDictDetailTb> selectDictDetailByArgs(@Param("criteria") SystemQueryDictDetailArgs criteria, Page<SystemDictDetailTb> page);
-    List<SystemDictDetailTb> selectDictDetailByArgs(@Param("criteria") SystemQueryDictDetailArgs criteria);
+    default List<SystemDictDetailTb> selectByDictId(Long dictId) {
+        LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemDictDetailTb::getDictId, dictId);
+        return selectList(wrapper);
+    }
+    default IPage<SystemDictDetailTb> selectDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
+        LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(CollUtil.isNotEmpty(dictIds), SystemDictDetailTb::getDictId, dictIds);
+        return selectPage(page, wrapper);
+    }
 }
