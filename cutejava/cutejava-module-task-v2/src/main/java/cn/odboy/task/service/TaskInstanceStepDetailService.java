@@ -35,48 +35,50 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TaskInstanceStepDetailService {
-    @Autowired private TaskInstanceStepDetailMapper taskInstanceStepDetailMapper;
 
-    /**
-     * 步骤执行成功
-     *
-     * @param instanceDetailId 任务实例明细id
-     * @param stepDesc         步骤描述
-     */
-    public void success(Long instanceDetailId, String stepDesc) {
-        TaskInstanceStepDetailTb stepDetail = new TaskInstanceStepDetailTb();
-        stepDetail.setInstanceDetailId(instanceDetailId);
-        stepDetail.setStepDesc(stepDesc);
-        stepDetail.setStepStatus(TaskStatusEnum.Success.getCode());
-        taskInstanceStepDetailMapper.insert(stepDetail);
-    }
+  @Autowired
+  private TaskInstanceStepDetailMapper taskInstanceStepDetailMapper;
 
-    /**
-     * 步骤执行失败
-     *
-     * @param instanceDetailId 任务实例明细id
-     * @param stepDesc         步骤描述
-     */
-    public void fail(Long instanceDetailId, String stepDesc) {
-        TaskInstanceStepDetailTb stepDetail = new TaskInstanceStepDetailTb();
-        stepDetail.setInstanceDetailId(instanceDetailId);
-        stepDetail.setStepDesc(stepDesc);
-        stepDetail.setStepStatus(TaskStatusEnum.Fail.getCode());
-        taskInstanceStepDetailMapper.insert(stepDetail);
-        throw new BadRequestException(stepDesc);
-    }
+  /**
+   * 步骤执行成功
+   *
+   * @param instanceDetailId 任务实例明细id
+   * @param stepDesc         步骤描述
+   */
+  public void success(Long instanceDetailId, String stepDesc) {
+    TaskInstanceStepDetailTb stepDetail = new TaskInstanceStepDetailTb();
+    stepDetail.setInstanceDetailId(instanceDetailId);
+    stepDetail.setStepDesc(stepDesc);
+    stepDetail.setStepStatus(TaskStatusEnum.Success.getCode());
+    taskInstanceStepDetailMapper.insert(stepDetail);
+  }
 
-    /**
-     * 根据明细ID删除步骤明细
-     *
-     * @param instanceDetailIds 任务实例明细id集合
-     */
-    public void removeByInstanceDetailIds(List<Long> instanceDetailIds) {
-        if (CollUtil.isEmpty(instanceDetailIds)) {
-            return;
-        }
-        LambdaQueryWrapper<TaskInstanceStepDetailTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(TaskInstanceStepDetailTb::getInstanceDetailId, instanceDetailIds);
-        taskInstanceStepDetailMapper.delete(wrapper);
+  /**
+   * 步骤执行失败
+   *
+   * @param instanceDetailId 任务实例明细id
+   * @param stepDesc         步骤描述
+   */
+  public void fail(Long instanceDetailId, String stepDesc) {
+    TaskInstanceStepDetailTb stepDetail = new TaskInstanceStepDetailTb();
+    stepDetail.setInstanceDetailId(instanceDetailId);
+    stepDetail.setStepDesc(stepDesc);
+    stepDetail.setStepStatus(TaskStatusEnum.Fail.getCode());
+    taskInstanceStepDetailMapper.insert(stepDetail);
+    throw new BadRequestException(stepDesc);
+  }
+
+  /**
+   * 根据明细ID删除步骤明细
+   *
+   * @param instanceDetailIds 任务实例明细id集合
+   */
+  public void removeByInstanceDetailIds(List<Long> instanceDetailIds) {
+    if (CollUtil.isEmpty(instanceDetailIds)) {
+      return;
     }
+    LambdaQueryWrapper<TaskInstanceStepDetailTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(TaskInstanceStepDetailTb::getInstanceDetailId, instanceDetailIds);
+    taskInstanceStepDetailMapper.delete(wrapper);
+  }
 }

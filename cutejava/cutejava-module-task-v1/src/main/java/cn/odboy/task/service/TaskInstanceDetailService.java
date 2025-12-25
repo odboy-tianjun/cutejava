@@ -38,72 +38,74 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TaskInstanceDetailService {
-    @Autowired private TaskInstanceDetailMapper taskInstanceDetailMapper;
 
-    public void fastFailWithInfo(Long instanceId, String code, String executeInfo) {
-        LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
-        wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
-        wrapper.set(TaskInstanceDetailTb::getFinishTime, new Date());
-        wrapper.set(TaskInstanceDetailTb::getExecuteInfo, executeInfo);
-        wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Fail.getCode());
-        taskInstanceDetailMapper.update(null, wrapper);
-    }
+  @Autowired
+  private TaskInstanceDetailMapper taskInstanceDetailMapper;
 
-    public void fastSuccess(Long instanceId, String code) {
-        LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
-        wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
-        wrapper.set(TaskInstanceDetailTb::getFinishTime, new Date());
-        wrapper.set(TaskInstanceDetailTb::getExecuteInfo, TaskStatusEnum.Success.getName());
-        wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Success.getCode());
-        taskInstanceDetailMapper.update(null, wrapper);
-    }
+  public void fastFailWithInfo(Long instanceId, String code, String executeInfo) {
+    LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
+    wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
+    wrapper.set(TaskInstanceDetailTb::getFinishTime, new Date());
+    wrapper.set(TaskInstanceDetailTb::getExecuteInfo, executeInfo);
+    wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Fail.getCode());
+    taskInstanceDetailMapper.update(null, wrapper);
+  }
 
-    public void fastSuccessWithInfo(Long instanceId, String code, String executeInfo) {
-        LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
-        wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
-        wrapper.set(TaskInstanceDetailTb::getFinishTime, new Date());
-        wrapper.set(TaskInstanceDetailTb::getExecuteInfo,
-            executeInfo == null ? TaskStatusEnum.Success.getName() : executeInfo);
-        wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Success.getCode());
-        taskInstanceDetailMapper.update(null, wrapper);
-    }
+  public void fastSuccess(Long instanceId, String code) {
+    LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
+    wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
+    wrapper.set(TaskInstanceDetailTb::getFinishTime, new Date());
+    wrapper.set(TaskInstanceDetailTb::getExecuteInfo, TaskStatusEnum.Success.getName());
+    wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Success.getCode());
+    taskInstanceDetailMapper.update(null, wrapper);
+  }
 
-    public void fastStart(Long instanceId, String code, JobDataMap dataMap) {
-        LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
-        wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
-        wrapper.set(TaskInstanceDetailTb::getStartTime, new Date());
-        wrapper.set(TaskInstanceDetailTb::getExecuteInfo, TaskStatusEnum.Running.getName());
-        wrapper.set(TaskInstanceDetailTb::getExecuteParams, JSON.toJSONString(dataMap));
-        wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Running.getCode());
-        taskInstanceDetailMapper.update(null, wrapper);
-    }
+  public void fastSuccessWithInfo(Long instanceId, String code, String executeInfo) {
+    LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
+    wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
+    wrapper.set(TaskInstanceDetailTb::getFinishTime, new Date());
+    wrapper.set(TaskInstanceDetailTb::getExecuteInfo,
+        executeInfo == null ? TaskStatusEnum.Success.getName() : executeInfo);
+    wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Success.getCode());
+    taskInstanceDetailMapper.update(null, wrapper);
+  }
 
-    public List<TaskInstanceDetailTb> queryByInstanceIdAndBizCodeList(Long instanceId, List<String> bizCodeList) {
-        if (CollUtil.isEmpty(bizCodeList)) {
-            return CollUtil.newArrayList();
-        }
-        LambdaQueryWrapper<TaskInstanceDetailTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
-        wrapper.in(TaskInstanceDetailTb::getBizCode, bizCodeList);
-        return taskInstanceDetailMapper.selectList(wrapper);
-    }
+  public void fastStart(Long instanceId, String code, JobDataMap dataMap) {
+    LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
+    wrapper.eq(TaskInstanceDetailTb::getBizCode, code);
+    wrapper.set(TaskInstanceDetailTb::getStartTime, new Date());
+    wrapper.set(TaskInstanceDetailTb::getExecuteInfo, TaskStatusEnum.Running.getName());
+    wrapper.set(TaskInstanceDetailTb::getExecuteParams, JSON.toJSONString(dataMap));
+    wrapper.set(TaskInstanceDetailTb::getExecuteStatus, TaskStatusEnum.Running.getCode());
+    taskInstanceDetailMapper.update(null, wrapper);
+  }
 
-    public List<TaskInstanceDetailTb> queryByInstanceId(Long instanceId) {
-        LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
-        wrapper.orderByAsc(TaskInstanceDetailTb::getId);
-        return taskInstanceDetailMapper.selectList(wrapper);
+  public List<TaskInstanceDetailTb> queryByInstanceIdAndBizCodeList(Long instanceId, List<String> bizCodeList) {
+    if (CollUtil.isEmpty(bizCodeList)) {
+      return CollUtil.newArrayList();
     }
+    LambdaQueryWrapper<TaskInstanceDetailTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
+    wrapper.in(TaskInstanceDetailTb::getBizCode, bizCodeList);
+    return taskInstanceDetailMapper.selectList(wrapper);
+  }
 
-    public void saveBatch(List<TaskInstanceDetailTb> taskInstanceDetails) {
-        taskInstanceDetailMapper.insert(taskInstanceDetails);
-    }
+  public List<TaskInstanceDetailTb> queryByInstanceId(Long instanceId) {
+    LambdaUpdateWrapper<TaskInstanceDetailTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceDetailTb::getInstanceId, instanceId);
+    wrapper.orderByAsc(TaskInstanceDetailTb::getId);
+    return taskInstanceDetailMapper.selectList(wrapper);
+  }
 
-    public void removeByIds(List<Long> taskInstanceDetailIds) {
-        taskInstanceDetailMapper.deleteByIds(taskInstanceDetailIds);
-    }
+  public void saveBatch(List<TaskInstanceDetailTb> taskInstanceDetails) {
+    taskInstanceDetailMapper.insert(taskInstanceDetails);
+  }
+
+  public void removeByIds(List<Long> taskInstanceDetailIds) {
+    taskInstanceDetailMapper.deleteByIds(taskInstanceDetailIds);
+  }
 }

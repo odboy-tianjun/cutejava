@@ -35,9 +35,14 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2025-07-15
  */
 public interface SystemOssStorageService extends IService<SystemOssStorageTb> {
-    KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page);
-    List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria);
-    void exportOssStorageExcel(List<SystemOssStorageVo> list, HttpServletResponse response) throws IOException;
-    String uploadFile(MultipartFile file);
-    void removeFileByIds(Long[] ids);
+
+  KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria, Page<SystemOssStorageTb> page);
+
+  List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria);
+
+  void exportOssStorageExcel(List<SystemOssStorageVo> list, HttpServletResponse response) throws IOException;
+
+  String uploadFile(MultipartFile file);
+
+  void removeFileByIds(Long[] ids);
 }

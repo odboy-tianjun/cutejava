@@ -27,6 +27,7 @@ import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
+import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.util.KitFileUtil;
@@ -83,8 +84,8 @@ public class SystemRoleService {
      * @param args /
      */
     @Transactional(rollbackFor = Exception.class)
-    public void modifyRoleById(SystemRoleTb args) {
-        SystemRoleTb role = systemRoleMapper.selectById(args.getId());
+    public void modifyRoleById(SystemRoleVo args) {
+        SystemRoleVo role = BeanUtil.copyProperties(systemRoleMapper.selectById(args.getId()), SystemRoleVo.class);
         SystemRoleTb role1 = this.getRoleByName(args.getName());
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new BadRequestException("角色名称已存在");
@@ -109,7 +110,7 @@ public class SystemRoleService {
      *
      * @param role /
      */
-    public void modifyBindMenuById(SystemRoleTb role) {
+    public void modifyBindMenuById(SystemRoleVo role) {
         // 更新菜单
         systemRoleMenuService.deleteRoleMenuByRoleId(role.getId());
         // 判断是否为空
@@ -138,9 +139,9 @@ public class SystemRoleService {
      * @param response /
      * @throws IOException
      */
-    public void exportRoleExcel(List<SystemRoleTb> roles, HttpServletResponse response) throws IOException {
+    public void exportRoleExcel(List<SystemRoleVo> roles, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (SystemRoleTb role : roles) {
+        for (SystemRoleVo role : roles) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("角色名称", role.getName());
             map.put("角色级别", role.getLevel());
@@ -172,7 +173,7 @@ public class SystemRoleService {
      * @param criteria 条件
      * @return
      */
-    public List<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria) {
+    public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs criteria) {
         return systemRoleMapper.selectRoleByArgs(criteria);
     }
 
@@ -183,9 +184,9 @@ public class SystemRoleService {
      * @param page     分页参数
      * @return
      */
-    public KitPageResult<SystemRoleTb> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
+    public KitPageResult<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
         criteria.setOffset(page.offset());
-        List<SystemRoleTb> roles = systemRoleMapper.selectRoleByArgs(criteria);
+        List<SystemRoleVo> roles = systemRoleMapper.selectRoleByArgs(criteria);
         Long total = systemRoleMapper.countRoleByArgs(criteria);
         return KitPageUtil.toPage(roles, total);
     }
@@ -196,7 +197,7 @@ public class SystemRoleService {
      * @param userId 用户ID
      * @return /
      */
-    public List<SystemRoleTb> queryRoleByUsersId(Long userId) {
+    public List<SystemRoleVo> queryRoleByUsersId(Long userId) {
         return systemRoleMapper.selectRoleByUserId(userId);
     }
 
@@ -230,7 +231,7 @@ public class SystemRoleService {
             permissions.add("admin");
             return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
         }
-        List<SystemRoleTb> roles = systemRoleMapper.selectRoleByUserId(user.getId());
+        List<SystemRoleVo> roles = systemRoleMapper.selectRoleByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission)
             .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
         return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());

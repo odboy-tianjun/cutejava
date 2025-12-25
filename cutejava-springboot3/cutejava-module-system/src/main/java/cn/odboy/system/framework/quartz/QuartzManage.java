@@ -19,12 +19,21 @@ package cn.odboy.system.framework.quartz;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import jakarta.annotation.Resource;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.CronTrigger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.ObjectAlreadyExistsException;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Slf4j
 @Component
@@ -32,13 +41,13 @@ public class QuartzManage {
 
     private static final String JOB_NAME = "TASK_";
 
-    @Resource
-    private Scheduler scheduler;
+    @Resource private Scheduler scheduler;
 
     public void addJob(SystemQuartzJobTb quartzJob) {
         try {
             // 构建job信息
-            JobDetail jobDetail = JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
+            JobDetail jobDetail =
+                JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
 
             // 通过触发器名和cron 表达式创建 Trigger
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME + quartzJob.getId()).startNow()

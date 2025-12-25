@@ -26,15 +26,14 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * 获取当前登录的用户
@@ -122,7 +121,8 @@ public class KitSecurityHelper {
      * @return /
      */
     public static String getToken() {
-        HttpServletRequest request = ((ServletRequestAttributes)Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes)Objects.requireNonNull(
+            RequestContextHolder.getRequestAttributes())).getRequest();
         String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
         if (bearerToken != null && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
             // 去掉令牌前缀

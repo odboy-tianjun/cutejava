@@ -38,6 +38,9 @@ import com.wf.captcha.base.Captcha;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +54,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 /**
  * 授权、根据token获取用户详细信息
  */
@@ -63,24 +62,20 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/auth")
 @Tag(name = "系统：系统授权接口")
 public class SystemAuthController {
-    @Autowired
-    private KitRedisHelper redisHelper;
-    @Autowired
-    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
-    @Autowired
-    private TokenProvider tokenProvider;
-    @Autowired
-    private AppProperties properties;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserDetailsHandler userDetailsService;
+    @Autowired private KitRedisHelper redisHelper;
+    @Autowired private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired private TokenProvider tokenProvider;
+    @Autowired private AppProperties properties;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserDetailsHandler userDetailsService;
 
     @Operation(summary = "登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
+    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest,
+        HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+        String password =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
         // 查询验证码
         String code = redisHelper.get(loginRequest.getUuid(), String.class);
         // 清除验证码
@@ -97,7 +92,8 @@ public class SystemAuthController {
         if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
             throw new BadRequestException("登录密码错误");
         }
-        Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
+        Authentication authentication =
+            new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
         String token = tokenProvider.createToken(jwtUser);
@@ -119,7 +115,7 @@ public class SystemAuthController {
     @Operation(summary = "获取用户信息")
     @PostMapping(value = "/info")
     public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-        SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();
+        SystemUserJwtVo jwtUser = (SystemUserJwtVo)KitSecurityHelper.getCurrentUser();
         SystemUserInfoVo userInfoVo = BeanUtil.copyProperties(jwtUser, SystemUserInfoVo.class);
         return ResponseEntity.ok(userInfoVo);
     }
@@ -132,11 +128,13 @@ public class SystemAuthController {
         String uuid = SystemCacheKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
         //当验证码类型为 arithmetic时且长度 >= 2 时, captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
-        if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() && captchaValue.contains(SystemConst.SYMBOL_DOT)) {
+        if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() &&
+            captchaValue.contains(SystemConst.SYMBOL_DOT)) {
             captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存
-        redisHelper.set(uuid, captchaValue, properties.getLogin().getCaptchaSetting().getExpiration(), TimeUnit.MINUTES);
+        redisHelper.set(uuid, captchaValue, properties.getLogin().getCaptchaSetting().getExpiration(),
+            TimeUnit.MINUTES);
         // 验证码信息
         Map<String, Object> imgResult = new HashMap<>(2) {{
             put("img", captcha.toBase64());

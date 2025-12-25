@@ -28,36 +28,37 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskInstanceNodeVo extends KitObject {
-    /**
-     * 业务编码
-     */
-    protected String code;
-    /**
-     * 业务名称
-     */
-    protected String name;
-    /**
-     * 开始时间
-     */
-    protected Date startTime;
-    /**
-     * 完成时间
-     */
-    protected Date finishTime;
-    /**
-     * 耗时多久
-     */
-    protected String durationDesc;
-    /**
-     * 进行中描述
-     */
-    protected String runningDesc;
-    /**
-     * 节点状态编码
-     */
-    protected String status;
-    /**
-     * 节点状态描述
-     */
-    protected String statusDesc;
+
+  /**
+   * 业务编码
+   */
+  protected String code;
+  /**
+   * 业务名称
+   */
+  protected String name;
+  /**
+   * 开始时间
+   */
+  protected Date startTime;
+  /**
+   * 完成时间
+   */
+  protected Date finishTime;
+  /**
+   * 耗时多久
+   */
+  protected String durationDesc;
+  /**
+   * 进行中描述
+   */
+  protected String runningDesc;
+  /**
+   * 节点状态编码
+   */
+  protected String status;
+  /**
+   * 节点状态描述
+   */
+  protected String statusDesc;
 }

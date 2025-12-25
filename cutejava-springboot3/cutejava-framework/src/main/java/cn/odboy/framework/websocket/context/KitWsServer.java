@@ -17,15 +17,18 @@
 package cn.odboy.framework.websocket.context;
 
 import com.alibaba.fastjson2.JSON;
-import jakarta.websocket.*;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -62,7 +65,8 @@ public class KitWsServer {
         KitWsMessage wsMessage = JSON.parseObject(message, KitWsMessage.class);
         String bizCode = wsMessage.getBizCode();
         Object data = wsMessage.getData();
-        log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode, JSON.toJSONString(data));
+        log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode,
+            JSON.toJSONString(data));
     }
 
     /**

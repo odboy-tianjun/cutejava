@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -28,6 +27,7 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
+import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemDeptService;
@@ -37,9 +37,8 @@ import cn.odboy.system.service.SystemUserService;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
@@ -61,7 +60,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "系统：用户管理")
+@Api(tags = "系统：用户管理")
 @RestController
 @RequestMapping("/api/user")
 public class SystemUserController {
@@ -73,17 +72,17 @@ public class SystemUserController {
     @Autowired private SystemEmailService systemEmailService;
     @Autowired private AppProperties properties;
 
-    @Operation(summary = "导出用户数据")
+    @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
     public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs criteria) throws IOException {
         systemUserService.exportUserExcel(systemUserService.queryUserByArgs(criteria), response);
     }
 
-    @Operation(summary = "查询用户")
+    @ApiOperation("查询用户")
     @PostMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<KitPageResult<SystemUserTb>> queryUserByArgs(
+    public ResponseEntity<KitPageResult<SystemUserVo>> queryUserByArgs(
         @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
         Page<SystemUserTb> page = new Page<>(args.getPage(), args.getSize());
         SystemQueryUserArgs criteria = args.getArgs();
@@ -112,10 +111,10 @@ public class SystemUserController {
         return ResponseEntity.ok(KitPageUtil.emptyData());
     }
 
-    @Operation(summary = "新增用户")
+    @ApiOperation("新增用户")
     @PostMapping(value = "/saveUser")
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserTb args) {
+    public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserVo args) {
         checkLevel(args);
         // 默认密码 123456
         args.setPassword(passwordEncoder.encode("123456"));
@@ -123,16 +122,16 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "修改用户")
+    @ApiOperation("修改用户")
     @PostMapping(value = "/modifyUserById")
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
+    public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserVo args) {
         checkLevel(args);
         systemUserService.modifyUserById(args);
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "修改用户：个人中心")
+    @ApiOperation("修改用户：个人中心")
     @PostMapping(value = "modifyUserCenterInfoById")
     public ResponseEntity<Object> modifyUserCenterInfoById(
         @Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
@@ -143,7 +142,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "删除用户")
+    @ApiOperation("删除用户")
     @PostMapping(value = "/removeUserByIds")
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
@@ -162,7 +161,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "修改密码")
+    @ApiOperation("修改密码")
     @PostMapping(value = "/modifyUserPasswordByUsername")
     public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo)
         throws Exception {
@@ -181,7 +180,7 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "重置密码")
+    @ApiOperation("重置密码")
     @PostMapping(value = "/resetUserPasswordByIds")
     public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
         String defaultPwd = passwordEncoder.encode("123456");
@@ -189,13 +188,13 @@ public class SystemUserController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "修改头像")
+    @ApiOperation("修改头像")
     @PostMapping(value = "/modifyUserAvatar")
     public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
         return ResponseEntity.ok(systemUserService.modifyUserAvatar(avatar));
     }
 
-    @Operation(summary = "修改邮箱")
+    @ApiOperation("修改邮箱")
     @PostMapping(value = "/modifyUserEmailByUsername/{code}")
     public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args)
         throws Exception {
@@ -215,7 +214,7 @@ public class SystemUserController {
      *
      * @param args /
      */
-    private void checkLevel(SystemUserTb args) {
+    private void checkLevel(SystemUserVo args) {
         Integer currentLevel = Collections.min(
             systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
                 .map(SystemRoleTb::getLevel).toList());

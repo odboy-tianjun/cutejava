@@ -26,26 +26,29 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.Set;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/user/online")
 @Tag(name = "系统：在线用户管理")
 public class SystemOnlineController {
-    @Autowired
-    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     @Operation(summary = "查询在线用户")
     @PostMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody KitPageArgs<SystemUserOnlineVo> args) {
+    public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(
+        @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> args) {
         IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
         return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
     }
@@ -54,7 +57,8 @@ public class SystemOnlineController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
+        systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(
+            systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
     }
 
     @Operation(summary = "踢出用户")

@@ -30,8 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统：组件数据源")
 @RequestMapping("/api/component")
 public class SystemComponentController {
-    @Autowired
-    private SystemDeptService systemDeptService;
+    @Autowired private SystemDeptService systemDeptService;
 
     @Operation(summary = "查询部门下拉选择数据源")
     @PostMapping(value = "/queryDeptSelectDataSource")

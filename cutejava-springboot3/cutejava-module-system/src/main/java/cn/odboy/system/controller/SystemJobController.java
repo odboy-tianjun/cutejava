@@ -26,21 +26,23 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.Set;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "系统：岗位管理")
 @RequestMapping("/api/job")
 public class SystemJobController {
-    @Autowired
-    private SystemJobService systemJobService;
+    @Autowired private SystemJobService systemJobService;
 
     @Operation(summary = "导出岗位数据")
     @GetMapping(value = "/download")
@@ -52,7 +54,8 @@ public class SystemJobController {
     @Operation(summary = "查询岗位")
     @PostMapping(value = "/queryAllEnableJob")
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
         SystemQueryJobArgs criteria = args.getArgs();
         Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
         return ResponseEntity.ok(systemJobService.queryJobByArgs(criteria, page));
@@ -61,7 +64,8 @@ public class SystemJobController {
     @Operation(summary = "查询岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(
+        @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
         return queryJobByArgs(args);
     }
 

@@ -27,18 +27,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class ActiveJobRegister implements ApplicationRunner {
-    @Autowired private SystemQuartzJobService systemQuartzJobService;
-    @Autowired private QuartzManage quartzManage;
 
-    /**
-     * 项目启动时重新激活启用的定时任务
-     *
-     * @param applicationArguments /
-     */
-    @Override
-    public void run(ApplicationArguments applicationArguments) {
-        List<SystemQuartzJobTb> quartzJobs = systemQuartzJobService.queryEnableQuartzJob();
-        quartzJobs.forEach(quartzManage::addJob);
-        log.info("Timing task injection complete");
-    }
+  @Autowired
+  private SystemQuartzJobService systemQuartzJobService;
+  @Autowired
+  private QuartzManage quartzManage;
+
+  /**
+   * 项目启动时重新激活启用的定时任务
+   *
+   * @param applicationArguments /
+   */
+  @Override
+  public void run(ApplicationArguments applicationArguments) {
+    List<SystemQuartzJobTb> quartzJobs = systemQuartzJobService.queryEnableQuartzJob();
+    quartzJobs.forEach(quartzManage::addJob);
+    log.info("Timing task injection complete");
+  }
 }

@@ -23,23 +23,24 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class KitCloseUtil {
-    public static void close(Closeable closeable) {
-        if (null != closeable) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                // 静默关闭
-            }
-        }
-    }
 
-    public static void close(AutoCloseable closeable) {
-        if (null != closeable) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                // 静默关闭
-            }
-        }
+  public static void close(Closeable closeable) {
+    if (null != closeable) {
+      try {
+        closeable.close();
+      } catch (Exception e) {
+        // 静默关闭
+      }
     }
+  }
+
+  public static void close(AutoCloseable closeable) {
+    if (null != closeable) {
+      try {
+        closeable.close();
+      } catch (Exception e) {
+        // 静默关闭
+      }
+    }
+  }
 }

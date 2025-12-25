@@ -21,12 +21,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,8 +35,6 @@ import lombok.Setter;
 public class SystemUserTb extends KitBaseUserTimeTb {
     @NotNull(groups = Update.class) @TableId(value = "user_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true) private Long id;
-    @TableField(exist = false) @ApiModelProperty(value = "用户角色") private Set<SystemRoleTb> roles;
-    @TableField(exist = false) @ApiModelProperty(value = "用户岗位") private Set<SystemJobTb> jobs;
     @TableField(value = "dept_id") @ApiModelProperty(hidden = true) private Long deptId;
     @ApiModelProperty(value = "用户部门") @TableField(exist = false) private SystemDeptTb dept;
     @NotBlank @ApiModelProperty(value = "用户名称") private String username;

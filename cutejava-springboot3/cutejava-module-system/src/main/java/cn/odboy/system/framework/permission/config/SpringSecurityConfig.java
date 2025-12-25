@@ -23,6 +23,8 @@ import cn.odboy.system.framework.permission.core.handler.JwtAuthenticationEntryP
 import cn.odboy.system.framework.permission.core.handler.TokenFilter;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.util.KitAnonTagUtil;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -40,24 +42,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Map;
-import java.util.Set;
-
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SpringSecurityConfig {
-    @Autowired
-    private TokenProvider tokenProvider;
-    @Autowired
-    private CorsFilter corsFilter;
-    @Autowired
-    private JwtAuthenticationEntryPoint authenticationErrorHandler;
-    @Autowired
-    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired private TokenProvider tokenProvider;
+    @Autowired private CorsFilter corsFilter;
+    @Autowired private JwtAuthenticationEntryPoint authenticationErrorHandler;
+    @Autowired private JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    @Autowired private ApplicationContext applicationContext;
+    @Autowired private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -81,20 +74,23 @@ public class SpringSecurityConfig {
 
         return httpSecurity
             // 禁用 CSRF
-            .csrf(AbstractHttpConfigurer::disable).addFilter(corsFilter).addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
+            .csrf(AbstractHttpConfigurer::disable).addFilter(corsFilter)
+            .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
             // 授权异常
             .exceptionHandling(
-                exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationErrorHandler).accessDeniedHandler(jwtAccessDeniedHandler))
+                exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationErrorHandler)
+                    .accessDeniedHandler(jwtAccessDeniedHandler))
             // 防止iframe 造成跨域
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             // 不创建会话
-            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(
+                sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 // 静态资源等等
                 .requestMatchers(HttpMethod.GET, "*.html", "*.css", "*.js", "/websocket/**").permitAll()
                 // Knife4j 和 OpenAPI 相关路径
-                .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**",
-                    "/configuration/ui", "/configuration/security").permitAll()
+                .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
+                    "/swagger-resources/**", "/configuration/ui", "/configuration/security").permitAll()
                 // 文件
                 .requestMatchers("/avatar/**").permitAll().requestMatchers("/file/**").permitAll()
                 // 阿里巴巴 druid
@@ -103,15 +99,20 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 自定义匿名访问所有url放行：允许匿名和带Token访问，细腻化到每个 Request 类型
                 // GET
-                .requestMatchers(HttpMethod.GET, anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0])).permitAll()
+                .requestMatchers(HttpMethod.GET,
+                    anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0])).permitAll()
                 // POST
-                .requestMatchers(HttpMethod.POST, anonymousUrls.get(RequestMethodEnum.POST.getType()).toArray(new String[0])).permitAll()
+                .requestMatchers(HttpMethod.POST,
+                    anonymousUrls.get(RequestMethodEnum.POST.getType()).toArray(new String[0])).permitAll()
                 // PUT
-                .requestMatchers(HttpMethod.PUT, anonymousUrls.get(RequestMethodEnum.PUT.getType()).toArray(new String[0])).permitAll()
+                .requestMatchers(HttpMethod.PUT,
+                    anonymousUrls.get(RequestMethodEnum.PUT.getType()).toArray(new String[0])).permitAll()
                 // PATCH
-                .requestMatchers(HttpMethod.PATCH, anonymousUrls.get(RequestMethodEnum.PATCH.getType()).toArray(new String[0])).permitAll()
+                .requestMatchers(HttpMethod.PATCH,
+                    anonymousUrls.get(RequestMethodEnum.PATCH.getType()).toArray(new String[0])).permitAll()
                 // DELETE
-                .requestMatchers(HttpMethod.DELETE, anonymousUrls.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0])).permitAll()
+                .requestMatchers(HttpMethod.DELETE,
+                    anonymousUrls.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0])).permitAll()
                 // 所有类型的接口都放行
                 .requestMatchers(anonymousUrls.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
                 // 所有请求都需要认证

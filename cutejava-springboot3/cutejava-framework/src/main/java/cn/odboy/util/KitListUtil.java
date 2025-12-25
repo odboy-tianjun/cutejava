@@ -18,12 +18,11 @@ package cn.odboy.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.odboy.base.KitBaseUserTimeTb;
-import lombok.experimental.UtilityClass;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 
 /**
  * List 工具
@@ -40,12 +39,14 @@ public final class KitListUtil {
      * @param classifier 对象T属性表达式, 比如: User::getName
      */
     public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
-        return items.stream().collect(Collectors.groupingBy(classifier)).values().stream().map(monitorItem -> monitorItem.iterator().next()).toList();
+        return items.stream().collect(Collectors.groupingBy(classifier)).values().stream()
+            .map(monitorItem -> monitorItem.iterator().next()).toList();
     }
 
     /**
-     * list转map, 保留新值 -> Map<String, User> userMap = items.stream().collect(Collectors.toMap(User::getName, user -> user)) <br> list转map, 保留旧值 -> Map<String,
-     * User> userMap = users.stream().collect(Collectors.toMap(User::getName, user -> user, (existing, replacement) -> existing));
+     * list转map, 保留新值 -> Map<String, User> userMap = items.stream().collect(Collectors.toMap(User::getName, user ->
+     * user)) <br> list转map, 保留旧值 -> Map<String, User> userMap = users.stream().collect(Collectors.toMap(User::getName,
+     * user -> user, (existing, replacement) -> existing));
      */
     public static void main(String[] args) {
         List<KitBaseUserTimeTb> entities = new ArrayList<>();

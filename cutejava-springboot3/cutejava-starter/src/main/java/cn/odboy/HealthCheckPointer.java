@@ -24,8 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HealthCheckPointer implements KitHealthCheckPointService {
-    @Autowired
-    private SystemDictService systemDictService;
+    @Autowired private SystemDictService systemDictService;
 
     /**
      * 系统准备就绪

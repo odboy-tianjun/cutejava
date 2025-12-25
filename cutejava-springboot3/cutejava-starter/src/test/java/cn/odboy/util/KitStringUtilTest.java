@@ -16,14 +16,16 @@
 
 package cn.odboy.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static cn.odboy.util.KitStringUtil.*;
+import static cn.odboy.util.KitStringUtil.getWeekDay;
+import static cn.odboy.util.KitStringUtil.toCamelCase;
+import static cn.odboy.util.KitStringUtil.toCapitalizeCamelCase;
+import static cn.odboy.util.KitStringUtil.toUnderScoreCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

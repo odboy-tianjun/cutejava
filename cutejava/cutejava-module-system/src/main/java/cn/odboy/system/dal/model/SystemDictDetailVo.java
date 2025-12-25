@@ -24,5 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemDictDetailVo extends SystemDictDetailTb {
-    @ApiModelProperty(value = "字典") private SystemDictTb dict;
+
+  @ApiModelProperty(value = "字典")
+  private SystemDictTb dict;
 }

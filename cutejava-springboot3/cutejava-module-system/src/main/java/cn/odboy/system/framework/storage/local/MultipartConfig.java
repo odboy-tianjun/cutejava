@@ -19,6 +19,7 @@ package cn.odboy.system.framework.storage.local;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import jakarta.servlet.MultipartConfigElement;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,15 +28,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 
-import java.io.File;
-
 @Slf4j
 @Configuration
 public class MultipartConfig {
-    @Value("${spring.application.name}")
-    private String name;
-    @Autowired
-    private AppProperties properties;
+    @Value("${spring.application.name}") private String name;
+    @Autowired private AppProperties properties;
 
     /**
      * 文件上传临时路径

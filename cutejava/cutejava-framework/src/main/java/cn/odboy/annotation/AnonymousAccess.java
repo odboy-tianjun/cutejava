@@ -29,4 +29,6 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AnonymousAccess {}
+public @interface AnonymousAccess {
+
+}

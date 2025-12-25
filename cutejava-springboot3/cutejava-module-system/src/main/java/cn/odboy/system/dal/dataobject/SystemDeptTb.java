@@ -34,6 +34,7 @@ import lombok.Setter;
 @Setter
 @TableName("system_dept")
 public class SystemDeptTb extends KitBaseUserTimeTb {
+
     @NotNull(groups = Update.class) @TableId(value = "dept_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true) private Long id;
     @TableField(exist = false) @JSONField(serialize = false) @ApiModelProperty(value = "角色") private Set<SystemRoleTb>

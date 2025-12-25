@@ -18,10 +18,9 @@ package cn.odboy.util;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-import lombok.experimental.UtilityClass;
-
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 
 /**
  * Json工具
@@ -32,13 +31,11 @@ import java.util.Map;
 @UtilityClass
 public final class KitJsonUtil {
     public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> kClass, Class<V> vClass) {
-        return JSON.parseObject(jsonStr, new TypeReference<>() {
-        });
+        return JSON.parseObject(jsonStr, new TypeReference<>() {});
     }
 
     public static <V> List<V> toList(String jsonStr, Class<V> vClass) {
-        return JSON.parseObject(jsonStr, new TypeReference<>() {
-        });
+        return JSON.parseObject(jsonStr, new TypeReference<>() {});
     }
 
     public static void main(String[] args) {

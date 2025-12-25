@@ -20,11 +20,12 @@ import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import org.quartz.JobDataMap;
 
 public interface TaskStepExecutor {
-    /**
-     * @param instanceDetailId 任务实例明细id
-     * @param jobDataMap       执行参数
-     * @param taskTemplateNode 任务节点信息
-     */
-    void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode)
-        throws BadRequestException;
+
+  /**
+   * @param instanceDetailId 任务实例明细id
+   * @param jobDataMap       执行参数
+   * @param taskTemplateNode 任务节点信息
+   */
+  void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode)
+      throws BadRequestException;
 }

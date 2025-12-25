@@ -34,48 +34,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/task")
 public class TaskTestsController {
-    @Autowired private TaskManage taskManage;
 
-    @AnonymousAccess
-    @GetMapping(value = "/testCreate")
-    public ResponseEntity<?> testCreate() {
-        TaskInstanceInfoTb instanceInfo =
-            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava",
-                "功能测试", null);
-        log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
-        return ResponseEntity.ok(instanceInfo);
-    }
+  @Autowired
+  private TaskManage taskManage;
 
-    @AnonymousAccess
-    @GetMapping(value = "/testCreateAfterStop")
-    public ResponseEntity<?> testCreateAfterStop() {
-        TaskInstanceInfoTb instanceInfo =
-            taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava",
-                "功能测试", null);
-        log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
-        ThreadUtil.execAsync(() -> {
-            ThreadUtil.safeSleep(5000);
-            taskManage.stopJob(instanceInfo.getId());
-        });
-        return ResponseEntity.ok(null);
-    }
+  @AnonymousAccess
+  @GetMapping(value = "/testCreate")
+  public ResponseEntity<?> testCreate() {
+    TaskInstanceInfoTb instanceInfo =
+        taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava",
+            "功能测试", null);
+    log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
+    return ResponseEntity.ok(instanceInfo);
+  }
 
-    @AnonymousAccess
-    @GetMapping(value = "/testRetry")
-    public ResponseEntity<?> testRetry(@RequestParam Long instanceId, @RequestParam String retryNodeCode) {
-        TaskInstanceInfoTb instanceInfo = taskManage.retryJob(instanceId, retryNodeCode);
-        log.info("任务重试成功，实例为：{}", JSON.toJSONString(instanceInfo));
-        return ResponseEntity.ok(null);
-    }
+  @AnonymousAccess
+  @GetMapping(value = "/testCreateAfterStop")
+  public ResponseEntity<?> testCreateAfterStop() {
+    TaskInstanceInfoTb instanceInfo =
+        taskManage.createJob("cutejava", TaskChangeTypeEnum.AppContainerDeploy, "java", "daily", "cutejava",
+            "功能测试", null);
+    log.info("任务创建成功，实例为：{}", JSON.toJSONString(instanceInfo));
+    ThreadUtil.execAsync(() -> {
+      ThreadUtil.safeSleep(5000);
+      taskManage.stopJob(instanceInfo.getId());
+    });
+    return ResponseEntity.ok(null);
+  }
 
-    @AnonymousAccess
-    @GetMapping(value = "/last")
-    public ResponseEntity<?> testLast() {
-        String contextName = "cutejava";
-        String language = "java";
-        String changeType = TaskChangeTypeEnum.AppContainerDeploy.getCode();
-        String envAlias = "daily";
-        TaskInstanceInfoVo instanceInfo = taskManage.getLastInfo(contextName, language, envAlias, changeType);
-        return ResponseEntity.ok(instanceInfo);
-    }
+  @AnonymousAccess
+  @GetMapping(value = "/testRetry")
+  public ResponseEntity<?> testRetry(@RequestParam Long instanceId, @RequestParam String retryNodeCode) {
+    TaskInstanceInfoTb instanceInfo = taskManage.retryJob(instanceId, retryNodeCode);
+    log.info("任务重试成功，实例为：{}", JSON.toJSONString(instanceInfo));
+    return ResponseEntity.ok(null);
+  }
+
+  @AnonymousAccess
+  @GetMapping(value = "/last")
+  public ResponseEntity<?> testLast() {
+    String contextName = "cutejava";
+    String language = "java";
+    String changeType = TaskChangeTypeEnum.AppContainerDeploy.getCode();
+    String envAlias = "daily";
+    TaskInstanceInfoVo instanceInfo = taskManage.getLastInfo(contextName, language, envAlias, changeType);
+    return ResponseEntity.ok(instanceInfo);
+  }
 }

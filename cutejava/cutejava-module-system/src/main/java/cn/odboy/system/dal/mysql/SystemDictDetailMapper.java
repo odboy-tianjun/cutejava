@@ -31,14 +31,16 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
-    default List<SystemDictDetailTb> selectByDictId(Long dictId) {
-        LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SystemDictDetailTb::getDictId, dictId);
-        return selectList(wrapper);
-    }
-    default IPage<SystemDictDetailTb> selectDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
-        LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(CollUtil.isNotEmpty(dictIds), SystemDictDetailTb::getDictId, dictIds);
-        return selectPage(page, wrapper);
-    }
+
+  default List<SystemDictDetailTb> selectByDictId(Long dictId) {
+    LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDictDetailTb::getDictId, dictId);
+    return selectList(wrapper);
+  }
+
+  default IPage<SystemDictDetailTb> selectDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
+    LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(CollUtil.isNotEmpty(dictIds), SystemDictDetailTb::getDictId, dictIds);
+    return selectPage(page, wrapper);
+  }
 }

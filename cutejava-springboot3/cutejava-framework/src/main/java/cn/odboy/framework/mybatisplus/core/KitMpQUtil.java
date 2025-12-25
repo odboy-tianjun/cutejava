@@ -29,10 +29,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 查询条件创建工具
@@ -77,7 +80,8 @@ public class KitMpQUtil {
         return StrUtil.toUnderlineCase(attributeName);
     }
 
-    private static <R> void handleWrapper(KitMpQuery q, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+    private static <R> void handleWrapper(KitMpQuery q, QueryWrapper<R> queryWrapper, String attributeName,
+        Object fieldVal) {
         switch (q.type()) {
             case EQUAL -> queryWrapper.eq(attributeName, fieldVal);
             case GREATER_THAN -> queryWrapper.ge(attributeName, fieldVal);
@@ -97,7 +101,8 @@ public class KitMpQUtil {
         }
     }
 
-    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName, Object fieldVal) {
+    private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName,
+        Object fieldVal) {
         Collection<?> wrapNotInVal = (Collection<?>)fieldVal;
         if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
             Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
@@ -122,7 +127,8 @@ public class KitMpQUtil {
         }
     }
 
-    private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal, String finalAttributeName) {
+    private static <R> void handleBetweenQuery(QueryWrapper<R> queryWrapper, Object fieldVal,
+        String finalAttributeName) {
         if (fieldVal instanceof List) {
             List<Object> between = new ArrayList<>((List<?>)fieldVal);
             int minLength = 2;
@@ -182,14 +188,10 @@ public class KitMpQUtil {
 
     @TableName("test_domain")
     private static class TestDomain {
-        @NotNull(groups = KitBaseUserTimeTb.Update.class)
-        @TableId(value = "user_id", type = IdType.AUTO)
-        private Long id;
-        @TableField(value = "dept_id")
-        private Long deptId;
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String nickName;
+        @NotNull(groups = KitBaseUserTimeTb.Update.class) @TableId(value = "user_id", type = IdType.AUTO) private Long
+            id;
+        @TableField(value = "dept_id") private Long deptId;
+        @NotBlank private String username;
+        @NotBlank private String nickName;
     }
 }

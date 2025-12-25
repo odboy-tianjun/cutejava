@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>cutejava</artifactId>
-        <groupId>cn.odboy</groupId>
-        <version>1.4.1</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>cutejava-module-task-v2</artifactId>
-    <name>任务模块V2：根据任务标记停止轮询检查</name>
-    <dependencies>
-        <dependency>
-            <groupId>cn.odboy</groupId>
-            <artifactId>cutejava-module-system</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-    </dependencies>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>cutejava</artifactId>
+    <groupId>cn.odboy</groupId>
+    <version>1.4.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>cutejava-module-task-v2</artifactId>
+  <name>任务模块V2：根据任务标记停止轮询检查</name>
+  <dependencies>
+    <dependency>
+      <groupId>cn.odboy</groupId>
+      <artifactId>cutejava-module-system</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+  </dependencies>
 </project>

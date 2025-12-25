@@ -28,6 +28,7 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
+import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.KitClassUtil;
@@ -241,7 +242,7 @@ public class SystemMenuService {
      * @return /
      */
     public List<SystemMenuTb> queryMenuListByUserId(Long currentUserId) {
-        List<SystemRoleTb> roles = systemRoleService.queryRoleByUsersId(currentUserId);
+        List<SystemRoleVo> roles = systemRoleService.queryRoleByUsersId(currentUserId);
         Set<Long> roleIds = roles.stream().map(SystemRoleTb::getId).collect(Collectors.toSet());
         return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIdsAndType(roleIds, 2));
     }

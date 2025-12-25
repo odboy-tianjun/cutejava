@@ -27,16 +27,17 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class WsMessageUtil {
-    public static WsSidVo parseSid(String sid) {
-        // sid {username}_{bizCode}_{param}
-        String[] sids = sid.split("_");
-        if (sids.length != 3) {
-            throw new BadRequestException("sid格式异常");
-        }
-        WsSidVo sidVo = new WsSidVo();
-        sidVo.setUsername(sids[0]);
-        sidVo.setBizCode(sids[1]);
-        sidVo.setParam(sids[2]);
-        return sidVo;
+
+  public static WsSidVo parseSid(String sid) {
+    // sid {username}_{bizCode}_{param}
+    String[] sids = sid.split("_");
+    if (sids.length != 3) {
+      throw new BadRequestException("sid格式异常");
     }
+    WsSidVo sidVo = new WsSidVo();
+    sidVo.setUsername(sids[0]);
+    sidVo.setBizCode(sids[1]);
+    sidVo.setParam(sids[2]);
+    return sidVo;
+  }
 }

@@ -19,6 +19,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
+import cn.odboy.system.dal.model.SystemRoleVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;
@@ -46,9 +47,9 @@ public interface SystemRoleMapper extends BaseMapper<SystemRoleTb> {
         }
         return selectCount(wrapper);
     }
-    List<SystemRoleTb> selectRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
-    List<SystemRoleTb> selectRoleByUserId(@Param("userId") Long userId);
-    List<SystemRoleTb> selectRoleByMenuId(@Param("menuId") Long menuId);
-    SystemRoleTb getRoleById(@Param("roleId") Long roleId);
+    List<SystemRoleVo> selectRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
+    List<SystemRoleVo> selectRoleByUserId(@Param("userId") Long userId);
+    List<SystemRoleVo> selectRoleByMenuId(@Param("menuId") Long menuId);
+    SystemRoleVo getRoleById(@Param("roleId") Long roleId);
     Integer countRoleByDeptIds(@Param("deptIds") Set<Long> deptIds);
 }

@@ -24,18 +24,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DateStringToDateConverter implements Converter<String, Date> {
-    private static final ThreadLocal<SimpleDateFormat> SDF =
-        ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
-    @Override
-    public Date convert(String source) {
-        if (StrUtil.isBlank(source)) {
-            return null;
-        }
-        try {
-            return SDF.get().parse(source);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Invalid date string: " + source);
-        }
+  private static final ThreadLocal<SimpleDateFormat> SDF =
+      ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+  @Override
+  public Date convert(String source) {
+    if (StrUtil.isBlank(source)) {
+      return null;
     }
+    try {
+      return SDF.get().parse(source);
+    } catch (ParseException e) {
+      throw new IllegalArgumentException("Invalid date string: " + source);
+    }
+  }
 }

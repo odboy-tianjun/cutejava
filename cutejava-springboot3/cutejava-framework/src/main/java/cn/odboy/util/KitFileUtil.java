@@ -26,13 +26,11 @@ import cn.odboy.framework.exception.BadRequestException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -41,8 +39,16 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.springframework.web.multipart.MultipartFile;
 
-import static cn.odboy.constant.SystemConst.*;
+import static cn.odboy.constant.SystemConst.SYMBOL_ADD;
+import static cn.odboy.constant.SystemConst.SYMBOL_AT;
+import static cn.odboy.constant.SystemConst.SYMBOL_EQUAL;
+import static cn.odboy.constant.SystemConst.SYMBOL_SUBTRACT;
 
 /**
  * File工具类, 扩展 hutool 工具包
@@ -189,8 +195,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
             map.forEach((key, value) -> {
                 if (value instanceof String strValue) {
                     // 检查并处理以特殊字符开头的值
-                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) || strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(
-                        SYMBOL_AT)) {
+                    if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) ||
+                        strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(SYMBOL_AT)) {
                         // 添加单引号前缀
                         strValue = "'" + strValue;
                     }
@@ -322,7 +328,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
      * @param response /
      * @param file     /
      */
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit) {
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file,
+        boolean deleteOnExit) {
         response.setCharacterEncoding(request.getCharacterEncoding());
         response.setContentType("application/octet-stream");
         FileInputStream fis = null;
@@ -379,7 +386,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
         fileName = fileName.replaceAll("^\\.+/", "");
 
         // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
-        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") + fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
+        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
+            fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
 
         return fileName;
     }

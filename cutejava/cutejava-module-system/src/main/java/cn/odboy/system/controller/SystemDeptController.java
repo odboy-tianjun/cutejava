@@ -45,75 +45,77 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class SystemDeptController {
-    @Autowired private SystemDeptService systemDeptService;
 
-    @ApiOperation("导出部门数据")
-    @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('dept:list')")
-    public void exportDept(HttpServletResponse response, SystemQueryDeptArgs criteria) throws Exception {
-        systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
-    }
+  @Autowired
+  private SystemDeptService systemDeptService;
 
-    @ApiOperation("查询部门")
-    @PostMapping
-    @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
-        @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
-        SystemQueryDeptArgs criteria = args.getArgs();
-        List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
-        return ResponseEntity.ok(KitPageUtil.toPage(depts));
-    }
+  @ApiOperation("导出部门数据")
+  @GetMapping(value = "/download")
+  @PreAuthorize("@el.check('dept:list')")
+  public void exportDept(HttpServletResponse response, SystemQueryDeptArgs criteria) throws Exception {
+    systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
+  }
 
-    @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @PostMapping("/queryDeptSuperiorTree")
-    @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
-        @RequestParam(defaultValue = "false") Boolean exclude) {
-        Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
-        for (Long id : ids) {
-            // 同级数据
-            SystemDeptTb dept = systemDeptService.getDeptById(id);
-            // 上级数据
-            List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
-            if (exclude) {
-                for (SystemDeptTb data : depts) {
-                    if (data.getId().equals(dept.getPid())) {
-                        data.setSubCount(data.getSubCount() - 1);
-                    }
-                }
-                // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
-                depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
-            }
-            deptSet.addAll(depts);
+  @ApiOperation("查询部门")
+  @PostMapping
+  @PreAuthorize("@el.check('user:list','dept:list')")
+  public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
+      @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
+    SystemQueryDeptArgs criteria = args.getArgs();
+    List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
+    return ResponseEntity.ok(KitPageUtil.toPage(depts));
+  }
+
+  @ApiOperation("查询部门:根据ID获取同级与上级数据")
+  @PostMapping("/queryDeptSuperiorTree")
+  @PreAuthorize("@el.check('user:list','dept:list')")
+  public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
+      @RequestParam(defaultValue = "false") Boolean exclude) {
+    Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
+    for (Long id : ids) {
+      // 同级数据
+      SystemDeptTb dept = systemDeptService.getDeptById(id);
+      // 上级数据
+      List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
+      if (exclude) {
+        for (SystemDeptTb data : depts) {
+          if (data.getId().equals(dept.getPid())) {
+            data.setSubCount(data.getSubCount() - 1);
+          }
         }
-        return ResponseEntity.ok(systemDeptService.buildDeptTree(new ArrayList<>(deptSet)));
+        // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
+        depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
+      }
+      deptSet.addAll(depts);
     }
+    return ResponseEntity.ok(systemDeptService.buildDeptTree(new ArrayList<>(deptSet)));
+  }
 
-    @ApiOperation("新增部门")
-    @PostMapping(value = "/saveDept")
-    @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<Void> saveDept(@Validated @RequestBody SystemCreateDeptArgs args) {
-        systemDeptService.saveDept(args);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("新增部门")
+  @PostMapping(value = "/saveDept")
+  @PreAuthorize("@el.check('dept:add')")
+  public ResponseEntity<Void> saveDept(@Validated @RequestBody SystemCreateDeptArgs args) {
+    systemDeptService.saveDept(args);
+    return ResponseEntity.ok(null);
+  }
 
-    @ApiOperation("修改部门")
-    @PostMapping(value = "/modifyDept")
-    @PreAuthorize("@el.check('dept:edit')")
-    public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
-        systemDeptService.updateDept(args);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("修改部门")
+  @PostMapping(value = "/modifyDept")
+  @PreAuthorize("@el.check('dept:edit')")
+  public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
+    systemDeptService.updateDept(args);
+    return ResponseEntity.ok(null);
+  }
 
-    @ApiOperation("删除部门")
-    @PostMapping(value = "/removeDeptByIds")
-    @PreAuthorize("@el.check('dept:del')")
-    public ResponseEntity<Void> removeDeptByIds(@RequestBody Set<Long> ids) {
-        // 获取部门, 和其所有子部门
-        Set<SystemDeptTb> depts = systemDeptService.traverseDeptByIdWithPids(ids);
-        // 验证是否被角色或用户关联
-        systemDeptService.verifyBindRelationByIds(depts);
-        systemDeptService.removeDeptByIds(depts);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("删除部门")
+  @PostMapping(value = "/removeDeptByIds")
+  @PreAuthorize("@el.check('dept:del')")
+  public ResponseEntity<Void> removeDeptByIds(@RequestBody Set<Long> ids) {
+    // 获取部门, 和其所有子部门
+    Set<SystemDeptTb> depts = systemDeptService.traverseDeptByIdWithPids(ids);
+    // 验证是否被角色或用户关联
+    systemDeptService.verifyBindRelationByIds(depts);
+    systemDeptService.removeDeptByIds(depts);
+    return ResponseEntity.ok(null);
+  }
 }

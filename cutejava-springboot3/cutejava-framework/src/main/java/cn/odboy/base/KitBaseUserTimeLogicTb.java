@@ -20,12 +20,11 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-
-import java.util.Date;
 
 /**
  * 逻辑删除通用模型
@@ -36,22 +35,13 @@ import java.util.Date;
 @Getter
 @Setter
 public class KitBaseUserTimeLogicTb extends KitObject {
-    @CreatedBy
-    @TableField(value = "create_by", fill = FieldFill.INSERT)
-    @Schema(name = "创建人", hidden = true)
+    @CreatedBy @TableField(value = "create_by", fill = FieldFill.INSERT) @Schema(name = "创建人", hidden = true)
     private String createBy;
-    @LastModifiedBy
-    @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
-    @Schema(name = "更新人", hidden = true)
-    private String updateBy;
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    @Schema(name = "创建时间", hidden = true)
-    private Date createTime;
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    @Schema(name = "更新时间", hidden = true)
+    @LastModifiedBy @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
+    @Schema(name = "更新人", hidden = true) private String updateBy;
+    @TableField(value = "create_time", fill = FieldFill.INSERT) @Schema(name = "创建时间", hidden = true) private Date
+        createTime;
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE) @Schema(name = "更新时间", hidden = true)
     private Date updateTime;
-    @Schema(name = "数据有效性", hidden = true)
-    @TableLogic
-    @TableField("available")
-    private Integer available;
+    @Schema(name = "数据有效性", hidden = true) @TableLogic @TableField("available") private Integer available;
 }

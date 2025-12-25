@@ -31,13 +31,14 @@ import org.apache.ibatis.session.Configuration;
  * @date 2025-01-11
  */
 public class MpInsertBatchSqlInjector extends DefaultSqlInjector {
-    @Override
-    public List<AbstractMethod> getMethodList(Configuration configuration, Class<?> mapperClass, TableInfo tableInfo) {
-        List<AbstractMethod> methodList = super.getMethodList(configuration, mapperClass, tableInfo);
-        // 新增自定义方法, InsertBatchSomeColumn这个方法Mp没有开放出来
-        methodList.add(new InsertBatchSomeColumn(i -> i.getFieldFill() != FieldFill.UPDATE));
-        // 全量更新, 包括null字段
-        methodList.add(new AlwaysUpdateSomeColumnById(i -> i.getFieldFill() != FieldFill.INSERT));
-        return methodList;
-    }
+
+  @Override
+  public List<AbstractMethod> getMethodList(Configuration configuration, Class<?> mapperClass, TableInfo tableInfo) {
+    List<AbstractMethod> methodList = super.getMethodList(configuration, mapperClass, tableInfo);
+    // 新增自定义方法, InsertBatchSomeColumn这个方法Mp没有开放出来
+    methodList.add(new InsertBatchSomeColumn(i -> i.getFieldFill() != FieldFill.UPDATE));
+    // 全量更新, 包括null字段
+    methodList.add(new AlwaysUpdateSomeColumnById(i -> i.getFieldFill() != FieldFill.INSERT));
+    return methodList;
+  }
 }

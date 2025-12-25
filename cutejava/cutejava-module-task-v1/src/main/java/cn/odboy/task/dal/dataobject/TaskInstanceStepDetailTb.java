@@ -45,23 +45,34 @@ import lombok.ToString;
 @TableName("task_instance_step_detail")
 @ApiModel(value = "TaskInstanceStepDetailTb对象", description = "")
 public class TaskInstanceStepDetailTb extends KitObject {
-    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    private Date createTime;
-    /**
-     * id
-     */
-    @ApiModelProperty("id") @TableId(value = "id", type = IdType.ASSIGN_ID)
-    @JsonSerialize(using = ToStringSerializer.class) @JSONField(format = "string") private Long id;
-    /**
-     * task_instance_detail表id
-     */
-    @TableField("instance_detail_id") @ApiModelProperty("task_instance_detail表id") private Long instanceDetailId;
-    /**
-     * 步骤描述
-     */
-    @TableField("step_desc") @ApiModelProperty("步骤描述") private String stepDesc;
-    /**
-     * 状态(success成功 fail失败)
-     */
-    @TableField("step_status") @ApiModelProperty("状态(success成功 fail失败)") private String stepStatus;
+
+  @TableField(fill = FieldFill.INSERT)
+  @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date createTime;
+  /**
+   * id
+   */
+  @ApiModelProperty("id")
+  @TableId(value = "id", type = IdType.ASSIGN_ID)
+  @JsonSerialize(using = ToStringSerializer.class)
+  @JSONField(format = "string")
+  private Long id;
+  /**
+   * task_instance_detail表id
+   */
+  @TableField("instance_detail_id")
+  @ApiModelProperty("task_instance_detail表id")
+  private Long instanceDetailId;
+  /**
+   * 步骤描述
+   */
+  @TableField("step_desc")
+  @ApiModelProperty("步骤描述")
+  private String stepDesc;
+  /**
+   * 状态(success成功 fail失败)
+   */
+  @TableField("step_status")
+  @ApiModelProperty("状态(success成功 fail失败)")
+  private String stepStatus;
 }

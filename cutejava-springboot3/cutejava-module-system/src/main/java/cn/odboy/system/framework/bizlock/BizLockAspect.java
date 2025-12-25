@@ -18,6 +18,7 @@ package cn.odboy.system.framework.bizlock;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.redis.KitRedisHelper;
+import java.lang.reflect.Method;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,8 +28,6 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
 
 @Aspect
 @Component
@@ -60,7 +59,8 @@ public class BizLockAspect {
     private String parseLockKey(ProceedingJoinPoint joinPoint, BizLock bizLock) {
         // 如果key为空，使用默认格式: bizName:方法名
         if (bizLock.key().isEmpty()) {
-            return String.format("%s:%s", bizLock.bizName(), ((MethodSignature)joinPoint.getSignature()).getMethod().getName());
+            return String.format("%s:%s", bizLock.bizName(),
+                ((MethodSignature)joinPoint.getSignature()).getMethod().getName());
         }
 
         // 解析SpEL表达式

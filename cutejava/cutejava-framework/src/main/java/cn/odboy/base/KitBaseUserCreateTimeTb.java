@@ -30,29 +30,38 @@ import org.springframework.data.annotation.CreatedBy;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUserCreateTimeTb extends KitObject {
-    @CreatedBy @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建人", hidden = true) private String
-        createBy;
-    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    private Date createTime;
 
-    @Override
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        Field[] fields = this.getClass().getDeclaredFields();
-        try {
-            for (Field f : fields) {
-                f.setAccessible(true);
-                builder.append(f.getName(), f.get(this)).append("\n");
-            }
-        } catch (Exception e) {
-            builder.append("toString builder encounter an error");
-        }
-        return builder.toString();
+  @CreatedBy
+  @TableField(fill = FieldFill.INSERT)
+  @ApiModelProperty(value = "创建人", hidden = true)
+  private String
+      createBy;
+  @TableField(fill = FieldFill.INSERT)
+  @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date createTime;
+
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this);
+    Field[] fields = this.getClass().getDeclaredFields();
+    try {
+      for (Field f : fields) {
+        f.setAccessible(true);
+        builder.append(f.getName(), f.get(this)).append("\n");
+      }
+    } catch (Exception e) {
+      builder.append("toString builder encounter an error");
     }
+    return builder.toString();
+  }
 
-    /* 分组校验 */
-    public @interface Create {}
+  /* 分组校验 */
+  public @interface Create {
 
-    /* 分组校验 */
-    public @interface Update {}
+  }
+
+  /* 分组校验 */
+  public @interface Update {
+
+  }
 }

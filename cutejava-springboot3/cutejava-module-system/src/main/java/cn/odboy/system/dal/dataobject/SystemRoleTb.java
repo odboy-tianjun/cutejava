@@ -23,10 +23,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
-import java.util.Set;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,9 +38,6 @@ import lombok.Setter;
 public class SystemRoleTb extends KitBaseUserTimeTb {
     @NotNull(groups = {Update.class}) @TableId(value = "role_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true) private Long id;
-    @TableField(exist = false) @ApiModelProperty(value = "用户", hidden = true) private Set<SystemUserTb> users;
-    @TableField(exist = false) @ApiModelProperty(value = "菜单", hidden = true) private Set<SystemMenuTb> menus;
-    @TableField(exist = false) @ApiModelProperty(value = "部门", hidden = true) private Set<SystemDeptTb> depts;
     @NotBlank @ApiModelProperty(value = "名称", hidden = true) private String name;
     @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义") private String dataScope =
         SystemDataScopeEnum.THIS_LEVEL.getValue();

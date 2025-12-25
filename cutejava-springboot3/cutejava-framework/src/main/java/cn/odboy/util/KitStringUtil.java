@@ -17,11 +17,10 @@
 
 package cn.odboy.util;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Calendar;
 import java.util.Date;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
@@ -35,7 +34,8 @@ public final class KitStringUtil {
     /**
      * 驼峰命名法工具
      *
-     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
+     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     *     toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toCamelCase(String s) {
         if (s == null) {
@@ -65,7 +65,8 @@ public final class KitStringUtil {
     /**
      * 驼峰命名法工具
      *
-     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
+     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     *     toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toCapitalizeCamelCase(String s) {
         if (s == null) {
@@ -78,7 +79,8 @@ public final class KitStringUtil {
     /**
      * 驼峰命名法工具
      *
-     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
+     * @return toCamelCase(" hello_world ") == "helloWorld" toCapitalizeCamelCase("hello_world") == "HelloWorld"
+     *     toUnderScoreCase("helloWorld") = "hello_world"
      */
     public static String toUnderScoreCase(String s) {
         if (s == null) {

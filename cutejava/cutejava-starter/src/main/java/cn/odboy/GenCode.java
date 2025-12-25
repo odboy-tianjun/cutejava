@@ -22,24 +22,25 @@ import java.util.List;
  * 代码生成入口
  */
 public class GenCode {
-    private static final String ADDR = "192.168.100.128";
-    private static final Integer PORT = 23306;
-    private static final String DATABASE_NAME = "cutejava";
-    private static final String DATABASE_USER = "root";
-    private static final String DATABASE_PWD = "kd123456";
-    private static final String URL = String.format("jdbc:mysql://%s:%s/%s", ADDR, PORT, DATABASE_NAME);
 
-    public static void main(String[] args) {
-        KitMpCmdGenUtil generator = new KitMpCmdGenUtil();
-        generator.setDatabaseUrl(URL);
-        generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        generator.setDatabaseUsername(DATABASE_USER);
-        generator.setDatabasePassword(DATABASE_PWD);
-        genTaskCode(generator);
-    }
+  private static final String ADDR = "192.168.100.128";
+  private static final Integer PORT = 23306;
+  private static final String DATABASE_NAME = "cutejava";
+  private static final String DATABASE_USER = "root";
+  private static final String DATABASE_PWD = "kd123456";
+  private static final String URL = String.format("jdbc:mysql://%s:%s/%s", ADDR, PORT, DATABASE_NAME);
 
-    private static void genTaskCode(KitMpCmdGenUtil generator) {
-        generator.gen("task", "",
-            List.of("task_instance_info", "task_instance_detail", "task_template_info", "task_instance_step_detail"));
-    }
+  public static void main(String[] args) {
+    KitMpCmdGenUtil generator = new KitMpCmdGenUtil();
+    generator.setDatabaseUrl(URL);
+    generator.setDriverClassName("com.mysql.cj.jdbc.Driver");
+    generator.setDatabaseUsername(DATABASE_USER);
+    generator.setDatabasePassword(DATABASE_PWD);
+    genTaskCode(generator);
+  }
+
+  private static void genTaskCode(KitMpCmdGenUtil generator) {
+    generator.gen("task", "",
+        List.of("task_instance_info", "task_instance_detail", "task_template_info", "task_instance_step_detail"));
+  }
 }

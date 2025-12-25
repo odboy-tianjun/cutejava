@@ -22,10 +22,9 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.groups.Default;
-import lombok.experimental.UtilityClass;
-
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 
 /**
  * Bean验证工具
@@ -46,7 +45,8 @@ public final class KitValidUtil {
     public static <T> void validate(T object) {
         Set<ConstraintViolation<T>> violations = VALIDATOR.validate(object, Default.class);
         if (!violations.isEmpty()) {
-            throw new BadRequestException(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
+            throw new BadRequestException(
+                violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
         }
     }
 }

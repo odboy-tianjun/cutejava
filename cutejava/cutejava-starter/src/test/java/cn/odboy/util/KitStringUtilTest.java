@@ -15,43 +15,44 @@
  */
 package cn.odboy.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 public class KitStringUtilTest {
-    @Test
-    public void testToCamelCase() {
-        assertNull(KitStringUtil.toCamelCase(null));
-    }
 
-    @Test
-    public void testToCapitalizeCamelCase() {
-        assertNull(KitStringUtil.toCapitalizeCamelCase(null));
-        assertEquals("HelloWorld", KitStringUtil.toCapitalizeCamelCase("hello_world"));
-    }
+  @Test
+  public void testToCamelCase() {
+    assertNull(KitStringUtil.toCamelCase(null));
+  }
 
-    @Test
-    public void testToUnderScoreCase() {
-        assertNull(KitStringUtil.toUnderScoreCase(null));
-        assertEquals("hello_world", KitStringUtil.toUnderScoreCase("helloWorld"));
-        assertEquals("\u0000\u0000", KitStringUtil.toUnderScoreCase("\u0000\u0000"));
-        assertEquals("\u0000_a", KitStringUtil.toUnderScoreCase("\u0000A"));
-    }
+  @Test
+  public void testToCapitalizeCamelCase() {
+    assertNull(KitStringUtil.toCapitalizeCamelCase(null));
+    assertEquals("HelloWorld", KitStringUtil.toCapitalizeCamelCase("hello_world"));
+  }
 
-    @Test
-    public void testGetWeekDay() {
-        SimpleDateFormat simpleDateformat = new SimpleDateFormat("E");
-        assertEquals(simpleDateformat.format(new Date()), KitStringUtil.getWeekDay());
-    }
+  @Test
+  public void testToUnderScoreCase() {
+    assertNull(KitStringUtil.toUnderScoreCase(null));
+    assertEquals("hello_world", KitStringUtil.toUnderScoreCase("helloWorld"));
+    assertEquals("\u0000\u0000", KitStringUtil.toUnderScoreCase("\u0000\u0000"));
+    assertEquals("\u0000_a", KitStringUtil.toUnderScoreCase("\u0000A"));
+  }
 
-    @Test
-    public void testGetIP() {
-        Assertions.assertEquals("127.0.0.1", KitBrowserUtil.getIp(new MockHttpServletRequest()));
-    }
+  @Test
+  public void testGetWeekDay() {
+    SimpleDateFormat simpleDateformat = new SimpleDateFormat("E");
+    assertEquals(simpleDateformat.format(new Date()), KitStringUtil.getWeekDay());
+  }
+
+  @Test
+  public void testGetIP() {
+    Assertions.assertEquals("127.0.0.1", KitBrowserUtil.getIp(new MockHttpServletRequest()));
+  }
 }

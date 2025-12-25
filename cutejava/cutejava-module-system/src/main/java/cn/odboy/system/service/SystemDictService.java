@@ -40,102 +40,105 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDictService {
-    @Autowired private SystemDictMapper systemDictMapper;
-    // @Autowired private SystemDictDetailMapper systemDictDetailMapper;
-    @Autowired private SystemDictDetailService systemDictDetailService;
 
-    /**
-     * 创建
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void saveDict(SystemCreateDictArgs args) {
-        systemDictMapper.insert(BeanUtil.copyProperties(args, SystemDictTb.class));
-    }
+  @Autowired
+  private SystemDictMapper systemDictMapper;
+  // @Autowired private SystemDictDetailMapper systemDictDetailMapper;
+  @Autowired
+  private SystemDictDetailService systemDictDetailService;
 
-    /**
-     * 编辑
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void modifyDictById(SystemDictTb args) {
-        SystemDictTb dict = systemDictMapper.selectById(args.getId());
-        dict.setName(args.getName());
-        dict.setDescription(args.getDescription());
-        systemDictMapper.insertOrUpdate(dict);
-    }
+  /**
+   * 创建
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void saveDict(SystemCreateDictArgs args) {
+    systemDictMapper.insert(BeanUtil.copyProperties(args, SystemDictTb.class));
+  }
 
-    /**
-     * 删除
-     *
-     * @param ids /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void removeDictByIds(Set<Long> ids) {
-        // 删除字典
-        systemDictMapper.deleteByIds(ids);
-        // 删除字典详情
-        systemDictDetailService.deleteDictDetailByDictIds(ids);
-    }
+  /**
+   * 编辑
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void modifyDictById(SystemDictTb args) {
+    SystemDictTb dict = systemDictMapper.selectById(args.getId());
+    dict.setName(args.getName());
+    dict.setDescription(args.getDescription());
+    systemDictMapper.insertOrUpdate(dict);
+  }
 
-    /**
-     * 导出数据
-     *
-     * @param dicts    待导出的数据
-     * @param response /
-     * @throws IOException /
-     */
-    public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (SystemDictTb dict : dicts) {
-            List<SystemDictDetailVo> dictDetails = systemDictDetailService.queryDictDetailByName(dict.getName());
-            if (CollectionUtil.isNotEmpty(dictDetails)) {
-                for (SystemDictDetailTb dictDetail : dictDetails) {
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    map.put("字典名称", dict.getName());
-                    map.put("字典描述", dict.getDescription());
-                    map.put("字典标签", dictDetail.getLabel());
-                    map.put("字典值", dictDetail.getValue());
-                    map.put("创建日期", dictDetail.getCreateTime());
-                    list.add(map);
-                }
-            } else {
-                Map<String, Object> map = new LinkedHashMap<>();
-                map.put("字典名称", dict.getName());
-                map.put("字典描述", dict.getDescription());
-                map.put("字典标签", null);
-                map.put("字典值", null);
-                map.put("创建日期", dict.getCreateTime());
-                list.add(map);
-            }
+  /**
+   * 删除
+   *
+   * @param ids /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void removeDictByIds(Set<Long> ids) {
+    // 删除字典
+    systemDictMapper.deleteByIds(ids);
+    // 删除字典详情
+    systemDictDetailService.deleteDictDetailByDictIds(ids);
+  }
+
+  /**
+   * 导出数据
+   *
+   * @param dicts    待导出的数据
+   * @param response /
+   * @throws IOException /
+   */
+  public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
+    List<Map<String, Object>> list = new ArrayList<>();
+    for (SystemDictTb dict : dicts) {
+      List<SystemDictDetailVo> dictDetails = systemDictDetailService.queryDictDetailByName(dict.getName());
+      if (CollectionUtil.isNotEmpty(dictDetails)) {
+        for (SystemDictDetailTb dictDetail : dictDetails) {
+          Map<String, Object> map = new LinkedHashMap<>();
+          map.put("字典名称", dict.getName());
+          map.put("字典描述", dict.getDescription());
+          map.put("字典标签", dictDetail.getLabel());
+          map.put("字典值", dictDetail.getValue());
+          map.put("创建日期", dictDetail.getCreateTime());
+          list.add(map);
         }
-        KitFileUtil.downloadExcel(list, response);
+      } else {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("字典名称", dict.getName());
+        map.put("字典描述", dict.getDescription());
+        map.put("字典标签", null);
+        map.put("字典值", null);
+        map.put("创建日期", dict.getCreateTime());
+        list.add(map);
+      }
     }
+    KitFileUtil.downloadExcel(list, response);
+  }
 
-    /**
-     * 分页查询
-     *
-     * @param args 条件
-     * @param page 分页参数
-     * @return /
-     */
-    public KitPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-        return KitPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
-    }
+  /**
+   * 分页查询
+   *
+   * @param args 条件
+   * @param page 分页参数
+   * @return /
+   */
+  public KitPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+    return KitPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
+  }
 
-    /**
-     * 查询全部数据
-     *
-     * @param args /
-     * @return /
-     */
-    public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
-        return systemDictMapper.selectDictByArgs(args);
-    }
+  /**
+   * 查询全部数据
+   *
+   * @param args /
+   * @return /
+   */
+  public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
+    return systemDictMapper.selectDictByArgs(args);
+  }
 
-    public SystemDictTb getById(int id) {
-        return systemDictMapper.selectById(id);
-    }
+  public SystemDictTb getById(int id) {
+    return systemDictMapper.selectById(id);
+  }
 }

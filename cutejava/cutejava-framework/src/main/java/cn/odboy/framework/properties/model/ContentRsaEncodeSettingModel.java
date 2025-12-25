@@ -25,5 +25,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ContentRsaEncodeSettingModel extends KitObject {
-    private String privateKey;
+
+  private String privateKey;
 }

@@ -15,6 +15,7 @@
  */
 package cn.odboy.system.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
@@ -25,6 +26,7 @@ import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
@@ -66,7 +68,7 @@ public class SystemUserService {
      * @param args /
      */
     @Transactional(rollbackFor = Exception.class)
-    public void saveUser(SystemUserTb args) {
+    public void saveUser(SystemUserVo args) {
         args.setDeptId(args.getDept().getId());
         if (systemUserMapper.getUserByUsername(args.getUsername()) != null) {
             throw new BadRequestException("用户名已存在");
@@ -91,9 +93,9 @@ public class SystemUserService {
      * @throws Exception /
      */
     @Transactional(rollbackFor = Exception.class)
-    public void modifyUserById(SystemUserTb args) {
-        SystemUserTb user = systemUserMapper.selectById(args.getId());
-        SystemUserTb user1 = systemUserMapper.getUserByUsername(args.getUsername());
+    public void modifyUserById(SystemUserVo args) {
+        SystemUserVo user = BeanUtil.copyProperties(systemUserMapper.selectById(args.getId()), SystemUserVo.class);
+        SystemUserVo user1 = systemUserMapper.getUserByUsername(args.getUsername());
         SystemUserTb user2 = systemUserMapper.getUserByEmail(args.getEmail());
         SystemUserTb user3 = systemUserMapper.getUserByPhone(args.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
@@ -254,9 +256,9 @@ public class SystemUserService {
      * @param response /
      * @throws IOException /
      */
-    public void exportUserExcel(List<SystemUserTb> users, HttpServletResponse response) throws IOException {
+    public void exportUserExcel(List<SystemUserVo> users, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (SystemUserTb user : users) {
+        for (SystemUserVo user : users) {
             List<String> roles = user.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.toList());
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", user.getUsername());
@@ -280,8 +282,8 @@ public class SystemUserService {
      * @param page     分页参数
      * @return /
      */
-    public KitPageResult<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
-        IPage<SystemUserTb> users = systemUserMapper.selectUserByArgs(criteria, page);
+    public KitPageResult<SystemUserVo> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
+        IPage<SystemUserVo> users = systemUserMapper.selectUserByArgs(criteria, page);
         return KitPageUtil.toPage(users);
     }
 
@@ -291,7 +293,7 @@ public class SystemUserService {
      * @param criteria 条件
      * @return /
      */
-    public List<SystemUserTb> queryUserByArgs(SystemQueryUserArgs criteria) {
+    public List<SystemUserVo> queryUserByArgs(SystemQueryUserArgs criteria) {
         return systemUserMapper.selectUserByArgs(criteria);
     }
 

@@ -14,12 +14,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskInstanceInfoVo extends TaskInstanceInfoTb {
-    /**
-     * 进行中
-     */
-    private List<TaskInstanceNodeVo> current;
-    /**
-     * 历史已完成或异常
-     */
-    private List<TaskInstanceNodeVo> history;
+
+  /**
+   * 进行中
+   */
+  private List<TaskInstanceNodeVo> current;
+  /**
+   * 历史已完成或异常
+   */
+  private List<TaskInstanceNodeVo> history;
 }

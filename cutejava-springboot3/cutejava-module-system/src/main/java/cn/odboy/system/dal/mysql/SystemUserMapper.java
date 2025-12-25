@@ -17,6 +17,7 @@ package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.SystemUserVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -29,14 +30,14 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
-    List<SystemUserTb> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria);
-    IPage<SystemUserTb> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria, Page<SystemUserTb> page);
-    List<SystemUserTb> selectUserByRoleId(@Param("roleId") Long roleId);
-    List<SystemUserTb> selectUserByDeptId(@Param("deptId") Long deptId);
-    List<SystemUserTb> selectUserByMenuId(@Param("menuId") Long menuId);
+    List<SystemUserVo> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria);
+    IPage<SystemUserVo> selectUserByArgs(@Param("criteria") SystemQueryUserArgs criteria, Page<SystemUserTb> page);
+    List<SystemUserVo> selectUserByRoleId(@Param("roleId") Long roleId);
+    List<SystemUserVo> selectUserByDeptId(@Param("deptId") Long deptId);
+    List<SystemUserVo> selectUserByMenuId(@Param("menuId") Long menuId);
     Long countUserByJobIds(@Param("jobIds") Set<Long> jobIds);
     Long countUserByRoleIds(@Param("roleIds") Set<Long> roleIds);
-    SystemUserTb getUserByUsername(@Param("username") String username);
+    SystemUserVo getUserByUsername(@Param("username") String username);
     default long countUserByDeptIds(Set<Long> deptIds) {
         LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(SystemUserTb::getDeptId, deptIds);

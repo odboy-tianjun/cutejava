@@ -27,7 +27,8 @@ import lombok.Getter;
 public enum SystemCaptchaBizEnum {
 
     /* 通过手机号码重置邮箱 */
-    PHONE_RESET_EMAIL_CODE("10000", "phone_reset_email_code_", "SystemEmailCaptchaTemplate.ftl", "通过手机号码重置邮箱"),
+    PHONE_RESET_EMAIL_CODE("10000", "phone_reset_email_code_", "SystemEmailCaptchaTemplate.ftl",
+        "通过手机号码重置邮箱"),
 
     /* 通过旧邮箱重置邮箱 */
     EMAIL_RESET_EMAIL_CODE("10001", "email_reset_email_code_", "SystemEmailCaptchaTemplate.ftl", "通过旧邮箱重置邮箱"),

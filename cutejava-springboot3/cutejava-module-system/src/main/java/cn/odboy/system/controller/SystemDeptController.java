@@ -26,23 +26,26 @@ import cn.odboy.util.KitPageUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "系统：部门管理")
 @RequestMapping("/api/dept")
 public class SystemDeptController {
-    @Autowired
-    private SystemDeptService systemDeptService;
+    @Autowired private SystemDeptService systemDeptService;
 
     @Operation(summary = "导出部门数据")
     @GetMapping(value = "/download")
@@ -54,7 +57,8 @@ public class SystemDeptController {
     @Operation(summary = "查询部门")
     @PostMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(@Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
+    public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
+        @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
         SystemQueryDeptArgs criteria = args.getArgs();
         List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
         return ResponseEntity.ok(KitPageUtil.toPage(depts));
@@ -64,7 +68,7 @@ public class SystemDeptController {
     @PostMapping("/queryDeptSuperiorTree")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
-                                                                             @RequestParam(defaultValue = "false") Boolean exclude) {
+        @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
         for (Long id : ids) {
             // 同级数据

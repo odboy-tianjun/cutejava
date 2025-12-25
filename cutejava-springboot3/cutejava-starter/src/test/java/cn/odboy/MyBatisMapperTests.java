@@ -21,16 +21,14 @@ import cn.hutool.core.date.DateUtil;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MyBatisMapperTests {
-    @Autowired
-    private SystemUserMapper systemUserMapper;
+    @Autowired private SystemUserMapper systemUserMapper;
 
     @Test
     public void testMapper1() {
@@ -38,13 +36,16 @@ public class MyBatisMapperTests {
         systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, new Date()));
 
         // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:50:16.786+0800');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateTime.now()));
+        systemUserMapper.selectList(
+            new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateTime.now()));
 
         // SELECT * FROM system_user WHERE (create_time > '2025-08-18 14:53:46');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDateTime(new Date())));
+        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime,
+            DateUtil.formatDateTime(new Date())));
 
         // SELECT * FROM system_user WHERE (create_time > '2025-08-18');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDate(new Date())));
+        systemUserMapper.selectList(
+            new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDate(new Date())));
     }
 }
 

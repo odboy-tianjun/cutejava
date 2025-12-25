@@ -20,6 +20,7 @@ import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
+import cn.odboy.system.dal.model.SystemRoleVo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +48,7 @@ public class SystemDataService {
     public List<Long> findDeptIdListByArgs(SystemUserTb user) {
         List<Long> deptIds = new ArrayList<>();
         // 查询用户角色
-        List<SystemRoleTb> roleList = systemRoleService.queryRoleByUsersId(user.getId());
+        List<SystemRoleVo> roleList = systemRoleService.queryRoleByUsersId(user.getId());
         // 获取对应的部门ID
         for (SystemRoleTb role : roleList) {
             SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());

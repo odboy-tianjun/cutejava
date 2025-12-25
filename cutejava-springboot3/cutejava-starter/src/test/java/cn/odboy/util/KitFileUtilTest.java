@@ -19,7 +19,10 @@ package cn.odboy.util;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-import static cn.odboy.util.KitFileUtil.*;
+import static cn.odboy.util.KitFileUtil.getPrefix;
+import static cn.odboy.util.KitFileUtil.getSize;
+import static cn.odboy.util.KitFileUtil.getSuffix;
+import static cn.odboy.util.KitFileUtil.toFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class KitFileUtilTest {

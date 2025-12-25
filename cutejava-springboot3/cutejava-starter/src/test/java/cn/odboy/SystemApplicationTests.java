@@ -22,19 +22,16 @@ import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.service.SystemUserService;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Set;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SystemApplicationTests {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private SystemUserService systemUserService;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private SystemUserService systemUserService;
 
     @Test
     public void contextLoads() {

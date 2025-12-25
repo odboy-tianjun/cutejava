@@ -22,11 +22,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskTemplateInfoVo extends KitObject {
-    private String changeType;
-    private String name;
-    private String description;
-    private String envAlias;
-    private String language;
-    private String contextName;
-    private String templateInfo;
+
+  private String changeType;
+  private String name;
+  private String description;
+  private String envAlias;
+  private String language;
+  private String contextName;
+  private String templateInfo;
 }
