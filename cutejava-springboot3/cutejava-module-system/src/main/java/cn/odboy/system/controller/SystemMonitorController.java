@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.system.service.SystemMonitorService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +27,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "系统-服务监控管理")
+@Api(tags = "系统-服务监控管理")
 @RequestMapping("/api/monitor")
 public class SystemMonitorController {
-    @Autowired private SystemMonitorService systemMonitorService;
 
-    @PostMapping(value = "/queryServerMonitorInfo")
-    @Operation(summary = "查询服务监控")
-    @PreAuthorize("@el.check('monitor:list')")
-    public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
-        return ResponseEntity.ok(systemMonitorService.queryServerMonitorInfo());
-    }
+  @Autowired
+  private SystemMonitorService systemMonitorService;
+
+  @PostMapping(value = "/queryServerMonitorInfo")
+  @ApiOperation("查询服务监控")
+  @PreAuthorize("@el.check('monitor:list')")
+  public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
+    return ResponseEntity.ok(systemMonitorService.queryServerMonitorInfo());
+  }
 }

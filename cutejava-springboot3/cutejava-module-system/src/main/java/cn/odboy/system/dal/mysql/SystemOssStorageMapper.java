@@ -28,4 +28,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2025-07-15
  */
 @Mapper
-public interface SystemOssStorageMapper extends BaseMapper<SystemOssStorageTb> {}
+public interface SystemOssStorageMapper extends BaseMapper<SystemOssStorageTb> {
+
+}

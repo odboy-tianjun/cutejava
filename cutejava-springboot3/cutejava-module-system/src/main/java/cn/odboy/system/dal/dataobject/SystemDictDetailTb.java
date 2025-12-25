@@ -29,10 +29,18 @@ import lombok.Setter;
 @Setter
 @TableName("system_dict_detail")
 public class SystemDictDetailTb extends KitBaseUserTimeTb {
-    @NotNull(groups = Update.class) @ApiModelProperty(value = "ID", hidden = true)
-    @TableId(value = "id", type = IdType.AUTO) private Long id;
-    @TableField(value = "dict_id") @ApiModelProperty(hidden = true) private Long dictId;
-    @ApiModelProperty(value = "字典标签") private String label;
-    @ApiModelProperty(value = "字典值") private String value;
-    @ApiModelProperty(value = "排序") private Integer dictSort = 999;
+
+  @NotNull(groups = Update.class)
+  @ApiModelProperty(value = "ID", hidden = true)
+  @TableId(value = "id", type = IdType.AUTO)
+  private Long id;
+  @TableField(value = "dict_id")
+  @ApiModelProperty(hidden = true)
+  private Long dictId;
+  @ApiModelProperty(value = "字典标签")
+  private String label;
+  @ApiModelProperty(value = "字典值")
+  private String value;
+  @ApiModelProperty(value = "排序")
+  private Integer dictSort = 999;
 }

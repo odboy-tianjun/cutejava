@@ -33,31 +33,32 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SystemLocalStorageMapper extends BaseMapper<SystemLocalStorageTb> {
-    default void injectQueryParams(SystemQueryStorageArgs criteria, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
-        if (criteria != null) {
-            wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-                c -> c.like(SystemLocalStorageTb::getName, criteria.getBlurry()).or()
-                    .like(SystemLocalStorageTb::getSuffix, criteria.getBlurry()).or()
-                    .like(SystemLocalStorageTb::getType, criteria.getBlurry()).or()
-                    .like(SystemLocalStorageTb::getCreateBy, criteria.getBlurry()));
-            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-                wrapper.between(SystemLocalStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
-                    criteria.getCreateTime().get(1));
-            }
-        }
-        wrapper.orderByDesc(SystemLocalStorageTb::getId);
-    }
 
-    default List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria) {
-        LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
-        injectQueryParams(criteria, wrapper);
-        return selectList(wrapper);
+  default void injectQueryParams(SystemQueryStorageArgs criteria, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
+    if (criteria != null) {
+      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
+          c -> c.like(SystemLocalStorageTb::getName, criteria.getBlurry()).or()
+              .like(SystemLocalStorageTb::getSuffix, criteria.getBlurry()).or()
+              .like(SystemLocalStorageTb::getType, criteria.getBlurry()).or()
+              .like(SystemLocalStorageTb::getCreateBy, criteria.getBlurry()));
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemLocalStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
     }
+    wrapper.orderByDesc(SystemLocalStorageTb::getId);
+  }
 
-    default IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria,
-        Page<SystemLocalStorageTb> page) {
-        LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
-        injectQueryParams(criteria, wrapper);
-        return selectPage(page, wrapper);
-    }
+  default List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria) {
+    LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(criteria, wrapper);
+    return selectList(wrapper);
+  }
+
+  default IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria,
+      Page<SystemLocalStorageTb> page) {
+    LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(criteria, wrapper);
+    return selectPage(page, wrapper);
+  }
 }

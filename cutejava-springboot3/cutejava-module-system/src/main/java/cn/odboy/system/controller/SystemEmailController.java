@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.service.SystemEmailService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -34,28 +33,30 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("api/email")
-@Tag(name = "工具：邮件管理")
+@Api(tags = "工具：邮件管理")
 public class SystemEmailController {
-    @Autowired private SystemEmailService systemEmailService;
 
-    @Operation(summary = "查询配置")
-    @PostMapping(value = "/getLastEmailConfig")
-    public ResponseEntity<SystemEmailConfigTb> getLastEmailConfig() {
-        return ResponseEntity.ok(systemEmailService.getLastEmailConfig());
-    }
+  @Autowired
+  private SystemEmailService systemEmailService;
 
-    @Operation(summary = "配置邮件")
-    @PostMapping(value = "/modifyEmailConfig")
-    public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
-        throws Exception {
-        systemEmailService.modifyEmailConfig(emailConfig);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("查询配置")
+  @PostMapping(value = "/getLastEmailConfig")
+  public ResponseEntity<SystemEmailConfigTb> getLastEmailConfig() {
+    return ResponseEntity.ok(systemEmailService.getLastEmailConfig());
+  }
 
-    @Operation(summary = "发送邮件")
-    @PostMapping(value = "/sendEmail")
-    public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
-        systemEmailService.sendEmail(sendEmailRequest);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("配置邮件")
+  @PostMapping(value = "/modifyEmailConfig")
+  public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
+      throws Exception {
+    systemEmailService.modifyEmailConfig(emailConfig);
+    return ResponseEntity.ok(null);
+  }
+
+  @ApiOperation("发送邮件")
+  @PostMapping(value = "/sendEmail")
+  public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
+    systemEmailService.sendEmail(sendEmailRequest);
+    return ResponseEntity.ok(null);
+  }
 }

@@ -23,7 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemProductLineTreeVo extends KitObject {
-    private String value;
-    private String label;
-    private List<SystemProductLineTreeVo> children;
+
+  private String value;
+  private String label;
+  private List<SystemProductLineTreeVo> children;
 }

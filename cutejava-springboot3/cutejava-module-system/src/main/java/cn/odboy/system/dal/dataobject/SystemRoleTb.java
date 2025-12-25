@@ -23,9 +23,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,28 +36,37 @@ import lombok.Setter;
 @Setter
 @TableName("system_role")
 public class SystemRoleTb extends KitBaseUserTimeTb {
-    @NotNull(groups = {Update.class}) @TableId(value = "role_id", type = IdType.AUTO)
-    @ApiModelProperty(value = "ID", hidden = true) private Long id;
-    @NotBlank @ApiModelProperty(value = "名称", hidden = true) private String name;
-    @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义") private String dataScope =
-        SystemDataScopeEnum.THIS_LEVEL.getValue();
-    @ApiModelProperty(value = "级别，数值越小，级别越大") private Integer level = 3;
-    @ApiModelProperty(value = "描述") @TableField(updateStrategy = FieldStrategy.ALWAYS) private String description;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        SystemRoleTb role = (SystemRoleTb)o;
-        return Objects.equals(id, role.id);
-    }
+  @NotNull(groups = {Update.class})
+  @TableId(value = "role_id", type = IdType.AUTO)
+  @ApiModelProperty(value = "ID", hidden = true)
+  private Long id;
+  @NotBlank
+  @ApiModelProperty(value = "名称", hidden = true)
+  private String name;
+  @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义")
+  private String dataScope =
+      SystemDataScopeEnum.THIS_LEVEL.getValue();
+  @ApiModelProperty(value = "级别，数值越小，级别越大")
+  private Integer level = 3;
+  @ApiModelProperty(value = "描述")
+  @TableField(updateStrategy = FieldStrategy.ALWAYS)
+  private String description;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SystemRoleTb role = (SystemRoleTb) o;
+    return Objects.equals(id, role.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

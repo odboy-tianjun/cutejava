@@ -25,4 +25,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author odboy
  */
 @Mapper
-public interface SystemQuartzJobMapper extends BaseMapper<SystemQuartzJobTb> {}
+public interface SystemQuartzJobMapper extends BaseMapper<SystemQuartzJobTb> {
+
+}

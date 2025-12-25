@@ -34,22 +34,28 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemRoleMapper extends BaseMapper<SystemRoleTb> {
-    default Long countRoleByArgs(SystemQueryRoleArgs criteria) {
-        LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-        if (criteria != null) {
-            wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-                c -> c.like(SystemRoleTb::getName, criteria.getBlurry()).or()
-                    .like(SystemRoleTb::getDescription, criteria.getBlurry()));
-            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-                wrapper.between(SystemRoleTb::getCreateTime, criteria.getCreateTime().get(0),
-                    criteria.getCreateTime().get(1));
-            }
-        }
-        return selectCount(wrapper);
+
+  default Long countRoleByArgs(SystemQueryRoleArgs criteria) {
+    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
+    if (criteria != null) {
+      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
+          c -> c.like(SystemRoleTb::getName, criteria.getBlurry()).or()
+              .like(SystemRoleTb::getDescription, criteria.getBlurry()));
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemRoleTb::getCreateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
     }
-    List<SystemRoleVo> selectRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
-    List<SystemRoleVo> selectRoleByUserId(@Param("userId") Long userId);
-    List<SystemRoleVo> selectRoleByMenuId(@Param("menuId") Long menuId);
-    SystemRoleVo getRoleById(@Param("roleId") Long roleId);
-    Integer countRoleByDeptIds(@Param("deptIds") Set<Long> deptIds);
+    return selectCount(wrapper);
+  }
+
+  List<SystemRoleVo> selectRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
+
+  List<SystemRoleVo> selectRoleByUserId(@Param("userId") Long userId);
+
+  List<SystemRoleVo> selectRoleByMenuId(@Param("menuId") Long menuId);
+
+  SystemRoleVo getRoleById(@Param("roleId") Long roleId);
+
+  Integer countRoleByDeptIds(@Param("deptIds") Set<Long> deptIds);
 }

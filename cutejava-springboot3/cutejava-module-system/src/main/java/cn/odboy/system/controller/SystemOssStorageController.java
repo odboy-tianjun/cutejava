@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
@@ -23,10 +22,10 @@ import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemOssStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,40 +41,42 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
-@Tag(name = "工具：OSS存储管理")
+@Api(tags = "工具：OSS存储管理")
 @RequestMapping("/api/ossStorage")
 public class SystemOssStorageController {
-    @Autowired private SystemOssStorageService systemOssStorageService;
 
-    @Operation(summary = "查询文件")
-    @PostMapping
-    @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
-        @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
-        SystemQueryStorageArgs criteria = args.getArgs();
-        Page<SystemOssStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return ResponseEntity.ok(systemOssStorageService.queryOssStorage(criteria, page));
-    }
+  @Autowired
+  private SystemOssStorageService systemOssStorageService;
 
-    @Operation(summary = "导出数据")
-    @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('storage:list')")
-    public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
-        systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(criteria), response);
-    }
+  @ApiOperation("查询文件")
+  @PostMapping
+  @PreAuthorize("@el.check('storage:list')")
+  public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
+      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
+    SystemQueryStorageArgs criteria = args.getArgs();
+    Page<SystemOssStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
+    return ResponseEntity.ok(systemOssStorageService.queryOssStorage(criteria, page));
+  }
 
-    @Operation(summary = "上传文件")
-    @PostMapping(value = "/uploadFile")
-    @PreAuthorize("@el.check('storage:add')")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        String fileUrl = systemOssStorageService.uploadFile(file);
-        return ResponseEntity.ok(fileUrl);
-    }
+  @ApiOperation("导出数据")
+  @GetMapping(value = "/download")
+  @PreAuthorize("@el.check('storage:list')")
+  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
+    systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(criteria), response);
+  }
 
-    @Operation(summary = "多选删除")
-    @PostMapping(value = "/removeFileByIds")
-    public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
-        systemOssStorageService.removeFileByIds(ids);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("上传文件")
+  @PostMapping(value = "/uploadFile")
+  @PreAuthorize("@el.check('storage:add')")
+  public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    String fileUrl = systemOssStorageService.uploadFile(file);
+    return ResponseEntity.ok(fileUrl);
+  }
+
+  @ApiOperation("多选删除")
+  @PostMapping(value = "/removeFileByIds")
+  public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
+    systemOssStorageService.removeFileByIds(ids);
+    return ResponseEntity.ok(null);
+  }
 }

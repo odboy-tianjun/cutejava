@@ -25,4 +25,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author odboy
  */
 @Mapper
-public interface SystemQuartzLogMapper extends BaseMapper<SystemQuartzLogTb> {}
+public interface SystemQuartzLogMapper extends BaseMapper<SystemQuartzLogTb> {
+
+}
