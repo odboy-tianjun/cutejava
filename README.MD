@@ -8,7 +8,7 @@
 
 #### 项目源码
 
-[https://github.com/odboy-tianjun/cutejava](https://github.com/odboy-tianjun/cutejava)
+[https://gitee.com/odboy-tianjun/cutejava](https://gitee.com/odboy-tianjun/cutejava)
 
 #### 项目文档
 
