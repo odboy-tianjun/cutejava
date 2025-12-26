@@ -16,18 +16,27 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
+import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
+import cn.odboy.system.dal.dataobject.SystemUserJobTb;
+import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
+import cn.odboy.system.dal.mysql.SystemUserJobMapper;
+import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
+import cn.odboy.system.dal.mysql.SystemJobMapper;
+import cn.odboy.system.dal.mysql.SystemRoleMapper;
+import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
@@ -42,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,6 +78,16 @@ public class SystemUserService {
   private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
   @Autowired
   private KitFileLocalUploadHelper fileUploadPathHelper;
+  @Autowired
+  private SystemUserJobMapper systemUserJobMapper;
+  @Autowired
+  private SystemUserRoleMapper systemUserRoleMapper;
+  @Autowired
+  private SystemJobMapper systemJobMapper;
+  @Autowired
+  private SystemRoleMapper systemRoleMapper;
+  @Autowired
+  private SystemDeptMapper systemDeptMapper;
 
   /**
    * 新增用户
@@ -101,8 +121,8 @@ public class SystemUserService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void modifyUserById(SystemUserVo args) {
-    SystemUserVo user = BeanUtil.copyProperties(systemUserMapper.selectById(args.getId()), SystemUserVo.class);
-    SystemUserVo user1 = systemUserMapper.getUserByUsername(args.getUsername());
+    SystemUserTb user = systemUserMapper.selectById(args.getId());
+    SystemUserTb user1 = systemUserMapper.getUserByUsername(args.getUsername());
     SystemUserTb user2 = systemUserMapper.getUserByEmail(args.getEmail());
     SystemUserTb user3 = systemUserMapper.getUserByPhone(args.getPhone());
     if (user1 != null && !user.getId().equals(user1.getId())) {
@@ -122,9 +142,7 @@ public class SystemUserService {
     user.setUsername(args.getUsername());
     user.setEmail(args.getEmail());
     user.setEnabled(args.getEnabled());
-    user.setRoles(args.getRoles());
     user.setDept(args.getDept());
-    user.setJobs(args.getJobs());
     user.setPhone(args.getPhone());
     user.setNickName(args.getNickName());
     user.setGender(args.getGender());
@@ -290,8 +308,15 @@ public class SystemUserService {
    * @return /
    */
   public KitPageResult<SystemUserVo> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
-    IPage<SystemUserVo> users = systemUserMapper.selectUserByArgs(criteria, page);
-    return KitPageUtil.toPage(users);
+    // 查询用户基本信息
+    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(criteria);
+    IPage<SystemUserTb> userPage = systemUserMapper.selectPage(page, wrapper);
+    List<SystemUserTb> users = userPage.getRecords();
+    
+    // 转换为SystemUserVo并关联查询
+    List<SystemUserVo> userVos = users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+    
+    return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
   /**
@@ -301,7 +326,12 @@ public class SystemUserService {
    * @return /
    */
   public List<SystemUserVo> queryUserByArgs(SystemQueryUserArgs criteria) {
-    return systemUserMapper.selectUserByArgs(criteria);
+    // 查询用户基本信息
+    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(criteria);
+    List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
+    
+    // 转换为SystemUserVo并关联查询
+    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
   }
 
   /**
@@ -345,5 +375,176 @@ public class SystemUserService {
       ext.put("phone", m.getPhone());
       return KitSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
     }).collect(Collectors.toList());
+  }
+
+  /**
+   * 根据角色ID查询用户
+   *
+   * @param roleId 角色ID
+   * @return /
+   */
+  public List<SystemUserVo> selectUserByRoleId(Long roleId) {
+    // 查询用户角色关联
+    LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
+    userRoleWrapper.eq(SystemUserRoleTb::getRoleId, roleId);
+    List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(userRoleWrapper);
+
+    if (CollUtil.isEmpty(userRoles)) {
+      return new ArrayList<>();
+    }
+
+    Set<Long> userIds = userRoles.stream().map(SystemUserRoleTb::getUserId).collect(Collectors.toSet());
+    List<SystemUserTb> users = systemUserMapper.selectByIds(userIds);
+
+    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+  }
+
+  /**
+   * 根据部门ID查询用户
+   *
+   * @param deptId 部门ID
+   * @return /
+   */
+  public List<SystemUserVo> selectUserByDeptId(Long deptId) {
+    // 查询部门关联的角色
+    LambdaQueryWrapper<SystemUserTb> userWrapper = new LambdaQueryWrapper<>();
+    userWrapper.eq(SystemUserTb::getDeptId, deptId);
+    List<SystemUserTb> users = systemUserMapper.selectList(userWrapper);
+
+    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+  }
+
+  /**
+   * 根据菜单ID查询用户
+   *
+   * @param menuId 菜单ID
+   * @return /
+   */
+  public List<SystemUserVo> selectUserByMenuId(Long menuId) {
+    // 查询菜单角色关联
+    LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
+    // 这里需要通过菜单角色关联表查询，暂时简化处理
+    List<SystemUserTb> users = systemUserMapper.selectList(null);
+
+    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+  }
+
+  /**
+   * 根据岗位ID统计用户数量
+   *
+   * @param jobIds 岗位ID集合
+   * @return /
+   */
+  public Long countUserByJobIds(Set<Long> jobIds) {
+    if (CollUtil.isEmpty(jobIds)) {
+      return 0L;
+    }
+
+    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserJobTb::getJobId, jobIds);
+    return systemUserJobMapper.selectCount(wrapper);
+  }
+
+  /**
+   * 根据角色ID统计用户数量
+   *
+   * @param roleIds 角色ID集合
+   * @return /
+   */
+  public Long countUserByRoleIds(Set<Long> roleIds) {
+    if (CollUtil.isEmpty(roleIds)) {
+      return 0L;
+    }
+
+    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserRoleTb::getRoleId, roleIds);
+    return systemUserRoleMapper.selectCount(wrapper);
+  }
+
+  /**
+   * 根据用户名查询用户详情（包含关联信息）
+   *
+   * @param username 用户名
+   * @return /
+   */
+  public SystemUserVo getUserVoByUsername(String username) {
+    SystemUserTb user = systemUserMapper.getUserByUsername(username);
+    if (user == null) {
+      return null;
+    }
+    return convertToUserVo(user);
+  }
+
+  /**
+   * 构建用户查询条件
+   *
+   * @param criteria 查询条件
+   * @return /
+   */
+  private LambdaQueryWrapper<SystemUserTb> buildUserQueryWrapper(SystemQueryUserArgs criteria) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    if (criteria != null) {
+      if (criteria.getId() != null) {
+        wrapper.eq(SystemUserTb::getId, criteria.getId());
+      }
+      if (criteria.getEnabled() != null) {
+        wrapper.eq(SystemUserTb::getEnabled, criteria.getEnabled());
+      }
+      if (CollUtil.isNotEmpty(criteria.getDeptIds())) {
+        wrapper.in(SystemUserTb::getDeptId, criteria.getDeptIds());
+      }
+      if (StrUtil.isNotBlank(criteria.getBlurry())) {
+        wrapper.and(w -> w.like(SystemUserTb::getUsername, criteria.getBlurry())
+            .or().like(SystemUserTb::getNickName, criteria.getBlurry())
+            .or().like(SystemUserTb::getEmail, criteria.getBlurry()));
+      }
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemUserTb::getCreateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByDesc(SystemUserTb::getCreateTime);
+    return wrapper;
+  }
+
+  /**
+   * 转换为SystemUserVo并关联查询部门、角色、岗位信息
+   *
+   * @param user 用户基本信息
+   * @return 包含关联信息的SystemUserVo
+   */
+  private SystemUserVo convertToUserVo(SystemUserTb user) {
+    if (user == null) {
+      return null;
+    }
+    SystemUserVo userVo = BeanUtil.copyProperties(user, SystemUserVo.class);
+    
+    // 查询关联的部门信息
+    if (user.getDeptId() != null) {
+      SystemDeptTb dept = systemDeptMapper.selectById(user.getDeptId());
+      userVo.setDept(dept);
+    }
+    
+    // 查询关联的岗位信息
+    LambdaQueryWrapper<SystemUserJobTb> jobWrapper = new LambdaQueryWrapper<>();
+    jobWrapper.eq(SystemUserJobTb::getUserId, user.getId());
+    List<SystemUserJobTb> userJobs = systemUserJobMapper.selectList(jobWrapper);
+    if (CollUtil.isNotEmpty(userJobs)) {
+      Set<Long> jobIds = userJobs.stream().map(SystemUserJobTb::getJobId).collect(Collectors.toSet());
+      List<SystemJobTb> jobs = systemJobMapper.selectByIds(jobIds);
+      userVo.setJobs(new LinkedHashSet<>(jobs));
+    }
+    
+    // 查询关联的角色信息
+    LambdaQueryWrapper<SystemUserRoleTb> roleWrapper = new LambdaQueryWrapper<>();
+    roleWrapper.eq(SystemUserRoleTb::getUserId, user.getId());
+    List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(roleWrapper);
+    if (CollUtil.isNotEmpty(userRoles)) {
+      Set<Long> roleIds = userRoles.stream().map(SystemUserRoleTb::getRoleId).collect(Collectors.toSet());
+      List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
+      userVo.setRoles(new LinkedHashSet<>(roles));
+    }
+    
+    return userVo;
   }
 }

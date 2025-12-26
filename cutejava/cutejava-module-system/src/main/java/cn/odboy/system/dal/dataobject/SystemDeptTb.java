@@ -16,7 +16,6 @@
 package cn.odboy.system.dal.dataobject;
 
 import cn.odboy.base.KitBaseUserTimeTb;
-import cn.odboy.system.dal.model.SystemRoleVo;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -43,7 +42,7 @@ public class SystemDeptTb extends KitBaseUserTimeTb {
   @TableField(exist = false)
   @JSONField(serialize = false)
   @ApiModelProperty(value = "角色")
-  private Set<SystemRoleVo> roles;
+  private Set<SystemRoleTb> roles;
   @TableField(exist = false)
   @ApiModelProperty(value = "子部门")
   private List<SystemDeptTb> children;

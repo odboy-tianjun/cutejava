@@ -40,10 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDictService {
-
   @Autowired
   private SystemDictMapper systemDictMapper;
-  // @Autowired private SystemDictDetailMapper systemDictDetailMapper;
   @Autowired
   private SystemDictDetailService systemDictDetailService;
 

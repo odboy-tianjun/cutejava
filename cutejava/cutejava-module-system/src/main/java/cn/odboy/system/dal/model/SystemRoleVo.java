@@ -14,7 +14,7 @@ import lombok.Setter;
 public class SystemRoleVo extends SystemRoleTb {
 
   @ApiModelProperty(value = "用户", hidden = true)
-  private Set<SystemUserVo> users;
+  private Set<SystemUserTb> users;
   @ApiModelProperty(value = "菜单", hidden = true)
   private Set<SystemMenuTb> menus;
   @ApiModelProperty(value = "部门", hidden = true)
