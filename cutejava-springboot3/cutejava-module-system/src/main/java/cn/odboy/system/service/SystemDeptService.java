@@ -60,7 +60,7 @@ public class SystemDeptService {
   @Autowired
   private SystemUserMapper systemUserMapper;
   @Autowired
-  private SystemRoleMapper systemRoleMapper;
+  private SystemRoleService systemRoleService;
 
   /**
    * 创建
@@ -320,7 +320,7 @@ public class SystemDeptService {
     if (systemUserMapper.countUserByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
     }
-    if (systemRoleMapper.countRoleByDeptIds(deptIds) > 0) {
+    if (systemRoleService.countRoleByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
     }
   }

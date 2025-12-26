@@ -3,9 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <style>
-      @page {
-          margin: 0;
-      }
+    @page {
+      margin: 0;
+    }
   </style>
 </head>
 <body style="margin: 0px;
@@ -64,7 +64,6 @@
                                               href="https://github.com/odboy-tianjun/cutejava" target="_blank">CuteJava</a>
     后台管理系统 All Rights Reserved.
   </div>
-
 </div>
 </body>
 </html>
