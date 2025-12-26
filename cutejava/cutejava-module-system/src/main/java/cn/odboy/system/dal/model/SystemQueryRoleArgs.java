@@ -31,6 +31,4 @@ public class SystemQueryRoleArgs {
   private Integer page = 1;
   @ApiModelProperty(value = "每页数据量", example = "10")
   private Integer size = 10;
-  @ApiModelProperty(value = "偏移量", hidden = true)
-  private long offset;
 }
