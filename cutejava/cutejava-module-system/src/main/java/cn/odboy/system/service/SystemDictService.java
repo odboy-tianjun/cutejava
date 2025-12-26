@@ -17,6 +17,7 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
@@ -26,6 +27,7 @@ import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDictService {
+
   @Autowired
   private SystemDictMapper systemDictMapper;
   @Autowired
@@ -123,7 +126,7 @@ public class SystemDictService {
    * @return /
    */
   public KitPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-    return KitPageUtil.toPage(systemDictMapper.selectDictByArgs(args, page));
+    return KitPageUtil.toPage(this.selectDictByArgs(args, page));
   }
 
   /**
@@ -133,10 +136,39 @@ public class SystemDictService {
    * @return /
    */
   public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
-    return systemDictMapper.selectDictByArgs(args);
+    return this.selectDictByArgs(args);
   }
 
   public SystemDictTb getById(int id) {
     return systemDictMapper.selectById(id);
+  }
+
+  private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+          .like(SystemDictTb::getDescription, args.getBlurry()));
+    }
+  }
+
+  private List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(args, wrapper);
+    return systemDictMapper.selectList(wrapper);
+  }
+
+  private List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(args, wrapper);
+    return systemDictMapper.selectList(page, wrapper);
+  }
+
+  public SystemDictTb getByName(String name) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDictTb::getName, name);
+    return systemDictMapper.selectOne(wrapper);
+  }
+
+  public List<SystemDictTb> selectList(LambdaQueryWrapper<SystemDictTb> wrapper) {
+    return systemDictMapper.selectList(wrapper);
   }
 }

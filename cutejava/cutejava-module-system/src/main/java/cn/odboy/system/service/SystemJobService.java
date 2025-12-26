@@ -16,6 +16,8 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
@@ -25,6 +27,8 @@ import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +56,7 @@ public class SystemJobService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveJob(SystemCreateJobArgs args) {
-    SystemJobTb job = systemJobMapper.getJobByName(args.getName());
+    SystemJobTb job = this.getJobByName(args.getName());
     if (job != null) {
       throw new BadRequestException("职位名称已存在");
     }
@@ -67,7 +71,7 @@ public class SystemJobService {
   @Transactional(rollbackFor = Exception.class)
   public void modifyJobById(SystemJobTb args) {
     SystemJobTb job = systemJobMapper.selectById(args.getId());
-    SystemJobTb old = systemJobMapper.getJobByName(args.getName());
+    SystemJobTb old = this.getJobByName(args.getName());
     if (old != null && !old.getId().equals(args.getId())) {
       throw new BadRequestException("职位名称已存在");
     }
@@ -112,7 +116,7 @@ public class SystemJobService {
    * @return
    */
   public KitPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
-    return KitPageUtil.toPage(systemJobMapper.selectJobByArgs(args, page));
+    return KitPageUtil.toPage(this.selectJobByArgs(args, page));
   }
 
   /**
@@ -122,7 +126,7 @@ public class SystemJobService {
    * @return /
    */
   public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
-    return systemJobMapper.selectJobByArgs(args);
+    return this.selectJobByArgs(args);
   }
 
   /**
@@ -134,5 +138,36 @@ public class SystemJobService {
     if (systemUserMapper.countUserByJobIds(ids) > 0) {
       throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
     }
+  }
+
+
+  public SystemJobTb getJobByName(String name) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemJobTb::getName, name);
+    return systemJobMapper.selectOne(wrapper);
+  }
+
+  public void injectQueryParams(SystemQueryJobArgs criteria, LambdaQueryWrapper<SystemJobTb> wrapper) {
+    if (criteria != null) {
+      wrapper.like(StrUtil.isNotBlank(criteria.getName()), SystemJobTb::getName, criteria.getName());
+      wrapper.eq(criteria.getEnabled() != null, SystemJobTb::getEnabled, criteria.getEnabled());
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemJobTb::getCreateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
+  }
+
+  public IPage<SystemJobTb> selectJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(criteria, wrapper);
+    return systemJobMapper.selectPage(page, wrapper);
+  }
+
+  public List<SystemJobTb> selectJobByArgs(SystemQueryJobArgs criteria) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(criteria, wrapper);
+    return systemJobMapper.selectList(wrapper);
   }
 }

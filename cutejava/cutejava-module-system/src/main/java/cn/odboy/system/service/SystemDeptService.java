@@ -29,11 +29,11 @@ import cn.odboy.system.dal.model.SystemProductLineTreeVo;
 import cn.odboy.system.dal.model.SystemProductLineVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
-import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitFileUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -133,9 +133,15 @@ public class SystemDeptService {
   @Transactional(rollbackFor = Exception.class)
   public void updateDeptSubCnt(Long deptId) {
     if (deptId != null) {
-      long count = systemDeptMapper.countDeptByPid(deptId);
+      long count = this.countDeptByPid(deptId);
       systemDeptMapper.updateDeptSubCountById(count, deptId);
     }
+  }
+
+  public long countDeptByPid(Long pid) {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDeptTb::getPid, pid);
+    return systemDeptMapper.selectCount(wrapper);
   }
 
   /**
@@ -152,6 +158,23 @@ public class SystemDeptService {
       }
     }
     return deptList;
+  }
+
+  public List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs criteria) {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    if (criteria != null) {
+      wrapper.in(CollUtil.isNotEmpty(criteria.getIds()), SystemDeptTb::getId, criteria.getIds());
+      wrapper.like(StrUtil.isNotBlank(criteria.getName()), SystemDeptTb::getName, criteria.getName());
+      wrapper.eq(criteria.getEnabled() != null, SystemDeptTb::getEnabled, criteria.getEnabled());
+      wrapper.eq(criteria.getPid() != null, SystemDeptTb::getPid, criteria.getPid());
+      wrapper.isNull(criteria.getPidIsNull() != null, SystemDeptTb::getPid);
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemDeptTb::getCreateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByAsc(SystemDeptTb::getDeptSort);
+    return systemDeptMapper.selectList(wrapper);
   }
 
   /**
@@ -188,7 +211,7 @@ public class SystemDeptService {
     }
     // 数据权限
     criteria.setIds(KitSecurityHelper.getCurrentUserDataScope());
-    List<SystemDeptTb> list = systemDeptMapper.queryDeptByArgs(criteria);
+    List<SystemDeptTb> list = this.queryDeptByArgs(criteria);
     // 如果为空, 就代表为自定义权限或者本级权限, 就需要去重, 不理解可以注释掉，看查询结果
     if (StrUtil.isBlank(dataScopeType)) {
       return this.deduplication(list);
@@ -213,7 +236,7 @@ public class SystemDeptService {
    * @return /
    */
   public List<SystemDeptTb> queryDeptByPid(long pid) {
-    return systemDeptMapper.selectDeptByPid(pid);
+    return this.selectDeptByPid(pid);
   }
 
   /**
@@ -226,7 +249,7 @@ public class SystemDeptService {
   public Set<SystemDeptTb> queryRelationDeptSet(List<SystemDeptTb> deptTbList, Set<SystemDeptTb> depts) {
     for (SystemDeptTb dept : deptTbList) {
       depts.add(dept);
-      List<SystemDeptTb> deptList = systemDeptMapper.selectDeptByPid(dept.getId());
+      List<SystemDeptTb> deptList = this.selectDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptList)) {
         queryRelationDeptSet(deptList, depts);
       }
@@ -244,7 +267,7 @@ public class SystemDeptService {
     List<Long> list = new ArrayList<>();
     for (SystemDeptTb systemDeptTb : deptList) {
       if (systemDeptTb != null && systemDeptTb.getEnabled()) {
-        List<SystemDeptTb> deptList1 = systemDeptMapper.selectDeptByPid(systemDeptTb.getId());
+        List<SystemDeptTb> deptList1 = this.selectDeptByPid(systemDeptTb.getId());
         if (CollUtil.isNotEmpty(deptList1)) {
           list.addAll(queryChildDeptIdListByDeptIds(deptList1));
         }
@@ -263,11 +286,17 @@ public class SystemDeptService {
    */
   public List<SystemDeptTb> querySuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
     if (dept.getPid() == null) {
-      deptList.addAll(systemDeptMapper.selectDeptByPidIsNull());
+      deptList.addAll(this.selectDeptByPidIsNull());
       return deptList;
     }
-    deptList.addAll(systemDeptMapper.selectDeptByPid(dept.getPid()));
+    deptList.addAll(this.selectDeptByPid(dept.getPid()));
     return querySuperiorDeptListByPid(this.getDeptById(dept.getPid()), deptList);
+  }
+
+  public List<SystemDeptTb> selectDeptByPidIsNull() {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.isNull(SystemDeptTb::getPid);
+    return systemDeptMapper.selectList(wrapper);
   }
 
   /**
@@ -325,6 +354,12 @@ public class SystemDeptService {
     }
   }
 
+  public List<SystemDeptTb> selectEnabledDepts() {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDeptTb::getEnabled, 1);
+    return systemDeptMapper.selectList(wrapper);
+  }
+
   /**
    * 遍历所有部门和子部门
    *
@@ -345,7 +380,7 @@ public class SystemDeptService {
   }
 
   public List<SystemProductLineVo> queryDeptSelectDataSource() {
-    List<SystemDeptTb> depts = systemDeptMapper.selectEnabledDepts();
+    List<SystemDeptTb> depts = this.selectEnabledDepts();
     return buildDeptSelectOptions(depts);
   }
 
@@ -394,7 +429,7 @@ public class SystemDeptService {
   }
 
   public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
-    List<SystemDeptTb> depts = systemDeptMapper.selectEnabledDepts();
+    List<SystemDeptTb> depts = this.selectEnabledDepts();
     // 获取所有部门并按父子关系组织
     Map<Long, SystemDeptTb> deptMap =
         depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
@@ -441,4 +476,11 @@ public class SystemDeptService {
     vo.setChildren(children);
     return vo;
   }
+
+  public List<SystemDeptTb> selectDeptByPid(long pid) {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDeptTb::getPid, pid);
+    return systemDeptMapper.selectList(wrapper);
+  }
+
 }

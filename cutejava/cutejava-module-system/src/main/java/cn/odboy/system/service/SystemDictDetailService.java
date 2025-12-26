@@ -25,7 +25,6 @@ import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
-import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -45,7 +44,7 @@ public class SystemDictDetailService {
   @Autowired
   private SystemDictDetailMapper systemDictDetailMapper;
   @Autowired
-  private SystemDictMapper systemDictMapper;
+  private SystemDictService systemDictService;
 
   /**
    * 创建
@@ -90,6 +89,18 @@ public class SystemDictDetailService {
     }
   }
 
+  private List<SystemDictDetailTb> selectByDictId(Long dictId) {
+    LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDictDetailTb::getDictId, dictId);
+    return systemDictDetailMapper.selectList(wrapper);
+  }
+
+  private IPage<SystemDictDetailTb> selectDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
+    LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(CollUtil.isNotEmpty(dictIds), SystemDictDetailTb::getDictId, dictIds);
+    return systemDictDetailMapper.selectPage(page, wrapper);
+  }
+
   /**
    * 分页查询
    *
@@ -104,14 +115,14 @@ public class SystemDictDetailService {
     List<SystemDictTb> dictTbs = new ArrayList<>();
 
     if (args == null) {
-      dictTbs.addAll(systemDictMapper.selectList(null));
+      dictTbs.addAll(systemDictService.selectList(null));
       dictIds = dictTbs.stream().map(SystemDictTb::getId).collect(Collectors.toList());
     } else {
       String dictName = args.getDictName();
       if (StrUtil.isBlank(dictName)) {
         return KitPageUtil.toPage(iPage);
       }
-      SystemDictTb dictTb = systemDictMapper.getByName(dictName);
+      SystemDictTb dictTb = systemDictService.getByName(dictName);
       if (dictTb == null) {
         return KitPageUtil.toPage(iPage);
       } else {
@@ -121,7 +132,7 @@ public class SystemDictDetailService {
     }
 
     Map<Long, SystemDictTb> id2ItemMap = dictTbs.stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
-    iPage = systemDictDetailMapper.selectDictDetailByArgs(dictIds, page)
+    iPage = this.selectDictDetailByArgs(dictIds, page)
         .convert(i -> BeanUtil.copyProperties(i, SystemDictDetailVo.class));
     for (SystemDictDetailVo record : iPage.getRecords()) {
       record.setDict(id2ItemMap.get(record.getDictId()));
@@ -139,11 +150,11 @@ public class SystemDictDetailService {
     if (StrUtil.isBlank(name)) {
       return new ArrayList<>();
     }
-    SystemDictTb systemDictTb = systemDictMapper.getByName(name);
+    SystemDictTb systemDictTb = systemDictService.getByName(name);
     if (systemDictTb == null) {
       return new ArrayList<>();
     }
-    return systemDictDetailMapper.selectByDictId(systemDictTb.getId()).stream().map(m -> {
+    return this.selectByDictId(systemDictTb.getId()).stream().map(m -> {
       SystemDictDetailVo detailVo = BeanUtil.copyProperties(m, SystemDictDetailVo.class);
       detailVo.setDict(systemDictTb);
       return detailVo;

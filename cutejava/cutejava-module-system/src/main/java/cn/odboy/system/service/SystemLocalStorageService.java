@@ -15,6 +15,7 @@
  */
 package cn.odboy.system.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -28,6 +29,8 @@ import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.File;
 import java.io.IOException;
@@ -152,7 +155,7 @@ public class SystemLocalStorageService {
    */
   public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria,
       Page<SystemLocalStorageTb> page) {
-    return KitPageUtil.toPage(systemLocalStorageMapper.selectLocalStorageByArgs(criteria, page));
+    return KitPageUtil.toPage(this.selectLocalStorageByArgs(criteria, page));
   }
 
   /**
@@ -162,6 +165,34 @@ public class SystemLocalStorageService {
    * @return /
    */
   public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
-    return systemLocalStorageMapper.selectLocalStorageByArgs(criteria);
+    return this.selectLocalStorageByArgs(criteria);
+  }
+
+  public void injectQueryParams(SystemQueryStorageArgs criteria, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
+    if (criteria != null) {
+      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
+          c -> c.like(SystemLocalStorageTb::getName, criteria.getBlurry()).or()
+              .like(SystemLocalStorageTb::getSuffix, criteria.getBlurry()).or()
+              .like(SystemLocalStorageTb::getType, criteria.getBlurry()).or()
+              .like(SystemLocalStorageTb::getCreateBy, criteria.getBlurry()));
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemLocalStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByDesc(SystemLocalStorageTb::getId);
+  }
+
+  public List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria) {
+    LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(criteria, wrapper);
+    return systemLocalStorageMapper.selectList(wrapper);
+  }
+
+  public IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria,
+      Page<SystemLocalStorageTb> page) {
+    LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(criteria, wrapper);
+    return systemLocalStorageMapper.selectPage(page, wrapper);
   }
 }
