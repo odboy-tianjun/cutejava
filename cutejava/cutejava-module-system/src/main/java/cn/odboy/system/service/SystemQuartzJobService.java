@@ -78,7 +78,7 @@ public class SystemQuartzJobService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyQuartzJobResumeCron(SystemUpdateQuartzJobArgs args) {
+  public void updateQuartzJobResumeCron(SystemUpdateQuartzJobArgs args) {
     if (!CronExpression.isValidExpression(args.getCronExpression())) {
       throw new BadRequestException("cron表达式格式错误");
     }

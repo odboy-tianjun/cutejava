@@ -104,7 +104,7 @@ public class SystemQuartzJobController {
       @Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {
     // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
     checkBean(args.getBeanName());
-    systemQuartzJobService.modifyQuartzJobResumeCron(args);
+    systemQuartzJobService.updateQuartzJobResumeCron(args);
     return ResponseEntity.ok(null);
   }
 

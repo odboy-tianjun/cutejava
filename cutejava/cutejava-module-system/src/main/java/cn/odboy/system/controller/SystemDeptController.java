@@ -24,11 +24,8 @@ import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +50,7 @@ public class SystemDeptController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('dept:list')")
   public void exportDept(HttpServletResponse response, SystemQueryDeptArgs criteria) throws Exception {
-    systemDeptService.exportDeptExcel(systemDeptService.queryAllDept(criteria, false), response);
+    systemDeptService.exportDeptExcel(systemDeptService.queryAllDeptByArgs(criteria, false), response);
   }
 
   @ApiOperation("查询部门")
@@ -62,7 +59,7 @@ public class SystemDeptController {
   public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
       @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> args) throws Exception {
     SystemQueryDeptArgs criteria = args.getArgs();
-    List<SystemDeptTb> depts = systemDeptService.queryAllDept(criteria, true);
+    List<SystemDeptTb> depts = systemDeptService.queryAllDeptByArgs(criteria, true);
     return ResponseEntity.ok(KitPageUtil.toPage(depts));
   }
 
@@ -71,24 +68,7 @@ public class SystemDeptController {
   @PreAuthorize("@el.check('user:list','dept:list')")
   public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
       @RequestParam(defaultValue = "false") Boolean exclude) {
-    Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
-    for (Long id : ids) {
-      // 同级数据
-      SystemDeptTb dept = systemDeptService.getDeptById(id);
-      // 上级数据
-      List<SystemDeptTb> depts = systemDeptService.querySuperiorDeptListByPid(dept, new ArrayList<>());
-      if (exclude) {
-        for (SystemDeptTb data : depts) {
-          if (data.getId().equals(dept.getPid())) {
-            data.setSubCount(data.getSubCount() - 1);
-          }
-        }
-        // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
-        depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
-      }
-      deptSet.addAll(depts);
-    }
-    return ResponseEntity.ok(systemDeptService.buildDeptTree(new ArrayList<>(deptSet)));
+    return ResponseEntity.ok(systemDeptService.searchDeptTree(ids, exclude));
   }
 
   @ApiOperation("新增部门")
@@ -115,7 +95,7 @@ public class SystemDeptController {
     Set<SystemDeptTb> depts = systemDeptService.traverseDeptByIdWithPids(ids);
     // 验证是否被角色或用户关联
     systemDeptService.verifyBindRelationByIds(depts);
-    systemDeptService.removeDeptByIds(depts);
+    systemDeptService.deleteDeptByIds(depts);
     return ResponseEntity.ok(null);
   }
 }

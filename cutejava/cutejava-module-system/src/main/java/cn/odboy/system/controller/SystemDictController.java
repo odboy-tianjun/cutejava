@@ -72,7 +72,7 @@ public class SystemDictController {
     } else {
       page = new Page<>(criteria.getPage(), criteria.getSize());
     }
-    return ResponseEntity.ok(systemDictService.queryDictByArgs(criteria, page));
+    return ResponseEntity.ok(systemDictService.searchDict(criteria, page));
   }
 
   @ApiOperation("新增字典")
@@ -87,7 +87,7 @@ public class SystemDictController {
   @PostMapping(value = "/modifyDictById")
   @PreAuthorize("@el.check('dict:edit')")
   public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
-    systemDictService.modifyDictById(args);
+    systemDictService.updateDictById(args);
     return ResponseEntity.ok(null);
   }
 
@@ -95,7 +95,7 @@ public class SystemDictController {
   @PostMapping(value = "/removeDictByIds")
   @PreAuthorize("@el.check('dict:del')")
   public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {
-    systemDictService.removeDictByIds(ids);
+    systemDictService.deleteDictByIds(ids);
     return ResponseEntity.ok(null);
   }
 }

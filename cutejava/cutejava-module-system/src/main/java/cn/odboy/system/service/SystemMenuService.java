@@ -34,6 +34,7 @@ import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -71,11 +72,11 @@ public class SystemMenuService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveMenu(SystemMenuTb args) {
-    if (systemMenuMapper.getMenuByTitle(args.getTitle()) != null) {
+    if (this.getMenuByTitle(args.getTitle()) != null) {
       throw new BadRequestException("菜单标题已存在");
     }
     if (StrUtil.isNotBlank(args.getComponentName())) {
-      if (systemMenuMapper.getMenuByComponentName(args.getComponentName()) != null) {
+      if (this.getMenuByComponentName(args.getComponentName()) != null) {
         throw new BadRequestException("菜单组件名称已存在");
       }
     }
@@ -101,7 +102,7 @@ public class SystemMenuService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyMenuById(SystemMenuTb args) {
+  public void updateMenuById(SystemMenuTb args) {
     if (args.getId().equals(args.getPid())) {
       throw new BadRequestException("上级不能为自己");
     }
@@ -112,7 +113,7 @@ public class SystemMenuService {
         throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
       }
     }
-    SystemMenuTb menu1 = systemMenuMapper.getMenuByTitle(args.getTitle());
+    SystemMenuTb menu1 = this.getMenuByTitle(args.getTitle());
     if (menu1 != null && !menu1.getId().equals(menu.getId())) {
       throw new BadRequestException("菜单标题已存在");
     }
@@ -123,7 +124,7 @@ public class SystemMenuService {
     Long oldPid = menu.getPid();
     Long newPid = args.getPid();
     if (StrUtil.isNotBlank(args.getComponentName())) {
-      menu1 = systemMenuMapper.getMenuByComponentName(args.getComponentName());
+      menu1 = this.getMenuByComponentName(args.getComponentName());
       if (menu1 != null && !menu1.getId().equals(menu.getId())) {
         throw new BadRequestException("菜单组件名称已存在");
       }
@@ -206,8 +207,11 @@ public class SystemMenuService {
   @Transactional(rollbackFor = Exception.class)
   public void updateMenuSubCnt(Long menuId) {
     if (menuId != null) {
-      long count = systemMenuMapper.countMenuByPid(menuId);
-      systemMenuMapper.updateMenuSubCntByMenuId(count, menuId);
+      long count = this.countMenuByPid(menuId);
+      LambdaUpdateWrapper<SystemMenuTb> wrapper = new LambdaUpdateWrapper<>();
+      wrapper.eq(SystemMenuTb::getId, menuId);
+      wrapper.set(SystemMenuTb::getSubCount, count);
+      systemMenuMapper.update(wrapper);
     }
   }
 
@@ -237,7 +241,7 @@ public class SystemMenuService {
         }
       }
     }
-    return systemMenuMapper.selectMenuByArgs(criteria);
+    return this.queryMenuByArgs(criteria);
   }
 
   /**
@@ -262,7 +266,7 @@ public class SystemMenuService {
   public Set<SystemMenuTb> queryChildMenu(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
     for (SystemMenuTb menu : menuList) {
       menuSet.add(menu);
-      List<SystemMenuTb> menus = systemMenuMapper.selectMenuByPid(menu.getId());
+      List<SystemMenuTb> menus = this.getMenuByPid(menu.getId());
       if (CollUtil.isNotEmpty(menus)) {
         queryChildMenu(menus, menuSet);
       }
@@ -279,9 +283,9 @@ public class SystemMenuService {
   public List<SystemMenuTb> queryMenuByPid(Long pid) {
     List<SystemMenuTb> menus;
     if (pid != null && !pid.equals(0L)) {
-      menus = systemMenuMapper.selectMenuByPid(pid);
+      menus = this.getMenuByPid(pid);
     } else {
-      menus = systemMenuMapper.selectMenuByPidIsNull();
+      menus = this.listRootMenu();
     }
     return menus;
   }
@@ -295,10 +299,10 @@ public class SystemMenuService {
    */
   public List<SystemMenuTb> querySuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> menus) {
     if (menu.getPid() == null) {
-      menus.addAll(systemMenuMapper.selectMenuByPidIsNull());
+      menus.addAll(this.listRootMenu());
       return menus;
     }
-    menus.addAll(systemMenuMapper.selectMenuByPid(menu.getPid()));
+    menus.addAll(this.getMenuByPid(menu.getPid()));
     return querySuperiorMenuList(systemMenuMapper.selectById(menu.getPid()), menus);
   }
 
@@ -401,7 +405,57 @@ public class SystemMenuService {
     return menuVo1;
   }
 
-  public List<SystemMenuTb> queryMenuByIds(List<Long> ids) {
+  public List<SystemMenuTb> listMenuByIds(List<Long> ids) {
     return systemMenuMapper.selectByIds(ids);
+  }
+
+  private SystemMenuTb getMenuByComponentName(String componentName) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getComponentName, componentName);
+    return systemMenuMapper.selectOne(wrapper);
+  }
+
+  private SystemMenuTb getMenuByTitle(String title) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getTitle, title);
+    return systemMenuMapper.selectOne(wrapper);
+  }
+
+  private Long countMenuByPid(Long pid) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getPid, pid);
+    return systemMenuMapper.selectCount(wrapper);
+  }
+
+  private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs criteria) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    if (criteria != null) {
+      wrapper.isNull(criteria.getPidIsNull() != null, SystemMenuTb::getPid);
+      wrapper.eq(criteria.getPid() != null, SystemMenuTb::getPid, criteria.getPid());
+      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
+          c -> c.like(SystemMenuTb::getTitle, criteria.getBlurry()).or()
+              .like(SystemMenuTb::getComponentName, criteria.getBlurry()).or()
+              .like(SystemMenuTb::getPermission, criteria.getBlurry()));
+      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
+        wrapper.between(SystemMenuTb::getCreateTime, criteria.getCreateTime().get(0),
+            criteria.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
+    return systemMenuMapper.selectList(wrapper);
+  }
+
+  private List<SystemMenuTb> getMenuByPid(Long pid) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getPid, pid);
+    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
+    return systemMenuMapper.selectList(wrapper);
+  }
+
+  private List<SystemMenuTb> listRootMenu() {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.isNull(SystemMenuTb::getPid);
+    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
+    return systemMenuMapper.selectList(wrapper);
   }
 }

@@ -47,7 +47,7 @@ public class SystemJobService {
   @Autowired
   private SystemJobMapper systemJobMapper;
   @Autowired
-  private SystemUserMapper systemUserMapper;
+  private SystemUserService systemUserService;
 
   /**
    * 创建
@@ -69,7 +69,7 @@ public class SystemJobService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyJobById(SystemJobTb args) {
+  public void updateJobById(SystemJobTb args) {
     SystemJobTb job = systemJobMapper.selectById(args.getId());
     SystemJobTb old = this.getJobByName(args.getName());
     if (old != null && !old.getId().equals(args.getId())) {
@@ -135,7 +135,7 @@ public class SystemJobService {
    * @param ids /
    */
   public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserMapper.countUserByJobIds(ids) > 0) {
+    if (systemUserService.countUserByJobIds(ids) > 0) {
       throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
     }
   }

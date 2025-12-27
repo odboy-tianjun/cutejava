@@ -98,12 +98,12 @@ public class SystemUserController {
     if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
       criteria.getDeptIds().add(criteria.getDeptId());
       // 先查找是否存在子节点
-      List<SystemDeptTb> data = systemDeptService.queryDeptByPid(criteria.getDeptId());
+      List<SystemDeptTb> data = systemDeptService.listDeptByPid(criteria.getDeptId());
       // 然后把子节点的ID都加入到集合中
-      criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdListByDeptIds(data));
+      criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
     }
     // 数据权限
-    List<Long> dataScopes = systemDataService.findDeptIdListByArgs(
+    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(
         systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername()));
     // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
     if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
@@ -136,7 +136,7 @@ public class SystemUserController {
   @PreAuthorize("@el.check('user:edit')")
   public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserVo args) {
     checkLevel(args);
-    systemUserService.modifyUserById(args);
+    systemUserService.updateUserById(args);
     return ResponseEntity.ok(null);
   }
 
@@ -147,7 +147,7 @@ public class SystemUserController {
     if (!args.getId().equals(KitSecurityHelper.getCurrentUserId())) {
       throw new BadRequestException("不能修改他人资料");
     }
-    systemUserService.modifyUserCenterInfoById(args);
+    systemUserService.updateUserCenterInfoById(args);
     return ResponseEntity.ok(null);
   }
 
@@ -186,7 +186,7 @@ public class SystemUserController {
     if (passwordEncoder.matches(newPass, user.getPassword())) {
       throw new BadRequestException("新密码不能与旧密码相同");
     }
-    systemUserService.modifyUserPasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
+    systemUserService.updateUserPasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
     return ResponseEntity.ok(null);
   }
 
@@ -201,7 +201,7 @@ public class SystemUserController {
   @ApiOperation("修改头像")
   @PostMapping(value = "/modifyUserAvatar")
   public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
-    return ResponseEntity.ok(systemUserService.modifyUserAvatar(avatar));
+    return ResponseEntity.ok(systemUserService.updateUserAvatar(avatar));
   }
 
   @ApiOperation("修改邮箱")
@@ -215,7 +215,7 @@ public class SystemUserController {
       throw new BadRequestException("密码错误");
     }
     systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
-    systemUserService.modifyUserEmailByUsername(user.getUsername(), args.getEmail());
+    systemUserService.updateUserEmailByUsername(user.getUsername(), args.getEmail());
     return ResponseEntity.ok(null);
   }
 

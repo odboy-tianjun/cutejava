@@ -31,12 +31,12 @@ import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUserVo;
-import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.system.dal.mysql.SystemUserJobMapper;
-import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
+import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
-import cn.odboy.system.dal.mysql.SystemDeptMapper;
+import cn.odboy.system.dal.mysql.SystemUserJobMapper;
+import cn.odboy.system.dal.mysql.SystemUserMapper;
+import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
@@ -97,13 +97,13 @@ public class SystemUserService {
   @Transactional(rollbackFor = Exception.class)
   public void saveUser(SystemUserVo args) {
     args.setDeptId(args.getDept().getId());
-    if (systemUserMapper.getUserByUsername(args.getUsername()) != null) {
+    if (this.getUserByUsername(args.getUsername()) != null) {
       throw new BadRequestException("用户名已存在");
     }
-    if (systemUserMapper.getUserByEmail(args.getEmail()) != null) {
+    if (this.getUserByEmail(args.getEmail()) != null) {
       throw new BadRequestException("邮箱已存在");
     }
-    if (systemUserMapper.getUserByPhone(args.getPhone()) != null) {
+    if (this.getUserByPhone(args.getPhone()) != null) {
       throw new BadRequestException("手机号已存在");
     }
     systemUserMapper.insert(args);
@@ -120,11 +120,11 @@ public class SystemUserService {
    * @throws Exception /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyUserById(SystemUserVo args) {
+  public void updateUserById(SystemUserVo args) {
     SystemUserTb user = systemUserMapper.selectById(args.getId());
-    SystemUserTb user1 = systemUserMapper.getUserByUsername(args.getUsername());
-    SystemUserTb user2 = systemUserMapper.getUserByEmail(args.getEmail());
-    SystemUserTb user3 = systemUserMapper.getUserByPhone(args.getPhone());
+    SystemUserTb user1 = this.getUserByUsername(args.getUsername());
+    SystemUserTb user2 = this.getUserByEmail(args.getEmail());
+    SystemUserTb user3 = this.getUserByPhone(args.getPhone());
     if (user1 != null && !user.getId().equals(user1.getId())) {
       throw new BadRequestException("用户名已存在");
     }
@@ -163,9 +163,9 @@ public class SystemUserService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyUserCenterInfoById(SystemUserTb args) {
+  public void updateUserCenterInfoById(SystemUserTb args) {
     SystemUserTb user = systemUserMapper.selectById(args.getId());
-    SystemUserTb user1 = systemUserMapper.getUserByPhone(args.getPhone());
+    SystemUserTb user1 = this.getUserByPhone(args.getPhone());
     if (user1 != null && !user.getId().equals(user1.getId())) {
       throw new BadRequestException("手机号已存在");
     }
@@ -202,7 +202,7 @@ public class SystemUserService {
    * @param encryptPassword 密码
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyUserPasswordByUsername(String username, String encryptPassword) {
+  public void updateUserPasswordByUsername(String username, String encryptPassword) {
     systemUserMapper.updateUserPasswordByUsername(username, encryptPassword);
     systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
   }
@@ -234,8 +234,8 @@ public class SystemUserService {
    * @return /
    */
   @Transactional(rollbackFor = Exception.class)
-  public Map<String, String> modifyUserAvatar(MultipartFile multipartFile) {
-    SystemUserTb user = systemUserMapper.getUserByUsername(KitSecurityHelper.getCurrentUsername());
+  public Map<String, String> updateUserAvatar(MultipartFile multipartFile) {
+    SystemUserTb user = this.getUserByUsername(KitSecurityHelper.getCurrentUsername());
     String username = user.getUsername();
     if (StrUtil.isBlank(username)) {
       throw new BadRequestException("异常用户数据, 请联系管理员处理");
@@ -269,7 +269,7 @@ public class SystemUserService {
    * @param email    邮箱
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyUserEmailByUsername(String username, String email) {
+  public void updateUserEmailByUsername(String username, String email) {
     systemUserMapper.updateUserEmailByUsername(username, email);
     systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
   }
@@ -312,10 +312,10 @@ public class SystemUserService {
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(criteria);
     IPage<SystemUserTb> userPage = systemUserMapper.selectPage(page, wrapper);
     List<SystemUserTb> users = userPage.getRecords();
-    
+
     // 转换为SystemUserVo并关联查询
     List<SystemUserVo> userVos = users.stream().map(this::convertToUserVo).collect(Collectors.toList());
-    
+
     return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
@@ -329,7 +329,7 @@ public class SystemUserService {
     // 查询用户基本信息
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(criteria);
     List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
-    
+
     // 转换为SystemUserVo并关联查询
     return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
   }
@@ -342,16 +342,6 @@ public class SystemUserService {
    */
   public SystemUserTb getUserById(long id) {
     return systemUserMapper.selectById(id);
-  }
-
-  /**
-   * 根据用户名查询
-   *
-   * @param username /
-   * @return /
-   */
-  public SystemUserTb getUserByUsername(String username) {
-    return systemUserMapper.getUserByUsername(username);
   }
 
   public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> args) {
@@ -439,7 +429,6 @@ public class SystemUserService {
     if (CollUtil.isEmpty(jobIds)) {
       return 0L;
     }
-
     LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemUserJobTb::getJobId, jobIds);
     return systemUserJobMapper.selectCount(wrapper);
@@ -455,7 +444,6 @@ public class SystemUserService {
     if (CollUtil.isEmpty(roleIds)) {
       return 0L;
     }
-
     LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemUserRoleTb::getRoleId, roleIds);
     return systemUserRoleMapper.selectCount(wrapper);
@@ -468,7 +456,7 @@ public class SystemUserService {
    * @return /
    */
   public SystemUserVo getUserVoByUsername(String username) {
-    SystemUserTb user = systemUserMapper.getUserByUsername(username);
+    SystemUserTb user = this.getUserByUsername(username);
     if (user == null) {
       return null;
     }
@@ -518,13 +506,13 @@ public class SystemUserService {
       return null;
     }
     SystemUserVo userVo = BeanUtil.copyProperties(user, SystemUserVo.class);
-    
+
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
       SystemDeptTb dept = systemDeptMapper.selectById(user.getDeptId());
       userVo.setDept(dept);
     }
-    
+
     // 查询关联的岗位信息
     LambdaQueryWrapper<SystemUserJobTb> jobWrapper = new LambdaQueryWrapper<>();
     jobWrapper.eq(SystemUserJobTb::getUserId, user.getId());
@@ -534,7 +522,7 @@ public class SystemUserService {
       List<SystemJobTb> jobs = systemJobMapper.selectByIds(jobIds);
       userVo.setJobs(new LinkedHashSet<>(jobs));
     }
-    
+
     // 查询关联的角色信息
     LambdaQueryWrapper<SystemUserRoleTb> roleWrapper = new LambdaQueryWrapper<>();
     roleWrapper.eq(SystemUserRoleTb::getUserId, user.getId());
@@ -544,7 +532,34 @@ public class SystemUserService {
       List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
       userVo.setRoles(new LinkedHashSet<>(roles));
     }
-    
+
     return userVo;
+  }
+
+  public SystemUserTb getUserByUsername(String username) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getUsername, username);
+    wrapper.eq(SystemUserTb::getEnabled, 1);
+    return systemUserMapper.selectOne(wrapper);
+  }
+
+  public long countUserByDeptIds(Set<Long> deptIds) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserTb::getDeptId, deptIds);
+    return systemUserMapper.selectCount(wrapper);
+  }
+
+  public SystemUserTb getUserByEmail(String email) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getEmail, email);
+    wrapper.eq(SystemUserTb::getEnabled, 1);
+    return systemUserMapper.selectOne(wrapper);
+  }
+
+  public SystemUserTb getUserByPhone(String phone) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getPhone, phone);
+    wrapper.eq(SystemUserTb::getEnabled, 1);
+    return systemUserMapper.selectOne(wrapper);
   }
 }

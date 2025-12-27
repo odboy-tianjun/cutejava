@@ -89,7 +89,7 @@ public class SystemLocalStorageController {
   @PostMapping(value = "/modifyLocalStorageById")
   @PreAuthorize("@el.check('storage:edit')")
   public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
-    localStorageService.modifyLocalStorageById(args);
+    localStorageService.updateLocalStorageById(args);
     return ResponseEntity.ok(null);
   }
 

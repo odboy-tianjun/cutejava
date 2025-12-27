@@ -99,7 +99,7 @@ public class SystemLocalStorageService {
    * @param args 文件信息
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyLocalStorageById(SystemLocalStorageTb args) {
+  public void updateLocalStorageById(SystemLocalStorageTb args) {
     SystemLocalStorageTb localStorage = systemLocalStorageMapper.selectById(args.getId());
     localStorage.copy(args);
     systemLocalStorageMapper.insertOrUpdate(localStorage);

@@ -103,7 +103,7 @@ public class SystemRoleController {
   @PreAuthorize("@el.check('roles:edit')")
   public ResponseEntity<Void> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleVo args) {
     checkRoleLevels(args.getLevel());
-    systemRoleService.modifyRoleById(args);
+    systemRoleService.updateRoleById(args);
     return ResponseEntity.ok(null);
   }
 
@@ -113,7 +113,7 @@ public class SystemRoleController {
   public ResponseEntity<Void> modifyBindMenuById(@RequestBody SystemRoleVo args) {
     SystemRoleTb role = systemRoleService.getRoleById(args.getId());
     checkRoleLevels(role.getLevel());
-    systemRoleService.modifyBindMenuById(args);
+    systemRoleService.updateBindMenuById(args);
     return ResponseEntity.ok(null);
   }
 

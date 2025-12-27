@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
- * OSS存储 服务类
+ * OSS存储接口
  * </p>
  *
  * @author codegen

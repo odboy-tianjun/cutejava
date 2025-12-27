@@ -29,7 +29,6 @@ import cn.odboy.system.dal.model.SystemProductLineTreeVo;
 import cn.odboy.system.dal.model.SystemProductLineVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
-import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitFileUtil;
@@ -58,7 +57,7 @@ public class SystemDeptService {
   @Autowired
   private SystemDeptMapper systemDeptMapper;
   @Autowired
-  private SystemUserMapper systemUserMapper;
+  private SystemUserService systemUserService;
   @Autowired
   private SystemRoleService systemRoleService;
 
@@ -99,7 +98,7 @@ public class SystemDeptService {
    * @param deptSet /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeDeptByIds(Set<SystemDeptTb> deptSet) {
+  public void deleteDeptByIds(Set<SystemDeptTb> deptSet) {
     for (SystemDeptTb dept : deptSet) {
       systemDeptMapper.deleteById(dept.getId());
       this.updateDeptSubCnt(dept.getPid());
@@ -138,7 +137,7 @@ public class SystemDeptService {
     }
   }
 
-  public long countDeptByPid(Long pid) {
+  private long countDeptByPid(Long pid) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getPid, pid);
     return systemDeptMapper.selectCount(wrapper);
@@ -160,7 +159,7 @@ public class SystemDeptService {
     return deptList;
   }
 
-  public List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs criteria) {
+  private List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs criteria) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     if (criteria != null) {
       wrapper.in(CollUtil.isNotEmpty(criteria.getIds()), SystemDeptTb::getId, criteria.getIds());
@@ -185,7 +184,7 @@ public class SystemDeptService {
    * @return /
    * @throws Exception /
    */
-  public List<SystemDeptTb> queryAllDept(SystemQueryDeptArgs criteria, Boolean isQuery) throws Exception {
+  public List<SystemDeptTb> queryAllDeptByArgs(SystemQueryDeptArgs criteria, Boolean isQuery) throws Exception {
     String dataScopeType = KitSecurityHelper.getDataScopeType();
     if (isQuery) {
       if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {
@@ -230,46 +229,30 @@ public class SystemDeptService {
   }
 
   /**
-   * 根据PID查询
-   *
-   * @param pid /
-   * @return /
-   */
-  public List<SystemDeptTb> queryDeptByPid(long pid) {
-    return this.selectDeptByPid(pid);
-  }
-
-  /**
    * 获取部门下所有关联的部门
    *
    * @param deptTbList /
    * @param depts      /
    * @return /
    */
-  public Set<SystemDeptTb> queryRelationDeptSet(List<SystemDeptTb> deptTbList, Set<SystemDeptTb> depts) {
+  private Set<SystemDeptTb> queryRelationDeptByArgs(List<SystemDeptTb> deptTbList, Set<SystemDeptTb> depts) {
     for (SystemDeptTb dept : deptTbList) {
       depts.add(dept);
-      List<SystemDeptTb> deptList = this.selectDeptByPid(dept.getId());
+      List<SystemDeptTb> deptList = this.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptList)) {
-        queryRelationDeptSet(deptList, depts);
+        queryRelationDeptByArgs(deptList, depts);
       }
     }
     return depts;
   }
 
-  /**
-   * 获取
-   *
-   * @param deptList 、
-   * @return 、
-   */
-  public List<Long> queryChildDeptIdListByDeptIds(List<SystemDeptTb> deptList) {
+  public List<Long> queryChildDeptIdByDeptIds(List<SystemDeptTb> deptList) {
     List<Long> list = new ArrayList<>();
     for (SystemDeptTb systemDeptTb : deptList) {
       if (systemDeptTb != null && systemDeptTb.getEnabled()) {
-        List<SystemDeptTb> deptList1 = this.selectDeptByPid(systemDeptTb.getId());
+        List<SystemDeptTb> deptList1 = this.listDeptByPid(systemDeptTb.getId());
         if (CollUtil.isNotEmpty(deptList1)) {
-          list.addAll(queryChildDeptIdListByDeptIds(deptList1));
+          list.addAll(queryChildDeptIdByDeptIds(deptList1));
         }
         list.add(systemDeptTb.getId());
       }
@@ -284,16 +267,16 @@ public class SystemDeptService {
    * @param deptList /
    * @return /
    */
-  public List<SystemDeptTb> querySuperiorDeptListByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
+  private List<SystemDeptTb> querySuperiorDeptByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
     if (dept.getPid() == null) {
-      deptList.addAll(this.selectDeptByPidIsNull());
+      deptList.addAll(this.listRootDept());
       return deptList;
     }
-    deptList.addAll(this.selectDeptByPid(dept.getPid()));
-    return querySuperiorDeptListByPid(this.getDeptById(dept.getPid()), deptList);
+    deptList.addAll(this.listDeptByPid(dept.getPid()));
+    return querySuperiorDeptByPid(this.getDeptById(dept.getPid()), deptList);
   }
 
-  public List<SystemDeptTb> selectDeptByPidIsNull() {
+  private List<SystemDeptTb> listRootDept() {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.isNull(SystemDeptTb::getPid);
     return systemDeptMapper.selectList(wrapper);
@@ -302,10 +285,28 @@ public class SystemDeptService {
   /**
    * 构建树形数据
    *
-   * @param deptList /
    * @return /
    */
-  public KitPageResult<SystemDeptTb> buildDeptTree(List<SystemDeptTb> deptList) {
+  public KitPageResult<SystemDeptTb> searchDeptTree(List<Long> ids, Boolean exclude) {
+    Set<SystemDeptTb> deptSet1 = new LinkedHashSet<>();
+    for (Long id : ids) {
+      // 同级数据
+      SystemDeptTb dept = this.getDeptById(id);
+      // 上级数据
+      List<SystemDeptTb> depts = this.querySuperiorDeptByPid(dept, new ArrayList<>());
+      if (exclude) {
+        for (SystemDeptTb data : depts) {
+          if (data.getId().equals(dept.getPid())) {
+            data.setSubCount(data.getSubCount() - 1);
+          }
+        }
+        // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
+        depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
+      }
+      deptSet1.addAll(depts);
+    }
+    ArrayList<SystemDeptTb> deptList = new ArrayList<>(deptSet1);
+    // 构建部门树
     Set<SystemDeptTb> trees = new LinkedHashSet<>();
     Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
     List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
@@ -346,7 +347,7 @@ public class SystemDeptService {
    */
   public void verifyBindRelationByIds(Set<SystemDeptTb> deptSet) {
     Set<Long> deptIds = deptSet.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
-    if (systemUserMapper.countUserByDeptIds(deptIds) > 0) {
+    if (systemUserService.countUserByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
     }
     if (systemRoleService.countRoleByDeptIds(deptIds) > 0) {
@@ -354,7 +355,7 @@ public class SystemDeptService {
     }
   }
 
-  public List<SystemDeptTb> selectEnabledDepts() {
+  private List<SystemDeptTb> listEnabledDepts() {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getEnabled, 1);
     return systemDeptMapper.selectList(wrapper);
@@ -371,16 +372,16 @@ public class SystemDeptService {
       // 根部门
       depts.add(this.getDeptById(id));
       // 子部门
-      List<SystemDeptTb> deptList = queryDeptByPid(id);
+      List<SystemDeptTb> deptList = listDeptByPid(id);
       if (CollectionUtil.isNotEmpty(deptList)) {
-        depts = queryRelationDeptSet(deptList, depts);
+        depts = queryRelationDeptByArgs(deptList, depts);
       }
     }
     return depts;
   }
 
   public List<SystemProductLineVo> queryDeptSelectDataSource() {
-    List<SystemDeptTb> depts = this.selectEnabledDepts();
+    List<SystemDeptTb> depts = this.listEnabledDepts();
     return buildDeptSelectOptions(depts);
   }
 
@@ -429,7 +430,7 @@ public class SystemDeptService {
   }
 
   public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
-    List<SystemDeptTb> depts = this.selectEnabledDepts();
+    List<SystemDeptTb> depts = this.listEnabledDepts();
     // 获取所有部门并按父子关系组织
     Map<Long, SystemDeptTb> deptMap =
         depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
@@ -477,10 +478,9 @@ public class SystemDeptService {
     return vo;
   }
 
-  public List<SystemDeptTb> selectDeptByPid(long pid) {
+  public List<SystemDeptTb> listDeptByPid(long pid) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getPid, pid);
     return systemDeptMapper.selectList(wrapper);
   }
-
 }

@@ -60,7 +60,7 @@ public class SystemDictDetailController {
       @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
     SystemQueryDictDetailArgs criteria = args.getArgs();
     Page<SystemDictDetailTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemDictDetailService.queryDictDetailByArgs(criteria, page));
+    return ResponseEntity.ok(systemDictDetailService.searchDictDetail(criteria, page));
   }
 
   @ApiOperation("查询多个字典详情")
@@ -69,7 +69,7 @@ public class SystemDictDetailController {
     String[] names = dictName.split("[,, ]");
     Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
     for (String name : names) {
-      dictMap.put(name, systemDictDetailService.queryDictDetailByName(name));
+      dictMap.put(name, systemDictDetailService.listDictDetailByName(name));
     }
     return ResponseEntity.ok(dictMap);
   }
@@ -87,7 +87,7 @@ public class SystemDictDetailController {
   @PreAuthorize("@el.check('dict:edit')")
   public ResponseEntity<Void> modifyDictDetailById(
       @Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
-    systemDictDetailService.modifyDictDetailById(args);
+    systemDictDetailService.updateDictDetailById(args);
     return ResponseEntity.ok(null);
   }
 
@@ -95,7 +95,7 @@ public class SystemDictDetailController {
   @PostMapping(value = "/removeDictDetailById")
   @PreAuthorize("@el.check('dict:del')")
   public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
-    systemDictDetailService.removeDictDetailById(args.getId());
+    systemDictDetailService.deleteDictDetailById(args.getId());
     return ResponseEntity.ok(null);
   }
 }

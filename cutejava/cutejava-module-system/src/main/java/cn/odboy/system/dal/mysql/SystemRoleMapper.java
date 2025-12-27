@@ -15,11 +15,7 @@
  */
 package cn.odboy.system.dal.mysql;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.model.SystemQueryRoleArgs;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,21 +27,4 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemRoleMapper extends BaseMapper<SystemRoleTb> {
 
-  default Long countRoleByArgs(SystemQueryRoleArgs criteria) {
-    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, criteria.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, criteria.getBlurry()));
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
-      }
-    }
-    return selectCount(wrapper);
-  }
-
-  default SystemRoleTb getRoleById(Long roleId) {
-    return selectById(roleId);
-  }
 }

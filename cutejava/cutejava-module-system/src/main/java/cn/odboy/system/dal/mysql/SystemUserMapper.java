@@ -34,51 +34,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
 
-  default SystemUserTb getUserByUsername(String username) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getUsername, username);
-    wrapper.eq(SystemUserTb::getEnabled, 1);
-    return selectOne(wrapper);
-  }
-
-  default Long countUserByJobIds(Set<Long> jobIds) {
-    if (CollUtil.isEmpty(jobIds)) {
-      return 0L;
-    }
-    // 需要通过用户岗位关联表查询，这里暂时返回0
-    // 实际实现需要在Service层通过关联查询
-    return 0L;
-  }
-
-  default Long countUserByRoleIds(Set<Long> roleIds) {
-    if (CollUtil.isEmpty(roleIds)) {
-      return 0L;
-    }
-    // 需要通过用户角色关联表查询，这里暂时返回0
-    // 实际实现需要在Service层通过关联查询
-    return 0L;
-  }
-
-  default long countUserByDeptIds(Set<Long> deptIds) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserTb::getDeptId, deptIds);
-    return selectCount(wrapper);
-  }
-
-  default SystemUserTb getUserByEmail(String email) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getEmail, email);
-    wrapper.eq(SystemUserTb::getEnabled, 1);
-    return selectOne(wrapper);
-  }
-
-  default SystemUserTb getUserByPhone(String phone) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getPhone, phone);
-    wrapper.eq(SystemUserTb::getEnabled, 1);
-    return selectOne(wrapper);
-  }
-
   default void updateUserPasswordByUsername(String username, String password) {
     LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
     wrapper.eq(SystemUserTb::getUsername, username);

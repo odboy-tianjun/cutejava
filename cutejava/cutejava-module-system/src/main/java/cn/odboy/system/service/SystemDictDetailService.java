@@ -64,7 +64,7 @@ public class SystemDictDetailService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyDictDetailById(SystemDictDetailTb args) {
+  public void updateDictDetailById(SystemDictDetailTb args) {
     SystemDictDetailTb dictDetail = systemDictDetailMapper.selectById(args.getId());
     args.setId(dictDetail.getId());
     systemDictDetailMapper.insertOrUpdate(args);
@@ -76,7 +76,7 @@ public class SystemDictDetailService {
    * @param id /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeDictDetailById(Long id) {
+  public void deleteDictDetailById(Long id) {
     systemDictDetailMapper.deleteById(id);
   }
 
@@ -89,13 +89,13 @@ public class SystemDictDetailService {
     }
   }
 
-  private List<SystemDictDetailTb> selectByDictId(Long dictId) {
+  private List<SystemDictDetailTb> listDictDetailByDictId(Long dictId) {
     LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDictDetailTb::getDictId, dictId);
     return systemDictDetailMapper.selectList(wrapper);
   }
 
-  private IPage<SystemDictDetailTb> selectDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
+  private IPage<SystemDictDetailTb> searchDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
     LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(CollUtil.isNotEmpty(dictIds), SystemDictDetailTb::getDictId, dictIds);
     return systemDictDetailMapper.selectPage(page, wrapper);
@@ -108,14 +108,14 @@ public class SystemDictDetailService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemDictDetailVo> queryDictDetailByArgs(SystemQueryDictDetailArgs args,
+  public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
       Page<SystemDictDetailTb> page) {
     IPage<SystemDictDetailVo> iPage = new Page<>();
     List<Long> dictIds = new ArrayList<>();
     List<SystemDictTb> dictTbs = new ArrayList<>();
 
     if (args == null) {
-      dictTbs.addAll(systemDictService.selectList(null));
+      dictTbs.addAll(systemDictService.listAll());
       dictIds = dictTbs.stream().map(SystemDictTb::getId).collect(Collectors.toList());
     } else {
       String dictName = args.getDictName();
@@ -132,7 +132,7 @@ public class SystemDictDetailService {
     }
 
     Map<Long, SystemDictTb> id2ItemMap = dictTbs.stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
-    iPage = this.selectDictDetailByArgs(dictIds, page)
+    iPage = this.searchDictDetailByArgs(dictIds, page)
         .convert(i -> BeanUtil.copyProperties(i, SystemDictDetailVo.class));
     for (SystemDictDetailVo record : iPage.getRecords()) {
       record.setDict(id2ItemMap.get(record.getDictId()));
@@ -146,7 +146,7 @@ public class SystemDictDetailService {
    * @param name 字典名称
    * @return /
    */
-  public List<SystemDictDetailVo> queryDictDetailByName(String name) {
+  public List<SystemDictDetailVo> listDictDetailByName(String name) {
     if (StrUtil.isBlank(name)) {
       return new ArrayList<>();
     }
@@ -154,11 +154,10 @@ public class SystemDictDetailService {
     if (systemDictTb == null) {
       return new ArrayList<>();
     }
-    return this.selectByDictId(systemDictTb.getId()).stream().map(m -> {
+    return this.listDictDetailByDictId(systemDictTb.getId()).stream().map(m -> {
       SystemDictDetailVo detailVo = BeanUtil.copyProperties(m, SystemDictDetailVo.class);
       detailVo.setDict(systemDictTb);
       return detailVo;
     }).collect(Collectors.toList());
   }
-
 }

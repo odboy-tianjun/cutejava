@@ -54,7 +54,7 @@ public class SystemEmailService {
    * @param emailConfig 邮箱配置
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyEmailConfig(SystemEmailConfigTb emailConfig) throws Exception {
+  public void updateEmailConfigById(SystemEmailConfigTb emailConfig) throws Exception {
     SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
     if (!emailConfig.getPassword().equals(systemEmailConfigTb.getPassword())) {
       // 对称加密

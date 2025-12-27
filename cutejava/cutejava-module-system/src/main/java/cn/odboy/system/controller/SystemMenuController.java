@@ -114,7 +114,7 @@ public class SystemMenuController {
   public ResponseEntity<List<SystemMenuTb>> queryMenuSuperior(@RequestBody List<Long> ids) {
     Set<SystemMenuTb> menus;
     if (CollectionUtil.isNotEmpty(ids)) {
-      menus = new LinkedHashSet<>(systemMenuService.queryMenuByIds(ids));
+      menus = new LinkedHashSet<>(systemMenuService.listMenuByIds(ids));
       for (SystemMenuTb menu : menus) {
         List<SystemMenuTb> menuList = systemMenuService.querySuperiorMenuList(menu, new ArrayList<>());
         for (SystemMenuTb data : menuList) {
@@ -146,7 +146,7 @@ public class SystemMenuController {
   @PostMapping(value = "/modifyMenuById")
   @PreAuthorize("@el.check('menu:edit')")
   public ResponseEntity<Void> modifyMenuById(@Validated(SystemMenuTb.Update.class) @RequestBody SystemMenuTb args) {
-    systemMenuService.modifyMenuById(args);
+    systemMenuService.updateMenuById(args);
     return ResponseEntity.ok(null);
   }
 

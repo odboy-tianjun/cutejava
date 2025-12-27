@@ -49,7 +49,7 @@ public class SystemDataService {
    * @param user /
    * @return /
    */
-  public List<Long> findDeptIdListByArgs(SystemUserTb user) {
+  public List<Long> queryDeptIdByArgs(SystemUserTb user) {
     List<Long> deptIds = new ArrayList<>();
     // 查询用户角色
     List<SystemRoleVo> roleList = systemRoleService.queryRoleByUsersId(user.getId());
@@ -61,7 +61,7 @@ public class SystemDataService {
           deptIds.add(user.getDept().getId());
           break;
         case CUSTOMIZE:
-          deptIds.addAll(this.findCustomDataPermissionList(deptIds, role));
+          deptIds.addAll(this.queryCustomDataPermissionByArgs(deptIds, role));
           break;
         default:
           return new ArrayList<>();
@@ -77,13 +77,13 @@ public class SystemDataService {
    * @param role    角色
    * @return 数据权限ID
    */
-  private List<Long> findCustomDataPermissionList(List<Long> deptIds, SystemRoleTb role) {
+  private List<Long> queryCustomDataPermissionByArgs(List<Long> deptIds, SystemRoleTb role) {
     List<SystemDeptTb> deptList = systemRoleDeptService.selectDeptByRoleId(role.getId());
     for (SystemDeptTb dept : deptList) {
       deptIds.add(dept.getId());
-      List<SystemDeptTb> deptChildren = systemDeptService.queryDeptByPid(dept.getId());
+      List<SystemDeptTb> deptChildren = systemDeptService.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptChildren)) {
-        deptIds.addAll(systemDeptService.queryChildDeptIdListByDeptIds(deptChildren));
+        deptIds.addAll(systemDeptService.queryChildDeptIdByDeptIds(deptChildren));
       }
     }
     return deptIds;

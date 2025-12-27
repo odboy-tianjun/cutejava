@@ -64,7 +64,7 @@ public class SystemDictService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void modifyDictById(SystemDictTb args) {
+  public void updateDictById(SystemDictTb args) {
     SystemDictTb dict = systemDictMapper.selectById(args.getId());
     dict.setName(args.getName());
     dict.setDescription(args.getDescription());
@@ -77,7 +77,7 @@ public class SystemDictService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeDictByIds(Set<Long> ids) {
+  public void deleteDictByIds(Set<Long> ids) {
     // 删除字典
     systemDictMapper.deleteByIds(ids);
     // 删除字典详情
@@ -94,7 +94,7 @@ public class SystemDictService {
   public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
     List<Map<String, Object>> list = new ArrayList<>();
     for (SystemDictTb dict : dicts) {
-      List<SystemDictDetailVo> dictDetails = systemDictDetailService.queryDictDetailByName(dict.getName());
+      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dict.getName());
       if (CollectionUtil.isNotEmpty(dictDetails)) {
         for (SystemDictDetailTb dictDetail : dictDetails) {
           Map<String, Object> map = new LinkedHashMap<>();
@@ -125,22 +125,11 @@ public class SystemDictService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-    return KitPageUtil.toPage(this.selectDictByArgs(args, page));
-  }
-
-  /**
-   * 查询全部数据
-   *
-   * @param args /
-   * @return /
-   */
-  public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
-    return this.selectDictByArgs(args);
-  }
-
-  public SystemDictTb getById(int id) {
-    return systemDictMapper.selectById(id);
+  public KitPageResult<SystemDictTb> searchDict(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(args, wrapper);
+    Page<SystemDictTb> selectPage = systemDictMapper.selectPage(page, wrapper);
+    return KitPageUtil.toPage(selectPage);
   }
 
   private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
@@ -150,16 +139,10 @@ public class SystemDictService {
     }
   }
 
-  private List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args) {
+  public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
     LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
     injectQueryParams(args, wrapper);
     return systemDictMapper.selectList(wrapper);
-  }
-
-  private List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-    injectQueryParams(args, wrapper);
-    return systemDictMapper.selectList(page, wrapper);
   }
 
   public SystemDictTb getByName(String name) {
@@ -168,7 +151,7 @@ public class SystemDictService {
     return systemDictMapper.selectOne(wrapper);
   }
 
-  public List<SystemDictTb> selectList(LambdaQueryWrapper<SystemDictTb> wrapper) {
-    return systemDictMapper.selectList(wrapper);
+  public List<SystemDictTb> listAll() {
+    return systemDictMapper.selectList(null);
   }
 }

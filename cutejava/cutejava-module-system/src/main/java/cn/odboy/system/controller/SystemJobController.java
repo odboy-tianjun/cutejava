@@ -82,7 +82,7 @@ public class SystemJobController {
   @PostMapping(value = "/modifyJobById")
   @PreAuthorize("@el.check('job:edit')")
   public ResponseEntity<Void> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb args) {
-    systemJobService.modifyJobById(args);
+    systemJobService.updateJobById(args);
     return ResponseEntity.ok(null);
   }
 

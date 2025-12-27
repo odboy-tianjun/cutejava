@@ -49,7 +49,7 @@ public class SystemEmailController {
   @PostMapping(value = "/modifyEmailConfig")
   public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
       throws Exception {
-    systemEmailService.modifyEmailConfig(emailConfig);
+    systemEmailService.updateEmailConfigById(emailConfig);
     return ResponseEntity.ok(null);
   }
 
