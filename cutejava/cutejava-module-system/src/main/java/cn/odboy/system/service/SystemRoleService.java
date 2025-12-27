@@ -57,15 +57,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemRoleService {
-
   @Autowired
   private SystemRoleMapper systemRoleMapper;
   @Autowired
   private SystemRoleMenuService systemRoleMenuService;
   @Autowired
   private SystemRoleDeptService systemRoleDeptService;
-  @Autowired
-  private SystemRoleMenuMapper systemRoleMenuMapper;
   @Autowired
   private SystemRoleDeptMapper systemRoleDeptMapper;
   @Autowired
@@ -143,7 +140,7 @@ public class SystemRoleService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeRoleByIds(Set<Long> ids) {
+  public void deleteRoleByIds(Set<Long> ids) {
     systemRoleMapper.deleteByIds(ids);
     // 删除角色部门关联数据、角色菜单关联数据
     systemRoleDeptService.batchDeleteRoleDept(ids);
@@ -172,14 +169,8 @@ public class SystemRoleService {
 
   /**
    * 查询全部角色
-   *
-   * @return
    */
-  public List<SystemRoleTb> queryAllRole() {
-    return this.selectAllRole();
-  }
-
-  private List<SystemRoleTb> selectAllRole() {
+  public List<SystemRoleTb> listAllRole() {
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.orderByAsc(SystemRoleTb::getLevel);
     return systemRoleMapper.selectList(wrapper);
@@ -204,10 +195,8 @@ public class SystemRoleService {
       }
     }
     wrapper.orderByAsc(SystemRoleTb::getLevel);
-
-    // 分页处理
-    if (args != null && args.getOffset() > 0 && args.getSize() != null) {
-      Page<SystemRoleTb> rolePage = new Page<>(args.getOffset() / args.getSize() + 1, args.getSize());
+    if (args != null && args.getSize() != null) {
+      Page<SystemRoleTb> rolePage = new Page<>(args.getPage(), args.getSize());
       Page<SystemRoleTb> page = systemRoleMapper.selectPage(rolePage, wrapper);
       List<SystemRoleTb> roles = page.getRecords();
       return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
@@ -224,7 +213,7 @@ public class SystemRoleService {
    * @param page 分页参数
    * @return
    */
-  public KitPageResult<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args, Page<Object> page) {
+  public KitPageResult<SystemRoleVo> searchRoleByArgs(SystemQueryRoleArgs args, Page<Object> page) {
     args.setOffset(page.offset());
     List<SystemRoleVo> roles = this.queryRoleByArgs(args);
     Long total = this.countRoleByArgs(args);
@@ -242,14 +231,11 @@ public class SystemRoleService {
     LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
     userRoleWrapper.eq(SystemUserRoleTb::getUserId, userId);
     List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(userRoleWrapper);
-
     if (CollUtil.isEmpty(userRoles)) {
       return new ArrayList<>();
     }
-
     Set<Long> roleIds = userRoles.stream().map(SystemUserRoleTb::getRoleId).collect(Collectors.toSet());
     List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
-
     return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
   }
 
@@ -311,42 +297,6 @@ public class SystemRoleService {
   }
 
   /**
-   * 根据ID查询角色详情（包含关联信息）
-   *
-   * @param id /
-   * @return /
-   */
-  public SystemRoleVo getRoleVoById(Long id) {
-    SystemRoleTb role = systemRoleMapper.selectById(id);
-    if (role == null) {
-      return null;
-    }
-    return convertToRoleVo(role);
-  }
-
-  /**
-   * 根据菜单ID查询角色
-   *
-   * @param menuId 菜单ID
-   * @return /
-   */
-  public List<SystemRoleVo> queryRoleByMenuId(Long menuId) {
-    // 查询包含该菜单的角色ID列表
-    LambdaQueryWrapper<SystemRoleMenuTb> roleMenuWrapper = new LambdaQueryWrapper<>();
-    roleMenuWrapper.eq(SystemRoleMenuTb::getMenuId, menuId);
-    List<SystemRoleMenuTb> roleMenuList = systemRoleMenuMapper.selectList(roleMenuWrapper);
-
-    if (CollUtil.isEmpty(roleMenuList)) {
-      return new ArrayList<>();
-    }
-
-    Set<Long> roleIds = roleMenuList.stream().map(SystemRoleMenuTb::getRoleId).collect(Collectors.toSet());
-    List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
-
-    return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
-  }
-
-  /**
    * 根据部门ID统计角色数量
    *
    * @param deptIds 部门ID集合
@@ -374,14 +324,13 @@ public class SystemRoleService {
     }
 
     SystemRoleVo roleVo = BeanUtil.copyProperties(role, SystemRoleVo.class);
-
     // 查询关联的菜单信息
-    Set<SystemMenuTb> menus = systemRoleMenuService.queryMenuByRoleIdsAndType(
-        Collections.singleton(role.getId()), -1);
+    Set<SystemMenuTb> menus = systemRoleMenuService.queryMenuByRoleIds(
+        Collections.singleton(role.getId()));
     roleVo.setMenus(menus);
 
     // 查询关联的部门信息
-    List<SystemDeptTb> depts = systemRoleDeptService.selectDeptByRoleId(role.getId());
+    List<SystemDeptTb> depts = systemRoleDeptService.listDeptByRoleId(role.getId());
     roleVo.setDepts(new LinkedHashSet<>(depts));
 
     return roleVo;

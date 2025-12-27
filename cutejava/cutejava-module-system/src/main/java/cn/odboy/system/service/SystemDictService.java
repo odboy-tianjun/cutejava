@@ -144,14 +144,4 @@ public class SystemDictService {
     injectQueryParams(args, wrapper);
     return systemDictMapper.selectList(wrapper);
   }
-
-  public SystemDictTb getByName(String name) {
-    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemDictTb::getName, name);
-    return systemDictMapper.selectOne(wrapper);
-  }
-
-  public List<SystemDictTb> listAll() {
-    return systemDictMapper.selectList(null);
-  }
 }

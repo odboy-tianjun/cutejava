@@ -16,7 +16,9 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemDictTb;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -27,4 +29,13 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemDictMapper extends BaseMapper<SystemDictTb> {
 
+  default List<SystemDictTb> listAll() {
+    return selectList(null);
+  }
+
+  default SystemDictTb getByName(String dictName) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDictTb::getName, dictName);
+    return selectOne(wrapper);
+  }
 }

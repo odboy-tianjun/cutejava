@@ -306,15 +306,13 @@ public class SystemUserService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemUserVo> queryUserByArgs(SystemQueryUserArgs args, Page<SystemUserTb> page) {
+  public KitPageResult<SystemUserVo> searchUserByArgs(SystemQueryUserArgs args, Page<SystemUserTb> page) {
     // 查询用户基本信息
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
     IPage<SystemUserTb> userPage = systemUserMapper.selectPage(page, wrapper);
     List<SystemUserTb> users = userPage.getRecords();
-
     // 转换为SystemUserVo并关联查询
     List<SystemUserVo> userVos = users.stream().map(this::convertToUserVo).collect(Collectors.toList());
-
     return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
@@ -328,7 +326,6 @@ public class SystemUserService {
     // 查询用户基本信息
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
     List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
-
     // 转换为SystemUserVo并关联查询
     return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
   }
@@ -367,57 +364,6 @@ public class SystemUserService {
   }
 
   /**
-   * 根据角色ID查询用户
-   *
-   * @param roleId 角色ID
-   * @return /
-   */
-  public List<SystemUserVo> selectUserByRoleId(Long roleId) {
-    // 查询用户角色关联
-    LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
-    userRoleWrapper.eq(SystemUserRoleTb::getRoleId, roleId);
-    List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(userRoleWrapper);
-
-    if (CollUtil.isEmpty(userRoles)) {
-      return new ArrayList<>();
-    }
-
-    Set<Long> userIds = userRoles.stream().map(SystemUserRoleTb::getUserId).collect(Collectors.toSet());
-    List<SystemUserTb> users = systemUserMapper.selectByIds(userIds);
-
-    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
-  }
-
-  /**
-   * 根据部门ID查询用户
-   *
-   * @param deptId 部门ID
-   * @return /
-   */
-  public List<SystemUserVo> selectUserByDeptId(Long deptId) {
-    // 查询部门关联的角色
-    LambdaQueryWrapper<SystemUserTb> userWrapper = new LambdaQueryWrapper<>();
-    userWrapper.eq(SystemUserTb::getDeptId, deptId);
-    List<SystemUserTb> users = systemUserMapper.selectList(userWrapper);
-
-    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
-  }
-
-  /**
-   * 根据菜单ID查询用户
-   *
-   * @param menuId 菜单ID
-   * @return /
-   */
-  public List<SystemUserVo> selectUserByMenuId(Long menuId) {
-    // 查询菜单角色关联
-    LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
-    // 这里需要通过菜单角色关联表查询，暂时简化处理
-    List<SystemUserTb> users = systemUserMapper.selectList(null);
-    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
-  }
-
-  /**
    * 根据岗位ID统计用户数量
    *
    * @param jobIds 岗位ID集合
@@ -445,20 +391,6 @@ public class SystemUserService {
     LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemUserRoleTb::getRoleId, roleIds);
     return systemUserRoleMapper.selectCount(wrapper);
-  }
-
-  /**
-   * 根据用户名查询用户详情（包含关联信息）
-   *
-   * @param username 用户名
-   * @return /
-   */
-  public SystemUserVo getUserVoByUsername(String username) {
-    SystemUserTb user = this.getUserByUsername(username);
-    if (user == null) {
-      return null;
-    }
-    return convertToUserVo(user);
   }
 
   /**

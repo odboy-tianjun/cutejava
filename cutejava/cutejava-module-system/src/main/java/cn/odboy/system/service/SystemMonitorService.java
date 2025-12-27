@@ -51,7 +51,7 @@ public class SystemMonitorService {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> queryServerMonitorInfo() {
+  public Map<String, Object> getServerMonitorInfo() {
     Map<String, Object> resultMap = new LinkedHashMap<>(8);
     try {
       SystemInfo si = new SystemInfo();

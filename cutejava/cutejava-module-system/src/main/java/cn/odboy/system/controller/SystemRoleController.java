@@ -70,7 +70,7 @@ public class SystemRoleController {
   @PostMapping(value = "/queryRoleList")
   @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
   public ResponseEntity<List<SystemRoleTb>> queryRoleList() {
-    return ResponseEntity.ok(systemRoleService.queryAllRole());
+    return ResponseEntity.ok(systemRoleService.listAllRole());
   }
 
   @ApiOperation("查询角色")
@@ -80,7 +80,7 @@ public class SystemRoleController {
       @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> pageArgs) {
     SystemQueryRoleArgs args = pageArgs.getArgs();
     Page<Object> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemRoleService.queryRoleByArgs(args, page));
+    return ResponseEntity.ok(systemRoleService.searchRoleByArgs(args, page));
   }
 
   @ApiOperation("获取用户级别")
@@ -127,7 +127,7 @@ public class SystemRoleController {
     }
     // 验证是否被用户关联
     systemRoleService.verifyBindRelationByIds(ids);
-    systemRoleService.removeRoleByIds(ids);
+    systemRoleService.deleteRoleByIds(ids);
     return ResponseEntity.ok(null);
   }
 

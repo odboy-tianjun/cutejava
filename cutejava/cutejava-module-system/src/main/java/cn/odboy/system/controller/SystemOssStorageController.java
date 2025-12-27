@@ -55,7 +55,7 @@ public class SystemOssStorageController {
       @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
     SystemQueryStorageArgs args = pageArgs.getArgs();
     Page<SystemOssStorageTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemOssStorageService.queryOssStorage(args, page));
+    return ResponseEntity.ok(systemOssStorageService.searchOssStorage(args, page));
   }
 
   @ApiOperation("导出数据")
@@ -76,7 +76,7 @@ public class SystemOssStorageController {
   @ApiOperation("多选删除")
   @PostMapping(value = "/removeFileByIds")
   public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
-    systemOssStorageService.removeFileByIds(ids);
+    systemOssStorageService.deleteFileByIds(ids);
     return ResponseEntity.ok(null);
   }
 }

@@ -110,12 +110,12 @@ public class SystemUserController {
       // 取交集
       args.getDeptIds().retainAll(dataScopes);
       if (!CollectionUtil.isEmpty(args.getDeptIds())) {
-        return ResponseEntity.ok(systemUserService.queryUserByArgs(args, page));
+        return ResponseEntity.ok(systemUserService.searchUserByArgs(args, page));
       }
     } else {
       // 否则取并集
       args.getDeptIds().addAll(dataScopes);
-      return ResponseEntity.ok(systemUserService.queryUserByArgs(args, page));
+      return ResponseEntity.ok(systemUserService.searchUserByArgs(args, page));
     }
     return ResponseEntity.ok(KitPageUtil.emptyData());
   }

@@ -68,7 +68,7 @@ public class SystemRoleMenuService {
     }
   }
 
-  public LinkedHashSet<SystemMenuTb> queryMenuByRoleIdsAndType(Set<Long> roleIds, int menuType) {
+  public LinkedHashSet<SystemMenuTb> queryMenuByRoleIds(Set<Long> roleIds) {
     if (CollUtil.isEmpty(roleIds)) {
       return new LinkedHashSet<>();
     }
@@ -79,7 +79,6 @@ public class SystemRoleMenuService {
     if (CollUtil.isEmpty(menuIds)) {
       return new LinkedHashSet<>();
     }
-
     LambdaQueryWrapper<SystemMenuTb> menuWrapper = new LambdaQueryWrapper<>();
     menuWrapper.in(SystemMenuTb::getId, menuIds);
     // 排除"按钮"

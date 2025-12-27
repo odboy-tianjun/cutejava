@@ -55,14 +55,14 @@ public class SystemLocalStorageController {
       @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
     SystemQueryStorageArgs args = pageArgs.getArgs();
     Page<SystemLocalStorageTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(localStorageService.queryLocalStorage(args, page));
+    return ResponseEntity.ok(localStorageService.searchLocalStorage(args, page));
   }
 
   @ApiOperation("导出数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
-    localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorage(args), response);
+    localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorageByArgs(args), response);
   }
 
   @ApiOperation("上传文件")
@@ -96,7 +96,7 @@ public class SystemLocalStorageController {
   @ApiOperation("多选删除")
   @PostMapping(value = "/removeFileByIds")
   public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
-    localStorageService.removeFileByIds(ids);
+    localStorageService.deleteFileByIds(ids);
     return ResponseEntity.ok(null);
   }
 }

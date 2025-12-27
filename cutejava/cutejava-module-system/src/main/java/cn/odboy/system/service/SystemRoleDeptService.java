@@ -66,7 +66,7 @@ public class SystemRoleDeptService {
    * @param roleId /
    * @return /
    */
-  public List<SystemDeptTb> selectDeptByRoleId(Long roleId) {
+  public List<SystemDeptTb> listDeptByRoleId(Long roleId) {
     LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemRoleDeptTb::getRoleId, roleId);
     List<SystemRoleDeptTb> systemRoleDeptTbs = systemRoleDeptMapper.selectList(wrapper);

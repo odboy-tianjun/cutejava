@@ -126,7 +126,7 @@ public class SystemQuartzJobService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeJobByIds(Set<Long> ids) {
+  public void deleteJobByIds(Set<Long> ids) {
     for (Long id : ids) {
       SystemQuartzJobTb quartzJob = systemQuartzJobMapper.selectById(id);
       quartzManage.deleteJob(quartzJob);
@@ -229,7 +229,7 @@ public class SystemQuartzJobService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs args,
+  public KitPageResult<SystemQuartzJobTb> searchQuartzJobByArgs(SystemQueryQuartzJobArgs args,
       Page<SystemQuartzJobTb> page) {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQuartzJobQueryParams(args, wrapper);
@@ -270,7 +270,7 @@ public class SystemQuartzJobService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs args,
+  public KitPageResult<SystemQuartzLogTb> searchQuartzLogByArgs(SystemQueryQuartzJobArgs args,
       Page<SystemQuartzLogTb> page) {
     LambdaQueryWrapper<SystemQuartzLogTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQuartzLogQueryParams(args, wrapper);
@@ -305,7 +305,7 @@ public class SystemQuartzJobService {
     return systemQuartzJobMapper.selectById(id);
   }
 
-  public List<SystemQuartzJobTb> queryEnableQuartzJob() {
+  public List<SystemQuartzJobTb> listEnableQuartzJob() {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemQuartzJobTb::getIsPause, 0);
     return systemQuartzJobMapper.selectList(wrapper);

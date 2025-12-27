@@ -25,6 +25,7 @@ import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
 import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
+import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -40,11 +41,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDictDetailService {
-
   @Autowired
   private SystemDictDetailMapper systemDictDetailMapper;
   @Autowired
-  private SystemDictService systemDictService;
+  private SystemDictMapper systemDictMapper;
 
   /**
    * 创建
@@ -115,14 +115,14 @@ public class SystemDictDetailService {
     List<SystemDictTb> dictTbs = new ArrayList<>();
 
     if (args == null) {
-      dictTbs.addAll(systemDictService.listAll());
+      dictTbs.addAll(systemDictMapper.listAll());
       dictIds = dictTbs.stream().map(SystemDictTb::getId).collect(Collectors.toList());
     } else {
       String dictName = args.getDictName();
       if (StrUtil.isBlank(dictName)) {
         return KitPageUtil.toPage(iPage);
       }
-      SystemDictTb dictTb = systemDictService.getByName(dictName);
+      SystemDictTb dictTb = systemDictMapper.getByName(dictName);
       if (dictTb == null) {
         return KitPageUtil.toPage(iPage);
       } else {
@@ -150,7 +150,7 @@ public class SystemDictDetailService {
     if (StrUtil.isBlank(name)) {
       return new ArrayList<>();
     }
-    SystemDictTb systemDictTb = systemDictService.getByName(name);
+    SystemDictTb systemDictTb = systemDictMapper.getByName(name);
     if (systemDictTb == null) {
       return new ArrayList<>();
     }

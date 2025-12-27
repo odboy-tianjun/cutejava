@@ -70,7 +70,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
   private SystemOssStorageMapper systemOssStorageMapper;
 
   @Override
-  public KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args,
+  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args,
       Page<SystemOssStorageTb> page) {
     IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(args, page);
     IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
@@ -103,7 +103,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
   public List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args) {
     // 防止刷数据
     Page<SystemOssStorageTb> page = new Page<>(1, 500);
-    return queryOssStorage(args, page).getContent();
+    return searchOssStorage(args, page).getContent();
   }
 
   @Override
@@ -145,7 +145,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     }
     // 校验文件md5, 看是否已存在云端（不确定, 可能云端已经删除, 但是正常来说云端是不允许私自删除的, 所以这里忽略云端不存在的情况）
     String md5 = KitFileUtil.getMd5(tempFile);
-    SystemOssStorageTb systemOssStorageTb = this.getByMd5(md5);
+    SystemOssStorageTb systemOssStorageTb = this.getOssStorageByMd5(md5);
     if (systemOssStorageTb != null) {
       // 重新生成7天链接
       return minioRepository.generatePreviewUrl(systemOssStorageTb.getObjectName());
@@ -166,7 +166,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
    */
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public void removeFileByIds(Long[] ids) {
+  public void deleteFileByIds(Long[] ids) {
     for (Long id : ids) {
       SystemOssStorageTb storage = getById(id);
       minioRepository.removeBucketFile(storage.getObjectName());
@@ -174,7 +174,7 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     }
   }
 
-  private SystemOssStorageTb getByMd5(String md5) {
+  private SystemOssStorageTb getOssStorageByMd5(String md5) {
     return lambdaQuery().eq(SystemOssStorageTb::getFileMd5, md5).one();
   }
 }

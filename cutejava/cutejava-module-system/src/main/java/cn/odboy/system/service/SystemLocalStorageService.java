@@ -30,7 +30,6 @@ import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +110,7 @@ public class SystemLocalStorageService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeFileByIds(Long[] ids) {
+  public void deleteFileByIds(Long[] ids) {
     for (Long id : ids) {
       SystemLocalStorageTb storage = systemLocalStorageMapper.selectById(id);
       try {
@@ -153,22 +152,15 @@ public class SystemLocalStorageService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs args,
+  public KitPageResult<SystemLocalStorageTb> searchLocalStorage(SystemQueryStorageArgs args,
       Page<SystemLocalStorageTb> page) {
-    return KitPageUtil.toPage(this.selectLocalStorageByArgs(args, page));
+    LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    Page<SystemLocalStorageTb> selectPage = systemLocalStorageMapper.selectPage(page, wrapper);
+    return KitPageUtil.toPage(selectPage);
   }
 
-  /**
-   * 查询全部数据
-   *
-   * @param args 条件
-   * @return /
-   */
-  public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs args) {
-    return this.selectLocalStorageByArgs(args);
-  }
-
-  public void injectQueryParams(SystemQueryStorageArgs args, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
+  private void injectQueryParams(SystemQueryStorageArgs args, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
     if (args != null) {
       wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
           c -> c.like(SystemLocalStorageTb::getName, args.getBlurry()).or()
@@ -183,16 +175,9 @@ public class SystemLocalStorageService {
     wrapper.orderByDesc(SystemLocalStorageTb::getId);
   }
 
-  public List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs args) {
+  public List<SystemLocalStorageTb> queryLocalStorageByArgs(SystemQueryStorageArgs args) {
     LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQueryParams(args, wrapper);
     return systemLocalStorageMapper.selectList(wrapper);
-  }
-
-  public IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs args,
-      Page<SystemLocalStorageTb> page) {
-    LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQueryParams(args, wrapper);
-    return systemLocalStorageMapper.selectPage(page, wrapper);
   }
 }

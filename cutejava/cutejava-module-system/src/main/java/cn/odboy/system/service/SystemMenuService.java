@@ -154,17 +154,17 @@ public class SystemMenuService {
    * 删除
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeMenuByIds(Set<Long> ids) {
+  public void deleteMenuByIds(Set<Long> ids) {
     Set<SystemMenuTb> menuSet = new HashSet<>();
     for (Long id : ids) {
-      List<SystemMenuTb> menuList = this.queryMenuByPid(id);
+      List<SystemMenuTb> menuList = this.listMenuByPid(id);
       menuSet.add(systemMenuMapper.selectById(id));
-      menuSet = this.queryChildMenu(menuList, menuSet);
+      menuSet = this.queryChildMenuByArgs(menuList, menuSet);
     }
     List<Long> menuIds =
         menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
     if (CollUtil.isNotEmpty(menuIds)) {
-      KitSpringBeanHolder.getBean(SystemMenuService.class).removeRoleMenuByMenuIds(menuIds);
+      KitSpringBeanHolder.getBean(SystemMenuService.class).deleteRoleMenuByMenuIds(menuIds);
       systemMenuMapper.deleteByIds(menuIds);
     }
     for (SystemMenuTb menu : menuSet) {
@@ -173,7 +173,7 @@ public class SystemMenuService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void removeRoleMenuByMenuIds(List<Long> menuIds) {
+  public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
     if (CollUtil.isNotEmpty(menuIds)) {
       LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
       wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
@@ -250,10 +250,10 @@ public class SystemMenuService {
    * @param currentUserId /
    * @return /
    */
-  public List<SystemMenuTb> queryMenuListByUserId(Long currentUserId) {
+  public List<SystemMenuTb> listMenuByUserId(Long currentUserId) {
     List<SystemRoleVo> roles = systemRoleService.queryRoleByUsersId(currentUserId);
     Set<Long> roleIds = roles.stream().map(SystemRoleTb::getId).collect(Collectors.toSet());
-    return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIdsAndType(roleIds, 2));
+    return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIds(roleIds));
   }
 
   /**
@@ -263,12 +263,12 @@ public class SystemMenuService {
    * @param menuSet  /
    * @return /
    */
-  public Set<SystemMenuTb> queryChildMenu(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
+  public Set<SystemMenuTb> queryChildMenuByArgs(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
     for (SystemMenuTb menu : menuList) {
       menuSet.add(menu);
-      List<SystemMenuTb> menus = this.getMenuByPid(menu.getId());
+      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId());
       if (CollUtil.isNotEmpty(menus)) {
-        queryChildMenu(menus, menuSet);
+        queryChildMenuByArgs(menus, menuSet);
       }
     }
     return menuSet;
@@ -280,10 +280,13 @@ public class SystemMenuService {
    * @param pid /
    * @return /
    */
-  public List<SystemMenuTb> queryMenuByPid(Long pid) {
+  public List<SystemMenuTb> listMenuByPid(Long pid) {
     List<SystemMenuTb> menus;
     if (pid != null && !pid.equals(0L)) {
-      menus = this.getMenuByPid(pid);
+      LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+      wrapper.eq(SystemMenuTb::getPid, pid);
+      wrapper.orderByAsc(SystemMenuTb::getMenuSort);
+      return systemMenuMapper.selectList(wrapper);
     } else {
       menus = this.listRootMenu();
     }
@@ -297,13 +300,13 @@ public class SystemMenuService {
    * @param menus /
    * @return /
    */
-  public List<SystemMenuTb> querySuperiorMenuList(SystemMenuTb menu, List<SystemMenuTb> menus) {
+  public List<SystemMenuTb> querySuperiorMenuByArgs(SystemMenuTb menu, List<SystemMenuTb> menus) {
     if (menu.getPid() == null) {
       menus.addAll(this.listRootMenu());
       return menus;
     }
-    menus.addAll(this.getMenuByPid(menu.getPid()));
-    return querySuperiorMenuList(systemMenuMapper.selectById(menu.getPid()), menus);
+    menus.addAll(this.listMenuByPid(menu.getPid()));
+    return querySuperiorMenuByArgs(systemMenuMapper.selectById(menu.getPid()), menus);
   }
 
   /**
@@ -441,13 +444,6 @@ public class SystemMenuService {
             args.getCreateTime().get(1));
       }
     }
-    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
-    return systemMenuMapper.selectList(wrapper);
-  }
-
-  private List<SystemMenuTb> getMenuByPid(Long pid) {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemMenuTb::getPid, pid);
     wrapper.orderByAsc(SystemMenuTb::getMenuSort);
     return systemMenuMapper.selectList(wrapper);
   }

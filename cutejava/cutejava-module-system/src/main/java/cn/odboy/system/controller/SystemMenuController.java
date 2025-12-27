@@ -66,7 +66,7 @@ public class SystemMenuController {
   @PostMapping(value = "/buildMenus")
   @ApiOperation("获取前端所需菜单")
   public ResponseEntity<List<SystemMenuVo>> buildMenus() {
-    List<SystemMenuTb> menuList = systemMenuService.queryMenuListByUserId(KitSecurityHelper.getCurrentUserId());
+    List<SystemMenuTb> menuList = systemMenuService.listMenuByUserId(KitSecurityHelper.getCurrentUserId());
     List<SystemMenuTb> menus = systemMenuService.buildMenuTree(menuList);
     return ResponseEntity.ok(systemMenuService.buildMenuVo(menus));
   }
@@ -75,7 +75,7 @@ public class SystemMenuController {
   @PostMapping(value = "/queryMenuListByPid")
   @PreAuthorize("@el.check('menu:list','roles:list')")
   public ResponseEntity<List<SystemMenuTb>> queryMenuListByPid(@RequestParam Long pid) {
-    return ResponseEntity.ok(systemMenuService.queryMenuByPid(pid));
+    return ResponseEntity.ok(systemMenuService.listMenuByPid(pid));
   }
 
   @ApiOperation("根据菜单ID返回所有子节点ID, 包含自身ID")
@@ -83,9 +83,9 @@ public class SystemMenuController {
   @PreAuthorize("@el.check('menu:list','roles:list')")
   public ResponseEntity<Set<Long>> queryChildMenuSet(@RequestParam Long id) {
     Set<SystemMenuTb> menuSet = new HashSet<>();
-    List<SystemMenuTb> menuList = systemMenuService.queryMenuByPid(id);
+    List<SystemMenuTb> menuList = systemMenuService.listMenuByPid(id);
     menuSet.add(systemMenuMapper.selectById(id));
-    menuSet = systemMenuService.queryChildMenu(menuList, menuSet);
+    menuSet = systemMenuService.queryChildMenuByArgs(menuList, menuSet);
     Set<Long> ids = menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
     return ResponseEntity.ok(ids);
   }
@@ -116,7 +116,7 @@ public class SystemMenuController {
     if (CollectionUtil.isNotEmpty(ids)) {
       menus = new LinkedHashSet<>(systemMenuService.listMenuByIds(ids));
       for (SystemMenuTb menu : menus) {
-        List<SystemMenuTb> menuList = systemMenuService.querySuperiorMenuList(menu, new ArrayList<>());
+        List<SystemMenuTb> menuList = systemMenuService.querySuperiorMenuByArgs(menu, new ArrayList<>());
         for (SystemMenuTb data : menuList) {
           if (data.getId().equals(menu.getPid())) {
             data.setSubCount(data.getSubCount() - 1);
@@ -128,7 +128,7 @@ public class SystemMenuController {
       menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
       return ResponseEntity.ok(systemMenuService.buildMenuTree(new ArrayList<>(menus)));
     }
-    return ResponseEntity.ok(systemMenuService.queryMenuByPid(null));
+    return ResponseEntity.ok(systemMenuService.listMenuByPid(null));
   }
 
   @ApiOperation("新增菜单")
@@ -154,7 +154,7 @@ public class SystemMenuController {
   @PostMapping(value = "/removeMenuByIds")
   @PreAuthorize("@el.check('menu:del')")
   public ResponseEntity<Void> removeMenuByIds(@RequestBody Set<Long> ids) {
-    systemMenuService.removeMenuByIds(ids);
+    systemMenuService.deleteMenuByIds(ids);
     return ResponseEntity.ok(null);
   }
 }

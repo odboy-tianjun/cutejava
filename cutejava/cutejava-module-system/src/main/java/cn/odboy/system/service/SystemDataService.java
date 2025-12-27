@@ -78,7 +78,7 @@ public class SystemDataService {
    * @return 数据权限ID
    */
   private List<Long> queryCustomDataPermissionByArgs(List<Long> deptIds, SystemRoleTb role) {
-    List<SystemDeptTb> deptList = systemRoleDeptService.selectDeptByRoleId(role.getId());
+    List<SystemDeptTb> deptList = systemRoleDeptService.listDeptByRoleId(role.getId());
     for (SystemDeptTb dept : deptList) {
       deptIds.add(dept.getId());
       List<SystemDeptTb> deptChildren = systemDeptService.listDeptByPid(dept.getId());

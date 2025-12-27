@@ -38,6 +38,6 @@ public class SystemMonitorController {
   @ApiOperation("查询服务监控")
   @PreAuthorize("@el.check('monitor:list')")
   public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
-    return ResponseEntity.ok(systemMonitorService.queryServerMonitorInfo());
+    return ResponseEntity.ok(systemMonitorService.getServerMonitorInfo());
   }
 }

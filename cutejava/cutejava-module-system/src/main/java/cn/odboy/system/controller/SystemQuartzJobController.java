@@ -59,7 +59,7 @@ public class SystemQuartzJobController {
       @Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
     SystemQueryQuartzJobArgs args = pageArgs.getArgs();
     Page<SystemQuartzJobTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemQuartzJobService.queryQuartzJobByArgs(args, page));
+    return ResponseEntity.ok(systemQuartzJobService.searchQuartzJobByArgs(args, page));
   }
 
   @ApiOperation("导出任务数据")
@@ -81,7 +81,7 @@ public class SystemQuartzJobController {
   @PreAuthorize("@el.check('quartzJob:list')")
   public ResponseEntity<KitPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
     Page<SystemQuartzLogTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemQuartzJobService.queryQuartzLogByArgs(args, page));
+    return ResponseEntity.ok(systemQuartzJobService.searchQuartzLogByArgs(args, page));
   }
 
   @ApiOperation("新增定时任务")
@@ -128,7 +128,7 @@ public class SystemQuartzJobController {
   @PostMapping(value = "/removeJobByIds")
   @PreAuthorize("@el.check('quartzJob:del')")
   public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
-    systemQuartzJobService.removeJobByIds(ids);
+    systemQuartzJobService.deleteJobByIds(ids);
     return ResponseEntity.ok(null);
   }
 
