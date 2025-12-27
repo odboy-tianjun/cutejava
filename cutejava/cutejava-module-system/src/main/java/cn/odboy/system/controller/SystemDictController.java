@@ -49,8 +49,8 @@ public class SystemDictController {
   @ApiOperation("导出字典数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('dict:list')")
-  public void exportDict(HttpServletResponse response, SystemQueryDictArgs criteria) throws IOException {
-    systemDictService.exportDictExcel(systemDictService.queryDictByArgs(criteria), response);
+  public void exportDict(HttpServletResponse response, SystemQueryDictArgs args) throws IOException {
+    systemDictService.exportDictExcel(systemDictService.queryDictByArgs(args), response);
   }
 
   @ApiOperation("查询字典")
@@ -64,15 +64,10 @@ public class SystemDictController {
   @PostMapping
   @PreAuthorize("@el.check('dict:list')")
   public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> args) {
-    Page<SystemDictTb> page;
-    SystemQueryDictArgs criteria = args.getArgs();
-    if (args.getSize() != null) {
-      page = new Page<>(args.getPage(), args.getSize());
-    } else {
-      page = new Page<>(criteria.getPage(), criteria.getSize());
-    }
-    return ResponseEntity.ok(systemDictService.searchDict(criteria, page));
+      @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
+    Page<SystemDictTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    SystemQueryDictArgs args = pageArgs.getArgs();
+    return ResponseEntity.ok(systemDictService.searchDict(args, page));
   }
 
   @ApiOperation("新增字典")

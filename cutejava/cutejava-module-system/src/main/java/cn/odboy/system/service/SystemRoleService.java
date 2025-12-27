@@ -188,26 +188,26 @@ public class SystemRoleService {
   /**
    * 根据条件查询全部角色
    *
-   * @param criteria 条件
+   * @param args 条件
    * @return
    */
-  public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs criteria) {
+  public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args) {
     // 查询角色基本信息
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, criteria.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, criteria.getBlurry()));
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+              .like(SystemRoleTb::getDescription, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByAsc(SystemRoleTb::getLevel);
 
     // 分页处理
-    if (criteria != null && criteria.getOffset() > 0 && criteria.getSize() != null) {
-      Page<SystemRoleTb> rolePage = new Page<>(criteria.getOffset() / criteria.getSize() + 1, criteria.getSize());
+    if (args != null && args.getOffset() > 0 && args.getSize() != null) {
+      Page<SystemRoleTb> rolePage = new Page<>(args.getOffset() / args.getSize() + 1, args.getSize());
       Page<SystemRoleTb> page = systemRoleMapper.selectPage(rolePage, wrapper);
       List<SystemRoleTb> roles = page.getRecords();
       return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
@@ -220,14 +220,14 @@ public class SystemRoleService {
   /**
    * 分页查询角色
    *
-   * @param criteria 条件
-   * @param page     分页参数
+   * @param args 条件
+   * @param page 分页参数
    * @return
    */
-  public KitPageResult<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs criteria, Page<Object> page) {
-    criteria.setOffset(page.offset());
-    List<SystemRoleVo> roles = this.queryRoleByArgs(criteria);
-    Long total = this.countRoleByArgs(criteria);
+  public KitPageResult<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args, Page<Object> page) {
+    args.setOffset(page.offset());
+    List<SystemRoleVo> roles = this.queryRoleByArgs(args);
+    Long total = this.countRoleByArgs(args);
     return KitPageUtil.toPage(roles, total);
   }
 
@@ -387,15 +387,15 @@ public class SystemRoleService {
     return roleVo;
   }
 
-  public Long countRoleByArgs(SystemQueryRoleArgs criteria) {
+  public Long countRoleByArgs(SystemQueryRoleArgs args) {
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, criteria.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, criteria.getBlurry()));
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+              .like(SystemRoleTb::getDescription, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     return systemRoleMapper.selectCount(wrapper);

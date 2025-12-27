@@ -218,30 +218,30 @@ public class SystemMenuService {
   /**
    * 查询全部数据
    *
-   * @param criteria 条件
-   * @param isQuery  /
+   * @param args    条件
+   * @param isQuery /
    * @return /
    * @throws Exception /
    */
-  public List<SystemMenuTb> queryAllMenu(SystemQueryMenuArgs criteria, Boolean isQuery) throws Exception {
+  public List<SystemMenuTb> queryAllMenu(SystemQueryMenuArgs args, Boolean isQuery) throws Exception {
     if (Boolean.TRUE.equals(isQuery)) {
-      criteria.setPidIsNull(true);
-      List<Field> fields = KitClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
+      args.setPidIsNull(true);
+      List<Field> fields = KitClassUtil.getAllFields(args.getClass(), new ArrayList<>());
       for (Field field : fields) {
         //设置对象的访问权限, 保证对private的属性的访问
         field.setAccessible(true);
-        Object val = field.get(criteria);
+        Object val = field.get(args);
         if ("pidIsNull".equals(field.getName())) {
           continue;
         }
         // 如果有查询条件, 则不指定pidIsNull
         if (ObjectUtil.isNotNull(val)) {
-          criteria.setPidIsNull(null);
+          args.setPidIsNull(null);
           break;
         }
       }
     }
-    return this.queryMenuByArgs(criteria);
+    return this.queryMenuByArgs(args);
   }
 
   /**
@@ -427,18 +427,18 @@ public class SystemMenuService {
     return systemMenuMapper.selectCount(wrapper);
   }
 
-  private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs criteria) {
+  private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs args) {
     LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      wrapper.isNull(criteria.getPidIsNull() != null, SystemMenuTb::getPid);
-      wrapper.eq(criteria.getPid() != null, SystemMenuTb::getPid, criteria.getPid());
-      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-          c -> c.like(SystemMenuTb::getTitle, criteria.getBlurry()).or()
-              .like(SystemMenuTb::getComponentName, criteria.getBlurry()).or()
-              .like(SystemMenuTb::getPermission, criteria.getBlurry()));
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemMenuTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.isNull(args.getPidIsNull() != null, SystemMenuTb::getPid);
+      wrapper.eq(args.getPid() != null, SystemMenuTb::getPid, args.getPid());
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemMenuTb::getTitle, args.getBlurry()).or()
+              .like(SystemMenuTb::getComponentName, args.getBlurry()).or()
+              .like(SystemMenuTb::getPermission, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemMenuTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByAsc(SystemMenuTb::getMenuSort);

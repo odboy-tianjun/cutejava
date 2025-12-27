@@ -84,38 +84,38 @@ public class SystemUserController {
   @ApiOperation("导出用户数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('user:list')")
-  public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs criteria) throws IOException {
-    systemUserService.exportUserExcel(systemUserService.queryUserByArgs(criteria), response);
+  public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs args) throws IOException {
+    systemUserService.exportUserExcel(systemUserService.queryUserByArgs(args), response);
   }
 
   @ApiOperation("查询用户")
   @PostMapping
   @PreAuthorize("@el.check('user:list')")
   public ResponseEntity<KitPageResult<SystemUserVo>> queryUserByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
-    Page<SystemUserTb> page = new Page<>(args.getPage(), args.getSize());
-    SystemQueryUserArgs criteria = args.getArgs();
-    if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
-      criteria.getDeptIds().add(criteria.getDeptId());
+      @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> pageArgs) {
+    Page<SystemUserTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    SystemQueryUserArgs args = pageArgs.getArgs();
+    if (!ObjectUtils.isEmpty(args.getDeptId())) {
+      args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
-      List<SystemDeptTb> data = systemDeptService.listDeptByPid(criteria.getDeptId());
+      List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
       // 然后把子节点的ID都加入到集合中
-      criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
+      args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
     }
     // 数据权限
     List<Long> dataScopes = systemDataService.queryDeptIdByArgs(
         systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername()));
-    // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
-    if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
+    // args.getDeptIds() 不为空并且数据权限不为空则取交集
+    if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
       // 取交集
-      criteria.getDeptIds().retainAll(dataScopes);
-      if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-        return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
+      args.getDeptIds().retainAll(dataScopes);
+      if (!CollectionUtil.isEmpty(args.getDeptIds())) {
+        return ResponseEntity.ok(systemUserService.queryUserByArgs(args, page));
       }
     } else {
       // 否则取并集
-      criteria.getDeptIds().addAll(dataScopes);
-      return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
+      args.getDeptIds().addAll(dataScopes);
+      return ResponseEntity.ok(systemUserService.queryUserByArgs(args, page));
     }
     return ResponseEntity.ok(KitPageUtil.emptyData());
   }

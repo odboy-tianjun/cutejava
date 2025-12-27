@@ -52,17 +52,17 @@ public class SystemOssStorageController {
   @PostMapping
   @PreAuthorize("@el.check('storage:list')")
   public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
-      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
-    SystemQueryStorageArgs criteria = args.getArgs();
-    Page<SystemOssStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(systemOssStorageService.queryOssStorage(criteria, page));
+      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
+    SystemQueryStorageArgs args = pageArgs.getArgs();
+    Page<SystemOssStorageTb> page = new Page<>(args.getPage(), args.getSize());
+    return ResponseEntity.ok(systemOssStorageService.queryOssStorage(args, page));
   }
 
   @ApiOperation("导出数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
-  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
-    systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(criteria), response);
+  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
+    systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(args), response);
   }
 
   @ApiOperation("上传文件")

@@ -48,18 +48,18 @@ public class SystemJobController {
   @ApiOperation("导出岗位数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('job:list')")
-  public void exportJob(HttpServletResponse response, SystemQueryJobArgs criteria) throws IOException {
-    systemJobService.exportJobExcel(systemJobService.queryJobByArgs(criteria), response);
+  public void exportJob(HttpServletResponse response, SystemQueryJobArgs args) throws IOException {
+    systemJobService.exportJobExcel(systemJobService.queryJobByArgs(args), response);
   }
 
   @ApiOperation("查询岗位")
   @PostMapping(value = "/queryAllEnableJob")
   @PreAuthorize("@el.check('job:list','user:list')")
   public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
-    SystemQueryJobArgs criteria = args.getArgs();
-    Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(systemJobService.queryJobByArgs(criteria, page));
+      @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> pageArgs) {
+    SystemQueryJobArgs args = pageArgs.getArgs();
+    Page<SystemJobTb> page = new Page<>(args.getPage(), args.getSize());
+    return ResponseEntity.ok(systemJobService.searchJobByArgs(args, page));
   }
 
   @ApiOperation("查询岗位")
@@ -92,7 +92,7 @@ public class SystemJobController {
   public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
     // 验证是否被用户关联
     systemJobService.verifyBindRelationByIds(ids);
-    systemJobService.removeJobByIds(ids);
+    systemJobService.deleteJobByIds(ids);
     return ResponseEntity.ok(null);
   }
 }

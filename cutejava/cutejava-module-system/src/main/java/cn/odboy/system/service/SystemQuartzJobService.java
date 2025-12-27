@@ -225,39 +225,39 @@ public class SystemQuartzJobService {
   /**
    * 分页查询
    *
-   * @param criteria 条件
-   * @param page     分页参数
+   * @param args 条件
+   * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria,
+  public KitPageResult<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs args,
       Page<SystemQuartzJobTb> page) {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQuartzJobQueryParams(criteria, wrapper);
+    this.injectQuartzJobQueryParams(args, wrapper);
     return KitPageUtil.toPage(systemQuartzJobMapper.selectPage(page, wrapper));
   }
 
-  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs criteria,
+  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args,
       LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
-    if (criteria != null) {
-      wrapper.like(StrUtil.isNotBlank(criteria.getJobName()), SystemQuartzJobTb::getJobName,
-          criteria.getJobName());
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemQuartzJobTb::getUpdateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName,
+          args.getJobName());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByDesc(SystemQuartzJobTb::getId);
   }
 
-  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs criteria,
+  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args,
       LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
-    if (criteria != null) {
-      wrapper.like(StrUtil.isNotBlank(criteria.getJobName()), SystemQuartzLogTb::getJobName,
-          criteria.getJobName());
-      wrapper.eq(criteria.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, criteria.getIsSuccess());
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemQuartzLogTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName,
+          args.getJobName());
+      wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByDesc(SystemQuartzLogTb::getId);
@@ -266,38 +266,38 @@ public class SystemQuartzJobService {
   /**
    * 分页查询日志
    *
-   * @param criteria 条件
-   * @param page     分页参数
+   * @param args 条件
+   * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria,
+  public KitPageResult<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs args,
       Page<SystemQuartzLogTb> page) {
     LambdaQueryWrapper<SystemQuartzLogTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQuartzLogQueryParams(criteria, wrapper);
+    this.injectQuartzLogQueryParams(args, wrapper);
     return KitPageUtil.toPage(systemQuartzLogMapper.selectPage(page, wrapper));
   }
 
   /**
    * 查询全部
    *
-   * @param criteria 条件
+   * @param args 条件
    * @return /
    */
-  public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs criteria) {
+  public List<SystemQuartzJobTb> queryQuartzJobByArgs(SystemQueryQuartzJobArgs args) {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQuartzJobQueryParams(criteria, wrapper);
+    this.injectQuartzJobQueryParams(args, wrapper);
     return systemQuartzJobMapper.selectList(wrapper);
   }
 
   /**
    * 查询全部
    *
-   * @param criteria 条件
+   * @param args 条件
    * @return /
    */
-  public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs criteria) {
+  public List<SystemQuartzLogTb> queryQuartzLogByArgs(SystemQueryQuartzJobArgs args) {
     LambdaQueryWrapper<SystemQuartzLogTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQuartzLogQueryParams(criteria, wrapper);
+    this.injectQuartzLogQueryParams(args, wrapper);
     return systemQuartzLogMapper.selectList(wrapper);
   }
 

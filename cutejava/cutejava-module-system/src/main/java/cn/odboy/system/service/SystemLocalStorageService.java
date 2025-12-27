@@ -149,50 +149,50 @@ public class SystemLocalStorageService {
   /**
    * 分页查询
    *
-   * @param criteria 条件
-   * @param page     分页参数
+   * @param args 条件
+   * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria,
+  public KitPageResult<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs args,
       Page<SystemLocalStorageTb> page) {
-    return KitPageUtil.toPage(this.selectLocalStorageByArgs(criteria, page));
+    return KitPageUtil.toPage(this.selectLocalStorageByArgs(args, page));
   }
 
   /**
    * 查询全部数据
    *
-   * @param criteria 条件
+   * @param args 条件
    * @return /
    */
-  public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs criteria) {
-    return this.selectLocalStorageByArgs(criteria);
+  public List<SystemLocalStorageTb> queryLocalStorage(SystemQueryStorageArgs args) {
+    return this.selectLocalStorageByArgs(args);
   }
 
-  public void injectQueryParams(SystemQueryStorageArgs criteria, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
-    if (criteria != null) {
-      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-          c -> c.like(SystemLocalStorageTb::getName, criteria.getBlurry()).or()
-              .like(SystemLocalStorageTb::getSuffix, criteria.getBlurry()).or()
-              .like(SystemLocalStorageTb::getType, criteria.getBlurry()).or()
-              .like(SystemLocalStorageTb::getCreateBy, criteria.getBlurry()));
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemLocalStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+  public void injectQueryParams(SystemQueryStorageArgs args, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemLocalStorageTb::getName, args.getBlurry()).or()
+              .like(SystemLocalStorageTb::getSuffix, args.getBlurry()).or()
+              .like(SystemLocalStorageTb::getType, args.getBlurry()).or()
+              .like(SystemLocalStorageTb::getCreateBy, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemLocalStorageTb::getUpdateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByDesc(SystemLocalStorageTb::getId);
   }
 
-  public List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria) {
+  public List<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs args) {
     LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQueryParams(criteria, wrapper);
+    this.injectQueryParams(args, wrapper);
     return systemLocalStorageMapper.selectList(wrapper);
   }
 
-  public IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs criteria,
+  public IPage<SystemLocalStorageTb> selectLocalStorageByArgs(SystemQueryStorageArgs args,
       Page<SystemLocalStorageTb> page) {
     LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQueryParams(criteria, wrapper);
+    this.injectQueryParams(args, wrapper);
     return systemLocalStorageMapper.selectPage(page, wrapper);
   }
 }

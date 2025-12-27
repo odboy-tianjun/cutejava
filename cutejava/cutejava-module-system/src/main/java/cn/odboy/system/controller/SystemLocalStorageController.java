@@ -52,17 +52,17 @@ public class SystemLocalStorageController {
   @PostMapping
   @PreAuthorize("@el.check('storage:list')")
   public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(
-      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
-    SystemQueryStorageArgs criteria = args.getArgs();
-    Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(localStorageService.queryLocalStorage(criteria, page));
+      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
+    SystemQueryStorageArgs args = pageArgs.getArgs();
+    Page<SystemLocalStorageTb> page = new Page<>(args.getPage(), args.getSize());
+    return ResponseEntity.ok(localStorageService.queryLocalStorage(args, page));
   }
 
   @ApiOperation("导出数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
-  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
-    localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorage(criteria), response);
+  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
+    localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorage(args), response);
   }
 
   @ApiOperation("上传文件")

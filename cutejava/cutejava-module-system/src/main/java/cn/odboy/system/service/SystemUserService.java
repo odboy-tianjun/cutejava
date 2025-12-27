@@ -117,7 +117,6 @@ public class SystemUserService {
    * 编辑用户
    *
    * @param args /
-   * @throws Exception /
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateUserById(SystemUserVo args) {
@@ -303,13 +302,13 @@ public class SystemUserService {
   /**
    * 查询全部
    *
-   * @param criteria 条件
-   * @param page     分页参数
+   * @param args 条件
+   * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemUserVo> queryUserByArgs(SystemQueryUserArgs criteria, Page<SystemUserTb> page) {
+  public KitPageResult<SystemUserVo> queryUserByArgs(SystemQueryUserArgs args, Page<SystemUserTb> page) {
     // 查询用户基本信息
-    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(criteria);
+    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
     IPage<SystemUserTb> userPage = systemUserMapper.selectPage(page, wrapper);
     List<SystemUserTb> users = userPage.getRecords();
 
@@ -322,12 +321,12 @@ public class SystemUserService {
   /**
    * 查询全部不分页
    *
-   * @param criteria 条件
+   * @param args 条件
    * @return /
    */
-  public List<SystemUserVo> queryUserByArgs(SystemQueryUserArgs criteria) {
+  public List<SystemUserVo> queryUserByArgs(SystemQueryUserArgs args) {
     // 查询用户基本信息
-    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(criteria);
+    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
     List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
 
     // 转换为SystemUserVo并关联查询
@@ -344,20 +343,20 @@ public class SystemUserService {
     return systemUserMapper.selectById(id);
   }
 
-  public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> args) {
-    SystemQueryUserArgs criteria = args.getArgs();
+  public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> pageArgs) {
+    SystemQueryUserArgs args = pageArgs.getArgs();
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.select(SystemUserTb::getId, SystemUserTb::getDeptId, SystemUserTb::getEmail, SystemUserTb::getPhone);
     wrapper.and(c -> {
-      c.eq(SystemUserTb::getPhone, criteria.getBlurry());
+      c.eq(SystemUserTb::getPhone, args.getBlurry());
       c.or();
-      c.eq(SystemUserTb::getEmail, criteria.getBlurry());
+      c.eq(SystemUserTb::getEmail, args.getBlurry());
       c.or();
-      c.like(SystemUserTb::getUsername, criteria.getBlurry());
+      c.like(SystemUserTb::getUsername, args.getBlurry());
       c.or();
-      c.like(SystemUserTb::getNickName, criteria.getBlurry());
+      c.like(SystemUserTb::getNickName, args.getBlurry());
     });
-    return systemUserMapper.selectPage(new Page<>(criteria.getPage(), 50), wrapper).getRecords().stream().map(m -> {
+    return systemUserMapper.selectPage(new Page<>(args.getPage(), 50), wrapper).getRecords().stream().map(m -> {
       Map<String, Object> ext = new HashMap<>(1);
       ext.put("id", m.getId());
       ext.put("deptId", m.getDeptId());
@@ -415,7 +414,6 @@ public class SystemUserService {
     LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
     // 这里需要通过菜单角色关联表查询，暂时简化处理
     List<SystemUserTb> users = systemUserMapper.selectList(null);
-
     return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
   }
 
@@ -466,29 +464,29 @@ public class SystemUserService {
   /**
    * 构建用户查询条件
    *
-   * @param criteria 查询条件
+   * @param args 查询条件
    * @return /
    */
-  private LambdaQueryWrapper<SystemUserTb> buildUserQueryWrapper(SystemQueryUserArgs criteria) {
+  private LambdaQueryWrapper<SystemUserTb> buildUserQueryWrapper(SystemQueryUserArgs args) {
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      if (criteria.getId() != null) {
-        wrapper.eq(SystemUserTb::getId, criteria.getId());
+    if (args != null) {
+      if (args.getId() != null) {
+        wrapper.eq(SystemUserTb::getId, args.getId());
       }
-      if (criteria.getEnabled() != null) {
-        wrapper.eq(SystemUserTb::getEnabled, criteria.getEnabled());
+      if (args.getEnabled() != null) {
+        wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
       }
-      if (CollUtil.isNotEmpty(criteria.getDeptIds())) {
-        wrapper.in(SystemUserTb::getDeptId, criteria.getDeptIds());
+      if (CollUtil.isNotEmpty(args.getDeptIds())) {
+        wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
       }
-      if (StrUtil.isNotBlank(criteria.getBlurry())) {
-        wrapper.and(w -> w.like(SystemUserTb::getUsername, criteria.getBlurry())
-            .or().like(SystemUserTb::getNickName, criteria.getBlurry())
-            .or().like(SystemUserTb::getEmail, criteria.getBlurry()));
+      if (StrUtil.isNotBlank(args.getBlurry())) {
+        wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry())
+            .or().like(SystemUserTb::getNickName, args.getBlurry())
+            .or().like(SystemUserTb::getEmail, args.getBlurry()));
       }
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemUserTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByDesc(SystemUserTb::getCreateTime);

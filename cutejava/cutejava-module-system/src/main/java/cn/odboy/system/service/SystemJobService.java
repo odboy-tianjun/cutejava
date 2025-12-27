@@ -24,11 +24,9 @@ import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
-import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,7 +83,7 @@ public class SystemJobService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeJobByIds(Set<Long> ids) {
+  public void deleteJobByIds(Set<Long> ids) {
     systemJobMapper.deleteByIds(ids);
   }
 
@@ -94,7 +92,6 @@ public class SystemJobService {
    *
    * @param jobs     待导出的数据
    * @param response /
-   * @throws IOException
    */
   public void exportJobExcel(List<SystemJobTb> jobs, HttpServletResponse response) throws IOException {
     List<Map<String, Object>> list = new ArrayList<>();
@@ -113,20 +110,21 @@ public class SystemJobService {
    *
    * @param args 条件
    * @param page 分页参数
-   * @return
    */
-  public KitPageResult<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
-    return KitPageUtil.toPage(this.selectJobByArgs(args, page));
+  public KitPageResult<SystemJobTb> searchJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    Page<SystemJobTb> selectPage = systemJobMapper.selectPage(page, wrapper);
+    return KitPageUtil.toPage(selectPage);
   }
 
   /**
    * 查询全部数据
-   *
-   * @param args /
-   * @return /
    */
   public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
-    return this.selectJobByArgs(args);
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    return systemJobMapper.selectList(wrapper);
   }
 
   /**
@@ -140,34 +138,21 @@ public class SystemJobService {
     }
   }
 
-
   public SystemJobTb getJobByName(String name) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemJobTb::getName, name);
     return systemJobMapper.selectOne(wrapper);
   }
 
-  public void injectQueryParams(SystemQueryJobArgs criteria, LambdaQueryWrapper<SystemJobTb> wrapper) {
-    if (criteria != null) {
-      wrapper.like(StrUtil.isNotBlank(criteria.getName()), SystemJobTb::getName, criteria.getName());
-      wrapper.eq(criteria.getEnabled() != null, SystemJobTb::getEnabled, criteria.getEnabled());
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemJobTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+  public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
+      wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
-  }
-
-  public IPage<SystemJobTb> selectJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
-    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQueryParams(criteria, wrapper);
-    return systemJobMapper.selectPage(page, wrapper);
-  }
-
-  public List<SystemJobTb> selectJobByArgs(SystemQueryJobArgs criteria) {
-    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQueryParams(criteria, wrapper);
-    return systemJobMapper.selectList(wrapper);
   }
 }

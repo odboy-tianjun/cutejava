@@ -59,8 +59,8 @@ public class SystemMenuController {
   @ApiOperation("导出菜单数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('menu:list')")
-  public void exportMenu(HttpServletResponse response, SystemQueryMenuArgs criteria) throws Exception {
-    systemMenuService.exportMenuExcel(systemMenuService.queryAllMenu(criteria, false), response);
+  public void exportMenu(HttpServletResponse response, SystemQueryMenuArgs args) throws Exception {
+    systemMenuService.exportMenuExcel(systemMenuService.queryAllMenu(args, false), response);
   }
 
   @PostMapping(value = "/buildMenus")
@@ -102,9 +102,9 @@ public class SystemMenuController {
   @ApiOperation("查询菜单")
   @PreAuthorize("@el.check('menu:list')")
   public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(
-      @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
-    SystemQueryMenuArgs criteria = args.getArgs();
-    List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(criteria, true);
+      @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) throws Exception {
+    SystemQueryMenuArgs args = pageArgs.getArgs();
+    List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(args, true);
     return ResponseEntity.ok(KitPageUtil.toPage(menuList));
   }
 

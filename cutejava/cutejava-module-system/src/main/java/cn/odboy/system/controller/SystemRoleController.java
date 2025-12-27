@@ -62,8 +62,8 @@ public class SystemRoleController {
   @ApiOperation("导出角色数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('role:list')")
-  public void exportRole(HttpServletResponse response, SystemQueryRoleArgs criteria) throws IOException {
-    systemRoleService.exportRoleExcel(systemRoleService.queryRoleByArgs(criteria), response);
+  public void exportRole(HttpServletResponse response, SystemQueryRoleArgs args) throws IOException {
+    systemRoleService.exportRoleExcel(systemRoleService.queryRoleByArgs(args), response);
   }
 
   @ApiOperation("返回全部的角色")
@@ -77,10 +77,10 @@ public class SystemRoleController {
   @PostMapping
   @PreAuthorize("@el.check('roles:list')")
   public ResponseEntity<KitPageResult<SystemRoleVo>> queryRoleByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> args) {
-    SystemQueryRoleArgs criteria = args.getArgs();
-    Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(systemRoleService.queryRoleByArgs(criteria, page));
+      @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> pageArgs) {
+    SystemQueryRoleArgs args = pageArgs.getArgs();
+    Page<Object> page = new Page<>(args.getPage(), args.getSize());
+    return ResponseEntity.ok(systemRoleService.queryRoleByArgs(args, page));
   }
 
   @ApiOperation("获取用户级别")

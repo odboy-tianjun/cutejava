@@ -70,9 +70,9 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
   private SystemOssStorageMapper systemOssStorageMapper;
 
   @Override
-  public KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria,
+  public KitPageResult<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args,
       Page<SystemOssStorageTb> page) {
-    IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(criteria, page);
+    IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(args, page);
     IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
       SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
       storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
@@ -81,18 +81,18 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
     return KitPageUtil.toPage(convert);
   }
 
-  private IPage<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs criteria,
+  private IPage<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs args,
       Page<SystemOssStorageTb> page) {
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-          c -> c.like(SystemOssStorageTb::getFileName, criteria.getBlurry()).or()
-              .like(SystemOssStorageTb::getFilePrefix, criteria.getBlurry()).or()
-              .like(SystemOssStorageTb::getFileMime, criteria.getBlurry()).or()
-              .like(SystemOssStorageTb::getFileMd5, criteria.getBlurry()));
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemOssStorageTb::getUpdateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
+              .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
+              .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
+              .like(SystemOssStorageTb::getFileMd5, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByAsc(SystemOssStorageTb::getId);
@@ -100,10 +100,10 @@ public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMap
   }
 
   @Override
-  public List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs criteria) {
+  public List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args) {
     // 防止刷数据
     Page<SystemOssStorageTb> page = new Page<>(1, 500);
-    return queryOssStorage(criteria, page).getContent();
+    return queryOssStorage(args, page).getContent();
   }
 
   @Override

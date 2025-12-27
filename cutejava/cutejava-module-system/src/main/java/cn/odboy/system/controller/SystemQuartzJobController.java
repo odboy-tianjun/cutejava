@@ -56,24 +56,24 @@ public class SystemQuartzJobController {
   @PostMapping
   @PreAuthorize("@el.check('quartzJob:list')")
   public ResponseEntity<KitPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> args) {
-    SystemQueryQuartzJobArgs criteria = args.getArgs();
-    Page<SystemQuartzJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(systemQuartzJobService.queryQuartzJobByArgs(criteria, page));
+      @Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
+    SystemQueryQuartzJobArgs args = pageArgs.getArgs();
+    Page<SystemQuartzJobTb> page = new Page<>(args.getPage(), args.getSize());
+    return ResponseEntity.ok(systemQuartzJobService.queryQuartzJobByArgs(args, page));
   }
 
   @ApiOperation("导出任务数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('quartzJob:list')")
-  public void exportQuartzJob(HttpServletResponse response, SystemQueryQuartzJobArgs criteria) throws IOException {
-    systemQuartzJobService.exportQuartzJobExcel(systemQuartzJobService.queryQuartzJobByArgs(criteria), response);
+  public void exportQuartzJob(HttpServletResponse response, SystemQueryQuartzJobArgs args) throws IOException {
+    systemQuartzJobService.exportQuartzJobExcel(systemQuartzJobService.queryQuartzJobByArgs(args), response);
   }
 
   @ApiOperation("导出日志数据")
   @GetMapping(value = "/logs/download")
   @PreAuthorize("@el.check('quartzJob:list')")
-  public void exportQuartzJobLog(HttpServletResponse response, SystemQueryQuartzJobArgs criteria) throws IOException {
-    systemQuartzJobService.exportQuartzLogExcel(systemQuartzJobService.queryQuartzLogByArgs(criteria), response);
+  public void exportQuartzJobLog(HttpServletResponse response, SystemQueryQuartzJobArgs args) throws IOException {
+    systemQuartzJobService.exportQuartzLogExcel(systemQuartzJobService.queryQuartzLogByArgs(args), response);
   }
 
   @ApiOperation("查询任务执行日志")

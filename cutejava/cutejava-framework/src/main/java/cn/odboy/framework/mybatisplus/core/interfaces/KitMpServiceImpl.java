@@ -144,10 +144,10 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
   /**
    * 查有关的数据
    *
-   * @param criteria 动态条件
+   * @param args 动态条件
    */
-  public <Q> List<T> queryClazzListByArgs(Q criteria) {
-    QueryWrapper<T> predicate = KitMpQUtil.build(criteria);
+  public <Q> List<T> queryClazzListByArgs(Q args) {
+    QueryWrapper<T> predicate = KitMpQUtil.build(args);
     return baseMapper.selectList(predicate);
   }
 
@@ -166,11 +166,11 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
   /**
    * 查有关的数据并转成目标类型的数据
    *
-   * @param criteria    动态条件
+   * @param args        动态条件
    * @param targetClazz 目标类型
    */
-  public <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz) {
-    QueryWrapper<T> predicate = KitMpQUtil.build(criteria);
+  public <G, Q> List<G> queryFeatureClazzListByArgs(Q args, Class<G> targetClazz) {
+    QueryWrapper<T> predicate = KitMpQUtil.build(args);
     List<T> data = baseMapper.selectList(predicate);
     return BeanUtil.copyToList(data, targetClazz);
   }
@@ -219,15 +219,15 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
         originPageData.getTotal());
   }
 
-  public <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
-    QueryWrapper<T> wrapper = KitMpQUtil.build(criteria);
+  public <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q args, IPage<T> pageable, Class<G> targetClazz) {
+    QueryWrapper<T> wrapper = KitMpQUtil.build(args);
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
     return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz),
         originPageData.getTotal());
   }
 
-  public <Q> KitPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {
-    QueryWrapper<T> wrapper = KitMpQUtil.build(criteria);
+  public <Q> KitPageResult<T> queryClazzPageByArgs(Q args, IPage<T> pageable) {
+    QueryWrapper<T> wrapper = KitMpQUtil.build(args);
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
     return new KitPageResult<>(originPageData.getRecords(), originPageData.getTotal());
   }

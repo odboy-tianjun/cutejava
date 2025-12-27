@@ -159,17 +159,17 @@ public class SystemDeptService {
     return deptList;
   }
 
-  private List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs criteria) {
+  private List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs args) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
-    if (criteria != null) {
-      wrapper.in(CollUtil.isNotEmpty(criteria.getIds()), SystemDeptTb::getId, criteria.getIds());
-      wrapper.like(StrUtil.isNotBlank(criteria.getName()), SystemDeptTb::getName, criteria.getName());
-      wrapper.eq(criteria.getEnabled() != null, SystemDeptTb::getEnabled, criteria.getEnabled());
-      wrapper.eq(criteria.getPid() != null, SystemDeptTb::getPid, criteria.getPid());
-      wrapper.isNull(criteria.getPidIsNull() != null, SystemDeptTb::getPid);
-      if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-        wrapper.between(SystemDeptTb::getCreateTime, criteria.getCreateTime().get(0),
-            criteria.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.in(CollUtil.isNotEmpty(args.getIds()), SystemDeptTb::getId, args.getIds());
+      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemDeptTb::getName, args.getName());
+      wrapper.eq(args.getEnabled() != null, SystemDeptTb::getEnabled, args.getEnabled());
+      wrapper.eq(args.getPid() != null, SystemDeptTb::getPid, args.getPid());
+      wrapper.isNull(args.getPidIsNull() != null, SystemDeptTb::getPid);
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemDeptTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
       }
     }
     wrapper.orderByAsc(SystemDeptTb::getDeptSort);
@@ -179,18 +179,18 @@ public class SystemDeptService {
   /**
    * 查询所有数据
    *
-   * @param criteria 条件
-   * @param isQuery  /
+   * @param args    条件
+   * @param isQuery /
    * @return /
    * @throws Exception /
    */
-  public List<SystemDeptTb> queryAllDeptByArgs(SystemQueryDeptArgs criteria, Boolean isQuery) throws Exception {
+  public List<SystemDeptTb> queryAllDeptByArgs(SystemQueryDeptArgs args, Boolean isQuery) throws Exception {
     String dataScopeType = KitSecurityHelper.getDataScopeType();
     if (isQuery) {
       if (dataScopeType.equals(SystemDataScopeEnum.ALL.getValue())) {
-        criteria.setPidIsNull(true);
+        args.setPidIsNull(true);
       }
-      List<Field> fields = KitClassUtil.getAllFields(criteria.getClass(), new ArrayList<>());
+      List<Field> fields = KitClassUtil.getAllFields(args.getClass(), new ArrayList<>());
       List<String> fieldNames = new ArrayList<>() {{
         add("pidIsNull");
         add("enabled");
@@ -198,19 +198,19 @@ public class SystemDeptService {
       for (Field field : fields) {
         // 设置对象的访问权限, 保证对private的属性的访问
         field.setAccessible(true);
-        Object val = field.get(criteria);
+        Object val = field.get(args);
         if (fieldNames.contains(field.getName())) {
           continue;
         }
         if (ObjectUtil.isNotNull(val)) {
-          criteria.setPidIsNull(null);
+          args.setPidIsNull(null);
           break;
         }
       }
     }
     // 数据权限
-    criteria.setIds(KitSecurityHelper.getCurrentUserDataScope());
-    List<SystemDeptTb> list = this.queryDeptByArgs(criteria);
+    args.setIds(KitSecurityHelper.getCurrentUserDataScope());
+    List<SystemDeptTb> list = this.queryDeptByArgs(args);
     // 如果为空, 就代表为自定义权限或者本级权限, 就需要去重, 不理解可以注释掉，看查询结果
     if (StrUtil.isBlank(dataScopeType)) {
       return this.deduplication(list);
