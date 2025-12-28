@@ -24,8 +24,8 @@ import cn.odboy.system.service.SystemOssStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,38 +45,37 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/ossStorage")
 public class SystemOssStorageController {
 
-  @Autowired
-  private SystemOssStorageService systemOssStorageService;
+    @Autowired private SystemOssStorageService systemOssStorageService;
 
-  @ApiOperation("查询文件")
-  @PostMapping
-  @PreAuthorize("@el.check('storage:list')")
-  public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
-      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
-    SystemQueryStorageArgs criteria = args.getArgs();
-    Page<SystemOssStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(systemOssStorageService.queryOssStorage(criteria, page));
-  }
+    @ApiOperation("查询文件")
+    @PostMapping
+    @PreAuthorize("@el.check('storage:list')")
+    public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
+        @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
+        SystemQueryStorageArgs args = pageArgs.getArgs();
+        Page<SystemOssStorageTb> page = new Page<>(args.getPage(), args.getSize());
+        return ResponseEntity.ok(systemOssStorageService.searchOssStorage(args, page));
+    }
 
-  @ApiOperation("导出数据")
-  @GetMapping(value = "/download")
-  @PreAuthorize("@el.check('storage:list')")
-  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
-    systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(criteria), response);
-  }
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('storage:list')")
+    public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
+        systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(args), response);
+    }
 
-  @ApiOperation("上传文件")
-  @PostMapping(value = "/uploadFile")
-  @PreAuthorize("@el.check('storage:add')")
-  public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-    String fileUrl = systemOssStorageService.uploadFile(file);
-    return ResponseEntity.ok(fileUrl);
-  }
+    @ApiOperation("上传文件")
+    @PostMapping(value = "/uploadFile")
+    @PreAuthorize("@el.check('storage:add')")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        String fileUrl = systemOssStorageService.uploadFile(file);
+        return ResponseEntity.ok(fileUrl);
+    }
 
-  @ApiOperation("多选删除")
-  @PostMapping(value = "/removeFileByIds")
-  public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
-    systemOssStorageService.removeFileByIds(ids);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("多选删除")
+    @PostMapping(value = "/removeFileByIds")
+    public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
+        systemOssStorageService.deleteFileByIds(ids);
+        return ResponseEntity.ok(null);
+    }
 }

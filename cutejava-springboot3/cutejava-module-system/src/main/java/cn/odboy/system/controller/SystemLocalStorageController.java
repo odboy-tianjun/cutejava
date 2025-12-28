@@ -26,8 +26,8 @@ import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,58 +45,57 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/localStorage")
 public class SystemLocalStorageController {
 
-  @Autowired
-  private SystemLocalStorageService localStorageService;
+    @Autowired private SystemLocalStorageService localStorageService;
 
-  @ApiOperation("查询文件")
-  @PostMapping
-  @PreAuthorize("@el.check('storage:list')")
-  public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(
-      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> args) {
-    SystemQueryStorageArgs criteria = args.getArgs();
-    Page<SystemLocalStorageTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(localStorageService.queryLocalStorage(criteria, page));
-  }
-
-  @ApiOperation("导出数据")
-  @GetMapping(value = "/download")
-  @PreAuthorize("@el.check('storage:list')")
-  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs criteria) throws IOException {
-    localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorage(criteria), response);
-  }
-
-  @ApiOperation("上传文件")
-  @PostMapping(value = "/uploadFile")
-  @PreAuthorize("@el.check('storage:add')")
-  public ResponseEntity<Void> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
-    localStorageService.uploadFile(name, file);
-    return ResponseEntity.ok(null);
-  }
-
-  @ApiOperation("上传图片")
-  @PostMapping("/uploadPicture")
-  public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
-    // 判断文件是否为图片
-    String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
-    if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
-      throw new BadRequestException("只能上传图片");
+    @ApiOperation("查询文件")
+    @PostMapping
+    @PreAuthorize("@el.check('storage:list')")
+    public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(
+        @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
+        SystemQueryStorageArgs args = pageArgs.getArgs();
+        Page<SystemLocalStorageTb> page = new Page<>(args.getPage(), args.getSize());
+        return ResponseEntity.ok(localStorageService.searchLocalStorage(args, page));
     }
-    SystemLocalStorageTb localStorage = localStorageService.uploadFile(null, file);
-    return ResponseEntity.ok(localStorage);
-  }
 
-  @ApiOperation("修改文件")
-  @PostMapping(value = "/modifyLocalStorageById")
-  @PreAuthorize("@el.check('storage:edit')")
-  public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
-    localStorageService.modifyLocalStorageById(args);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('storage:list')")
+    public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
+        localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorageByArgs(args), response);
+    }
 
-  @ApiOperation("多选删除")
-  @PostMapping(value = "/removeFileByIds")
-  public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
-    localStorageService.removeFileByIds(ids);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("上传文件")
+    @PostMapping(value = "/uploadFile")
+    @PreAuthorize("@el.check('storage:add')")
+    public ResponseEntity<Void> uploadFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
+        localStorageService.uploadFile(name, file);
+        return ResponseEntity.ok(null);
+    }
+
+    @ApiOperation("上传图片")
+    @PostMapping("/uploadPicture")
+    public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
+        // 判断文件是否为图片
+        String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
+        if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
+            throw new BadRequestException("只能上传图片");
+        }
+        SystemLocalStorageTb localStorage = localStorageService.uploadFile(null, file);
+        return ResponseEntity.ok(localStorage);
+    }
+
+    @ApiOperation("修改文件")
+    @PostMapping(value = "/modifyLocalStorageById")
+    @PreAuthorize("@el.check('storage:edit')")
+    public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
+        localStorageService.updateLocalStorageById(args);
+        return ResponseEntity.ok(null);
+    }
+
+    @ApiOperation("多选删除")
+    @PostMapping(value = "/removeFileByIds")
+    public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
+        localStorageService.deleteFileByIds(ids);
+        return ResponseEntity.ok(null);
+    }
 }

@@ -20,9 +20,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,34 +31,26 @@ import lombok.Setter;
 @TableName("system_job")
 public class SystemJobTb extends KitBaseUserTimeTb {
 
-  @NotNull(groups = Update.class)
-  @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "ID", hidden = true)
-  private Long id;
-  @NotBlank
-  @ApiModelProperty(value = "岗位名称")
-  private String name;
-  @NotNull
-  @ApiModelProperty(value = "岗位排序")
-  private Long jobSort;
-  @NotNull
-  @ApiModelProperty(value = "是否启用")
-  private Boolean enabled;
+    @NotNull(groups = Update.class) @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "ID", hidden = true) private Long id;
+    @NotBlank @ApiModelProperty(value = "岗位名称") private String name;
+    @NotNull @ApiModelProperty(value = "岗位排序") private Long jobSort;
+    @NotNull @ApiModelProperty(value = "是否启用") private Boolean enabled;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SystemJobTb job = (SystemJobTb)o;
+        return Objects.equals(id, job.id);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SystemJobTb job = (SystemJobTb) o;
-    return Objects.equals(id, job.id);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

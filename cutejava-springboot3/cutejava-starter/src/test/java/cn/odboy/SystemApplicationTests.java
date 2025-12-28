@@ -20,7 +20,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.service.SystemUserService;
 import java.util.Set;

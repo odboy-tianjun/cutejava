@@ -24,14 +24,8 @@ import lombok.Setter;
 @Setter
 public class SystemUserLoginArgs {
 
-  @NotBlank
-  @ApiModelProperty(value = "用户名")
-  private String username;
-  @NotBlank
-  @ApiModelProperty(value = "密码")
-  private String password;
-  @ApiModelProperty(value = "验证码")
-  private String code;
-  @ApiModelProperty(value = "验证码的key")
-  private String uuid = "";
+    @NotBlank @ApiModelProperty(value = "用户名") private String username;
+    @NotBlank @ApiModelProperty(value = "密码") private String password;
+    @ApiModelProperty(value = "验证码") private String code;
+    @ApiModelProperty(value = "验证码的key") private String uuid = "";
 }

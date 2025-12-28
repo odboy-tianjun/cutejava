@@ -13,8 +13,6 @@ import lombok.Setter;
 @TableName("system_roles_menus")
 public class SystemRoleMenuTb {
 
-  @TableField(value = "role_id")
-  private Long roleId;
-  @TableField(value = "menu_id")
-  private Long menuId;
+    @TableField(value = "role_id") private Long roleId;
+    @TableField(value = "menu_id") private Long menuId;
 }

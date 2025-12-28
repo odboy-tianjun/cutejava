@@ -24,9 +24,9 @@ import cn.odboy.system.service.SystemJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,57 +42,56 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/job")
 public class SystemJobController {
 
-  @Autowired
-  private SystemJobService systemJobService;
+    @Autowired private SystemJobService systemJobService;
 
-  @ApiOperation("导出岗位数据")
-  @GetMapping(value = "/download")
-  @PreAuthorize("@el.check('job:list')")
-  public void exportJob(HttpServletResponse response, SystemQueryJobArgs criteria) throws IOException {
-    systemJobService.exportJobExcel(systemJobService.queryJobByArgs(criteria), response);
-  }
+    @ApiOperation("导出岗位数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('job:list')")
+    public void exportJob(HttpServletResponse response, SystemQueryJobArgs args) throws IOException {
+        systemJobService.exportJobExcel(systemJobService.queryJobByArgs(args), response);
+    }
 
-  @ApiOperation("查询岗位")
-  @PostMapping(value = "/queryAllEnableJob")
-  @PreAuthorize("@el.check('job:list','user:list')")
-  public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
-    SystemQueryJobArgs criteria = args.getArgs();
-    Page<SystemJobTb> page = new Page<>(criteria.getPage(), criteria.getSize());
-    return ResponseEntity.ok(systemJobService.queryJobByArgs(criteria, page));
-  }
+    @ApiOperation("查询岗位")
+    @PostMapping(value = "/queryAllEnableJob")
+    @PreAuthorize("@el.check('job:list','user:list')")
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> pageArgs) {
+        SystemQueryJobArgs args = pageArgs.getArgs();
+        Page<SystemJobTb> page = new Page<>(args.getPage(), args.getSize());
+        return ResponseEntity.ok(systemJobService.searchJobByArgs(args, page));
+    }
 
-  @ApiOperation("查询岗位")
-  @PostMapping
-  @PreAuthorize("@el.check('job:list','user:list')")
-  public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
-    return queryJobByArgs(args);
-  }
+    @ApiOperation("查询岗位")
+    @PostMapping
+    @PreAuthorize("@el.check('job:list','user:list')")
+    public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(
+        @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
+        return queryJobByArgs(args);
+    }
 
-  @ApiOperation("新增岗位")
-  @PostMapping(value = "/saveJob")
-  @PreAuthorize("@el.check('job:add')")
-  public ResponseEntity<Void> saveJob(@Validated @RequestBody SystemCreateJobArgs args) {
-    systemJobService.saveJob(args);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("新增岗位")
+    @PostMapping(value = "/saveJob")
+    @PreAuthorize("@el.check('job:add')")
+    public ResponseEntity<Void> saveJob(@Validated @RequestBody SystemCreateJobArgs args) {
+        systemJobService.saveJob(args);
+        return ResponseEntity.ok(null);
+    }
 
-  @ApiOperation("修改岗位")
-  @PostMapping(value = "/modifyJobById")
-  @PreAuthorize("@el.check('job:edit')")
-  public ResponseEntity<Void> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb args) {
-    systemJobService.modifyJobById(args);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("修改岗位")
+    @PostMapping(value = "/modifyJobById")
+    @PreAuthorize("@el.check('job:edit')")
+    public ResponseEntity<Void> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb args) {
+        systemJobService.updateJobById(args);
+        return ResponseEntity.ok(null);
+    }
 
-  @ApiOperation("删除岗位")
-  @PostMapping(value = "/removeJobByIds")
-  @PreAuthorize("@el.check('job:del')")
-  public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
-    // 验证是否被用户关联
-    systemJobService.verifyBindRelationByIds(ids);
-    systemJobService.removeJobByIds(ids);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("删除岗位")
+    @PostMapping(value = "/removeJobByIds")
+    @PreAuthorize("@el.check('job:del')")
+    public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
+        // 验证是否被用户关联
+        systemJobService.verifyBindRelationByIds(ids);
+        systemJobService.deleteJobByIds(ids);
+        return ResponseEntity.ok(null);
+    }
 }

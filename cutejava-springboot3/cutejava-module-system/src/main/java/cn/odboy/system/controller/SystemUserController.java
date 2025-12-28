@@ -39,12 +39,12 @@ import cn.odboy.util.KitRsaEncryptUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,179 +66,173 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/user")
 public class SystemUserController {
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-  @Autowired
-  private SystemUserService systemUserService;
-  @Autowired
-  private SystemDataService systemDataService;
-  @Autowired
-  private SystemDeptService systemDeptService;
-  @Autowired
-  private SystemRoleService systemRoleService;
-  @Autowired
-  private SystemEmailService systemEmailService;
-  @Autowired
-  private AppProperties properties;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private SystemUserService systemUserService;
+    @Autowired private SystemDataService systemDataService;
+    @Autowired private SystemDeptService systemDeptService;
+    @Autowired private SystemRoleService systemRoleService;
+    @Autowired private SystemEmailService systemEmailService;
+    @Autowired private AppProperties properties;
 
-  @ApiOperation("导出用户数据")
-  @GetMapping(value = "/download")
-  @PreAuthorize("@el.check('user:list')")
-  public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs criteria) throws IOException {
-    systemUserService.exportUserExcel(systemUserService.queryUserByArgs(criteria), response);
-  }
-
-  @ApiOperation("查询用户")
-  @PostMapping
-  @PreAuthorize("@el.check('user:list')")
-  public ResponseEntity<KitPageResult<SystemUserVo>> queryUserByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
-    Page<SystemUserTb> page = new Page<>(args.getPage(), args.getSize());
-    SystemQueryUserArgs criteria = args.getArgs();
-    if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
-      criteria.getDeptIds().add(criteria.getDeptId());
-      // 先查找是否存在子节点
-      List<SystemDeptTb> data = systemDeptService.queryDeptByPid(criteria.getDeptId());
-      // 然后把子节点的ID都加入到集合中
-      criteria.getDeptIds().addAll(systemDeptService.queryChildDeptIdListByDeptIds(data));
+    @ApiOperation("导出用户数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('user:list')")
+    public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs args) throws IOException {
+        systemUserService.exportUserExcel(systemUserService.queryUserByArgs(args), response);
     }
-    // 数据权限
-    List<Long> dataScopes = systemDataService.findDeptIdListByArgs(
-        systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername()));
-    // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
-    if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
-      // 取交集
-      criteria.getDeptIds().retainAll(dataScopes);
-      if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-        return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
-      }
-    } else {
-      // 否则取并集
-      criteria.getDeptIds().addAll(dataScopes);
-      return ResponseEntity.ok(systemUserService.queryUserByArgs(criteria, page));
+
+    @ApiOperation("查询用户")
+    @PostMapping
+    @PreAuthorize("@el.check('user:list')")
+    public ResponseEntity<KitPageResult<SystemUserVo>> queryUserByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> pageArgs) {
+        Page<SystemUserTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+        SystemQueryUserArgs args = pageArgs.getArgs();
+        if (!ObjectUtils.isEmpty(args.getDeptId())) {
+            args.getDeptIds().add(args.getDeptId());
+            // 先查找是否存在子节点
+            List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
+            // 然后把子节点的ID都加入到集合中
+            args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
+        }
+        // 数据权限
+        List<Long> dataScopes = systemDataService.queryDeptIdByArgs(
+            systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername()));
+        // args.getDeptIds() 不为空并且数据权限不为空则取交集
+        if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
+            // 取交集
+            args.getDeptIds().retainAll(dataScopes);
+            if (!CollectionUtil.isEmpty(args.getDeptIds())) {
+                return ResponseEntity.ok(systemUserService.searchUserByArgs(args, page));
+            }
+        } else {
+            // 否则取并集
+            args.getDeptIds().addAll(dataScopes);
+            return ResponseEntity.ok(systemUserService.searchUserByArgs(args, page));
+        }
+        return ResponseEntity.ok(KitPageUtil.emptyData());
     }
-    return ResponseEntity.ok(KitPageUtil.emptyData());
-  }
 
-  @ApiOperation("新增用户")
-  @PostMapping(value = "/saveUser")
-  @PreAuthorize("@el.check('user:add')")
-  public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserVo args) {
-    checkLevel(args);
-    // 默认密码 123456
-    args.setPassword(passwordEncoder.encode("123456"));
-    systemUserService.saveUser(args);
-    return ResponseEntity.ok(null);
-  }
-
-  @ApiOperation("修改用户")
-  @PostMapping(value = "/modifyUserById")
-  @PreAuthorize("@el.check('user:edit')")
-  public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserVo args) {
-    checkLevel(args);
-    systemUserService.modifyUserById(args);
-    return ResponseEntity.ok(null);
-  }
-
-  @ApiOperation("修改用户：个人中心")
-  @PostMapping(value = "modifyUserCenterInfoById")
-  public ResponseEntity<Object> modifyUserCenterInfoById(
-      @Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
-    if (!args.getId().equals(KitSecurityHelper.getCurrentUserId())) {
-      throw new BadRequestException("不能修改他人资料");
+    @ApiOperation("新增用户")
+    @PostMapping(value = "/saveUser")
+    @PreAuthorize("@el.check('user:add')")
+    public ResponseEntity<Object> saveUser(@Validated @RequestBody SystemUserVo args) {
+        checkLevel(args);
+        // 默认密码 123456
+        args.setPassword(passwordEncoder.encode("123456"));
+        systemUserService.saveUser(args);
+        return ResponseEntity.ok(null);
     }
-    systemUserService.modifyUserCenterInfoById(args);
-    return ResponseEntity.ok(null);
-  }
 
-  @ApiOperation("删除用户")
-  @PostMapping(value = "/removeUserByIds")
-  @PreAuthorize("@el.check('user:del')")
-  public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
-    for (Long id : ids) {
-      Integer currentLevel = Collections.min(
-          systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-              .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
-      Integer optLevel = Collections.min(
-          systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel)
-              .collect(Collectors.toList()));
-      if (currentLevel > optLevel) {
-        throw new BadRequestException(
-            "角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
-      }
+    @ApiOperation("修改用户")
+    @PostMapping(value = "/modifyUserById")
+    @PreAuthorize("@el.check('user:edit')")
+    public ResponseEntity<Object> modifyUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserVo args) {
+        checkLevel(args);
+        systemUserService.updateUserById(args);
+        return ResponseEntity.ok(null);
     }
-    systemUserService.removeUserByIds(ids);
-    return ResponseEntity.ok(null);
-  }
 
-  @ApiOperation("修改密码")
-  @PostMapping(value = "/modifyUserPasswordByUsername")
-  public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo)
-      throws Exception {
-    String oldPass =
-        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
-    String newPass =
-        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
-    SystemUserTb user = systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername());
-    if (!passwordEncoder.matches(oldPass, user.getPassword())) {
-      throw new BadRequestException("修改失败，旧密码错误");
+    @ApiOperation("修改用户：个人中心")
+    @PostMapping(value = "modifyUserCenterInfoById")
+    public ResponseEntity<Object> modifyUserCenterInfoById(
+        @Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
+        if (!args.getId().equals(KitSecurityHelper.getCurrentUserId())) {
+            throw new BadRequestException("不能修改他人资料");
+        }
+        systemUserService.updateUserCenterInfoById(args);
+        return ResponseEntity.ok(null);
     }
-    if (passwordEncoder.matches(newPass, user.getPassword())) {
-      throw new BadRequestException("新密码不能与旧密码相同");
+
+    @ApiOperation("删除用户")
+    @PostMapping(value = "/removeUserByIds")
+    @PreAuthorize("@el.check('user:del')")
+    public ResponseEntity<Object> removeUserByIds(@RequestBody Set<Long> ids) {
+        for (Long id : ids) {
+            Integer currentLevel = Collections.min(
+                systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
+                    .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            Integer optLevel = Collections.min(
+                systemRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel)
+                    .collect(Collectors.toList()));
+            if (currentLevel > optLevel) {
+                throw new BadRequestException(
+                    "角色权限不足, 不能删除：" + systemUserService.getUserById(id).getUsername());
+            }
+        }
+        systemUserService.removeUserByIds(ids);
+        return ResponseEntity.ok(null);
     }
-    systemUserService.modifyUserPasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
-    return ResponseEntity.ok(null);
-  }
 
-  @ApiOperation("重置密码")
-  @PostMapping(value = "/resetUserPasswordByIds")
-  public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
-    String defaultPwd = passwordEncoder.encode("123456");
-    systemUserService.resetUserPasswordByIds(ids, defaultPwd);
-    return ResponseEntity.ok(null);
-  }
-
-  @ApiOperation("修改头像")
-  @PostMapping(value = "/modifyUserAvatar")
-  public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
-    return ResponseEntity.ok(systemUserService.modifyUserAvatar(avatar));
-  }
-
-  @ApiOperation("修改邮箱")
-  @PostMapping(value = "/modifyUserEmailByUsername/{code}")
-  public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args)
-      throws Exception {
-    String password =
-        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
-    SystemUserTb user = systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername());
-    if (!passwordEncoder.matches(password, user.getPassword())) {
-      throw new BadRequestException("密码错误");
+    @ApiOperation("修改密码")
+    @PostMapping(value = "/modifyUserPasswordByUsername")
+    public ResponseEntity<Object> modifyUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo)
+        throws Exception {
+        String oldPass =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getOldPass());
+        String newPass =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), passVo.getNewPass());
+        SystemUserTb user = systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername());
+        if (!passwordEncoder.matches(oldPass, user.getPassword())) {
+            throw new BadRequestException("修改失败，旧密码错误");
+        }
+        if (passwordEncoder.matches(newPass, user.getPassword())) {
+            throw new BadRequestException("新密码不能与旧密码相同");
+        }
+        systemUserService.updateUserPasswordByUsername(user.getUsername(), passwordEncoder.encode(newPass));
+        return ResponseEntity.ok(null);
     }
-    systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
-    systemUserService.modifyUserEmailByUsername(user.getUsername(), args.getEmail());
-    return ResponseEntity.ok(null);
-  }
 
-  /**
-   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
-   *
-   * @param args /
-   */
-  private void checkLevel(SystemUserVo args) {
-    Integer currentLevel = Collections.min(
-        systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-            .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
-    Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
-    if (currentLevel > optLevel) {
-      throw new BadRequestException("角色权限不足");
+    @ApiOperation("重置密码")
+    @PostMapping(value = "/resetUserPasswordByIds")
+    public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
+        String defaultPwd = passwordEncoder.encode("123456");
+        systemUserService.resetUserPasswordByIds(ids, defaultPwd);
+        return ResponseEntity.ok(null);
     }
-  }
 
-  @ApiOperation("查询用户基础数据")
-  @PostMapping(value = "/queryUserMetadataOptions")
-  @PreAuthorize("@el.check('user:list')")
-  public ResponseEntity<List<KitSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
-    List<KitSelectOptionVo> collect = systemUserService.queryUserMetadataOptions(args);
-    return ResponseEntity.ok(collect);
-  }
+    @ApiOperation("修改头像")
+    @PostMapping(value = "/modifyUserAvatar")
+    public ResponseEntity<Object> modifyUserAvatar(@RequestParam MultipartFile avatar) {
+        return ResponseEntity.ok(systemUserService.updateUserAvatar(avatar));
+    }
+
+    @ApiOperation("修改邮箱")
+    @PostMapping(value = "/modifyUserEmailByUsername/{code}")
+    public ResponseEntity<Object> modifyUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args)
+        throws Exception {
+        String password =
+            KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
+        SystemUserTb user = systemUserService.getUserByUsername(KitSecurityHelper.getCurrentUsername());
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadRequestException("密码错误");
+        }
+        systemEmailService.checkEmailCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
+        systemUserService.updateUserEmailByUsername(user.getUsername(), args.getEmail());
+        return ResponseEntity.ok(null);
+    }
+
+    /**
+     * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
+     *
+     * @param args /
+     */
+    private void checkLevel(SystemUserVo args) {
+        Integer currentLevel = Collections.min(
+            systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
+                .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+        Integer optLevel = systemRoleService.getDeptLevelByRoles(args.getRoles());
+        if (currentLevel > optLevel) {
+            throw new BadRequestException("角色权限不足");
+        }
+    }
+
+    @ApiOperation("查询用户基础数据")
+    @PostMapping(value = "/queryUserMetadataOptions")
+    @PreAuthorize("@el.check('user:list')")
+    public ResponseEntity<List<KitSelectOptionVo>> queryUserMetadataOptions(
+        @Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
+        List<KitSelectOptionVo> collect = systemUserService.queryUserMetadataOptions(args);
+        return ResponseEntity.ok(collect);
+    }
 }

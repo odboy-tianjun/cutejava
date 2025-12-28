@@ -38,7 +38,7 @@ public class ActiveJobRegister implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        List<SystemQuartzJobTb> quartzJobs = systemQuartzJobService.queryEnableQuartzJob();
+        List<SystemQuartzJobTb> quartzJobs = systemQuartzJobService.listEnableQuartzJob();
         quartzJobs.forEach(quartzManage::addJob);
         log.info("Timing task injection complete");
     }

@@ -30,29 +30,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SystemUserJobService {
 
-  @Autowired
-  private SystemUserJobMapper systemUserJobMapper;
+    @Autowired private SystemUserJobMapper systemUserJobMapper;
 
-  @Transactional(rollbackFor = Exception.class)
-  public void batchInsertUserJob(Set<SystemJobTb> jobs, Long userId) {
-    if (CollUtil.isNotEmpty(jobs)) {
-      List<SystemUserJobTb> records = new ArrayList<>();
-      for (SystemJobTb job : jobs) {
-        SystemUserJobTb record = new SystemUserJobTb();
-        record.setUserId(userId);
-        record.setJobId(job.getId());
-        records.add(record);
-      }
-      systemUserJobMapper.insert(records);
+    @Transactional(rollbackFor = Exception.class)
+    public void batchInsertUserJob(Set<SystemJobTb> jobs, Long userId) {
+        if (CollUtil.isNotEmpty(jobs)) {
+            List<SystemUserJobTb> records = new ArrayList<>();
+            for (SystemJobTb job : jobs) {
+                SystemUserJobTb record = new SystemUserJobTb();
+                record.setUserId(userId);
+                record.setJobId(job.getId());
+                records.add(record);
+            }
+            systemUserJobMapper.insert(records);
+        }
     }
-  }
 
-  @Transactional(rollbackFor = Exception.class)
-  public void batchDeleteUserJob(Set<Long> userIds) {
-    if (CollUtil.isNotEmpty(userIds)) {
-      LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
-      wrapper.in(SystemUserJobTb::getUserId, userIds);
-      systemUserJobMapper.delete(wrapper);
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDeleteUserJob(Set<Long> userIds) {
+        if (CollUtil.isNotEmpty(userIds)) {
+            LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(SystemUserJobTb::getUserId, userIds);
+            systemUserJobMapper.delete(wrapper);
+        }
     }
-  }
 }

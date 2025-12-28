@@ -24,8 +24,6 @@ import lombok.Setter;
 @Setter
 public class SystemQueryDictDetailArgs extends KitObject {
 
-  @ApiModelProperty(value = "标签")
-  private String label;
-  @ApiModelProperty(value = "字典名称")
-  private String dictName;
+    @ApiModelProperty(value = "标签") private String label;
+    @ApiModelProperty(value = "字典名称") private String dictName;
 }

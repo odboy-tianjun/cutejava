@@ -17,14 +17,14 @@
 package cn.odboy;
 
 import cn.odboy.framework.monitor.service.KitHealthCheckPointService;
-import cn.odboy.system.service.SystemDictService;
+import cn.odboy.system.dal.mysql.SystemDictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HealthCheckPointer implements KitHealthCheckPointService {
-    @Autowired private SystemDictService systemDictService;
+    @Autowired private SystemDictMapper systemDictMapper;
 
     /**
      * 系统准备就绪
@@ -39,6 +39,6 @@ public class HealthCheckPointer implements KitHealthCheckPointService {
      */
     @Override
     public ResponseEntity<?> doLiveness() {
-        return ResponseEntity.ok(systemDictService.getById(1));
+        return ResponseEntity.ok(systemDictMapper.selectById(1));
     }
 }

@@ -36,56 +36,53 @@ import org.springframework.stereotype.Service;
 @Service
 public class SystemDataService {
 
-  @Autowired
-  private SystemRoleService systemRoleService;
-  @Autowired
-  private SystemDeptService systemDeptService;
-  @Autowired
-  private SystemRoleDeptService systemRoleDeptService;
+    @Autowired private SystemRoleService systemRoleService;
+    @Autowired private SystemDeptService systemDeptService;
+    @Autowired private SystemRoleDeptService systemRoleDeptService;
 
-  /**
-   * 获取数据权限
-   *
-   * @param user /
-   * @return /
-   */
-  public List<Long> findDeptIdListByArgs(SystemUserTb user) {
-    List<Long> deptIds = new ArrayList<>();
-    // 查询用户角色
-    List<SystemRoleVo> roleList = systemRoleService.queryRoleByUsersId(user.getId());
-    // 获取对应的部门ID
-    for (SystemRoleTb role : roleList) {
-      SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
-      switch (Objects.requireNonNull(dataScopeEnum)) {
-        case THIS_LEVEL:
-          deptIds.add(user.getDept().getId());
-          break;
-        case CUSTOMIZE:
-          deptIds.addAll(this.findCustomDataPermissionList(deptIds, role));
-          break;
-        default:
-          return new ArrayList<>();
-      }
+    /**
+     * 获取数据权限
+     *
+     * @param user /
+     * @return /
+     */
+    public List<Long> queryDeptIdByArgs(SystemUserTb user) {
+        List<Long> deptIds = new ArrayList<>();
+        // 查询用户角色
+        List<SystemRoleVo> roleList = systemRoleService.queryRoleByUsersId(user.getId());
+        // 获取对应的部门ID
+        for (SystemRoleTb role : roleList) {
+            SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
+            switch (Objects.requireNonNull(dataScopeEnum)) {
+                case THIS_LEVEL:
+                    deptIds.add(user.getDept().getId());
+                    break;
+                case CUSTOMIZE:
+                    deptIds.addAll(this.queryCustomDataPermissionByArgs(deptIds, role));
+                    break;
+                default:
+                    return new ArrayList<>();
+            }
+        }
+        return deptIds.stream().distinct().collect(Collectors.toList());
     }
-    return deptIds.stream().distinct().collect(Collectors.toList());
-  }
 
-  /**
-   * 获取自定义的数据权限
-   *
-   * @param deptIds 部门ID
-   * @param role    角色
-   * @return 数据权限ID
-   */
-  private List<Long> findCustomDataPermissionList(List<Long> deptIds, SystemRoleTb role) {
-    List<SystemDeptTb> deptList = systemRoleDeptService.selectDeptByRoleId(role.getId());
-    for (SystemDeptTb dept : deptList) {
-      deptIds.add(dept.getId());
-      List<SystemDeptTb> deptChildren = systemDeptService.queryDeptByPid(dept.getId());
-      if (CollUtil.isNotEmpty(deptChildren)) {
-        deptIds.addAll(systemDeptService.queryChildDeptIdListByDeptIds(deptChildren));
-      }
+    /**
+     * 获取自定义的数据权限
+     *
+     * @param deptIds 部门ID
+     * @param role    角色
+     * @return 数据权限ID
+     */
+    private List<Long> queryCustomDataPermissionByArgs(List<Long> deptIds, SystemRoleTb role) {
+        List<SystemDeptTb> deptList = systemRoleDeptService.listDeptByRoleId(role.getId());
+        for (SystemDeptTb dept : deptList) {
+            deptIds.add(dept.getId());
+            List<SystemDeptTb> deptChildren = systemDeptService.listDeptByPid(dept.getId());
+            if (CollUtil.isNotEmpty(deptChildren)) {
+                deptIds.addAll(systemDeptService.queryChildDeptIdByDeptIds(deptChildren));
+            }
+        }
+        return deptIds;
     }
-    return deptIds;
-  }
 }

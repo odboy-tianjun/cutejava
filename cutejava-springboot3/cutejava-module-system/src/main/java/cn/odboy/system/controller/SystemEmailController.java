@@ -36,27 +36,26 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "工具：邮件管理")
 public class SystemEmailController {
 
-  @Autowired
-  private SystemEmailService systemEmailService;
+    @Autowired private SystemEmailService systemEmailService;
 
-  @ApiOperation("查询配置")
-  @PostMapping(value = "/getLastEmailConfig")
-  public ResponseEntity<SystemEmailConfigTb> getLastEmailConfig() {
-    return ResponseEntity.ok(systemEmailService.getLastEmailConfig());
-  }
+    @ApiOperation("查询配置")
+    @PostMapping(value = "/getLastEmailConfig")
+    public ResponseEntity<SystemEmailConfigTb> getLastEmailConfig() {
+        return ResponseEntity.ok(systemEmailService.getLastEmailConfig());
+    }
 
-  @ApiOperation("配置邮件")
-  @PostMapping(value = "/modifyEmailConfig")
-  public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
-      throws Exception {
-    systemEmailService.modifyEmailConfig(emailConfig);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("配置邮件")
+    @PostMapping(value = "/modifyEmailConfig")
+    public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
+        throws Exception {
+        systemEmailService.updateEmailConfigById(emailConfig);
+        return ResponseEntity.ok(null);
+    }
 
-  @ApiOperation("发送邮件")
-  @PostMapping(value = "/sendEmail")
-  public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
-    systemEmailService.sendEmail(sendEmailRequest);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("发送邮件")
+    @PostMapping(value = "/sendEmail")
+    public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
+        systemEmailService.sendEmail(sendEmailRequest);
+        return ResponseEntity.ok(null);
+    }
 }

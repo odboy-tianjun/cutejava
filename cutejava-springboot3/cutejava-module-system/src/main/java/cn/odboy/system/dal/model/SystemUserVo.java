@@ -12,8 +12,6 @@ import lombok.Setter;
 @Setter
 public class SystemUserVo extends SystemUserTb {
 
-  @ApiModelProperty(value = "用户角色")
-  private Set<SystemRoleTb> roles;
-  @ApiModelProperty(value = "用户岗位")
-  private Set<SystemJobTb> jobs;
+    @ApiModelProperty(value = "用户角色") private Set<SystemRoleTb> roles;
+    @ApiModelProperty(value = "用户岗位") private Set<SystemJobTb> jobs;
 }

@@ -44,58 +44,57 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dictDetail")
 public class SystemDictDetailController {
 
-  @Autowired
-  private SystemDictDetailService systemDictDetailService;
+    @Autowired private SystemDictDetailService systemDictDetailService;
 
-  @ApiOperation("查询字典详情")
-  @PostMapping
-  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
-    return queryDictDetailByArgs(args);
-  }
-
-  @ApiOperation("查询字典详情")
-  @PostMapping(value = "/queryDictDetailByArgs")
-  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
-    SystemQueryDictDetailArgs criteria = args.getArgs();
-    Page<SystemDictDetailTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemDictDetailService.queryDictDetailByArgs(criteria, page));
-  }
-
-  @ApiOperation("查询多个字典详情")
-  @GetMapping(value = "/getDictDetailMaps")
-  public ResponseEntity<Map<String, List<SystemDictDetailVo>>> getDictDetailMaps(@RequestParam String dictName) {
-    String[] names = dictName.split("[,, ]");
-    Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
-    for (String name : names) {
-      dictMap.put(name, systemDictDetailService.queryDictDetailByName(name));
+    @ApiOperation("查询字典详情")
+    @PostMapping
+    public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByCrud(
+        @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
+        return queryDictDetailByArgs(args);
     }
-    return ResponseEntity.ok(dictMap);
-  }
 
-  @ApiOperation("新增字典详情")
-  @PostMapping(value = "/saveDictDetail")
-  @PreAuthorize("@el.check('dict:add')")
-  public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody SystemCreateDictDetailArgs args) {
-    systemDictDetailService.saveDictDetail(args);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("查询字典详情")
+    @PostMapping(value = "/queryDictDetailByArgs")
+    public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
+        @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
+        SystemQueryDictDetailArgs args = pageArgs.getArgs();
+        Page<SystemDictDetailTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+        return ResponseEntity.ok(systemDictDetailService.searchDictDetail(args, page));
+    }
 
-  @ApiOperation("修改字典详情")
-  @PostMapping(value = "/modifyDictDetailById")
-  @PreAuthorize("@el.check('dict:edit')")
-  public ResponseEntity<Void> modifyDictDetailById(
-      @Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
-    systemDictDetailService.modifyDictDetailById(args);
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("查询多个字典详情")
+    @GetMapping(value = "/getDictDetailMaps")
+    public ResponseEntity<Map<String, List<SystemDictDetailVo>>> getDictDetailMaps(@RequestParam String dictName) {
+        String[] names = dictName.split("[,, ]");
+        Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
+        for (String name : names) {
+            dictMap.put(name, systemDictDetailService.listDictDetailByName(name));
+        }
+        return ResponseEntity.ok(dictMap);
+    }
 
-  @ApiOperation("删除字典详情")
-  @PostMapping(value = "/removeDictDetailById")
-  @PreAuthorize("@el.check('dict:del')")
-  public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
-    systemDictDetailService.removeDictDetailById(args.getId());
-    return ResponseEntity.ok(null);
-  }
+    @ApiOperation("新增字典详情")
+    @PostMapping(value = "/saveDictDetail")
+    @PreAuthorize("@el.check('dict:add')")
+    public ResponseEntity<Void> saveDictDetail(@Validated @RequestBody SystemCreateDictDetailArgs args) {
+        systemDictDetailService.saveDictDetail(args);
+        return ResponseEntity.ok(null);
+    }
+
+    @ApiOperation("修改字典详情")
+    @PostMapping(value = "/modifyDictDetailById")
+    @PreAuthorize("@el.check('dict:edit')")
+    public ResponseEntity<Void> modifyDictDetailById(
+        @Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
+        systemDictDetailService.updateDictDetailById(args);
+        return ResponseEntity.ok(null);
+    }
+
+    @ApiOperation("删除字典详情")
+    @PostMapping(value = "/removeDictDetailById")
+    @PreAuthorize("@el.check('dict:del')")
+    public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
+        systemDictDetailService.deleteDictDetailById(args.getId());
+        return ResponseEntity.ok(null);
+    }
 }

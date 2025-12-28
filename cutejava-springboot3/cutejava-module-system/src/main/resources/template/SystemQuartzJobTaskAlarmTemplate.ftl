@@ -3,9 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <style>
-    @page {
-      margin: 0;
-    }
+      @page {
+          margin: 0;
+      }
   </style>
 </head>
 <body style="margin: 0px;
