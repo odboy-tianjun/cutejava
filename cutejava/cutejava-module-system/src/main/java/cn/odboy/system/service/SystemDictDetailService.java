@@ -41,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDictDetailService {
+
   @Autowired
   private SystemDictDetailMapper systemDictDetailMapper;
   @Autowired
@@ -95,12 +96,6 @@ public class SystemDictDetailService {
     return systemDictDetailMapper.selectList(wrapper);
   }
 
-  private IPage<SystemDictDetailTb> searchDictDetailByArgs(List<Long> dictIds, Page<SystemDictDetailTb> page) {
-    LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(CollUtil.isNotEmpty(dictIds), SystemDictDetailTb::getDictId, dictIds);
-    return systemDictDetailMapper.selectPage(page, wrapper);
-  }
-
   /**
    * 分页查询
    *
@@ -110,30 +105,9 @@ public class SystemDictDetailService {
    */
   public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
       Page<SystemDictDetailTb> page) {
-    IPage<SystemDictDetailVo> iPage = new Page<>();
-    List<Long> dictIds = new ArrayList<>();
-    List<SystemDictTb> dictTbs = new ArrayList<>();
-
-    if (args == null) {
-      dictTbs.addAll(systemDictMapper.listAll());
-      dictIds = dictTbs.stream().map(SystemDictTb::getId).collect(Collectors.toList());
-    } else {
-      String dictName = args.getDictName();
-      if (StrUtil.isBlank(dictName)) {
-        return KitPageUtil.toPage(iPage);
-      }
-      SystemDictTb dictTb = systemDictMapper.getByName(dictName);
-      if (dictTb == null) {
-        return KitPageUtil.toPage(iPage);
-      } else {
-        dictIds.add(dictTb.getId());
-        dictTbs.add(dictTb);
-      }
-    }
-
-    Map<Long, SystemDictTb> id2ItemMap = dictTbs.stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
-    iPage = this.searchDictDetailByArgs(dictIds, page)
-        .convert(i -> BeanUtil.copyProperties(i, SystemDictDetailVo.class));
+    IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args).convert(i -> BeanUtil.copyProperties(i, SystemDictDetailVo.class));
+    List<Long> dictIds = iPage.getRecords().stream().map(SystemDictDetailTb::getDictId).collect(Collectors.toList());
+    Map<Long, SystemDictTb> id2ItemMap = systemDictMapper.selectByIds(dictIds).stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
     for (SystemDictDetailVo record : iPage.getRecords()) {
       record.setDict(id2ItemMap.get(record.getDictId()));
     }
