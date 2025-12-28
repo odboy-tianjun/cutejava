@@ -55,7 +55,7 @@
     <commons-net.version>3.11.1</commons-net.version>
     <joda-time.version>2.12.7</joda-time.version>
     <pinyin.version>2.0.3.RELEASE</pinyin.version>
-    <fastexcel.version>1.2.0</fastexcel.version>
+    <fastexcel.version>1.3.0</fastexcel.version>
     <rhino.version>1.8.0</rhino.version>
     <guava.version>33.5.0-jre</guava.version>
   </properties>
