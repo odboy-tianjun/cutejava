@@ -36,13 +36,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,14 +50,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
- * OSS存储 服务实现类
+ * OSS存储 Minio服务实现类
  * </p>
  *
  * @author codegen
  * @since 2025-07-15
  */
 @Service
-public class SystemOssStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb>
+public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb>
     implements SystemOssStorageService {
 
   @Autowired

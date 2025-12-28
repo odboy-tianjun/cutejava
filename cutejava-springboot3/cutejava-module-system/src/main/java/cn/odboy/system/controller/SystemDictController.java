@@ -15,19 +15,25 @@
  */
 package cn.odboy.system.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
+import cn.odboy.system.dal.model.SystemDictDetailVo;
+import cn.odboy.system.dal.model.SystemDictExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
+import cn.odboy.system.service.SystemDictDetailService;
 import cn.odboy.system.service.SystemDictService;
+import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,12 +51,37 @@ public class SystemDictController {
 
   @Autowired
   private SystemDictService systemDictService;
+  @Autowired
+  private SystemDictDetailService systemDictDetailService;
 
   @ApiOperation("导出字典数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('dict:list')")
   public void exportDict(HttpServletResponse response, SystemQueryDictArgs args) throws IOException {
-    systemDictService.exportDictExcel(systemDictService.queryDictByArgs(args), response);
+    List<SystemDictTb> systemDictTbs = systemDictService.queryDictByArgs(args);
+    KitXlsxExportUtil.exportFile(response, "字典数据", systemDictTbs, SystemDictExportRowVo.class, (dataObject) -> {
+      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());
+      if (CollUtil.isEmpty(dictDetails)) {
+        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
+        rowVo.setName(dataObject.getName());
+        rowVo.setDescription(dataObject.getDescription());
+        rowVo.setCreateTime(dataObject.getCreateTime());
+        rowVo.setLabel("");
+        rowVo.setValue("");
+        return CollUtil.newArrayList(rowVo);
+      }
+      List<SystemDictExportRowVo> rowVos = new ArrayList<>();
+      for (SystemDictDetailVo dictDetail : dictDetails) {
+        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
+        rowVo.setName(dataObject.getName());
+        rowVo.setDescription(dataObject.getDescription());
+        rowVo.setCreateTime(dataObject.getCreateTime());
+        rowVo.setLabel(dictDetail.getLabel());
+        rowVo.setValue(dictDetail.getValue());
+        rowVos.add(rowVo);
+      }
+      return rowVos;
+    });
   }
 
   @ApiOperation("查询字典")

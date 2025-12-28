@@ -15,21 +15,24 @@
  */
 package cn.odboy.system.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
+import cn.odboy.system.dal.model.SystemRoleExportRowVo;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.service.SystemRoleService;
+import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,7 +62,15 @@ public class SystemRoleController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('role:list')")
   public void exportRole(HttpServletResponse response, SystemQueryRoleArgs args) throws IOException {
-    systemRoleService.exportRoleExcel(systemRoleService.queryRoleByArgs(args), response);
+    List<SystemRoleVo> systemRoleVos = systemRoleService.queryRoleByArgs(args);
+    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
+      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setLevel(dataObject.getLevel());
+      rowVo.setDescription(dataObject.getDescription());
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      return CollUtil.newArrayList(rowVo);
+    });
   }
 
   @ApiOperation("返回全部的角色")

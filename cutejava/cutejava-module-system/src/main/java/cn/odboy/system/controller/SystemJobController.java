@@ -15,16 +15,20 @@
  */
 package cn.odboy.system.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
+import cn.odboy.system.dal.model.SystemJobExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.service.SystemJobService;
+import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +53,14 @@ public class SystemJobController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('job:list')")
   public void exportJob(HttpServletResponse response, SystemQueryJobArgs args) throws IOException {
-    systemJobService.exportJobExcel(systemJobService.queryJobByArgs(args), response);
+    List<SystemJobTb> systemJobTbs = systemJobService.queryJobByArgs(args);
+    KitXlsxExportUtil.exportFile(response, "岗位数据", systemJobTbs, SystemJobExportRowVo.class, (dataObject) -> {
+      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      return CollUtil.newArrayList(rowVo);
+    });
   }
 
   @ApiOperation("查询岗位")

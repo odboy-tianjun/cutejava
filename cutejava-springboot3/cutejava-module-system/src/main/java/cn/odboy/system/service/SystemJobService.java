@@ -24,16 +24,10 @@ import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,24 +81,6 @@ public class SystemJobService {
     // 验证是否被用户关联
     this.verifyBindRelationByIds(ids);
     systemJobMapper.deleteByIds(ids);
-  }
-
-  /**
-   * 导出数据
-   *
-   * @param jobs     待导出的数据
-   * @param response /
-   */
-  public void exportJobExcel(List<SystemJobTb> jobs, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemJobTb job : jobs) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("岗位名称", job.getName());
-      map.put("岗位状态", job.getEnabled() ? "启用" : "停用");
-      map.put("创建日期", job.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   /**

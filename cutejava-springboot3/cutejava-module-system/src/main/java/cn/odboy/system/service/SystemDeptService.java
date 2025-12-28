@@ -31,16 +31,12 @@ import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
-import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -107,25 +103,6 @@ public class SystemDeptService {
       systemDeptMapper.deleteById(dept.getId());
       this.updateDeptSubCnt(dept.getPid());
     }
-  }
-
-  /**
-   * 导出数据
-   *
-   * @param deptList 待导出的数据
-   * @param response /
-   * @throws IOException /
-   */
-  public void exportDeptExcel(List<SystemDeptTb> deptList, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemDeptTb dept : deptList) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("部门名称", dept.getName());
-      map.put("部门状态", dept.getEnabled() ? "启用" : "停用");
-      map.put("创建日期", dept.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   /**

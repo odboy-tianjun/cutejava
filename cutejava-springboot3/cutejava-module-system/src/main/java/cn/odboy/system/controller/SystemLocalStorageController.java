@@ -15,16 +15,21 @@
  */
 package cn.odboy.system.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
+import cn.odboy.system.dal.model.SystemLocalStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
+import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,7 +63,9 @@ public class SystemLocalStorageController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
-    localStorageService.exportLocalStorageExcel(localStorageService.queryLocalStorageByArgs(args), response);
+    List<SystemLocalStorageTb> systemLocalStorageTbs = localStorageService.queryLocalStorageByArgs(args);
+    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
+        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
   }
 
   @ApiOperation("上传文件")

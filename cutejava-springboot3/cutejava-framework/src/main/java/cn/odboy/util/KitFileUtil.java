@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import static cn.odboy.constant.SystemConst.SYMBOL_ADD;
@@ -44,6 +43,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
@@ -80,7 +80,6 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
    * 定义KB的计算常量
    */
   private static final int KB = 1024;
-
   /**
    * 格式化小数
    */
@@ -185,6 +184,7 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
   /**
    * 导出excel
    */
+  @Deprecated
   public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
     String tempPath = SYS_TEM_DIR + IdUtil.fastSimpleUUID() + ".xlsx";
     File file = new File(tempPath);
@@ -193,7 +193,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
     List<Map<String, Object>> sanitizedList = list.parallelStream().map(map -> {
       Map<String, Object> sanitizedMap = new LinkedHashMap<>();
       map.forEach((key, value) -> {
-        if (value instanceof String strValue) {
+        if (value instanceof String) {
+          String strValue = (String) value;
           // 检查并处理以特殊字符开头的值
           if (strValue.startsWith(SYMBOL_EQUAL) || strValue.startsWith(SYMBOL_ADD) ||
               strValue.startsWith(SYMBOL_SUBTRACT) || strValue.startsWith(SYMBOL_AT)) {
@@ -206,7 +207,7 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
         }
       });
       return sanitizedMap;
-    }).toList();
+    }).collect(Collectors.toList());
     // 一次性写出内容, 使用默认样式，强制输出标题
     writer.write(sanitizedList, true);
     SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
@@ -363,10 +364,8 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
   public static String verifyFilename(String fileName) {
     // 过滤掉特殊字符
     fileName = fileName.replaceAll("[\\\\/:*?\"<>|~\\s]", "");
-
     // 去掉文件名开头和结尾的空格和点
     fileName = fileName.trim().replaceAll("^[. ]+|[. ]+$", "");
-
     // 不允许文件名超过255（在Mac和Linux中）或260（在Windows中）个字符
     int maxFileNameLength = 255;
     if (System.getProperty(SystemConst.PROPERTY_OS_NAME).startsWith(SystemConst.OS_NAME_WINDOWS)) {
@@ -375,20 +374,15 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
     if (fileName.length() > maxFileNameLength) {
       fileName = fileName.substring(0, maxFileNameLength);
     }
-
     // 过滤掉控制字符
     fileName = fileName.replaceAll("[\\p{Cntrl}]", "");
-
     // 过滤掉 ".." 路径
     fileName = fileName.replaceAll("\\.{2,}", "");
-
     // 去掉文件名开头的 ".."
     fileName = fileName.replaceAll("^\\.+/", "");
-
     // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
     fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
         fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
-
     return fileName;
   }
 

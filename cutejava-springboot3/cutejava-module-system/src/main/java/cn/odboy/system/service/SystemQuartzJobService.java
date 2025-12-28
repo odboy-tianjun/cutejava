@@ -30,17 +30,11 @@ import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,57 +184,6 @@ public class SystemQuartzJobService {
         break;
       }
     }
-  }
-
-  /**
-   * 导出定时任务
-   *
-   * @param quartzJobs 待导出的数据
-   * @param response   /
-   * @throws IOException /
-   */
-  public void exportQuartzJobExcel(List<SystemQuartzJobTb> quartzJobs, HttpServletResponse response)
-      throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemQuartzJobTb quartzJob : quartzJobs) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("任务名称", quartzJob.getJobName());
-      map.put("Bean名称", quartzJob.getBeanName());
-      map.put("执行方法", quartzJob.getMethodName());
-      map.put("参数", quartzJob.getParams());
-      map.put("表达式", quartzJob.getCronExpression());
-      map.put("状态", quartzJob.getIsPause() ? "暂停中" : "运行中");
-      map.put("描述", quartzJob.getDescription());
-      map.put("创建日期", quartzJob.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
-
-  /**
-   * 导出定时任务日志
-   *
-   * @param queryAllLog 待导出的数据
-   * @param response    /
-   * @throws IOException /
-   */
-  public void exportQuartzLogExcel(List<SystemQuartzLogTb> queryAllLog, HttpServletResponse response)
-      throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemQuartzLogTb quartzLog : queryAllLog) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("任务名称", quartzLog.getJobName());
-      map.put("Bean名称", quartzLog.getBeanName());
-      map.put("执行方法", quartzLog.getMethodName());
-      map.put("参数", quartzLog.getParams());
-      map.put("表达式", quartzLog.getCronExpression());
-      map.put("异常详情", quartzLog.getExceptionDetail());
-      map.put("耗时/毫秒", quartzLog.getTime());
-      map.put("状态", quartzLog.getIsSuccess() ? "成功" : "失败");
-      map.put("创建日期", quartzLog.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   /**

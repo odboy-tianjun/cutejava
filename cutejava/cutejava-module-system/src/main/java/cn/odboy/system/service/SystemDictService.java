@@ -16,26 +16,17 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
-import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,40 +73,6 @@ public class SystemDictService {
     systemDictMapper.deleteByIds(ids);
     // 删除字典详情
     systemDictDetailService.deleteDictDetailByDictIds(ids);
-  }
-
-  /**
-   * 导出数据
-   *
-   * @param dicts    待导出的数据
-   * @param response /
-   * @throws IOException /
-   */
-  public void exportDictExcel(List<SystemDictTb> dicts, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemDictTb dict : dicts) {
-      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dict.getName());
-      if (CollectionUtil.isNotEmpty(dictDetails)) {
-        for (SystemDictDetailTb dictDetail : dictDetails) {
-          Map<String, Object> map = new LinkedHashMap<>();
-          map.put("字典名称", dict.getName());
-          map.put("字典描述", dict.getDescription());
-          map.put("字典标签", dictDetail.getLabel());
-          map.put("字典值", dictDetail.getValue());
-          map.put("创建日期", dictDetail.getCreateTime());
-          list.add(map);
-        }
-      } else {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("字典名称", dict.getName());
-        map.put("字典描述", dict.getDescription());
-        map.put("字典标签", null);
-        map.put("字典值", null);
-        map.put("创建日期", dict.getCreateTime());
-        list.add(map);
-      }
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   /**

@@ -31,18 +31,12 @@ import cn.odboy.system.dal.model.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,25 +143,6 @@ public class SystemRoleService {
     // 删除角色部门关联数据、角色菜单关联数据
     systemRoleDeptService.batchDeleteRoleDept(ids);
     systemRoleMenuService.batchDeleteRoleMenu(ids);
-  }
-
-  /**
-   * 导出数据
-   *
-   * @param roles    待导出的数据
-   * @param response /
-   */
-  public void exportRoleExcel(List<SystemRoleVo> roles, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemRoleVo role : roles) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("角色名称", role.getName());
-      map.put("角色级别", role.getLevel());
-      map.put("描述", role.getDescription());
-      map.put("创建日期", role.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   /**

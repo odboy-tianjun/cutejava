@@ -33,22 +33,17 @@ import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
-import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,14 +51,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SystemMenuService {
 
-  private static final String YES_STR = "是";
-  private static final String NO_STR = "否";
+
   @Autowired
   private SystemMenuMapper systemMenuMapper;
   @Autowired
   private SystemRoleMenuMapper systemRoleMenuMapper;
-  @Autowired
-  private SystemRoleService systemRoleService;
   @Autowired
   private SystemRoleMenuService systemRoleMenuService;
   @Autowired
@@ -183,29 +175,6 @@ public class SystemMenuService {
       wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
       systemRoleMenuMapper.delete(wrapper);
     }
-  }
-
-  /**
-   * 导出
-   *
-   * @param menus    待导出的数据
-   * @param response /
-   * @throws IOException /
-   */
-  public void exportMenuExcel(List<SystemMenuTb> menus, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemMenuTb menu : menus) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("菜单标题", menu.getTitle());
-      map.put("菜单类型", menu.getType() == null ? "目录" : menu.getType() == 1 ? "菜单" : "按钮");
-      map.put("权限标识", menu.getPermission());
-      map.put("外链菜单", menu.getIFrame() ? YES_STR : NO_STR);
-      map.put("菜单可见", menu.getHidden() ? NO_STR : YES_STR);
-      map.put("是否缓存", menu.getCache() ? YES_STR : NO_STR);
-      map.put("创建日期", menu.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   @Transactional(rollbackFor = Exception.class)

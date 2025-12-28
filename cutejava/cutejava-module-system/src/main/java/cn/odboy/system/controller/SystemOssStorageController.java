@@ -15,16 +15,21 @@
  */
 package cn.odboy.system.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
+import cn.odboy.system.dal.model.SystemOssStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemOssStorageService;
+import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +66,9 @@ public class SystemOssStorageController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
-    systemOssStorageService.exportOssStorageExcel(systemOssStorageService.queryOssStorage(args), response);
+    List<SystemOssStorageVo> systemOssStorageVos = systemOssStorageService.queryOssStorage(args);
+    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
+        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
   }
 
   @ApiOperation("上传文件")

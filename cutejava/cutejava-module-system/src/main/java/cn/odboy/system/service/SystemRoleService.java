@@ -152,25 +152,6 @@ public class SystemRoleService {
   }
 
   /**
-   * 导出数据
-   *
-   * @param roles    待导出的数据
-   * @param response /
-   */
-  public void exportRoleExcel(List<SystemRoleVo> roles, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemRoleVo role : roles) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("角色名称", role.getName());
-      map.put("角色级别", role.getLevel());
-      map.put("描述", role.getDescription());
-      map.put("创建日期", role.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
-
-  /**
    * 查询全部角色
    */
   public List<SystemRoleTb> listAllRole() {

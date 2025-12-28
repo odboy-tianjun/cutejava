@@ -50,13 +50,9 @@ import cn.odboy.util.KitRsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -336,32 +332,6 @@ public class SystemUserService {
   }
 
   /**
-   * 导出数据
-   *
-   * @param users    待导出的数据
-   * @param response /
-   * @throws IOException /
-   */
-  public void exportUserExcel(List<SystemUserVo> users, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemUserVo user : users) {
-      List<String> roles = user.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.toList());
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("用户名", user.getUsername());
-      map.put("角色", roles);
-      map.put("部门", user.getDept().getName());
-      map.put("岗位", user.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.toList()));
-      map.put("邮箱", user.getEmail());
-      map.put("状态", user.getEnabled() ? "启用" : "禁用");
-      map.put("手机号码", user.getPhone());
-      map.put("修改密码的时间", user.getPwdResetTime());
-      map.put("创建日期", user.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
-
-  /**
    * 查询全部
    *
    * @param args 条件
@@ -384,7 +354,7 @@ public class SystemUserService {
    * @param args 条件
    * @return /
    */
-  public List<SystemUserVo> queryUserByArgs(SystemQueryUserArgs args) {
+  public List<SystemUserVo> queryUserVoByArgs(SystemQueryUserArgs args) {
     // 查询用户基本信息
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
     List<SystemUserTb> users = systemUserMapper.selectList(wrapper);

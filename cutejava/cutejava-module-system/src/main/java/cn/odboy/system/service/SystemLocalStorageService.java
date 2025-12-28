@@ -125,29 +125,6 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 导出数据
-   *
-   * @param localStorages 待导出的数据
-   * @param response      /
-   * @throws IOException /
-   */
-  public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response)
-      throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemLocalStorageTb localStorage : localStorages) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("文件名", localStorage.getRealName());
-      map.put("备注名", localStorage.getName());
-      map.put("文件类型", localStorage.getType());
-      map.put("文件大小", localStorage.getSize());
-      map.put("创建者", localStorage.getCreateBy());
-      map.put("创建日期", localStorage.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
-
-  /**
    * 分页查询
    *
    * @param args 条件

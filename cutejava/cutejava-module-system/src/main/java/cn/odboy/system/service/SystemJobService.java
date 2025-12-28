@@ -90,24 +90,6 @@ public class SystemJobService {
   }
 
   /**
-   * 导出数据
-   *
-   * @param jobs     待导出的数据
-   * @param response /
-   */
-  public void exportJobExcel(List<SystemJobTb> jobs, HttpServletResponse response) throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemJobTb job : jobs) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("岗位名称", job.getName());
-      map.put("岗位状态", job.getEnabled() ? "启用" : "停用");
-      map.put("创建日期", job.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
-
-  /**
    * 分页查询
    *
    * @param args 条件

@@ -15,19 +15,24 @@
  */
 package cn.odboy.system.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
+import cn.odboy.system.dal.model.SystemQuartzJobExportRowVo;
+import cn.odboy.system.dal.model.SystemQuartzLogExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.service.SystemQuartzJobService;
+import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,14 +68,41 @@ public class SystemQuartzJobController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('quartzJob:list')")
   public void exportQuartzJob(HttpServletResponse response, SystemQueryQuartzJobArgs args) throws IOException {
-    systemQuartzJobService.exportQuartzJobExcel(systemQuartzJobService.queryQuartzJobByArgs(args), response);
+    List<SystemQuartzJobTb> systemQuartzJobTbs = systemQuartzJobService.queryQuartzJobByArgs(args);
+    KitXlsxExportUtil.exportFile(response, "定时任务数据", systemQuartzJobTbs, SystemQuartzJobExportRowVo.class,
+        (dataObject) -> {
+          SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();
+          rowVo.setJobName(dataObject.getJobName());
+          rowVo.setBeanName(dataObject.getBeanName());
+          rowVo.setMethodName(dataObject.getMethodName());
+          rowVo.setParams(dataObject.getParams());
+          rowVo.setCronExpression(dataObject.getCronExpression());
+          rowVo.setIsPause(dataObject.getIsPause() ? "暂停中" : "运行中");
+          rowVo.setDescription(dataObject.getDescription());
+          rowVo.setCreateTime(dataObject.getCreateTime());
+          return CollUtil.newArrayList(rowVo);
+        });
   }
 
   @ApiOperation("导出日志数据")
   @GetMapping(value = "/logs/download")
   @PreAuthorize("@el.check('quartzJob:list')")
   public void exportQuartzJobLog(HttpServletResponse response, SystemQueryQuartzJobArgs args) throws IOException {
-    systemQuartzJobService.exportQuartzLogExcel(systemQuartzJobService.queryQuartzLogByArgs(args), response);
+    List<SystemQuartzLogTb> systemQuartzLogTbs = systemQuartzJobService.queryQuartzLogByArgs(args);
+    KitXlsxExportUtil.exportFile(response, "定时任务日志数据", systemQuartzLogTbs, SystemQuartzLogExportRowVo.class,
+        (dataObject) -> {
+          SystemQuartzLogExportRowVo rowVo = new SystemQuartzLogExportRowVo();
+          rowVo.setJobName(dataObject.getJobName());
+          rowVo.setBeanName(dataObject.getBeanName());
+          rowVo.setMethodName(dataObject.getMethodName());
+          rowVo.setParams(dataObject.getParams());
+          rowVo.setCronExpression(dataObject.getCronExpression());
+          rowVo.setExceptionDetail(dataObject.getExceptionDetail());
+          rowVo.setTime(dataObject.getTime());
+          rowVo.setStatus(dataObject.getIsSuccess() ? "成功" : "失败");
+          rowVo.setCreateTime(dataObject.getCreateTime());
+          return CollUtil.newArrayList(rowVo);
+        });
   }
 
   @ApiOperation("查询任务执行日志")

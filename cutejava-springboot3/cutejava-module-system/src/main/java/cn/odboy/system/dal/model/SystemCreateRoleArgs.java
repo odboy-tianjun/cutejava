@@ -17,9 +17,9 @@ package cn.odboy.system.dal.model;
 
 import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
+import java.util.Set;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

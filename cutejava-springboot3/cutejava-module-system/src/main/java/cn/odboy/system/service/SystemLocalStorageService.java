@@ -33,14 +33,9 @@ import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,29 +117,6 @@ public class SystemLocalStorageService {
         throw new BadRequestException("删除文件 " + storage.getName() + " 失败");
       }
     }
-  }
-
-  /**
-   * 导出数据
-   *
-   * @param localStorages 待导出的数据
-   * @param response      /
-   * @throws IOException /
-   */
-  public void exportLocalStorageExcel(List<SystemLocalStorageTb> localStorages, HttpServletResponse response)
-      throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemLocalStorageTb localStorage : localStorages) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("文件名", localStorage.getRealName());
-      map.put("备注名", localStorage.getName());
-      map.put("文件类型", localStorage.getType());
-      map.put("文件大小", localStorage.getSize());
-      map.put("创建者", localStorage.getCreateBy());
-      map.put("创建日期", localStorage.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
   }
 
   /**
