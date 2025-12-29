@@ -66,17 +66,28 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class SystemUserService {
 
-    @Autowired private SystemUserMapper systemUserMapper;
-    @Autowired private SystemUserJobService systemUserJobService;
-    @Autowired private SystemUserRoleService systemUserRoleService;
-    @Autowired private SystemUserInfoDAO systemUserInfoDAO;
-    @Autowired private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
-    @Autowired private KitFileLocalUploadHelper fileUploadPathHelper;
-    @Autowired private SystemUserJobMapper systemUserJobMapper;
-    @Autowired private SystemUserRoleMapper systemUserRoleMapper;
-    @Autowired private SystemJobMapper systemJobMapper;
-    @Autowired private SystemRoleMapper systemRoleMapper;
-    @Autowired private SystemDeptMapper systemDeptMapper;
+    @Autowired
+    private SystemUserMapper systemUserMapper;
+    @Autowired
+    private SystemUserJobService systemUserJobService;
+    @Autowired
+    private SystemUserRoleService systemUserRoleService;
+    @Autowired
+    private SystemUserInfoDAO systemUserInfoDAO;
+    @Autowired
+    private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
+    @Autowired
+    private KitFileLocalUploadHelper fileUploadPathHelper;
+    @Autowired
+    private SystemUserJobMapper systemUserJobMapper;
+    @Autowired
+    private SystemUserRoleMapper systemUserRoleMapper;
+    @Autowired
+    private SystemJobMapper systemJobMapper;
+    @Autowired
+    private SystemRoleMapper systemRoleMapper;
+    @Autowired
+    private SystemDeptMapper systemDeptMapper;
 
     /**
      * 新增用户
@@ -401,12 +412,13 @@ public class SystemUserService {
                 wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
             }
             if (StrUtil.isNotBlank(args.getBlurry())) {
-                wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry()).or()
-                    .like(SystemUserTb::getNickName, args.getBlurry()).or()
-                    .like(SystemUserTb::getEmail, args.getBlurry()));
+                wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry())
+                    .or().like(SystemUserTb::getNickName, args.getBlurry())
+                    .or().like(SystemUserTb::getEmail, args.getBlurry()));
             }
             if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-                wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+                wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0),
+                    args.getCreateTime().get(1));
             }
         }
         wrapper.orderByDesc(SystemUserTb::getCreateTime);
@@ -459,6 +471,10 @@ public class SystemUserService {
         wrapper.eq(SystemUserTb::getUsername, username);
         wrapper.eq(SystemUserTb::getEnabled, 1);
         return systemUserMapper.selectOne(wrapper);
+    }
+
+    public SystemUserVo getUserVoByUsername(String username) {
+        return this.convertToUserVo(this.getUserByUsername(username));
     }
 
     public long countUserByDeptIds(Set<Long> deptIds) {

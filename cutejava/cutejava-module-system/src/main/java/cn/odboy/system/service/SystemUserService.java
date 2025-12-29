@@ -473,6 +473,10 @@ public class SystemUserService {
     return systemUserMapper.selectOne(wrapper);
   }
 
+  public SystemUserVo getUserVoByUsername(String username) {
+    return this.convertToUserVo(this.getUserByUsername(username));
+  }
+
   public long countUserByDeptIds(Set<Long> deptIds) {
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemUserTb::getDeptId, deptIds);

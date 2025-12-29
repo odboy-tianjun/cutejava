@@ -16,9 +16,9 @@
 package cn.odboy.system.framework.permission.core.handler;
 
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
+import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemRoleService;
@@ -49,7 +49,7 @@ public class UserDetailsHandler implements UserDetailsService {
   public SystemUserJwtVo loadUserByUsername(String username) {
     SystemUserJwtVo userJwtVo = systemUserInfoDAO.getUserLoginInfoByUserName(username);
     if (userJwtVo == null) {
-      SystemUserTb user = systemUserService.getUserByUsername(username);
+      SystemUserVo user = systemUserService.getUserVoByUsername(username);
       if (user == null) {
         throw new BadRequestException("用户不存在");
       } else {

@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.dal.model;
 
-import cn.odboy.system.dal.dataobject.SystemUserTb;
 import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
@@ -30,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SystemUserJwtVo implements UserDetails {
 
   @ApiModelProperty(value = "用户")
-  private final SystemUserTb user;
+  private final SystemUserVo user;
   @ApiModelProperty(value = "数据权限")
   private final List<Long> dataScopes;
   @ApiModelProperty(value = "角色")
