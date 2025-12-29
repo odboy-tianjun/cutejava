@@ -7,10 +7,11 @@ package cn.odboy.task.constant;
  * @date 2025-10-25
  */
 public interface TaskJobKeys {
-    String ID = "id";
-    String CONTEXT_NAME = "contextName";
-    String LANGUAGE = "language";
-    String ENV_ALIAS = "envAlias";
-    String CHANGE_TYPE = "changeType";
-    String RETRY_NODE_CODE = "retryNodeCode";
+
+  String ID = "id";
+  String CONTEXT_NAME = "contextName";
+  String LANGUAGE = "language";
+  String ENV_ALIAS = "envAlias";
+  String CHANGE_TYPE = "changeType";
+  String RETRY_NODE_CODE = "retryNodeCode";
 }

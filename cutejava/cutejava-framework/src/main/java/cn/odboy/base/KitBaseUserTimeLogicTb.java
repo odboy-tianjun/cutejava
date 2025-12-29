@@ -34,14 +34,24 @@ import org.springframework.data.annotation.LastModifiedBy;
 @Getter
 @Setter
 public class KitBaseUserTimeLogicTb extends KitObject {
-    @CreatedBy @TableField(value = "create_by", fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建人", hidden = true) private String createBy;
-    @LastModifiedBy @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新人", hidden = true) private String updateBy;
-    @TableField(value = "create_time", fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间", hidden = true)
-    private Date createTime;
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间", hidden = true) private Date updateTime;
-    @ApiModelProperty(value = "数据有效性", hidden = true) @TableLogic @TableField("available") private Integer
-        available;
+
+  @CreatedBy
+  @TableField(value = "create_by", fill = FieldFill.INSERT)
+  @ApiModelProperty(value = "创建人", hidden = true)
+  private String createBy;
+  @LastModifiedBy
+  @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
+  @ApiModelProperty(value = "更新人", hidden = true)
+  private String updateBy;
+  @TableField(value = "create_time", fill = FieldFill.INSERT)
+  @ApiModelProperty(value = "创建时间", hidden = true)
+  private Date createTime;
+  @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+  @ApiModelProperty(value = "更新时间", hidden = true)
+  private Date updateTime;
+  @ApiModelProperty(value = "数据有效性", hidden = true)
+  @TableLogic
+  @TableField("available")
+  private Integer
+      available;
 }

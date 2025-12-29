@@ -30,7 +30,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SystemSendEmailArgs {
-    @NotEmpty @ApiModelProperty(value = "收件人") private List<String> tos;
-    @NotBlank @ApiModelProperty(value = "主题") private String subject;
-    @NotBlank @ApiModelProperty(value = "内容") private String content;
+
+  @NotEmpty
+  @ApiModelProperty(value = "收件人")
+  private List<String> tos;
+  @NotBlank
+  @ApiModelProperty(value = "主题")
+  private String subject;
+  @NotBlank
+  @ApiModelProperty(value = "内容")
+  private String content;
 }

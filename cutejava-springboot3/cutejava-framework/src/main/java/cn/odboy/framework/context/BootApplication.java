@@ -17,13 +17,12 @@
 package cn.odboy.framework.context;
 
 import cn.hutool.core.util.StrUtil;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * 主要目的是输出应用的服务地址
@@ -37,7 +36,8 @@ public class BootApplication {
         Environment env = application.getEnvironment();
         String ip = InetAddress.getLocalHost().getHostAddress();
         String port = env.getProperty("server.port");
-        String path = StrUtil.isEmpty(env.getProperty("config.servlet.context-path")) ? "" : env.getProperty("config.servlet.context-path");
+        String path = StrUtil.isEmpty(env.getProperty("config.servlet.context-path")) ? ""
+            : env.getProperty("config.servlet.context-path");
         log.info("""
             ----------------------------------------------------------
             \tApplication is running! Access URLs:

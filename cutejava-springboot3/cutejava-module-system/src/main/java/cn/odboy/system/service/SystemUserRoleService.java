@@ -29,28 +29,30 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemUserRoleService {
-    @Autowired private SystemUserRoleMapper systemUserRoleMapper;
 
-    @Transactional(rollbackFor = Exception.class)
-    public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
-        if (CollUtil.isNotEmpty(roles)) {
-            List<SystemUserRoleTb> records = new ArrayList<>();
-            for (SystemRoleTb role : roles) {
-                SystemUserRoleTb record = new SystemUserRoleTb();
-                record.setUserId(userId);
-                record.setRoleId(role.getId());
-                records.add(record);
-            }
-            systemUserRoleMapper.insert(records);
-        }
-    }
+  @Autowired
+  private SystemUserRoleMapper systemUserRoleMapper;
 
-    @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteUserRole(Set<Long> userIds) {
-        if (CollUtil.isNotEmpty(userIds)) {
-            LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-            wrapper.in(SystemUserRoleTb::getUserId, userIds);
-            systemUserRoleMapper.delete(wrapper);
-        }
+  @Transactional(rollbackFor = Exception.class)
+  public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
+    if (CollUtil.isNotEmpty(roles)) {
+      List<SystemUserRoleTb> records = new ArrayList<>();
+      for (SystemRoleTb role : roles) {
+        SystemUserRoleTb record = new SystemUserRoleTb();
+        record.setUserId(userId);
+        record.setRoleId(role.getId());
+        records.add(record);
+      }
+      systemUserRoleMapper.insert(records);
     }
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void batchDeleteUserRole(Set<Long> userIds) {
+    if (CollUtil.isNotEmpty(userIds)) {
+      LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+      wrapper.in(SystemUserRoleTb::getUserId, userIds);
+      systemUserRoleMapper.delete(wrapper);
+    }
+  }
 }

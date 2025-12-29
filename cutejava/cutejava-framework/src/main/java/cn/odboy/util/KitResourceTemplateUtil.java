@@ -31,11 +31,12 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class KitResourceTemplateUtil {
-    public static String render(String moduleName, String filename, Dict params) {
-        String path = StrUtil.isBlank(moduleName) ? "template" : "template/" + moduleName;
-        TemplateEngine engine =
-            TemplateUtil.createEngine(new TemplateConfig(path, TemplateConfig.ResourceMode.CLASSPATH));
-        Template template = engine.getTemplate(filename);
-        return template.render(params);
-    }
+
+  public static String render(String moduleName, String filename, Dict params) {
+    String path = StrUtil.isBlank(moduleName) ? "template" : "template/" + moduleName;
+    TemplateEngine engine =
+        TemplateUtil.createEngine(new TemplateConfig(path, TemplateConfig.ResourceMode.CLASSPATH));
+    Template template = engine.getTemplate(filename);
+    return template.render(params);
+  }
 }

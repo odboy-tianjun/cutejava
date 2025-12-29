@@ -21,7 +21,12 @@ import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.framework.exception.BadRequestException;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
-import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
+import com.baomidou.mybatisplus.generator.config.GlobalConfig;
+import com.baomidou.mybatisplus.generator.config.IDbQuery;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.PackageConfig;
+import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
@@ -29,13 +34,12 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
-import lombok.Data;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.sql.Types;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import lombok.Data;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 代码生成器入口
@@ -67,14 +71,16 @@ public class KitMpCmdGenUtil {
     private static Consumer<StrategyConfig.Builder> getEntityConfigConsumer() {
         return strategyConfigBuilder -> strategyConfigBuilder.entityBuilder().enableLombok()
             // 如果不需要生成注解, 去掉.enableTableFieldAnnotation()
-            .enableTableFieldAnnotation().enableFileOverride().naming(NamingStrategy.underline_to_camel).columnNaming(NamingStrategy.underline_to_camel)
-            .idType(IdType.AUTO);
+            .enableTableFieldAnnotation().enableFileOverride().naming(NamingStrategy.underline_to_camel)
+            .columnNaming(NamingStrategy.underline_to_camel).idType(IdType.AUTO);
     }
 
     private static Consumer<StrategyConfig.Builder> getStrategyConfigConsumer(List<String> tableNames) {
-        return strategyConfigBuilder -> strategyConfigBuilder.enableCapitalMode().enableSkipView().disableSqlFilter().addInclude(tableNames)
+        return strategyConfigBuilder -> strategyConfigBuilder.enableCapitalMode().enableSkipView().disableSqlFilter()
+            .addInclude(tableNames)
             // 实体类生成策略
-            .entityBuilder().superClass(KitBaseUserTimeTb.class).addIgnoreColumns("create_time", "update_time", "create_by", "update_by")
+            .entityBuilder().superClass(KitBaseUserTimeTb.class)
+            .addIgnoreColumns("create_time", "update_time", "create_by", "update_by")
             // 开启生成实体时生成字段注解。
             // 会在实体类的属性前，添加[@TableField("nickname")]
             .enableTableFieldAnnotation().disableSerialVersionUID()
@@ -99,13 +105,13 @@ public class KitMpCmdGenUtil {
 
     private static Consumer<GlobalConfig.Builder> getGlobalConfigConsumer() {
         String outputDir = projectRootPath + "CodeGen";
-        return globalConfigBuilder -> globalConfigBuilder.enableSwagger().outputDir(outputDir).author("codegen").commentDate("yyyy-MM-dd")
-            .dateType(DateType.TIME_PACK);
+        return globalConfigBuilder -> globalConfigBuilder.enableSwagger().outputDir(outputDir).author("codegen")
+            .commentDate("yyyy-MM-dd").dateType(DateType.TIME_PACK);
     }
 
     private static Consumer<StrategyConfig.Builder> getStrategyConfigConsumer() {
-        return strategyConfigBuilder -> strategyConfigBuilder.mapperBuilder().mapperAnnotation(Mapper.class).formatMapperFileName("%sMapper")
-            .formatXmlFileName("%sMapper").entityBuilder().formatFileName("%sTb");
+        return strategyConfigBuilder -> strategyConfigBuilder.mapperBuilder().mapperAnnotation(Mapper.class)
+            .formatMapperFileName("%sMapper").formatXmlFileName("%sMapper").entityBuilder().formatFileName("%sTb");
     }
 
     private static Consumer<DataSourceConfig.Builder> getDataSourceConfigConsumer() {
@@ -138,7 +144,8 @@ public class KitMpCmdGenUtil {
         this.parentModuleName = moduleName;
         // 1.数据库配置
         DataSourceConfig.Builder dataSourceConfigBuilder =
-            new DataSourceConfig.Builder(this.databaseUrl, this.databaseUsername, this.databasePassword).driverClassName(this.driverClassName);
+            new DataSourceConfig.Builder(this.databaseUrl, this.databaseUsername,
+                this.databasePassword).driverClassName(this.driverClassName);
         dataSourceConfigBuilder.dbQuery(DB_QUERY);
         dataSourceConfigBuilder.keyWordsHandler(new MySqlKeyWordsHandler());
         // 1.1.快速生成器
@@ -168,7 +175,8 @@ public class KitMpCmdGenUtil {
         fastAutoGenerator.strategyConfig(getStrategyConfigConsumer(tableNames));
         if (tablePrefix != null) {
             // 表前缀, 可多个
-            fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder.addTablePrefix(tablePrefix));
+            fastAutoGenerator.strategyConfig(
+                strategyConfigBuilder -> strategyConfigBuilder.addTablePrefix(tablePrefix));
         }
         // 5.1.Entity策略配置
         // 生成实体时生成字段的注解, 包括@TableId注解等
@@ -178,10 +186,13 @@ public class KitMpCmdGenUtil {
         fastAutoGenerator.strategyConfig(getEntityConfigConsumer());
         // 5.2.Controller策略配置
         // 开启生成@RestController控制器
-        fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder.controllerBuilder().enableRestStyle());
-        // 如果不需要生成Controller, fastAutoGenerator.templateConfig(templateConfig -> templateConfig.controller(""))。5.3.Service策略配置：格式化service接口和实现类的文件名称, 去掉默认的ServiceName前面的I
         fastAutoGenerator.strategyConfig(
-            strategyConfigBuilder -> strategyConfigBuilder.serviceBuilder().formatServiceFileName("%sService").formatServiceImplFileName("%sServiceImpl"));
+            strategyConfigBuilder -> strategyConfigBuilder.controllerBuilder().enableRestStyle());
+        // 如果不需要生成Controller, fastAutoGenerator.templateConfig(templateConfig -> templateConfig.controller(""))。5.3
+        // .Service策略配置：格式化service接口和实现类的文件名称, 去掉默认的ServiceName前面的I
+        fastAutoGenerator.strategyConfig(
+            strategyConfigBuilder -> strategyConfigBuilder.serviceBuilder().formatServiceFileName("%sService")
+                .formatServiceImplFileName("%sServiceImpl"));
         // 5.4.Mapper策略配置
         // 格式化 mapper文件名,格式化xml实现类文件名称
         fastAutoGenerator.strategyConfig(getStrategyConfigConsumer());
@@ -194,8 +205,9 @@ public class KitMpCmdGenUtil {
         if (StrUtil.isBlank(this.parentModuleName)) {
             throw new BadRequestException("模块名称必填");
         }
-        return packageConfigBuilder -> packageConfigBuilder.parent(this.parentPackageName).moduleName(this.parentModuleName).entity("dal.dataobject")
-            .mapper("dal.mysql").service("service").serviceImpl("service.impl").controller("controller")
+        return packageConfigBuilder -> packageConfigBuilder.parent(this.parentPackageName)
+            .moduleName(this.parentModuleName).entity("dal.dataobject").mapper("dal.mysql").service("service")
+            .serviceImpl("service.impl").controller("controller")
             .pathInfo(Collections.singletonMap(OutputFile.xml, mapperPath));
     }
 }

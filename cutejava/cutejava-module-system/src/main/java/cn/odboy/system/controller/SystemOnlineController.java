@@ -41,34 +41,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user/online")
 @Api(tags = "系统：在线用户管理")
 public class SystemOnlineController {
-    @Autowired private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    @ApiOperation("查询在线用户")
-    @PostMapping
-    @PreAuthorize("@el.check()")
-    public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(
-        @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> args) {
-        IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
-        return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
-    }
+  @Autowired
+  private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    @ApiOperation("导出数据")
-    @GetMapping(value = "/download")
-    @PreAuthorize("@el.check()")
-    public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-        systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(
-            systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
-    }
+  @ApiOperation("查询在线用户")
+  @PostMapping
+  @PreAuthorize("@el.check()")
+  public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(
+      @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> args) {
+    IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
+    return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
+  }
 
-    @ApiOperation("踢出用户")
-    @PostMapping(value = "/kickOutUser")
-    @PreAuthorize("@el.check()")
-    public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
-        for (String token : keys) {
-            // 解密Key
-            token = KitDesEncryptUtil.desDecrypt(token);
-            systemUserOnlineInfoDAO.logoutByToken(token);
-        }
-        return ResponseEntity.ok(null);
+  @ApiOperation("导出数据")
+  @GetMapping(value = "/download")
+  @PreAuthorize("@el.check()")
+  public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
+    systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(
+        systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
+  }
+
+  @ApiOperation("踢出用户")
+  @PostMapping(value = "/kickOutUser")
+  @PreAuthorize("@el.check()")
+  public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
+    for (String token : keys) {
+      // 解密Key
+      token = KitDesEncryptUtil.desDecrypt(token);
+      systemUserOnlineInfoDAO.logoutByToken(token);
     }
+    return ResponseEntity.ok(null);
+  }
 }

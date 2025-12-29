@@ -22,9 +22,8 @@ import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColumnById;
 import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
-import org.apache.ibatis.session.Configuration;
-
 import java.util.List;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * 批量插入SQL注入器

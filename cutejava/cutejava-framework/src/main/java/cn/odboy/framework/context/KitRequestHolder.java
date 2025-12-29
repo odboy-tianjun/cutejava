@@ -24,8 +24,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * 获取 HttpServletRequest
  */
 public class KitRequestHolder {
-    public static HttpServletRequest getHttpServletRequest() {
-        return ((ServletRequestAttributes)Objects.requireNonNull(
-            RequestContextHolder.getRequestAttributes())).getRequest();
-    }
+
+  public static HttpServletRequest getHttpServletRequest() {
+    return ((ServletRequestAttributes) Objects.requireNonNull(
+        RequestContextHolder.getRequestAttributes())).getRequest();
+  }
 }

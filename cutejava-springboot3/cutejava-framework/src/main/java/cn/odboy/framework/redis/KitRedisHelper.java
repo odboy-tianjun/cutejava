@@ -21,16 +21,26 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.ConvertingCursor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
@@ -204,8 +214,8 @@ public class KitRedisHelper {
     public void scanDel(String pattern) {
         ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
         try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
-            (RedisCallback<Cursor<byte[]>>)connection -> (Cursor<byte[]>)new ConvertingCursor<>(connection.scan(options),
-                redisTemplate.getKeySerializer()::deserialize))) {
+            (RedisCallback<Cursor<byte[]>>)connection -> (Cursor<byte[]>)new ConvertingCursor<>(
+                connection.scan(options), redisTemplate.getKeySerializer()::deserialize))) {
             while (cursor.hasNext()) {
                 redisTemplate.delete(cursor.next());
             }
@@ -293,7 +303,8 @@ public class KitRedisHelper {
     public List<Object> multiGet(List<String> keys) {
         List list = redisTemplate.opsForValue().multiGet(Sets.newHashSet(keys));
         List resultList = Lists.newArrayList();
-        Optional.ofNullable(list).ifPresent(e -> list.forEach(ele -> Optional.ofNullable(ele).ifPresent(resultList::add)));
+        Optional.ofNullable(list)
+            .ifPresent(e -> list.forEach(ele -> Optional.ofNullable(ele).ifPresent(resultList::add)));
         return resultList;
     }
 

@@ -17,13 +17,12 @@
 package cn.odboy.base;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 结果封装类

@@ -26,15 +26,20 @@ import lombok.Setter;
  * @date 2025-07-23
  */
 public class KitArgs {
-    @Getter
-    @Setter
-    public static class FindByLongId extends KitObject {
-        @NotNull(message = "id必填") private Long id;
-    }
 
-    @Getter
-    @Setter
-    public static class DeleteById extends KitObject {
-        @NotNull(message = "id必填") private Long id;
-    }
+  @Getter
+  @Setter
+  public static class FindByLongId extends KitObject {
+
+    @NotNull(message = "id必填")
+    private Long id;
+  }
+
+  @Getter
+  @Setter
+  public static class DeleteById extends KitObject {
+
+    @NotNull(message = "id必填")
+    private Long id;
+  }
 }

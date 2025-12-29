@@ -29,18 +29,21 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class KitJsonUtil {
-    public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> kClass, Class<V> vClass) {
-        return JSON.parseObject(jsonStr, new TypeReference<Map<K, V>>() {});
-    }
 
-    public static <V> List<V> toList(String jsonStr, Class<V> vClass) {
-        return JSON.parseObject(jsonStr, new TypeReference<List<V>>() {});
-    }
+  public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> kClass, Class<V> vClass) {
+    return JSON.parseObject(jsonStr, new TypeReference<Map<K, V>>() {
+    });
+  }
 
-    public static void main(String[] args) {
-        String mapStr = "{\"key1\":\"value1\", \"key2\":\"value2\"}";
-        System.err.println(KitJsonUtil.toMap(mapStr, String.class, String.class));
-        String listStr = "[\"value1\", \"value2\"]";
-        System.err.println(KitJsonUtil.toList(listStr, String.class));
-    }
+  public static <V> List<V> toList(String jsonStr, Class<V> vClass) {
+    return JSON.parseObject(jsonStr, new TypeReference<List<V>>() {
+    });
+  }
+
+  public static void main(String[] args) {
+    String mapStr = "{\"key1\":\"value1\", \"key2\":\"value2\"}";
+    System.err.println(KitJsonUtil.toMap(mapStr, String.class, String.class));
+    String listStr = "[\"value1\", \"value2\"]";
+    System.err.println(KitJsonUtil.toList(listStr, String.class));
+  }
 }

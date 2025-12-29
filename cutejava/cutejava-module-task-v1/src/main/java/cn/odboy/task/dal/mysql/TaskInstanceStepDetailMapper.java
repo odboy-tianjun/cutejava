@@ -28,4 +28,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2025-09-28
  */
 @Mapper
-public interface TaskInstanceStepDetailMapper extends BaseMapper<TaskInstanceStepDetailTb> {}
+public interface TaskInstanceStepDetailMapper extends BaseMapper<TaskInstanceStepDetailTb> {
+
+}

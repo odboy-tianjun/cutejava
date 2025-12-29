@@ -29,8 +29,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class BeanLoadFinishListener implements ApplicationListener<ContextRefreshedEvent> {
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.info("所有的Bean都加载完毕了");
-    }
+
+  @Override
+  public void onApplicationEvent(ContextRefreshedEvent event) {
+    log.info("所有的Bean都加载完毕了");
+  }
 }

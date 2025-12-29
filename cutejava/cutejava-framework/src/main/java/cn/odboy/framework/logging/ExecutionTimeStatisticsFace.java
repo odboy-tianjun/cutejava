@@ -32,12 +32,14 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExecutionTimeStatisticsFace {
-    /**
-     * 接口描述
-     */
-    String description();
-    /**
-     * 是否展示异常日志
-     */
-    boolean showErrLog() default true;
+
+  /**
+   * 接口描述
+   */
+  String description();
+
+  /**
+   * 是否展示异常日志
+   */
+  boolean showErrLog() default true;
 }

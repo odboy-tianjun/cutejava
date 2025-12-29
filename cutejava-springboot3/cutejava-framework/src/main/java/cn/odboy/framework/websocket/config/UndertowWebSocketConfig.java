@@ -7,7 +7,8 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.stereotype.Component;
 
 /**
- * 解决启动io.undertow.websockets.jsr UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used的警告
+ * 解决启动io.undertow.websockets.jsr UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be
+ * used的警告
  *
  * @author odboy
  * @date 2025-10-30
@@ -34,8 +35,10 @@ public class UndertowWebSocketConfig implements WebServerFactoryCustomizer<Under
 
         factory.addDeploymentInfoCustomizers(deploymentInfo -> {
             WebSocketDeploymentInfo webSocketDeploymentInfo = new WebSocketDeploymentInfo();
-            webSocketDeploymentInfo.setBuffers(new DefaultByteBufferPool(false, bufferSize, maxPoolSize, threadLocalCacheSize));
-            deploymentInfo.addServletContextAttribute("io.undertow.websockets.jsr.WebSocketDeploymentInfo", webSocketDeploymentInfo);
+            webSocketDeploymentInfo.setBuffers(
+                new DefaultByteBufferPool(false, bufferSize, maxPoolSize, threadLocalCacheSize));
+            deploymentInfo.addServletContextAttribute("io.undertow.websockets.jsr.WebSocketDeploymentInfo",
+                webSocketDeploymentInfo);
         });
     }
 }

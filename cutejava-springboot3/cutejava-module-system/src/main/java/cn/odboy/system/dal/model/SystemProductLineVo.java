@@ -22,16 +22,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemProductLineVo extends KitObject {
-    /**
-     * 部门ID（select的value）
-     */
-    private Long value;
-    /**
-     * 产品线，如"研发部/华南分部/devops组"
-     */
-    private String label;
-    /**
-     * ID路径，如"1-2-3"
-     */
-    private String idPath;
+
+  /**
+   * 部门ID（select的value）
+   */
+  private Long value;
+  /**
+   * 产品线，如"研发部/华南分部/devops组"
+   */
+  private String label;
+  /**
+   * ID路径，如"1-2-3"
+   */
+  private String idPath;
 }

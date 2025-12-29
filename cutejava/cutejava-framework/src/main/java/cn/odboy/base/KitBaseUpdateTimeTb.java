@@ -27,6 +27,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUpdateTimeTb extends KitObject {
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true) private Date updateTime;
+
+  @TableField(fill = FieldFill.INSERT_UPDATE)
+  @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date updateTime;
 }

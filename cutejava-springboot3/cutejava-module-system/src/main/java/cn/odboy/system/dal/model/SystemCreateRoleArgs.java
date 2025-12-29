@@ -26,13 +26,17 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class SystemCreateRoleArgs extends KitObject {
-    @NotBlank(message = "角色名称必填") private String name;
-    @NotNull(message = "角色级别必填") private Integer level;
-    @NotBlank(message = "数据范围必填") private String dataScope;
-    private String description;
-    /**
-     * 关联的部门
-     */
-    private Long id;
-    private Set<SystemDeptTb> depts;
+
+  @NotBlank(message = "角色名称必填")
+  private String name;
+  @NotNull(message = "角色级别必填")
+  private Integer level;
+  @NotBlank(message = "数据范围必填")
+  private String dataScope;
+  private String description;
+  /**
+   * 关联的部门
+   */
+  private Long id;
+  private Set<SystemDeptTb> depts;
 }

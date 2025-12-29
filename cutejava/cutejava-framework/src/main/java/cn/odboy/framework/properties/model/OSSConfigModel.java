@@ -22,20 +22,21 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OSSConfigModel extends KitObject {
-    /**
-     * 服务地址
-     */
-    private String endpoint;
-    /**
-     * 存储桶名称
-     */
-    private String bucketName;
-    /**
-     * Access Key
-     */
-    private String accessKey;
-    /**
-     * Secret Key
-     */
-    private String secretKey;
+
+  /**
+   * 服务地址
+   */
+  private String endpoint;
+  /**
+   * 存储桶名称
+   */
+  private String bucketName;
+  /**
+   * Access Key
+   */
+  private String accessKey;
+  /**
+   * Secret Key
+   */
+  private String secretKey;
 }

@@ -16,12 +16,11 @@
 
 package cn.odboy.framework.context;
 
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * 脚本工具

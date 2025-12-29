@@ -33,54 +33,55 @@ import org.springframework.web.filter.GenericFilterBean;
 
 @Slf4j
 public class TokenFilter extends GenericFilterBean {
-    private final TokenProvider tokenProvider;
-    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    /**
-     * @param tokenProvider           Token
-     * @param systemUserOnlineInfoDAO 用户在线
-     */
-    public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
-        this.systemUserOnlineInfoDAO = systemUserOnlineInfoDAO;
-        this.tokenProvider = tokenProvider;
-    }
+  private final TokenProvider tokenProvider;
+  private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-        throws ServletException, IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
-        String token = resolveToken(httpServletRequest);
-        // 对于 Token 为空的不需要去查 Redis
-        if (StrUtil.isNotBlank(token)) {
-            // 获取用户Token的Key
-            String loginKey = tokenProvider.loginKey(token);
-            SystemUserOnlineVo userOnlineVo = systemUserOnlineInfoDAO.queryUserOnlineModelByKey(loginKey);
-            // 判断用户在线信息是否为空
-            if (userOnlineVo != null) {
-                // Token 续期判断
-                tokenProvider.checkRenewal(token);
-                // 获取认证信息，设置上下文
-                Authentication authentication = tokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        }
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
+  /**
+   * @param tokenProvider           Token
+   * @param systemUserOnlineInfoDAO 用户在线
+   */
+  public TokenFilter(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
+    this.systemUserOnlineInfoDAO = systemUserOnlineInfoDAO;
+    this.tokenProvider = tokenProvider;
+  }
 
-    /**
-     * 初步检测Token
-     *
-     * @param request /
-     * @return /
-     */
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
-            // 去掉令牌前缀
-            return bearerToken.replace(SystemConst.TOKEN_PREFIX + " ", "");
-        } else {
-            log.debug("非法Token：{}", bearerToken);
-        }
-        return null;
+  @Override
+  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+      throws ServletException, IOException {
+    HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+    String token = resolveToken(httpServletRequest);
+    // 对于 Token 为空的不需要去查 Redis
+    if (StrUtil.isNotBlank(token)) {
+      // 获取用户Token的Key
+      String loginKey = tokenProvider.loginKey(token);
+      SystemUserOnlineVo userOnlineVo = systemUserOnlineInfoDAO.queryUserOnlineModelByKey(loginKey);
+      // 判断用户在线信息是否为空
+      if (userOnlineVo != null) {
+        // Token 续期判断
+        tokenProvider.checkRenewal(token);
+        // 获取认证信息，设置上下文
+        Authentication authentication = tokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      }
     }
+    filterChain.doFilter(servletRequest, servletResponse);
+  }
+
+  /**
+   * 初步检测Token
+   *
+   * @param request /
+   * @return /
+   */
+  private String resolveToken(HttpServletRequest request) {
+    String bearerToken = request.getHeader(SystemConst.HEADER_NAME);
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(SystemConst.TOKEN_PREFIX)) {
+      // 去掉令牌前缀
+      return bearerToken.replace(SystemConst.TOKEN_PREFIX + " ", "");
+    } else {
+      log.debug("非法Token：{}", bearerToken);
+    }
+    return null;
+  }
 }

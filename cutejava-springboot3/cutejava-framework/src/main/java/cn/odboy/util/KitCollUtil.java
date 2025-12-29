@@ -18,15 +18,19 @@ package cn.odboy.util;
 
 import cn.odboy.base.KitSelectOptionVo;
 import com.alibaba.fastjson2.JSON;
-import lombok.experimental.UtilityClass;
-
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 
 /**
  * 集合工具
@@ -61,7 +65,8 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
      * @param <U>          /
      * @return /
      */
-    public static <T, U extends Comparable<? super U>> List<T> streamAscSort(List<T> data, Function<? super T, ? extends U> keyExtractor) {
+    public static <T, U extends Comparable<? super U>> List<T> streamAscSort(List<T> data,
+        Function<? super T, ? extends U> keyExtractor) {
         return data.stream().sorted(Comparator.comparing(keyExtractor)).toList();
     }
 
@@ -76,7 +81,8 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
      * @param <U>          /
      * @return /
      */
-    public static <T, U extends Comparable<? super U>> List<T> streamDescSort(List<T> data, Function<? super T, ? extends U> keyExtractor) {
+    public static <T, U extends Comparable<? super U>> List<T> streamDescSort(List<T> data,
+        Function<? super T, ? extends U> keyExtractor) {
         return data.stream().sorted(Comparator.comparing(keyExtractor).reversed()).toList();
     }
 
@@ -93,7 +99,8 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
      * @param <U>         /
      * @return /
      */
-    public static <T, K, U> Map<K, U> streamToMap(List<T> data, Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+    public static <T, K, U> Map<K, U> streamToMap(List<T> data, Function<? super T, ? extends K> keyMapper,
+        Function<? super T, ? extends U> valueMapper) {
         // 根据key去重再并流
         return streamDistinct(data, keyMapper).stream().collect(Collectors.toMap(keyMapper, valueMapper));
     }
@@ -185,7 +192,8 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
      * @return /
      */
     public static BigDecimal streamBigDecimalAvg(List<BigDecimal> data) {
-        return data.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
+        return data.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)
+            .divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
     }
 
     public static void main(String[] args) {
@@ -204,7 +212,8 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
         System.out.println(JSON.toJSONString(selectOptions2));
         List<KitSelectOptionVo> selectOptions3 = KitCollUtil.streamDistinct(testData, KitSelectOptionVo::getValue);
         System.out.println(JSON.toJSONString(selectOptions3));
-        Map<String, String> selectMap1 = KitCollUtil.streamToMap(testData, KitSelectOptionVo::getValue, KitSelectOptionVo::getLabel);
+        Map<String, String> selectMap1 =
+            KitCollUtil.streamToMap(testData, KitSelectOptionVo::getValue, KitSelectOptionVo::getLabel);
         System.out.println(JSON.toJSONString(selectMap1));
         // 这只是一个示范
         BigDecimal total1 = KitCollUtil.streamBigDecimalAdd(testData, "value");

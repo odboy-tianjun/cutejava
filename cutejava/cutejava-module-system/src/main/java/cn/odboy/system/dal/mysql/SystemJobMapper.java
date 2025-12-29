@@ -15,15 +15,8 @@
  */
 package cn.odboy.system.dal.mysql;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
-import cn.odboy.system.dal.model.SystemQueryJobArgs;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -33,32 +26,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SystemJobMapper extends BaseMapper<SystemJobTb> {
-    default SystemJobTb getJobByName(String name) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SystemJobTb::getName, name);
-        return selectOne(wrapper);
-    }
-    default void injectQueryParams(SystemQueryJobArgs criteria, LambdaQueryWrapper<SystemJobTb> wrapper) {
-        if (criteria != null) {
-            wrapper.like(StrUtil.isNotBlank(criteria.getName()), SystemJobTb::getName, criteria.getName());
-            wrapper.eq(criteria.getEnabled() != null, SystemJobTb::getEnabled, criteria.getEnabled());
-            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-                wrapper.between(SystemJobTb::getCreateTime, criteria.getCreateTime().get(0),
-                    criteria.getCreateTime().get(1));
-            }
-        }
-        wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
-    }
 
-    default IPage<SystemJobTb> selectJobByArgs(SystemQueryJobArgs criteria, Page<SystemJobTb> page) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        this.injectQueryParams(criteria, wrapper);
-        return selectPage(page, wrapper);
-    }
-
-    default List<SystemJobTb> selectJobByArgs(SystemQueryJobArgs criteria) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        this.injectQueryParams(criteria, wrapper);
-        return selectList(wrapper);
-    }
 }

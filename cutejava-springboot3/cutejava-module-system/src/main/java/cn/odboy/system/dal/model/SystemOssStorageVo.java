@@ -22,5 +22,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemOssStorageVo extends SystemOssStorageTb {
-    private String fileSizeDesc;
+
+  private String fileSizeDesc;
 }

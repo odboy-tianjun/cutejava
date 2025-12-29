@@ -25,4 +25,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author odboy
  */
 @Mapper
-public interface SystemRoleDeptMapper extends BaseMapper<SystemRoleDeptTb> {}
+public interface SystemRoleDeptMapper extends BaseMapper<SystemRoleDeptTb> {
+
+}

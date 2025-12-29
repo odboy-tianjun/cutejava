@@ -19,7 +19,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.dataobject.SystemUserTb;
+import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.service.SystemUserService;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -29,34 +29,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SystemApplicationTests {
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private SystemUserService systemUserService;
 
-    public static void main(String[] args) {
-    }
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+  @Autowired
+  private SystemUserService systemUserService;
 
-    @Test
-    public void contextLoads() {
-        SystemDeptTb systemDept = new SystemDeptTb();
-        systemDept.setId(2L);
-        SystemJobTb systemJob = new SystemJobTb();
-        systemJob.setId(11L);
-        Set<SystemJobTb> systemJobs = CollUtil.newHashSet(systemJob);
-        SystemRoleTb systemRole = new SystemRoleTb();
-        systemRole.setId(2L);
-        Set<SystemRoleTb> systemRoles = CollUtil.newHashSet(systemRole);
-        String pwd = passwordEncoder.encode("123456");
-        for (int i = 100; i < 200; i++) {
-            SystemUserTb systemUser = new SystemUserTb();
-            systemUser.setDept(systemDept);
-            systemUser.setJobs(systemJobs);
-            systemUser.setRoles(systemRoles);
-            systemUser.setUsername("odboy" + i);
-            systemUser.setEmail("1943815" + i + "@qq.com");
-            systemUser.setPhone("18797874" + i);
-            systemUser.setPassword(pwd);
-            systemUser.setEnabled(true);
-            systemUserService.saveUser(systemUser);
-        }
+  public static void main(String[] args) {
+  }
+
+  @Test
+  public void contextLoads() {
+    SystemDeptTb systemDept = new SystemDeptTb();
+    systemDept.setId(2L);
+    SystemJobTb systemJob = new SystemJobTb();
+    systemJob.setId(11L);
+    Set<SystemJobTb> systemJobs = CollUtil.newHashSet(systemJob);
+    SystemRoleTb systemRole = new SystemRoleTb();
+    systemRole.setId(2L);
+    Set<SystemRoleTb> systemRoles = CollUtil.newHashSet(systemRole);
+    String pwd = passwordEncoder.encode("123456");
+    for (int i = 100; i < 200; i++) {
+      SystemUserVo systemUser = new SystemUserVo();
+      systemUser.setDept(systemDept);
+      systemUser.setJobs(systemJobs);
+      systemUser.setRoles(systemRoles);
+      systemUser.setUsername("odboy" + i);
+      systemUser.setEmail("1943815" + i + "@qq.com");
+      systemUser.setPhone("18797874" + i);
+      systemUser.setPassword(pwd);
+      systemUser.setEnabled(true);
+      systemUserService.saveUser(systemUser);
     }
+  }
 }

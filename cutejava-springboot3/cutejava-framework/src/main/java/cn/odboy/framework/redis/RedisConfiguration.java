@@ -19,6 +19,10 @@ package cn.odboy.framework.redis;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONFactory;
 import com.alibaba.fastjson2.JSONWriter;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -39,11 +43,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @Configuration
 @EnableCaching
@@ -53,7 +52,8 @@ public class RedisConfiguration {
      * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/> 未配置可能导致, 登录失败, 反复登录等问题
      */
     private static final String[] WHITELIST_STR =
-        {"org.springframework", "cn.odboy.system.dal.dataobject", "cn.odboy.system.dal.model", "cn.odboy.task.dal.dataobject", "cn.odboy.task.dal.model",};
+        {"org.springframework", "cn.odboy.system.dal.dataobject", "cn.odboy.system.dal.model",
+            "cn.odboy.task.dal.dataobject", "cn.odboy.task.dal.model",};
 
     /**
      * 设置 redis 数据默认过期时间，默认2小时 设置@cacheable 序列化方式
@@ -62,7 +62,8 @@ public class RedisConfiguration {
     public RedisCacheConfiguration redisCacheConfiguration() {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer))
+        configuration = configuration.serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer))
             .entryTtl(Duration.ofHours(2));
         return configuration;
     }

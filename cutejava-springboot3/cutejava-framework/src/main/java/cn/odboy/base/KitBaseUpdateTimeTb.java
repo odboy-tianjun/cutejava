@@ -19,17 +19,15 @@ package cn.odboy.base;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUpdateTimeTb extends KitObject {
-    @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true) @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 }

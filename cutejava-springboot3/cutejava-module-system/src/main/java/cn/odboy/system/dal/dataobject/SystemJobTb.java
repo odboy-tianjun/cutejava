@@ -30,26 +30,35 @@ import lombok.Setter;
 @Setter
 @TableName("system_job")
 public class SystemJobTb extends KitBaseUserTimeTb {
-    @NotNull(groups = Update.class) @TableId(value = "id", type = IdType.AUTO)
-    @ApiModelProperty(value = "ID", hidden = true) private Long id;
-    @NotBlank @ApiModelProperty(value = "岗位名称") private String name;
-    @NotNull @ApiModelProperty(value = "岗位排序") private Long jobSort;
-    @NotNull @ApiModelProperty(value = "是否启用") private Boolean enabled;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        SystemJobTb job = (SystemJobTb)o;
-        return Objects.equals(id, job.id);
-    }
+  @NotNull(groups = Update.class)
+  @TableId(value = "id", type = IdType.AUTO)
+  @ApiModelProperty(value = "ID", hidden = true)
+  private Long id;
+  @NotBlank
+  @ApiModelProperty(value = "岗位名称")
+  private String name;
+  @NotNull
+  @ApiModelProperty(value = "岗位排序")
+  private Long jobSort;
+  @NotNull
+  @ApiModelProperty(value = "是否启用")
+  private Boolean enabled;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SystemJobTb job = (SystemJobTb) o;
+    return Objects.equals(id, job.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

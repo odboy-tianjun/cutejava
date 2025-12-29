@@ -30,14 +30,12 @@ public class KitArgs {
     @Getter
     @Setter
     public static class FindByLongId extends KitObject {
-        @NotNull(message = "id必填")
-        private Long id;
+        @NotNull(message = "id必填") private Long id;
     }
 
     @Getter
     @Setter
     public static class DeleteById extends KitObject {
-        @NotNull(message = "id必填")
-        private Long id;
+        @NotNull(message = "id必填") private Long id;
     }
 }

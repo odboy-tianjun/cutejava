@@ -31,36 +31,37 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskTemplateNodeVo extends KitObject {
-    /**
-     * 业务编码
-     */
-    protected String code;
-    /**
-     * 业务类型（service:系统内置服务 rpc:远程调用）
-     */
-    protected String type;
-    /**
-     * 业务名称
-     */
-    protected String name;
-    /**
-     * 是否可点击
-     */
-    protected Boolean click = false;
-    /**
-     * 是否可重试
-     */
-    protected Boolean retry = false;
-    /**
-     * 是否可点击：点击展示详情，详情内容类型
-     */
-    protected String detailType = "";
-    /**
-     * 默认参数<br/> execute: 执行调用 describe: 明细调用
-     */
-    protected Map<String, String> parameters = new HashMap<>();
-    /**
-     * 流水线节点控制按钮
-     */
-    protected List<TaskTemplateNodeOperateButtonVo> buttons = new ArrayList<>();
+
+  /**
+   * 业务编码
+   */
+  protected String code;
+  /**
+   * 业务类型（service:系统内置服务 rpc:远程调用）
+   */
+  protected String type;
+  /**
+   * 业务名称
+   */
+  protected String name;
+  /**
+   * 是否可点击
+   */
+  protected Boolean click = false;
+  /**
+   * 是否可重试
+   */
+  protected Boolean retry = false;
+  /**
+   * 是否可点击：点击展示详情，详情内容类型
+   */
+  protected String detailType = "";
+  /**
+   * 默认参数<br/> execute: 执行调用 describe: 明细调用
+   */
+  protected Map<String, String> parameters = new HashMap<>();
+  /**
+   * 流水线节点控制按钮
+   */
+  protected List<TaskTemplateNodeOperateButtonVo> buttons = new ArrayList<>();
 }

@@ -28,5 +28,7 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SystemRoleCodeVo implements GrantedAuthority {
-    @ApiModelProperty(value = "角色名") private String authority;
+
+  @ApiModelProperty(value = "角色名")
+  private String authority;
 }

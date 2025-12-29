@@ -27,11 +27,10 @@ import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.ibatis.binding.MapperMethod;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import org.apache.ibatis.binding.MapperMethod;
 
 /**
  * 公共抽象Mapper接口类
@@ -138,7 +137,8 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
      */
     public <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz) {
         List<T> entitys = this.listByIds(ids);
-        return entitys == null || entitys.isEmpty() ? CollUtil.newArrayList() : BeanUtil.copyToList(entitys, targetClazz);
+        return entitys == null || entitys.isEmpty() ? CollUtil.newArrayList()
+            : BeanUtil.copyToList(entitys, targetClazz);
     }
 
     /**
@@ -209,18 +209,21 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
      * @param pageable    分页参数
      * @param targetClazz 目标类型
      */
-    public <G> KitPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
+    public <G> KitPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable,
+        Class<G> targetClazz) {
         if (wrapper == null) {
             wrapper = new LambdaQueryWrapper<>();
         }
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-        return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
+        return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz),
+            originPageData.getTotal());
     }
 
     public <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
         QueryWrapper<T> wrapper = KitMpQUtil.build(criteria);
         IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-        return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
+        return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz),
+            originPageData.getTotal());
     }
 
     public <Q> KitPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {

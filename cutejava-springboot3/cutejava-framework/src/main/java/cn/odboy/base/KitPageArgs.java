@@ -19,11 +19,10 @@ package cn.odboy.base;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * 数据分页参数
@@ -35,13 +34,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KitPageArgs<T> implements Serializable {
-    @NotNull(message = "参数page不能为空")
-    @Min(value = 1, message = "参数page最小值为1")
-    @Schema(name = "页码", example = "1")
-    private Integer page;
-    @NotNull(message = "参数size不能为空")
-    @Min(value = 1, message = "参数size最小值为1")
-    @Schema(name = "每页数据量", example = "10")
-    private Integer size;
+    @NotNull(message = "参数page不能为空") @Min(value = 1, message = "参数page最小值为1")
+    @Schema(name = "页码", example = "1") private Integer page;
+    @NotNull(message = "参数size不能为空") @Min(value = 1, message = "参数size最小值为1")
+    @Schema(name = "每页数据量", example = "10") private Integer size;
     private T args;
 }

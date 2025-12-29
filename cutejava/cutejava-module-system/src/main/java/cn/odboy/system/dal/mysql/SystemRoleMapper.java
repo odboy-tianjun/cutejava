@@ -15,16 +15,9 @@
  */
 package cn.odboy.system.dal.mysql;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.model.SystemQueryRoleArgs;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import java.util.List;
-import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * 角色 Mapper
@@ -33,22 +26,5 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemRoleMapper extends BaseMapper<SystemRoleTb> {
-    default Long countRoleByArgs(SystemQueryRoleArgs criteria) {
-        LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-        if (criteria != null) {
-            wrapper.and(StrUtil.isNotBlank(criteria.getBlurry()),
-                c -> c.like(SystemRoleTb::getName, criteria.getBlurry()).or()
-                    .like(SystemRoleTb::getDescription, criteria.getBlurry()));
-            if (CollUtil.isNotEmpty(criteria.getCreateTime()) && criteria.getCreateTime().size() >= 2) {
-                wrapper.between(SystemRoleTb::getCreateTime, criteria.getCreateTime().get(0),
-                    criteria.getCreateTime().get(1));
-            }
-        }
-        return selectCount(wrapper);
-    }
-    List<SystemRoleTb> selectRoleByArgs(@Param("criteria") SystemQueryRoleArgs criteria);
-    List<SystemRoleTb> selectRoleByUserId(@Param("userId") Long userId);
-    List<SystemRoleTb> selectRoleByMenuId(@Param("menuId") Long menuId);
-    SystemRoleTb getRoleById(@Param("roleId") Long roleId);
-    Integer countRoleByDeptIds(@Param("deptIds") Set<Long> deptIds);
+
 }

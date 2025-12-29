@@ -31,8 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/healthCheck")
 @Tag(name = "系统：健康检查接口")
 public class HealthCheckController {
-    @Autowired
-    private KitHealthCheckPointService kitHealthCheckPointService;
+    @Autowired private KitHealthCheckPointService kitHealthCheckPointService;
 
     /**
      * 就绪检查

@@ -30,10 +30,22 @@ import lombok.EqualsAndHashCode;
 @TableName("system_email_config")
 @EqualsAndHashCode(callSuper = false)
 public class SystemEmailConfigTb extends KitObject {
-    @TableId("config_id") private Long id;
-    @NotBlank @ApiModelProperty(value = "邮件服务器SMTP地址") private String host;
-    @NotBlank @ApiModelProperty(value = "邮件服务器 SMTP 端口") private String port;
-    @NotBlank @ApiModelProperty(value = "发件者用户名") private String user;
-    @NotBlank @ApiModelProperty(value = "密码") private String password;
-    @NotBlank @ApiModelProperty(value = "收件人") private String fromUser;
+
+  @TableId("config_id")
+  private Long id;
+  @NotBlank
+  @ApiModelProperty(value = "邮件服务器SMTP地址")
+  private String host;
+  @NotBlank
+  @ApiModelProperty(value = "邮件服务器 SMTP 端口")
+  private String port;
+  @NotBlank
+  @ApiModelProperty(value = "发件者用户名")
+  private String user;
+  @NotBlank
+  @ApiModelProperty(value = "密码")
+  private String password;
+  @NotBlank
+  @ApiModelProperty(value = "收件人")
+  private String fromUser;
 }

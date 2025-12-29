@@ -31,20 +31,29 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SystemDictMapper extends BaseMapper<SystemDictTb> {
-    default void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
-        if (args != null) {
-            wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
-                .like(SystemDictTb::getDescription, args.getBlurry()));
-        }
+
+  default void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+          .like(SystemDictTb::getDescription, args.getBlurry()));
     }
-    default List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args) {
-        LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-        injectQueryParams(args, wrapper);
-        return selectList(wrapper);
-    }
-    default List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-        LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-        injectQueryParams(args, wrapper);
-        return selectList(page, wrapper);
-    }
+  }
+
+  default List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(args, wrapper);
+    return selectList(wrapper);
+  }
+
+  default List<SystemDictTb> selectDictByArgs(SystemQueryDictArgs args, Page<SystemDictTb> page) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    injectQueryParams(args, wrapper);
+    return selectList(page, wrapper);
+  }
+
+  default SystemDictTb getByName(String name) {
+    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDictTb::getName, name);
+    return selectOne(wrapper);
+  }
 }

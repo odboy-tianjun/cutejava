@@ -12,6 +12,9 @@ import lombok.Setter;
 @Setter
 @TableName("system_users_jobs")
 public class SystemUserJobTb {
-    @TableField(value = "user_id") private Long userId;
-    @TableField(value = "job_id") private Long jobId;
+
+  @TableField(value = "user_id")
+  private Long userId;
+  @TableField(value = "job_id")
+  private Long jobId;
 }

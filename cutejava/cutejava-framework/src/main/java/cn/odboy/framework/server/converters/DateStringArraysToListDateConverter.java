@@ -27,20 +27,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DateStringArraysToListDateConverter implements Converter<String[], List<Date>> {
-    private static final ThreadLocal<SimpleDateFormat> SDF =
-        ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
-    @Override
-    public List<Date> convert(String[] source) {
-        if (source.length == 0) {
-            return Collections.emptyList();
-        }
-        return Arrays.stream(source).map(s -> {
-            try {
-                return SDF.get().parse(s);
-            } catch (ParseException e) {
-                throw new IllegalArgumentException("Invalid date string: " + s);
-            }
-        }).collect(Collectors.toList());
+  private static final ThreadLocal<SimpleDateFormat> SDF =
+      ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+  @Override
+  public List<Date> convert(String[] source) {
+    if (source.length == 0) {
+      return Collections.emptyList();
     }
+    return Arrays.stream(source).map(s -> {
+      try {
+        return SDF.get().parse(s);
+      } catch (ParseException e) {
+        throw new IllegalArgumentException("Invalid date string: " + s);
+      }
+    }).collect(Collectors.toList());
+  }
 }

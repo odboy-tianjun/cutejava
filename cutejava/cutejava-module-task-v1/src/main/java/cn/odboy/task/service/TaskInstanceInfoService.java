@@ -36,80 +36,82 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class TaskInstanceInfoService {
-    @Autowired private TaskInstanceInfoMapper taskInstanceInfoMapper;
 
-    public TaskInstanceInfoTb getRunningById(Long id) {
-        LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceInfoTb::getId, id);
-        wrapper.eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode());
-        wrapper.orderByDesc(TaskInstanceInfoTb::getId);
-        return taskInstanceInfoMapper.selectOne(wrapper);
-    }
+  @Autowired
+  private TaskInstanceInfoMapper taskInstanceInfoMapper;
 
-    @Transactional(rollbackFor = Exception.class)
-    public void fastFailWithMessage(Long id, String errorMessage) {
-        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
-        updRecord.setId(id);
-        updRecord.setFinishTime(new Date());
-        updRecord.setStatus(TaskStatusEnum.Fail.getCode());
-        updRecord.setErrorMessage(errorMessage);
-        taskInstanceInfoMapper.updateById(updRecord);
-    }
+  public TaskInstanceInfoTb getRunningById(Long id) {
+    LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceInfoTb::getId, id);
+    wrapper.eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode());
+    wrapper.orderByDesc(TaskInstanceInfoTb::getId);
+    return taskInstanceInfoMapper.selectOne(wrapper);
+  }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap) {
-        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
-        updRecord.setId(id);
-        updRecord.setFinishTime(new Date());
-        updRecord.setStatus(TaskStatusEnum.Fail.getCode());
-        updRecord.setErrorMessage(errorMessage);
-        updRecord.setJobData(JSON.toJSONString(dataMap));
-        taskInstanceInfoMapper.updateById(updRecord);
-    }
+  @Transactional(rollbackFor = Exception.class)
+  public void fastFailWithMessage(Long id, String errorMessage) {
+    TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+    updRecord.setId(id);
+    updRecord.setFinishTime(new Date());
+    updRecord.setStatus(TaskStatusEnum.Fail.getCode());
+    updRecord.setErrorMessage(errorMessage);
+    taskInstanceInfoMapper.updateById(updRecord);
+  }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void fastSuccessWithData(Long id, JobDataMap dataMap) {
-        TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
-        updRecord.setId(id);
-        updRecord.setFinishTime(new Date());
-        updRecord.setStatus(TaskStatusEnum.Success.getCode());
-        updRecord.setJobData(JSON.toJSONString(dataMap));
-        taskInstanceInfoMapper.updateById(updRecord);
-    }
+  @Transactional(rollbackFor = Exception.class)
+  public void fastFailWithMessageData(Long id, String errorMessage, JobDataMap dataMap) {
+    TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+    updRecord.setId(id);
+    updRecord.setFinishTime(new Date());
+    updRecord.setStatus(TaskStatusEnum.Fail.getCode());
+    updRecord.setErrorMessage(errorMessage);
+    updRecord.setJobData(JSON.toJSONString(dataMap));
+    taskInstanceInfoMapper.updateById(updRecord);
+  }
 
-    public TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias,
-        String changeType) {
-        LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceInfoTb::getContextName, contextName);
-        wrapper.eq(TaskInstanceInfoTb::getLanguage, language);
-        wrapper.eq(TaskInstanceInfoTb::getEnvAlias, envAlias);
-        wrapper.eq(TaskInstanceInfoTb::getChangeType, changeType);
-        wrapper.eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode());
-        wrapper.orderByDesc(TaskInstanceInfoTb::getId);
-        return taskInstanceInfoMapper.selectOne(wrapper);
-    }
+  @Transactional(rollbackFor = Exception.class)
+  public void fastSuccessWithData(Long id, JobDataMap dataMap) {
+    TaskInstanceInfoTb updRecord = new TaskInstanceInfoTb();
+    updRecord.setId(id);
+    updRecord.setFinishTime(new Date());
+    updRecord.setStatus(TaskStatusEnum.Success.getCode());
+    updRecord.setJobData(JSON.toJSONString(dataMap));
+    taskInstanceInfoMapper.updateById(updRecord);
+  }
 
-    public TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias,
-        String changeType) {
-        LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TaskInstanceInfoTb::getContextName, contextName);
-        wrapper.eq(TaskInstanceInfoTb::getLanguage, language);
-        wrapper.eq(TaskInstanceInfoTb::getEnvAlias, envAlias);
-        wrapper.eq(TaskInstanceInfoTb::getChangeType, changeType);
-        wrapper.orderByDesc(TaskInstanceInfoTb::getId);
-        wrapper.last("LIMIT 1");
-        return taskInstanceInfoMapper.selectOne(wrapper);
-    }
+  public TaskInstanceInfoTb getLastRunningInstance(String contextName, String language, String envAlias,
+      String changeType) {
+    LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceInfoTb::getContextName, contextName);
+    wrapper.eq(TaskInstanceInfoTb::getLanguage, language);
+    wrapper.eq(TaskInstanceInfoTb::getEnvAlias, envAlias);
+    wrapper.eq(TaskInstanceInfoTb::getChangeType, changeType);
+    wrapper.eq(TaskInstanceInfoTb::getStatus, TaskStatusEnum.Running.getCode());
+    wrapper.orderByDesc(TaskInstanceInfoTb::getId);
+    return taskInstanceInfoMapper.selectOne(wrapper);
+  }
 
-    public void save(TaskInstanceInfoTb newInstance) {
-        taskInstanceInfoMapper.insert(newInstance);
-    }
+  public TaskInstanceInfoTb getLastHistoryInstance(String contextName, String language, String envAlias,
+      String changeType) {
+    LambdaUpdateWrapper<TaskInstanceInfoTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(TaskInstanceInfoTb::getContextName, contextName);
+    wrapper.eq(TaskInstanceInfoTb::getLanguage, language);
+    wrapper.eq(TaskInstanceInfoTb::getEnvAlias, envAlias);
+    wrapper.eq(TaskInstanceInfoTb::getChangeType, changeType);
+    wrapper.orderByDesc(TaskInstanceInfoTb::getId);
+    wrapper.last("LIMIT 1");
+    return taskInstanceInfoMapper.selectOne(wrapper);
+  }
 
-    public TaskInstanceInfoTb getById(Long id) {
-        return taskInstanceInfoMapper.selectById(id);
-    }
+  public void save(TaskInstanceInfoTb newInstance) {
+    taskInstanceInfoMapper.insert(newInstance);
+  }
 
-    public void updateById(TaskInstanceInfoTb taskInstanceInfoTb) {
-        taskInstanceInfoMapper.updateById(taskInstanceInfoTb);
-    }
+  public TaskInstanceInfoTb getById(Long id) {
+    return taskInstanceInfoMapper.selectById(id);
+  }
+
+  public void updateById(TaskInstanceInfoTb taskInstanceInfoTb) {
+    taskInstanceInfoMapper.updateById(taskInstanceInfoTb);
+  }
 }

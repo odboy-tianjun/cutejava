@@ -22,7 +22,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.KitRequestHolder;
 import cn.odboy.system.dal.dataobject.SystemOperationLogTb;
 import cn.odboy.system.dal.mysql.SystemOperationLogMapper;
-import cn.odboy.system.framework.permission.core.CsSecurityHelper;
+import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
@@ -47,72 +47,74 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class OperationLogAspect {
-    @Autowired private SystemOperationLogMapper systemOperationLogMapper;
 
-    @Around("@annotation(operationLog)")
-    public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {
-        return handleLog(joinPoint, operationLog);
-    }
+  @Autowired
+  private SystemOperationLogMapper systemOperationLogMapper;
 
-    private Object handleLog(ProceedingJoinPoint joinPoint, OperationLog annotation) throws Throwable {
-        TimeInterval timeInterval = new TimeInterval();
+  @Around("@annotation(operationLog)")
+  public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {
+    return handleLog(joinPoint, operationLog);
+  }
+
+  private Object handleLog(ProceedingJoinPoint joinPoint, OperationLog annotation) throws Throwable {
+    TimeInterval timeInterval = new TimeInterval();
+    try {
+      Object result = joinPoint.proceed();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      ThreadUtil.execAsync(() -> {
         try {
-            Object result = joinPoint.proceed();
-            SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
-            ThreadUtil.execAsync(() -> {
-                try {
-                    systemOperationLogMapper.insert(record);
-                } catch (Exception e) {
-                    // 忽略
-                }
-            });
-            return result;
-        } catch (Throwable exception) {
-            SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
-            record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
-            ThreadUtil.execAsync(() -> {
-                try {
-                    systemOperationLogMapper.insert(record);
-                } catch (Exception e) {
-                    // 忽略
-                }
-            });
-            throw exception;
+          systemOperationLogMapper.insert(record);
+        } catch (Exception e) {
+          // 忽略
         }
+      });
+      return result;
+    } catch (Throwable exception) {
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
+      ThreadUtil.execAsync(() -> {
+        try {
+          systemOperationLogMapper.insert(record);
+        } catch (Exception e) {
+          // 忽略
+        }
+      });
+      throw exception;
     }
+  }
 
-    private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
-        TimeInterval timeInterval) {
-        long executeTime = timeInterval.intervalMs();
-        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
-        String bizName = annotation.bizName();
-        if (StrUtil.isBlank(bizName)) {
-            Method method = signature.getMethod();
-            ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
-            if (apiOperation != null) {
-                bizName = apiOperation.value();
-            }
-        }
-        if (StrUtil.isBlank(bizName)) {
-            bizName = "默认业务";
-        }
-        String method = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
-        Object[] args = joinPoint.getArgs();
-        String params = JSON.toJSONString(args);
-        HttpServletRequest request = KitRequestHolder.getHttpServletRequest();
-        String requestIp = KitBrowserUtil.getIp(request);
-        String browserInfo = KitBrowserUtil.getVersion(request);
-        String address = KitIPUtil.getCityInfo(requestIp);
-        String username = CsSecurityHelper.getCurrentUsername();
-        SystemOperationLogTb record = new SystemOperationLogTb();
-        record.setBizName(bizName);
-        record.setMethod(method);
-        record.setParams(params);
-        record.setRequestIp(requestIp);
-        record.setExecuteTime(executeTime);
-        record.setUsername(username);
-        record.setAddress(address);
-        record.setBrowserInfo(browserInfo);
-        return record;
+  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
+      TimeInterval timeInterval) {
+    long executeTime = timeInterval.intervalMs();
+    MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+    String bizName = annotation.bizName();
+    if (StrUtil.isBlank(bizName)) {
+      Method method = signature.getMethod();
+      ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
+      if (apiOperation != null) {
+        bizName = apiOperation.value();
+      }
     }
+    if (StrUtil.isBlank(bizName)) {
+      bizName = "默认业务";
+    }
+    String method = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
+    Object[] args = joinPoint.getArgs();
+    String params = JSON.toJSONString(args);
+    HttpServletRequest request = KitRequestHolder.getHttpServletRequest();
+    String requestIp = KitBrowserUtil.getIp(request);
+    String browserInfo = KitBrowserUtil.getVersion(request);
+    String address = KitIPUtil.getCityInfo(requestIp);
+    String username = KitSecurityHelper.getCurrentUsername();
+    SystemOperationLogTb record = new SystemOperationLogTb();
+    record.setBizName(bizName);
+    record.setMethod(method);
+    record.setParams(params);
+    record.setRequestIp(requestIp);
+    record.setExecuteTime(executeTime);
+    record.setUsername(username);
+    record.setAddress(address);
+    record.setBrowserInfo(browserInfo);
+    return record;
+  }
 }

@@ -32,30 +32,32 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Scope("singleton")
 public class QuartzConfig {
-    /**
-     * 解决Job中注入Spring Bean为null的问题
-     */
-    @Component("quartzJobFactory")
-    public static class QuartzJobFactory extends AdaptableJobFactory {
-        private final AutowireCapableBeanFactory autowireCapableBeanFactory;
 
-        @Autowired
-        public QuartzJobFactory(AutowireCapableBeanFactory autowireCapableBeanFactory) {
-            this.autowireCapableBeanFactory = autowireCapableBeanFactory;
-        }
+  /**
+   * 解决Job中注入Spring Bean为null的问题
+   */
+  @Component("quartzJobFactory")
+  public static class QuartzJobFactory extends AdaptableJobFactory {
 
-        @NonNull
-        @Override
-        protected Object createJobInstance(@NonNull TriggerFiredBundle triggerFiredBundle) throws Exception {
-            try {
-                // 调用父类的方法, 把Job注入Spring中
-                Object jobInstance = super.createJobInstance(triggerFiredBundle);
-                autowireCapableBeanFactory.autowireBean(jobInstance);
-                return jobInstance;
-            } catch (Exception e) {
-                log.error("Job注入Spring失败, {}", triggerFiredBundle, e);
-                throw e;
-            }
-        }
+    private final AutowireCapableBeanFactory autowireCapableBeanFactory;
+
+    @Autowired
+    public QuartzJobFactory(AutowireCapableBeanFactory autowireCapableBeanFactory) {
+      this.autowireCapableBeanFactory = autowireCapableBeanFactory;
     }
+
+    @NonNull
+    @Override
+    protected Object createJobInstance(@NonNull TriggerFiredBundle triggerFiredBundle) throws Exception {
+      try {
+        // 调用父类的方法, 把Job注入Spring中
+        Object jobInstance = super.createJobInstance(triggerFiredBundle);
+        autowireCapableBeanFactory.autowireBean(jobInstance);
+        return jobInstance;
+      } catch (Exception e) {
+        log.error("Job注入Spring失败, {}", triggerFiredBundle, e);
+        throw e;
+      }
+    }
+  }
 }

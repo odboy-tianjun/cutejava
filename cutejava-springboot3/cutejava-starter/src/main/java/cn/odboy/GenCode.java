@@ -17,7 +17,6 @@
 package cn.odboy;
 
 import cn.odboy.framework.mybatisplus.core.KitMpCmdGenUtil;
-
 import java.util.List;
 
 /**
@@ -41,6 +40,7 @@ public class GenCode {
     }
 
     private static void genTaskCode(KitMpCmdGenUtil generator) {
-        generator.gen("task", "", List.of("task_instance_info", "task_instance_detail", "task_template_info", "task_instance_step_detail"));
+        generator.gen("task", "",
+            List.of("task_instance_info", "task_instance_detail", "task_template_info", "task_instance_step_detail"));
     }
 }

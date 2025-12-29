@@ -21,20 +21,18 @@ import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
+import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.service.SystemUserService;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Set;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SystemApplicationTests {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private SystemUserService systemUserService;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private SystemUserService systemUserService;
 
     @Test
     public void contextLoads() {
@@ -51,7 +49,7 @@ public class SystemApplicationTests {
 
         String pwd = passwordEncoder.encode("123456");
         for (int i = 100; i < 200; i++) {
-            SystemUserTb systemUser = new SystemUserTb();
+            SystemUserVo systemUser = new SystemUserVo();
             systemUser.setDept(systemDept);
             systemUser.setJobs(systemJobs);
             systemUser.setRoles(systemRoles);

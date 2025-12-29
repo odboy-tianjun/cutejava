@@ -31,20 +31,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class KitPageResult<T> extends KitObject {
-    private List<T> content;
-    private long totalElements;
 
-    public static <T> KitPageResult<T> emptyListData() {
-        KitPageResult<T> result = new KitPageResult<>();
-        result.setTotalElements(0);
-        result.setContent(new ArrayList<>());
-        return result;
-    }
+  private List<T> content;
+  private long totalElements;
 
-    public static <T> KitPageResult<T> listData(IPage<T> page) {
-        KitPageResult<T> result = new KitPageResult<>();
-        result.setTotalElements(page.getTotal());
-        result.setContent(page.getRecords());
-        return result;
-    }
+  public static <T> KitPageResult<T> emptyListData() {
+    KitPageResult<T> result = new KitPageResult<>();
+    result.setTotalElements(0);
+    result.setContent(new ArrayList<>());
+    return result;
+  }
+
+  public static <T> KitPageResult<T> listData(IPage<T> page) {
+    KitPageResult<T> result = new KitPageResult<>();
+    result.setTotalElements(page.getTotal());
+    result.setContent(page.getRecords());
+    return result;
+  }
 }

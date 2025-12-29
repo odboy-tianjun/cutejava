@@ -30,10 +30,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TaskTemplateInfoService {
-    @Autowired private TaskTemplateInfoMapper taskTemplateInfoMapper;
 
-    public TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language,
-        String changeType) {
-        return taskTemplateInfoMapper.selectTemplateInfoByECL(envAlias, contextName, language, changeType);
-    }
+  @Autowired
+  private TaskTemplateInfoMapper taskTemplateInfoMapper;
+
+  public TaskTemplateInfoVo getTemplateInfoByECL(String envAlias, String contextName, String language,
+      String changeType) {
+    return taskTemplateInfoMapper.selectTemplateInfoByECL(envAlias, contextName, language, changeType);
+  }
 }

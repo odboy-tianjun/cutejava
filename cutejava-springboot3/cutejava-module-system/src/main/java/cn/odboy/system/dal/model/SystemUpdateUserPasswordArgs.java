@@ -23,6 +23,9 @@ import lombok.Data;
  */
 @Data
 public class SystemUpdateUserPasswordArgs {
-    @ApiModelProperty(value = "旧密码") private String oldPass;
-    @ApiModelProperty(value = "新密码") private String newPass;
+
+  @ApiModelProperty(value = "旧密码")
+  private String oldPass;
+  @ApiModelProperty(value = "新密码")
+  private String newPass;
 }

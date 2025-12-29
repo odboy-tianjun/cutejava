@@ -28,6 +28,7 @@ import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,8 +36,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
 
 /**
  * 捕捉操作日志
@@ -48,8 +47,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 public class SystemOperationLogAspect {
-    @Autowired
-    private SystemOperationLogMapper systemOperationLogMapper;
+    @Autowired private SystemOperationLogMapper systemOperationLogMapper;
 
     @Around("@annotation(operationLog)")
     public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {
@@ -85,7 +83,8 @@ public class SystemOperationLogAspect {
         }
     }
 
-    private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, TimeInterval timeInterval) {
+    private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
+        TimeInterval timeInterval) {
         long executeTime = timeInterval.intervalMs();
         MethodSignature signature = (MethodSignature)joinPoint.getSignature();
         String bizName = annotation.bizName();

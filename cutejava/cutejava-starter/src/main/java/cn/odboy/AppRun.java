@@ -26,8 +26,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 @SpringBootApplication
 public class AppRun extends BootApplication {
-    public static void main(String[] args) throws UnknownHostException {
-        SpringApplication springApplication = new SpringApplication(AppRun.class);
-        inited(springApplication.run(args));
-    }
+
+  public static void main(String[] args) throws UnknownHostException {
+    SpringApplication springApplication = new SpringApplication(AppRun.class);
+    inited(springApplication.run(args));
+  }
 }

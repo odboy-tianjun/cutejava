@@ -25,4 +25,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author odboy
  */
 @Mapper
-public interface SystemUserJobMapper extends BaseMapper<SystemUserJobTb> {}
+public interface SystemUserJobMapper extends BaseMapper<SystemUserJobTb> {
+
+}

@@ -20,12 +20,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitObject;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.framework.exception.BadRequestException;
-import com.wf.captcha.*;
+import com.wf.captcha.ArithmeticCaptcha;
+import com.wf.captcha.ChineseCaptcha;
+import com.wf.captcha.ChineseGifCaptcha;
+import com.wf.captcha.GifCaptcha;
+import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
+import java.awt.Font;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.awt.*;
 
 /**
  * 验证码配置

@@ -28,35 +28,37 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class KitFileLocalUploadHelper {
-    /**
-     * 单位MB
-     */
-    private static final int AVATAR_MAX_SIZE = 5;
-    private static final String PATH_WINDOWS = "C:\\${appName}\\file\\";
-    private static final String PATH_MAC = "/Users${username}/${appName}/file/";
-    private static final String PATH_LINUX = "/home/${appName}/file/";
-    @Value("${spring.application.name}") private String appName;
 
-    public String getPath() {
-        String os = System.getProperty("os.name");
-        if (os == null) {
-            // 默认使用 Linux 路径作为兜底方案
-            return PATH_LINUX.replace("${appName}", appName);
-        }
-        String lowerOs = os.toLowerCase();
-        if (lowerOs.startsWith(SystemConst.WIN)) {
-            return PATH_WINDOWS.replace("${appName}", appName);
-        } else if (lowerOs.startsWith(SystemConst.MAC)) {
-            String currentUserName = KitSystemUtil.getCurrentUserName();
-            if (StrUtil.isBlank(currentUserName)) {
-                return PATH_MAC.replace("${appName}", appName).replace("${username}", "");
-            }
-            return PATH_MAC.replace("${appName}", appName).replace("${username}", currentUserName);
-        }
-        return PATH_LINUX.replace("${appName}", appName);
-    }
+  /**
+   * 单位MB
+   */
+  private static final int AVATAR_MAX_SIZE = 5;
+  private static final String PATH_WINDOWS = "C:\\${appName}\\file\\";
+  private static final String PATH_MAC = "/Users${username}/${appName}/file/";
+  private static final String PATH_LINUX = "/home/${appName}/file/";
+  @Value("${spring.application.name}")
+  private String appName;
 
-    public int getAvatarMaxSize() {
-        return AVATAR_MAX_SIZE;
+  public String getPath() {
+    String os = System.getProperty("os.name");
+    if (os == null) {
+      // 默认使用 Linux 路径作为兜底方案
+      return PATH_LINUX.replace("${appName}", appName);
     }
+    String lowerOs = os.toLowerCase();
+    if (lowerOs.startsWith(SystemConst.WIN)) {
+      return PATH_WINDOWS.replace("${appName}", appName);
+    } else if (lowerOs.startsWith(SystemConst.MAC)) {
+      String currentUserName = KitSystemUtil.getCurrentUserName();
+      if (StrUtil.isBlank(currentUserName)) {
+        return PATH_MAC.replace("${appName}", appName).replace("${username}", "");
+      }
+      return PATH_MAC.replace("${appName}", appName).replace("${username}", currentUserName);
+    }
+    return PATH_LINUX.replace("${appName}", appName);
+  }
+
+  public int getAvatarMaxSize() {
+    return AVATAR_MAX_SIZE;
+  }
 }

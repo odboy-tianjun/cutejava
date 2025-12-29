@@ -24,5 +24,6 @@ import java.io.Serializable;
  * @date 2022-01-12
  */
 public class KitObject implements Serializable {
-    private static final long serialVersionUID = 1L;
+
+  private static final long serialVersionUID = 1L;
 }

@@ -27,6 +27,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseCreateTimeTb extends KitObject {
-    @TableField(fill = FieldFill.INSERT) @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    private Date createTime;
+
+  @TableField(fill = FieldFill.INSERT)
+  @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date createTime;
 }

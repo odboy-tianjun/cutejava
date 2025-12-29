@@ -19,10 +19,9 @@ package cn.odboy.system.framework.mybatisplus;
 import cn.hutool.core.date.DateTime;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import java.util.Date;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class MpMetaObjectHandler implements MetaObjectHandler {

@@ -29,20 +29,21 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskTemplateNodeOperateButtonVo extends KitObject {
-    /**
-     * 按钮类型（service:调用某个服务并传递参数 link:带参跳转）
-     */
-    private String type;
-    /**
-     * 按钮标题
-     */
-    private String title;
-    /**
-     * 按钮传递的参数
-     */
-    private String code;
-    /**
-     * 默认附加参数
-     */
-    private Map<String, String> parameters = new HashMap<>();
+
+  /**
+   * 按钮类型（service:调用某个服务并传递参数 link:带参跳转）
+   */
+  private String type;
+  /**
+   * 按钮标题
+   */
+  private String title;
+  /**
+   * 按钮传递的参数
+   */
+  private String code;
+  /**
+   * 默认附加参数
+   */
+  private Map<String, String> parameters = new HashMap<>();
 }

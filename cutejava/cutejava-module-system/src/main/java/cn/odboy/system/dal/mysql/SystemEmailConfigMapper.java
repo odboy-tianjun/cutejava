@@ -25,4 +25,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author odboy
  */
 @Mapper
-public interface SystemEmailConfigMapper extends BaseMapper<SystemEmailConfigTb> {}
+public interface SystemEmailConfigMapper extends BaseMapper<SystemEmailConfigTb> {
+
+}

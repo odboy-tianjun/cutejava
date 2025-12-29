@@ -27,17 +27,17 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TaskStatusEnum {
-    Pending("pending", "未开始"), Running("running", "运行中"), Success("success", "执行成功"),
-    Fail("fail", "执行失败");
-    private final String code;
-    private final String name;
+  Pending("pending", "未开始"), Running("running", "运行中"), Success("success", "执行成功"),
+  Fail("fail", "执行失败");
+  private final String code;
+  private final String name;
 
-    public static String getDesc(String code) {
-        for (TaskStatusEnum taskStatusEnum : TaskStatusEnum.values()) {
-            if (taskStatusEnum.code.equals(code)) {
-                return taskStatusEnum.getName();
-            }
-        }
-        return code;
+  public static String getDesc(String code) {
+    for (TaskStatusEnum taskStatusEnum : TaskStatusEnum.values()) {
+      if (taskStatusEnum.code.equals(code)) {
+        return taskStatusEnum.getName();
+      }
     }
+    return code;
+  }
 }

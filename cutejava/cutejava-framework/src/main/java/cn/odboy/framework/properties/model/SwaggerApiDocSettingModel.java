@@ -26,5 +26,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SwaggerApiDocSettingModel extends KitObject {
-    private Boolean enabled;
+
+  private Boolean enabled;
 }

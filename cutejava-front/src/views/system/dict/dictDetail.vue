@@ -4,22 +4,6 @@
       <div class="my-code">点击字典查看详情</div>
     </div>
     <div v-else>
-      <!--工具栏-->
-      <div class="head-container">
-        <div v-if="crud.props.searchToggle">
-          <!-- 搜索 -->
-          <el-input
-            v-model="query.label"
-            clearable
-            size="small"
-            placeholder="输入字典标签查询"
-            style="width: 200px;"
-            class="filter-item"
-            @keyup.enter.native="toQuery"
-          />
-          <rrOperation />
-        </div>
-      </div>
       <!--表单组件-->
       <el-dialog
         append-to-body
@@ -91,13 +75,12 @@
 import crudDictDetail from '@/api/system/dictDetail'
 import CRUD, { form, header, presenter } from '@crud/crud'
 import pagination from '@crud/Pagination'
-import rrOperation from '@crud/RR.operation'
 import udOperation from '@crud/UD.operation'
 
 const defaultForm = { id: null, label: null, value: null, dictSort: 999 }
 
 export default {
-  components: { pagination, rrOperation, udOperation },
+  components: { pagination, udOperation },
   cruds() {
     return [
       CRUD({
