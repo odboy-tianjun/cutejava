@@ -31,6 +31,7 @@ import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
+import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -40,6 +41,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +66,8 @@ public class SystemMenuService {
   private SystemRoleService systemRoleService;
   @Autowired
   private SystemRoleMenuService systemRoleMenuService;
+  @Autowired
+  private SystemUserRoleService systemUserRoleService;
 
   /**
    * 创建
@@ -251,7 +255,7 @@ public class SystemMenuService {
    * @return /
    */
   public List<SystemMenuTb> listMenuByUserId(Long currentUserId) {
-    List<SystemRoleVo> roles = systemRoleService.queryRoleByUsersId(currentUserId);
+    List<SystemRoleVo> roles = systemUserRoleService.queryRoleByUsersId(currentUserId);
     Set<Long> roleIds = roles.stream().map(SystemRoleTb::getId).collect(Collectors.toSet());
     return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIds(roleIds));
   }
@@ -453,5 +457,42 @@ public class SystemMenuService {
     wrapper.isNull(SystemMenuTb::getPid);
     wrapper.orderByAsc(SystemMenuTb::getMenuSort);
     return systemMenuMapper.selectList(wrapper);
+  }
+
+  public List<SystemMenuVo> buildFrontMenus() {
+    List<SystemMenuTb> menuList = this.listMenuByUserId(KitSecurityHelper.getCurrentUserId());
+    List<SystemMenuTb> menus = this.buildMenuTree(menuList);
+    return this.buildMenuVo(menus);
+  }
+
+  public Set<Long> listChildMenuSetByMenuId(Long id) {
+    Set<SystemMenuTb> menuSet = new HashSet<>();
+    List<SystemMenuTb> menuList = this.listMenuByPid(id);
+    menuSet.add(systemMenuMapper.selectById(id));
+    menuSet = this.queryChildMenuByArgs(menuList, menuSet);
+    return menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
+  }
+
+  public List<SystemMenuTb> listMenuSuperior(List<Long> ids) {
+    Set<SystemMenuTb> menus;
+    List<SystemMenuTb> systemMenuTbs;
+    if (CollectionUtil.isNotEmpty(ids)) {
+      menus = new LinkedHashSet<>(this.listMenuByIds(ids));
+      for (SystemMenuTb menu : menus) {
+        List<SystemMenuTb> menuList = this.querySuperiorMenuByArgs(menu, new ArrayList<>());
+        for (SystemMenuTb data : menuList) {
+          if (data.getId().equals(menu.getPid())) {
+            data.setSubCount(data.getSubCount() - 1);
+          }
+        }
+        menus.addAll(menuList);
+      }
+      // 编辑菜单时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
+      menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
+      systemMenuTbs = this.buildMenuTree(new ArrayList<>(menus));
+    } else {
+      systemMenuTbs = this.listMenuByPid(null);
+    }
+    return systemMenuTbs;
   }
 }

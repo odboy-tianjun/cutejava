@@ -28,13 +28,13 @@ import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,114 +42,119 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SystemJobService {
 
-    @Autowired private SystemJobMapper systemJobMapper;
-    @Autowired private SystemUserService systemUserService;
+  @Autowired
+  private SystemJobMapper systemJobMapper;
+  @Autowired
+  private SystemUserService systemUserService;
 
-    /**
-     * 创建
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void saveJob(SystemCreateJobArgs args) {
-        SystemJobTb job = this.getJobByName(args.getName());
-        if (job != null) {
-            throw new BadRequestException("职位名称已存在");
-        }
-        systemJobMapper.insert(BeanUtil.copyProperties(args, SystemJobTb.class));
+  /**
+   * 创建
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void saveJob(SystemCreateJobArgs args) {
+    SystemJobTb job = this.getJobByName(args.getName());
+    if (job != null) {
+      throw new BadRequestException("职位名称已存在");
     }
+    systemJobMapper.insert(BeanUtil.copyProperties(args, SystemJobTb.class));
+  }
 
-    /**
-     * 编辑
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void updateJobById(SystemJobTb args) {
-        SystemJobTb job = systemJobMapper.selectById(args.getId());
-        SystemJobTb old = this.getJobByName(args.getName());
-        if (old != null && !old.getId().equals(args.getId())) {
-            throw new BadRequestException("职位名称已存在");
-        }
-        args.setId(job.getId());
-        systemJobMapper.insertOrUpdate(args);
+  /**
+   * 编辑
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void updateJobById(SystemJobTb args) {
+    SystemJobTb job = systemJobMapper.selectById(args.getId());
+    SystemJobTb old = this.getJobByName(args.getName());
+    if (old != null && !old.getId().equals(args.getId())) {
+      throw new BadRequestException("职位名称已存在");
     }
+    args.setId(job.getId());
+    systemJobMapper.insertOrUpdate(args);
+  }
 
-    /**
-     * 删除
-     *
-     * @param ids /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteJobByIds(Set<Long> ids) {
-        systemJobMapper.deleteByIds(ids);
-    }
+  /**
+   * 删除
+   *
+   * @param ids /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteJobByIds(Set<Long> ids) {
+    // 验证是否被用户关联
+    this.verifyBindRelationByIds(ids);
+    systemJobMapper.deleteByIds(ids);
+  }
 
-    /**
-     * 导出数据
-     *
-     * @param jobs     待导出的数据
-     * @param response /
-     */
-    public void exportJobExcel(List<SystemJobTb> jobs, HttpServletResponse response) throws IOException {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (SystemJobTb job : jobs) {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("岗位名称", job.getName());
-            map.put("岗位状态", job.getEnabled() ? "启用" : "停用");
-            map.put("创建日期", job.getCreateTime());
-            list.add(map);
-        }
-        KitFileUtil.downloadExcel(list, response);
+  /**
+   * 导出数据
+   *
+   * @param jobs     待导出的数据
+   * @param response /
+   */
+  public void exportJobExcel(List<SystemJobTb> jobs, HttpServletResponse response) throws IOException {
+    List<Map<String, Object>> list = new ArrayList<>();
+    for (SystemJobTb job : jobs) {
+      Map<String, Object> map = new LinkedHashMap<>();
+      map.put("岗位名称", job.getName());
+      map.put("岗位状态", job.getEnabled() ? "启用" : "停用");
+      map.put("创建日期", job.getCreateTime());
+      list.add(map);
     }
+    KitFileUtil.downloadExcel(list, response);
+  }
 
-    /**
-     * 分页查询
-     *
-     * @param args 条件
-     * @param page 分页参数
-     */
-    public KitPageResult<SystemJobTb> searchJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        this.injectQueryParams(args, wrapper);
-        Page<SystemJobTb> selectPage = systemJobMapper.selectPage(page, wrapper);
-        return KitPageUtil.toPage(selectPage);
-    }
+  /**
+   * 分页查询
+   *
+   * @param args 条件
+   * @param page 分页参数
+   */
+  public KitPageResult<SystemJobTb> searchJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    Page<SystemJobTb> selectPage = systemJobMapper.selectPage(page, wrapper);
+    return KitPageUtil.toPage(selectPage);
+  }
 
-    /**
-     * 查询全部数据
-     */
-    public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        this.injectQueryParams(args, wrapper);
-        return systemJobMapper.selectList(wrapper);
-    }
+  /**
+   * 查询全部数据
+   */
+  public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    return systemJobMapper.selectList(wrapper);
+  }
 
-    /**
-     * 验证是否被用户关联
-     *
-     * @param ids /
-     */
-    public void verifyBindRelationByIds(Set<Long> ids) {
-        if (systemUserService.countUserByJobIds(ids) > 0) {
-            throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
-        }
+  /**
+   * 验证是否被用户关联
+   *
+   * @param ids /
+   */
+  public void verifyBindRelationByIds(Set<Long> ids) {
+    if (systemUserService.countUserByJobIds(ids) > 0) {
+      throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
     }
+  }
 
-    public SystemJobTb getJobByName(String name) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SystemJobTb::getName, name);
-        return systemJobMapper.selectOne(wrapper);
-    }
+  public SystemJobTb getJobByName(String name) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemJobTb::getName, name);
+    return systemJobMapper.selectOne(wrapper);
+  }
 
-    public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
-        if (args != null) {
-            wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
-            wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
-            if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-                wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
-            }
-        }
-        wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
+  public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
+      wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
+      }
     }
+    wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
+  }
 }

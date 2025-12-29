@@ -57,9 +57,9 @@ public class SystemDeptService {
   @Autowired
   private SystemDeptMapper systemDeptMapper;
   @Autowired
-  private SystemUserService systemUserService;
+  private SystemUserDeptService systemUserDeptService;
   @Autowired
-  private SystemRoleService systemRoleService;
+  private SystemRoleDeptService systemRoleDeptService;
 
   /**
    * 创建
@@ -95,11 +95,15 @@ public class SystemDeptService {
   /**
    * 删除
    *
-   * @param deptSet /
+   * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void deleteDeptByIds(Set<SystemDeptTb> deptSet) {
-    for (SystemDeptTb dept : deptSet) {
+  public void deleteDeptByIds(Set<Long> ids) {
+    // 获取部门, 和其所有子部门
+    Set<SystemDeptTb> depts = this.traverseDeptByIdWithPids(ids);
+    // 验证是否被角色或用户关联
+    this.verifyBindRelationByIds(depts);
+    for (SystemDeptTb dept : depts) {
       systemDeptMapper.deleteById(dept.getId());
       this.updateDeptSubCnt(dept.getPid());
     }
@@ -347,10 +351,10 @@ public class SystemDeptService {
    */
   public void verifyBindRelationByIds(Set<SystemDeptTb> deptSet) {
     Set<Long> deptIds = deptSet.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
-    if (systemUserService.countUserByDeptIds(deptIds) > 0) {
+    if (systemUserDeptService.countUserByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
     }
-    if (systemRoleService.countRoleByDeptIds(deptIds) > 0) {
+    if (systemRoleDeptService.countRoleByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
     }
   }

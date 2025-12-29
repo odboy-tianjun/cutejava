@@ -37,7 +37,7 @@ import org.springframework.stereotype.Service;
 public class SystemDataService {
 
   @Autowired
-  private SystemRoleService systemRoleService;
+  private SystemUserRoleService systemUserRoleService;
   @Autowired
   private SystemDeptService systemDeptService;
   @Autowired
@@ -52,7 +52,7 @@ public class SystemDataService {
   public List<Long> queryDeptIdByArgs(SystemUserTb user) {
     List<Long> deptIds = new ArrayList<>();
     // 查询用户角色
-    List<SystemRoleVo> roleList = systemRoleService.queryRoleByUsersId(user.getId());
+    List<SystemRoleVo> roleList = systemUserRoleService.queryRoleByUsersId(user.getId());
     // 获取对应的部门ID
     for (SystemRoleTb role : roleList) {
       SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());

@@ -24,6 +24,7 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
+import cn.odboy.system.dal.model.SystemCheckEmailCaptchaArgs;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
 import cn.odboy.util.KitDesEncryptUtil;
@@ -112,7 +113,7 @@ public class SystemEmailService {
   /**
    * 校验邮箱验证码
    */
-  public void checkEmailCaptcha(SystemCaptchaBizEnum biEnum, String email, String code) {
+  public void checkEmailCaptchaV1(SystemCaptchaBizEnum biEnum, String email, String code) {
     String redisKey = biEnum.getRedisKey() + email;
     String value = redisHelper.get(redisKey, String.class);
     if (value == null || !value.equals(code)) {
@@ -152,5 +153,13 @@ public class SystemEmailService {
   public SystemEmailConfigTb getLastEmailConfig() {
     SystemEmailConfigTb systemEmailConfigTb = systemEmailConfigMapper.selectById(1L);
     return systemEmailConfigTb == null ? new SystemEmailConfigTb() : systemEmailConfigTb;
+  }
+
+  public void checkEmailCaptcha(SystemCheckEmailCaptchaArgs args) {
+    SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(args.getBizCode());
+    if (biEnum == null) {
+      throw new BadRequestException("不支持的业务");
+    }
+    this.checkEmailCaptchaV1(biEnum, args.getEmail(), args.getCode());
   }
 }

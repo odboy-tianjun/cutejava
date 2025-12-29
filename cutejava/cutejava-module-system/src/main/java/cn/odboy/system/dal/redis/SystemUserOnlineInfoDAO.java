@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -156,5 +157,13 @@ public class SystemUserOnlineInfoDAO {
    */
   public SystemUserOnlineVo queryUserOnlineModelByKey(String key) {
     return redisHelper.get(key, SystemUserOnlineVo.class);
+  }
+
+  public void kickOutUser(Set<String> keys) throws Exception {
+    for (String token : keys) {
+      // 解密Key
+      token = KitDesEncryptUtil.desDecrypt(token);
+      this.logoutByToken(token);
+    }
   }
 }

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.odboy.system.dal.mysql.SystemDictDetailMapper">
-    <select id="selectPageByArgs" resultType="cn.odboy.system.dal.dataobject.SystemDictDetailTb">
-      SELECT
-      t1.*
-      FROM system_dict_detail t1 LEFT JOIN system_dict t2 ON t1.dict_id = t2.id
-      <where>
-        <if test="args.dictName != null and args.dictName != ''">
-          AND t2.name = #{args.dictName}
-        </if>
-        <if test="args.label != null and args.label != ''">
-          AND t1.label = #{args.label}
-        </if>
-      </where>
-      ORDER BY t1.dict_sort
-    </select>
+  <select id="selectPageByArgs" resultType="cn.odboy.system.dal.dataobject.SystemDictDetailTb">
+    SELECT
+    t1.*
+    FROM system_dict_detail t1 LEFT JOIN system_dict t2 ON t1.dict_id = t2.id
+    <where>
+      <if test="args.dictName != null and args.dictName != ''">
+        AND t2.name = #{args.dictName}
+      </if>
+      <if test="args.label != null and args.label != ''">
+        AND t1.label = #{args.label}
+      </if>
+    </where>
+    ORDER BY t1.dict_sort
+  </select>
 </mapper>

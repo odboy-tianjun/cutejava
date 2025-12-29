@@ -20,6 +20,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
@@ -59,12 +60,30 @@ public class SystemQuartzJobService {
   private KitRedisHelper redisHelper;
 
   /**
+   * 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
+   *
+   * @param beanName Bean名称
+   */
+  private void checkBean(String beanName) {
+    // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
+    // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
+    if (!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
+      throw new BadRequestException("非法的 Bean，请重新输入！");
+    }
+  }
+
+  /**
    * 创建
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void createJob(SystemQuartzJobTb args) {
+    if (args.getId() != null) {
+      throw new BadRequestException("无效参数id");
+    }
+    // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
+    checkBean(args.getBeanName());
     if (!CronExpression.isValidExpression(args.getCronExpression())) {
       throw new BadRequestException("cron表达式格式错误");
     }
@@ -79,6 +98,8 @@ public class SystemQuartzJobService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateQuartzJobResumeCron(SystemUpdateQuartzJobArgs args) {
+    // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
+    checkBean(args.getBeanName());
     if (!CronExpression.isValidExpression(args.getCronExpression())) {
       throw new BadRequestException("cron表达式格式错误");
     }

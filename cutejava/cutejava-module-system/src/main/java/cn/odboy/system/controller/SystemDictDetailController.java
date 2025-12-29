@@ -25,7 +25,6 @@ import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,19 +57,14 @@ public class SystemDictDetailController {
   @PostMapping(value = "/queryDictDetailByArgs")
   public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
-    SystemQueryDictDetailArgs args = pageArgs.getArgs();
     Page<SystemDictDetailTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
-    return ResponseEntity.ok(systemDictDetailService.searchDictDetail(args, page));
+    return ResponseEntity.ok(systemDictDetailService.searchDictDetail(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("查询多个字典详情")
   @GetMapping(value = "/getDictDetailMaps")
   public ResponseEntity<Map<String, List<SystemDictDetailVo>>> getDictDetailMaps(@RequestParam String dictName) {
-    String[] names = dictName.split("[,, ]");
-    Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
-    for (String name : names) {
-      dictMap.put(name, systemDictDetailService.listDictDetailByName(name));
-    }
+    Map<String, List<SystemDictDetailVo>> dictMap = systemDictDetailService.getDictDetailMap(dictName);
     return ResponseEntity.ok(dictMap);
   }
 

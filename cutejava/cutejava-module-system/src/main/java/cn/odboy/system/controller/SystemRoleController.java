@@ -18,21 +18,17 @@ package cn.odboy.system.controller;
 import cn.hutool.core.lang.Dict;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleVo;
-import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +51,7 @@ public class SystemRoleController {
   @ApiOperation("获取单个role")
   @PostMapping(value = "/queryRoleById")
   @PreAuthorize("@el.check('roles:list')")
-  public ResponseEntity<SystemRoleTb> queryRoleById(@RequestBody SystemRoleTb args) {
+  public ResponseEntity<SystemRoleVo> queryRoleById(@RequestBody SystemRoleTb args) {
     return ResponseEntity.ok(systemRoleService.getRoleById(args.getId()));
   }
 
@@ -78,22 +74,20 @@ public class SystemRoleController {
   @PreAuthorize("@el.check('roles:list')")
   public ResponseEntity<KitPageResult<SystemRoleVo>> queryRoleByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> pageArgs) {
-    SystemQueryRoleArgs args = pageArgs.getArgs();
-    Page<Object> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemRoleService.searchRoleByArgs(args, page));
+    Page<Object> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemRoleService.searchRoleByArgs(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("获取用户级别")
   @PostMapping(value = "/queryRoleLevel")
   public ResponseEntity<Dict> queryRoleLevel() {
-    return ResponseEntity.ok(Dict.create().set("level", checkRoleLevels(null)));
+    return ResponseEntity.ok(systemRoleService.getRoleLevel());
   }
 
   @ApiOperation("新增角色")
   @PostMapping(value = "/saveRole")
   @PreAuthorize("@el.check('roles:add')")
   public ResponseEntity<Void> saveRole(@Validated @RequestBody SystemCreateRoleArgs args) {
-    checkRoleLevels(args.getLevel());
     systemRoleService.saveRole(args);
     return ResponseEntity.ok(null);
   }
@@ -102,7 +96,6 @@ public class SystemRoleController {
   @PostMapping(value = "/modifyRoleById")
   @PreAuthorize("@el.check('roles:edit')")
   public ResponseEntity<Void> modifyRoleById(@Validated(SystemRoleTb.Update.class) @RequestBody SystemRoleVo args) {
-    checkRoleLevels(args.getLevel());
     systemRoleService.updateRoleById(args);
     return ResponseEntity.ok(null);
   }
@@ -111,8 +104,6 @@ public class SystemRoleController {
   @PostMapping(value = "/modifyBindMenuById")
   @PreAuthorize("@el.check('roles:edit')")
   public ResponseEntity<Void> modifyBindMenuById(@RequestBody SystemRoleVo args) {
-    SystemRoleTb role = systemRoleService.getRoleById(args.getId());
-    checkRoleLevels(role.getLevel());
     systemRoleService.updateBindMenuById(args);
     return ResponseEntity.ok(null);
   }
@@ -121,30 +112,7 @@ public class SystemRoleController {
   @PostMapping(value = "/removeRoleByIds")
   @PreAuthorize("@el.check('roles:del')")
   public ResponseEntity<Void> removeRoleByIds(@RequestBody Set<Long> ids) {
-    for (Long id : ids) {
-      SystemRoleTb role = systemRoleService.getRoleById(id);
-      checkRoleLevels(role.getLevel());
-    }
-    // 验证是否被用户关联
-    systemRoleService.verifyBindRelationByIds(ids);
     systemRoleService.deleteRoleByIds(ids);
     return ResponseEntity.ok(null);
-  }
-
-  /**
-   * 检查用户的角色级别
-   *
-   * @return /
-   */
-  private int checkRoleLevels(Integer level) {
-    List<Integer> levels = systemRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-        .map(SystemRoleTb::getLevel).collect(Collectors.toList());
-    int min = Collections.min(levels);
-    if (level != null) {
-      if (level < min) {
-        throw new BadRequestException("权限不足, 你的角色级别：" + min + ", 低于操作的角色级别：" + level);
-      }
-    }
-    return min;
   }
 }

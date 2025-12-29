@@ -84,6 +84,8 @@ public class SystemJobService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteJobByIds(Set<Long> ids) {
+    // 验证是否被用户关联
+    this.verifyBindRelationByIds(ids);
     systemJobMapper.deleteByIds(ids);
   }
 

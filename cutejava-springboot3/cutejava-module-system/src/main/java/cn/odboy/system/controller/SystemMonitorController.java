@@ -31,12 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/monitor")
 public class SystemMonitorController {
 
-    @Autowired private SystemMonitorService systemMonitorService;
+  @Autowired
+  private SystemMonitorService systemMonitorService;
 
-    @PostMapping(value = "/queryServerMonitorInfo")
-    @ApiOperation("查询服务监控")
-    @PreAuthorize("@el.check('monitor:list')")
-    public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
-        return ResponseEntity.ok(systemMonitorService.getServerMonitorInfo());
-    }
+  @PostMapping(value = "/queryServerMonitorInfo")
+  @ApiOperation("查询服务监控")
+  @PreAuthorize("@el.check('monitor:list')")
+  public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
+    return ResponseEntity.ok(systemMonitorService.getServerMonitorInfo());
+  }
 }

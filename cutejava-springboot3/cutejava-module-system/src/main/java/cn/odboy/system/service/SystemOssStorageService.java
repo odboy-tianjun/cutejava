@@ -21,9 +21,9 @@ import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -36,13 +36,13 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface SystemOssStorageService extends IService<SystemOssStorageTb> {
 
-    KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page);
+  KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page);
 
-    List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args);
+  List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args);
 
-    void exportOssStorageExcel(List<SystemOssStorageVo> list, HttpServletResponse response) throws IOException;
+  void exportOssStorageExcel(List<SystemOssStorageVo> list, HttpServletResponse response) throws IOException;
 
-    String uploadFile(MultipartFile file);
+  String uploadFile(MultipartFile file);
 
-    void deleteFileByIds(Long[] ids);
+  void deleteFileByIds(Long[] ids);
 }

@@ -17,12 +17,9 @@ package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.constant.FileTypeEnum;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
-import cn.odboy.util.KitFileUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,9 +50,8 @@ public class SystemLocalStorageController {
   @PreAuthorize("@el.check('storage:list')")
   public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(
       @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
-    SystemQueryStorageArgs args = pageArgs.getArgs();
-    Page<SystemLocalStorageTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(localStorageService.searchLocalStorage(args, page));
+    Page<SystemLocalStorageTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(localStorageService.searchLocalStorage(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("导出数据")
@@ -76,12 +72,7 @@ public class SystemLocalStorageController {
   @ApiOperation("上传图片")
   @PostMapping("/uploadPicture")
   public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
-    // 判断文件是否为图片
-    String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
-    if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
-      throw new BadRequestException("只能上传图片");
-    }
-    SystemLocalStorageTb localStorage = localStorageService.uploadFile(null, file);
+    SystemLocalStorageTb localStorage = localStorageService.uploadPictureV1(file);
     return ResponseEntity.ok(localStorage);
   }
 

@@ -76,4 +76,20 @@ public class SystemRoleDeptService {
     List<Long> deptIds = systemRoleDeptTbs.stream().map(SystemRoleDeptTb::getDeptId).collect(Collectors.toList());
     return systemDeptMapper.selectByIds(deptIds);
   }
+
+  /**
+   * 根据部门ID统计角色数量
+   *
+   * @param deptIds 部门ID集合
+   * @return /
+   */
+  public Long countRoleByDeptIds(Set<Long> deptIds) {
+    if (CollUtil.isEmpty(deptIds)) {
+      return 0L;
+    }
+
+    LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemRoleDeptTb::getDeptId, deptIds);
+    return systemRoleDeptMapper.selectCount(wrapper);
+  }
 }

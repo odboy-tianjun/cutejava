@@ -24,10 +24,10 @@ import cn.odboy.system.service.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,53 +43,53 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dict")
 public class SystemDictController {
 
-    @Autowired private SystemDictService systemDictService;
+  @Autowired
+  private SystemDictService systemDictService;
 
-    @ApiOperation("导出字典数据")
-    @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('dict:list')")
-    public void exportDict(HttpServletResponse response, SystemQueryDictArgs args) throws IOException {
-        systemDictService.exportDictExcel(systemDictService.queryDictByArgs(args), response);
-    }
+  @ApiOperation("导出字典数据")
+  @GetMapping(value = "/download")
+  @PreAuthorize("@el.check('dict:list')")
+  public void exportDict(HttpServletResponse response, SystemQueryDictArgs args) throws IOException {
+    systemDictService.exportDictExcel(systemDictService.queryDictByArgs(args), response);
+  }
 
-    @ApiOperation("查询字典")
-    @PostMapping(value = "/queryAllDict")
-    @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<List<SystemDictTb>> queryAllDict() {
-        return ResponseEntity.ok(systemDictService.queryDictByArgs(new SystemQueryDictArgs()));
-    }
+  @ApiOperation("查询字典")
+  @PostMapping(value = "/queryAllDict")
+  @PreAuthorize("@el.check('dict:list')")
+  public ResponseEntity<List<SystemDictTb>> queryAllDict() {
+    return ResponseEntity.ok(systemDictService.queryDictByArgs(new SystemQueryDictArgs()));
+  }
 
-    @ApiOperation("查询字典")
-    @PostMapping
-    @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(
-        @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
-        Page<SystemDictTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
-        SystemQueryDictArgs args = pageArgs.getArgs();
-        return ResponseEntity.ok(systemDictService.searchDict(args, page));
-    }
+  @ApiOperation("查询字典")
+  @PostMapping
+  @PreAuthorize("@el.check('dict:list')")
+  public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(
+      @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
+    Page<SystemDictTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemDictService.searchDict(pageArgs.getArgs(), page));
+  }
 
-    @ApiOperation("新增字典")
-    @PostMapping(value = "/saveDict")
-    @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs args) {
-        systemDictService.saveDict(args);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("新增字典")
+  @PostMapping(value = "/saveDict")
+  @PreAuthorize("@el.check('dict:add')")
+  public ResponseEntity<Void> saveDict(@Validated @RequestBody SystemCreateDictArgs args) {
+    systemDictService.saveDict(args);
+    return ResponseEntity.ok(null);
+  }
 
-    @ApiOperation("修改字典")
-    @PostMapping(value = "/modifyDictById")
-    @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
-        systemDictService.updateDictById(args);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("修改字典")
+  @PostMapping(value = "/modifyDictById")
+  @PreAuthorize("@el.check('dict:edit')")
+  public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
+    systemDictService.updateDictById(args);
+    return ResponseEntity.ok(null);
+  }
 
-    @ApiOperation("删除字典")
-    @PostMapping(value = "/removeDictByIds")
-    @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {
-        systemDictService.deleteDictByIds(ids);
-        return ResponseEntity.ok(null);
-    }
+  @ApiOperation("删除字典")
+  @PostMapping(value = "/removeDictByIds")
+  @PreAuthorize("@el.check('dict:del')")
+  public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {
+    systemDictService.deleteDictByIds(ids);
+    return ResponseEntity.ok(null);
+  }
 }

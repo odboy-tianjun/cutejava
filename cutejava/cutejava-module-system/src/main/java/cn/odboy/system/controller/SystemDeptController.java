@@ -58,8 +58,7 @@ public class SystemDeptController {
   @PreAuthorize("@el.check('user:list','dept:list')")
   public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
       @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> pageArgs) throws Exception {
-    SystemQueryDeptArgs args = pageArgs.getArgs();
-    List<SystemDeptTb> depts = systemDeptService.queryAllDeptByArgs(args, true);
+    List<SystemDeptTb> depts = systemDeptService.queryAllDeptByArgs(pageArgs.getArgs(), true);
     return ResponseEntity.ok(KitPageUtil.toPage(depts));
   }
 
@@ -91,11 +90,7 @@ public class SystemDeptController {
   @PostMapping(value = "/removeDeptByIds")
   @PreAuthorize("@el.check('dept:del')")
   public ResponseEntity<Void> removeDeptByIds(@RequestBody Set<Long> ids) {
-    // 获取部门, 和其所有子部门
-    Set<SystemDeptTb> depts = systemDeptService.traverseDeptByIdWithPids(ids);
-    // 验证是否被角色或用户关联
-    systemDeptService.verifyBindRelationByIds(depts);
-    systemDeptService.deleteDeptByIds(depts);
+    systemDeptService.deleteDeptByIds(ids);
     return ResponseEntity.ok(null);
   }
 }

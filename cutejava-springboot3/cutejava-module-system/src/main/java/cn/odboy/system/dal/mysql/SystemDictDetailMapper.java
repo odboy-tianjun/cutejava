@@ -30,5 +30,6 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
+
   IPage<SystemDictDetailTb> selectPageByArgs(Page<SystemDictDetailTb> page, @Param("args") SystemQueryDictDetailArgs args);
 }

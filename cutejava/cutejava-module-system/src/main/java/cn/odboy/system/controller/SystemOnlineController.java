@@ -19,12 +19,12 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
-import cn.odboy.util.KitDesEncryptUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,28 +49,24 @@ public class SystemOnlineController {
   @PostMapping
   @PreAuthorize("@el.check()")
   public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(
-      @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> args) {
-    IPage<SystemUserOnlineVo> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(args.getArgs(), page));
+      @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> pageArgs) {
+    IPage<SystemUserOnlineVo> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("导出数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check()")
   public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-    systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(
-        systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username), response);
+    List<SystemUserOnlineVo> userOnlineVos = systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username);
+    systemUserOnlineInfoDAO.downloadUserOnlineModelExcel(userOnlineVos, response);
   }
 
   @ApiOperation("踢出用户")
   @PostMapping(value = "/kickOutUser")
   @PreAuthorize("@el.check()")
   public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
-    for (String token : keys) {
-      // 解密Key
-      token = KitDesEncryptUtil.desDecrypt(token);
-      systemUserOnlineInfoDAO.logoutByToken(token);
-    }
+    systemUserOnlineInfoDAO.kickOutUser(keys);
     return ResponseEntity.ok(null);
   }
 }

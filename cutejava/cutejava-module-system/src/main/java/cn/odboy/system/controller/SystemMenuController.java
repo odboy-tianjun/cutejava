@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
@@ -23,17 +22,12 @@ import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
-import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -66,27 +60,23 @@ public class SystemMenuController {
   @PostMapping(value = "/buildMenus")
   @ApiOperation("获取前端所需菜单")
   public ResponseEntity<List<SystemMenuVo>> buildMenus() {
-    List<SystemMenuTb> menuList = systemMenuService.listMenuByUserId(KitSecurityHelper.getCurrentUserId());
-    List<SystemMenuTb> menus = systemMenuService.buildMenuTree(menuList);
-    return ResponseEntity.ok(systemMenuService.buildMenuVo(menus));
+    List<SystemMenuVo> systemMenuVos = systemMenuService.buildFrontMenus();
+    return ResponseEntity.ok(systemMenuVos);
   }
 
   @ApiOperation("返回全部的菜单")
   @PostMapping(value = "/queryMenuListByPid")
   @PreAuthorize("@el.check('menu:list','roles:list')")
   public ResponseEntity<List<SystemMenuTb>> queryMenuListByPid(@RequestParam Long pid) {
-    return ResponseEntity.ok(systemMenuService.listMenuByPid(pid));
+    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuByPid(pid);
+    return ResponseEntity.ok(systemMenuTbs);
   }
 
   @ApiOperation("根据菜单ID返回所有子节点ID, 包含自身ID")
   @PostMapping(value = "/queryChildMenuSet")
   @PreAuthorize("@el.check('menu:list','roles:list')")
   public ResponseEntity<Set<Long>> queryChildMenuSet(@RequestParam Long id) {
-    Set<SystemMenuTb> menuSet = new HashSet<>();
-    List<SystemMenuTb> menuList = systemMenuService.listMenuByPid(id);
-    menuSet.add(systemMenuMapper.selectById(id));
-    menuSet = systemMenuService.queryChildMenuByArgs(menuList, menuSet);
-    Set<Long> ids = menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
+    Set<Long> ids = systemMenuService.listChildMenuSetByMenuId(id);
     return ResponseEntity.ok(ids);
   }
 
@@ -103,8 +93,7 @@ public class SystemMenuController {
   @PreAuthorize("@el.check('menu:list')")
   public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(
       @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) throws Exception {
-    SystemQueryMenuArgs args = pageArgs.getArgs();
-    List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(args, true);
+    List<SystemMenuTb> menuList = systemMenuService.queryAllMenu(pageArgs.getArgs(), true);
     return ResponseEntity.ok(KitPageUtil.toPage(menuList));
   }
 
@@ -112,23 +101,8 @@ public class SystemMenuController {
   @PostMapping("/queryMenuSuperior")
   @PreAuthorize("@el.check('menu:list')")
   public ResponseEntity<List<SystemMenuTb>> queryMenuSuperior(@RequestBody List<Long> ids) {
-    Set<SystemMenuTb> menus;
-    if (CollectionUtil.isNotEmpty(ids)) {
-      menus = new LinkedHashSet<>(systemMenuService.listMenuByIds(ids));
-      for (SystemMenuTb menu : menus) {
-        List<SystemMenuTb> menuList = systemMenuService.querySuperiorMenuByArgs(menu, new ArrayList<>());
-        for (SystemMenuTb data : menuList) {
-          if (data.getId().equals(menu.getPid())) {
-            data.setSubCount(data.getSubCount() - 1);
-          }
-        }
-        menus.addAll(menuList);
-      }
-      // 编辑菜单时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
-      menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
-      return ResponseEntity.ok(systemMenuService.buildMenuTree(new ArrayList<>(menus)));
-    }
-    return ResponseEntity.ok(systemMenuService.listMenuByPid(null));
+    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuSuperior(ids);
+    return ResponseEntity.ok(systemMenuTbs);
   }
 
   @ApiOperation("新增菜单")

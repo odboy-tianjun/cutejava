@@ -15,14 +15,9 @@
  */
 package cn.odboy.system.dal.mysql;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.SystemQueryUserArgs;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import java.util.List;
 import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
 

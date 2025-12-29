@@ -21,6 +21,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
+import cn.odboy.constant.FileTypeEnum;
+import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
@@ -179,5 +181,15 @@ public class SystemLocalStorageService {
     LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQueryParams(args, wrapper);
     return systemLocalStorageMapper.selectList(wrapper);
+  }
+
+
+  public SystemLocalStorageTb uploadPictureV1(MultipartFile file) {
+    // 判断文件是否为图片
+    String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
+    if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
+      throw new BadRequestException("只能上传图片");
+    }
+    return KitSpringBeanHolder.getBean(SystemLocalStorageService.class).uploadFile(null, file);
   }
 }

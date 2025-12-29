@@ -17,8 +17,6 @@ package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.framework.context.KitSpringBeanHolder;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
@@ -57,9 +55,8 @@ public class SystemQuartzJobController {
   @PreAuthorize("@el.check('quartzJob:list')")
   public ResponseEntity<KitPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(
       @Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
-    SystemQueryQuartzJobArgs args = pageArgs.getArgs();
-    Page<SystemQuartzJobTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemQuartzJobService.searchQuartzJobByArgs(args, page));
+    Page<SystemQuartzJobTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemQuartzJobService.searchQuartzJobByArgs(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("导出任务数据")
@@ -88,11 +85,6 @@ public class SystemQuartzJobController {
   @PostMapping(value = "/createQuartzJob")
   @PreAuthorize("@el.check('quartzJob:add')")
   public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb args) {
-    if (args.getId() != null) {
-      throw new BadRequestException("无效参数id");
-    }
-    // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
-    checkBean(args.getBeanName());
     systemQuartzJobService.createJob(args);
     return ResponseEntity.ok(null);
   }
@@ -102,8 +94,6 @@ public class SystemQuartzJobController {
   @PreAuthorize("@el.check('quartzJob:edit')")
   public ResponseEntity<Void> updateQuartzJob(
       @Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {
-    // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
-    checkBean(args.getBeanName());
     systemQuartzJobService.updateQuartzJobResumeCron(args);
     return ResponseEntity.ok(null);
   }
@@ -130,18 +120,5 @@ public class SystemQuartzJobController {
   public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
     systemQuartzJobService.deleteJobByIds(ids);
     return ResponseEntity.ok(null);
-  }
-
-  /**
-   * 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
-   *
-   * @param beanName Bean名称
-   */
-  private void checkBean(String beanName) {
-    // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
-    // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
-    if (!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
-      throw new BadRequestException("非法的 Bean，请重新输入！");
-    }
   }
 }

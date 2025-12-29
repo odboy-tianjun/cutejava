@@ -57,9 +57,8 @@ public class SystemJobController {
   @PreAuthorize("@el.check('job:list','user:list')")
   public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> pageArgs) {
-    SystemQueryJobArgs args = pageArgs.getArgs();
-    Page<SystemJobTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemJobService.searchJobByArgs(args, page));
+    Page<SystemJobTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemJobService.searchJobByArgs(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("查询岗位")
@@ -90,8 +89,6 @@ public class SystemJobController {
   @PostMapping(value = "/removeJobByIds")
   @PreAuthorize("@el.check('job:del')")
   public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
-    // 验证是否被用户关联
-    systemJobService.verifyBindRelationByIds(ids);
     systemJobService.deleteJobByIds(ids);
     return ResponseEntity.ok(null);
   }

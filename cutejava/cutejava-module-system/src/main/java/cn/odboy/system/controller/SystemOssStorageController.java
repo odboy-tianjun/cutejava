@@ -53,9 +53,8 @@ public class SystemOssStorageController {
   @PreAuthorize("@el.check('storage:list')")
   public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
       @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
-    SystemQueryStorageArgs args = pageArgs.getArgs();
-    Page<SystemOssStorageTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemOssStorageService.searchOssStorage(args, page));
+    Page<SystemOssStorageTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemOssStorageService.searchOssStorage(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("导出数据")

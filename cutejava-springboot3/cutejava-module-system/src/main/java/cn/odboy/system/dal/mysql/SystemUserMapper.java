@@ -29,24 +29,24 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemUserMapper extends BaseMapper<SystemUserTb> {
 
-    default void updateUserPasswordByUsername(String username, String password) {
-        LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(SystemUserTb::getUsername, username);
-        wrapper.set(SystemUserTb::getPassword, password);
-        update(null, wrapper);
-    }
+  default void updateUserPasswordByUsername(String username, String password) {
+    LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(SystemUserTb::getUsername, username);
+    wrapper.set(SystemUserTb::getPassword, password);
+    update(null, wrapper);
+  }
 
-    default void updateUserEmailByUsername(String username, String email) {
-        LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(SystemUserTb::getUsername, username);
-        wrapper.set(SystemUserTb::getEmail, email);
-        update(null, wrapper);
-    }
+  default void updateUserEmailByUsername(String username, String email) {
+    LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(SystemUserTb::getUsername, username);
+    wrapper.set(SystemUserTb::getEmail, email);
+    update(null, wrapper);
+  }
 
-    default void updateUserPasswordByUserIds(String password, Set<Long> userIds) {
-        LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.in(SystemUserTb::getId, userIds);
-        wrapper.set(SystemUserTb::getPassword, password);
-        update(null, wrapper);
-    }
+  default void updateUserPasswordByUserIds(String password, Set<Long> userIds) {
+    LambdaUpdateWrapper<SystemUserTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.in(SystemUserTb::getId, userIds);
+    wrapper.set(SystemUserTb::getPassword, password);
+    update(null, wrapper);
+  }
 }

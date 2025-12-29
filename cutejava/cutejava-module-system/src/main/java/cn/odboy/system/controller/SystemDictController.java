@@ -66,8 +66,7 @@ public class SystemDictController {
   public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
     Page<SystemDictTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
-    SystemQueryDictArgs args = pageArgs.getArgs();
-    return ResponseEntity.ok(systemDictService.searchDict(args, page));
+    return ResponseEntity.ok(systemDictService.searchDict(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("新增字典")

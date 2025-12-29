@@ -17,12 +17,15 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
+import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -30,6 +33,7 @@ import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
@@ -42,6 +46,7 @@ import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitRsaEncryptUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -59,8 +64,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -69,9 +77,21 @@ public class SystemUserService {
   @Autowired
   private SystemUserMapper systemUserMapper;
   @Autowired
+  private SystemJobMapper systemJobMapper;
+  @Autowired
+  private SystemRoleMapper systemRoleMapper;
+  @Autowired
+  private SystemDeptMapper systemDeptMapper;
+  @Autowired
   private SystemUserJobService systemUserJobService;
   @Autowired
   private SystemUserRoleService systemUserRoleService;
+  @Autowired
+  private SystemEmailService systemEmailService;
+  @Autowired
+  private SystemDeptService systemDeptService;
+  @Autowired
+  private SystemDataService systemDataService;
   @Autowired
   private SystemUserInfoDAO systemUserInfoDAO;
   @Autowired
@@ -83,11 +103,10 @@ public class SystemUserService {
   @Autowired
   private SystemUserRoleMapper systemUserRoleMapper;
   @Autowired
-  private SystemJobMapper systemJobMapper;
+  private AppProperties properties;
   @Autowired
-  private SystemRoleMapper systemRoleMapper;
-  @Autowired
-  private SystemDeptMapper systemDeptMapper;
+  private PasswordEncoder passwordEncoder;
+
 
   /**
    * 新增用户
@@ -96,6 +115,9 @@ public class SystemUserService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveUser(SystemUserVo args) {
+    systemUserRoleService.checkLevel(args);
+    // 默认密码 123456
+    args.setPassword(passwordEncoder.encode("123456"));
     args.setDeptId(args.getDept().getId());
     if (this.getUserByUsername(args.getUsername()) != null) {
       throw new BadRequestException("用户名已存在");
@@ -106,6 +128,7 @@ public class SystemUserService {
     if (this.getUserByPhone(args.getPhone()) != null) {
       throw new BadRequestException("手机号已存在");
     }
+    // 保存用户
     systemUserMapper.insert(args);
     // 保存用户岗位
     systemUserJobService.batchInsertUserJob(args.getJobs(), args.getId());
@@ -120,6 +143,7 @@ public class SystemUserService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateUserById(SystemUserVo args) {
+    systemUserRoleService.checkLevel(args);
     SystemUserTb user = systemUserMapper.selectById(args.getId());
     SystemUserTb user1 = this.getUserByUsername(args.getUsername());
     SystemUserTb user2 = this.getUserByEmail(args.getEmail());
@@ -163,6 +187,9 @@ public class SystemUserService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateUserCenterInfoById(SystemUserTb args) {
+    if (!args.getId().equals(KitSecurityHelper.getCurrentUserId())) {
+      throw new BadRequestException("不能修改他人资料");
+    }
     SystemUserTb user = systemUserMapper.selectById(args.getId());
     SystemUserTb user1 = this.getUserByPhone(args.getPhone());
     if (user1 != null && !user.getId().equals(user1.getId())) {
@@ -182,11 +209,26 @@ public class SystemUserService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void removeUserByIds(Set<Long> ids) {
+    Long currentUserId = KitSecurityHelper.getCurrentUserId();
+    // 校验权限
     for (Long id : ids) {
-      // 清理缓存
-      SystemUserTb user = systemUserMapper.selectById(id);
-      systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
+      Integer currentLevel = Collections.min(
+          systemUserRoleService.queryRoleByUsersId(currentUserId).stream()
+              .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+      Integer optLevel = Collections.min(
+          systemUserRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel)
+              .collect(Collectors.toList()));
+      if (currentLevel > optLevel) {
+        throw new BadRequestException(
+            "角色权限不足, 不能删除：" + this.getUserById(id).getUsername());
+      }
     }
+    // 清理缓存
+    List<String> usernameList = systemUserMapper.selectByIds(ids).stream().map(SystemUserTb::getUsername).distinct().collect(Collectors.toList());
+    for (String username : usernameList) {
+      systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
+    }
+    // 删除用户
     systemUserMapper.deleteByIds(ids);
     // 删除用户岗位
     systemUserJobService.batchDeleteUserJob(ids);
@@ -197,11 +239,23 @@ public class SystemUserService {
   /**
    * 修改密码
    *
-   * @param username        用户名
-   * @param encryptPassword 密码
+   * @param username 用户名
+   * @param args     参数
    */
   @Transactional(rollbackFor = Exception.class)
-  public void updateUserPasswordByUsername(String username, String encryptPassword) {
+  public void updateUserPasswordByUsername(String username, SystemUpdateUserPasswordArgs args) throws Exception {
+    String oldPass =
+        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getOldPass());
+    String newPass =
+        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getNewPass());
+    SystemUserTb user = this.getUserByUsername(username);
+    if (!passwordEncoder.matches(oldPass, user.getPassword())) {
+      throw new BadRequestException("修改失败，旧密码错误");
+    }
+    if (passwordEncoder.matches(newPass, user.getPassword())) {
+      throw new BadRequestException("新密码不能与旧密码相同");
+    }
+    String encryptPassword = passwordEncoder.encode(newPass);
     systemUserMapper.updateUserPasswordByUsername(username, encryptPassword);
     systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
   }
@@ -209,21 +263,21 @@ public class SystemUserService {
   /**
    * 重置密码
    *
-   * @param ids      用户id
-   * @param password 密码
+   * @param ids 用户id
    */
   @Transactional(rollbackFor = Exception.class)
-  public void resetUserPasswordByIds(Set<Long> ids, String password) {
+  public void resetUserPasswordByIds(Set<Long> ids) {
+    String defaultPwd = passwordEncoder.encode("123456");
     List<SystemUserTb> users = systemUserMapper.selectByIds(ids);
     // 清除缓存
-    users.forEach(user -> {
+    for (SystemUserTb user : users) {
       // 清除缓存
       systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
       // 强制退出
       systemUserOnlineInfoDAO.kickOutByUsername(user.getUsername());
-    });
+    }
     // 重置密码
-    systemUserMapper.updateUserPasswordByUserIds(password, ids);
+    systemUserMapper.updateUserPasswordByUserIds(defaultPwd, ids);
   }
 
   /**
@@ -265,11 +319,19 @@ public class SystemUserService {
    * 修改邮箱
    *
    * @param username 用户名
-   * @param email    邮箱
+   * @param args     参数
+   * @param code     验证码
    */
   @Transactional(rollbackFor = Exception.class)
-  public void updateUserEmailByUsername(String username, String email) {
-    systemUserMapper.updateUserEmailByUsername(username, email);
+  public void updateUserEmailByUsername(String username, SystemUserTb args, String code) throws Exception {
+    String password =
+        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
+    SystemUserTb user = this.getUserByUsername(username);
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+      throw new BadRequestException("密码错误");
+    }
+    systemEmailService.checkEmailCaptchaV1(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
+    systemUserMapper.updateUserEmailByUsername(username, args.getEmail());
     systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
   }
 
@@ -436,13 +498,11 @@ public class SystemUserService {
       return null;
     }
     SystemUserVo userVo = BeanUtil.copyProperties(user, SystemUserVo.class);
-
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
       SystemDeptTb dept = systemDeptMapper.selectById(user.getDeptId());
       userVo.setDept(dept);
     }
-
     // 查询关联的岗位信息
     LambdaQueryWrapper<SystemUserJobTb> jobWrapper = new LambdaQueryWrapper<>();
     jobWrapper.eq(SystemUserJobTb::getUserId, user.getId());
@@ -452,7 +512,6 @@ public class SystemUserService {
       List<SystemJobTb> jobs = systemJobMapper.selectByIds(jobIds);
       userVo.setJobs(new LinkedHashSet<>(jobs));
     }
-
     // 查询关联的角色信息
     LambdaQueryWrapper<SystemUserRoleTb> roleWrapper = new LambdaQueryWrapper<>();
     roleWrapper.eq(SystemUserRoleTb::getUserId, user.getId());
@@ -462,7 +521,6 @@ public class SystemUserService {
       List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
       userVo.setRoles(new LinkedHashSet<>(roles));
     }
-
     return userVo;
   }
 
@@ -477,12 +535,6 @@ public class SystemUserService {
     return this.convertToUserVo(this.getUserByUsername(username));
   }
 
-  public long countUserByDeptIds(Set<Long> deptIds) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserTb::getDeptId, deptIds);
-    return systemUserMapper.selectCount(wrapper);
-  }
-
   public SystemUserTb getUserByEmail(String email) {
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemUserTb::getEmail, email);
@@ -495,5 +547,31 @@ public class SystemUserService {
     wrapper.eq(SystemUserTb::getPhone, phone);
     wrapper.eq(SystemUserTb::getEnabled, 1);
     return systemUserMapper.selectOne(wrapper);
+  }
+
+  public KitPageResult<SystemUserVo> aggregationSearchUserByArgs(Page<SystemUserTb> page, SystemQueryUserArgs args, String currentUsername) {
+    if (!ObjectUtils.isEmpty(args.getDeptId())) {
+      args.getDeptIds().add(args.getDeptId());
+      // 先查找是否存在子节点
+      List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
+      // 然后把子节点的ID都加入到集合中
+      args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
+    }
+    // 数据权限
+    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(
+        this.getUserByUsername(currentUsername));
+    // args.getDeptIds() 不为空并且数据权限不为空则取交集
+    if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
+      // 取交集
+      args.getDeptIds().retainAll(dataScopes);
+      if (!CollectionUtil.isEmpty(args.getDeptIds())) {
+        return this.searchUserByArgs(args, page);
+      }
+    } else {
+      // 否则取并集
+      args.getDeptIds().addAll(dataScopes);
+      return this.searchUserByArgs(args, page);
+    }
+    return KitPageUtil.emptyData();
   }
 }

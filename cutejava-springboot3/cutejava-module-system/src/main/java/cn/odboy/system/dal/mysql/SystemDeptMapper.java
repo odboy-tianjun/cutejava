@@ -28,10 +28,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemDeptMapper extends BaseMapper<SystemDeptTb> {
 
-    default void updateDeptSubCountById(long count, Long deptId) {
-        LambdaUpdateWrapper<SystemDeptTb> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(SystemDeptTb::getId, deptId);
-        wrapper.set(SystemDeptTb::getSubCount, count);
-        update(null, wrapper);
-    }
+  default void updateDeptSubCountById(long count, Long deptId) {
+    LambdaUpdateWrapper<SystemDeptTb> wrapper = new LambdaUpdateWrapper<>();
+    wrapper.eq(SystemDeptTb::getId, deptId);
+    wrapper.set(SystemDeptTb::getSubCount, count);
+    update(null, wrapper);
+  }
 }
