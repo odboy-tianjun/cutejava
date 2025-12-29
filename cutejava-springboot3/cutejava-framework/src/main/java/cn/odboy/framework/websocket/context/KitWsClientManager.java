@@ -29,35 +29,36 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class KitWsClientManager {
-    /**
-     * concurrent包的线程安全Map, 用来存放每个客户端对应的MyWebSocket对象。（分布式必出问题）
-     */
-    private static final Map<String, KitWsServer> clientMap = new ConcurrentHashMap<>();
 
-    public static void addClient(String sid, KitWsServer wsServer) {
-        // 如果存在就先删除一个, 防止重复推送消息
-        removeClient(sid);
-        clientMap.put(sid, wsServer);
-    }
+  /**
+   * concurrent包的线程安全Map, 用来存放每个客户端对应的MyWebSocket对象。（分布式必出问题）
+   */
+  private static final Map<String, KitWsServer> clientMap = new ConcurrentHashMap<>();
 
-    public static void removeClient(String sid) {
-        KitWsServer wsServer = clientMap.get(sid);
-        if (wsServer != null) {
-            try {
-                log.info("关闭session, sid={}", sid);
-                wsServer.getSession().close();
-            } catch (Exception e) {
-                log.error("Close session failed, sid={}", sid, e);
-            }
-            clientMap.remove(sid);
-        }
-    }
+  public static void addClient(String sid, KitWsServer wsServer) {
+    // 如果存在就先删除一个, 防止重复推送消息
+    removeClient(sid);
+    clientMap.put(sid, wsServer);
+  }
 
-    public static Collection<KitWsServer> getAllClient() {
-        return clientMap.values();
+  public static void removeClient(String sid) {
+    KitWsServer wsServer = clientMap.get(sid);
+    if (wsServer != null) {
+      try {
+        log.info("关闭session, sid={}", sid);
+        wsServer.getSession().close();
+      } catch (Exception e) {
+        log.error("Close session failed, sid={}", sid, e);
+      }
+      clientMap.remove(sid);
     }
+  }
 
-    public static KitWsServer getClientBySid(String sid) {
-        return clientMap.get(sid);
-    }
+  public static Collection<KitWsServer> getAllClient() {
+    return clientMap.values();
+  }
+
+  public static KitWsServer getClientBySid(String sid) {
+    return clientMap.get(sid);
+  }
 }

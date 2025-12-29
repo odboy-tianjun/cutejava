@@ -20,11 +20,12 @@ package cn.odboy.util;
  * 钉钉 Teambition 实际工时数计算
  */
 public class WorkTimeTests {
-    public static void main(String[] args) {
-        // 总工作时长（时）
-        double totalHour = 11;
-        // 实际工作时长（天），一天8小时工作制
-        double actualHour = totalHour / 8.0;
-        System.err.println("actualHour=" + actualHour + " 天");
-    }
+
+  public static void main(String[] args) {
+    // 总工作时长（时）
+    double totalHour = 11;
+    // 实际工作时长（天），一天8小时工作制
+    double actualHour = totalHour / 8.0;
+    System.err.println("actualHour=" + actualHour + " 天");
+  }
 }

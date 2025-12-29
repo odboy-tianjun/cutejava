@@ -34,19 +34,20 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class KitValidUtil {
-    private static final Validator VALIDATOR;
 
-    static {
-        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-            VALIDATOR = factory.getValidator();
-        }
-    }
+  private static final Validator VALIDATOR;
 
-    public static <T> void validate(T object) {
-        Set<ConstraintViolation<T>> violations = VALIDATOR.validate(object, Default.class);
-        if (!violations.isEmpty()) {
-            throw new BadRequestException(
-                violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
-        }
+  static {
+    try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+      VALIDATOR = factory.getValidator();
     }
+  }
+
+  public static <T> void validate(T object) {
+    Set<ConstraintViolation<T>> violations = VALIDATOR.validate(object, Default.class);
+    if (!violations.isEmpty()) {
+      throw new BadRequestException(
+          violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
+    }
+  }
 }

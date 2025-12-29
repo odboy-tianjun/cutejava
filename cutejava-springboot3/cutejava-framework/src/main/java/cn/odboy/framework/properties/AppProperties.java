@@ -36,12 +36,13 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
-    private ContentRsaEncodeSettingModel rsa;
-    private JwtAuthSettingModel jwt;
-    private UserLoginSettingModel login;
-    private ThreadPoolSettingModel asyncTaskPool;
-    private CaptchaModel captcha;
-    private StorageOSSModel oss;
+
+  private ContentRsaEncodeSettingModel rsa;
+  private JwtAuthSettingModel jwt;
+  private UserLoginSettingModel login;
+  private ThreadPoolSettingModel asyncTaskPool;
+  private CaptchaModel captcha;
+  private StorageOSSModel oss;
 }
 
 

@@ -25,17 +25,18 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-    private final TokenProvider tokenProvider;
-    private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    public TokenConfigurer(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
-        this.tokenProvider = tokenProvider;
-        this.systemUserOnlineInfoDAO = systemUserOnlineInfoDAO;
-    }
+  private final TokenProvider tokenProvider;
+  private final SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
-    @Override
-    public void configure(HttpSecurity http) {
-        TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineInfoDAO);
-        http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
-    }
+  public TokenConfigurer(TokenProvider tokenProvider, SystemUserOnlineInfoDAO systemUserOnlineInfoDAO) {
+    this.tokenProvider = tokenProvider;
+    this.systemUserOnlineInfoDAO = systemUserOnlineInfoDAO;
+  }
+
+  @Override
+  public void configure(HttpSecurity http) {
+    TokenFilter customFilter = new TokenFilter(tokenProvider, systemUserOnlineInfoDAO);
+    http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+  }
 }

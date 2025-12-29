@@ -24,21 +24,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HealthCheckPointer implements KitHealthCheckPointService {
-    @Autowired private SystemDictMapper systemDictMapper;
 
-    /**
-     * 系统准备就绪
-     */
-    @Override
-    public ResponseEntity<?> doReadiness() {
-        return ResponseEntity.ok(null);
-    }
+  @Autowired
+  private SystemDictMapper systemDictMapper;
 
-    /**
-     * 系统是否正常
-     */
-    @Override
-    public ResponseEntity<?> doLiveness() {
-        return ResponseEntity.ok(systemDictMapper.selectById(1));
-    }
+  /**
+   * 系统准备就绪
+   */
+  @Override
+  public ResponseEntity<?> doReadiness() {
+    return ResponseEntity.ok(null);
+  }
+
+  /**
+   * 系统是否正常
+   */
+  @Override
+  public ResponseEntity<?> doLiveness() {
+    return ResponseEntity.ok(systemDictMapper.selectById(1));
+  }
 }

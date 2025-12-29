@@ -16,10 +16,10 @@
 
 package cn.odboy.framework.exception;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * 统一异常处理
@@ -27,19 +27,19 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Getter
 public class BadRequestException extends RuntimeException {
 
-    private Integer status = BAD_REQUEST.value();
+  private Integer status = BAD_REQUEST.value();
 
-    public BadRequestException(String msg) {
-        super(msg);
-    }
+  public BadRequestException(String msg) {
+    super(msg);
+  }
 
-    public BadRequestException(HttpStatus status, String msg) {
-        super(msg);
-        this.status = status.value();
-    }
+  public BadRequestException(HttpStatus status, String msg) {
+    super(msg);
+    this.status = status.value();
+  }
 
-    public BadRequestException(Throwable cause) {
-        super(cause.getMessage());
-        this.status = BAD_REQUEST.value();
-    }
+  public BadRequestException(Throwable cause) {
+    super(cause.getMessage());
+    this.status = BAD_REQUEST.value();
+  }
 }

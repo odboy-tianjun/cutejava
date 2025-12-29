@@ -26,6 +26,8 @@ import lombok.Setter;
 @TableName("system_roles_depts")
 public class SystemRoleDeptTb extends KitObject {
 
-    @TableField(value = "role_id") private Long roleId;
-    @TableField(value = "dept_id") private Long deptId;
+  @TableField(value = "role_id")
+  private Long roleId;
+  @TableField(value = "dept_id")
+  private Long deptId;
 }

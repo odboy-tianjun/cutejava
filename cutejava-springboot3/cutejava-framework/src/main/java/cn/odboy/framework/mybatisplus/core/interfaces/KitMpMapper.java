@@ -42,146 +42,147 @@ import org.springframework.data.domain.Pageable;
  * @date 2022-04-03
  */
 public interface KitMpMapper<E> extends BaseMapper<E> {
-    /**
-     * 批量插入
-     *
-     * @param entityList List<E>
-     * @return 影响的行数
-     */
-    int insertBatchSomeColumn(List<E> entityList);
 
-    /**
-     * 根据id全量更新
-     *
-     * @param entity E
-     * @return 影响的行数
-     */
-    int alwaysUpdateSomeColumnById(@Param("et") E entity);
+  /**
+   * 批量插入
+   *
+   * @param entityList List<E>
+   * @return 影响的行数
+   */
+  int insertBatchSomeColumn(List<E> entityList);
 
-    /**
-     * 获取字典
-     *
-     * @param wrapper   LambdaQueryWrapper<E>
-     * @param keyName   键对应的列名称
-     * @param valueName 值对应的列名称
-     * @return Map<String, Object>
-     */
-    default Map<String, Object> getMapWithKv(LambdaQueryWrapper<E> wrapper, String keyName, String valueName) {
-        Map<String, Object> result = new ConcurrentHashMap<>(1);
-        List<E> list = this.selectList(wrapper);
-        if (CollUtil.isEmpty(list)) {
-            return new HashMap<>(3);
-        }
-        E tempObj = list.stream().findFirst().orElse(null);
-        if (tempObj == null) {
-            return new HashMap<>(3);
-        }
-        Field[] fields = ReflectUtil.getFields(tempObj.getClass());
-        for (E e : list) {
-            Field keyField = null;
-            Field valueField = null;
-            for (Field field : fields) {
-                String fieldName = field.getName();
-                if (fieldName.equals(keyName)) {
-                    keyField = field;
-                } else if (fieldName.equals(valueName)) {
-                    valueField = field;
-                    break;
-                }
-            }
-            String fieldKey = String.valueOf(ReflectUtil.getFieldValue(e, keyField));
-            Object fieldValue = ReflectUtil.getFieldValue(e, valueField);
-            if (fieldKey != null) {
-                result.put(fieldKey, fieldValue);
-            }
-        }
-        return result;
+  /**
+   * 根据id全量更新
+   *
+   * @param entity E
+   * @return 影响的行数
+   */
+  int alwaysUpdateSomeColumnById(@Param("et") E entity);
+
+  /**
+   * 获取字典
+   *
+   * @param wrapper   LambdaQueryWrapper<E>
+   * @param keyName   键对应的列名称
+   * @param valueName 值对应的列名称
+   * @return Map<String, Object>
+   */
+  default Map<String, Object> getMapWithKv(LambdaQueryWrapper<E> wrapper, String keyName, String valueName) {
+    Map<String, Object> result = new ConcurrentHashMap<>(1);
+    List<E> list = this.selectList(wrapper);
+    if (CollUtil.isEmpty(list)) {
+      return new HashMap<>(3);
     }
-
-    /**
-     * 条件查询列表, 并返回期望的对象
-     *
-     * @param wrapper LambdaQueryWrapper<E>
-     * @param clazz   期望的对象类型
-     * @return List<T>
-     */
-    default <T> List<T> queryFeatureClazzList(LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
-        List<E> list = this.selectList(wrapper);
-        if (CollUtil.isEmpty(list)) {
-            return new ArrayList<>();
-        }
-        return BeanUtil.copyToList(list, clazz);
+    E tempObj = list.stream().findFirst().orElse(null);
+    if (tempObj == null) {
+      return new HashMap<>(3);
     }
-
-    /**
-     * 条件查询列表, 并返回期望的对象
-     *
-     * @param wrapper LambdaQueryWrapper<E>
-     * @param clazz   期望的对象类型
-     * @return List<T>
-     */
-    default <T> List<T> queryFeatureClazzList(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
-        List<E> list = wrapper.list();
-        if (CollUtil.isEmpty(list)) {
-            return new ArrayList<>();
+    Field[] fields = ReflectUtil.getFields(tempObj.getClass());
+    for (E e : list) {
+      Field keyField = null;
+      Field valueField = null;
+      for (Field field : fields) {
+        String fieldName = field.getName();
+        if (fieldName.equals(keyName)) {
+          keyField = field;
+        } else if (fieldName.equals(valueName)) {
+          valueField = field;
+          break;
         }
-        return BeanUtil.copyToList(list, clazz);
+      }
+      String fieldKey = String.valueOf(ReflectUtil.getFieldValue(e, keyField));
+      Object fieldValue = ReflectUtil.getFieldValue(e, valueField);
+      if (fieldKey != null) {
+        result.put(fieldKey, fieldValue);
+      }
     }
+    return result;
+  }
 
-    /**
-     * 条件查询分页列表, 并返回期望的对象
-     *
-     * @param pageable 分页参数
-     * @param wrapper  LambdaQueryWrapper<E> wrapper
-     * @param clazz    期望的对象类型
-     * @return IPage<T>
-     */
-    default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper,
-        Class<T> clazz) {
-        int pageNumber = pageable.getPageNumber();
-        int pageSize = pageable.getPageSize();
-        pageNumber = pageNumber <= 0 ? 1 : pageNumber;
-        pageSize = pageSize <= 0 ? 10 : pageSize;
-        IPage<E> pageInfo = this.selectPage(new Page<>(pageNumber, pageSize), wrapper);
-        if (CollUtil.isEmpty(pageInfo.getRecords())) {
-            return new KitPageResult<>(new ArrayList<>(), pageInfo.getTotal());
-        }
-        return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+  /**
+   * 条件查询列表, 并返回期望的对象
+   *
+   * @param wrapper LambdaQueryWrapper<E>
+   * @param clazz   期望的对象类型
+   * @return List<T>
+   */
+  default <T> List<T> queryFeatureClazzList(LambdaQueryWrapper<E> wrapper, Class<T> clazz) {
+    List<E> list = this.selectList(wrapper);
+    if (CollUtil.isEmpty(list)) {
+      return new ArrayList<>();
     }
+    return BeanUtil.copyToList(list, clazz);
+  }
 
-    /**
-     * 条件查询分页列表, 并返回期望的对象
-     *
-     * @param pageable 分页参数
-     * @param wrapper  LambdaQueryWrapper<E> wrapper
-     * @param clazz    期望的对象类型
-     * @return IPage<T>
-     */
-    default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper,
-        Class<T> clazz) {
-        int pageNumber = pageable.getPageNumber();
-        int pageSize = pageable.getPageSize();
-        pageNumber = pageNumber <= 0 ? 1 : pageNumber;
-        pageSize = pageSize <= 0 ? 10 : pageSize;
-        IPage<E> pageInfo = wrapper.page(new Page<>(pageNumber, pageSize));
-        if (CollUtil.isEmpty(pageInfo.getRecords())) {
-            return KitPageUtil.emptyListData();
-        }
-        return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+  /**
+   * 条件查询列表, 并返回期望的对象
+   *
+   * @param wrapper LambdaQueryWrapper<E>
+   * @param clazz   期望的对象类型
+   * @return List<T>
+   */
+  default <T> List<T> queryFeatureClazzList(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    List<E> list = wrapper.list();
+    if (CollUtil.isEmpty(list)) {
+      return new ArrayList<>();
     }
+    return BeanUtil.copyToList(list, clazz);
+  }
 
-    /**
-     * 获取目标类
-     *
-     * @param wrapper LambdaQueryChainWrapper<E> wrapper
-     * @param clazz   期望的对象类型
-     * @return T
-     */
-    default <T> T getFeatureClazz(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
-        E e = this.selectOne(wrapper);
-        if (e == null) {
-            return null;
-        }
-        return BeanUtil.copyProperties(e, clazz);
+  /**
+   * 条件查询分页列表, 并返回期望的对象
+   *
+   * @param pageable 分页参数
+   * @param wrapper  LambdaQueryWrapper<E> wrapper
+   * @param clazz    期望的对象类型
+   * @return IPage<T>
+   */
+  default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryWrapper<E> wrapper,
+      Class<T> clazz) {
+    int pageNumber = pageable.getPageNumber();
+    int pageSize = pageable.getPageSize();
+    pageNumber = pageNumber <= 0 ? 1 : pageNumber;
+    pageSize = pageSize <= 0 ? 10 : pageSize;
+    IPage<E> pageInfo = this.selectPage(new Page<>(pageNumber, pageSize), wrapper);
+    if (CollUtil.isEmpty(pageInfo.getRecords())) {
+      return new KitPageResult<>(new ArrayList<>(), pageInfo.getTotal());
     }
+    return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+  }
+
+  /**
+   * 条件查询分页列表, 并返回期望的对象
+   *
+   * @param pageable 分页参数
+   * @param wrapper  LambdaQueryWrapper<E> wrapper
+   * @param clazz    期望的对象类型
+   * @return IPage<T>
+   */
+  default <T> KitPageResult<T> queryFeatureClazzPage(Pageable pageable, LambdaQueryChainWrapper<E> wrapper,
+      Class<T> clazz) {
+    int pageNumber = pageable.getPageNumber();
+    int pageSize = pageable.getPageSize();
+    pageNumber = pageNumber <= 0 ? 1 : pageNumber;
+    pageSize = pageSize <= 0 ? 10 : pageSize;
+    IPage<E> pageInfo = wrapper.page(new Page<>(pageNumber, pageSize));
+    if (CollUtil.isEmpty(pageInfo.getRecords())) {
+      return KitPageUtil.emptyListData();
+    }
+    return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+  }
+
+  /**
+   * 获取目标类
+   *
+   * @param wrapper LambdaQueryChainWrapper<E> wrapper
+   * @param clazz   期望的对象类型
+   * @return T
+   */
+  default <T> T getFeatureClazz(LambdaQueryChainWrapper<E> wrapper, Class<T> clazz) {
+    E e = this.selectOne(wrapper);
+    if (e == null) {
+      return null;
+    }
+    return BeanUtil.copyProperties(e, clazz);
+  }
 }

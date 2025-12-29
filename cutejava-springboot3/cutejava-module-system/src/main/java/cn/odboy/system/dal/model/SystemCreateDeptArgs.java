@@ -25,10 +25,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SystemCreateDeptArgs extends KitObject {
 
-    @NotBlank(message = "部门名称必填") private String name;
-    @NotNull(message = "部门排序必填") private Integer deptSort;
-    private Boolean enabled;
-    private String isTop;
-    private Long pid;
-    private Integer subCount = 0;
+  @NotBlank(message = "部门名称必填")
+  private String name;
+  @NotNull(message = "部门排序必填")
+  private Integer deptSort;
+  private Boolean enabled;
+  private String isTop;
+  private Long pid;
+  private Integer subCount = 0;
 }

@@ -23,7 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WsSidVo extends KitObject {
-    private String username;
-    private String bizCode;
-    private String param;
+
+  private String username;
+  private String bizCode;
+  private String param;
 }

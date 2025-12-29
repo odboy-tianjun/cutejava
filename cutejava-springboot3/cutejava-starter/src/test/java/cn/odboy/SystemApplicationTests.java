@@ -30,35 +30,38 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SystemApplicationTests {
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private SystemUserService systemUserService;
 
-    @Test
-    public void contextLoads() {
-        SystemDeptTb systemDept = new SystemDeptTb();
-        systemDept.setId(2L);
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+  @Autowired
+  private SystemUserService systemUserService;
 
-        SystemJobTb systemJob = new SystemJobTb();
-        systemJob.setId(11L);
-        Set<SystemJobTb> systemJobs = CollUtil.newHashSet(systemJob);
+  @Test
+  public void contextLoads() {
+    SystemDeptTb systemDept = new SystemDeptTb();
+    systemDept.setId(2L);
 
-        SystemRoleTb systemRole = new SystemRoleTb();
-        systemRole.setId(2L);
-        Set<SystemRoleTb> systemRoles = CollUtil.newHashSet(systemRole);
+    SystemJobTb systemJob = new SystemJobTb();
+    systemJob.setId(11L);
+    Set<SystemJobTb> systemJobs = CollUtil.newHashSet(systemJob);
 
-        String pwd = passwordEncoder.encode("123456");
-        for (int i = 100; i < 200; i++) {
-            SystemUserVo systemUser = new SystemUserVo();
-            systemUser.setDept(systemDept);
-            systemUser.setJobs(systemJobs);
-            systemUser.setRoles(systemRoles);
-            systemUser.setUsername("odboy" + i);
-            systemUser.setEmail("1943815" + i + "@qq.com");
-            systemUser.setPhone("18797874" + i);
-            systemUser.setPassword(pwd);
-            systemUser.setEnabled(true);
-            systemUserService.saveUser(systemUser);
-        }
+    SystemRoleTb systemRole = new SystemRoleTb();
+    systemRole.setId(2L);
+    Set<SystemRoleTb> systemRoles = CollUtil.newHashSet(systemRole);
+
+    String pwd = passwordEncoder.encode("123456");
+    for (int i = 100; i < 200; i++) {
+      SystemUserVo systemUser = new SystemUserVo();
+      systemUser.setDept(systemDept);
+      systemUser.setJobs(systemJobs);
+      systemUser.setRoles(systemRoles);
+      systemUser.setUsername("odboy" + i);
+      systemUser.setEmail("1943815" + i + "@qq.com");
+      systemUser.setPhone("18797874" + i);
+      systemUser.setPassword(pwd);
+      systemUser.setEnabled(true);
+      systemUserService.saveUser(systemUser);
     }
+  }
 }
 

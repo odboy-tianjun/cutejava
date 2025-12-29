@@ -30,53 +30,54 @@ import java.util.List;
  * @date 2025-05-15
  */
 public class KitMpAnyQUtil {
-    public static <T> T selectOne(BaseMapper<T> baseMapper, Object queryParams) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        return baseMapper.selectOne(queryWrapper);
-    }
 
-    public static <T, M> M selectOne(BaseMapper<T> baseMapper, Object queryParams, Class<M> mapperClazz) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        T mapperTarget = baseMapper.selectOne(queryWrapper);
-        if (mapperTarget == null) {
-            return null;
-        }
-        return BeanUtil.copyProperties(mapperTarget, mapperClazz);
-    }
+  public static <T> T selectOne(BaseMapper<T> baseMapper, Object queryParams) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    return baseMapper.selectOne(queryWrapper);
+  }
 
-    public static <T> List<T> selectList(BaseMapper<T> baseMapper, Object queryParams) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        return baseMapper.selectList(queryWrapper);
+  public static <T, M> M selectOne(BaseMapper<T> baseMapper, Object queryParams, Class<M> mapperClazz) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    T mapperTarget = baseMapper.selectOne(queryWrapper);
+    if (mapperTarget == null) {
+      return null;
     }
+    return BeanUtil.copyProperties(mapperTarget, mapperClazz);
+  }
 
-    public static <T, M> List<M> selectList(BaseMapper<T> baseMapper, Object queryParams, Class<M> mapperClazz) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        List<T> mapperTarget = baseMapper.selectList(queryWrapper);
-        if (mapperTarget == null) {
-            return new ArrayList<>();
-        }
-        return BeanUtil.copyToList(mapperTarget, mapperClazz);
-    }
+  public static <T> List<T> selectList(BaseMapper<T> baseMapper, Object queryParams) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    return baseMapper.selectList(queryWrapper);
+  }
 
-    public static <T> Long selectCount(BaseMapper<T> baseMapper, Object queryParams) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        return baseMapper.selectCount(queryWrapper);
+  public static <T, M> List<M> selectList(BaseMapper<T> baseMapper, Object queryParams, Class<M> mapperClazz) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    List<T> mapperTarget = baseMapper.selectList(queryWrapper);
+    if (mapperTarget == null) {
+      return new ArrayList<>();
     }
+    return BeanUtil.copyToList(mapperTarget, mapperClazz);
+  }
 
-    public static <T> Page<T> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        return baseMapper.selectPage(page, queryWrapper);
-    }
+  public static <T> Long selectCount(BaseMapper<T> baseMapper, Object queryParams) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    return baseMapper.selectCount(queryWrapper);
+  }
 
-    public static <T, M> Page<M> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams,
-        Class<M> mapperClazz) {
-        QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
-        Page<T> tPage = baseMapper.selectPage(page, queryWrapper);
-        Page<M> mapperTarget = new Page<>();
-        mapperTarget.setRecords(BeanUtil.copyToList(tPage.getRecords(), mapperClazz));
-        mapperTarget.setTotal(tPage.getTotal());
-        mapperTarget.setSize(tPage.getSize());
-        mapperTarget.setCurrent(tPage.getCurrent());
-        return mapperTarget;
-    }
+  public static <T> Page<T> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    return baseMapper.selectPage(page, queryWrapper);
+  }
+
+  public static <T, M> Page<M> selectPage(BaseMapper<T> baseMapper, Page<T> page, Object queryParams,
+      Class<M> mapperClazz) {
+    QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
+    Page<T> tPage = baseMapper.selectPage(page, queryWrapper);
+    Page<M> mapperTarget = new Page<>();
+    mapperTarget.setRecords(BeanUtil.copyToList(tPage.getRecords(), mapperClazz));
+    mapperTarget.setTotal(tPage.getTotal());
+    mapperTarget.setSize(tPage.getSize());
+    mapperTarget.setCurrent(tPage.getCurrent());
+    return mapperTarget;
+  }
 }

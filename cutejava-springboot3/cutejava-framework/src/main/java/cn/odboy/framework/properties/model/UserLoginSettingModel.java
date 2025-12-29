@@ -28,9 +28,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserLoginSettingModel extends KitObject {
-    /**
-     * 账号单用户 登录
-     */
-    private boolean single = false;
-    private UserLoginCaptchaSettingModel captchaSetting;
+
+  /**
+   * 账号单用户 登录
+   */
+  private boolean single = false;
+  private UserLoginCaptchaSettingModel captchaSetting;
 }

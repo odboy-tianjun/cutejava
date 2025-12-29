@@ -31,32 +31,33 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class KitScriptHelper {
-    public Object evalObj(String script, Map<String, Object> args) {
-        try (Context rhino = Context.enter()) {
-            Scriptable scope = rhino.initStandardObjects();
-            bindArgumentsToScope(scope, args);
-            Object result = rhino.evaluateString(scope, script, "JavaScript", 1, null);
-            log.info("执行结果: {}", Context.toString(result));
-            return result;
-        }
-    }
 
-    private void bindArgumentsToScope(Scriptable scope, Map<?, ?> args) {
-        if (args == null) {
-            return;
-        }
-        for (Map.Entry<?, ?> entry : args.entrySet()) {
-            Object jsValue = Context.javaToJS(entry.getValue(), scope);
-            scope.put(entry.getKey().toString(), scope, jsValue);
-        }
+  public Object evalObj(String script, Map<String, Object> args) {
+    try (Context rhino = Context.enter()) {
+      Scriptable scope = rhino.initStandardObjects();
+      bindArgumentsToScope(scope, args);
+      Object result = rhino.evaluateString(scope, script, "JavaScript", 1, null);
+      log.info("执行结果: {}", Context.toString(result));
+      return result;
     }
+  }
 
-    private void bindArgumentsToScope(Scriptable scope, Object args) {
-        if (args == null) {
-            return;
-        }
-        // 单个对象参数
-        Object jsValue = Context.javaToJS(args, scope);
-        scope.put("args", scope, jsValue);
+  private void bindArgumentsToScope(Scriptable scope, Map<?, ?> args) {
+    if (args == null) {
+      return;
     }
+    for (Map.Entry<?, ?> entry : args.entrySet()) {
+      Object jsValue = Context.javaToJS(entry.getValue(), scope);
+      scope.put(entry.getKey().toString(), scope, jsValue);
+    }
+  }
+
+  private void bindArgumentsToScope(Scriptable scope, Object args) {
+    if (args == null) {
+      return;
+    }
+    // 单个对象参数
+    Object jsValue = Context.javaToJS(args, scope);
+    scope.put("args", scope, jsValue);
+  }
 }

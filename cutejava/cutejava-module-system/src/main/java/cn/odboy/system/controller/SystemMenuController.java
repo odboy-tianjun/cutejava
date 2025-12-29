@@ -47,8 +47,6 @@ public class SystemMenuController {
 
   @Autowired
   private SystemMenuService systemMenuService;
-  @Autowired
-  private SystemMenuMapper systemMenuMapper;
 
   @ApiOperation("导出菜单数据")
   @GetMapping(value = "/download")

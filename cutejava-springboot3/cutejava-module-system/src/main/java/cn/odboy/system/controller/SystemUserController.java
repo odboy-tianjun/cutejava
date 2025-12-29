@@ -23,16 +23,14 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
-import cn.odboy.system.service.SystemDataService;
-import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.system.service.SystemUserService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,10 +51,6 @@ public class SystemUserController {
 
   @Autowired
   private SystemUserService systemUserService;
-  @Autowired
-  private SystemDataService systemDataService;
-  @Autowired
-  private SystemDeptService systemDeptService;
 
 
   @ApiOperation("导出用户数据")

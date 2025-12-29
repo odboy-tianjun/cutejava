@@ -25,13 +25,22 @@ import lombok.Data;
 @Data
 public class SystemUserOnlineVo {
 
-    @ApiModelProperty(value = "Token编号") private String uid;
-    @ApiModelProperty(value = "用户名") private String userName;
-    @ApiModelProperty(value = "昵称") private String nickName;
-    @ApiModelProperty(value = "岗位") private String dept;
-    @ApiModelProperty(value = "浏览器") private String browser;
-    @ApiModelProperty(value = "IP") private String ip;
-    @ApiModelProperty(value = "地址") private String address;
-    @ApiModelProperty(value = "token") private String key;
-    @ApiModelProperty(value = "登录时间") private Date loginTime;
+  @ApiModelProperty(value = "Token编号")
+  private String uid;
+  @ApiModelProperty(value = "用户名")
+  private String userName;
+  @ApiModelProperty(value = "昵称")
+  private String nickName;
+  @ApiModelProperty(value = "岗位")
+  private String dept;
+  @ApiModelProperty(value = "浏览器")
+  private String browser;
+  @ApiModelProperty(value = "IP")
+  private String ip;
+  @ApiModelProperty(value = "地址")
+  private String address;
+  @ApiModelProperty(value = "token")
+  private String key;
+  @ApiModelProperty(value = "登录时间")
+  private Date loginTime;
 }

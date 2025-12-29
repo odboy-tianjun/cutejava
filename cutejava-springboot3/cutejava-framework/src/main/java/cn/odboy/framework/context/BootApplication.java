@@ -32,23 +32,24 @@ import org.springframework.core.env.Environment;
  */
 @Slf4j
 public class BootApplication {
-    protected static void inited(ConfigurableApplicationContext application) throws UnknownHostException {
-        Environment env = application.getEnvironment();
-        String ip = InetAddress.getLocalHost().getHostAddress();
-        String port = env.getProperty("server.port");
-        String path = StrUtil.isEmpty(env.getProperty("config.servlet.context-path")) ? ""
-            : env.getProperty("config.servlet.context-path");
-        log.info("""
-            ----------------------------------------------------------
-            \tApplication is running! Access URLs:
-            \tLocal: \t\thttp://localhost:{}{}
-            \tExternal: \thttp://{}:{}{}
-            \tSwagger文档: \thttp://{}:{}{}/doc.html
-            ----------------------------------------------------------""", port, path, ip, port, path, ip, port, path);
-    }
 
-    @Bean
-    public KitSpringBeanHolder springBeanHolder() {
-        return new KitSpringBeanHolder();
-    }
+  protected static void inited(ConfigurableApplicationContext application) throws UnknownHostException {
+    Environment env = application.getEnvironment();
+    String ip = InetAddress.getLocalHost().getHostAddress();
+    String port = env.getProperty("server.port");
+    String path = StrUtil.isEmpty(env.getProperty("config.servlet.context-path")) ? ""
+        : env.getProperty("config.servlet.context-path");
+    log.info("""
+        ----------------------------------------------------------
+        \tApplication is running! Access URLs:
+        \tLocal: \t\thttp://localhost:{}{}
+        \tExternal: \thttp://{}:{}{}
+        \tSwagger文档: \thttp://{}:{}{}/doc.html
+        ----------------------------------------------------------""", port, path, ip, port, path, ip, port, path);
+  }
+
+  @Bean
+  public KitSpringBeanHolder springBeanHolder() {
+    return new KitSpringBeanHolder();
+  }
 }

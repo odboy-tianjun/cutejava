@@ -28,6 +28,9 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseCreateTimeTb extends KitObject {
-    @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true) @TableField(fill = FieldFill.INSERT) private Date
-        createTime;
+
+  @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  @TableField(fill = FieldFill.INSERT)
+  private Date
+      createTime;
 }

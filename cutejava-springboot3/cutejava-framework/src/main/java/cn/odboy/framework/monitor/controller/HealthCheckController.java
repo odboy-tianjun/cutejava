@@ -31,29 +31,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/healthCheck")
 @Tag(name = "系统：健康检查接口")
 public class HealthCheckController {
-    @Autowired private KitHealthCheckPointService kitHealthCheckPointService;
 
-    /**
-     * 就绪检查
-     */
-    @AnonymousGetMapping(value = "/readiness")
-    public ResponseEntity<?> doReadiness() {
-        return kitHealthCheckPointService.doReadiness();
-    }
+  @Autowired
+  private KitHealthCheckPointService kitHealthCheckPointService;
 
-    /**
-     * 存活检查
-     */
-    @AnonymousGetMapping(value = "/liveness")
-    public ResponseEntity<?> doLiveness() {
-        return kitHealthCheckPointService.doLiveness();
-    }
+  /**
+   * 就绪检查
+   */
+  @AnonymousGetMapping(value = "/readiness")
+  public ResponseEntity<?> doReadiness() {
+    return kitHealthCheckPointService.doReadiness();
+  }
 
-    //    /**
-    //     * 访问首页提示
-    //     */
-    //    @AnonymousGetMapping("/")
-    //    public String index() {
-    //        return "success";
-    //    }
+  /**
+   * 存活检查
+   */
+  @AnonymousGetMapping(value = "/liveness")
+  public ResponseEntity<?> doLiveness() {
+    return kitHealthCheckPointService.doLiveness();
+  }
+
+  //    /**
+  //     * 访问首页提示
+  //     */
+  //    @AnonymousGetMapping("/")
+  //    public String index() {
+  //        return "success";
+  //    }
 }

@@ -28,24 +28,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MyBatisMapperTests {
-    @Autowired private SystemUserMapper systemUserMapper;
 
-    @Test
-    public void testMapper1() {
-        // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:48:18.400+0800');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, new Date()));
+  @Autowired
+  private SystemUserMapper systemUserMapper;
 
-        // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:50:16.786+0800');
-        systemUserMapper.selectList(
-            new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateTime.now()));
+  @Test
+  public void testMapper1() {
+    // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:48:18.400+0800');
+    systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, new Date()));
 
-        // SELECT * FROM system_user WHERE (create_time > '2025-08-18 14:53:46');
-        systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime,
-            DateUtil.formatDateTime(new Date())));
+    // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:50:16.786+0800');
+    systemUserMapper.selectList(
+        new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateTime.now()));
 
-        // SELECT * FROM system_user WHERE (create_time > '2025-08-18');
-        systemUserMapper.selectList(
-            new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDate(new Date())));
-    }
+    // SELECT * FROM system_user WHERE (create_time > '2025-08-18 14:53:46');
+    systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime,
+        DateUtil.formatDateTime(new Date())));
+
+    // SELECT * FROM system_user WHERE (create_time > '2025-08-18');
+    systemUserMapper.selectList(
+        new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDate(new Date())));
+  }
 }
 

@@ -26,11 +26,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SystemUserInfoVo extends KitObject {
 
-    private SystemSimpleUserVo user;
-    private List<Long> dataScopes;
-    private List<SystemRoleCodeVo> authorities;
+  private SystemSimpleUserVo user;
+  private List<Long> dataScopes;
+  private List<SystemRoleCodeVo> authorities;
 
-    public Set<String> getRoles() {
-        return authorities.stream().map(SystemRoleCodeVo::getAuthority).collect(Collectors.toSet());
-    }
+  public Set<String> getRoles() {
+    return authorities.stream().map(SystemRoleCodeVo::getAuthority).collect(Collectors.toSet());
+  }
 }

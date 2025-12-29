@@ -35,7 +35,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class KitSelectOptionVo extends KitObject {
-    private String label;
-    private String value;
-    private Map<String, Object> ext;
+
+  private String label;
+  private String value;
+  private Map<String, Object> ext;
 }

@@ -27,12 +27,13 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class KitClassUtil {
-    @SuppressWarnings({"unchecked", "all"})
-    public static List<Field> getAllFields(Class clazz, List<Field> fields) {
-        if (clazz != null) {
-            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-            getAllFields(clazz.getSuperclass(), fields);
-        }
-        return fields;
+
+  @SuppressWarnings({"unchecked", "all"})
+  public static List<Field> getAllFields(Class clazz, List<Field> fields) {
+    if (clazz != null) {
+      fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+      getAllFields(clazz.getSuperclass(), fields);
     }
+    return fields;
+  }
 }

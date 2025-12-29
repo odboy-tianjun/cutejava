@@ -24,6 +24,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SystemCreateDictArgs extends KitObject {
 
-    @NotBlank(message = "字典名称必填") private String name;
-    private String description;
+  @NotBlank(message = "字典名称必填")
+  private String name;
+  private String description;
 }

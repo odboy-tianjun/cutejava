@@ -33,35 +33,48 @@ import org.springframework.data.annotation.LastModifiedBy;
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUserTimeTb extends KitObject {
 
-    @CreatedBy @TableField(fill = FieldFill.INSERT) @Schema(name = "创建人", hidden = true) private String createBy;
+  @CreatedBy
+  @TableField(fill = FieldFill.INSERT)
+  @Schema(name = "创建人", hidden = true)
+  private String createBy;
 
-    @LastModifiedBy @TableField(fill = FieldFill.INSERT_UPDATE) @Schema(name = "更新人", hidden = true) private String
-        updateBy;
+  @LastModifiedBy
+  @TableField(fill = FieldFill.INSERT_UPDATE)
+  @Schema(name = "更新人", hidden = true)
+  private String
+      updateBy;
 
-    @TableField(fill = FieldFill.INSERT) @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true) private Date
-        createTime;
+  @TableField(fill = FieldFill.INSERT)
+  @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date
+      createTime;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE) @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-    private Date updateTime;
+  @TableField(fill = FieldFill.INSERT_UPDATE)
+  @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date updateTime;
 
-    @Override
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        Field[] fields = this.getClass().getDeclaredFields();
-        try {
-            for (Field f : fields) {
-                f.setAccessible(true);
-                builder.append(f.getName(), f.get(this)).append("\n");
-            }
-        } catch (Exception e) {
-            builder.append("toString builder encounter an error");
-        }
-        return builder.toString();
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this);
+    Field[] fields = this.getClass().getDeclaredFields();
+    try {
+      for (Field f : fields) {
+        f.setAccessible(true);
+        builder.append(f.getName(), f.get(this)).append("\n");
+      }
+    } catch (Exception e) {
+      builder.append("toString builder encounter an error");
     }
+    return builder.toString();
+  }
 
-    /* 分组校验 */
-    public @interface Create {}
+  /* 分组校验 */
+  public @interface Create {
 
-    /* 分组校验 */
-    public @interface Update {}
+  }
+
+  /* 分组校验 */
+  public @interface Update {
+
+  }
 }

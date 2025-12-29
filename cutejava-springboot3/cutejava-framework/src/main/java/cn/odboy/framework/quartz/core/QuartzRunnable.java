@@ -28,29 +28,30 @@ import org.springframework.util.ReflectionUtils;
  */
 @Slf4j
 public class QuartzRunnable implements Callable<Object> {
-    private final Object target;
-    private final Method method;
-    private final String params;
 
-    public QuartzRunnable(String beanName, String methodName, String params)
-        throws NoSuchMethodException, SecurityException {
-        this.target = KitSpringBeanHolder.getBean(beanName);
-        this.params = params;
-        if (StringUtils.isNotBlank(params)) {
-            this.method = target.getClass().getDeclaredMethod(methodName, String.class);
-        } else {
-            this.method = target.getClass().getDeclaredMethod(methodName);
-        }
-    }
+  private final Object target;
+  private final Method method;
+  private final String params;
 
-    @Override
-    @SuppressWarnings({"unchecked", "all"})
-    public Object call() throws Exception {
-        ReflectionUtils.makeAccessible(method);
-        if (StringUtils.isNotBlank(params)) {
-            return method.invoke(target, params);
-        } else {
-            return method.invoke(target);
-        }
+  public QuartzRunnable(String beanName, String methodName, String params)
+      throws NoSuchMethodException, SecurityException {
+    this.target = KitSpringBeanHolder.getBean(beanName);
+    this.params = params;
+    if (StringUtils.isNotBlank(params)) {
+      this.method = target.getClass().getDeclaredMethod(methodName, String.class);
+    } else {
+      this.method = target.getClass().getDeclaredMethod(methodName);
     }
+  }
+
+  @Override
+  @SuppressWarnings({"unchecked", "all"})
+  public Object call() throws Exception {
+    ReflectionUtils.makeAccessible(method);
+    if (StringUtils.isNotBlank(params)) {
+      return method.invoke(target, params);
+    } else {
+      return method.invoke(target);
+    }
+  }
 }

@@ -32,40 +32,41 @@ import java.util.List;
  * @date 2022-04-03
  */
 public interface KitMpService<T> extends IService<T> {
-    <G> int saveFeatureClazz(G resources);
 
-    <G> int saveFeatureClazzList(List<G> resources);
+  <G> int saveFeatureClazz(G resources);
 
-    <G> int modifyFeatureClazzById(G resources);
+  <G> int saveFeatureClazzList(List<G> resources);
 
-    <G> boolean modifyFeatureClazzListById(Collection<G> resources, int batchSize);
+  <G> int modifyFeatureClazzById(G resources);
 
-    <G> G queryFeatureClazzById(Serializable id, Class<G> targetClazz);
+  <G> boolean modifyFeatureClazzListById(Collection<G> resources, int batchSize);
 
-    T queryClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
+  <G> G queryFeatureClazzById(Serializable id, Class<G> targetClazz);
 
-    <G> G queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz);
+  T queryClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
 
-    <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
+  <G> G queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz);
 
-    <Q> List<T> queryClazzListByArgs(Q criteria);
+  <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
 
-    List<T> queryClazzListByArgs(LambdaQueryWrapper<T> wrapper);
+  <Q> List<T> queryClazzListByArgs(Q criteria);
 
-    <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz);
+  List<T> queryClazzListByArgs(LambdaQueryWrapper<T> wrapper);
 
-    <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
+  <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz);
 
-    KitPageResult<T> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
+  <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
 
-    <G> KitPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable,
-        Class<G> targetClazz);
+  KitPageResult<T> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
 
-    <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
+  <G> KitPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable,
+      Class<G> targetClazz);
 
-    <Q> KitPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable);
+  <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
 
-    int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity);
+  <Q> KitPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable);
 
-    int removeClazzByArgs(LambdaQueryWrapper<T> wrapper);
+  int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity);
+
+  int removeClazzByArgs(LambdaQueryWrapper<T> wrapper);
 }

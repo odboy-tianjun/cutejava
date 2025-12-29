@@ -29,18 +29,19 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KitMpQuery {
-    /**
-     * 基本对象的属性名
-     */
-    String propName() default "";
 
-    /**
-     * 查询方式
-     */
-    KitMpQTypeEnum type() default KitMpQTypeEnum.EQUAL;
+  /**
+   * 基本对象的属性名
+   */
+  String propName() default "";
 
-    /**
-     * 多字段模糊搜索, 仅支持String类型字段, 多个用逗号隔开, 如@MpQuery(blurry = "email,username")
-     */
-    String blurry() default "";
+  /**
+   * 查询方式
+   */
+  KitMpQTypeEnum type() default KitMpQTypeEnum.EQUAL;
+
+  /**
+   * 多字段模糊搜索, 仅支持String类型字段, 多个用逗号隔开, 如@MpQuery(blurry = "email,username")
+   */
+  String blurry() default "";
 }

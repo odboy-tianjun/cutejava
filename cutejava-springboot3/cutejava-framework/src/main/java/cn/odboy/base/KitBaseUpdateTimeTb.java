@@ -28,6 +28,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class KitBaseUpdateTimeTb extends KitObject {
-    @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true) @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+
+  @Schema(name = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  @TableField(fill = FieldFill.INSERT_UPDATE)
+  private Date updateTime;
 }

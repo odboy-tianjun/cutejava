@@ -35,28 +35,29 @@ import java.util.concurrent.TimeUnit;
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BizLock {
-    /**
-     * 业务名称
-     */
-    String bizName() default "";
 
-    /**
-     * 锁key，支持SpEL表达式 示例: #user.id - 获取参数user的id属性 #p0 - 获取第一个参数 #root.methodName - 获取方法名
-     */
-    String key() default "";
+  /**
+   * 业务名称
+   */
+  String bizName() default "";
 
-    /**
-     * 锁持有时间(秒)，默认60秒。锁的持有时间，超过这个时间锁会自动释放
-     */
-    long leaseTime() default 60;
+  /**
+   * 锁key，支持SpEL表达式 示例: #user.id - 获取参数user的id属性 #p0 - 获取第一个参数 #root.methodName - 获取方法名
+   */
+  String key() default "";
 
-    /**
-     * 时间单位，默认为秒
-     */
-    TimeUnit timeUnit() default TimeUnit.SECONDS;
+  /**
+   * 锁持有时间(秒)，默认60秒。锁的持有时间，超过这个时间锁会自动释放
+   */
+  long leaseTime() default 60;
 
-    /**
-     * 获取锁失败后的异常信息
-     */
-    String errorMessage() default "操作太繁忙，请稍后再试";
+  /**
+   * 时间单位，默认为秒
+   */
+  TimeUnit timeUnit() default TimeUnit.SECONDS;
+
+  /**
+   * 获取锁失败后的异常信息
+   */
+  String errorMessage() default "操作太繁忙，请稍后再试";
 }

@@ -47,72 +47,76 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class ConfigurerAdapter implements WebMvcConfigurer {
-    @Autowired private DateStringArraysToListDateConverter dateStringArraysToListDateConverter;
-    @Autowired private DateStringToDateConverter dateStringToDateConverter;
-    @Autowired private KitFileLocalUploadHelper fileUploadPathHelper;
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+  @Autowired
+  private DateStringArraysToListDateConverter dateStringArraysToListDateConverter;
+  @Autowired
+  private DateStringToDateConverter dateStringToDateConverter;
+  @Autowired
+  private KitFileLocalUploadHelper fileUploadPathHelper;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String path = fileUploadPathHelper.getPath();
-        String pathUtl = "file:" + path.replace("\\", "/");
-        registry.addResourceHandler("/avatar/**").addResourceLocations(pathUtl).setCachePeriod(0);
-        registry.addResourceHandler("/file/**").addResourceLocations(pathUtl).setCachePeriod(0);
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
-    }
+  @Bean
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.addAllowedOriginPattern("*");
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+  }
 
-    /**
-     * Http消息转换器
-     */
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        // 添加默认的 StringHttpMessageConverter
-        converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        // 配置 FastJsonHttpMessageConverter
-        FastJsonHttpMessageConverter fastJsonConverter = new FastJsonHttpMessageConverter();
-        List<MediaType> supportMediaTypeList = new ArrayList<>();
-        supportMediaTypeList.add(MediaType.APPLICATION_JSON);
-        FastJsonConfig config = new FastJsonConfig();
-        config.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        // 开启引用检测, 枚举支持
-        /// 是否输出值为null的字段
-        //        config.setWriterFeatures(JSONWriter.Feature.WriteMapNullValue);
-        /// 字段如果为null,输出为false,而非null
-        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullBooleanAsFalse);
-        /// 字段如果为null,输出为[],而非null
-        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullListAsEmpty);
-        /// 字符类型字段如果为null,输出为"",而非null
-        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullStringAsEmpty);
-        /// 太具体的数值会直接影响逻辑本身, 所以不要这个
-        //        config.setWriterFeatures(JSONWriter.Feature.WriteNullNumberAsZero);
-        /// 全局Long转字符串，会导致基础框架本身异常, 所以不要这个
-        //        config.setWriterFeatures(JSONWriter.Feature.WriteLongAsString);
-        config.setWriterFeatures(JSONWriter.Feature.WriteEnumUsingToString);
-        config.setWriterFeatures(JSONWriter.Feature.ReferenceDetection);
-        fastJsonConverter.setFastJsonConfig(config);
-        fastJsonConverter.setSupportedMediaTypes(supportMediaTypeList);
-        fastJsonConverter.setDefaultCharset(StandardCharsets.UTF_8);
-        // 将 FastJsonHttpMessageConverter 添加到列表末尾
-        converters.add(fastJsonConverter);
-    }
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    String path = fileUploadPathHelper.getPath();
+    String pathUtl = "file:" + path.replace("\\", "/");
+    registry.addResourceHandler("/avatar/**").addResourceLocations(pathUtl).setCachePeriod(0);
+    registry.addResourceHandler("/file/**").addResourceLocations(pathUtl).setCachePeriod(0);
+    registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
+  }
 
-    /**
-     * 自定义时间转换器
-     */
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(dateStringArraysToListDateConverter);
-        registry.addConverter(dateStringToDateConverter);
-    }
+  /**
+   * Http消息转换器
+   */
+  @Override
+  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    // 添加默认的 StringHttpMessageConverter
+    converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    // 配置 FastJsonHttpMessageConverter
+    FastJsonHttpMessageConverter fastJsonConverter = new FastJsonHttpMessageConverter();
+    List<MediaType> supportMediaTypeList = new ArrayList<>();
+    supportMediaTypeList.add(MediaType.APPLICATION_JSON);
+    FastJsonConfig config = new FastJsonConfig();
+    config.setDateFormat("yyyy-MM-dd HH:mm:ss");
+    // 开启引用检测, 枚举支持
+    /// 是否输出值为null的字段
+    //        config.setWriterFeatures(JSONWriter.Feature.WriteMapNullValue);
+    /// 字段如果为null,输出为false,而非null
+    //        config.setWriterFeatures(JSONWriter.Feature.WriteNullBooleanAsFalse);
+    /// 字段如果为null,输出为[],而非null
+    //        config.setWriterFeatures(JSONWriter.Feature.WriteNullListAsEmpty);
+    /// 字符类型字段如果为null,输出为"",而非null
+    //        config.setWriterFeatures(JSONWriter.Feature.WriteNullStringAsEmpty);
+    /// 太具体的数值会直接影响逻辑本身, 所以不要这个
+    //        config.setWriterFeatures(JSONWriter.Feature.WriteNullNumberAsZero);
+    /// 全局Long转字符串，会导致基础框架本身异常, 所以不要这个
+    //        config.setWriterFeatures(JSONWriter.Feature.WriteLongAsString);
+    config.setWriterFeatures(JSONWriter.Feature.WriteEnumUsingToString);
+    config.setWriterFeatures(JSONWriter.Feature.ReferenceDetection);
+    fastJsonConverter.setFastJsonConfig(config);
+    fastJsonConverter.setSupportedMediaTypes(supportMediaTypeList);
+    fastJsonConverter.setDefaultCharset(StandardCharsets.UTF_8);
+    // 将 FastJsonHttpMessageConverter 添加到列表末尾
+    converters.add(fastJsonConverter);
+  }
+
+  /**
+   * 自定义时间转换器
+   */
+  @Override
+  public void addFormatters(FormatterRegistry registry) {
+    registry.addConverter(dateStringArraysToListDateConverter);
+    registry.addConverter(dateStringToDateConverter);
+  }
 }

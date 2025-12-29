@@ -23,8 +23,6 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
-import cn.odboy.system.service.SystemDataService;
-import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.system.service.SystemUserService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -53,10 +51,6 @@ public class SystemUserController {
 
   @Autowired
   private SystemUserService systemUserService;
-  @Autowired
-  private SystemDataService systemDataService;
-  @Autowired
-  private SystemDeptService systemDeptService;
 
 
   @ApiOperation("导出用户数据")

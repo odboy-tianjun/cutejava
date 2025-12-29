@@ -23,11 +23,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KitWsMessage extends KitObject {
-    private String bizCode;
-    private String data;
 
-    public KitWsMessage(String bizCode, String data) {
-        this.bizCode = bizCode;
-        this.data = data;
-    }
+  private String bizCode;
+  private String data;
+
+  public KitWsMessage(String bizCode, String data) {
+    this.bizCode = bizCode;
+    this.data = data;
+  }
 }

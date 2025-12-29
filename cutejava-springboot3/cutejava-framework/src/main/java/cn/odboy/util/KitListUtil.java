@@ -32,38 +32,38 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class KitListUtil {
-    /**
-     * 根据对象T的属性去重
-     *
-     * @param items      对象T集合
-     * @param classifier 对象T属性表达式, 比如: User::getName
-     */
-    public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
-        return items.stream().collect(Collectors.groupingBy(classifier)).values().stream()
-            .map(monitorItem -> monitorItem.iterator().next()).toList();
-    }
 
-    /**
-     * list转map, 保留新值 -> Map<String, User> userMap = items.stream().collect(Collectors.toMap(User::getName, user ->
-     * user)) <br> list转map, 保留旧值 -> Map<String, User> userMap = users.stream().collect(Collectors.toMap(User::getName,
-     * user -> user, (existing, replacement) -> existing));
-     */
-    public static void main(String[] args) {
-        List<KitBaseUserTimeTb> entities = new ArrayList<>();
-        int total = 50;
-        for (int i = 0; i < total; i++) {
-            KitBaseUserTimeTb entity = new KitBaseUserTimeTb();
-            if (i % 2 == 0) {
-                entity.setCreateBy("odboy");
-            } else {
-                entity.setCreateBy("admin");
-            }
-            entity.setUpdateBy("admin");
-            entity.setCreateTime(DateTime.now().toTimestamp());
-            entity.setUpdateTime(DateTime.now().toTimestamp());
-            entities.add(entity);
-        }
-        List<KitBaseUserTimeTb> entities1 = KitListUtil.distinctByArgs(entities, KitBaseUserTimeTb::getCreateBy);
-        System.err.println(entities1);
+  /**
+   * 根据对象T的属性去重
+   *
+   * @param items      对象T集合
+   * @param classifier 对象T属性表达式, 比如: User::getName
+   */
+  public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
+    return items.stream().collect(Collectors.groupingBy(classifier)).values().stream()
+        .map(monitorItem -> monitorItem.iterator().next()).toList();
+  }
+
+  /**
+   * list转map, 保留新值 -> Map<String, User> userMap = items.stream().collect(Collectors.toMap(User::getName, user -> user)) <br> list转map, 保留旧值 -> Map<String,
+   * User> userMap = users.stream().collect(Collectors.toMap(User::getName, user -> user, (existing, replacement) -> existing));
+   */
+  public static void main(String[] args) {
+    List<KitBaseUserTimeTb> entities = new ArrayList<>();
+    int total = 50;
+    for (int i = 0; i < total; i++) {
+      KitBaseUserTimeTb entity = new KitBaseUserTimeTb();
+      if (i % 2 == 0) {
+        entity.setCreateBy("odboy");
+      } else {
+        entity.setCreateBy("admin");
+      }
+      entity.setUpdateBy("admin");
+      entity.setCreateTime(DateTime.now().toTimestamp());
+      entity.setUpdateTime(DateTime.now().toTimestamp());
+      entities.add(entity);
     }
+    List<KitBaseUserTimeTb> entities1 = KitListUtil.distinctByArgs(entities, KitBaseUserTimeTb::getCreateBy);
+    System.err.println(entities1);
+  }
 }

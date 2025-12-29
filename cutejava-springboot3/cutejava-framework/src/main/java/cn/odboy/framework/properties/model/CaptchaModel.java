@@ -23,8 +23,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CaptchaModel extends KitObject {
-    /**
-     * 验证码有效时间, 单位: 秒
-     */
-    private Long expireTime;
+
+  /**
+   * 验证码有效时间, 单位: 秒
+   */
+  private Long expireTime;
 }

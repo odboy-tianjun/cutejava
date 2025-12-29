@@ -33,58 +33,58 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class KitPageUtil extends cn.hutool.core.util.PageUtil {
 
-    /**
-     * List 分页
-     */
-    public static <T> List<T> softPaging(long page, long size, List<T> list) {
-        int pageIndex = Math.toIntExact(page - 1);
-        int fromIndex = Math.toIntExact(pageIndex * size);
-        int toIndex = Math.toIntExact(pageIndex * size + size);
-        if (fromIndex > list.size()) {
-            return Collections.emptyList();
-        } else if (toIndex >= list.size()) {
-            return list.subList(fromIndex, list.size());
-        } else {
-            return list.subList(fromIndex, toIndex);
-        }
+  /**
+   * List 分页
+   */
+  public static <T> List<T> softPaging(long page, long size, List<T> list) {
+    int pageIndex = Math.toIntExact(page - 1);
+    int fromIndex = Math.toIntExact(pageIndex * size);
+    int toIndex = Math.toIntExact(pageIndex * size + size);
+    if (fromIndex > list.size()) {
+      return Collections.emptyList();
+    } else if (toIndex >= list.size()) {
+      return list.subList(fromIndex, list.size());
+    } else {
+      return list.subList(fromIndex, toIndex);
     }
+  }
 
-    /**
-     * Page 数据处理
-     */
-    public static <T> KitPageResult<T> toPage(IPage<T> page) {
-        return new KitPageResult<>(page.getRecords(), page.getTotal());
-    }
+  /**
+   * Page 数据处理
+   */
+  public static <T> KitPageResult<T> toPage(IPage<T> page) {
+    return new KitPageResult<>(page.getRecords(), page.getTotal());
+  }
 
-    /**
-     * 自定义分页
-     */
-    public static <T> KitPageResult<T> toPage(List<T> list) {
-        return new KitPageResult<>(list, list.size());
-    }
+  /**
+   * 自定义分页
+   */
+  public static <T> KitPageResult<T> toPage(List<T> list) {
+    return new KitPageResult<>(list, list.size());
+  }
 
-    /**
-     * 返回空数据
-     */
-    public static <T> KitPageResult<T> emptyListData() {
-        return new KitPageResult<>(new ArrayList<>(), 0);
-    }
+  /**
+   * 返回空数据
+   */
+  public static <T> KitPageResult<T> emptyListData() {
+    return new KitPageResult<>(new ArrayList<>(), 0);
+  }
 
-    /**
-     * 返回空数据
-     */
-    public static <T> KitPageResult<T> emptyData() {
-        return new KitPageResult<>(null, 0);
-    }
+  /**
+   * 返回空数据
+   */
+  public static <T> KitPageResult<T> emptyData() {
+    return new KitPageResult<>(null, 0);
+  }
 
-    /**
-     * 自定义分页
-     */
-    public static <T> KitPageResult<T> toPage(List<T> list, long totalElements) {
-        return new KitPageResult<>(list, totalElements);
-    }
+  /**
+   * 自定义分页
+   */
+  public static <T> KitPageResult<T> toPage(List<T> list, long totalElements) {
+    return new KitPageResult<>(list, totalElements);
+  }
 
-    public static <T> Page<T> getCount(BaseMapper<T> baseMapper) {
-        return new Page<>(1, baseMapper.selectCount(null));
-    }
+  public static <T> Page<T> getCount(BaseMapper<T> baseMapper) {
+    return new Page<>(1, baseMapper.selectCount(null));
+  }
 }

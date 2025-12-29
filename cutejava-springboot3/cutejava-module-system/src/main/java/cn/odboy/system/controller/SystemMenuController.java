@@ -21,7 +21,6 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
-import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
@@ -47,8 +46,6 @@ public class SystemMenuController {
 
   @Autowired
   private SystemMenuService systemMenuService;
-  @Autowired
-  private SystemMenuMapper systemMenuMapper;
 
   @ApiOperation("导出菜单数据")
   @GetMapping(value = "/download")

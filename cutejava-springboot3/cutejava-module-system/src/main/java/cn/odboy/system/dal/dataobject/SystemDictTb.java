@@ -32,8 +32,14 @@ import lombok.Setter;
 @TableName("system_dict")
 public class SystemDictTb extends KitBaseUserTimeTb {
 
-    @NotNull(groups = Update.class) @ApiModelProperty(value = "ID", hidden = true)
-    @TableId(value = "id", type = IdType.AUTO) private Long id;
-    @NotBlank @ApiModelProperty(value = "名称") private String name;
-    @ApiModelProperty(value = "描述") @TableField(updateStrategy = FieldStrategy.ALWAYS) private String description;
+  @NotNull(groups = Update.class)
+  @ApiModelProperty(value = "ID", hidden = true)
+  @TableId(value = "id", type = IdType.AUTO)
+  private Long id;
+  @NotBlank
+  @ApiModelProperty(value = "名称")
+  private String name;
+  @ApiModelProperty(value = "描述")
+  @TableField(updateStrategy = FieldStrategy.ALWAYS)
+  private String description;
 }

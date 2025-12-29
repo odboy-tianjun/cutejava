@@ -16,27 +16,27 @@
 
 package cn.odboy.framework.exception;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Getter
 public class ServerException extends RuntimeException {
 
-    private Integer status = INTERNAL_SERVER_ERROR.value();
+  private Integer status = INTERNAL_SERVER_ERROR.value();
 
-    public ServerException(String msg) {
-        super(msg);
-    }
+  public ServerException(String msg) {
+    super(msg);
+  }
 
-    public ServerException(HttpStatus status, String msg) {
-        super(msg);
-        this.status = status.value();
-    }
+  public ServerException(HttpStatus status, String msg) {
+    super(msg);
+    this.status = status.value();
+  }
 
-    public ServerException(Throwable cause) {
-        super(cause.getMessage());
-        this.status = INTERNAL_SERVER_ERROR.value();
-    }
+  public ServerException(Throwable cause) {
+    super(cause.getMessage());
+    this.status = INTERNAL_SERVER_ERROR.value();
+  }
 }

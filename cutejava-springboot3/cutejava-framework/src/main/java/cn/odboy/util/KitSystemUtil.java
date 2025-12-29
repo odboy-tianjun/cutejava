@@ -27,16 +27,17 @@ import oshi.hardware.CentralProcessor;
  * @date 2025-08-11
  */
 public class KitSystemUtil {
-    public static int getCpuCount() {
-        SystemInfo systemInfo = new SystemInfo();
-        CentralProcessor processor = systemInfo.getHardware().getProcessor();
-        return processor.getPhysicalProcessorCount();
-    }
 
-    /**
-     * 获取当前系统的用户名
-     */
-    public static String getCurrentUserName() {
-        return System.getProperty("user.name");
-    }
+  public static int getCpuCount() {
+    SystemInfo systemInfo = new SystemInfo();
+    CentralProcessor processor = systemInfo.getHardware().getProcessor();
+    return processor.getPhysicalProcessorCount();
+  }
+
+  /**
+   * 获取当前系统的用户名
+   */
+  public static String getCurrentUserName() {
+    return System.getProperty("user.name");
+  }
 }
