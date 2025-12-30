@@ -1,5 +1,7 @@
 import request from '@/utils/request'
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function get(dictName) {
   const params = {
     page: 1,

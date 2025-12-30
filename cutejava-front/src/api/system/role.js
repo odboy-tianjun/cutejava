@@ -1,13 +1,7 @@
 import request from '@/utils/request'
-
-// 获取所有的Role
-export function queryRoleList() {
-  return request({
-    url: 'api/role/queryRoleList',
-    method: 'post'
-  })
-}
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/role/saveRole',
@@ -24,13 +18,6 @@ export function get(id) {
   })
 }
 
-export function getLevel() {
-  return request({
-    url: 'api/role/queryRoleLevel',
-    method: 'post'
-  })
-}
-
 export function del(ids) {
   return request({
     url: 'api/role/removeRoleByIds',
@@ -44,6 +31,21 @@ export function edit(data) {
     url: 'api/role/modifyRoleById',
     method: 'post',
     data: data
+  })
+}
+
+// 获取所有的Role
+export function queryRoleList() {
+  return request({
+    url: 'api/role/queryRoleList',
+    method: 'post'
+  })
+}
+
+export function getLevel() {
+  return request({
+    url: 'api/role/getCurrentUserRoleLevel',
+    method: 'post'
   })
 }
 

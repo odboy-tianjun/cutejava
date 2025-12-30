@@ -1,6 +1,9 @@
 import request from '@/utils/request'
 import { encrypt } from '@/utils/CsRsaUtil'
 
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/user/saveUser',
@@ -17,19 +20,19 @@ export function del(ids) {
   })
 }
 
-export function resetPwd(ids) {
-  return request({
-    url: 'api/user/resetUserPasswordByIds',
-    method: 'post',
-    data: ids
-  })
-}
-
 export function edit(data) {
   return request({
     url: 'api/user/modifyUserById',
     method: 'post',
     data: data
+  })
+}
+
+export function resetPwd(ids) {
+  return request({
+    url: 'api/user/resetUserPasswordByIds',
+    method: 'post',
+    data: ids
   })
 }
 

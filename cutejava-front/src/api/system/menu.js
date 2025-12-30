@@ -1,5 +1,32 @@
 import request from '@/utils/request'
 
+/**
+ * 默认入口：add、del、edit、get
+ */
+export function add(data) {
+  return request({
+    url: 'api/menu/saveMenu',
+    method: 'post',
+    data: data
+  })
+}
+
+export function del(ids) {
+  return request({
+    url: 'api/menu/removeMenuByIds',
+    method: 'post',
+    data: ids
+  })
+}
+
+export function edit(data) {
+  return request({
+    url: 'api/menu/modifyMenuById',
+    method: 'post',
+    data: data
+  })
+}
+
 export function queryMenuListByPid(pid) {
   return request({
     url: 'api/menu/queryMenuListByPid?pid=' + pid,
@@ -35,30 +62,6 @@ export function buildMenus() {
   return request({
     url: 'api/menu/buildMenus',
     method: 'post'
-  })
-}
-
-export function add(data) {
-  return request({
-    url: 'api/menu/saveMenu',
-    method: 'post',
-    data: data
-  })
-}
-
-export function del(ids) {
-  return request({
-    url: 'api/menu/removeMenuByIds',
-    method: 'post',
-    data: ids
-  })
-}
-
-export function edit(data) {
-  return request({
-    url: 'api/menu/modifyMenuById',
-    method: 'post',
-    data: data
   })
 }
 

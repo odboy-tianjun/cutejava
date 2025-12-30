@@ -1,20 +1,7 @@
 import request from '@/utils/request'
-
-export function queryAllEnableJob() {
-  const params = {
-    page: 1,
-    size: 9999999,
-    args: {
-      enabled: true
-    }
-  }
-  return request({
-    url: 'api/job/queryAllEnableJob',
-    method: 'post',
-    data: params
-  })
-}
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/job/saveJob',
@@ -36,6 +23,20 @@ export function edit(data) {
     url: 'api/job/modifyJobById',
     method: 'post',
     data: data
+  })
+}
+export function queryAllEnableJob() {
+  const params = {
+    page: 1,
+    size: 9999999,
+    args: {
+      enabled: true
+    }
+  }
+  return request({
+    url: 'api/job/queryAllEnableJob',
+    method: 'post',
+    data: params
   })
 }
 

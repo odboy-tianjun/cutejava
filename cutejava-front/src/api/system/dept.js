@@ -1,23 +1,8 @@
 import request from '@/utils/request'
 
-export function queryDeptList(params) {
-  return request({
-    url: 'api/dept',
-    method: 'post',
-    data: params
-  })
-}
-
-export function queryDeptSuperiorTree(ids, exclude) {
-  exclude = exclude !== undefined ? exclude : false
-  const data = Array.isArray(ids) ? ids : [ids]
-  return request({
-    url: 'api/dept/queryDeptSuperiorTree?exclude=' + exclude,
-    method: 'post',
-    data: data
-  })
-}
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/dept/saveDept',
@@ -37,6 +22,24 @@ export function del(ids) {
 export function edit(data) {
   return request({
     url: 'api/dept/modifyDept',
+    method: 'post',
+    data: data
+  })
+}
+
+export function queryDeptList(params) {
+  return request({
+    url: 'api/dept',
+    method: 'post',
+    data: params
+  })
+}
+
+export function queryDeptSuperiorTree(ids, exclude) {
+  exclude = exclude !== undefined ? exclude : false
+  const data = Array.isArray(ids) ? ids : [ids]
+  return request({
+    url: 'api/dept/queryDeptSuperiorTree?exclude=' + exclude,
     method: 'post',
     data: data
   })
