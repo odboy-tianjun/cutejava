@@ -35,14 +35,14 @@ export function edit(data) {
 }
 
 // 获取所有的Role
-export function queryRoleList() {
+export function listAllRole() {
   return request({
     url: 'api/role/listAllRole',
     method: 'post'
   })
 }
 
-export function getLevel() {
+export function getCurrentUserRoleLevel() {
   return request({
     url: 'api/role/getCurrentUserRoleLevel',
     method: 'post'
@@ -57,4 +57,4 @@ export function editMenu(data) {
   })
 }
 
-export default { add, edit, del, get, editMenu, getLevel }
+export default { add, edit, del, get, editMenu, getCurrentUserRoleLevel }

@@ -26,12 +26,12 @@ export function edit(data) {
   })
 }
 
-export function queryPageDict(data) {
+export function searchDict(data) {
   return request({
-    url: 'api/dict',
+    url: 'api/dict/searchDict',
     method: 'post',
     data: data
   })
 }
 
-export default { add, edit, del, queryPageDict }
+export default { add, edit, del, searchDict }

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { getLastEmailConfig, modifyEmailConfig } from '@/api/system/email'
+import { getLastEmailConfig, updateEmailConfigById } from '@/api/system/email'
 
 export default {
   name: 'Config',
@@ -67,7 +67,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          modifyEmailConfig(this.form).then(res => {
+          updateEmailConfigById(this.form).then(res => {
             this.$notify({
               title: '修改成功',
               type: 'success',

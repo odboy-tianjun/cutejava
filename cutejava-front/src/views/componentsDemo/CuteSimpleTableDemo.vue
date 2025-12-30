@@ -105,7 +105,7 @@ export default {
           }
         },
         fetch: async(queryParams) => {
-          return DictService.queryPageDict(queryParams)
+          return DictService.searchDict(queryParams)
         },
         columns: [
           { prop: 'name', label: '名称' },

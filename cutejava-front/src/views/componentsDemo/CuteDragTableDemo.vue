@@ -78,7 +78,7 @@ export default {
           }
         },
         fetch: async(queryParams) => {
-          return DictService.queryPageDict(queryParams)
+          return DictService.searchDict(queryParams)
         },
         pageProps: {
           current: 1,

@@ -35,7 +35,7 @@ export function searchDept(params) {
   })
 }
 
-export function queryDeptSuperiorTree(ids, exclude) {
+export function searchDeptTree(ids, exclude) {
   exclude = exclude !== undefined ? exclude : false
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
@@ -45,4 +45,4 @@ export function queryDeptSuperiorTree(ids, exclude) {
   })
 }
 
-export default { add, edit, del, searchDept, queryDeptSuperiorTree }
+export default { add, edit, del, searchDept, searchDeptTree }

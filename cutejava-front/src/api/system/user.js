@@ -28,7 +28,7 @@ export function edit(data) {
   })
 }
 
-export function resetPwd(ids) {
+export function resetUserPasswordByIds(ids) {
   return request({
     url: 'api/user/resetUserPasswordByIds',
     method: 'post',
@@ -36,7 +36,7 @@ export function resetPwd(ids) {
   })
 }
 
-export function editUser(data) {
+export function updateUserCenterInfoById(data) {
   return request({
     url: 'api/user/updateUserCenterInfoById',
     method: 'post',
@@ -44,7 +44,7 @@ export function editUser(data) {
   })
 }
 
-export function updatePass(user) {
+export function updateUserPasswordByUsername(user) {
   const data = {
     oldPass: encrypt(user.oldPass),
     newPass: encrypt(user.newPass)
@@ -56,7 +56,7 @@ export function updatePass(user) {
   })
 }
 
-export function updateEmail(form) {
+export function updateUserEmailByUsername(form) {
   const data = {
     password: encrypt(form.pass),
     email: form.email
@@ -68,7 +68,7 @@ export function updateEmail(form) {
   })
 }
 
-export function queryUserMetaPage(query) {
+export function queryUserMetadataOptions(query) {
   const params = {
     page: 1,
     size: 50,
@@ -83,5 +83,5 @@ export function queryUserMetaPage(query) {
   })
 }
 
-export default { add, edit, del, resetPwd, queryUserMetaPage }
+export default { add, edit, del, resetUserPasswordByIds, queryUserMetadataOptions }
 

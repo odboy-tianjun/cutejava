@@ -25,7 +25,7 @@ export function edit(data) {
     data: data
   })
 }
-export function queryAllEnableJob() {
+export function searchJob() {
   const params = {
     page: 1,
     size: 9999999,

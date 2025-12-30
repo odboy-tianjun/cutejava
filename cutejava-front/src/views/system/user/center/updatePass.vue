@@ -30,7 +30,7 @@
 
 <script>
 import store from '@/store'
-import { updatePass } from '@/api/system/user'
+import { updateUserPasswordByUsername } from '@/api/system/user'
 
 export default {
   data() {
@@ -69,7 +69,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          updatePass(this.form).then(res => {
+          updateUserPasswordByUsername(this.form).then(res => {
             this.resetForm()
             this.$notify({
               title: '密码修改成功，请重新登录',

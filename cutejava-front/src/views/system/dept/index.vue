@@ -195,7 +195,7 @@ export default {
       }
     },
     getSupDepts(id) {
-      crudDept.queryDeptSuperiorTree(id, true).then(res => {
+      crudDept.searchDeptTree(id, true).then(res => {
         const data = res.content
         this.buildDepts(data)
         this.depts = data

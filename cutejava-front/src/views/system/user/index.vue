@@ -196,9 +196,9 @@
 <script>
 import crudUser from '@/api/system/user'
 import { IsValidPhone } from '@/utils/CsValidateUtil'
-import { searchDept, queryDeptSuperiorTree } from '@/api/system/dept'
-import { getLevel, queryRoleList } from '@/api/system/role'
-import { queryAllEnableJob } from '@/api/system/job'
+import { searchDept, searchDeptTree } from '@/api/system/dept'
+import { getCurrentUserRoleLevel, listAllRole } from '@/api/system/role'
+import { searchJob } from '@/api/system/job'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -415,7 +415,7 @@ export default {
       })
     },
     getSupDepts(deptId) {
-      queryDeptSuperiorTree(deptId).then(res => {
+      searchDeptTree(deptId).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -469,21 +469,21 @@ export default {
     },
     // 获取弹窗内角色数据
     getRoles() {
-      queryRoleList().then(res => {
+      listAllRole().then(res => {
         this.roles = res
       }).catch(() => {
       })
     },
     // 获取弹窗内岗位数据
     getJobs() {
-      queryAllEnableJob().then(res => {
+      searchJob().then(res => {
         this.jobs = res.content
       }).catch(() => {
       })
     },
     // 获取权限级别
     getRoleLevel() {
-      getLevel().then(res => {
+      getCurrentUserRoleLevel().then(res => {
         this.level = res.level
       }).catch(() => {
       })
@@ -502,7 +502,7 @@ export default {
           ids.push(val.id)
         })
         console.log(ids)
-        crudUser.resetPwd(ids).then(() => {
+        crudUser.resetUserPasswordByIds(ids).then(() => {
           this.crud.notify('重置成功, 用户新密码:123456', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {
         })

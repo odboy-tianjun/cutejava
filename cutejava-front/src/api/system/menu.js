@@ -27,14 +27,14 @@ export function edit(data) {
   })
 }
 
-export function queryMenuListByPid(pid) {
+export function listMenuByPid(pid) {
   return request({
     url: 'api/menu/listMenuByPid?pid=' + pid,
     method: 'post'
   })
 }
 
-export function queryMenuByArgs(params) {
+export function searchMenu(params) {
   return request({
     url: 'api/menu/searchMenu',
     method: 'post',
@@ -51,7 +51,7 @@ export function queryMenuSuperior(ids) {
   })
 }
 
-export function queryChildMenuSet(id) {
+export function listChildMenuSetByMenuId(id) {
   return request({
     url: 'api/menu/listChildMenuSetByMenuId?id=' + id,
     method: 'post'
@@ -65,4 +65,4 @@ export function buildMenus() {
   })
 }
 
-export default { add, edit, del, queryMenuListByPid, queryMenuSuperior, queryMenuByArgs, queryChildMenuSet }
+export default { add, edit, del, listMenuByPid, queryMenuSuperior, searchMenu, listChildMenuSetByMenuId }
