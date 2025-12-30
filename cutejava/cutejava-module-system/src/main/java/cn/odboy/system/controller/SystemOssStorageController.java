@@ -73,8 +73,8 @@ public class SystemOssStorageController {
   }
 
   @ApiOperation("多选删除")
-  @PostMapping(value = "/removeFileByIds")
-  public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
+  @PostMapping(value = "/deleteFileByIds")
+  public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
     systemOssStorageService.deleteFileByIds(ids);
     return ResponseEntity.ok(null);
   }

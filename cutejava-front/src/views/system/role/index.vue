@@ -152,7 +152,7 @@
 
 <script>
 import crudRoles from '@/api/system/role'
-import { queryDeptList, queryDeptSuperiorTree } from '@/api/system/dept'
+import { searchDept, queryDeptSuperiorTree } from '@/api/system/dept'
 import { queryChildMenuSet, queryMenuListByPid } from '@/api/system/menu'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
@@ -313,7 +313,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      queryDeptList({
+      searchDept({
         page: 1,
         size: 9999999,
         args: { enabled: true }
@@ -350,7 +350,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        queryDeptList({
+        searchDept({
           page: 1,
           size: 9999999,
           args: { enabled: true, pid: parentNode.id }

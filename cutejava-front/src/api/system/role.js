@@ -12,7 +12,7 @@ export function add(data) {
 
 export function get(id) {
   return request({
-    url: 'api/role/queryRoleById',
+    url: 'api/role/getRoleById',
     method: 'post',
     data: { id: id }
   })
@@ -20,7 +20,7 @@ export function get(id) {
 
 export function del(ids) {
   return request({
-    url: 'api/role/removeRoleByIds',
+    url: 'api/role/deleteRoleByIds',
     method: 'post',
     data: ids
   })
@@ -28,7 +28,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/role/modifyRoleById',
+    url: 'api/role/updateRoleById',
     method: 'post',
     data: data
   })
@@ -37,7 +37,7 @@ export function edit(data) {
 // 获取所有的Role
 export function queryRoleList() {
   return request({
-    url: 'api/role/queryRoleList',
+    url: 'api/role/listAllRole',
     method: 'post'
   })
 }
@@ -51,7 +51,7 @@ export function getLevel() {
 
 export function editMenu(data) {
   return request({
-    url: 'api/role/modifyBindMenuById',
+    url: 'api/role/updateBindMenuById',
     method: 'post',
     data
   })

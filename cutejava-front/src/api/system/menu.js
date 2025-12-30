@@ -13,7 +13,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/menu/removeMenuByIds',
+    url: 'api/menu/deleteMenuByIds',
     method: 'post',
     data: ids
   })
@@ -21,7 +21,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/menu/modifyMenuById',
+    url: 'api/menu/updateMenuById',
     method: 'post',
     data: data
   })
@@ -29,14 +29,14 @@ export function edit(data) {
 
 export function queryMenuListByPid(pid) {
   return request({
-    url: 'api/menu/queryMenuListByPid?pid=' + pid,
+    url: 'api/menu/listMenuByPid?pid=' + pid,
     method: 'post'
   })
 }
 
 export function queryMenuByArgs(params) {
   return request({
-    url: 'api/menu/queryAllMenu',
+    url: 'api/menu/searchMenu',
     method: 'post',
     data: params
   })
@@ -53,7 +53,7 @@ export function queryMenuSuperior(ids) {
 
 export function queryChildMenuSet(id) {
   return request({
-    url: 'api/menu/queryChildMenuSet?id=' + id,
+    url: 'api/menu/listChildMenuSetByMenuId?id=' + id,
     method: 'post'
   })
 }

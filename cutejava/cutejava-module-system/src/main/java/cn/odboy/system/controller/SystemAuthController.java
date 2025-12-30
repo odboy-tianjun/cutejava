@@ -52,13 +52,6 @@ public class SystemAuthController {
     return ResponseEntity.ok(loginInfo);
   }
 
-  @ApiOperation("获取用户信息")
-  @PostMapping(value = "/info")
-  public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-    SystemUserInfoVo userInfoVo = systemAuthService.getCurrentUserInfoVo();
-    return ResponseEntity.ok(userInfoVo);
-  }
-
   @ApiOperation("退出登录")
   @AnonymousPostMapping(value = "/logout")
   public ResponseEntity<Void> logout(HttpServletRequest request) {

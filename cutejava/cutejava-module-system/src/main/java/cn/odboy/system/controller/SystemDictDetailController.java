@@ -70,18 +70,18 @@ public class SystemDictDetailController {
   }
 
   @ApiOperation("修改字典详情")
-  @PostMapping(value = "/modifyDictDetailById")
+  @PostMapping(value = "/updateDictDetailById")
   @PreAuthorize("@el.check('dict:edit')")
-  public ResponseEntity<Void> modifyDictDetailById(
+  public ResponseEntity<Void> updateDictDetailById(
       @Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
     systemDictDetailService.updateDictDetailById(args);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("删除字典详情")
-  @PostMapping(value = "/removeDictDetailById")
+  @PostMapping(value = "/deleteDictDetailById")
   @PreAuthorize("@el.check('dict:del')")
-  public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
+  public ResponseEntity<Void> deleteDictDetailById(@RequestBody SystemDictDetailTb args) {
     systemDictDetailService.deleteDictDetailById(args.getId());
     return ResponseEntity.ok(null);
   }

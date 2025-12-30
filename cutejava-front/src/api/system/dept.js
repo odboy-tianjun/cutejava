@@ -13,7 +13,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/dept/removeDeptByIds',
+    url: 'api/dept/deleteDeptByIds',
     method: 'post',
     data: ids
   })
@@ -21,15 +21,15 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/dept/modifyDept',
+    url: 'api/dept/updateDeptById',
     method: 'post',
     data: data
   })
 }
 
-export function queryDeptList(params) {
+export function searchDept(params) {
   return request({
-    url: 'api/dept/queryAllDeptByArgs',
+    url: 'api/dept/searchDept',
     method: 'post',
     data: params
   })
@@ -39,10 +39,10 @@ export function queryDeptSuperiorTree(ids, exclude) {
   exclude = exclude !== undefined ? exclude : false
   const data = Array.isArray(ids) ? ids : [ids]
   return request({
-    url: 'api/dept/queryDeptSuperiorTree?exclude=' + exclude,
+    url: 'api/dept/searchDeptTree?exclude=' + exclude,
     method: 'post',
     data: data
   })
 }
 
-export default { add, edit, del, queryDeptList, queryDeptSuperiorTree }
+export default { add, edit, del, searchDept, queryDeptSuperiorTree }

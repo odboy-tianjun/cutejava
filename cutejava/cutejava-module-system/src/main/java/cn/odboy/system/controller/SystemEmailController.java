@@ -46,16 +46,16 @@ public class SystemEmailController {
   }
 
   @ApiOperation("配置邮件")
-  @PostMapping(value = "/modifyEmailConfig")
-  public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
+  @PostMapping(value = "/updateEmailConfigById")
+  public ResponseEntity<Void> updateEmailConfigById(@Validated @RequestBody SystemEmailConfigTb emailConfig)
       throws Exception {
     systemEmailService.updateEmailConfigById(emailConfig);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("发送邮件")
-  @PostMapping(value = "/sendEmail")
-  public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
+  @PostMapping(value = "/send")
+  public ResponseEntity<Void> send(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
     systemEmailService.sendEmail(sendEmailRequest);
     return ResponseEntity.ok(null);
   }

@@ -5,7 +5,7 @@ const api = {
     // 图片上传
     imagesUploadApi: baseUrl + '/api/localStorage/uploadPicture',
     // 修改头像
-    updateAvatarApi: baseUrl + '/api/user/modifyUserAvatar',
+    updateAvatarApi: baseUrl + '/api/user/updateUserAvatar',
     // Sql 监控
     druidSqlApi: baseUrl + '/druid/index.html',
     // websocket

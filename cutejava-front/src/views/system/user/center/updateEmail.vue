@@ -34,9 +34,9 @@
 
 <script>
 import store from '@/store'
-import { validEmail } from '@/utils/CsValidateUtil'
+import { IsValidEmail } from '@/utils/CsValidateUtil'
 import { updateEmail } from '@/api/system/user'
-import { sendResetEmailCaptcha } from '@/api/system/code'
+import { sendResetEmailCode } from '@/api/system/code'
 
 export default {
   props: {
@@ -51,7 +51,7 @@ export default {
         callback(new Error('新邮箱不能为空'))
       } else if (value === this.email) {
         callback(new Error('新邮箱不能与旧邮箱相同'))
-      } else if (validEmail(value)) {
+      } else if (IsValidEmail(value)) {
         callback()
       } else {
         callback(new Error('邮箱格式错误'))
@@ -83,7 +83,7 @@ export default {
         this.codeLoading = true
         this.buttonName = '验证码发送中'
         const _this = this
-        sendResetEmailCaptcha(this.form.email).then(res => {
+        sendResetEmailCode(this.form.email).then(res => {
           this.$message({
             showClose: true,
             message: '发送成功，验证码有效期5分钟',

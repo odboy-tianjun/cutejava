@@ -12,7 +12,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/ossStorage/removeFileByIds',
+    url: 'api/ossStorage/deleteFileByIds',
     method: 'post',
     data: ids
   })

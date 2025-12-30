@@ -209,7 +209,7 @@ public class SystemUserService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeUserByIds(Set<Long> ids) {
+  public void deleteUserByIds(Set<Long> ids) {
     Long currentUserId = KitSecurityHelper.getCurrentUserId();
     // 校验权限
     for (Long id : ids) {

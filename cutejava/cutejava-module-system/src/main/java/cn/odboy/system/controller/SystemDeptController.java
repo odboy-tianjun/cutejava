@@ -54,7 +54,7 @@ public class SystemDeptController {
   }
 
   @ApiOperation("查询部门")
-  @PostMapping(value = "/queryAllDeptByArgs")
+  @PostMapping(value = "/searchDept")
   @PreAuthorize("@el.check('user:list','dept:list')")
   public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
       @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> pageArgs) throws Exception {
@@ -63,7 +63,7 @@ public class SystemDeptController {
   }
 
   @ApiOperation("查询部门:根据ID获取同级与上级数据")
-  @PostMapping("/queryDeptSuperiorTree")
+  @PostMapping("/searchDeptTree")
   @PreAuthorize("@el.check('user:list','dept:list')")
   public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
       @RequestParam(defaultValue = "false") Boolean exclude) {
@@ -79,17 +79,17 @@ public class SystemDeptController {
   }
 
   @ApiOperation("修改部门")
-  @PostMapping(value = "/modifyDept")
+  @PostMapping(value = "/updateDeptById")
   @PreAuthorize("@el.check('dept:edit')")
-  public ResponseEntity<Void> modifyDept(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
-    systemDeptService.updateDept(args);
+  public ResponseEntity<Void> updateDeptById(@Validated(SystemDeptTb.Update.class) @RequestBody SystemDeptTb args) {
+    systemDeptService.updateDeptById(args);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("删除部门")
-  @PostMapping(value = "/removeDeptByIds")
+  @PostMapping(value = "/deleteDeptByIds")
   @PreAuthorize("@el.check('dept:del')")
-  public ResponseEntity<Void> removeDeptByIds(@RequestBody Set<Long> ids) {
+  public ResponseEntity<Void> deleteDeptByIds(@RequestBody Set<Long> ids) {
     systemDeptService.deleteDeptByIds(ids);
     return ResponseEntity.ok(null);
   }

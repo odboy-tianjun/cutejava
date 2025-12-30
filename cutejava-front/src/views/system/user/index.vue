@@ -196,7 +196,7 @@
 <script>
 import crudUser from '@/api/system/user'
 import { IsValidPhone } from '@/utils/CsValidateUtil'
-import { queryDeptList, queryDeptSuperiorTree } from '@/api/system/dept'
+import { searchDept, queryDeptSuperiorTree } from '@/api/system/dept'
 import { getLevel, queryRoleList } from '@/api/system/role'
 import { queryAllEnableJob } from '@/api/system/job'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'
@@ -228,7 +228,7 @@ export default {
   name: 'User',
   components: { CuteDeptTree, Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
   cruds() {
-    return CRUD({ title: '用户', url: 'api/user', searchRouter: '/aggregationSearchUserByArgs', crudMethod: { ...crudUser }})
+    return CRUD({ title: '用户', url: 'api/user', searchRouter: '/aggregationSearchUser', crudMethod: { ...crudUser }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
@@ -401,7 +401,7 @@ export default {
       this.crud.toQuery()
     },
     getDepts() {
-      queryDeptList({
+      searchDept({
         page: 1,
         size: 9999999,
         args: { enabled: true }
@@ -434,7 +434,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        queryDeptList({
+        searchDept({
           page: 1,
           size: 9999999,
           args: { enabled: true, pid: parentNode.id }

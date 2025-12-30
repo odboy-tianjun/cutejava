@@ -53,6 +53,7 @@ public class SystemDictController {
     systemDictService.exportDictXlsx(response, args);
   }
 
+  @Deprecated
   @ApiOperation("查询所有字典")
   @PostMapping(value = "/queryAllDict")
   @PreAuthorize("@el.check('dict:list')")
@@ -78,17 +79,17 @@ public class SystemDictController {
   }
 
   @ApiOperation("修改字典")
-  @PostMapping(value = "/modifyDictById")
+  @PostMapping(value = "/updateDictById")
   @PreAuthorize("@el.check('dict:edit')")
-  public ResponseEntity<Void> modifyDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
+  public ResponseEntity<Void> updateDictById(@Validated(SystemDictTb.Update.class) @RequestBody SystemDictTb args) {
     systemDictService.updateDictById(args);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("删除字典")
-  @PostMapping(value = "/removeDictByIds")
+  @PostMapping(value = "/deleteDictByIds")
   @PreAuthorize("@el.check('dict:del')")
-  public ResponseEntity<Void> removeDictByIds(@RequestBody Set<Long> ids) {
+  public ResponseEntity<Void> deleteDictByIds(@RequestBody Set<Long> ids) {
     systemDictService.deleteDictByIds(ids);
     return ResponseEntity.ok(null);
   }

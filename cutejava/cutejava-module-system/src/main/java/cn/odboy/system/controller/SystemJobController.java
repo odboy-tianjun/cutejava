@@ -70,17 +70,17 @@ public class SystemJobController {
   }
 
   @ApiOperation("修改岗位")
-  @PostMapping(value = "/modifyJobById")
+  @PostMapping(value = "/updateJobById")
   @PreAuthorize("@el.check('job:edit')")
-  public ResponseEntity<Void> modifyJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb args) {
+  public ResponseEntity<Void> updateJobById(@Validated(SystemJobTb.Update.class) @RequestBody SystemJobTb args) {
     systemJobService.updateJobById(args);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("删除岗位")
-  @PostMapping(value = "/removeJobByIds")
+  @PostMapping(value = "/deleteJobByIds")
   @PreAuthorize("@el.check('job:del')")
-  public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
+  public ResponseEntity<Void> deleteJobByIds(@RequestBody Set<Long> ids) {
     systemJobService.deleteJobByIds(ids);
     return ResponseEntity.ok(null);
   }

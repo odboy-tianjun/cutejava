@@ -77,15 +77,15 @@ public class SystemLocalStorageController {
   }
 
   @ApiOperation("修改文件")
-  @PostMapping(value = "/modifyLocalStorageById")
+  @PostMapping(value = "/updateLocalStorageById")
   @PreAuthorize("@el.check('storage:edit')")
-  public ResponseEntity<Void> modifyLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
+  public ResponseEntity<Void> updateLocalStorageById(@Validated @RequestBody SystemLocalStorageTb args) {
     localStorageService.updateLocalStorageById(args);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("多选删除")
-  @PostMapping(value = "/removeFileByIds")
+  @PostMapping(value = "/deleteFileByIds")
   public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
     localStorageService.deleteFileByIds(ids);
     return ResponseEntity.ok(null);

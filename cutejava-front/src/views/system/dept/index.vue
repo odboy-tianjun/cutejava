@@ -140,7 +140,7 @@ export default {
   name: 'Dept',
   components: { Treeselect, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '部门', url: 'api/dept', searchRouter: '/queryAllDeptByArgs', crudMethod: { ...crudDept }})
+    return CRUD({ title: '部门', url: 'api/dept', searchRouter: '/searchDept', crudMethod: { ...crudDept }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 设置数据字典
@@ -175,7 +175,7 @@ export default {
         args: { pid: tree.id }
       }
       setTimeout(() => {
-        crudDept.queryDeptList(params).then(res => {
+        crudDept.searchDept(params).then(res => {
           resolve(res.content)
         })
       }, 100)
@@ -212,7 +212,7 @@ export default {
       })
     },
     getDepts() {
-      crudDept.queryDeptList({
+      crudDept.searchDept({
         page: 1,
         size: 9999999,
         args: { enabled: true }
@@ -228,7 +228,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.queryDeptList({
+        crudDept.searchDept({
           page: 1,
           size: 9999999,
           args: { enabled: true, pid: parentNode.id }

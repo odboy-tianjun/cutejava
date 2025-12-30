@@ -114,9 +114,9 @@ public class SystemQuartzJobController {
   }
 
   @ApiOperation("删除定时任务")
-  @PostMapping(value = "/removeJobByIds")
+  @PostMapping(value = "/deleteJobByIds")
   @PreAuthorize("@el.check('quartzJob:del')")
-  public ResponseEntity<Void> removeJobByIds(@RequestBody Set<Long> ids) {
+  public ResponseEntity<Void> deleteJobByIds(@RequestBody Set<Long> ids) {
     systemQuartzJobService.deleteJobByIds(ids);
     return ResponseEntity.ok(null);
   }

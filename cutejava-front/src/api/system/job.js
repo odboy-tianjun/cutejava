@@ -12,7 +12,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/job/removeJobByIds',
+    url: 'api/job/deleteJobByIds',
     method: 'post',
     data: ids
   })
@@ -20,7 +20,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/job/modifyJobById',
+    url: 'api/job/updateJobById',
     method: 'post',
     data: data
   })

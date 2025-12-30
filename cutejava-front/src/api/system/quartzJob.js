@@ -12,7 +12,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/quartzJob/removeJobByIds',
+    url: 'api/quartzJob/deleteJobByIds',
     method: 'post',
     data: ids
   })

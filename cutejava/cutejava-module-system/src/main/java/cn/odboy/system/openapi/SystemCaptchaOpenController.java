@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/captcha")
 @Api(tags = "系统：验证码管理")
 public class SystemCaptchaOpenController {
 
@@ -34,7 +34,7 @@ public class SystemCaptchaOpenController {
   private SystemAuthService systemAuthService;
 
   @ApiOperation("获取验证码")
-  @AnonymousPostMapping(value = "/captcha/getImage")
+  @AnonymousPostMapping(value = "/getCode")
   public ResponseEntity<Map<String, Object>> getCode() {
     Map<String, Object> imgResult = systemAuthService.getCaptchaInfo();
     return ResponseEntity.ok(imgResult);

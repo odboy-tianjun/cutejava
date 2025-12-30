@@ -27,7 +27,7 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'api/dictDetail/removeDictDetailById',
+    url: 'api/dictDetail/deleteDictDetailById',
     method: 'post',
     data: { id: id }
   })
@@ -35,7 +35,7 @@ export function del(id) {
 
 export function edit(data) {
   return request({
-    url: 'api/dictDetail/modifyDictDetailById',
+    url: 'api/dictDetail/updateDictDetailById',
     method: 'post',
     data: data
   })
