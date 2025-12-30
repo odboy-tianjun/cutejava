@@ -255,7 +255,7 @@ public class SystemRoleService {
     return systemUserRoleService.convertToRoleVo(roleTb);
   }
 
-  public Dict getRoleLevel() {
+  public Dict getCurrentUserRoleLevel() {
     return Dict.create().set("level", checkRoleLevels(null));
   }
 

@@ -15,6 +15,7 @@
  */
 package cn.odboy.system.controller;
 
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemMonitorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,10 +35,11 @@ public class SystemMonitorController {
   @Autowired
   private SystemMonitorService systemMonitorService;
 
-  @PostMapping(value = "/queryServerMonitorInfo")
+  @OperationLog
+  @PostMapping(value = "/getServerMonitorInfo")
   @ApiOperation("查询服务监控")
   @PreAuthorize("@el.check('monitor:list')")
-  public ResponseEntity<Map<String, Object>> queryServerMonitorInfo() {
+  public ResponseEntity<Map<String, Object>> getServerMonitorInfo() {
     return ResponseEntity.ok(systemMonitorService.getServerMonitorInfo());
   }
 }

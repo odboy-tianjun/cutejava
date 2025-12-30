@@ -19,6 +19,7 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemLocalStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -54,13 +55,15 @@ public class SystemLocalStorageController {
     return ResponseEntity.ok(localStorageService.searchLocalStorage(pageArgs.getArgs(), page));
   }
 
-  @ApiOperation("导出数据")
+  @OperationLog
+  @ApiOperation("导出本地存储记录数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
     localStorageService.exportLocalStorageXlsx(response, args);
   }
 
+  @OperationLog
   @ApiOperation("上传文件")
   @PostMapping(value = "/uploadFile")
   @PreAuthorize("@el.check('storage:add')")
@@ -69,6 +72,7 @@ public class SystemLocalStorageController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("上传图片")
   @PostMapping("/uploadPicture")
   public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
@@ -76,6 +80,7 @@ public class SystemLocalStorageController {
     return ResponseEntity.ok(localStorage);
   }
 
+  @OperationLog
   @ApiOperation("修改文件")
   @PostMapping(value = "/updateLocalStorageById")
   @PreAuthorize("@el.check('storage:edit')")
@@ -84,7 +89,8 @@ public class SystemLocalStorageController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("多选删除")
+  @OperationLog
+  @ApiOperation("删除文件")
   @PostMapping(value = "/deleteFileByIds")
   public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
     localStorageService.deleteFileByIds(ids);

@@ -23,6 +23,7 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserVo;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.service.SystemAuthService;
 import cn.odboy.system.service.SystemUserService;
@@ -55,7 +56,7 @@ public class SystemUserController {
   @Autowired
   private SystemAuthService systemAuthService;
 
-
+  @OperationLog
   @ApiOperation("导出用户数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('user:list')")
@@ -72,6 +73,7 @@ public class SystemUserController {
     return ResponseEntity.ok(systemUserService.aggregationSearchUserByArgs(page, pageArgs.getArgs(), currentUsername));
   }
 
+  @OperationLog
   @ApiOperation("新增用户")
   @PostMapping(value = "/saveUser")
   @PreAuthorize("@el.check('user:add')")
@@ -80,7 +82,8 @@ public class SystemUserController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("修改用户")
+  @OperationLog
+  @ApiOperation("修改用户数据")
   @PostMapping(value = "/updateUserById")
   @PreAuthorize("@el.check('user:edit')")
   public ResponseEntity<Object> updateUserById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserVo args) {
@@ -88,13 +91,15 @@ public class SystemUserController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("修改用户：个人中心")
+  @OperationLog
+  @ApiOperation("修改个人中心信息")
   @PostMapping(value = "/updateUserCenterInfoById")
   public ResponseEntity<Object> updateUserCenterInfoById(@Validated(SystemUserTb.Update.class) @RequestBody SystemUserTb args) {
     systemUserService.updateUserCenterInfoById(args);
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除用户")
   @PostMapping(value = "/deleteUserByIds")
   @PreAuthorize("@el.check('user:del')")
@@ -103,7 +108,8 @@ public class SystemUserController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("修改密码")
+  @OperationLog
+  @ApiOperation("修改用户密码")
   @PostMapping(value = "/updateUserPasswordByUsername")
   public ResponseEntity<Object> updateUserPasswordByUsername(@RequestBody SystemUpdateUserPasswordArgs passVo) throws Exception {
     String currentUsername = KitSecurityHelper.getCurrentUsername();
@@ -111,20 +117,23 @@ public class SystemUserController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("重置密码")
+  @OperationLog
+  @ApiOperation("重置用户密码")
   @PostMapping(value = "/resetUserPasswordByIds")
   public ResponseEntity<Object> resetUserPasswordByIds(@RequestBody Set<Long> ids) {
     systemUserService.resetUserPasswordByIds(ids);
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("修改头像")
+  @OperationLog
+  @ApiOperation("修改用户头像")
   @PostMapping(value = "/updateUserAvatar")
   public ResponseEntity<Object> updateUserAvatar(@RequestParam MultipartFile avatar) {
     return ResponseEntity.ok(systemUserService.updateUserAvatar(avatar));
   }
 
-  @ApiOperation("修改邮箱")
+  @OperationLog
+  @ApiOperation("修改用户邮箱")
   @PostMapping(value = "/updateUserEmailByUsername/{code}")
   public ResponseEntity<Object> updateUserEmailByUsername(@PathVariable String code, @RequestBody SystemUserTb args) throws Exception {
     String currentUsername = KitSecurityHelper.getCurrentUsername();

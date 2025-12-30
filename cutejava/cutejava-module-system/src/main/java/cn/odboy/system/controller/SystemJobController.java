@@ -20,6 +20,7 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -45,6 +46,7 @@ public class SystemJobController {
   @Autowired
   private SystemJobService systemJobService;
 
+  @OperationLog
   @ApiOperation("导出岗位数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('job:list')")
@@ -61,6 +63,7 @@ public class SystemJobController {
     return ResponseEntity.ok(systemJobService.searchJobByArgs(pageArgs.getArgs(), page));
   }
 
+  @OperationLog
   @ApiOperation("新增岗位")
   @PostMapping(value = "/saveJob")
   @PreAuthorize("@el.check('job:add')")
@@ -69,6 +72,7 @@ public class SystemJobController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改岗位")
   @PostMapping(value = "/updateJobById")
   @PreAuthorize("@el.check('job:edit')")
@@ -77,6 +81,7 @@ public class SystemJobController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除岗位")
   @PostMapping(value = "/deleteJobByIds")
   @PreAuthorize("@el.check('job:del')")

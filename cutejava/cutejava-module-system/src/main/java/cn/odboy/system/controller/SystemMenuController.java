@@ -21,6 +21,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
@@ -47,6 +48,7 @@ public class SystemMenuController {
   @Autowired
   private SystemMenuService systemMenuService;
 
+  @OperationLog
   @ApiOperation("导出菜单数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('menu:list')")
@@ -94,6 +96,7 @@ public class SystemMenuController {
     return ResponseEntity.ok(systemMenuTbs);
   }
 
+  @OperationLog
   @ApiOperation("新增菜单")
   @PostMapping(value = "/saveMenu")
   @PreAuthorize("@el.check('menu:add')")
@@ -105,6 +108,7 @@ public class SystemMenuController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改菜单")
   @PostMapping(value = "/updateMenuById")
   @PreAuthorize("@el.check('menu:edit')")
@@ -113,6 +117,7 @@ public class SystemMenuController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除菜单")
   @PostMapping(value = "/deleteMenuByIds")
   @PreAuthorize("@el.check('menu:del')")

@@ -20,6 +20,7 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemOssStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -57,14 +58,16 @@ public class SystemOssStorageController {
     return ResponseEntity.ok(systemOssStorageService.searchOssStorage(pageArgs.getArgs(), page));
   }
 
-  @ApiOperation("导出数据")
+  @OperationLog
+  @ApiOperation("导出OSS存储记录数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
     systemOssStorageService.exportOssStorageXlsx(response, args);
   }
 
-  @ApiOperation("上传文件")
+  @OperationLog
+  @ApiOperation("上传文件到OSS")
   @PostMapping(value = "/uploadFile")
   @PreAuthorize("@el.check('storage:add')")
   public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -72,7 +75,8 @@ public class SystemOssStorageController {
     return ResponseEntity.ok(fileUrl);
   }
 
-  @ApiOperation("多选删除")
+  @OperationLog
+  @ApiOperation("从OSS删除文件")
   @PostMapping(value = "/deleteFileByIds")
   public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
     systemOssStorageService.deleteFileByIds(ids);

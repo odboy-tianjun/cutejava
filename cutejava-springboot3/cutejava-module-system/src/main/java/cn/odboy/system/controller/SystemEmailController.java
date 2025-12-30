@@ -17,6 +17,7 @@ package cn.odboy.system.controller;
 
 import cn.odboy.system.dal.dataobject.SystemEmailConfigTb;
 import cn.odboy.system.dal.model.SystemSendEmailArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemEmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,17 +46,19 @@ public class SystemEmailController {
     return ResponseEntity.ok(systemEmailService.getLastEmailConfig());
   }
 
-  @ApiOperation("配置邮件")
-  @PostMapping(value = "/modifyEmailConfig")
-  public ResponseEntity<Void> modifyEmailConfig(@Validated @RequestBody SystemEmailConfigTb emailConfig)
+  @OperationLog
+  @ApiOperation("修改邮箱配置")
+  @PostMapping(value = "/updateEmailConfigById")
+  public ResponseEntity<Void> updateEmailConfigById(@Validated @RequestBody SystemEmailConfigTb emailConfig)
       throws Exception {
     systemEmailService.updateEmailConfigById(emailConfig);
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("发送邮件")
-  @PostMapping(value = "/sendEmail")
-  public ResponseEntity<Void> sendEmail(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
+  @PostMapping(value = "/send")
+  public ResponseEntity<Void> send(@Validated @RequestBody SystemSendEmailArgs sendEmailRequest) {
     systemEmailService.sendEmail(sendEmailRequest);
     return ResponseEntity.ok(null);
   }

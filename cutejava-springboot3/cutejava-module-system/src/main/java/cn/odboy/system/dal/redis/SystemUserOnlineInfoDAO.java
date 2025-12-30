@@ -121,7 +121,7 @@ public class SystemUserOnlineInfoDAO {
    * @param pageable /
    * @return /
    */
-  public KitPageResult<SystemUserOnlineVo> queryUserOnlineModelPage(SystemUserOnlineVo onlineVo,
+  public KitPageResult<SystemUserOnlineVo> searchOnlineUser(SystemUserOnlineVo onlineVo,
       IPage<SystemUserOnlineVo> pageable) {
     String username = null;
     if (onlineVo != null) {

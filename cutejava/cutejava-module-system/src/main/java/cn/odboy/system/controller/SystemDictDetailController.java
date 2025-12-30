@@ -21,6 +21,7 @@ import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
 import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -61,6 +62,7 @@ public class SystemDictDetailController {
     return ResponseEntity.ok(dictMap);
   }
 
+  @OperationLog
   @ApiOperation("新增字典详情")
   @PostMapping(value = "/saveDictDetail")
   @PreAuthorize("@el.check('dict:add')")
@@ -69,6 +71,7 @@ public class SystemDictDetailController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改字典详情")
   @PostMapping(value = "/updateDictDetailById")
   @PreAuthorize("@el.check('dict:edit')")
@@ -78,6 +81,7 @@ public class SystemDictDetailController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除字典详情")
   @PostMapping(value = "/deleteDictDetailById")
   @PreAuthorize("@el.check('dict:del')")

@@ -16,7 +16,6 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserLoginArgs;
 import cn.odboy.system.service.SystemAuthService;
 import io.swagger.annotations.Api;
@@ -27,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,20 +48,6 @@ public class SystemAuthController {
       HttpServletRequest request) throws Exception {
     Map<String, Object> loginInfo = systemAuthService.doLogin(loginRequest, request);
     return ResponseEntity.ok(loginInfo);
-  }
-
-  @ApiOperation("获取用户信息")
-  @PostMapping(value = "/info")
-  public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-    SystemUserInfoVo userInfoVo = systemAuthService.getCurrentUserInfoVo();
-    return ResponseEntity.ok(userInfoVo);
-  }
-
-  @ApiOperation("获取验证码")
-  @AnonymousPostMapping(value = "/captcha/getImage")
-  public ResponseEntity<Map<String, Object>> getCode() {
-    Map<String, Object> imgResult = systemAuthService.getCaptchaInfo();
-    return ResponseEntity.ok(imgResult);
   }
 
   @ApiOperation("退出登录")

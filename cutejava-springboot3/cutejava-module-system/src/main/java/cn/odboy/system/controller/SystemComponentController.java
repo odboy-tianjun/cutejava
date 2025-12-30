@@ -34,16 +34,16 @@ public class SystemComponentController {
   private SystemDeptService systemDeptService;
 
   @ApiOperation("查询部门下拉选择数据源")
-  @PostMapping(value = "/queryDeptSelectDataSource")
+  @PostMapping(value = "/listDeptSelectDataSource")
   @PreAuthorize("@el.check()")
-  public ResponseEntity<?> queryDeptSelectDataSource() {
-    return ResponseEntity.ok(systemDeptService.queryDeptSelectDataSource());
+  public ResponseEntity<?> listDeptSelectDataSource() {
+    return ResponseEntity.ok(systemDeptService.listDeptSelectDataSource());
   }
 
   @ApiOperation("查询部门下拉选择Pro数据源")
-  @PostMapping(value = "/queryDeptSelectProDataSource")
+  @PostMapping(value = "/listDeptSelectProDataSource")
   @PreAuthorize("@el.check()")
-  public ResponseEntity<?> queryDeptSelectProDataSource() {
-    return ResponseEntity.ok(systemDeptService.queryDeptSelectProDataSource());
+  public ResponseEntity<?> listDeptSelectProDataSource() {
+    return ResponseEntity.ok(systemDeptService.listDeptSelectProDataSource());
   }
 }

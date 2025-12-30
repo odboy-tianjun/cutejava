@@ -22,6 +22,7 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleVo;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -84,6 +85,7 @@ public class SystemRoleController {
     return ResponseEntity.ok(systemRoleService.getCurrentUserRoleLevel());
   }
 
+  @OperationLog
   @ApiOperation("新增角色")
   @PostMapping(value = "/saveRole")
   @PreAuthorize("@el.check('roles:add')")
@@ -92,6 +94,7 @@ public class SystemRoleController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改角色")
   @PostMapping(value = "/updateRoleById")
   @PreAuthorize("@el.check('roles:edit')")
@@ -100,6 +103,7 @@ public class SystemRoleController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改角色菜单")
   @PostMapping(value = "/updateBindMenuById")
   @PreAuthorize("@el.check('roles:edit')")
@@ -108,6 +112,7 @@ public class SystemRoleController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除角色")
   @PostMapping(value = "/deleteRoleByIds")
   @PreAuthorize("@el.check('roles:del')")

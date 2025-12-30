@@ -78,7 +78,7 @@ public class SystemDeptService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void updateDept(SystemDeptTb args) {
+  public void updateDeptById(SystemDeptTb args) {
     // 旧的部门
     Long oldPid = this.getDeptById(args.getId()).getPid();
     Long newPid = args.getPid();
@@ -365,7 +365,7 @@ public class SystemDeptService {
     return depts;
   }
 
-  public List<SystemProductLineVo> queryDeptSelectDataSource() {
+  public List<SystemProductLineVo> listDeptSelectDataSource() {
     List<SystemDeptTb> depts = this.listEnabledDepts();
     return buildDeptSelectOptions(depts);
   }
@@ -414,7 +414,7 @@ public class SystemDeptService {
     }
   }
 
-  public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
+  public List<SystemProductLineTreeVo> listDeptSelectProDataSource() {
     List<SystemDeptTb> depts = this.listEnabledDepts();
     // 获取所有部门并按父子关系组织
     Map<Long, SystemDeptTb> deptMap =

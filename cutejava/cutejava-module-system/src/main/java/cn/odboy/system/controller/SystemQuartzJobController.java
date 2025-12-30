@@ -21,6 +21,7 @@ import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemQuartzJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -35,7 +36,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,21 +58,23 @@ public class SystemQuartzJobController {
     return ResponseEntity.ok(systemQuartzJobService.searchQuartzJobByArgs(pageArgs.getArgs(), page));
   }
 
-  @ApiOperation("导出任务数据")
+  @OperationLog
+  @ApiOperation("导出定时任务数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('quartzJob:list')")
   public void exportQuartzJob(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     systemQuartzJobService.exportQuartzJobXlsx(response, args);
   }
 
-  @ApiOperation("导出日志数据")
+  @OperationLog
+  @ApiOperation("导出定时任务日志数据")
   @GetMapping(value = "/logs/download")
   @PreAuthorize("@el.check('quartzJob:list')")
   public void exportQuartzJobLog(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     systemQuartzJobService.exportQuartzLogXlsx(response, args);
   }
 
-  @ApiOperation("查询任务执行日志")
+  @ApiOperation("查询定时任务执行日志")
   @PostMapping(value = "/searchQuartzLog")
   @PreAuthorize("@el.check('quartzJob:list')")
   public ResponseEntity<KitPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
@@ -80,6 +82,7 @@ public class SystemQuartzJobController {
     return ResponseEntity.ok(systemQuartzJobService.searchQuartzLogByArgs(args, page));
   }
 
+  @OperationLog
   @ApiOperation("新增定时任务")
   @PostMapping(value = "/createQuartzJob")
   @PreAuthorize("@el.check('quartzJob:add')")
@@ -88,6 +91,7 @@ public class SystemQuartzJobController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改定时任务")
   @PostMapping(value = "/updateQuartzJobResumeCron")
   @PreAuthorize("@el.check('quartzJob:edit')")
@@ -97,6 +101,7 @@ public class SystemQuartzJobController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("更改定时任务状态")
   @PostMapping(value = "/switchQuartzJobStatus/{id}")
   @PreAuthorize("@el.check('quartzJob:edit')")
@@ -105,6 +110,7 @@ public class SystemQuartzJobController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("执行定时任务")
   @PostMapping(value = "/startQuartzJob/{id}")
   @PreAuthorize("@el.check('quartzJob:edit')")
@@ -113,6 +119,7 @@ public class SystemQuartzJobController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除定时任务")
   @PostMapping(value = "/deleteJobByIds")
   @PreAuthorize("@el.check('quartzJob:del')")

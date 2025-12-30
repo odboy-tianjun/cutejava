@@ -21,6 +21,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.KitPageUtil;
 import io.swagger.annotations.Api;
@@ -47,6 +48,7 @@ public class SystemMenuController {
   @Autowired
   private SystemMenuService systemMenuService;
 
+  @OperationLog
   @ApiOperation("导出菜单数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('menu:list')")
@@ -62,30 +64,22 @@ public class SystemMenuController {
   }
 
   @ApiOperation("返回全部的菜单")
-  @PostMapping(value = "/queryMenuListByPid")
+  @PostMapping(value = "/listMenuByPid")
   @PreAuthorize("@el.check('menu:list','roles:list')")
-  public ResponseEntity<List<SystemMenuTb>> queryMenuListByPid(@RequestParam Long pid) {
+  public ResponseEntity<List<SystemMenuTb>> listMenuByPid(@RequestParam Long pid) {
     List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuByPid(pid);
     return ResponseEntity.ok(systemMenuTbs);
   }
 
   @ApiOperation("根据菜单ID返回所有子节点ID, 包含自身ID")
-  @PostMapping(value = "/queryChildMenuSet")
+  @PostMapping(value = "/listChildMenuSetByMenuId")
   @PreAuthorize("@el.check('menu:list','roles:list')")
-  public ResponseEntity<Set<Long>> queryChildMenuSet(@RequestParam Long id) {
+  public ResponseEntity<Set<Long>> listChildMenuSetByMenuId(@RequestParam Long id) {
     Set<Long> ids = systemMenuService.listChildMenuSetByMenuId(id);
     return ResponseEntity.ok(ids);
   }
 
-  @PostMapping
-  @ApiOperation("查询菜单")
-  @PreAuthorize("@el.check('menu:list')")
-  public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenuByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
-    return queryAllMenu(args);
-  }
-
-  @PostMapping(value = "/queryMenuByArgs")
+  @PostMapping(value = "/searchMenu")
   @ApiOperation("查询菜单")
   @PreAuthorize("@el.check('menu:list')")
   public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(
@@ -102,6 +96,7 @@ public class SystemMenuController {
     return ResponseEntity.ok(systemMenuTbs);
   }
 
+  @OperationLog
   @ApiOperation("新增菜单")
   @PostMapping(value = "/saveMenu")
   @PreAuthorize("@el.check('menu:add')")
@@ -113,18 +108,20 @@ public class SystemMenuController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改菜单")
-  @PostMapping(value = "/modifyMenuById")
+  @PostMapping(value = "/updateMenuById")
   @PreAuthorize("@el.check('menu:edit')")
-  public ResponseEntity<Void> modifyMenuById(@Validated(SystemMenuTb.Update.class) @RequestBody SystemMenuTb args) {
+  public ResponseEntity<Void> updateMenuById(@Validated(SystemMenuTb.Update.class) @RequestBody SystemMenuTb args) {
     systemMenuService.updateMenuById(args);
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除菜单")
-  @PostMapping(value = "/removeMenuByIds")
+  @PostMapping(value = "/deleteMenuByIds")
   @PreAuthorize("@el.check('menu:del')")
-  public ResponseEntity<Void> removeMenuByIds(@RequestBody Set<Long> ids) {
+  public ResponseEntity<Void> deleteMenuByIds(@RequestBody Set<Long> ids) {
     systemMenuService.deleteMenuByIds(ids);
     return ResponseEntity.ok(null);
   }

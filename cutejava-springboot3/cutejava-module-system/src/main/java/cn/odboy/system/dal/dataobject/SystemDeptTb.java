@@ -22,11 +22,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,8 +42,7 @@ public class SystemDeptTb extends KitBaseUserTimeTb {
   @TableField(exist = false)
   @JSONField(serialize = false)
   @ApiModelProperty(value = "角色")
-  private Set<SystemRoleTb>
-      roles;
+  private Set<SystemRoleTb> roles;
   @TableField(exist = false)
   @ApiModelProperty(value = "子部门")
   private List<SystemDeptTb> children;

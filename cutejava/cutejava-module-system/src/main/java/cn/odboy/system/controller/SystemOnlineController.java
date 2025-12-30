@@ -19,6 +19,7 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
+import cn.odboy.system.framework.operalog.OperationLog;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -43,6 +44,7 @@ public class SystemOnlineController {
   @Autowired
   private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
+  @OperationLog
   @ApiOperation("查询在线用户")
   @PostMapping(value = "/searchOnlineUser")
   @PreAuthorize("@el.check()")
@@ -52,14 +54,16 @@ public class SystemOnlineController {
     return ResponseEntity.ok(systemUserOnlineInfoDAO.searchOnlineUser(pageArgs.getArgs(), page));
   }
 
-  @ApiOperation("导出数据")
+  @OperationLog
+  @ApiOperation("导出在线用户数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check()")
   public void exportOnlineUser(HttpServletResponse response, String username) {
     systemUserOnlineInfoDAO.exportOnlineUserXlsx(response, username);
   }
 
-  @ApiOperation("踢出用户")
+  @OperationLog
+  @ApiOperation("踢出在线用户")
   @PostMapping(value = "/kickOutUser")
   @PreAuthorize("@el.check()")
   public ResponseEntity<Void> kickOutUser(@RequestBody Set<String> keys) throws Exception {
