@@ -111,7 +111,7 @@ public class SwaggerConfig {
 
   private ApiInfo apiInfo() {
     return new ApiInfoBuilder().description("一个简单且易上手的自动化运维平台").title("CuteJava 接口文档")
-        .version("1.4.1").build();
+        .version("1.5.0").build();
   }
 
   private List<SecurityScheme> securitySchemes() {

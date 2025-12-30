@@ -4,7 +4,7 @@
   <parent>
     <artifactId>cutejava</artifactId>
     <groupId>cn.odboy</groupId>
-    <version>1.4.1</version>
+    <version>1.5.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cutejava-module-task-v1</artifactId>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>cn.odboy</groupId>
       <artifactId>cutejava-module-system</artifactId>
-      <version>1.4.1</version>
+      <version>1.5.0</version>
     </dependency>
   </dependencies>
 </project>
