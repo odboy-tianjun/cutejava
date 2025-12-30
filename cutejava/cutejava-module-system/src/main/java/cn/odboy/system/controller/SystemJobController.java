@@ -52,21 +52,13 @@ public class SystemJobController {
     systemJobService.exportJobXlsx(response, args);
   }
 
-  @ApiOperation("查询岗位")
-  @PostMapping(value = "/queryAllEnableJob")
+  @ApiOperation("分页查询岗位")
+  @PostMapping(value = "/searchJob")
   @PreAuthorize("@el.check('job:list','user:list')")
   public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> pageArgs) {
     Page<SystemJobTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemJobService.searchJobByArgs(pageArgs.getArgs(), page));
-  }
-
-  @ApiOperation("查询岗位")
-  @PostMapping
-  @PreAuthorize("@el.check('job:list','user:list')")
-  public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> args) {
-    return queryJobByArgs(args);
   }
 
   @ApiOperation("新增岗位")

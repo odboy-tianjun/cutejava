@@ -50,7 +50,7 @@ public class SystemQuartzJobController {
   private SystemQuartzJobService systemQuartzJobService;
 
   @ApiOperation("查询定时任务")
-  @PostMapping
+  @PostMapping(value = "/searchQuartzJob")
   @PreAuthorize("@el.check('quartzJob:list')")
   public ResponseEntity<KitPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(
       @Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
@@ -73,7 +73,7 @@ public class SystemQuartzJobController {
   }
 
   @ApiOperation("查询任务执行日志")
-  @PostMapping(value = "/logs")
+  @PostMapping(value = "/searchQuartzLog")
   @PreAuthorize("@el.check('quartzJob:list')")
   public ResponseEntity<KitPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
     Page<SystemQuartzLogTb> page = new Page<>(args.getPage(), args.getSize());
@@ -89,7 +89,7 @@ public class SystemQuartzJobController {
   }
 
   @ApiOperation("修改定时任务")
-  @PutMapping
+  @PostMapping(value = "/updateQuartzJobResumeCron")
   @PreAuthorize("@el.check('quartzJob:edit')")
   public ResponseEntity<Void> updateQuartzJob(
       @Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {

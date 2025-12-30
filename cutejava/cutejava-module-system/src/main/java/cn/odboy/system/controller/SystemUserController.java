@@ -60,7 +60,7 @@ public class SystemUserController {
   }
 
   @ApiOperation("查询用户")
-  @PostMapping
+  @PostMapping(value = "/aggregationSearchUserByArgs")
   @PreAuthorize("@el.check('user:list')")
   public ResponseEntity<KitPageResult<SystemUserVo>> queryUserByArgs(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> pageArgs) {
     String currentUsername = KitSecurityHelper.getCurrentUsername();

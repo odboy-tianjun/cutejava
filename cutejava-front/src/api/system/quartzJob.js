@@ -20,8 +20,8 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/quartzJob',
-    method: 'put',
+    url: 'api/quartzJob/updateQuartzJobResumeCron',
+    method: 'post',
     data: data
   })
 }

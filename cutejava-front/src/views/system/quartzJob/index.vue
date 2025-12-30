@@ -192,7 +192,7 @@ export default {
   name: 'QuartzJob',
   components: { Log, pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '定时任务', url: 'api/quartzJob', crudMethod: { ...crudJob }})
+    return CRUD({ title: '定时任务', url: 'api/quartzJob', searchRouter: '/searchQuartzJob', crudMethod: { ...crudJob }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

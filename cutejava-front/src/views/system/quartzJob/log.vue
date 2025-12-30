@@ -109,7 +109,7 @@ export default {
     },
     // 获取数据前设置好接口地址
     beforeInit() {
-      this.url = 'api/quartzJob/logs'
+      this.url = 'api/quartzJob/searchQuartzLog'
       this.size = 6
       return true
     },

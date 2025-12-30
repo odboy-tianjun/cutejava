@@ -34,7 +34,7 @@ export function queryAllEnableJob() {
     }
   }
   return request({
-    url: 'api/job/queryAllEnableJob',
+    url: 'api/job/searchJob',
     method: 'post',
     data: params
   })

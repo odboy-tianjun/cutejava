@@ -49,7 +49,7 @@ public class SystemOssStorageController {
   private SystemOssStorageService systemOssStorageService;
 
   @ApiOperation("查询文件")
-  @PostMapping
+  @PostMapping(value = "/searchOssStorage")
   @PreAuthorize("@el.check('storage:list')")
   public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
       @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {

@@ -11,7 +11,7 @@ export function get(dictName) {
     }
   }
   return request({
-    url: 'api/dictDetail/queryDictDetailByArgs',
+    url: 'api/dictDetail/searchDictDetail',
     method: 'post',
     data: params
   })

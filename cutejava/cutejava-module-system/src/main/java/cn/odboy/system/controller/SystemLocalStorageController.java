@@ -46,7 +46,7 @@ public class SystemLocalStorageController {
   private SystemLocalStorageService localStorageService;
 
   @ApiOperation("查询文件")
-  @PostMapping
+  @PostMapping(value = "/searchLocalStorage")
   @PreAuthorize("@el.check('storage:list')")
   public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(
       @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {

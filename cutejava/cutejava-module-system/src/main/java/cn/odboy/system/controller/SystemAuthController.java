@@ -59,13 +59,6 @@ public class SystemAuthController {
     return ResponseEntity.ok(userInfoVo);
   }
 
-  @ApiOperation("获取验证码")
-  @AnonymousPostMapping(value = "/captcha/getImage")
-  public ResponseEntity<Map<String, Object>> getCode() {
-    Map<String, Object> imgResult = systemAuthService.getCaptchaInfo();
-    return ResponseEntity.ok(imgResult);
-  }
-
   @ApiOperation("退出登录")
   @AnonymousPostMapping(value = "/logout")
   public ResponseEntity<Void> logout(HttpServletRequest request) {

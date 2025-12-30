@@ -70,7 +70,7 @@ public class SystemRoleController {
   }
 
   @ApiOperation("查询角色")
-  @PostMapping
+  @PostMapping(value = "/searchRole")
   @PreAuthorize("@el.check('roles:list')")
   public ResponseEntity<KitPageResult<SystemRoleVo>> queryRoleByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> pageArgs) {
@@ -79,9 +79,9 @@ public class SystemRoleController {
   }
 
   @ApiOperation("获取用户级别")
-  @PostMapping(value = "/queryRoleLevel")
-  public ResponseEntity<Dict> queryRoleLevel() {
-    return ResponseEntity.ok(systemRoleService.getRoleLevel());
+  @PostMapping(value = "/getCurrentUserRoleLevel")
+  public ResponseEntity<Dict> getCurrentUserRoleLevel() {
+    return ResponseEntity.ok(systemRoleService.getCurrentUserRoleLevel());
   }
 
   @ApiOperation("新增角色")

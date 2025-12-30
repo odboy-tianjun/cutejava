@@ -54,7 +54,7 @@ public class SystemDeptController {
   }
 
   @ApiOperation("查询部门")
-  @PostMapping
+  @PostMapping(value = "/queryAllDeptByArgs")
   @PreAuthorize("@el.check('user:list','dept:list')")
   public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
       @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> pageArgs) throws Exception {

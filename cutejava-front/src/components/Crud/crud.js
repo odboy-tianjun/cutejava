@@ -17,8 +17,10 @@ function CRUD(options) {
     idField: 'id',
     // 标题
     title: '',
-    // 请求数据的url
+    // 请求数据的url, @Controller注解的路径
     url: '',
+    // 分页查询路由，@PostMapping注解的路径
+    searchRouter: '',
     // 表格数据
     data: [],
     // 选择项
@@ -134,7 +136,7 @@ function CRUD(options) {
       return new Promise((resolve, reject) => {
         crud.loading = true
         // 请求数据
-        initData(crud.url, crud.getQueryParams()).then(data => {
+        initData(crud.url + crud.searchRouter, crud.getQueryParams()).then(data => {
           const table = crud.getTable()
           if (table && table.lazy) { // 懒加载子节点数据，清掉已加载的数据
             table.store.states.treeData = {}

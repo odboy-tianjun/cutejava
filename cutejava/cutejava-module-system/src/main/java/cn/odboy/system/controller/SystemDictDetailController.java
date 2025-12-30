@@ -47,14 +47,7 @@ public class SystemDictDetailController {
   private SystemDictDetailService systemDictDetailService;
 
   @ApiOperation("查询字典详情")
-  @PostMapping
-  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
-    return queryDictDetailByArgs(args);
-  }
-
-  @ApiOperation("查询字典详情")
-  @PostMapping(value = "/queryDictDetailByArgs")
+  @PostMapping(value = "/searchDictDetail")
   public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
     Page<SystemDictDetailTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());

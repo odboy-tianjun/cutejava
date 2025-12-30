@@ -77,15 +77,7 @@ public class SystemMenuController {
     return ResponseEntity.ok(ids);
   }
 
-  @PostMapping
-  @ApiOperation("查询菜单")
-  @PreAuthorize("@el.check('menu:list')")
-  public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenuByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> args) throws Exception {
-    return queryAllMenu(args);
-  }
-
-  @PostMapping(value = "/queryMenuByArgs")
+  @PostMapping(value = "/queryAllMenu")
   @ApiOperation("查询菜单")
   @PreAuthorize("@el.check('menu:list')")
   public ResponseEntity<KitPageResult<SystemMenuTb>> queryAllMenu(

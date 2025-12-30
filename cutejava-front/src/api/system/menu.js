@@ -36,7 +36,7 @@ export function queryMenuListByPid(pid) {
 
 export function queryMenuByArgs(params) {
   return request({
-    url: 'api/menu/queryMenuByArgs',
+    url: 'api/menu/queryAllMenu',
     method: 'post',
     data: params
   })

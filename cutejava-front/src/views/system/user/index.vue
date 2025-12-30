@@ -228,7 +228,7 @@ export default {
   name: 'User',
   components: { CuteDeptTree, Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
   cruds() {
-    return CRUD({ title: '用户', url: 'api/user', crudMethod: { ...crudUser }})
+    return CRUD({ title: '用户', url: 'api/user', searchRouter: '/aggregationSearchUserByArgs', crudMethod: { ...crudUser }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典

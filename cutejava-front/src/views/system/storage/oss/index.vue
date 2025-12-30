@@ -107,7 +107,7 @@ const defaultForm = { id: null }
 export default {
   components: { pagination, crudOperation, rrOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '文件', url: 'api/ossStorage', crudMethod: { ...crudFile }})
+    return CRUD({ title: '文件', url: 'api/ossStorage', searchRouter: '/searchOssStorage', crudMethod: { ...crudFile }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

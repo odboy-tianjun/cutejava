@@ -44,12 +44,12 @@ public class SystemOnlineController {
   private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
 
   @ApiOperation("查询在线用户")
-  @PostMapping
+  @PostMapping(value = "/searchOnlineUser")
   @PreAuthorize("@el.check()")
   public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(
       @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> pageArgs) {
     IPage<SystemUserOnlineVo> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
-    return ResponseEntity.ok(systemUserOnlineInfoDAO.queryUserOnlineModelPage(pageArgs.getArgs(), page));
+    return ResponseEntity.ok(systemUserOnlineInfoDAO.searchOnlineUser(pageArgs.getArgs(), page));
   }
 
   @ApiOperation("导出数据")

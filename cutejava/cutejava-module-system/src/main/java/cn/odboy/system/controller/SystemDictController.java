@@ -20,7 +20,6 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
-import cn.odboy.system.service.SystemDictDetailService;
 import cn.odboy.system.service.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -46,8 +45,6 @@ public class SystemDictController {
 
   @Autowired
   private SystemDictService systemDictService;
-  @Autowired
-  private SystemDictDetailService systemDictDetailService;
 
   @ApiOperation("导出字典数据")
   @GetMapping(value = "/download")
@@ -56,15 +53,15 @@ public class SystemDictController {
     systemDictService.exportDictXlsx(response, args);
   }
 
-  @ApiOperation("查询字典")
+  @ApiOperation("查询所有字典")
   @PostMapping(value = "/queryAllDict")
   @PreAuthorize("@el.check('dict:list')")
   public ResponseEntity<List<SystemDictTb>> queryAllDict() {
     return ResponseEntity.ok(systemDictService.queryDictByArgs(new SystemQueryDictArgs()));
   }
 
-  @ApiOperation("查询字典")
-  @PostMapping
+  @ApiOperation("分页查询字典")
+  @PostMapping(value = "/searchDict")
   @PreAuthorize("@el.check('dict:list')")
   public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(
       @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {

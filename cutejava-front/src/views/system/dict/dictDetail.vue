@@ -84,7 +84,7 @@ export default {
   cruds() {
     return [
       CRUD({
-        title: '字典详情', url: 'api/dictDetail', query: { dictName: '' },
+        title: '字典详情', url: 'api/dictDetail', searchRouter: '/searchDictDetail', query: { dictName: '' },
         crudMethod: { ...crudDictDetail },
         optShow: {
           add: true,

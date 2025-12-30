@@ -29,7 +29,7 @@ export function edit(data) {
 
 export function queryDeptList(params) {
   return request({
-    url: 'api/dept',
+    url: 'api/dept/queryAllDeptByArgs',
     method: 'post',
     data: params
   })
