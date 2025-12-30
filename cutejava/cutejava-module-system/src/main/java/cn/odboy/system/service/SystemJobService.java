@@ -43,7 +43,7 @@ public class SystemJobService {
   @Autowired
   private SystemJobMapper systemJobMapper;
   @Autowired
-  private SystemUserService systemUserService;
+  private SystemUserJobService systemUserJobService;
 
   /**
    * 创建
@@ -115,7 +115,7 @@ public class SystemJobService {
    * @param ids /
    */
   public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserService.countUserByJobIds(ids) > 0) {
+    if (systemUserJobService.countUserByJobIds(ids) > 0) {
       throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
     }
   }
@@ -156,5 +156,9 @@ public class SystemJobService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
+  }
+
+  public List<SystemJobTb> listByIds(Set<Long> jobIds) {
+    return systemJobMapper.selectByIds(jobIds);
   }
 }

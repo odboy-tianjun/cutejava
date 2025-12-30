@@ -147,4 +147,19 @@ public class SystemUserRoleService {
       throw new BadRequestException("角色权限不足");
     }
   }
+
+  public List<SystemUserRoleTb> listUserRoleByUserId(Long userId) {
+    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserRoleTb::getUserId, userId);
+    return systemUserRoleMapper.selectList(wrapper);
+  }
+
+  public long countUserByRoleIds(Set<Long> ids) {
+    if (CollUtil.isEmpty(ids)) {
+      return 0L;
+    }
+    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserRoleTb::getRoleId, ids);
+    return systemUserRoleMapper.selectCount(wrapper);
+  }
 }

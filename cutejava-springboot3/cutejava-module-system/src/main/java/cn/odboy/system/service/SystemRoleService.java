@@ -57,8 +57,6 @@ public class SystemRoleService {
   @Autowired
   private SystemRoleDeptService systemRoleDeptService;
   @Autowired
-  private SystemUserService systemUserService;
-  @Autowired
   private SystemUserRoleService systemUserRoleService;
 
   /**
@@ -228,7 +226,7 @@ public class SystemRoleService {
    * @param ids /
    */
   public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserService.countUserByRoleIds(ids) > 0) {
+    if (systemUserRoleService.countUserByRoleIds(ids) > 0) {
       throw new BadRequestException("所选角色存在用户关联, 请解除关联再试！");
     }
   }
@@ -296,5 +294,9 @@ public class SystemRoleService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "部门数据", SystemRoleExportRowVo.class, rowVos);
+  }
+
+  public List<SystemRoleTb> listByIds(Set<Long> roleIds) {
+    return systemRoleMapper.selectByIds(roleIds);
   }
 }

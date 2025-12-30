@@ -19,12 +19,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemYesOrNoChConst;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
-import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemMenuExportRowVo;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
@@ -32,7 +30,6 @@ import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
-import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
@@ -58,8 +55,6 @@ public class SystemMenuService {
 
   @Autowired
   private SystemMenuMapper systemMenuMapper;
-  @Autowired
-  private SystemRoleMenuMapper systemRoleMenuMapper;
   @Autowired
   private SystemRoleMenuService systemRoleMenuService;
   @Autowired
@@ -164,20 +159,11 @@ public class SystemMenuService {
     List<Long> menuIds =
         menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
     if (CollUtil.isNotEmpty(menuIds)) {
-      KitSpringBeanHolder.getBean(SystemMenuService.class).deleteRoleMenuByMenuIds(menuIds);
+      systemRoleMenuService.deleteRoleMenuByMenuIds(menuIds);
       systemMenuMapper.deleteByIds(menuIds);
     }
     for (SystemMenuTb menu : menuSet) {
       this.updateMenuSubCnt(menu.getPid());
-    }
-  }
-
-  @Transactional(rollbackFor = Exception.class)
-  public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
-    if (CollUtil.isNotEmpty(menuIds)) {
-      LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
-      wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
-      systemRoleMenuMapper.delete(wrapper);
     }
   }
 

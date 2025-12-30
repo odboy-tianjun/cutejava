@@ -86,4 +86,14 @@ public class SystemRoleMenuService {
     menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
     return new LinkedHashSet<>(systemMenuMapper.selectList(menuWrapper));
   }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
+    if (CollUtil.isEmpty(menuIds)) {
+      return;
+    }
+    LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
+    systemRoleMenuMapper.delete(wrapper);
+  }
 }

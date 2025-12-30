@@ -37,12 +37,7 @@ import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserExportRowVo;
 import cn.odboy.system.dal.model.SystemUserVo;
-import cn.odboy.system.dal.mysql.SystemDeptMapper;
-import cn.odboy.system.dal.mysql.SystemJobMapper;
-import cn.odboy.system.dal.mysql.SystemRoleMapper;
-import cn.odboy.system.dal.mysql.SystemUserJobMapper;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
@@ -78,19 +73,17 @@ public class SystemUserService {
   @Autowired
   private SystemUserMapper systemUserMapper;
   @Autowired
-  private SystemJobMapper systemJobMapper;
+  private SystemJobService systemJobService;
   @Autowired
-  private SystemRoleMapper systemRoleMapper;
+  private SystemRoleService systemRoleService;
   @Autowired
-  private SystemDeptMapper systemDeptMapper;
+  private SystemDeptService systemDeptService;
   @Autowired
   private SystemUserJobService systemUserJobService;
   @Autowired
   private SystemUserRoleService systemUserRoleService;
   @Autowired
   private SystemEmailService systemEmailService;
-  @Autowired
-  private SystemDeptService systemDeptService;
   @Autowired
   private SystemDataService systemDataService;
   @Autowired
@@ -99,10 +92,6 @@ public class SystemUserService {
   private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
   @Autowired
   private KitFileLocalUploadHelper fileUploadPathHelper;
-  @Autowired
-  private SystemUserJobMapper systemUserJobMapper;
-  @Autowired
-  private SystemUserRoleMapper systemUserRoleMapper;
   @Autowired
   private AppProperties properties;
   @Autowired
@@ -406,36 +395,6 @@ public class SystemUserService {
   }
 
   /**
-   * 根据岗位ID统计用户数量
-   *
-   * @param jobIds 岗位ID集合
-   * @return /
-   */
-  public Long countUserByJobIds(Set<Long> jobIds) {
-    if (CollUtil.isEmpty(jobIds)) {
-      return 0L;
-    }
-    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserJobTb::getJobId, jobIds);
-    return systemUserJobMapper.selectCount(wrapper);
-  }
-
-  /**
-   * 根据角色ID统计用户数量
-   *
-   * @param roleIds 角色ID集合
-   * @return /
-   */
-  public Long countUserByRoleIds(Set<Long> roleIds) {
-    if (CollUtil.isEmpty(roleIds)) {
-      return 0L;
-    }
-    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserRoleTb::getRoleId, roleIds);
-    return systemUserRoleMapper.selectCount(wrapper);
-  }
-
-  /**
    * 构建用户查询条件
    *
    * @param args 查询条件
@@ -480,25 +439,21 @@ public class SystemUserService {
     SystemUserVo userVo = BeanUtil.copyProperties(user, SystemUserVo.class);
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
-      SystemDeptTb dept = systemDeptMapper.selectById(user.getDeptId());
+      SystemDeptTb dept = systemDeptService.getDeptById(user.getDeptId());
       userVo.setDept(dept);
     }
     // 查询关联的岗位信息
-    LambdaQueryWrapper<SystemUserJobTb> jobWrapper = new LambdaQueryWrapper<>();
-    jobWrapper.eq(SystemUserJobTb::getUserId, user.getId());
-    List<SystemUserJobTb> userJobs = systemUserJobMapper.selectList(jobWrapper);
+    List<SystemUserJobTb> userJobs = systemUserJobService.listUserJobByUserId(user.getId());
     if (CollUtil.isNotEmpty(userJobs)) {
       Set<Long> jobIds = userJobs.stream().map(SystemUserJobTb::getJobId).collect(Collectors.toSet());
-      List<SystemJobTb> jobs = systemJobMapper.selectByIds(jobIds);
+      List<SystemJobTb> jobs = systemJobService.listByIds(jobIds);
       userVo.setJobs(new LinkedHashSet<>(jobs));
     }
     // 查询关联的角色信息
-    LambdaQueryWrapper<SystemUserRoleTb> roleWrapper = new LambdaQueryWrapper<>();
-    roleWrapper.eq(SystemUserRoleTb::getUserId, user.getId());
-    List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(roleWrapper);
+    List<SystemUserRoleTb> userRoles = systemUserRoleService.listUserRoleByUserId(user.getId());
     if (CollUtil.isNotEmpty(userRoles)) {
       Set<Long> roleIds = userRoles.stream().map(SystemUserRoleTb::getRoleId).collect(Collectors.toSet());
-      List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
+      List<SystemRoleTb> roles = systemRoleService.listByIds(roleIds);
       userVo.setRoles(new LinkedHashSet<>(roles));
     }
     return userVo;
