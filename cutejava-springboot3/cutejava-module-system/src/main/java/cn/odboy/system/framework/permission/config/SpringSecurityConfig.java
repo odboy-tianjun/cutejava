@@ -93,8 +93,8 @@ public class SpringSecurityConfig {
         .sessionManagement(
             sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-            // 静态资源等等
-            .requestMatchers(HttpMethod.GET, "*.html", "*.css", "*.js", "/websocket/**").permitAll()
+            // 静态资源等
+            .requestMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/websocket/**").permitAll()
             // Knife4j 和 OpenAPI 相关路径
             .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
                 "/swagger-resources/**", "/configuration/ui", "/configuration/security").permitAll()
