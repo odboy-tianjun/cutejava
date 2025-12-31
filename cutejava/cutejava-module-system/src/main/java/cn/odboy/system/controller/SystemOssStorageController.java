@@ -23,7 +23,9 @@ import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
 import cn.odboy.system.dal.model.SystemOssStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.service.SystemOssStorageService;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -67,8 +69,10 @@ public class SystemOssStorageController {
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
     List<SystemOssStorageVo> systemOssStorageVos = systemOssStorageService.queryOssStorage(args);
-    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
-        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
+//    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
+//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
+    List<SystemOssStorageExportRowVo> rowVos = BeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
+    KitExcelExporter.exportSimple(response, "OSS文件上传记录数据", SystemOssStorageExportRowVo.class, rowVos);
   }
 
   @ApiOperation("上传文件")

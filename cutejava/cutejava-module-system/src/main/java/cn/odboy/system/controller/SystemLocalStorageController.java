@@ -16,14 +16,13 @@
 package cn.odboy.system.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemLocalStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.service.SystemLocalStorageService;
-import cn.odboy.util.xlsx.KitXlsxExportUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,8 +63,10 @@ public class SystemLocalStorageController {
   @PreAuthorize("@el.check('storage:list')")
   public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
     List<SystemLocalStorageTb> systemLocalStorageTbs = localStorageService.queryLocalStorageByArgs(args);
-    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
-        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
+//    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
+//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
+    List<SystemLocalStorageExportRowVo> rowVos = BeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
+    KitExcelExporter.exportSimple(response, "文件上传记录数据", SystemLocalStorageExportRowVo.class, rowVos);
   }
 
   @ApiOperation("上传文件")
