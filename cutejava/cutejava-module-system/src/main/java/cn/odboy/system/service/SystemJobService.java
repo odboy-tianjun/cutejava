@@ -22,17 +22,15 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.SystemCreateJobArgs;
+import cn.odboy.system.dal.model.SystemJobExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,5 +136,25 @@ public class SystemJobService {
       }
     }
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
+  }
+
+  public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
+    List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "岗位数据", systemJobTbs, SystemJobExportRowVo.class, (dataObject) -> {
+//      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
+//      rowVo.setName(dataObject.getName());
+//      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      return CollUtil.newArrayList(rowVo);
+//    });
+    List<SystemJobExportRowVo> rowVos = new ArrayList<>();
+    for (SystemJobTb dataObject : systemJobTbs) {
+      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
   }
 }

@@ -15,22 +15,14 @@
  */
 package cn.odboy.system.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.system.dal.model.SystemLocalStorageExportRowVo;
-import cn.odboy.system.dal.model.SystemUserOnlineExportRowVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
-import cn.odboy.util.xlsx.KitExcelExporter;
-import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +55,8 @@ public class SystemOnlineController {
   @ApiOperation("导出数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check()")
-  public void exportOnlineUser(HttpServletResponse response, String username) throws IOException {
-    List<SystemUserOnlineVo> userOnlineVos = systemUserOnlineInfoDAO.queryUserOnlineModelListByUsername(username);
-//    KitXlsxExportUtil.exportFile(response, "在线用户数据", userOnlineVos, SystemUserOnlineExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
-    List<SystemUserOnlineVo> rowVos = BeanUtil.copyToList(userOnlineVos, SystemUserOnlineVo.class);
-    KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineVo.class, rowVos);
+  public void exportOnlineUser(HttpServletResponse response, String username) {
+    systemUserOnlineInfoDAO.exportOnlineUserXlsx(response, username);
   }
 
   @ApiOperation("踢出用户")

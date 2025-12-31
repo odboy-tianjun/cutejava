@@ -24,6 +24,7 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
+import cn.odboy.system.dal.model.SystemOssStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemOssStorageVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemOssStorageMapper;
@@ -32,16 +33,13 @@ import cn.odboy.system.service.SystemOssStorageService;
 import cn.odboy.util.KitDateUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,25 +105,6 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   }
 
   @Override
-  public void exportOssStorageExcel(List<SystemOssStorageVo> ossStorages, HttpServletResponse response)
-      throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemOssStorageVo ossStorage : ossStorages) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("服务类型", ossStorage.getServiceType());
-      map.put("服务地址", ossStorage.getEndpoint());
-      map.put("存储桶名称", ossStorage.getBucketName());
-      map.put("文件名称", ossStorage.getFileName());
-      map.put("文件大小", ossStorage.getFileSizeDesc());
-      map.put("文件类型", ossStorage.getFileMime());
-      map.put("创建人", ossStorage.getCreateBy());
-      map.put("创建日期", ossStorage.getCreateTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
-
-  @Override
   @Transactional(rollbackFor = Exception.class)
   public String uploadFile(MultipartFile file) {
     String originalFilename = file.getOriginalFilename();
@@ -172,6 +151,15 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
       minioRepository.removeBucketFile(storage.getObjectName());
       removeById(storage);
     }
+  }
+
+  @Override
+  public void exportOssStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
+    List<SystemOssStorageVo> systemOssStorageVos = this.queryOssStorage(args);
+//    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
+//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
+    List<SystemOssStorageExportRowVo> rowVos = BeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
+    KitExcelExporter.exportSimple(response, "OSS文件上传记录数据", SystemOssStorageExportRowVo.class, rowVos);
   }
 
   private SystemOssStorageTb getOssStorageByMd5(String md5) {

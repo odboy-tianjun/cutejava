@@ -25,21 +25,20 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
+import cn.odboy.system.dal.model.SystemQuartzJobExportRowVo;
+import cn.odboy.system.dal.model.SystemQuartzLogExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import org.quartz.CronExpression;
@@ -279,5 +278,69 @@ public class SystemQuartzJobService {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemQuartzJobTb::getIsPause, 0);
     return systemQuartzJobMapper.selectList(wrapper);
+  }
+
+  public void exportQuartzJobXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
+    List<SystemQuartzJobTb> systemQuartzJobTbs = this.queryQuartzJobByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "定时任务数据", systemQuartzJobTbs, SystemQuartzJobExportRowVo.class,
+//        (dataObject) -> {
+//          SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();
+//          rowVo.setJobName(dataObject.getJobName());
+//          rowVo.setBeanName(dataObject.getBeanName());
+//          rowVo.setMethodName(dataObject.getMethodName());
+//          rowVo.setParams(dataObject.getParams());
+//          rowVo.setCronExpression(dataObject.getCronExpression());
+//          rowVo.setIsPause(dataObject.getIsPause() ? "暂停中" : "运行中");
+//          rowVo.setDescription(dataObject.getDescription());
+//          rowVo.setCreateTime(dataObject.getCreateTime());
+//          return CollUtil.newArrayList(rowVo);
+//        });
+    List<SystemQuartzJobExportRowVo> rowVos = new ArrayList<>();
+    for (SystemQuartzJobTb dataObject : systemQuartzJobTbs) {
+      SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();
+      rowVo.setJobName(dataObject.getJobName());
+      rowVo.setBeanName(dataObject.getBeanName());
+      rowVo.setMethodName(dataObject.getMethodName());
+      rowVo.setParams(dataObject.getParams());
+      rowVo.setCronExpression(dataObject.getCronExpression());
+      rowVo.setIsPause(dataObject.getIsPause() ? "暂停中" : "运行中");
+      rowVo.setDescription(dataObject.getDescription());
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "定时任务数据", SystemQuartzJobExportRowVo.class, rowVos);
+  }
+
+  public void exportQuartzLogXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
+    List<SystemQuartzLogTb> systemQuartzLogTbs = this.queryQuartzLogByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "定时任务日志数据", systemQuartzLogTbs, SystemQuartzLogExportRowVo.class,
+//        (dataObject) -> {
+//          SystemQuartzLogExportRowVo rowVo = new SystemQuartzLogExportRowVo();
+//          rowVo.setJobName(dataObject.getJobName());
+//          rowVo.setBeanName(dataObject.getBeanName());
+//          rowVo.setMethodName(dataObject.getMethodName());
+//          rowVo.setParams(dataObject.getParams());
+//          rowVo.setCronExpression(dataObject.getCronExpression());
+//          rowVo.setExceptionDetail(dataObject.getExceptionDetail());
+//          rowVo.setTime(dataObject.getTime());
+//          rowVo.setStatus(dataObject.getIsSuccess() ? "成功" : "失败");
+//          rowVo.setCreateTime(dataObject.getCreateTime());
+//          return CollUtil.newArrayList(rowVo);
+//        });
+    List<SystemQuartzLogExportRowVo> rowVos = new ArrayList<>();
+    for (SystemQuartzLogTb dataObject : systemQuartzLogTbs) {
+      SystemQuartzLogExportRowVo rowVo = new SystemQuartzLogExportRowVo();
+      rowVo.setJobName(dataObject.getJobName());
+      rowVo.setBeanName(dataObject.getBeanName());
+      rowVo.setMethodName(dataObject.getMethodName());
+      rowVo.setParams(dataObject.getParams());
+      rowVo.setCronExpression(dataObject.getCronExpression());
+      rowVo.setExceptionDetail(dataObject.getExceptionDetail());
+      rowVo.setTime(dataObject.getTime());
+      rowVo.setStatus(dataObject.getIsSuccess() ? "成功" : "失败");
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "定时任务日志数据", SystemQuartzLogExportRowVo.class, rowVos);
   }
 }

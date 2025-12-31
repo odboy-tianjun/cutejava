@@ -16,17 +16,23 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.SystemCreateDictArgs;
+import cn.odboy.system.dal.model.SystemDictDetailVo;
+import cn.odboy.system.dal.model.SystemDictExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,5 +106,56 @@ public class SystemDictService {
     LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
     injectQueryParams(args, wrapper);
     return systemDictMapper.selectList(wrapper);
+  }
+
+  public void exportDictXlsx(HttpServletResponse response, SystemQueryDictArgs args) {
+    List<SystemDictTb> systemDictTbs = this.queryDictByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "字典数据", systemDictTbs, SystemDictExportRowVo.class, (dataObject) -> {
+//      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());
+//      if (CollUtil.isEmpty(dictDetails)) {
+//        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
+//        rowVo.setName(dataObject.getName());
+//        rowVo.setDescription(dataObject.getDescription());
+//        rowVo.setCreateTime(dataObject.getCreateTime());
+//        rowVo.setLabel("");
+//        rowVo.setValue("");
+//        return CollUtil.newArrayList(rowVo);
+//      }
+//      List<SystemDictExportRowVo> rowVos = new ArrayList<>();
+//      for (SystemDictDetailVo dictDetail : dictDetails) {
+//        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
+//        rowVo.setName(dataObject.getName());
+//        rowVo.setDescription(dataObject.getDescription());
+//        rowVo.setCreateTime(dataObject.getCreateTime());
+//        rowVo.setLabel(dictDetail.getLabel());
+//        rowVo.setValue(dictDetail.getValue());
+//        rowVos.add(rowVo);
+//      }
+//      return rowVos;
+//    });
+    List<SystemDictExportRowVo> rowVos = new ArrayList<>();
+    for (SystemDictTb dataObject : systemDictTbs) {
+      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());
+      if (CollUtil.isEmpty(dictDetails)) {
+        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
+        rowVo.setName(dataObject.getName());
+        rowVo.setDescription(dataObject.getDescription());
+        rowVo.setCreateTime(dataObject.getCreateTime());
+        rowVo.setLabel("");
+        rowVo.setValue("");
+        rowVos.add(rowVo);
+        continue;
+      }
+      for (SystemDictDetailVo dictDetail : dictDetails) {
+        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
+        rowVo.setName(dataObject.getName());
+        rowVo.setDescription(dataObject.getDescription());
+        rowVo.setCreateTime(dataObject.getCreateTime());
+        rowVo.setLabel(dictDetail.getLabel());
+        rowVo.setValue(dictDetail.getValue());
+        rowVos.add(rowVo);
+      }
+    }
+    KitExcelExporter.exportSimple(response, "字典数据", SystemDictExportRowVo.class, rowVos);
   }
 }

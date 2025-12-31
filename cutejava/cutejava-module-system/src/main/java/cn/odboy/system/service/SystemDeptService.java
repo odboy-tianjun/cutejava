@@ -23,14 +23,17 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
+import cn.odboy.system.constant.SystemZhConst;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.SystemDeptExportRowVo;
 import cn.odboy.system.dal.model.SystemProductLineTreeVo;
 import cn.odboy.system.dal.model.SystemProductLineVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -463,5 +467,25 @@ public class SystemDeptService {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getPid, pid);
     return systemDeptMapper.selectList(wrapper);
+  }
+
+  public void exportDeptXlsx(HttpServletResponse response, SystemQueryDeptArgs args) throws Exception {
+    List<SystemDeptTb> systemDeptTbs = this.queryAllDeptByArgs(args, false);
+//    KitXlsxExportUtil.exportFile(response, "部门数据", systemDeptTbs, SystemDeptExportRowVo.class, (dataObject) -> {
+//      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
+//      rowVo.setName(dataObject.getName());
+//      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      return CollUtil.newArrayList(rowVo);
+//    });
+    List<SystemDeptExportRowVo> rowVos = new ArrayList<>();
+    for (SystemDeptTb dataObject : systemDeptTbs) {
+      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "部门数据", SystemDeptExportRowVo.class, rowVos);
   }
 }

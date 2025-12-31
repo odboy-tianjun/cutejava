@@ -3,7 +3,6 @@ package cn.odboy.system.dal.model;
 import cn.idev.excel.annotation.ExcelProperty;
 import cn.odboy.base.KitObject;
 import java.util.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 

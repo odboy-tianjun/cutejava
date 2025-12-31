@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemRoleExportRowVo extends KitObject {
+
   @ExcelProperty("角色名称")
   private String name;
   @ExcelProperty("角色级别")

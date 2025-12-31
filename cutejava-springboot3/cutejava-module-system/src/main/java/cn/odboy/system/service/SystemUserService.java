@@ -26,6 +26,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
+import cn.odboy.system.constant.SystemZhConst;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
@@ -34,6 +35,7 @@ import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
+import cn.odboy.system.dal.model.SystemUserExportRowVo;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
@@ -47,10 +49,12 @@ import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -59,6 +63,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -348,18 +353,23 @@ public class SystemUserService {
     return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
-  /**
-   * 查询全部不分页
-   *
-   * @param args 条件
-   * @return /
-   */
-  public List<SystemUserVo> queryUserVoByArgs(SystemQueryUserArgs args) {
-    // 查询用户基本信息
+//  /**
+//   * 查询全部不分页
+//   *
+//   * @param args 条件
+//   * @return /
+//   */
+//  public List<SystemUserVo> queryUserVoByArgs(SystemQueryUserArgs args) {
+//    // 查询用户基本信息
+//    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
+//    List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
+//    // 转换为SystemUserVo并关联查询
+//    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+//  }
+
+  public long countUserByArgs(SystemQueryUserArgs args) {
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
-    List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
-    // 转换为SystemUserVo并关联查询
-    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+    return systemUserMapper.selectCount(wrapper);
   }
 
   /**
@@ -543,5 +553,56 @@ public class SystemUserService {
       return this.searchUserByArgs(args, page);
     }
     return KitPageUtil.emptyData();
+  }
+
+  public void exportUserXlsx(HttpServletResponse response, SystemQueryUserArgs args) {
+    //    List<SystemUserVo> systemUserVos = systemUserService.queryUserVoByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "用户数据", systemUserVos, SystemUserExportRowVo.class, (dataObject) -> {
+//      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
+//      rowVo.setUsername(dataObject.getUsername());
+//      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
+//      rowVo.setDept(dataObject.getDept().getName());
+//      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
+//      rowVo.setEmail(dataObject.getEmail());
+//      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
+//      rowVo.setMobile(dataObject.getPhone());
+//      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      return CollUtil.newArrayList(rowVo);
+//    });
+//    List<SystemUserExportRowVo> rowVos = new ArrayList<>();
+//    for (SystemUserVo dataObject : systemUserVos) {
+//      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
+//      rowVo.setUsername(dataObject.getUsername());
+//      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
+//      rowVo.setDept(dataObject.getDept().getName());
+//      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
+//      rowVo.setEmail(dataObject.getEmail());
+//      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
+//      rowVo.setMobile(dataObject.getPhone());
+//      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      rowVos.add(rowVo);
+//    }
+//    KitExcelExporter.exportSimple(response, "用户数据", SystemUserExportRowVo.class, rowVos);
+    long totalCount = this.countUserByArgs(args);
+    KitExcelExporter.exportByPage(response, "用户数据", SystemUserExportRowVo.class, totalCount, (long pageNum, long pageSize) -> {
+      KitPageResult<SystemUserVo> pageResult = this.searchUserByArgs(args, new Page<>(pageNum, pageSize));
+      List<SystemUserExportRowVo> rowVos = new ArrayList<>();
+      for (SystemUserVo dataObject : pageResult.getContent()) {
+        SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
+        rowVo.setUsername(dataObject.getUsername());
+        rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
+        rowVo.setDept(dataObject.getDept().getName());
+        rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
+        rowVo.setEmail(dataObject.getEmail());
+        rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
+        rowVo.setMobile(dataObject.getPhone());
+        rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
+        rowVo.setCreateTime(dataObject.getCreateTime());
+        rowVos.add(rowVo);
+      }
+      return rowVos;
+    });
   }
 }

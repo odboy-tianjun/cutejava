@@ -17,17 +17,13 @@ package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.system.constant.SystemZhConst;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
-import cn.odboy.system.dal.model.SystemDeptExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.util.KitPageUtil;
-import cn.odboy.util.xlsx.KitExcelExporter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
@@ -54,23 +50,7 @@ public class SystemDeptController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('dept:list')")
   public void exportDept(HttpServletResponse response, SystemQueryDeptArgs args) throws Exception {
-    List<SystemDeptTb> systemDeptTbs = systemDeptService.queryAllDeptByArgs(args, false);
-//    KitXlsxExportUtil.exportFile(response, "部门数据", systemDeptTbs, SystemDeptExportRowVo.class, (dataObject) -> {
-//      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
-    List<SystemDeptExportRowVo> rowVos = new ArrayList<>();
-    for (SystemDeptTb dataObject : systemDeptTbs) {
-      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
-      rowVo.setName(dataObject.getName());
-      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-      rowVo.setCreateTime(dataObject.getCreateTime());
-      rowVos.add(rowVo);
-    }
-    KitExcelExporter.exportSimple(response, "部门数据", SystemDeptExportRowVo.class, rowVos);
+    systemDeptService.exportDeptXlsx(response, args);
   }
 
   @ApiOperation("查询部门")

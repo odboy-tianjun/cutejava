@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemDictExportRowVo extends KitObject {
+
   @ExcelProperty("字典名称")
   private String name;
   @ExcelProperty("字典描述")

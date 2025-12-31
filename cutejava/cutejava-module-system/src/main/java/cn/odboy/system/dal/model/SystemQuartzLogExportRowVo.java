@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemQuartzLogExportRowVo extends KitObject {
+
   @ExcelProperty("任务名称")
   private String jobName;
   @ExcelProperty("Bean名称")

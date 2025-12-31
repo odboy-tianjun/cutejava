@@ -28,20 +28,18 @@ import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
+import cn.odboy.system.dal.model.SystemRoleExportRowVo;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
@@ -276,5 +274,27 @@ public class SystemRoleService {
       }
     }
     return min;
+  }
+
+  public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
+    List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
+//      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
+//      rowVo.setName(dataObject.getName());
+//      rowVo.setLevel(dataObject.getLevel());
+//      rowVo.setDescription(dataObject.getDescription());
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      return CollUtil.newArrayList(rowVo);
+//    });
+    List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
+    for (SystemRoleVo dataObject : systemRoleVos) {
+      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setLevel(dataObject.getLevel());
+      rowVo.setDescription(dataObject.getDescription());
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "部门数据", SystemRoleExportRowVo.class, rowVos);
   }
 }

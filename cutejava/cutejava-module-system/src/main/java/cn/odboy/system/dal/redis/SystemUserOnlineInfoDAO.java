@@ -1,5 +1,6 @@
 package cn.odboy.system.dal.redis;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.properties.AppProperties;
@@ -12,6 +13,7 @@ import cn.odboy.util.KitDesEncryptUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitIPUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -165,5 +167,13 @@ public class SystemUserOnlineInfoDAO {
       token = KitDesEncryptUtil.desDecrypt(token);
       this.logoutByToken(token);
     }
+  }
+
+  public void exportOnlineUserXlsx(HttpServletResponse response, String username) {
+    List<SystemUserOnlineVo> userOnlineVos = this.queryUserOnlineModelListByUsername(username);
+//    KitXlsxExportUtil.exportFile(response, "在线用户数据", userOnlineVos, SystemUserOnlineExportRowVo.class,
+//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
+    List<SystemUserOnlineVo> rowVos = BeanUtil.copyToList(userOnlineVos, SystemUserOnlineVo.class);
+    KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineVo.class, rowVos);
   }
 }

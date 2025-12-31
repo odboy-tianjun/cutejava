@@ -15,6 +15,7 @@
  */
 package cn.odboy.system.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -27,15 +28,18 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
+import cn.odboy.system.dal.model.SystemLocalStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,5 +167,13 @@ public class SystemLocalStorageService {
       throw new BadRequestException("只能上传图片");
     }
     return KitSpringBeanHolder.getBean(SystemLocalStorageService.class).uploadFile(null, file);
+  }
+
+  public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
+    List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
+//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
+    List<SystemLocalStorageExportRowVo> rowVos = BeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
+    KitExcelExporter.exportSimple(response, "文件上传记录数据", SystemLocalStorageExportRowVo.class, rowVos);
   }
 }

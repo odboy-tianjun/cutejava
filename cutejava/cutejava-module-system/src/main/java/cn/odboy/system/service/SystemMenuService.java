@@ -21,10 +21,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.constant.SystemYesOrNoChConst;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
+import cn.odboy.system.dal.model.SystemMenuExportRowVo;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
@@ -33,6 +35,7 @@ import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import java.lang.reflect.Field;
@@ -44,6 +47,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -463,5 +467,33 @@ public class SystemMenuService {
       systemMenuTbs = this.listMenuByPid(null);
     }
     return systemMenuTbs;
+  }
+
+  public void exportMenuXlsx(HttpServletResponse response, SystemQueryMenuArgs args) throws Exception {
+    List<SystemMenuTb> systemMenuTbs = this.queryAllMenu(args, false);
+//    KitXlsxExportUtil.exportFile(response, "菜单数据", systemMenuTbs, SystemMenuExportRowVo.class, (dataObject -> {
+//      SystemMenuExportRowVo rowVo = new SystemMenuExportRowVo();
+//      rowVo.setTitle(dataObject.getTitle());
+//      rowVo.setType(dataObject.getType() == null ? "目录" : dataObject.getType() == 1 ? "菜单" : "按钮");
+//      rowVo.setPermission(dataObject.getPermission());
+//      rowVo.setIFrame(dataObject.getIFrame() ? SystemYesOrNoChConst.YES_STR : SystemYesOrNoChConst.NO_STR);
+//      rowVo.setHidden(dataObject.getHidden() ? SystemYesOrNoChConst.NO_STR : SystemYesOrNoChConst.YES_STR);
+//      rowVo.setCache(dataObject.getCache() ? SystemYesOrNoChConst.YES_STR : SystemYesOrNoChConst.NO_STR);
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      return CollUtil.newArrayList(rowVo);
+//    }));
+    List<SystemMenuExportRowVo> rowVos = new ArrayList<>();
+    for (SystemMenuTb dataObject : systemMenuTbs) {
+      SystemMenuExportRowVo rowVo = new SystemMenuExportRowVo();
+      rowVo.setTitle(dataObject.getTitle());
+      rowVo.setType(dataObject.getType() == null ? "目录" : dataObject.getType() == 1 ? "菜单" : "按钮");
+      rowVo.setPermission(dataObject.getPermission());
+      rowVo.setIFrame(dataObject.getIFrame() ? SystemYesOrNoChConst.YES_STR : SystemYesOrNoChConst.NO_STR);
+      rowVo.setHidden(dataObject.getHidden() ? SystemYesOrNoChConst.NO_STR : SystemYesOrNoChConst.YES_STR);
+      rowVo.setCache(dataObject.getCache() ? SystemYesOrNoChConst.YES_STR : SystemYesOrNoChConst.NO_STR);
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "菜单数据", SystemMenuExportRowVo.class, rowVos);
   }
 }

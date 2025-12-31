@@ -15,18 +15,14 @@
  */
 package cn.odboy.system.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.system.constant.SystemYesOrNoChConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
-import cn.odboy.system.dal.model.SystemMenuExportRowVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.service.SystemMenuService;
 import cn.odboy.util.KitPageUtil;
-import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -55,18 +51,7 @@ public class SystemMenuController {
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('menu:list')")
   public void exportMenu(HttpServletResponse response, SystemQueryMenuArgs args) throws Exception {
-    List<SystemMenuTb> systemMenuTbs = systemMenuService.queryAllMenu(args, false);
-    KitXlsxExportUtil.exportFile(response, "菜单数据", systemMenuTbs, SystemMenuExportRowVo.class, (dataObject -> {
-      SystemMenuExportRowVo rowVo = new SystemMenuExportRowVo();
-      rowVo.setTitle(dataObject.getTitle());
-      rowVo.setType(dataObject.getType() == null ? "目录" : dataObject.getType() == 1 ? "菜单" : "按钮");
-      rowVo.setPermission(dataObject.getPermission());
-      rowVo.setIFrame(dataObject.getIFrame() ? SystemYesOrNoChConst.YES_STR : SystemYesOrNoChConst.NO_STR);
-      rowVo.setHidden(dataObject.getHidden() ? SystemYesOrNoChConst.NO_STR : SystemYesOrNoChConst.YES_STR);
-      rowVo.setCache(dataObject.getCache() ? SystemYesOrNoChConst.YES_STR : SystemYesOrNoChConst.NO_STR);
-      rowVo.setCreateTime(dataObject.getCreateTime());
-      return CollUtil.newArrayList(rowVo);
-    }));
+    systemMenuService.exportMenuXlsx(response, args);
   }
 
   @PostMapping(value = "/buildMenus")

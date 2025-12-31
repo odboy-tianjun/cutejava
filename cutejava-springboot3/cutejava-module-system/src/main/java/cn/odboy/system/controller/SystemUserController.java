@@ -15,28 +15,20 @@
  */
 package cn.odboy.system.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.base.KitSelectOptionVo;
-import cn.odboy.system.constant.SystemZhConst;
-import cn.odboy.system.dal.dataobject.SystemJobTb;
-import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
-import cn.odboy.system.dal.model.SystemUserExportRowVo;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.service.SystemUserService;
-import cn.odboy.util.xlsx.KitXlsxExportUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,21 +55,8 @@ public class SystemUserController {
   @ApiOperation("导出用户数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('user:list')")
-  public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs args) throws IOException {
-    List<SystemUserVo> systemUserVos = systemUserService.queryUserVoByArgs(args);
-    KitXlsxExportUtil.exportFile(response, "用户数据", systemUserVos, SystemUserExportRowVo.class, (dataObject) -> {
-      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
-      rowVo.setUsername(dataObject.getUsername());
-      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
-      rowVo.setDept(dataObject.getDept().getName());
-      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
-      rowVo.setEmail(dataObject.getEmail());
-      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-      rowVo.setMobile(dataObject.getPhone());
-      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
-      rowVo.setCreateTime(dataObject.getCreateTime());
-      return CollUtil.newArrayList(rowVo);
-    });
+  public void exportUserExcel(HttpServletResponse response, SystemQueryUserArgs args) {
+    systemUserService.exportUserXlsx(response, args);
   }
 
   @ApiOperation("查询用户")
