@@ -41,9 +41,6 @@ public class SystemUserTb extends KitBaseUserTimeTb {
   @TableField(value = "dept_id")
   @ApiModelProperty(hidden = true)
   private Long deptId;
-  @ApiModelProperty(value = "用户部门")
-  @TableField(exist = false)
-  private SystemDeptTb dept;
   @NotBlank
   @ApiModelProperty(value = "用户名称")
   private String username;

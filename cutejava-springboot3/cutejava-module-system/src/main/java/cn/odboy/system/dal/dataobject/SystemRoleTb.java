@@ -45,8 +45,7 @@ public class SystemRoleTb extends KitBaseUserTimeTb {
   @ApiModelProperty(value = "名称", hidden = true)
   private String name;
   @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义")
-  private String dataScope =
-      SystemDataScopeEnum.THIS_LEVEL.getValue();
+  private String dataScope = SystemDataScopeEnum.THIS_LEVEL.getValue();
   @ApiModelProperty(value = "级别，数值越小，级别越大")
   private Integer level = 3;
   @ApiModelProperty(value = "描述")

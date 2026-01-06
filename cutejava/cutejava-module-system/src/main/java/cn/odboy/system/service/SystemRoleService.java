@@ -32,6 +32,7 @@ import cn.odboy.system.dal.model.SystemRoleExportRowVo;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -70,7 +71,7 @@ public class SystemRoleService {
     if (this.getRoleByName(args.getName()) != null) {
       throw new BadRequestException("角色名称已存在");
     }
-    systemRoleMapper.insert(BeanUtil.copyProperties(args, SystemRoleTb.class));
+    systemRoleMapper.insert(KitBeanUtil.copyToClass(args, SystemRoleTb.class));
     // 判断是否有部门数据, 若有, 则需创建关联
     if (CollectionUtil.isNotEmpty(args.getDepts())) {
       systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
@@ -91,7 +92,7 @@ public class SystemRoleService {
   @Transactional(rollbackFor = Exception.class)
   public void updateRoleById(SystemRoleVo args) {
     checkRoleLevels(args.getLevel());
-    SystemRoleVo role = BeanUtil.copyProperties(systemRoleMapper.selectById(args.getId()), SystemRoleVo.class);
+    SystemRoleVo role = KitBeanUtil.copyToClass(systemRoleMapper.selectById(args.getId()), SystemRoleVo.class);
     SystemRoleTb role1 = this.getRoleByName(args.getName());
     if (role1 != null && !role1.getId().equals(role.getId())) {
       throw new BadRequestException("角色名称已存在");

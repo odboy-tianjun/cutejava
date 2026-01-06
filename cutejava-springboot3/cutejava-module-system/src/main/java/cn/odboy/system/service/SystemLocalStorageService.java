@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -31,6 +30,7 @@ import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
 import cn.odboy.system.dal.model.SystemLocalStorageExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
@@ -172,8 +172,8 @@ public class SystemLocalStorageService {
   public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);
 //    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
-    List<SystemLocalStorageExportRowVo> rowVos = BeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
+//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
+    List<SystemLocalStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "文件上传记录数据", SystemLocalStorageExportRowVo.class, rowVos);
   }
 }

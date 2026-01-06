@@ -1,6 +1,5 @@
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.constant.CaptchaCodeEnum;
@@ -16,6 +15,7 @@ import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
 import com.wf.captcha.base.Captcha;
 import java.util.HashMap;
@@ -47,8 +47,7 @@ public class SystemAuthService {
 
   public Map<String, Object> doLogin(SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
     // 密码解密
-    String password =
-        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+    String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
     // 查询验证码
     String code = redisHelper.get(loginRequest.getUuid(), String.class);
     // 清除验证码
@@ -65,15 +64,14 @@ public class SystemAuthService {
     if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
       throw new BadRequestException("登录密码错误");
     }
-    Authentication authentication =
-        new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
+    Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
     SecurityContextHolder.getContext().setAuthentication(authentication);
     // 生成令牌
     String token = tokenProvider.createToken(jwtUser);
     // 返回 token 与 用户信息
     Map<String, Object> authInfo = new HashMap<>(2) {{
       put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
-      put("user", BeanUtil.copyProperties(jwtUser, SystemUserInfoVo.class));
+      put("user", KitBeanUtil.copyToClass(jwtUser, SystemUserInfoVo.class));
     }};
     if (properties.getLogin().isSingle()) {
       // 踢掉之前已经登录的token
@@ -87,7 +85,8 @@ public class SystemAuthService {
 
   public SystemUserInfoVo getCurrentUserInfoVo() {
     SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();
-    return BeanUtil.copyProperties(jwtUser, SystemUserInfoVo.class);
+    // 转换是为了去掉密码
+    return KitBeanUtil.copyToClass(jwtUser, SystemUserInfoVo.class);
   }
 
   public Map<String, Object> getCaptchaInfo() {

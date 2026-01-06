@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.odboy.framework.exception.BadRequestException;
+import java.util.Set;
+import java.util.stream.Collectors;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.groups.Default;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
 /**

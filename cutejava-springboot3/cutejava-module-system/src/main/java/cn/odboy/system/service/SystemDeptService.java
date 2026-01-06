@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -27,11 +26,13 @@ import cn.odboy.system.constant.SystemZhConst;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
 import cn.odboy.system.dal.model.SystemDeptExportRowVo;
+import cn.odboy.system.dal.model.SystemDeptVo;
 import cn.odboy.system.dal.model.SystemProductLineTreeVo;
 import cn.odboy.system.dal.model.SystemProductLineVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -68,7 +69,7 @@ public class SystemDeptService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDept(SystemCreateDeptArgs args) {
-    systemDeptMapper.insert(BeanUtil.copyProperties(args, SystemDeptTb.class));
+    systemDeptMapper.insert(KitBeanUtil.copyToClass(args, SystemDeptTb.class));
     this.updateDeptSubCnt(args.getPid());
   }
 
@@ -272,7 +273,7 @@ public class SystemDeptService {
    *
    * @return /
    */
-  public KitPageResult<SystemDeptTb> searchDeptTree(List<Long> ids, Boolean exclude) {
+  public KitPageResult<SystemDeptVo> searchDeptTree(List<Long> ids, Boolean exclude) {
     Set<SystemDeptTb> deptSet1 = new LinkedHashSet<>();
     for (Long id : ids) {
       // 同级数据
@@ -290,18 +291,18 @@ public class SystemDeptService {
       }
       deptSet1.addAll(depts);
     }
-    ArrayList<SystemDeptTb> deptList = new ArrayList<>(deptSet1);
+    List<SystemDeptVo> deptList = KitBeanUtil.copyToList(new ArrayList<>(deptSet1), SystemDeptVo.class);
     // 构建部门树
-    Set<SystemDeptTb> trees = new LinkedHashSet<>();
-    Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
-    List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
+    Set<SystemDeptVo> trees = new LinkedHashSet<>();
+    Set<SystemDeptVo> deptSet = new LinkedHashSet<>();
+    List<String> deptNames = deptList.stream().map(SystemDeptVo::getName).collect(Collectors.toList());
     boolean isChild;
-    for (SystemDeptTb dept : deptList) {
+    for (SystemDeptVo dept : deptList) {
       isChild = false;
       if (dept.getPid() == null) {
         trees.add(dept);
       }
-      for (SystemDeptTb it : deptList) {
+      for (SystemDeptVo it : deptList) {
         if (it.getPid() != null && dept.getId().equals(it.getPid())) {
           isChild = true;
           if (dept.getChildren() == null) {
@@ -319,7 +320,7 @@ public class SystemDeptService {
     if (CollectionUtil.isEmpty(trees)) {
       trees = deptSet;
     }
-    KitPageResult<SystemDeptTb> baseResult = new KitPageResult<>();
+    KitPageResult<SystemDeptVo> baseResult = new KitPageResult<>();
     baseResult.setContent(CollectionUtil.isEmpty(trees) ? new ArrayList<>(deptSet) : new ArrayList<>(trees));
     baseResult.setTotalElements(deptSet.size());
     return baseResult;

@@ -25,6 +25,7 @@ import cn.odboy.system.dal.model.SystemCreateJobArgs;
 import cn.odboy.system.dal.model.SystemJobExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -56,7 +57,7 @@ public class SystemJobService {
     if (job != null) {
       throw new BadRequestException("职位名称已存在");
     }
-    systemJobMapper.insert(BeanUtil.copyProperties(args, SystemJobTb.class));
+    systemJobMapper.insert(KitBeanUtil.copyToClass(args, SystemJobTb.class));
   }
 
   /**

@@ -26,11 +26,13 @@ import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemMenuExportRowVo;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
+import cn.odboy.system.dal.model.SystemMenuRouterVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -278,14 +280,14 @@ public class SystemMenuService {
    * @param menus 原始数据
    * @return /
    */
-  public List<SystemMenuTb> buildMenuTree(List<SystemMenuTb> menus) {
-    List<SystemMenuTb> trees = new ArrayList<>();
+  public List<SystemMenuVo> buildMenuTree(List<SystemMenuVo> menus) {
+    List<SystemMenuVo> trees = new ArrayList<>();
     Set<Long> ids = new HashSet<>();
-    for (SystemMenuTb menu : menus) {
+    for (SystemMenuVo menu : menus) {
       if (menu.getPid() == null) {
         trees.add(menu);
       }
-      for (SystemMenuTb it : menus) {
+      for (SystemMenuVo it : menus) {
         if (menu.getId().equals(it.getPid())) {
           if (menu.getChildren() == null) {
             menu.setChildren(new ArrayList<>());
@@ -307,12 +309,12 @@ public class SystemMenuService {
    * @param menus /
    * @return /
    */
-  public List<SystemMenuVo> buildMenuVo(List<SystemMenuTb> menus) {
-    List<SystemMenuVo> list = new LinkedList<>();
-    menus.forEach(menu -> {
+  public List<SystemMenuRouterVo> buildMenuVo(List<SystemMenuVo> menus) {
+    List<SystemMenuRouterVo> list = new LinkedList<>();
+    for (SystemMenuVo menu : menus) {
       if (menu != null) {
-        List<SystemMenuTb> menuList = menu.getChildren();
-        SystemMenuVo menuVo = new SystemMenuVo();
+        List<SystemMenuVo> menuList = menu.getChildren();
+        SystemMenuRouterVo menuVo = new SystemMenuRouterVo();
         menuVo.setName(
             ObjectUtil.isNotEmpty(menu.getComponentName()) ? menu.getComponentName() : menu.getTitle());
         // 一级目录需要加斜杠, 不然会报警告
@@ -336,17 +338,17 @@ public class SystemMenuService {
           menuVo.setChildren(buildMenuVo(menuList));
           // 处理是一级菜单并且没有子菜单的情况
         } else if (menu.getPid() == null) {
-          SystemMenuVo menuVo1 = getMenuVo(menu, menuVo);
+          SystemMenuRouterVo menuVo1 = getMenuVo(menu, menuVo);
           menuVo.setName(null);
           menuVo.setMeta(null);
           menuVo.setComponent("Layout");
-          List<SystemMenuVo> list1 = new ArrayList<>();
+          List<SystemMenuRouterVo> list1 = new ArrayList<>();
           list1.add(menuVo1);
           menuVo.setChildren(list1);
         }
         list.add(menuVo);
       }
-    });
+    }
     return list;
   }
 
@@ -357,8 +359,8 @@ public class SystemMenuService {
    * @param menuVo /
    * @return /
    */
-  private SystemMenuVo getMenuVo(SystemMenuTb menu, SystemMenuVo menuVo) {
-    SystemMenuVo menuVo1 = new SystemMenuVo();
+  private SystemMenuRouterVo getMenuVo(SystemMenuTb menu, SystemMenuRouterVo menuVo) {
+    SystemMenuRouterVo menuVo1 = new SystemMenuRouterVo();
     menuVo1.setMeta(menuVo.getMeta());
     // 非外链
     if (!menu.getIFrame()) {
@@ -418,10 +420,11 @@ public class SystemMenuService {
     return systemMenuMapper.selectList(wrapper);
   }
 
-  public List<SystemMenuVo> buildFrontMenus() {
+  public List<SystemMenuRouterVo> buildFrontMenus() {
     List<SystemMenuTb> menuList = this.listMenuByUserId(KitSecurityHelper.getCurrentUserId());
-    List<SystemMenuTb> menus = this.buildMenuTree(menuList);
-    return this.buildMenuVo(menus);
+    List<SystemMenuVo> originMenus = KitBeanUtil.copyToList(menuList, SystemMenuVo.class);
+    List<SystemMenuVo> targetMenus = this.buildMenuTree(originMenus);
+    return this.buildMenuVo(targetMenus);
   }
 
   public Set<Long> listChildMenuSetByMenuId(Long id) {
@@ -432,9 +435,9 @@ public class SystemMenuService {
     return menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
   }
 
-  public List<SystemMenuTb> listMenuSuperior(List<Long> ids) {
+  public List<SystemMenuVo> listMenuSuperior(List<Long> ids) {
     Set<SystemMenuTb> menus;
-    List<SystemMenuTb> systemMenuTbs;
+    List<SystemMenuVo> systemMenuTbs;
     if (CollectionUtil.isNotEmpty(ids)) {
       menus = new LinkedHashSet<>(this.listMenuByIds(ids));
       for (SystemMenuTb menu : menus) {
@@ -448,9 +451,11 @@ public class SystemMenuService {
       }
       // 编辑菜单时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
       menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
-      systemMenuTbs = this.buildMenuTree(new ArrayList<>(menus));
+      List<SystemMenuTb> newMenuList = new ArrayList<>(menus);
+      systemMenuTbs = this.buildMenuTree(KitBeanUtil.copyToList(newMenuList, SystemMenuVo.class));
     } else {
-      systemMenuTbs = this.listMenuByPid(null);
+      List<SystemMenuTb> newMenuList = this.listMenuByPid(null);
+      systemMenuTbs = KitBeanUtil.copyToList(newMenuList, SystemMenuVo.class);
     }
     return systemMenuTbs;
   }

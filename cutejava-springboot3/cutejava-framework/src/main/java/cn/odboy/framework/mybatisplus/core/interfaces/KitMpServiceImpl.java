@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.core.interfaces;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.mybatisplus.core.KitMpQUtil;
+import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
@@ -46,7 +45,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
    * @param resources /
    */
   public <G> int saveFeatureClazz(G resources) {
-    return getBaseMapper().insert(BeanUtil.copyProperties(resources, this.getEntityClass()));
+    return getBaseMapper().insert(KitBeanUtil.copyToClass(resources, this.getEntityClass()));
   }
 
   /**
@@ -55,7 +54,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
    * @param resources /
    */
   public <G> int saveFeatureClazzList(List<G> resources) {
-    return getBaseMapper().insertBatchSomeColumn(BeanUtil.copyToList(resources, this.getEntityClass()));
+    return getBaseMapper().insertBatchSomeColumn(KitBeanUtil.copyToList(resources, this.getEntityClass()));
   }
 
   /**
@@ -64,7 +63,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
    * @param resources /
    */
   public <G> int modifyFeatureClazzById(G resources) {
-    return getBaseMapper().updateById(BeanUtil.copyProperties(resources, this.getEntityClass()));
+    return getBaseMapper().updateById(KitBeanUtil.copyToClass(resources, this.getEntityClass()));
   }
 
   /**
@@ -77,7 +76,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     String sqlStatement = this.getSqlStatement(SqlMethod.UPDATE_BY_ID);
     return this.executeBatch(resources, batchSize, (sqlSession, entity) -> {
       MapperMethod.ParamMap<T> param = new MapperMethod.ParamMap<>();
-      param.put("et", BeanUtil.copyProperties(entity, this.getEntityClass()));
+      param.put("et", KitBeanUtil.copyToClass(entity, this.getEntityClass()));
       sqlSession.update(sqlStatement, param);
     });
   }
@@ -90,7 +89,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
    */
   public <G> G queryFeatureClazzById(Serializable id, Class<G> targetClazz) {
     T entity = this.getById(id);
-    return entity == null ? null : BeanUtil.copyProperties(entity, targetClazz);
+    return entity == null ? null : KitBeanUtil.copyToClass(entity, targetClazz);
   }
 
   /**
@@ -127,7 +126,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     if (ts.isEmpty()) {
       return null;
     }
-    return BeanUtil.copyProperties(ts.stream().findFirst().get(), clazz);
+    return KitBeanUtil.copyToClass(ts.stream().findFirst().get(), clazz);
   }
 
   /**
@@ -138,17 +137,16 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
    */
   public <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz) {
     List<T> entitys = this.listByIds(ids);
-    return entitys == null || entitys.isEmpty() ? CollUtil.newArrayList()
-        : BeanUtil.copyToList(entitys, targetClazz);
+    return entitys == null || entitys.isEmpty() ? CollUtil.newArrayList() : KitBeanUtil.copyToList(entitys, targetClazz);
   }
 
   /**
    * 查有关的数据
    *
-   * @param criteria 动态条件
+   * @param args 动态条件
    */
-  public <Q> List<T> queryClazzListByArgs(Q criteria) {
-    QueryWrapper<T> predicate = KitMpQUtil.build(criteria);
+  public <Q> List<T> queryClazzListByArgs(Q args) {
+    QueryWrapper<T> predicate = KitMpQUtil.build(args);
     return baseMapper.selectList(predicate);
   }
 
@@ -167,13 +165,13 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
   /**
    * 查有关的数据并转成目标类型的数据
    *
-   * @param criteria    动态条件
+   * @param args        动态条件
    * @param targetClazz 目标类型
    */
-  public <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz) {
-    QueryWrapper<T> predicate = KitMpQUtil.build(criteria);
+  public <G, Q> List<G> queryFeatureClazzListByArgs(Q args, Class<G> targetClazz) {
+    QueryWrapper<T> predicate = KitMpQUtil.build(args);
     List<T> data = baseMapper.selectList(predicate);
-    return BeanUtil.copyToList(data, targetClazz);
+    return KitBeanUtil.copyToList(data, targetClazz);
   }
 
   /**
@@ -186,7 +184,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
-    return BeanUtil.copyToList(baseMapper.selectList(wrapper), targetClazz);
+    return KitBeanUtil.copyToList(baseMapper.selectList(wrapper), targetClazz);
   }
 
   /**
@@ -216,19 +214,19 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
       wrapper = new LambdaQueryWrapper<>();
     }
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-    return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz),
+    return new KitPageResult<>(KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz),
         originPageData.getTotal());
   }
 
-  public <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz) {
-    QueryWrapper<T> wrapper = KitMpQUtil.build(criteria);
+  public <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q args, IPage<T> pageable, Class<G> targetClazz) {
+    QueryWrapper<T> wrapper = KitMpQUtil.build(args);
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-    return new KitPageResult<>(BeanUtil.copyToList(originPageData.getRecords(), targetClazz),
+    return new KitPageResult<>(KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz),
         originPageData.getTotal());
   }
 
-  public <Q> KitPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable) {
-    QueryWrapper<T> wrapper = KitMpQUtil.build(criteria);
+  public <Q> KitPageResult<T> queryClazzPageByArgs(Q args, IPage<T> pageable) {
+    QueryWrapper<T> wrapper = KitMpQUtil.build(args);
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
     return new KitPageResult<>(originPageData.getRecords(), originPageData.getTotal());
   }

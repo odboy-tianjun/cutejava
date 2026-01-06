@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.odboy.base.KitSelectOptionVo;
@@ -52,7 +51,7 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
    * 使用方式: list = CollUtil.streamDistinct(list, Object::getXXX)
    */
   public static <T, K> List<T> streamDistinct(List<T> data, Function<? super T, ? extends K> keyMapper) {
-    return data.stream().filter(distinctPredicate(keyMapper)).toList();
+    return data.stream().filter(distinctPredicate(keyMapper)).collect(Collectors.toList());
   }
 
   /**
@@ -68,7 +67,7 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
    */
   public static <T, U extends Comparable<? super U>> List<T> streamAscSort(List<T> data,
       Function<? super T, ? extends U> keyExtractor) {
-    return data.stream().sorted(Comparator.comparing(keyExtractor)).toList();
+    return data.stream().sorted(Comparator.comparing(keyExtractor)).collect(Collectors.toList());
   }
 
   /**
@@ -84,7 +83,7 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
    */
   public static <T, U extends Comparable<? super U>> List<T> streamDescSort(List<T> data,
       Function<? super T, ? extends U> keyExtractor) {
-    return data.stream().sorted(Comparator.comparing(keyExtractor).reversed()).toList();
+    return data.stream().sorted(Comparator.comparing(keyExtractor).reversed()).collect(Collectors.toList());
   }
 
   /**

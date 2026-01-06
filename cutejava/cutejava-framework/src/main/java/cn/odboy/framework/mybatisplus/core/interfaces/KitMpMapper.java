@@ -19,6 +19,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.odboy.base.KitPageResult;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -110,7 +111,7 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
     if (CollUtil.isEmpty(list)) {
       return new ArrayList<>();
     }
-    return BeanUtil.copyToList(list, clazz);
+    return KitBeanUtil.copyToList(list, clazz);
   }
 
   /**
@@ -125,7 +126,7 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
     if (CollUtil.isEmpty(list)) {
       return new ArrayList<>();
     }
-    return BeanUtil.copyToList(list, clazz);
+    return KitBeanUtil.copyToList(list, clazz);
   }
 
   /**
@@ -146,7 +147,7 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
     if (CollUtil.isEmpty(pageInfo.getRecords())) {
       return new KitPageResult<>(new ArrayList<>(), pageInfo.getTotal());
     }
-    return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+    return new KitPageResult<>(KitBeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
   }
 
   /**
@@ -167,7 +168,7 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
     if (CollUtil.isEmpty(pageInfo.getRecords())) {
       return KitPageUtil.emptyListData();
     }
-    return new KitPageResult<>(BeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
+    return new KitPageResult<>(KitBeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
   }
 
   /**
@@ -182,6 +183,6 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
     if (e == null) {
       return null;
     }
-    return BeanUtil.copyProperties(e, clazz);
+    return KitBeanUtil.copyToClass(e, clazz);
   }
 }

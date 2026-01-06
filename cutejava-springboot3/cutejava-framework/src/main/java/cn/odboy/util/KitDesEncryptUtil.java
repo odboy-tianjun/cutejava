@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import java.nio.charset.StandardCharsets;
@@ -93,4 +92,3 @@ public final class KitDesEncryptUtil {
     return b2;
   }
 }
-

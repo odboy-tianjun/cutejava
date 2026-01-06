@@ -16,15 +16,11 @@
 package cn.odboy.system.dal.dataobject;
 
 import cn.odboy.base.KitBaseUserTimeTb;
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -39,13 +35,6 @@ public class SystemDeptTb extends KitBaseUserTimeTb {
   @TableId(value = "dept_id", type = IdType.AUTO)
   @ApiModelProperty(value = "ID", hidden = true)
   private Long id;
-  @TableField(exist = false)
-  @JSONField(serialize = false)
-  @ApiModelProperty(value = "角色")
-  private Set<SystemRoleTb> roles;
-  @TableField(exist = false)
-  @ApiModelProperty(value = "子部门")
-  private List<SystemDeptTb> children;
   @ApiModelProperty(value = "排序")
   private Integer deptSort;
   @NotBlank

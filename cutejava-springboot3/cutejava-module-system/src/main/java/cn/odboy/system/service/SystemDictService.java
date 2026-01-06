@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -25,6 +24,7 @@ import cn.odboy.system.dal.model.SystemDictDetailVo;
 import cn.odboy.system.dal.model.SystemDictExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -52,7 +52,7 @@ public class SystemDictService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDict(SystemCreateDictArgs args) {
-    systemDictMapper.insert(BeanUtil.copyProperties(args, SystemDictTb.class));
+    systemDictMapper.insert(KitBeanUtil.copyToClass(args, SystemDictTb.class));
   }
 
   /**

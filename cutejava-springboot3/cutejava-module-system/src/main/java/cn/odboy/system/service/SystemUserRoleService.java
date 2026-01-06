@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
@@ -27,6 +26,7 @@ import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,7 +84,7 @@ public class SystemUserRoleService {
     if (role == null) {
       return null;
     }
-    SystemRoleVo roleVo = BeanUtil.copyProperties(role, SystemRoleVo.class);
+    SystemRoleVo roleVo = KitBeanUtil.copyToClass(role, SystemRoleVo.class);
     // 查询关联的菜单信息
     Set<SystemMenuTb> menus = systemRoleMenuService.queryMenuByRoleIds(
         Collections.singleton(role.getId()));

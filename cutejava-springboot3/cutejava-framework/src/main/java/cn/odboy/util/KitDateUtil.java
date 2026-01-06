@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.hutool.core.date.DatePattern;
@@ -69,32 +68,24 @@ public class KitDateUtil {
       // 什么都不返回
       return "";
     }
-
     long betweenSeconds = DateUtil.between(startTime, endTime, cn.hutool.core.date.DateUnit.SECOND);
-
     long days = betweenSeconds / (24 * 60 * 60);
     long hours = (betweenSeconds % (24 * 60 * 60)) / (60 * 60);
     long minutes = (betweenSeconds % (60 * 60)) / 60;
     long seconds = betweenSeconds % 60;
-
     StringBuilder result = new StringBuilder();
-
     if (days > 0) {
       result.append(days).append("天");
     }
-
     if (hours > 0) {
       result.append(hours).append("时");
     }
-
     if (minutes > 0) {
       result.append(minutes).append("分");
     }
-
-    if (seconds > 0 || result.isEmpty()) {
+    if (seconds > 0 || result.length() == 0) {
       result.append(seconds).append("秒");
     }
-
     return result.toString();
   }
 
@@ -110,41 +101,32 @@ public class KitDateUtil {
       // 什么都不返回
       return "";
     }
-
     long betweenMs = DateUtil.betweenMs(startTime, endTime);
     long days = betweenMs / (24 * 60 * 60 * 1000);
     long hours = (betweenMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
     long minutes = (betweenMs % (60 * 60 * 1000)) / (60 * 1000);
     long seconds = (betweenMs % (60 * 1000)) / 1000;
     long milliseconds = betweenMs % 1000;
-
     StringBuilder result = new StringBuilder();
-
     if (days > 0) {
       result.append(days).append("天");
     }
-
     if (hours > 0) {
       result.append(hours).append("时");
     }
-
     if (minutes > 0) {
       result.append(minutes).append("分");
     }
-
     if (seconds > 0) {
       result.append(seconds).append("秒");
     }
-
     if (milliseconds > 0) {
       result.append(milliseconds).append("毫秒");
     }
-
     // 如果所有单位都是0，则显示0毫秒
-    if (result.isEmpty()) {
+    if (result.length() == 0) {
       result.append("0毫秒");
     }
-
     return result.toString();
   }
 }

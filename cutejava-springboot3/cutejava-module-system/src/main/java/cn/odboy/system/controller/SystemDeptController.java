@@ -19,6 +19,7 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.SystemDeptVo;
 import cn.odboy.system.dal.model.SystemQueryDeptArgs;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemDeptService;
@@ -67,7 +68,7 @@ public class SystemDeptController {
   @ApiOperation("查询部门:根据ID获取同级与上级数据")
   @PostMapping("/searchDeptTree")
   @PreAuthorize("@el.check('user:list','dept:list')")
-  public ResponseEntity<KitPageResult<SystemDeptTb>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
+  public ResponseEntity<KitPageResult<SystemDeptVo>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
       @RequestParam(defaultValue = "false") Boolean exclude) {
     return ResponseEntity.ok(systemDeptService.searchDeptTree(ids, exclude));
   }

@@ -21,6 +21,7 @@ import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemRoleVo;
+import cn.odboy.system.dal.model.SystemUserVo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +50,7 @@ public class SystemDataService {
    * @param user /
    * @return /
    */
-  public List<Long> queryDeptIdByArgs(SystemUserTb user) {
+  public List<Long> queryDeptIdByArgs(SystemUserVo user) {
     List<Long> deptIds = new ArrayList<>();
     // 查询用户角色
     List<SystemRoleVo> roleList = systemUserRoleService.queryRoleByUsersId(user.getId());

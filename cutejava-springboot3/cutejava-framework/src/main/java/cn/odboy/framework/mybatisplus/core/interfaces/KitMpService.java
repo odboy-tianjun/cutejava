@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.core.interfaces;
 
 import cn.odboy.base.KitPageResult;
@@ -49,11 +48,11 @@ public interface KitMpService<T> extends IService<T> {
 
   <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
 
-  <Q> List<T> queryClazzListByArgs(Q criteria);
+  <Q> List<T> queryClazzListByArgs(Q args);
 
   List<T> queryClazzListByArgs(LambdaQueryWrapper<T> wrapper);
 
-  <G, Q> List<G> queryFeatureClazzListByArgs(Q criteria, Class<G> targetClazz);
+  <G, Q> List<G> queryFeatureClazzListByArgs(Q args, Class<G> targetClazz);
 
   <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
 
@@ -62,9 +61,9 @@ public interface KitMpService<T> extends IService<T> {
   <G> KitPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable,
       Class<G> targetClazz);
 
-  <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q criteria, IPage<T> pageable, Class<G> targetClazz);
+  <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q args, IPage<T> pageable, Class<G> targetClazz);
 
-  <Q> KitPageResult<T> queryClazzPageByArgs(Q criteria, IPage<T> pageable);
+  <Q> KitPageResult<T> queryClazzPageByArgs(Q args, IPage<T> pageable);
 
   int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity);
 

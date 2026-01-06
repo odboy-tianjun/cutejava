@@ -19,6 +19,7 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
+import cn.odboy.system.dal.model.SystemMenuRouterVo;
 import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryMenuArgs;
 import cn.odboy.system.framework.operalog.OperationLog;
@@ -58,9 +59,9 @@ public class SystemMenuController {
 
   @PostMapping(value = "/buildMenus")
   @ApiOperation("获取前端所需菜单")
-  public ResponseEntity<List<SystemMenuVo>> buildMenus() {
-    List<SystemMenuVo> systemMenuVos = systemMenuService.buildFrontMenus();
-    return ResponseEntity.ok(systemMenuVos);
+  public ResponseEntity<List<SystemMenuRouterVo>> buildMenus() {
+    List<SystemMenuRouterVo> systemMenuRouterVos = systemMenuService.buildFrontMenus();
+    return ResponseEntity.ok(systemMenuRouterVos);
   }
 
   @ApiOperation("返回全部的菜单")
@@ -91,8 +92,8 @@ public class SystemMenuController {
   @ApiOperation("查询菜单:根据ID获取同级与上级数据")
   @PostMapping("/queryMenuSuperior")
   @PreAuthorize("@el.check('menu:list')")
-  public ResponseEntity<List<SystemMenuTb>> queryMenuSuperior(@RequestBody List<Long> ids) {
-    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuSuperior(ids);
+  public ResponseEntity<List<SystemMenuVo>> queryMenuSuperior(@RequestBody List<Long> ids) {
+    List<SystemMenuVo> systemMenuTbs = systemMenuService.listMenuSuperior(ids);
     return ResponseEntity.ok(systemMenuTbs);
   }
 

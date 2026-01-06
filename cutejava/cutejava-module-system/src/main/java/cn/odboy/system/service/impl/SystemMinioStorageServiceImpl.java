@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -30,6 +29,7 @@ import cn.odboy.system.dal.model.SystemQueryStorageArgs;
 import cn.odboy.system.dal.mysql.SystemOssStorageMapper;
 import cn.odboy.system.framework.storage.minio.MinioRepository;
 import cn.odboy.system.service.SystemOssStorageService;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitDateUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
@@ -72,7 +72,7 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
       Page<SystemOssStorageTb> page) {
     IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(args, page);
     IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
-      SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
+      SystemOssStorageVo storageVo = KitBeanUtil.copyToClass(c, SystemOssStorageVo.class);
       storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
       return storageVo;
     });
@@ -157,8 +157,8 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   public void exportOssStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemOssStorageVo> systemOssStorageVos = this.queryOssStorage(args);
 //    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
-    List<SystemOssStorageExportRowVo> rowVos = BeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
+//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
+    List<SystemOssStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "OSS文件上传记录数据", SystemOssStorageExportRowVo.class, rowVos);
   }
 

@@ -41,6 +41,7 @@ import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
@@ -155,7 +156,6 @@ public class SystemUserService {
     user.setUsername(args.getUsername());
     user.setEmail(args.getEmail());
     user.setEnabled(args.getEnabled());
-    user.setDept(args.getDept());
     user.setPhone(args.getPhone());
     user.setNickName(args.getNickName());
     user.setGender(args.getGender());
@@ -436,7 +436,7 @@ public class SystemUserService {
     if (user == null) {
       return null;
     }
-    SystemUserVo userVo = BeanUtil.copyProperties(user, SystemUserVo.class);
+    SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
       SystemDeptTb dept = systemDeptService.getDeptById(user.getDeptId());
@@ -493,8 +493,7 @@ public class SystemUserService {
       args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
     }
     // 数据权限
-    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(
-        this.getUserByUsername(currentUsername));
+    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(this.getUserVoByUsername(currentUsername));
     // args.getDeptIds() 不为空并且数据权限不为空则取交集
     if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
       // 取交集

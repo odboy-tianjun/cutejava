@@ -26,12 +26,14 @@ import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.SystemQuartzJobExportRowVo;
+import cn.odboy.system.dal.model.SystemQuartzJobVo;
 import cn.odboy.system.dal.model.SystemQuartzLogExportRowVo;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -108,7 +110,7 @@ public class SystemQuartzJobService {
         throw new BadRequestException("子任务中不能添加当前任务ID");
       }
     }
-    SystemQuartzJobTb quartzJob = BeanUtil.copyProperties(args, SystemQuartzJobTb.class);
+    SystemQuartzJobTb quartzJob = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
     systemQuartzJobMapper.insertOrUpdate(quartzJob);
     quartzManage.updateJobCron(quartzJob);
   }
@@ -167,7 +169,7 @@ public class SystemQuartzJobService {
         // 如果是手动清除子任务id, 会出现id为空字符串的问题
         continue;
       }
-      SystemQuartzJobTb quartzJob = systemQuartzJobMapper.selectById(Long.parseLong(id));
+      SystemQuartzJobVo quartzJob = systemQuartzJobMapper.selectVoById(id);
       if (quartzJob == null) {
         // 防止子任务不存在
         continue;

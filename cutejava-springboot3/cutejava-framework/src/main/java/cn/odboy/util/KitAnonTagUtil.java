@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.odboy.annotation.AnonymousAccess;
@@ -30,7 +28,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -48,9 +46,9 @@ public class KitAnonTagUtil {
    */
   public static Map<String, Set<String>> getAnonymousUrl(final ApplicationContext applicationContext) {
     RequestMappingHandlerMapping requestMappingHandlerMapping =
-        applicationContext.getBean(RequestMappingHandlerMapping.class);
+        (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
     Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
-    Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
+    Map<String, Set<String>> anonymousUrls = new HashMap<>(8);
     // 获取匿名标记
     Set<String> get = new HashSet<>();
     Set<String> post = new HashSet<>();
@@ -66,15 +64,27 @@ public class KitAnonTagUtil {
             new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
         RequestMethodEnum request = RequestMethodEnum.find(
             requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
-        PathPatternsRequestCondition pathPatternsCondition = infoEntry.getKey().getPathPatternsCondition();
-        if (pathPatternsCondition != null) {
+        PatternsRequestCondition patternsCondition = infoEntry.getKey().getPatternsCondition();
+        if (patternsCondition != null) {
           switch (Objects.requireNonNull(request)) {
-            case GET -> get.addAll(pathPatternsCondition.getPatternValues());
-            case POST -> post.addAll(pathPatternsCondition.getPatternValues());
-            case PUT -> put.addAll(pathPatternsCondition.getPatternValues());
-            case PATCH -> patch.addAll(pathPatternsCondition.getPatternValues());
-            case DELETE -> delete.addAll(pathPatternsCondition.getPatternValues());
-            default -> all.addAll(pathPatternsCondition.getPatternValues());
+            case GET:
+              get.addAll(patternsCondition.getPatterns());
+              break;
+            case POST:
+              post.addAll(patternsCondition.getPatterns());
+              break;
+            case PUT:
+              put.addAll(patternsCondition.getPatterns());
+              break;
+            case PATCH:
+              patch.addAll(patternsCondition.getPatterns());
+              break;
+            case DELETE:
+              delete.addAll(patternsCondition.getPatterns());
+              break;
+            default:
+              all.addAll(patternsCondition.getPatterns());
+              break;
           }
         }
       }

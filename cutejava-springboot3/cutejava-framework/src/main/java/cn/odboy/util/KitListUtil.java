@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.hutool.core.date.DateTime;
@@ -41,7 +40,7 @@ public final class KitListUtil {
    */
   public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
     return items.stream().collect(Collectors.groupingBy(classifier)).values().stream()
-        .map(monitorItem -> monitorItem.iterator().next()).toList();
+        .map(monitorItem -> monitorItem.iterator().next()).collect(Collectors.toList());
   }
 
   /**

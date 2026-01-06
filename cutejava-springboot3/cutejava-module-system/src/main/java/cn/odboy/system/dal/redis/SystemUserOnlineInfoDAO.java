@@ -1,6 +1,5 @@
 package cn.odboy.system.dal.redis;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.properties.AppProperties;
@@ -8,20 +7,17 @@ import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitDesEncryptUtil;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitIPUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,28 +77,28 @@ public class SystemUserOnlineInfoDAO {
     redisHelper.del(loginKey);
   }
 
-  /**
-   * 导出
-   *
-   * @param all      /
-   * @param response /
-   * @throws IOException /
-   */
-  public void downloadUserOnlineModelExcel(List<SystemUserOnlineVo> all, HttpServletResponse response)
-      throws IOException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    for (SystemUserOnlineVo user : all) {
-      Map<String, Object> map = new LinkedHashMap<>();
-      map.put("用户名", user.getUserName());
-      map.put("部门", user.getDept());
-      map.put("登录IP", user.getIp());
-      map.put("登录地点", user.getAddress());
-      map.put("浏览器", user.getBrowser());
-      map.put("登录日期", user.getLoginTime());
-      list.add(map);
-    }
-    KitFileUtil.downloadExcel(list, response);
-  }
+//  /**
+//   * 导出
+//   *
+//   * @param all      /
+//   * @param response /
+//   * @throws IOException /
+//   */
+//  public void downloadUserOnlineModelExcel(List<SystemUserOnlineVo> all, HttpServletResponse response)
+//      throws IOException {
+//    List<Map<String, Object>> list = new ArrayList<>();
+//    for (SystemUserOnlineVo user : all) {
+//      Map<String, Object> map = new LinkedHashMap<>();
+//      map.put("用户名", user.getUserName());
+//      map.put("部门", user.getDept());
+//      map.put("登录IP", user.getIp());
+//      map.put("登录地点", user.getAddress());
+//      map.put("浏览器", user.getBrowser());
+//      map.put("登录日期", user.getLoginTime());
+//      list.add(map);
+//    }
+//    KitFileUtil.downloadExcel(list, response);
+//  }
 
   /**
    * 根据用户名强退用户
@@ -172,8 +168,8 @@ public class SystemUserOnlineInfoDAO {
   public void exportOnlineUserXlsx(HttpServletResponse response, String username) {
     List<SystemUserOnlineVo> userOnlineVos = this.queryUserOnlineModelListByUsername(username);
 //    KitXlsxExportUtil.exportFile(response, "在线用户数据", userOnlineVos, SystemUserOnlineExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
-    List<SystemUserOnlineVo> rowVos = BeanUtil.copyToList(userOnlineVos, SystemUserOnlineVo.class);
+//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
+    List<SystemUserOnlineVo> rowVos = KitBeanUtil.copyToList(userOnlineVos, SystemUserOnlineVo.class);
     KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineVo.class, rowVos);
   }
 }
