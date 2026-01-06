@@ -83,10 +83,12 @@ public class SystemAuthService {
     return authInfo;
   }
 
-  public SystemUserInfoVo getCurrentUserInfoVo() {
+  public SystemUserJwtVo getCurrentUserInfo() {
     SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();
-    // 转换是为了去掉密码
-    return KitBeanUtil.copyToClass(jwtUser, SystemUserInfoVo.class);
+    if (jwtUser.getUser() != null) {
+      jwtUser.getUser().setPassword(null);
+    }
+    return jwtUser;
   }
 
   public Map<String, Object> getCaptchaInfo() {
