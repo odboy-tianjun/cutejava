@@ -49,4 +49,16 @@ public final class KitValidUtil {
           violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
     }
   }
+
+  public static void notNull(Object value) {
+    if (value == null) {
+      throw new BadRequestException("参数必填");
+    }
+  }
+
+  public static void isNull(Object value) {
+    if (value != null) {
+      throw new BadRequestException("参数非必填");
+    }
+  }
 }

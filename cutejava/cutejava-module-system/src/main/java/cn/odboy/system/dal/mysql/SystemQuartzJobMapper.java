@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.dal.mysql;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.model.SystemQuartzJobVo;
 import cn.odboy.util.KitBeanUtil;

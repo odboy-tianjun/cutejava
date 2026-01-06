@@ -21,7 +21,6 @@ import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
-import cn.odboy.system.dal.model.SystemUserInfoVo;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.framework.operalog.OperationLog;

@@ -15,7 +15,6 @@
  */
 package cn.odboy.task.core;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;

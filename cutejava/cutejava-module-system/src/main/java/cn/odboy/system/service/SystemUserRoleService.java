@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;

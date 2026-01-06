@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -35,6 +34,7 @@ import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.lang.reflect.Field;
@@ -147,17 +147,16 @@ public class SystemDeptService {
   }
 
   private List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.in(CollUtil.isNotEmpty(args.getIds()), SystemDeptTb::getId, args.getIds());
-      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemDeptTb::getName, args.getName());
-      wrapper.eq(args.getEnabled() != null, SystemDeptTb::getEnabled, args.getEnabled());
-      wrapper.eq(args.getPid() != null, SystemDeptTb::getPid, args.getPid());
-      wrapper.isNull(args.getPidIsNull() != null, SystemDeptTb::getPid);
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemDeptTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.in(CollUtil.isNotEmpty(args.getIds()), SystemDeptTb::getId, args.getIds());
+    wrapper.like(StrUtil.isNotBlank(args.getName()), SystemDeptTb::getName, args.getName());
+    wrapper.eq(args.getEnabled() != null, SystemDeptTb::getEnabled, args.getEnabled());
+    wrapper.eq(args.getPid() != null, SystemDeptTb::getPid, args.getPid());
+    wrapper.isNull(args.getPidIsNull() != null, SystemDeptTb::getPid);
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemDeptTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemDeptTb::getDeptSort);
     return systemDeptMapper.selectList(wrapper);

@@ -15,8 +15,6 @@
  */
 package cn.odboy.system.dal.dataobject;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.annotation.IdType;

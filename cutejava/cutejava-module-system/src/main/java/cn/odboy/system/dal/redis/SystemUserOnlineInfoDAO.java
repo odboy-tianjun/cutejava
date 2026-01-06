@@ -1,28 +1,24 @@
 package cn.odboy.system.dal.redis;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
+import cn.odboy.system.dal.model.SystemUserOnlineExportRowVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitDesEncryptUtil;
-import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitIPUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
@@ -174,7 +170,7 @@ public class SystemUserOnlineInfoDAO {
     List<SystemUserOnlineVo> userOnlineVos = this.queryUserOnlineModelListByUsername(username);
 //    KitXlsxExportUtil.exportFile(response, "在线用户数据", userOnlineVos, SystemUserOnlineExportRowVo.class,
 //        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
-    List<SystemUserOnlineVo> rowVos = KitBeanUtil.copyToList(userOnlineVos, SystemUserOnlineVo.class);
-    KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineVo.class, rowVos);
+    List<SystemUserOnlineExportRowVo> rowVos = KitBeanUtil.copyToList(userOnlineVos, SystemUserOnlineExportRowVo.class);
+    KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineExportRowVo.class, rowVos);
   }
 }

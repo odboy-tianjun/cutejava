@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
@@ -34,6 +33,7 @@ import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -164,19 +164,18 @@ public class SystemRoleService {
    * @return /
    */
   public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args) {
+    KitValidUtil.notNull(args);
     // 查询角色基本信息
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+            .like(SystemRoleTb::getDescription, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemRoleTb::getLevel);
-    if (args != null && args.getSize() != null) {
+    if (args.getSize() != null) {
       Page<SystemRoleTb> rolePage = new Page<>(args.getPage(), args.getSize());
       Page<SystemRoleTb> page = systemRoleMapper.selectPage(rolePage, wrapper);
       List<SystemRoleTb> roles = page.getRecords();
@@ -233,15 +232,14 @@ public class SystemRoleService {
   }
 
   public Long countRoleByArgs(SystemQueryRoleArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+            .like(SystemRoleTb::getDescription, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     return systemRoleMapper.selectCount(wrapper);
   }

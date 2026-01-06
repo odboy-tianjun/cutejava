@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -35,6 +34,7 @@ import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -397,18 +397,17 @@ public class SystemMenuService {
   }
 
   private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.isNull(args.getPidIsNull() != null, SystemMenuTb::getPid);
-      wrapper.eq(args.getPid() != null, SystemMenuTb::getPid, args.getPid());
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemMenuTb::getTitle, args.getBlurry()).or()
-              .like(SystemMenuTb::getComponentName, args.getBlurry()).or()
-              .like(SystemMenuTb::getPermission, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemMenuTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.isNull(args.getPidIsNull() != null, SystemMenuTb::getPid);
+    wrapper.eq(args.getPid() != null, SystemMenuTb::getPid, args.getPid());
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemMenuTb::getTitle, args.getBlurry()).or()
+            .like(SystemMenuTb::getComponentName, args.getBlurry()).or()
+            .like(SystemMenuTb::getPermission, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemMenuTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemMenuTb::getMenuSort);
     return systemMenuMapper.selectList(wrapper);

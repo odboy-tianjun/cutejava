@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -35,6 +34,7 @@ import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -200,36 +200,27 @@ public class SystemQuartzJobService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzJobTb> searchQuartzJobByArgs(SystemQueryQuartzJobArgs args,
-      Page<SystemQuartzJobTb> page) {
+  public KitPageResult<SystemQuartzJobTb> searchQuartzJobByArgs(SystemQueryQuartzJobArgs args, Page<SystemQuartzJobTb> page) {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQuartzJobQueryParams(args, wrapper);
     return KitPageUtil.toPage(systemQuartzJobMapper.selectPage(page, wrapper));
   }
 
-  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args,
-      LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
-    if (args != null) {
-      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName,
-          args.getJobName());
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
+    KitValidUtil.notNull(args);
+    wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName, args.getJobName());
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemQuartzJobTb::getId);
   }
 
-  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args,
-      LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
-    if (args != null) {
-      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName,
-          args.getJobName());
-      wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
+    KitValidUtil.notNull(args);
+    wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName, args.getJobName());
+    wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemQuartzLogTb::getId);
   }

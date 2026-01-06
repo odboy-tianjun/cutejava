@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -27,6 +26,7 @@ import cn.odboy.system.dal.model.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -128,13 +128,12 @@ public class SystemJobService {
   }
 
   public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
-    if (args != null) {
-      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
-      wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    KitValidUtil.notNull(args);
+    wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
+    wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
   }
