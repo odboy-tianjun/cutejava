@@ -296,20 +296,6 @@ public class SystemQuartzJobService {
 
   public void exportQuartzLogXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     List<SystemQuartzLogTb> systemQuartzLogTbs = this.queryQuartzLogByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "定时任务日志数据", systemQuartzLogTbs, SystemQuartzLogExportRowVo.class,
-//        (dataObject) -> {
-//          SystemQuartzLogExportRowVo rowVo = new SystemQuartzLogExportRowVo();
-//          rowVo.setJobName(dataObject.getJobName());
-//          rowVo.setBeanName(dataObject.getBeanName());
-//          rowVo.setMethodName(dataObject.getMethodName());
-//          rowVo.setParams(dataObject.getParams());
-//          rowVo.setCronExpression(dataObject.getCronExpression());
-//          rowVo.setExceptionDetail(dataObject.getExceptionDetail());
-//          rowVo.setTime(dataObject.getTime());
-//          rowVo.setStatus(dataObject.getIsSuccess() ? "成功" : "失败");
-//          rowVo.setCreateTime(dataObject.getCreateTime());
-//          return CollUtil.newArrayList(rowVo);
-//        });
     List<SystemQuartzLogExportRowVo> rowVos = new ArrayList<>();
     for (SystemQuartzLogTb dataObject : systemQuartzLogTbs) {
       SystemQuartzLogExportRowVo rowVo = new SystemQuartzLogExportRowVo();

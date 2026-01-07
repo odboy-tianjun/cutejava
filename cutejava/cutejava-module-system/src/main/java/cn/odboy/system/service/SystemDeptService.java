@@ -473,13 +473,6 @@ public class SystemDeptService {
 
   public void exportDeptXlsx(HttpServletResponse response, SystemQueryDeptArgs args) throws Exception {
     List<SystemDeptTb> systemDeptTbs = this.queryAllDeptByArgs(args, false);
-//    KitXlsxExportUtil.exportFile(response, "部门数据", systemDeptTbs, SystemDeptExportRowVo.class, (dataObject) -> {
-//      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemDeptExportRowVo> rowVos = new ArrayList<>();
     for (SystemDeptTb dataObject : systemDeptTbs) {
       SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();

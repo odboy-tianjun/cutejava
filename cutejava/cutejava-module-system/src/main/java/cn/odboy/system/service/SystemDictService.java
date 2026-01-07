@@ -111,29 +111,6 @@ public class SystemDictService {
 
   public void exportDictXlsx(HttpServletResponse response, SystemQueryDictArgs args) {
     List<SystemDictTb> systemDictTbs = this.queryDictByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "字典数据", systemDictTbs, SystemDictExportRowVo.class, (dataObject) -> {
-//      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());
-//      if (CollUtil.isEmpty(dictDetails)) {
-//        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
-//        rowVo.setName(dataObject.getName());
-//        rowVo.setDescription(dataObject.getDescription());
-//        rowVo.setCreateTime(dataObject.getCreateTime());
-//        rowVo.setLabel("");
-//        rowVo.setValue("");
-//        return CollUtil.newArrayList(rowVo);
-//      }
-//      List<SystemDictExportRowVo> rowVos = new ArrayList<>();
-//      for (SystemDictDetailVo dictDetail : dictDetails) {
-//        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
-//        rowVo.setName(dataObject.getName());
-//        rowVo.setDescription(dataObject.getDescription());
-//        rowVo.setCreateTime(dataObject.getCreateTime());
-//        rowVo.setLabel(dictDetail.getLabel());
-//        rowVo.setValue(dictDetail.getValue());
-//        rowVos.add(rowVo);
-//      }
-//      return rowVos;
-//    });
     List<SystemDictExportRowVo> rowVos = new ArrayList<>();
     for (SystemDictTb dataObject : systemDictTbs) {
       List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());

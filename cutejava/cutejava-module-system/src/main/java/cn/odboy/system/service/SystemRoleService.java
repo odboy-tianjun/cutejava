@@ -281,14 +281,6 @@ public class SystemRoleService {
 
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
     List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
-//      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setLevel(dataObject.getLevel());
-//      rowVo.setDescription(dataObject.getDescription());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
     for (SystemRoleVo dataObject : systemRoleVos) {
       SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();

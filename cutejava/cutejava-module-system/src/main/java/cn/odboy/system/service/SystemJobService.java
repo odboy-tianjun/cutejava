@@ -141,13 +141,6 @@ public class SystemJobService {
 
   public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
     List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "岗位数据", systemJobTbs, SystemJobExportRowVo.class, (dataObject) -> {
-//      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemJobExportRowVo> rowVos = new ArrayList<>();
     for (SystemJobTb dataObject : systemJobTbs) {
       SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
