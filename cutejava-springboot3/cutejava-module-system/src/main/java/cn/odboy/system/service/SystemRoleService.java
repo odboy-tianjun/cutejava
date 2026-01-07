@@ -21,7 +21,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
@@ -94,7 +93,7 @@ public class SystemRoleService {
   @Transactional(rollbackFor = Exception.class)
   public void updateRoleById(SystemRoleVo args) {
     checkRoleLevels(args.getLevel());
-    SystemRoleVo role = this.getRoleVoById(args.getId());
+    SystemRoleTb role = this.getRoleTbById(args.getId());
     SystemRoleTb role1 = this.getRoleByName(args.getName());
     if (role1 != null && !role1.getId().equals(role.getId())) {
       throw new BadRequestException("角色名称已存在");
@@ -102,7 +101,6 @@ public class SystemRoleService {
     role.setName(args.getName());
     role.setDescription(args.getDescription());
     role.setDataScope(args.getDataScope());
-    role.setDepts(args.getDepts());
     role.setLevel(args.getLevel());
     // 更新
     systemRoleMapper.insertOrUpdate(role);
@@ -114,8 +112,8 @@ public class SystemRoleService {
     }
   }
 
-  private SystemRoleVo getRoleVoById(Long id) {
-    return KitBeanUtil.copyToClass(systemRoleMapper.selectById(id), SystemRoleVo.class);
+  private SystemRoleTb getRoleTbById(Long id) {
+    return systemRoleMapper.selectById(id);
   }
 
   /**
@@ -143,7 +141,7 @@ public class SystemRoleService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteRoleByIds(Set<Long> ids) {
-    List<Integer> roleLevels = systemRoleMapper.selectByIds(ids).stream().map(SystemRoleTb::getLevel).distinct().toList();
+    List<Integer> roleLevels = systemRoleMapper.selectByIds(ids).stream().map(SystemRoleTb::getLevel).distinct().collect(Collectors.toList());
     for (Integer roleLevel : roleLevels) {
       checkRoleLevels(roleLevel);
     }
@@ -223,7 +221,7 @@ public class SystemRoleService {
       return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
     List<SystemRoleVo> roles = systemUserRoleService.queryRoleByUsersId(user.getId());
-    permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission)
+    permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuVo::getPermission)
         .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
     return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
   }
@@ -271,7 +269,7 @@ public class SystemRoleService {
    */
   private int checkRoleLevels(Integer level) {
     List<Integer> levels = systemUserRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-        .map(SystemRoleTb::getLevel).toList();
+        .map(SystemRoleVo::getLevel).collect(Collectors.toList());
     int min = Collections.min(levels);
     if (level != null) {
       if (level < min) {
@@ -283,6 +281,14 @@ public class SystemRoleService {
 
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
     List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
+//    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
+//      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
+//      rowVo.setName(dataObject.getName());
+//      rowVo.setLevel(dataObject.getLevel());
+//      rowVo.setDescription(dataObject.getDescription());
+//      rowVo.setCreateTime(dataObject.getCreateTime());
+//      return CollUtil.newArrayList(rowVo);
+//    });
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
     for (SystemRoleVo dataObject : systemRoleVos) {
       SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();

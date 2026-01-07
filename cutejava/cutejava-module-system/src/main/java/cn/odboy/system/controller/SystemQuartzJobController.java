@@ -19,6 +19,7 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
+import cn.odboy.system.dal.model.SystemQuartzJobVo;
 import cn.odboy.system.dal.model.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.SystemUpdateQuartzJobArgs;
 import cn.odboy.system.framework.operalog.OperationLog;
@@ -86,7 +87,7 @@ public class SystemQuartzJobController {
   @ApiOperation("新增定时任务")
   @PostMapping(value = "/createQuartzJob")
   @PreAuthorize("@el.check('quartzJob:add')")
-  public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobTb args) {
+  public ResponseEntity<Void> createQuartzJob(@Validated @RequestBody SystemQuartzJobVo args) {
     systemQuartzJobService.createJob(args);
     return ResponseEntity.ok(null);
   }

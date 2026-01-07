@@ -62,6 +62,5 @@ public class SystemQuartzJobTb extends KitBaseUserTimeTb {
   @NotBlank
   @ApiModelProperty(value = "备注")
   @TableField(updateStrategy = FieldStrategy.ALWAYS)
-  private String
-      description;
+  private String description;
 }

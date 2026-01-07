@@ -23,7 +23,6 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemYesOrNoChConst;
 import cn.odboy.system.constant.TransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
-import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.SystemMenuExportRowVo;
 import cn.odboy.system.dal.model.SystemMenuMetaVo;
 import cn.odboy.system.dal.model.SystemMenuRouterVo;
@@ -160,12 +159,12 @@ public class SystemMenuService {
       menuSet = this.queryChildMenuByArgs(menuList, menuSet);
     }
     List<Long> menuIds =
-        menuSet.stream().map(SystemMenuTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        menuSet.stream().map(SystemMenuVo::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
     if (CollUtil.isNotEmpty(menuIds)) {
       systemRoleMenuService.deleteRoleMenuByMenuIds(menuIds);
       systemMenuMapper.deleteByIds(menuIds);
     }
-    for (SystemMenuTb menu : menuSet) {
+    for (SystemMenuVo menu : menuSet) {
       this.updateMenuSubCnt(menu.getPid());
     }
   }
@@ -222,7 +221,7 @@ public class SystemMenuService {
    */
   public List<SystemMenuVo> listMenuByUserId(Long currentUserId) {
     List<SystemRoleVo> roles = systemUserRoleService.queryRoleByUsersId(currentUserId);
-    Set<Long> roleIds = roles.stream().map(SystemRoleTb::getId).collect(Collectors.toSet());
+    Set<Long> roleIds = roles.stream().map(SystemRoleVo::getId).collect(Collectors.toSet());
     return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIds(roleIds));
   }
 
@@ -270,7 +269,7 @@ public class SystemMenuService {
    * @param menus /
    * @return /
    */
-  public List<SystemMenuVo> querySuperiorMenuByArgs(SystemMenuTb menu, List<SystemMenuVo> menus) {
+  public List<SystemMenuVo> querySuperiorMenuByArgs(SystemMenuVo menu, List<SystemMenuVo> menus) {
     if (menu.getPid() == null) {
       menus.addAll(this.listRootMenu());
       return menus;
@@ -364,7 +363,7 @@ public class SystemMenuService {
    * @param menuVo /
    * @return /
    */
-  private SystemMenuRouterVo getMenuVo(SystemMenuTb menu, SystemMenuRouterVo menuVo) {
+  private SystemMenuRouterVo getMenuVo(SystemMenuVo menu, SystemMenuRouterVo menuVo) {
     SystemMenuRouterVo menuVo1 = new SystemMenuRouterVo();
     menuVo1.setMeta(menuVo.getMeta());
     // 非外链
@@ -435,7 +434,7 @@ public class SystemMenuService {
     List<SystemMenuVo> menuList = this.listMenuByPid(id);
     menuSet.add(this.getMenuVoById(id));
     menuSet = this.queryChildMenuByArgs(menuList, menuSet);
-    return menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
+    return menuSet.stream().map(SystemMenuVo::getId).collect(Collectors.toSet());
   }
 
   public List<SystemMenuVo> listMenuSuperior(List<Long> ids) {
@@ -443,7 +442,7 @@ public class SystemMenuService {
     List<SystemMenuVo> systemMenuTbs;
     if (CollectionUtil.isNotEmpty(ids)) {
       menus = new LinkedHashSet<>(this.listMenuByIds(ids));
-      for (SystemMenuTb menu : menus) {
+      for (SystemMenuVo menu : menus) {
         List<SystemMenuVo> menuList = this.querySuperiorMenuByArgs(menu, new ArrayList<>());
         for (SystemMenuVo data : menuList) {
           if (data.getId().equals(menu.getPid())) {

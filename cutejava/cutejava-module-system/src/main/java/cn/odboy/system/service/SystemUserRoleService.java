@@ -18,7 +18,6 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.model.SystemMenuVo;
@@ -141,7 +140,7 @@ public class SystemUserRoleService {
   public void checkLevel(SystemUserVo args) {
     Integer currentLevel = Collections.min(
         this.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-            .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
     Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
     if (currentLevel > optLevel) {
       throw new BadRequestException("角色权限不足");

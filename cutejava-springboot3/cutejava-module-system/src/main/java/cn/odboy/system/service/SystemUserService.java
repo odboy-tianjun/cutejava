@@ -26,7 +26,6 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.constant.SystemZhConst;
-import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
@@ -34,6 +33,7 @@ import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemDeptVo;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserExportRowVo;
 import cn.odboy.system.dal.model.SystemUserVo;
@@ -205,9 +205,9 @@ public class SystemUserService {
     for (Long id : ids) {
       Integer currentLevel = Collections.min(
           systemUserRoleService.queryRoleByUsersId(currentUserId).stream()
-              .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+              .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
       Integer optLevel = Collections.min(
-          systemUserRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel)
+          systemUserRoleService.queryRoleByUsersId(id).stream().map(SystemRoleVo::getLevel)
               .collect(Collectors.toList()));
       if (currentLevel > optLevel) {
         throw new BadRequestException(
@@ -439,7 +439,7 @@ public class SystemUserService {
     SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
-      SystemDeptTb dept = systemDeptService.getDeptById(user.getDeptId());
+      SystemDeptVo dept = systemDeptService.getDeptVoById(user.getDeptId());
       userVo.setDept(dept);
     }
     // 查询关联的岗位信息

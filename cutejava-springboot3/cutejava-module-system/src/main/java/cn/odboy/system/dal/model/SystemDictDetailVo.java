@@ -15,16 +15,31 @@
  */
 package cn.odboy.system.dal.model;
 
-import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
+import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SystemDictDetailVo extends SystemDictDetailTb {
+public class SystemDictDetailVo extends KitBaseUserTimeTb {
 
+  @NotNull(groups = Update.class)
+  @ApiModelProperty(value = "ID", hidden = true)
+  private Long id;
+  @ApiModelProperty(hidden = true)
+  private Long dictId;
+  @ApiModelProperty(value = "字典标签")
+  private String label;
+  @ApiModelProperty(value = "字典值")
+  private String value;
+  @ApiModelProperty(value = "排序")
+  private Integer dictSort = 999;
+  /**
+   * 扩展字段
+   */
   @ApiModelProperty(value = "字典")
   private SystemDictTb dict;
 }

@@ -83,7 +83,7 @@ public class SystemDeptService {
   @Transactional(rollbackFor = Exception.class)
   public void updateDeptById(SystemDeptTb args) {
     // 旧的部门
-    Long oldPid = this.getDeptById(args.getId()).getPid();
+    Long oldPid = this.getDeptVoById(args.getId()).getPid();
     Long newPid = args.getPid();
     if (args.getPid() != null && args.getId().equals(args.getPid())) {
       throw new BadRequestException("上级不能为自己");
@@ -103,10 +103,10 @@ public class SystemDeptService {
   @Transactional(rollbackFor = Exception.class)
   public void deleteDeptByIds(Set<Long> ids) {
     // 获取部门, 和其所有子部门
-    Set<SystemDeptTb> depts = this.traverseDeptByIdWithPids(ids);
+    Set<SystemDeptVo> depts = this.traverseDeptByIdWithPids(ids);
     // 验证是否被角色或用户关联
     this.verifyBindRelationByIds(depts);
-    for (SystemDeptTb dept : depts) {
+    for (SystemDeptVo dept : depts) {
       systemDeptMapper.deleteById(dept.getId());
       this.updateDeptSubCnt(dept.getPid());
     }
@@ -211,8 +211,8 @@ public class SystemDeptService {
    * @param id /
    * @return /
    */
-  public SystemDeptTb getDeptById(Long id) {
-    return systemDeptMapper.selectById(id);
+  public SystemDeptVo getDeptVoById(Long id) {
+    return KitBeanUtil.copyToClass(systemDeptMapper.selectById(id), SystemDeptVo.class);
   }
 
   /**
@@ -222,8 +222,8 @@ public class SystemDeptService {
    * @param depts      /
    * @return /
    */
-  private Set<SystemDeptTb> queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptTb> depts) {
-    for (SystemDeptTb dept : deptTbList) {
+  private Set<SystemDeptVo> queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptVo> depts) {
+    for (SystemDeptVo dept : deptTbList) {
       depts.add(dept);
       List<SystemDeptVo> deptList = this.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptList)) {
@@ -254,13 +254,13 @@ public class SystemDeptService {
    * @param deptList /
    * @return /
    */
-  private List<SystemDeptVo> querySuperiorDeptByPid(SystemDeptTb dept, List<SystemDeptVo> deptList) {
+  private List<SystemDeptVo> querySuperiorDeptByPid(SystemDeptVo dept, List<SystemDeptVo> deptList) {
     if (dept.getPid() == null) {
       deptList.addAll(this.listRootDept());
       return deptList;
     }
     deptList.addAll(this.listDeptByPid(dept.getPid()));
-    return querySuperiorDeptByPid(this.getDeptById(dept.getPid()), deptList);
+    return querySuperiorDeptByPid(this.getDeptVoById(dept.getPid()), deptList);
   }
 
   private List<SystemDeptVo> listRootDept() {
@@ -278,7 +278,7 @@ public class SystemDeptService {
     Set<SystemDeptVo> deptSet1 = new LinkedHashSet<>();
     for (Long id : ids) {
       // 同级数据
-      SystemDeptTb dept = this.getDeptById(id);
+      SystemDeptVo dept = this.getDeptVoById(id);
       // 上级数据
       List<SystemDeptVo> depts = this.querySuperiorDeptByPid(dept, new ArrayList<>());
       if (exclude) {
@@ -314,7 +314,7 @@ public class SystemDeptService {
       }
       if (isChild) {
         deptSet.add(dept);
-      } else if (dept.getPid() != null && !deptNames.contains(this.getDeptById(dept.getPid()).getName())) {
+      } else if (dept.getPid() != null && !deptNames.contains(this.getDeptVoById(dept.getPid()).getName())) {
         deptSet.add(dept);
       }
     }
@@ -332,8 +332,8 @@ public class SystemDeptService {
    *
    * @param deptSet /
    */
-  public void verifyBindRelationByIds(Set<SystemDeptTb> deptSet) {
-    Set<Long> deptIds = deptSet.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
+  public void verifyBindRelationByIds(Set<SystemDeptVo> deptSet) {
+    Set<Long> deptIds = deptSet.stream().map(SystemDeptVo::getId).collect(Collectors.toSet());
     if (systemUserDeptService.countUserByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
     }
@@ -353,11 +353,11 @@ public class SystemDeptService {
    *
    * @param ids /
    */
-  public Set<SystemDeptTb> traverseDeptByIdWithPids(Set<Long> ids) {
-    Set<SystemDeptTb> depts = new HashSet<>();
+  public Set<SystemDeptVo> traverseDeptByIdWithPids(Set<Long> ids) {
+    Set<SystemDeptVo> depts = new HashSet<>();
     for (Long id : ids) {
       // 根部门
-      depts.add(this.getDeptById(id));
+      depts.add(this.getDeptVoById(id));
       // 子部门
       List<SystemDeptVo> deptList = this.listDeptByPid(id);
       if (CollectionUtil.isNotEmpty(deptList)) {

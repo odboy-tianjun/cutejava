@@ -79,7 +79,7 @@ public class SystemQuartzJobService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void createJob(SystemQuartzJobTb args) {
+  public void createJob(SystemQuartzJobVo args) {
     if (args.getId() != null) {
       throw new BadRequestException("无效参数id");
     }
@@ -88,7 +88,8 @@ public class SystemQuartzJobService {
     if (!CronExpression.isValidExpression(args.getCronExpression())) {
       throw new BadRequestException("cron表达式格式错误");
     }
-    systemQuartzJobMapper.insert(args);
+    SystemQuartzJobTb record = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
+    systemQuartzJobMapper.insert(record);
     quartzManage.addJob(args);
   }
 
@@ -110,9 +111,10 @@ public class SystemQuartzJobService {
         throw new BadRequestException("子任务中不能添加当前任务ID");
       }
     }
-    SystemQuartzJobTb quartzJob = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
-    systemQuartzJobMapper.insertOrUpdate(quartzJob);
-    quartzManage.updateJobCron(quartzJob);
+    SystemQuartzJobTb jobTb = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
+    systemQuartzJobMapper.insertOrUpdate(jobTb);
+    SystemQuartzJobVo jobVo = KitBeanUtil.copyToClass(args, SystemQuartzJobVo.class);
+    quartzManage.updateJobCron(jobVo);
   }
 
   /**
@@ -121,7 +123,7 @@ public class SystemQuartzJobService {
    * @param quartzJob /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void switchQuartzJobStatus(SystemQuartzJobTb quartzJob) {
+  public void switchQuartzJobStatus(SystemQuartzJobVo quartzJob) {
     // 置换暂停状态
     if (quartzJob.getIsPause()) {
       quartzManage.resumeJob(quartzJob);
@@ -130,7 +132,8 @@ public class SystemQuartzJobService {
       quartzManage.pauseJob(quartzJob);
       quartzJob.setIsPause(true);
     }
-    systemQuartzJobMapper.insertOrUpdate(quartzJob);
+    SystemQuartzJobTb quartzJobTb = KitBeanUtil.copyToClass(quartzJob, SystemQuartzJobTb.class);
+    systemQuartzJobMapper.insertOrUpdate(quartzJobTb);
   }
 
   /**
@@ -138,7 +141,7 @@ public class SystemQuartzJobService {
    *
    * @param quartzJob /
    */
-  public void startQuartzJob(SystemQuartzJobTb quartzJob) {
+  public void startQuartzJob(SystemQuartzJobVo quartzJob) {
     quartzManage.runJobNow(quartzJob);
   }
 
@@ -263,31 +266,18 @@ public class SystemQuartzJobService {
     return systemQuartzLogMapper.selectList(wrapper);
   }
 
-  public SystemQuartzJobTb getQuartzJobById(Long id) {
-    return systemQuartzJobMapper.selectById(id);
+  public SystemQuartzJobVo getQuartzJobById(Long id) {
+    return KitBeanUtil.copyToClass(systemQuartzJobMapper.selectById(id), SystemQuartzJobVo.class);
   }
 
-  public List<SystemQuartzJobTb> listEnableQuartzJob() {
+  public List<SystemQuartzJobVo> listEnableQuartzJob() {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemQuartzJobTb::getIsPause, 0);
-    return systemQuartzJobMapper.selectList(wrapper);
+    return KitBeanUtil.copyToList(systemQuartzJobMapper.selectList(wrapper), SystemQuartzJobVo.class);
   }
 
   public void exportQuartzJobXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     List<SystemQuartzJobTb> systemQuartzJobTbs = this.queryQuartzJobByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "定时任务数据", systemQuartzJobTbs, SystemQuartzJobExportRowVo.class,
-//        (dataObject) -> {
-//          SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();
-//          rowVo.setJobName(dataObject.getJobName());
-//          rowVo.setBeanName(dataObject.getBeanName());
-//          rowVo.setMethodName(dataObject.getMethodName());
-//          rowVo.setParams(dataObject.getParams());
-//          rowVo.setCronExpression(dataObject.getCronExpression());
-//          rowVo.setIsPause(dataObject.getIsPause() ? "暂停中" : "运行中");
-//          rowVo.setDescription(dataObject.getDescription());
-//          rowVo.setCreateTime(dataObject.getCreateTime());
-//          return CollUtil.newArrayList(rowVo);
-//        });
     List<SystemQuartzJobExportRowVo> rowVos = new ArrayList<>();
     for (SystemQuartzJobTb dataObject : systemQuartzJobTbs) {
       SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();

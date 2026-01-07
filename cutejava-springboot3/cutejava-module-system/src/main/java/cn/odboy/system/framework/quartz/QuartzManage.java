@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.quartz;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
-import jakarta.annotation.Resource;
+import cn.odboy.system.dal.model.SystemQuartzJobVo;
 import java.util.Date;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -40,32 +40,26 @@ import org.springframework.stereotype.Component;
 public class QuartzManage {
 
   private static final String JOB_NAME = "TASK_";
-
   @Resource
   private Scheduler scheduler;
 
-  public void addJob(SystemQuartzJobTb quartzJob) {
+  public void addJob(SystemQuartzJobVo quartzJob) {
     try {
       // 构建job信息
       JobDetail jobDetail =
           JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
-
       // 通过触发器名和cron 表达式创建 Trigger
       Trigger trigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME + quartzJob.getId()).startNow()
           .withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression())).build();
-
       trigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
-
       // 重置启动时间
       ((CronTriggerImpl) trigger).setStartTime(new Date());
-
       // 执行定时任务，如果是持久化的，这里会报错，捕获输出
       try {
         scheduler.scheduleJob(jobDetail, trigger);
       } catch (ObjectAlreadyExistsException e) {
         log.warn("定时任务已存在，跳过加载");
       }
-
       // 暂停任务
       if (quartzJob.getIsPause()) {
         pauseJob(quartzJob);
@@ -81,7 +75,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void updateJobCron(SystemQuartzJobTb quartzJob) {
+  public void updateJobCron(SystemQuartzJobVo quartzJob) {
     try {
       TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -95,7 +89,6 @@ public class QuartzManage {
       // 重置启动时间
       ((CronTriggerImpl) trigger).setStartTime(new Date());
       trigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
-
       scheduler.rescheduleJob(triggerKey, trigger);
       // 暂停任务
       if (quartzJob.getIsPause()) {
@@ -128,7 +121,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void resumeJob(SystemQuartzJobTb quartzJob) {
+  public void resumeJob(SystemQuartzJobVo quartzJob) {
     try {
       TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -149,7 +142,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void runJobNow(SystemQuartzJobTb quartzJob) {
+  public void runJobNow(SystemQuartzJobVo quartzJob) {
     try {
       TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -172,7 +165,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void pauseJob(SystemQuartzJobTb quartzJob) {
+  public void pauseJob(SystemQuartzJobVo quartzJob) {
     try {
       JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
       scheduler.pauseJob(jobKey);

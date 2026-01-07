@@ -109,7 +109,7 @@ public class SystemDictDetailService {
    */
   public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args, Page<SystemDictDetailTb> page) {
     IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args).convert(i -> KitBeanUtil.copyToClass(i, SystemDictDetailVo.class));
-    List<Long> dictIds = iPage.getRecords().stream().map(SystemDictDetailTb::getDictId).collect(Collectors.toList());
+    List<Long> dictIds = iPage.getRecords().stream().map(SystemDictDetailVo::getDictId).collect(Collectors.toList());
     Map<Long, SystemDictTb> id2ItemMap = systemDictMapper.selectByIds(dictIds).stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
     for (SystemDictDetailVo record : iPage.getRecords()) {
       record.setDict(id2ItemMap.get(record.getDictId()));

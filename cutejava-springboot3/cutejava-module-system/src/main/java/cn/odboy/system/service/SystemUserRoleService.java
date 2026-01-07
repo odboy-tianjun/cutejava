@@ -140,7 +140,7 @@ public class SystemUserRoleService {
   public void checkLevel(SystemUserVo args) {
     Integer currentLevel = Collections.min(
         this.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-            .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
     Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
     if (currentLevel > optLevel) {
       throw new BadRequestException("角色权限不足");

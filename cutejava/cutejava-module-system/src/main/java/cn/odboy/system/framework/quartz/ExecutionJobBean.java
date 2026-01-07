@@ -114,7 +114,7 @@ public class ExecutionJobBean extends QuartzJobBean {
     }
   }
 
-  private SystemSendEmailArgs taskAlarm(SystemQuartzJobTb quartzJob, String msg) {
+  private SystemSendEmailArgs taskAlarm(SystemQuartzJobVo quartzJob, String msg) {
     SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs();
     sendEmailRequest.setSubject("定时任务【" + quartzJob.getJobName() + "】执行失败，请尽快处理！");
     Map<String, Object> data = new HashMap<>(16);

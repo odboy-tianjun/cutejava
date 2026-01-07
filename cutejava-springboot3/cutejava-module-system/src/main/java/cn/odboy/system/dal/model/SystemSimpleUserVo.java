@@ -19,7 +19,6 @@ import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Set;
 import lombok.Data;
@@ -36,7 +35,6 @@ public class SystemSimpleUserVo extends KitObject {
   @ApiModelProperty(value = "用户岗位")
   private Set<SystemJobTb> jobs;
   private Long deptId;
-  @TableField(exist = false)
   private SystemDeptTb dept;
   @ApiModelProperty(value = "用户名称")
   private String username;
