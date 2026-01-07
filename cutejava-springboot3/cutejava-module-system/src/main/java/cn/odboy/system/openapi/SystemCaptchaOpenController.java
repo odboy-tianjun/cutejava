@@ -16,10 +16,10 @@
 package cn.odboy.system.openapi;
 
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.system.service.SystemAuthService;
+import cn.odboy.system.dal.model.response.SystemCaptchaVo;
+import cn.odboy.system.service.SystemCaptchaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SystemCaptchaOpenController {
 
   @Autowired
-  private SystemAuthService systemAuthService;
+  private SystemCaptchaService systemCaptchaService;
 
   @ApiOperation("获取验证码")
   @AnonymousPostMapping(value = "/getCode")
-  public ResponseEntity<Map<String, Object>> getCode() {
-    Map<String, Object> imgResult = systemAuthService.getCaptchaInfo();
+  public ResponseEntity<SystemCaptchaVo> getCode() {
+    SystemCaptchaVo imgResult = systemCaptchaService.getLoginCaptcha();
     return ResponseEntity.ok(imgResult);
   }
 }

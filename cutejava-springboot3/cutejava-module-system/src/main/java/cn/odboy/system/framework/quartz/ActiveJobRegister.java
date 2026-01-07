@@ -15,7 +15,7 @@
  */
 package cn.odboy.system.framework.quartz;
 
-import cn.odboy.system.dal.model.SystemQuartzJobVo;
+import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.service.SystemQuartzJobService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

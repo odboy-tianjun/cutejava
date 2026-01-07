@@ -16,11 +16,11 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.system.dal.model.SystemUserLoginArgs;
+import cn.odboy.system.dal.model.response.SystemAuthVo;
+import cn.odboy.system.dal.model.request.SystemUserLoginArgs;
 import cn.odboy.system.service.SystemAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +44,8 @@ public class SystemAuthController {
 
   @ApiOperation("登录授权")
   @AnonymousPostMapping(value = "/login")
-  public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody SystemUserLoginArgs loginRequest,
-      HttpServletRequest request) throws Exception {
-    Map<String, Object> loginInfo = systemAuthService.doLogin(loginRequest, request);
+  public ResponseEntity<SystemAuthVo> login(@Validated @RequestBody SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
+    SystemAuthVo loginInfo = systemAuthService.doLogin(loginRequest, request);
     return ResponseEntity.ok(loginInfo);
   }
 

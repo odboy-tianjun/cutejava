@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.redis;
 
 import com.alibaba.fastjson2.JSON;
@@ -28,6 +27,7 @@ import org.apache.commons.codec.digest.MurmurHash3;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -47,14 +47,19 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @EnableCaching
 @AutoConfigureBefore(RedisAutoConfiguration.class)
-public class RedisConfiguration {
+public class RedisConfiguration extends CachingConfigurerSupport {
 
   /**
    * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/> 未配置可能导致, 登录失败, 反复登录等问题
    */
   private static final String[] WHITELIST_STR =
-      {"org.springframework", "cn.odboy.system.dal.dataobject", "cn.odboy.system.dal.model",
-          "cn.odboy.task.dal.dataobject", "cn.odboy.task.dal.model",};
+      {
+          "org.springframework",
+          "cn.odboy.system.dal.dataobject",
+          "cn.odboy.system.dal.model",
+          "cn.odboy.task.dal.dataobject",
+          "cn.odboy.task.dal.model",
+      };
 
   /**
    * 设置 redis 数据默认过期时间，默认2小时 设置@cacheable 序列化方式
@@ -63,9 +68,7 @@ public class RedisConfiguration {
   public RedisCacheConfiguration redisCacheConfiguration() {
     FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
     RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-    configuration = configuration.serializeValuesWith(
-            RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer))
-        .entryTtl(Duration.ofHours(2));
+    configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
     return configuration;
   }
 
@@ -103,8 +106,8 @@ public class RedisConfiguration {
   /**
    * 自定义缓存key生成策略
    */
-
   @Bean
+  @Override
   public KeyGenerator keyGenerator() {
     return (target, method, params) -> {
       Map<String, Object> container = new HashMap<>(8);
@@ -127,6 +130,7 @@ public class RedisConfiguration {
   }
 
   @Bean
+  @SuppressWarnings({"unchecked", "all"})
   public CacheErrorHandler errorHandler() {
     return new SimpleCacheErrorHandler() {
       @Override

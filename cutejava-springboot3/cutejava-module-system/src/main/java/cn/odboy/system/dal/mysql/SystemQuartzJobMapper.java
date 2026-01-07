@@ -16,7 +16,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
-import cn.odboy.system.dal.model.SystemQuartzJobVo;
+import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

@@ -17,7 +17,7 @@ package cn.odboy.system.framework.quartz;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
-import cn.odboy.system.dal.model.SystemQuartzJobVo;
+import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import java.util.Date;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

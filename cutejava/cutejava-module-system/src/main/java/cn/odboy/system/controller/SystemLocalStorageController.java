@@ -18,7 +18,7 @@ package cn.odboy.system.controller;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemLocalStorageTb;
-import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.request.SystemQueryStorageArgs;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemLocalStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

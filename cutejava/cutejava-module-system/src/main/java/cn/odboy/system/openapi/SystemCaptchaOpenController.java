@@ -16,7 +16,7 @@
 package cn.odboy.system.openapi;
 
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.system.dal.model.SystemCaptchaVo;
+import cn.odboy.system.dal.model.response.SystemCaptchaVo;
 import cn.odboy.system.service.SystemCaptchaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

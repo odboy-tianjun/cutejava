@@ -16,8 +16,8 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.annotation.AnonymousPostMapping;
-import cn.odboy.system.dal.model.SystemAuthVo;
-import cn.odboy.system.dal.model.SystemUserLoginArgs;
+import cn.odboy.system.dal.model.response.SystemAuthVo;
+import cn.odboy.system.dal.model.request.SystemUserLoginArgs;
 import cn.odboy.system.service.SystemAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

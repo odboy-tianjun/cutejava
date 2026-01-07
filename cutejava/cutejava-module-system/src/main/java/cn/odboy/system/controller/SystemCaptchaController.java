@@ -16,7 +16,7 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
-import cn.odboy.system.dal.model.SystemCheckEmailCaptchaArgs;
+import cn.odboy.system.dal.model.request.SystemCheckEmailCaptchaArgs;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemEmailService;
 import io.swagger.annotations.Api;

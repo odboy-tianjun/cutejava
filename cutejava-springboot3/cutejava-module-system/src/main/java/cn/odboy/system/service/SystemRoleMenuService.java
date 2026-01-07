@@ -18,7 +18,7 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
-import cn.odboy.system.dal.model.SystemMenuVo;
+import cn.odboy.system.dal.model.response.SystemMenuVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.KitBeanUtil;

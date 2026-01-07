@@ -2,7 +2,7 @@ package cn.odboy.system.service;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.system.dal.dataobject.SystemOperationLogTb;
-import cn.odboy.system.dal.model.SystemQueryOperationLogArgs;
+import cn.odboy.system.dal.model.request.SystemQueryOperationLogArgs;
 import cn.odboy.system.dal.mysql.SystemOperationLogMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

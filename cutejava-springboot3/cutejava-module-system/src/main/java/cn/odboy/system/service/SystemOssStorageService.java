@@ -17,8 +17,8 @@ package cn.odboy.system.service;
 
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
-import cn.odboy.system.dal.model.SystemOssStorageVo;
-import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.response.SystemOssStorageVo;
+import cn.odboy.system.dal.model.request.SystemQueryStorageArgs;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;

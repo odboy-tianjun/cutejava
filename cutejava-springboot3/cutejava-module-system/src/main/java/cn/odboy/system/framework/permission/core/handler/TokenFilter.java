@@ -18,7 +18,7 @@ package cn.odboy.system.framework.permission.core.handler;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.system.dal.model.SystemUserOnlineVo;
+import cn.odboy.system.dal.model.response.SystemUserOnlineVo;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
