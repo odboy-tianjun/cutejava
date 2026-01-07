@@ -7,8 +7,6 @@ import cn.odboy.system.dal.dataobject.SystemUserTb;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import java.util.Set;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,10 +14,8 @@ import lombok.Setter;
 @Setter
 public class SystemRoleVo extends KitBaseUserTimeTb {
 
-  @NotNull(groups = {Update.class})
   @ApiModelProperty(value = "ID", hidden = true)
   private Long id;
-  @NotBlank
   @ApiModelProperty(value = "名称", hidden = true)
   private String name;
   @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义")

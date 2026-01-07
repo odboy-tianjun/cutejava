@@ -27,7 +27,6 @@ import cn.odboy.system.service.SystemRoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +58,7 @@ public class SystemRoleController {
   @ApiOperation("导出角色数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('role:list')")
-  public void exportRole(HttpServletResponse response, SystemQueryRoleArgs args) throws IOException {
+  public void exportRole(HttpServletResponse response, SystemQueryRoleArgs args) {
     systemRoleService.exportRoleXlsx(response, args);
   }
 

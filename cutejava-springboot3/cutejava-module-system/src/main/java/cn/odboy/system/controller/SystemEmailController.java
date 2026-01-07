@@ -49,8 +49,7 @@ public class SystemEmailController {
   @OperationLog
   @ApiOperation("修改邮箱配置")
   @PostMapping(value = "/updateEmailConfigById")
-  public ResponseEntity<Void> updateEmailConfigById(@Validated @RequestBody SystemEmailConfigTb emailConfig)
-      throws Exception {
+  public ResponseEntity<Void> updateEmailConfigById(@Validated @RequestBody SystemEmailConfigTb emailConfig) throws Exception {
     systemEmailService.updateEmailConfigById(emailConfig);
     return ResponseEntity.ok(null);
   }

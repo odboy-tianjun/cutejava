@@ -25,7 +25,6 @@ import cn.odboy.system.service.SystemDictService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +50,7 @@ public class SystemDictController {
   @ApiOperation("导出字典数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('dict:list')")
-  public void exportDict(HttpServletResponse response, SystemQueryDictArgs args) throws IOException {
+  public void exportDict(HttpServletResponse response, SystemQueryDictArgs args) {
     systemDictService.exportDictXlsx(response, args);
   }
 
@@ -66,8 +65,7 @@ public class SystemDictController {
   @ApiOperation("分页查询字典")
   @PostMapping(value = "/searchDict")
   @PreAuthorize("@el.check('dict:list')")
-  public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
     Page<SystemDictTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemDictService.searchDict(pageArgs.getArgs(), page));
   }

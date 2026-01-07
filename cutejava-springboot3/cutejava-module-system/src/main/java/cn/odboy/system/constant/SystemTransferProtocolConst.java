@@ -15,7 +15,7 @@
  */
 package cn.odboy.system.constant;
 
-public interface TransferProtocolConst {
+public interface SystemTransferProtocolConst {
 
   String PREFIX_HTTP = "http://";
   String PREFIX_HTTPS = "https://";

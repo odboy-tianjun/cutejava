@@ -19,8 +19,8 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.request.SystemCreateDictDetailArgs;
-import cn.odboy.system.dal.model.response.SystemDictDetailVo;
 import cn.odboy.system.dal.model.request.SystemQueryDictDetailArgs;
+import cn.odboy.system.dal.model.response.SystemDictDetailVo;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -49,8 +49,7 @@ public class SystemDictDetailController {
 
   @ApiOperation("查询字典详情")
   @PostMapping(value = "/searchDictDetail")
-  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
     Page<SystemDictDetailTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemDictDetailService.searchDictDetail(pageArgs.getArgs(), page));
   }
@@ -75,8 +74,7 @@ public class SystemDictDetailController {
   @ApiOperation("修改字典详情")
   @PostMapping(value = "/updateDictDetailById")
   @PreAuthorize("@el.check('dict:edit')")
-  public ResponseEntity<Void> updateDictDetailById(
-      @Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
+  public ResponseEntity<Void> updateDictDetailById(@Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
     systemDictDetailService.updateDictDetailById(args);
     return ResponseEntity.ok(null);
   }

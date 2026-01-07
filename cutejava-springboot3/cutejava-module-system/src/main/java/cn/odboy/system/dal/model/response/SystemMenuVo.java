@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,6 @@ import lombok.Setter;
 @Setter
 public class SystemMenuVo extends KitBaseUserTimeTb {
 
-  @NotNull(groups = {Update.class})
   @ApiModelProperty(value = "ID", hidden = true)
   private Long id;
   @ApiModelProperty(value = "菜单标题")

@@ -24,7 +24,6 @@ import cn.odboy.system.service.SystemLocalStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +48,7 @@ public class SystemLocalStorageController {
   @ApiOperation("查询文件")
   @PostMapping(value = "/searchLocalStorage")
   @PreAuthorize("@el.check('storage:list')")
-  public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(
-      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemLocalStorageTb>> queryLocalStorage(@Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
     Page<SystemLocalStorageTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(localStorageService.searchLocalStorage(pageArgs.getArgs(), page));
   }
@@ -59,7 +57,7 @@ public class SystemLocalStorageController {
   @ApiOperation("导出本地存储记录数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
-  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
+  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) {
     localStorageService.exportLocalStorageXlsx(response, args);
   }
 

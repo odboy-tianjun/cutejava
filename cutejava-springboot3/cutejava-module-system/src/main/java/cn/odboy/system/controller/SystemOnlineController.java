@@ -48,8 +48,7 @@ public class SystemOnlineController {
   @ApiOperation("查询在线用户")
   @PostMapping(value = "/searchOnlineUser")
   @PreAuthorize("@el.check()")
-  public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(
-      @Validated @RequestBody KitPageArgs<SystemUserOnlineVo> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemUserOnlineVo>> queryOnlineUser(@Validated @RequestBody KitPageArgs<SystemUserOnlineVo> pageArgs) {
     IPage<SystemUserOnlineVo> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemUserOnlineInfoDAO.searchOnlineUser(pageArgs.getArgs(), page));
   }

@@ -21,7 +21,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemYesOrNoChConst;
-import cn.odboy.system.constant.TransferProtocolConst;
+import cn.odboy.system.constant.SystemTransferProtocolConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.export.SystemMenuExportRowVo;
 import cn.odboy.system.dal.model.response.SystemMenuMetaVo;
@@ -81,9 +81,9 @@ public class SystemMenuService {
       args.setPid(null);
     }
     if (args.getIFrame()) {
-      if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) ||
-          args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
-        throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
+      if (!(args.getPath().toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTP) ||
+          args.getPath().toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTPS))) {
+        throw new BadRequestException(SystemTransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
       }
     }
     systemMenuMapper.insert(args);
@@ -105,9 +105,9 @@ public class SystemMenuService {
     }
     SystemMenuTb menu = systemMenuMapper.selectById(args.getId());
     if (args.getIFrame()) {
-      if (!(args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTP) ||
-          args.getPath().toLowerCase().startsWith(TransferProtocolConst.PREFIX_HTTPS))) {
-        throw new BadRequestException(TransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
+      if (!(args.getPath().toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTP) ||
+          args.getPath().toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTPS))) {
+        throw new BadRequestException(SystemTransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
       }
     }
     SystemMenuTb menu1 = this.getMenuByTitle(args.getTitle());

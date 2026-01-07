@@ -19,8 +19,8 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.model.request.SystemCreateDeptArgs;
-import cn.odboy.system.dal.model.response.SystemDeptVo;
 import cn.odboy.system.dal.model.request.SystemQueryDeptArgs;
+import cn.odboy.system.dal.model.response.SystemDeptVo;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemDeptService;
 import cn.odboy.util.KitPageUtil;
@@ -59,8 +59,7 @@ public class SystemDeptController {
   @ApiOperation("查询部门")
   @PostMapping(value = "/searchDept")
   @PreAuthorize("@el.check('user:list','dept:list')")
-  public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(
-      @Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> pageArgs) throws Exception {
+  public ResponseEntity<KitPageResult<SystemDeptTb>> queryDept(@Validated @RequestBody KitPageArgs<SystemQueryDeptArgs> pageArgs) throws Exception {
     List<SystemDeptTb> depts = systemDeptService.queryAllDeptByArgs(pageArgs.getArgs(), true);
     return ResponseEntity.ok(KitPageUtil.toPage(depts));
   }
@@ -68,8 +67,7 @@ public class SystemDeptController {
   @ApiOperation("查询部门:根据ID获取同级与上级数据")
   @PostMapping("/searchDeptTree")
   @PreAuthorize("@el.check('user:list','dept:list')")
-  public ResponseEntity<KitPageResult<SystemDeptVo>> queryDeptSuperiorTree(@RequestBody List<Long> ids,
-      @RequestParam(defaultValue = "false") Boolean exclude) {
+  public ResponseEntity<KitPageResult<SystemDeptVo>> queryDeptSuperiorTree(@RequestBody List<Long> ids, @RequestParam(defaultValue = "false") Boolean exclude) {
     return ResponseEntity.ok(systemDeptService.searchDeptTree(ids, exclude));
   }
 

@@ -18,7 +18,6 @@ package cn.odboy.system.dal.model.response;
 import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import io.swagger.annotations.ApiModelProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +25,6 @@ import lombok.Setter;
 @Setter
 public class SystemDictDetailVo extends KitBaseUserTimeTb {
 
-  @NotNull(groups = Update.class)
   @ApiModelProperty(value = "ID", hidden = true)
   private Long id;
   @ApiModelProperty(hidden = true)

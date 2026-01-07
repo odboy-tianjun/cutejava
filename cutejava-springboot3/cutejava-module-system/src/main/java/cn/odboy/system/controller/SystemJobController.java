@@ -25,7 +25,6 @@ import cn.odboy.system.service.SystemJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import java.util.Set;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +49,14 @@ public class SystemJobController {
   @ApiOperation("导出岗位数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('job:list')")
-  public void exportJob(HttpServletResponse response, SystemQueryJobArgs args) throws IOException {
+  public void exportJob(HttpServletResponse response, SystemQueryJobArgs args) {
     systemJobService.exportJobXlsx(response, args);
   }
 
   @ApiOperation("分页查询岗位")
   @PostMapping(value = "/searchJob")
   @PreAuthorize("@el.check('job:list','user:list')")
-  public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryJobArgs> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemJobTb>> queryJobByArgs(@Validated @RequestBody KitPageArgs<SystemQueryJobArgs> pageArgs) {
     Page<SystemJobTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemJobService.searchJobByArgs(pageArgs.getArgs(), page));
   }

@@ -19,9 +19,9 @@ import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
-import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.dal.model.request.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.request.SystemUpdateQuartzJobArgs;
+import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemQuartzJobService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -53,8 +53,7 @@ public class SystemQuartzJobController {
   @ApiOperation("查询定时任务")
   @PostMapping(value = "/searchQuartzJob")
   @PreAuthorize("@el.check('quartzJob:list')")
-  public ResponseEntity<KitPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemQuartzJobTb>> queryQuartzJobByCrud(@Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
     Page<SystemQuartzJobTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemQuartzJobService.searchQuartzJobByArgs(pageArgs.getArgs(), page));
   }

@@ -7,9 +7,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,22 +14,16 @@ import lombok.Setter;
 @Setter
 public class SystemUserVo extends SystemUserTb {
 
-  @NotNull(groups = Update.class)
   @ApiModelProperty(value = "ID", hidden = true)
   private Long id;
   @ApiModelProperty(hidden = true)
   private Long deptId;
-  @NotBlank
   @ApiModelProperty(value = "用户名称")
   private String username;
-  @NotBlank
   @ApiModelProperty(value = "用户昵称")
   private String nickName;
-  @Email
-  @NotBlank
   @ApiModelProperty(value = "邮箱")
   private String email;
-  @NotBlank
   @ApiModelProperty(value = "电话号码")
   private String phone;
   @ApiModelProperty(value = "用户性别")
@@ -43,7 +34,6 @@ public class SystemUserVo extends SystemUserTb {
   private String avatarPath;
   @ApiModelProperty(value = "密码")
   private String password;
-  @NotNull
   @ApiModelProperty(value = "是否启用")
   private Boolean enabled;
   @ApiModelProperty(value = "是否为admin账号", hidden = true)
