@@ -71,6 +71,7 @@ public class SystemAuthService {
     // 返回 token 与 用户信息
     Map<String, Object> authInfo = new HashMap<>(2) {{
       put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
+      // 这里是为了清空密码
       put("user", KitBeanUtil.copyToClass(jwtUser, SystemUserInfoVo.class));
     }};
     if (properties.getLogin().isSingle()) {
@@ -83,10 +84,12 @@ public class SystemAuthService {
     return authInfo;
   }
 
-  public SystemUserInfoVo getCurrentUserInfoVo() {
+  public SystemUserJwtVo getCurrentUserInfo() {
     SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();
-    // 转换是为了去掉密码
-    return KitBeanUtil.copyToClass(jwtUser, SystemUserInfoVo.class);
+    if (jwtUser.getUser() != null) {
+      jwtUser.getUser().setPassword(null);
+    }
+    return jwtUser;
   }
 
   public Map<String, Object> getCaptchaInfo() {

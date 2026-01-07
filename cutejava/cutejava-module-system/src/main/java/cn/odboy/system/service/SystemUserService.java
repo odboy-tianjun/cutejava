@@ -32,6 +32,7 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
+import cn.odboy.system.dal.model.SystemDeptVo;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserExportRowVo;
@@ -487,7 +488,7 @@ public class SystemUserService {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
       args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
-      List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
+      List<SystemDeptVo> data = systemDeptService.listDeptByPid(args.getDeptId());
       // 然后把子节点的ID都加入到集合中
       args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
     }

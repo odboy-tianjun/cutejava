@@ -12,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemUserVo extends SystemUserTb {
+
   @ApiModelProperty(value = "用户部门")
   private SystemDeptTb dept;
   @ApiModelProperty(value = "用户角色")

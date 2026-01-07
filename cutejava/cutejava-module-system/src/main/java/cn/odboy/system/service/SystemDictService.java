@@ -53,7 +53,8 @@ public class SystemDictService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDict(SystemCreateDictArgs args) {
-    systemDictMapper.insert(KitBeanUtil.copyToClass(args, SystemDictTb.class));
+    SystemDictTb dictTb = KitBeanUtil.copyToClass(args, SystemDictTb.class);
+    systemDictMapper.insert(dictTb);
   }
 
   /**

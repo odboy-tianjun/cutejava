@@ -18,8 +18,10 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
+import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
+import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -46,10 +48,10 @@ public class SystemRoleMenuService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void batchInsertRoleMenu(Set<SystemMenuTb> menus, Long roleId) {
+  public void batchInsertRoleMenu(Set<SystemMenuVo> menus, Long roleId) {
     if (CollUtil.isNotEmpty(menus)) {
       List<SystemRoleMenuTb> records = new ArrayList<>();
-      for (SystemMenuTb menu : menus) {
+      for (SystemMenuVo menu : menus) {
         SystemRoleMenuTb record = new SystemRoleMenuTb();
         record.setMenuId(menu.getId());
         record.setRoleId(roleId);
@@ -68,7 +70,7 @@ public class SystemRoleMenuService {
     }
   }
 
-  public LinkedHashSet<SystemMenuTb> queryMenuByRoleIds(Set<Long> roleIds) {
+  public LinkedHashSet<SystemMenuVo> queryMenuByRoleIds(Set<Long> roleIds) {
     if (CollUtil.isEmpty(roleIds)) {
       return new LinkedHashSet<>();
     }
@@ -84,7 +86,10 @@ public class SystemRoleMenuService {
     // 排除"按钮"
     menuWrapper.ne(SystemMenuTb::getType, 2);
     menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
-    return new LinkedHashSet<>(systemMenuMapper.selectList(menuWrapper));
+
+    List<SystemMenuTb> systemMenuTbs = systemMenuMapper.selectList(menuWrapper);
+    List<SystemMenuVo> systemMenuVos = KitBeanUtil.copyToList(systemMenuTbs, SystemMenuVo.class);
+    return new LinkedHashSet<>(systemMenuVos);
   }
 
   @Transactional(rollbackFor = Exception.class)

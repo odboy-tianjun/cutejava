@@ -26,6 +26,7 @@ import cn.odboy.system.dal.model.SystemQueryDictArgs;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -52,7 +53,8 @@ public class SystemDictService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDict(SystemCreateDictArgs args) {
-    systemDictMapper.insert(KitBeanUtil.copyToClass(args, SystemDictTb.class));
+    SystemDictTb dictTb = KitBeanUtil.copyToClass(args, SystemDictTb.class);
+    systemDictMapper.insert(dictTb);
   }
 
   /**
@@ -96,10 +98,9 @@ public class SystemDictService {
   }
 
   private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
-          .like(SystemDictTb::getDescription, args.getBlurry()));
-    }
+    KitValidUtil.notNull(args);
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+        .like(SystemDictTb::getDescription, args.getBlurry()));
   }
 
   public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {

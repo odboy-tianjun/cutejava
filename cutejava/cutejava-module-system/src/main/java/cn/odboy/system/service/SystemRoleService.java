@@ -25,6 +25,7 @@ import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemCreateRoleArgs;
+import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.SystemRoleExportRowVo;
@@ -71,7 +72,8 @@ public class SystemRoleService {
     if (this.getRoleByName(args.getName()) != null) {
       throw new BadRequestException("角色名称已存在");
     }
-    systemRoleMapper.insert(KitBeanUtil.copyToClass(args, SystemRoleTb.class));
+    SystemRoleTb roleTb = KitBeanUtil.copyToClass(args, SystemRoleTb.class);
+    systemRoleMapper.insert(roleTb);
     // 判断是否有部门数据, 若有, 则需创建关联
     if (CollectionUtil.isNotEmpty(args.getDepts())) {
       systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
@@ -92,7 +94,7 @@ public class SystemRoleService {
   @Transactional(rollbackFor = Exception.class)
   public void updateRoleById(SystemRoleVo args) {
     checkRoleLevels(args.getLevel());
-    SystemRoleVo role = KitBeanUtil.copyToClass(systemRoleMapper.selectById(args.getId()), SystemRoleVo.class);
+    SystemRoleVo role = this.getRoleVoById(args.getId());
     SystemRoleTb role1 = this.getRoleByName(args.getName());
     if (role1 != null && !role1.getId().equals(role.getId())) {
       throw new BadRequestException("角色名称已存在");
@@ -112,6 +114,10 @@ public class SystemRoleService {
     }
   }
 
+  private SystemRoleVo getRoleVoById(Long id) {
+    return KitBeanUtil.copyToClass(systemRoleMapper.selectById(id), SystemRoleVo.class);
+  }
+
   /**
    * 修改绑定的菜单
    *
@@ -123,8 +129,9 @@ public class SystemRoleService {
     // 更新菜单
     systemRoleMenuService.deleteRoleMenuByRoleId(role.getId());
     // 判断是否为空
-    if (CollUtil.isNotEmpty(args.getMenus())) {
-      systemRoleMenuService.batchInsertRoleMenu(args.getMenus(), role.getId());
+    Set<SystemMenuVo> menus = args.getMenus();
+    if (CollUtil.isNotEmpty(menus)) {
+      systemRoleMenuService.batchInsertRoleMenu(menus, role.getId());
     }
   }
 

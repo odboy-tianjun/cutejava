@@ -71,6 +71,7 @@ public class SystemAuthService {
     // 返回 token 与 用户信息
     Map<String, Object> authInfo = new HashMap<>(2) {{
       put("token", String.format("%s %s", SystemConst.TOKEN_PREFIX, token));
+      // 这里是为了清空密码
       put("user", KitBeanUtil.copyToClass(jwtUser, SystemUserInfoVo.class));
     }};
     if (properties.getLogin().isSingle()) {

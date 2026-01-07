@@ -33,6 +33,7 @@ import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitDateUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -68,33 +69,27 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   private SystemOssStorageMapper systemOssStorageMapper;
 
   @Override
-  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page) {
-    IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(args, page);
-    IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
-      SystemOssStorageVo storageVo = KitBeanUtil.copyToClass(c, SystemOssStorageVo.class);
+  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
+    IPage<SystemOssStorageVo> ossStorageTbs = this.selectOssStorageByArgs(args, page);
+    for (SystemOssStorageVo storageVo : ossStorageTbs.getRecords()) {
       storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
-      return storageVo;
-    });
-    return KitPageUtil.toPage(convert);
+    }
+    return KitPageUtil.toPage(ossStorageTbs);
   }
 
-  private IPage<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page) {
+  private IPage<SystemOssStorageVo> selectOssStorageByArgs(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
-              .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
-              .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
-              .like(SystemOssStorageTb::getFileMd5, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFileMd5, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemOssStorageTb::getId);
-    return systemOssStorageMapper.selectPage(page, wrapper);
+    return systemOssStorageMapper.selectPage(page, wrapper).convert(i -> KitBeanUtil.copyToClass(i, SystemOssStorageVo.class));
   }
 
   @Override

@@ -21,7 +21,7 @@ import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
-import cn.odboy.system.dal.model.SystemUserInfoVo;
+import cn.odboy.system.dal.model.SystemUserJwtVo;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
@@ -151,8 +151,8 @@ public class SystemUserController {
 
   @ApiOperation("获取用户信息")
   @PostMapping(value = "/getCurrentUserInfo")
-  public ResponseEntity<SystemUserInfoVo> getUserInfo() {
-    SystemUserInfoVo userInfoVo = systemAuthService.getCurrentUserInfoVo();
+  public ResponseEntity<SystemUserJwtVo> getUserInfo() {
+    SystemUserJwtVo userInfoVo = systemAuthService.getCurrentUserInfo();
     return ResponseEntity.ok(userInfoVo);
   }
 }

@@ -27,6 +27,7 @@ import cn.odboy.system.dal.mysql.SystemDictDetailMapper;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -55,6 +56,8 @@ public class SystemDictDetailService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDictDetail(SystemCreateDictDetailArgs args) {
+    KitValidUtil.notNull(args);
+    KitValidUtil.notNull(args.getDict());
     SystemDictDetailTb dictDetail = KitBeanUtil.copyToClass(args, SystemDictDetailTb.class);
     dictDetail.setDictId(args.getDict().getId());
     systemDictDetailMapper.insert(dictDetail);
@@ -104,8 +107,7 @@ public class SystemDictDetailService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
-      Page<SystemDictDetailTb> page) {
+  public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args, Page<SystemDictDetailTb> page) {
     IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args).convert(i -> KitBeanUtil.copyToClass(i, SystemDictDetailVo.class));
     List<Long> dictIds = iPage.getRecords().stream().map(SystemDictDetailTb::getDictId).collect(Collectors.toList());
     Map<Long, SystemDictTb> id2ItemMap = systemDictMapper.selectByIds(dictIds).stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
@@ -129,11 +131,12 @@ public class SystemDictDetailService {
     if (systemDictTb == null) {
       return new ArrayList<>();
     }
-    return this.listDictDetailByDictId(systemDictTb.getId()).stream().map(m -> {
-      SystemDictDetailVo detailVo = KitBeanUtil.copyToClass(m, SystemDictDetailVo.class);
+    List<SystemDictDetailTb> detailTbs = this.listDictDetailByDictId(systemDictTb.getId());
+    List<SystemDictDetailVo> detailVos = KitBeanUtil.copyToList(detailTbs, SystemDictDetailVo.class);
+    for (SystemDictDetailVo detailVo : detailVos) {
       detailVo.setDict(systemDictTb);
-      return detailVo;
-    }).collect(Collectors.toList());
+    }
+    return detailVos;
   }
 
   public Map<String, List<SystemDictDetailVo>> getDictDetailMap(String dictName) {

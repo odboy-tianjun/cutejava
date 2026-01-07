@@ -19,6 +19,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
+import cn.odboy.system.dal.model.SystemDeptVo;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.model.SystemUserVo;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class SystemDataService {
     List<SystemDeptTb> deptList = systemRoleDeptService.listDeptByRoleId(role.getId());
     for (SystemDeptTb dept : deptList) {
       deptIds.add(dept.getId());
-      List<SystemDeptTb> deptChildren = systemDeptService.listDeptByPid(dept.getId());
+      List<SystemDeptVo> deptChildren = systemDeptService.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptChildren)) {
         deptIds.addAll(systemDeptService.queryChildDeptIdByDeptIds(deptChildren));
       }

@@ -32,6 +32,7 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
+import cn.odboy.system.dal.model.SystemDeptVo;
 import cn.odboy.system.dal.model.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.SystemUserExportRowVo;
@@ -44,6 +45,7 @@ import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -400,26 +402,25 @@ public class SystemUserService {
    * @return /
    */
   private LambdaQueryWrapper<SystemUserTb> buildUserQueryWrapper(SystemQueryUserArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      if (args.getId() != null) {
-        wrapper.eq(SystemUserTb::getId, args.getId());
-      }
-      if (args.getEnabled() != null) {
-        wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
-      }
-      if (CollUtil.isNotEmpty(args.getDeptIds())) {
-        wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
-      }
-      if (StrUtil.isNotBlank(args.getBlurry())) {
-        wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry())
-            .or().like(SystemUserTb::getNickName, args.getBlurry())
-            .or().like(SystemUserTb::getEmail, args.getBlurry()));
-      }
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    if (args.getId() != null) {
+      wrapper.eq(SystemUserTb::getId, args.getId());
+    }
+    if (args.getEnabled() != null) {
+      wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
+    }
+    if (CollUtil.isNotEmpty(args.getDeptIds())) {
+      wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
+    }
+    if (StrUtil.isNotBlank(args.getBlurry())) {
+      wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry())
+          .or().like(SystemUserTb::getNickName, args.getBlurry())
+          .or().like(SystemUserTb::getEmail, args.getBlurry()));
+    }
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemUserTb::getCreateTime);
     return wrapper;
@@ -487,7 +488,7 @@ public class SystemUserService {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
       args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
-      List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
+      List<SystemDeptVo> data = systemDeptService.listDeptByPid(args.getDeptId());
       // 然后把子节点的ID都加入到集合中
       args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
     }

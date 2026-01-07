@@ -168,8 +168,6 @@ public class SystemUserOnlineInfoDAO {
 
   public void exportOnlineUserXlsx(HttpServletResponse response, String username) {
     List<SystemUserOnlineVo> userOnlineVos = this.queryUserOnlineModelListByUsername(username);
-//    KitXlsxExportUtil.exportFile(response, "在线用户数据", userOnlineVos, SystemUserOnlineExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
     List<SystemUserOnlineExportRowVo> rowVos = KitBeanUtil.copyToList(userOnlineVos, SystemUserOnlineExportRowVo.class);
     KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineExportRowVo.class, rowVos);
   }

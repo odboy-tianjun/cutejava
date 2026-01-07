@@ -57,7 +57,8 @@ public class SystemJobService {
     if (job != null) {
       throw new BadRequestException("职位名称已存在");
     }
-    systemJobMapper.insert(KitBeanUtil.copyToClass(args, SystemJobTb.class));
+    SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
+    systemJobMapper.insert(systemJobTb);
   }
 
   /**

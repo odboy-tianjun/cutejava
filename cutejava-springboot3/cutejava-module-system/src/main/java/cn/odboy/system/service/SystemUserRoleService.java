@@ -18,9 +18,9 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
+import cn.odboy.system.dal.model.SystemMenuVo;
 import cn.odboy.system.dal.model.SystemRoleVo;
 import cn.odboy.system.dal.model.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
@@ -86,8 +86,7 @@ public class SystemUserRoleService {
     }
     SystemRoleVo roleVo = KitBeanUtil.copyToClass(role, SystemRoleVo.class);
     // 查询关联的菜单信息
-    Set<SystemMenuTb> menus = systemRoleMenuService.queryMenuByRoleIds(
-        Collections.singleton(role.getId()));
+    Set<SystemMenuVo> menus = systemRoleMenuService.queryMenuByRoleIds(Collections.singleton(role.getId()));
     roleVo.setMenus(menus);
 
     // 查询关联的部门信息

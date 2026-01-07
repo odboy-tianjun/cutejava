@@ -33,6 +33,7 @@ import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -139,16 +140,15 @@ public class SystemLocalStorageService {
   }
 
   private void injectQueryParams(SystemQueryStorageArgs args, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemLocalStorageTb::getName, args.getBlurry()).or()
-              .like(SystemLocalStorageTb::getSuffix, args.getBlurry()).or()
-              .like(SystemLocalStorageTb::getType, args.getBlurry()).or()
-              .like(SystemLocalStorageTb::getCreateBy, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemLocalStorageTb::getUpdateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    KitValidUtil.notNull(args);
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemLocalStorageTb::getName, args.getBlurry()).or()
+            .like(SystemLocalStorageTb::getSuffix, args.getBlurry()).or()
+            .like(SystemLocalStorageTb::getType, args.getBlurry()).or()
+            .like(SystemLocalStorageTb::getCreateBy, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemLocalStorageTb::getUpdateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemLocalStorageTb::getId);
   }
@@ -171,8 +171,6 @@ public class SystemLocalStorageService {
 
   public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
     List<SystemLocalStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "文件上传记录数据", SystemLocalStorageExportRowVo.class, rowVos);
   }

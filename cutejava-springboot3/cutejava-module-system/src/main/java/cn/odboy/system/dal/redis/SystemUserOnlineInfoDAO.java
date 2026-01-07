@@ -5,6 +5,7 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.SystemUserJwtVo;
+import cn.odboy.system.dal.model.SystemUserOnlineExportRowVo;
 import cn.odboy.system.dal.model.SystemUserOnlineVo;
 import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.util.KitBeanUtil;
@@ -167,9 +168,7 @@ public class SystemUserOnlineInfoDAO {
 
   public void exportOnlineUserXlsx(HttpServletResponse response, String username) {
     List<SystemUserOnlineVo> userOnlineVos = this.queryUserOnlineModelListByUsername(username);
-//    KitXlsxExportUtil.exportFile(response, "在线用户数据", userOnlineVos, SystemUserOnlineExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemUserOnlineExportRowVo.class)));
-    List<SystemUserOnlineVo> rowVos = KitBeanUtil.copyToList(userOnlineVos, SystemUserOnlineVo.class);
-    KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineVo.class, rowVos);
+    List<SystemUserOnlineExportRowVo> rowVos = KitBeanUtil.copyToList(userOnlineVos, SystemUserOnlineExportRowVo.class);
+    KitExcelExporter.exportSimple(response, "在线用户数据", SystemUserOnlineExportRowVo.class, rowVos);
   }
 }

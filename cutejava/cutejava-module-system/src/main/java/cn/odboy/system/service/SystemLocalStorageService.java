@@ -171,8 +171,6 @@ public class SystemLocalStorageService {
 
   public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "文件上传记录数据", systemLocalStorageTbs, SystemLocalStorageExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemLocalStorageExportRowVo.class)));
     List<SystemLocalStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "文件上传记录数据", SystemLocalStorageExportRowVo.class, rowVos);
   }
