@@ -123,6 +123,7 @@ public class SystemRoleService {
    *
    * @param args /
    */
+  @Transactional(rollbackFor = Exception.class)
   public void updateBindMenuById(SystemRoleVo args) {
     SystemRoleTb role = systemRoleMapper.selectById(args.getId());
     checkRoleLevels(role.getLevel());

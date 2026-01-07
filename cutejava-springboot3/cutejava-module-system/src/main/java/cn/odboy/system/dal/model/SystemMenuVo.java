@@ -5,11 +5,13 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 public class SystemMenuVo extends SystemMenuTb {
 
   @ApiModelProperty(value = "菜单角色")

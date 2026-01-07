@@ -123,6 +123,7 @@ public class SystemRoleService {
    *
    * @param args /
    */
+  @Transactional(rollbackFor = Exception.class)
   public void updateBindMenuById(SystemRoleVo args) {
     SystemRoleTb role = systemRoleMapper.selectById(args.getId());
     checkRoleLevels(role.getLevel());
@@ -142,7 +143,7 @@ public class SystemRoleService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteRoleByIds(Set<Long> ids) {
-    List<Integer> roleLevels = systemRoleMapper.selectByIds(ids).stream().map(SystemRoleTb::getLevel).distinct().collect(Collectors.toList());
+    List<Integer> roleLevels = systemRoleMapper.selectByIds(ids).stream().map(SystemRoleTb::getLevel).distinct().toList();
     for (Integer roleLevel : roleLevels) {
       checkRoleLevels(roleLevel);
     }
@@ -270,7 +271,7 @@ public class SystemRoleService {
    */
   private int checkRoleLevels(Integer level) {
     List<Integer> levels = systemUserRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-        .map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        .map(SystemRoleTb::getLevel).toList();
     int min = Collections.min(levels);
     if (level != null) {
       if (level < min) {
@@ -282,14 +283,6 @@ public class SystemRoleService {
 
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
     List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
-//      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setLevel(dataObject.getLevel());
-//      rowVo.setDescription(dataObject.getDescription());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
     for (SystemRoleVo dataObject : systemRoleVos) {
       SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
