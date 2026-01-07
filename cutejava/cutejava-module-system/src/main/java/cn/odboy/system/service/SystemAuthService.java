@@ -13,6 +13,7 @@ import cn.odboy.system.framework.permission.core.handler.TokenProvider;
 import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
+import cn.odboy.util.KitValidUtil;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,13 +38,15 @@ public class SystemAuthService {
   @Autowired
   private SystemCaptchaService systemCaptchaService;
 
-  public SystemAuthVo doLogin(SystemUserLoginArgs loginRequest, HttpServletRequest request) throws Exception {
+  public SystemAuthVo doLogin(SystemUserLoginArgs loginArgs, HttpServletRequest request) throws Exception {
+    KitValidUtil.notNull(loginArgs);
+
     // 密码解密
-    String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginRequest.getPassword());
+    String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginArgs.getPassword());
     // 校验验证码
-    systemCaptchaService.validate(loginRequest.getUuid(), loginRequest.getCode());
+    systemCaptchaService.validate(loginArgs.getUuid(), loginArgs.getCode());
     // 获取用户信息
-    SystemUserJwtVo jwtUser = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+    SystemUserJwtVo jwtUser = userDetailsService.loadUserByUsername(loginArgs.getUsername());
     // 验证用户密码
     if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
       throw new BadRequestException("登录密码错误");
@@ -63,7 +66,7 @@ public class SystemAuthService {
 
     if (properties.getLogin().isSingle()) {
       // 踢掉之前已经登录的token
-      systemUserOnlineInfoDAO.kickOutByUsername(loginRequest.getUsername());
+      systemUserOnlineInfoDAO.kickOutByUsername(loginArgs.getUsername());
     }
     // 保存在线信息
     systemUserOnlineInfoDAO.saveUserJwtModelByToken(jwtUser, token, request);

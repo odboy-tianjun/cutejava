@@ -24,12 +24,12 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.constant.SystemZhConst;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.model.request.SystemCreateDeptArgs;
 import cn.odboy.system.dal.model.export.SystemDeptExportRowVo;
+import cn.odboy.system.dal.model.request.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.request.SystemQueryDeptArgs;
 import cn.odboy.system.dal.model.response.SystemDeptVo;
 import cn.odboy.system.dal.model.response.SystemProductLineTreeVo;
 import cn.odboy.system.dal.model.response.SystemProductLineVo;
-import cn.odboy.system.dal.model.request.SystemQueryDeptArgs;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
@@ -70,8 +70,8 @@ public class SystemDeptService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDept(SystemCreateDeptArgs args) {
-    SystemDeptTb deptTb = KitBeanUtil.copyToClass(args, SystemDeptTb.class);
-    systemDeptMapper.insert(deptTb);
+    KitValidUtil.notNull(args);
+    systemDeptMapper.insert(KitBeanUtil.copyToClass(args, SystemDeptTb.class));
     this.updateDeptSubCnt(args.getPid());
   }
 
@@ -82,8 +82,10 @@ public class SystemDeptService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateDeptById(SystemDeptTb args) {
-    // 旧的部门
+    KitValidUtil.notNull(args);
+    // 旧的父部门
     Long oldPid = this.getDeptVoById(args.getId()).getPid();
+    // 新的父部门
     Long newPid = args.getPid();
     if (args.getPid() != null && args.getId().equals(args.getPid())) {
       throw new BadRequestException("上级不能为自己");
@@ -220,9 +222,8 @@ public class SystemDeptService {
    *
    * @param deptTbList /
    * @param depts      /
-   * @return /
    */
-  private Set<SystemDeptVo> queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptVo> depts) {
+  private void queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptVo> depts) {
     for (SystemDeptVo dept : deptTbList) {
       depts.add(dept);
       List<SystemDeptVo> deptList = this.listDeptByPid(dept.getId());
@@ -230,7 +231,6 @@ public class SystemDeptService {
         queryRelationDeptByArgs(deptList, depts);
       }
     }
-    return depts;
   }
 
   public List<Long> queryChildDeptIdByDeptIds(List<SystemDeptVo> deptList) {
@@ -473,13 +473,6 @@ public class SystemDeptService {
 
   public void exportDeptXlsx(HttpServletResponse response, SystemQueryDeptArgs args) throws Exception {
     List<SystemDeptTb> systemDeptTbs = this.queryAllDeptByArgs(args, false);
-//    KitXlsxExportUtil.exportFile(response, "部门数据", systemDeptTbs, SystemDeptExportRowVo.class, (dataObject) -> {
-//      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemDeptExportRowVo> rowVos = new ArrayList<>();
     for (SystemDeptTb dataObject : systemDeptTbs) {
       SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();

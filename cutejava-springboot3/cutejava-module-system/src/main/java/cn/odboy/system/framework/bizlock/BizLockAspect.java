@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.bizlock;
 
 import cn.odboy.framework.exception.BadRequestException;
@@ -63,14 +62,11 @@ public class BizLockAspect {
       return String.format("%s:%s", bizLock.bizName(),
           ((MethodSignature) joinPoint.getSignature()).getMethod().getName());
     }
-
     // 解析SpEL表达式
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     Method method = signature.getMethod();
-
     // 创建SpEL上下文
     StandardEvaluationContext context = new StandardEvaluationContext();
-
     // 设置方法参数
     String[] parameterNames = signature.getParameterNames();
     Object[] args = joinPoint.getArgs();
@@ -79,15 +75,12 @@ public class BizLockAspect {
       // 支持#p0,#p1格式
       context.setVariable("p" + i, args[i]);
     }
-
     // 设置方法相关信息
     context.setVariable("methodName", method.getName());
     context.setVariable("targetClass", joinPoint.getTarget().getClass().getName());
-
     // 解析表达式
     Expression expression = parser.parseExpression(bizLock.key());
     String value = expression.getValue(context, String.class);
-
     // 组合最终的key: bizName:解析后的key
     return String.format("%s:%s", bizLock.bizName(), value);
   }

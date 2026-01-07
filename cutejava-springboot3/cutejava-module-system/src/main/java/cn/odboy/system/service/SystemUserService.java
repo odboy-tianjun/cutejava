@@ -31,11 +31,11 @@ import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.response.SystemDeptVo;
-import cn.odboy.system.dal.model.request.SystemQueryUserArgs;
-import cn.odboy.system.dal.model.response.SystemRoleVo;
-import cn.odboy.system.dal.model.request.SystemUpdateUserPasswordArgs;
 import cn.odboy.system.dal.model.export.SystemUserExportRowVo;
+import cn.odboy.system.dal.model.request.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.request.SystemUpdateUserPasswordArgs;
+import cn.odboy.system.dal.model.response.SystemDeptVo;
+import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
@@ -510,35 +510,6 @@ public class SystemUserService {
   }
 
   public void exportUserXlsx(HttpServletResponse response, SystemQueryUserArgs args) {
-    //    List<SystemUserVo> systemUserVos = systemUserService.queryUserVoByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "用户数据", systemUserVos, SystemUserExportRowVo.class, (dataObject) -> {
-//      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
-//      rowVo.setUsername(dataObject.getUsername());
-//      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setDept(dataObject.getDept().getName());
-//      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setEmail(dataObject.getEmail());
-//      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setMobile(dataObject.getPhone());
-//      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
-//    List<SystemUserExportRowVo> rowVos = new ArrayList<>();
-//    for (SystemUserVo dataObject : systemUserVos) {
-//      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
-//      rowVo.setUsername(dataObject.getUsername());
-//      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setDept(dataObject.getDept().getName());
-//      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setEmail(dataObject.getEmail());
-//      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setMobile(dataObject.getPhone());
-//      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      rowVos.add(rowVo);
-//    }
-//    KitExcelExporter.exportSimple(response, "用户数据", SystemUserExportRowVo.class, rowVos);
     long totalCount = this.countUserByArgs(args);
     KitExcelExporter.exportByPage(response, "用户数据", SystemUserExportRowVo.class, totalCount, (long pageNum, long pageSize) -> {
       KitPageResult<SystemUserVo> pageResult = this.searchUserByArgs(args, new Page<>(pageNum, pageSize));

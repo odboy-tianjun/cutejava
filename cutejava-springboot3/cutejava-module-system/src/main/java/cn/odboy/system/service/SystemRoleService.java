@@ -23,11 +23,11 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.request.SystemCreateRoleArgs;
-import cn.odboy.system.dal.model.response.SystemMenuVo;
-import cn.odboy.system.dal.model.request.SystemQueryRoleArgs;
-import cn.odboy.system.dal.model.response.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.export.SystemRoleExportRowVo;
+import cn.odboy.system.dal.model.request.SystemCreateRoleArgs;
+import cn.odboy.system.dal.model.request.SystemQueryRoleArgs;
+import cn.odboy.system.dal.model.response.SystemMenuVo;
+import cn.odboy.system.dal.model.response.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
@@ -281,14 +281,6 @@ public class SystemRoleService {
 
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
     List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
-//      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setLevel(dataObject.getLevel());
-//      rowVo.setDescription(dataObject.getDescription());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
     for (SystemRoleVo dataObject : systemRoleVos) {
       SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
