@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -68,7 +69,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
   public RedisCacheConfiguration redisCacheConfiguration() {
     FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
     RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-    configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
+    configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer))
+        .entryTtl(Duration.ofHours(2));
     return configuration;
   }
 
@@ -130,29 +132,28 @@ public class RedisConfiguration extends CachingConfigurerSupport {
   }
 
   @Bean
-  @SuppressWarnings({"unchecked", "all"})
   public CacheErrorHandler errorHandler() {
     return new SimpleCacheErrorHandler() {
       @Override
-      public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
+      public void handleCacheGetError(@NonNull RuntimeException exception, @NonNull Cache cache, @NonNull Object key) {
         // 处理缓存读取错误
         log.error("Cache Get Error: {}", exception.getMessage());
       }
 
       @Override
-      public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
+      public void handleCachePutError(@NonNull RuntimeException exception, @NonNull Cache cache, @NonNull Object key, Object value) {
         // 处理缓存写入错误
         log.error("Cache Put Error: {}", exception.getMessage());
       }
 
       @Override
-      public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
+      public void handleCacheEvictError(@NonNull RuntimeException exception, @NonNull Cache cache, @NonNull Object key) {
         // 处理缓存删除错误
         log.error("Cache Evict Error: {}", exception.getMessage());
       }
 
       @Override
-      public void handleCacheClearError(RuntimeException exception, Cache cache) {
+      public void handleCacheClearError(@NonNull RuntimeException exception, @NonNull Cache cache) {
         // 处理缓存清除错误
         log.error("Cache Clear Error: {}", exception.getMessage());
       }

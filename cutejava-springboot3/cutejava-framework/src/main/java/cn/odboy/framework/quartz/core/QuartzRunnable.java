@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.quartz.core;
 
 import cn.odboy.framework.context.KitSpringBeanHolder;
@@ -45,13 +44,12 @@ public class QuartzRunnable implements Callable<Object> {
   }
 
   @Override
-  @SuppressWarnings({"unchecked", "all"})
   public Object call() throws Exception {
     ReflectionUtils.makeAccessible(method);
     if (StringUtils.isNotBlank(params)) {
       return method.invoke(target, params);
     } else {
-      return method.invoke(target);
+      return method.invoke(target, "");
     }
   }
 }

@@ -35,7 +35,6 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.ConvertingCursor;
 import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -43,11 +42,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 @Component
-@SuppressWarnings({"unchecked", "all"})
 public class KitRedisHelper {
 
   private static final Logger log = LoggerFactory.getLogger(KitRedisHelper.class);
-  private RedisTemplate<Object, Object> redisTemplate;
+  private final RedisTemplate<Object, Object> redisTemplate;
 
   public KitRedisHelper(RedisTemplate<Object, Object> redisTemplate) {
     this.redisTemplate = redisTemplate;
@@ -98,7 +96,7 @@ public class KitRedisHelper {
    * @param key 键 不能为null
    * @return 时间(秒) 返回0代表为永久有效
    */
-  public long getExpire(Object key) {
+  public Long getExpire(Object key) {
     return redisTemplate.getExpire(key, TimeUnit.SECONDS);
   }
 
@@ -171,7 +169,7 @@ public class KitRedisHelper {
    */
   public boolean hasKey(String key) {
     try {
-      return redisTemplate.hasKey(key);
+      return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return false;
@@ -181,27 +179,23 @@ public class KitRedisHelper {
   /**
    * 删除缓存
    *
-   * @param key 可以传一个值 或多个
+   * @param keys 可以传一个值 或多个
    */
   public void del(String... keys) {
     if (keys != null && keys.length > 0) {
       if (keys.length == 1) {
-        boolean result = redisTemplate.delete(keys[0]);
-        log.debug("--------------------------------------------");
-        log.debug(new StringBuilder("删除缓存：").append(keys[0]).append(", 结果：").append(result).toString());
-        log.debug("--------------------------------------------");
+        boolean result = Boolean.TRUE.equals(redisTemplate.delete(keys[0]));
+        log.debug("删除缓存：{}, 结果：{}", keys[0], result);
       } else {
         Set<Object> keySet = new HashSet<>();
         for (String key : keys) {
-          if (redisTemplate.hasKey(key)) {
+          if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
             keySet.add(key);
           }
         }
-        long count = redisTemplate.delete(keySet);
-        log.debug("--------------------------------------------");
-        log.debug("成功删除缓存：" + keySet.toString());
-        log.debug("缓存删除数量：" + count + "个");
-        log.debug("--------------------------------------------");
+        Long count = redisTemplate.delete(keySet);
+        log.debug("成功删除缓存：{}", keySet);
+        log.debug("缓存删除数量：{}个", count);
       }
     }
   }
@@ -209,16 +203,34 @@ public class KitRedisHelper {
   /**
    * 批量模糊删除key
    *
-   * @param pattern
+   * @param pattern /
    */
   public void scanDel(String pattern) {
-    ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
-    try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
-        (RedisCallback<Cursor<byte[]>>) connection -> (Cursor<byte[]>) new ConvertingCursor<>(
-            connection.scan(options), redisTemplate.getKeySerializer()::deserialize))) {
-      while (cursor.hasNext()) {
-        redisTemplate.delete(cursor.next());
+    ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
+    try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(connection -> {
+      try {
+        return (Cursor<byte[]>) new ConvertingCursor<>(
+            connection.scan(options), redisTemplate.getKeySerializer()::deserialize);
+      } catch (Exception e) {
+        throw new RuntimeException("Redis scan operation failed", e);
       }
+    })) {
+      List<Object> keysToDelete = new ArrayList<>();
+      while (cursor.hasNext()) {
+        Object key = cursor.next();
+        keysToDelete.add(key);
+        // 批量删除，避免一次性删除过多key
+        if (keysToDelete.size() >= 100) {
+          redisTemplate.delete(keysToDelete);
+          keysToDelete.clear();
+        }
+      }
+      // 删除剩余的key
+      if (!keysToDelete.isEmpty()) {
+        redisTemplate.delete(keysToDelete);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Error during scan and delete operation", e);
     }
   }
   // ============================String=============================
@@ -244,7 +256,7 @@ public class KitRedisHelper {
     if (value == null) {
       return null;
     }
-    // 如果 value 不是目标类型, 则尝试将其反序列化为 clazz 类型 by
+    // 如果 value 不是目标类型, 则尝试将其反序列化为 clazz 类型
     if (!clazz.isInstance(value)) {
       return JSON.parseObject(value.toString(), clazz);
     } else if (clazz.isInstance(value)) {
@@ -301,8 +313,8 @@ public class KitRedisHelper {
    * @return
    */
   public List<Object> multiGet(List<String> keys) {
-    List list = redisTemplate.opsForValue().multiGet(Sets.newHashSet(keys));
-    List resultList = Lists.newArrayList();
+    List<Object> list = redisTemplate.opsForValue().multiGet(Sets.newHashSet(keys));
+    List<Object> resultList = Lists.newArrayList();
     Optional.ofNullable(list)
         .ifPresent(e -> list.forEach(ele -> Optional.ofNullable(ele).ifPresent(resultList::add)));
     return resultList;
@@ -544,7 +556,7 @@ public class KitRedisHelper {
    */
   public boolean sHasKey(String key, Object value) {
     try {
-      return redisTemplate.opsForSet().isMember(key, value);
+      return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, value));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return false;
@@ -560,10 +572,11 @@ public class KitRedisHelper {
    */
   public long sSet(String key, Object... values) {
     try {
-      return redisTemplate.opsForSet().add(key, values);
+      Long add = redisTemplate.opsForSet().add(key, values);
+      return add == null ? 0L : add;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      return 0;
+      return 0L;
     }
   }
 
@@ -581,7 +594,7 @@ public class KitRedisHelper {
       if (time > 0) {
         expire(key, time);
       }
-      return count;
+      return count == null ? 0 : count;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return 0;
@@ -596,7 +609,8 @@ public class KitRedisHelper {
    */
   public long sGetSetSize(String key) {
     try {
-      return redisTemplate.opsForSet().size(key);
+      Long size = redisTemplate.opsForSet().size(key);
+      return size == null ? 0 : size;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return 0;
@@ -833,7 +847,7 @@ public class KitRedisHelper {
    * @param unit    时间单位
    * @return 如果设置成功返回true，否则返回false
    */
-  public Boolean setIfAbsent(String key, Object value, long timeout, TimeUnit unit) {
+  public boolean setIfAbsent(String key, Object value, long timeout, TimeUnit unit) {
     try {
       String stringValue = ObjUtil.toString(value);
       // 使用Redis的SETNX命令实现原子性操作
