@@ -15,8 +15,10 @@
  */
 package cn.odboy.util;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.exception.BadRequestException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
@@ -65,7 +67,7 @@ public final class KitValidUtil {
   }
 
   public static void notNull(Object value, @NotNull String name, @NotNull String code) {
-    if (value != null) {
+    if (value == null) {
       throw new BadRequestException(String.format("参数 %s(%s) 必填", name, code));
     }
   }
@@ -79,6 +81,12 @@ public final class KitValidUtil {
   public static void notBlank(CharSequence value, @NotNull String name, @NotNull String code) {
     if (StrUtil.isBlank(value)) {
       throw new BadRequestException(String.format("参数 %s(%s) 必填", name, code));
+    }
+  }
+
+  public static void notEmpty(List<?> data, @NotNull String code) {
+    if (CollUtil.isEmpty(data)) {
+      throw new BadRequestException(String.format("参数 %s 必填", code));
     }
   }
 }

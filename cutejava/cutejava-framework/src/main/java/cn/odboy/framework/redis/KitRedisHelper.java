@@ -110,10 +110,12 @@ public class KitRedisHelper {
     ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
     RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
     RedisConnection rc = Objects.requireNonNull(factory).getConnection();
-    Cursor<byte[]> cursor = rc.scan(options);
-    List<String> result = new ArrayList<>();
-    while (cursor.hasNext()) {
-      result.add(new String(cursor.next()));
+    List<String> result;
+    try (Cursor<byte[]> cursor = rc.scan(options)) {
+      result = new ArrayList<>();
+      while (cursor.hasNext()) {
+        result.add(new String(cursor.next()));
+      }
     }
     try {
       RedisConnectionUtils.releaseConnection(rc, factory);
