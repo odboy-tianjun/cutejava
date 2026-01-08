@@ -56,7 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @UtilityClass
-public final class KitFileUtil {
+public final class KitFileUtil extends FileUtil {
 
   /**
    * 系统临时目录
@@ -93,7 +93,7 @@ public final class KitFileUtil {
     // 获取文件名
     String fileName = multipartFile.getOriginalFilename();
     // 获取文件后缀
-    String prefix = "." + FileUtil.getSuffix(fileName);
+    String prefix = "." + getSuffix(fileName);
     File file = null;
     try {
       // 用uuid作为文件名, 防止生成的临时文件重复
@@ -159,8 +159,8 @@ public final class KitFileUtil {
     Date date = new Date();
     SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssS");
     // 过滤非法文件名
-    String name = FileUtil.getPrefix(verifyFilename(file.getOriginalFilename()));
-    String suffix = FileUtil.getSuffix(file.getOriginalFilename());
+    String name = getPrefix(verifyFilename(file.getOriginalFilename()));
+    String suffix = getSuffix(file.getOriginalFilename());
     String nowStr = "-" + format.format(date);
     try {
       String fileName = name + nowStr + "." + suffix;
