@@ -30,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 /**
- * TODO 通过用户名判断用户信息，并获取拥有的权限与部门
+ * 通过用户名判断用户信息，并获取拥有的权限与部门
  */
 @Slf4j
 @Service("userDetailsService")

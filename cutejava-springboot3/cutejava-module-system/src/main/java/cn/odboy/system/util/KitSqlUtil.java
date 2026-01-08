@@ -34,6 +34,9 @@ import java.util.List;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 不建议在生产环境使用
+ */
 @Slf4j
 public final class KitSqlUtil {
 

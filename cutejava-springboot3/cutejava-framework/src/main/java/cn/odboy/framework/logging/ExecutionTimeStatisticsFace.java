@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.logging;
 
 import java.lang.annotation.Documented;
@@ -24,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 统计执行时长
+ * 统计执行时长（仅对代理方法有效）
  *
  * @author odboy
  */
