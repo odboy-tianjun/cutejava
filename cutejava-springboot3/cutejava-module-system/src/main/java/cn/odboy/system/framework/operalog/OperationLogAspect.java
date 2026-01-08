@@ -96,7 +96,7 @@ public class OperationLogAspect {
       }
     }
     if (StrUtil.isBlank(bizName)) {
-      bizName = "默认业务";
+      bizName = "Default";
     }
     String method = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
     Object[] args = joinPoint.getArgs();

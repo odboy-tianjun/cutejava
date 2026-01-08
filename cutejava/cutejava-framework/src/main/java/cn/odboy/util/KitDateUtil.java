@@ -30,7 +30,7 @@ import lombok.experimental.UtilityClass;
 public class KitDateUtil {
 
   /**
-   * 获取当前时间毫秒数
+   * 获取当前时间毫秒数 yyyyMMddHHmmssSSS
    *
    * @return /
    */
@@ -39,7 +39,7 @@ public class KitDateUtil {
   }
 
   /**
-   * 获取当前时间,但不包括毫秒数
+   * 获取当前时间,但不包括毫秒数 yyyyMMddHHmmss
    *
    * @return /
    */
@@ -48,7 +48,7 @@ public class KitDateUtil {
   }
 
   /**
-   * 获取当前时间,但不包括毫秒数
+   * 获取当前时间,但不包括毫秒数 yyyyMMdd
    *
    * @return /
    */
@@ -61,7 +61,7 @@ public class KitDateUtil {
    *
    * @param startTime 开始时间
    * @param endTime   结束时间
-   * @return 格式化后的时间，X天X时X分X秒X毫秒
+   * @return 格式化后的时间，X天X时X分X秒
    */
   public static String formatMillsDuration(Date startTime, Date endTime) {
     if (startTime == null || endTime == null) {

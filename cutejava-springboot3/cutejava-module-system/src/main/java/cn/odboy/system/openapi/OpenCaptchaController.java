@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/captcha")
 @Api(tags = "系统：验证码管理")
-public class SystemCaptchaOpenController {
+public class OpenCaptchaController {
 
   @Autowired
   private SystemCaptchaService systemCaptchaService;

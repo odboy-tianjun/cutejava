@@ -165,7 +165,7 @@ public interface KitMpMapper<E> extends BaseMapper<E> {
     pageSize = pageSize <= 0 ? 10 : pageSize;
     IPage<E> pageInfo = wrapper.page(new Page<>(pageNumber, pageSize));
     if (CollUtil.isEmpty(pageInfo.getRecords())) {
-      return KitPageUtil.emptyListData();
+      return KitPageUtil.emptyData();
     }
     return new KitPageResult<>(KitBeanUtil.copyToList(pageInfo.getRecords(), clazz), pageInfo.getTotal());
   }
