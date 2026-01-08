@@ -60,7 +60,8 @@ public class OperationLogAspect {
     TimeInterval timeInterval = new TimeInterval();
     try {
       Object result = joinPoint.proceed();
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      long interval = timeInterval.interval();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
       ThreadUtil.execAsync(() -> {
         try {
           systemOperationLogMapper.insert(record);
@@ -70,7 +71,8 @@ public class OperationLogAspect {
       });
       return result;
     } catch (Throwable exception) {
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      long interval = timeInterval.interval();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
       record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
       ThreadUtil.execAsync(() -> {
         try {
@@ -83,9 +85,7 @@ public class OperationLogAspect {
     }
   }
 
-  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
-      TimeInterval timeInterval) {
-    long executeTime = timeInterval.intervalMs();
+  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, long executeTime) {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     String bizName = annotation.bizName();
     if (StrUtil.isBlank(bizName)) {

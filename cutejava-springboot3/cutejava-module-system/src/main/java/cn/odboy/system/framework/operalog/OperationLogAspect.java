@@ -27,8 +27,8 @@ import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.annotations.ApiOperation;
-import java.lang.reflect.Method;
 import jakarta.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -60,7 +60,8 @@ public class OperationLogAspect {
     TimeInterval timeInterval = new TimeInterval();
     try {
       Object result = joinPoint.proceed();
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      long interval = timeInterval.interval();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
       ThreadUtil.execAsync(() -> {
         try {
           systemOperationLogMapper.insert(record);
@@ -70,7 +71,8 @@ public class OperationLogAspect {
       });
       return result;
     } catch (Throwable exception) {
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      long interval = timeInterval.interval();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
       record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
       ThreadUtil.execAsync(() -> {
         try {
@@ -83,9 +85,7 @@ public class OperationLogAspect {
     }
   }
 
-  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
-      TimeInterval timeInterval) {
-    long executeTime = timeInterval.intervalMs();
+  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, long executeTime) {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     String bizName = annotation.bizName();
     if (StrUtil.isBlank(bizName)) {
