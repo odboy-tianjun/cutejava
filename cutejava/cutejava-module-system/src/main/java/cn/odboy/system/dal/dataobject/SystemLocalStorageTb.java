@@ -15,9 +15,8 @@
  */
 package cn.odboy.system.dal.dataobject;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.odboy.base.KitBaseUserTimeTb;
+import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -49,6 +48,6 @@ public class SystemLocalStorageTb extends KitBaseUserTimeTb {
   private String dateGroup;
 
   public void copy(SystemLocalStorageTb source) {
-    BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
+    KitBeanUtil.copyToTarget(source, this);
   }
 }

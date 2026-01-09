@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.operalog;
 
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.KitRequestHolder;
 import cn.odboy.system.dal.dataobject.SystemOperationLogTb;
@@ -26,7 +26,7 @@ import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
@@ -60,8 +60,9 @@ public class OperationLogAspect {
     TimeInterval timeInterval = new TimeInterval();
     try {
       Object result = joinPoint.proceed();
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
-      Thread.startVirtualThread(() -> {
+      long interval = timeInterval.interval();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
+      ThreadUtil.execAsync(() -> {
         try {
           systemOperationLogMapper.insert(record);
         } catch (Exception e) {
@@ -70,9 +71,10 @@ public class OperationLogAspect {
       });
       return result;
     } catch (Throwable exception) {
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, timeInterval);
+      long interval = timeInterval.interval();
+      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
       record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
-      Thread.startVirtualThread(() -> {
+      ThreadUtil.execAsync(() -> {
         try {
           systemOperationLogMapper.insert(record);
         } catch (Exception e) {
@@ -83,20 +85,18 @@ public class OperationLogAspect {
     }
   }
 
-  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation,
-      TimeInterval timeInterval) {
-    long executeTime = timeInterval.intervalMs();
+  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, long executeTime) {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     String bizName = annotation.bizName();
     if (StrUtil.isBlank(bizName)) {
       Method method = signature.getMethod();
-      Operation apiOperation = method.getAnnotation(Operation.class);
+      ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
       if (apiOperation != null) {
-        bizName = apiOperation.summary();
+        bizName = apiOperation.value();
       }
     }
     if (StrUtil.isBlank(bizName)) {
-      bizName = "默认业务";
+      bizName = "Default";
     }
     String method = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
     Object[] args = joinPoint.getArgs();

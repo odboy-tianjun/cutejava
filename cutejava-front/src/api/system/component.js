@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
-export function queryDeptSelectDataSource() {
+export function listDeptSelectDataSource() {
   return request({
-    url: 'api/component/queryDeptSelectDataSource',
+    url: 'api/component/listDeptSelectDataSource',
     method: 'post'
   })
 }
 
-export function queryDeptSelectProDataSource() {
+export function listDeptSelectProDataSource() {
   return request({
-    url: 'api/component/queryDeptSelectProDataSource',
+    url: 'api/component/listDeptSelectProDataSource',
     method: 'post'
   })
 }

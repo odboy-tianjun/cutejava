@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -130,25 +131,25 @@ public class RedisConfiguration {
   public CacheErrorHandler errorHandler() {
     return new SimpleCacheErrorHandler() {
       @Override
-      public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
+      public void handleCacheGetError(@NonNull RuntimeException exception, @NonNull Cache cache, @NonNull Object key) {
         // 处理缓存读取错误
         log.error("Cache Get Error: {}", exception.getMessage());
       }
 
       @Override
-      public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
+      public void handleCachePutError(@NonNull RuntimeException exception, @NonNull Cache cache, @NonNull Object key, @NonNull Object value) {
         // 处理缓存写入错误
         log.error("Cache Put Error: {}", exception.getMessage());
       }
 
       @Override
-      public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
+      public void handleCacheEvictError(@NonNull RuntimeException exception, @NonNull Cache cache, @NonNull Object key) {
         // 处理缓存删除错误
         log.error("Cache Evict Error: {}", exception.getMessage());
       }
 
       @Override
-      public void handleCacheClearError(RuntimeException exception, Cache cache) {
+      public void handleCacheClearError(@NonNull RuntimeException exception, @NonNull Cache cache) {
         // 处理缓存清除错误
         log.error("Cache Clear Error: {}", exception.getMessage());
       }

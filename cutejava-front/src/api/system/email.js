@@ -7,17 +7,17 @@ export function getLastEmailConfig() {
   })
 }
 
-export function modifyEmailConfig(data) {
+export function updateEmailConfigById(data) {
   return request({
-    url: 'api/email/modifyEmailConfig',
+    url: 'api/email/updateEmailConfigById',
     method: 'post',
     data: data
   })
 }
 
-export function sendEmail(data) {
+export function send(data) {
   return request({
-    url: 'api/email/sendEmail',
+    url: 'api/email/send',
     method: 'post',
     data: data
   })

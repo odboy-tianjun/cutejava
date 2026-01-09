@@ -1,6 +1,9 @@
 import request from '@/utils/request'
 import { encrypt } from '@/utils/CsRsaUtil'
 
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/user/saveUser',
@@ -11,15 +14,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/user/removeUserByIds',
-    method: 'post',
-    data: ids
-  })
-}
-
-export function resetPwd(ids) {
-  return request({
-    url: 'api/user/resetUserPasswordByIds',
+    url: 'api/user/deleteUserByIds',
     method: 'post',
     data: ids
   })
@@ -27,45 +22,53 @@ export function resetPwd(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/user/modifyUserById',
+    url: 'api/user/updateUserById',
     method: 'post',
     data: data
   })
 }
 
-export function editUser(data) {
+export function resetUserPasswordByIds(ids) {
   return request({
-    url: 'api/user/modifyUserCenterInfoById',
+    url: 'api/user/resetUserPasswordByIds',
+    method: 'post',
+    data: ids
+  })
+}
+
+export function updateUserCenterInfoById(data) {
+  return request({
+    url: 'api/user/updateUserCenterInfoById',
     method: 'post',
     data: data
   })
 }
 
-export function updatePass(user) {
+export function updateUserPasswordByUsername(user) {
   const data = {
     oldPass: encrypt(user.oldPass),
     newPass: encrypt(user.newPass)
   }
   return request({
-    url: 'api/user/modifyUserPasswordByUsername',
+    url: 'api/user/updateUserPasswordByUsername',
     method: 'post',
     data: data
   })
 }
 
-export function updateEmail(form) {
+export function updateUserEmailByUsername(form) {
   const data = {
     password: encrypt(form.pass),
     email: form.email
   }
   return request({
-    url: 'api/user/modifyUserEmailByUsername/' + form.code,
+    url: 'api/user/updateUserEmailByUsername/' + form.code,
     method: 'post',
     data: data
   })
 }
 
-export function queryUserMetaPage(query) {
+export function queryUserMetadataOptions(query) {
   const params = {
     page: 1,
     size: 50,
@@ -80,5 +83,5 @@ export function queryUserMetaPage(query) {
   })
 }
 
-export default { add, edit, del, resetPwd, queryUserMetaPage }
+export default { add, edit, del, resetUserPasswordByIds, queryUserMetadataOptions }
 

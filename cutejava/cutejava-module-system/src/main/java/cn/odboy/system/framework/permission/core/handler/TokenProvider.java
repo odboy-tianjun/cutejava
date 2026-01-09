@@ -21,7 +21,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
-import cn.odboy.system.dal.model.SystemUserJwtVo;
+import cn.odboy.system.dal.model.response.SystemUserJwtVo;
 import cn.odboy.system.dal.redis.SystemCacheKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;

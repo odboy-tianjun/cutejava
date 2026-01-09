@@ -21,11 +21,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
+import java.util.Objects;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,9 +41,6 @@ public class SystemUserTb extends KitBaseUserTimeTb {
   @TableField(value = "dept_id")
   @ApiModelProperty(hidden = true)
   private Long deptId;
-  @ApiModelProperty(value = "用户部门")
-  @TableField(exist = false)
-  private SystemDeptTb dept;
   @NotBlank
   @ApiModelProperty(value = "用户名称")
   private String username;

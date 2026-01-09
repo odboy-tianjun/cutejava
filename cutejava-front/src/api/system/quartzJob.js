@@ -1,5 +1,7 @@
 import request from '@/utils/request'
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/quartzJob/createQuartzJob',
@@ -10,7 +12,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/quartzJob/removeJobByIds',
+    url: 'api/quartzJob/deleteJobByIds',
     method: 'post',
     data: ids
   })
@@ -18,8 +20,8 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/quartzJob',
-    method: 'put',
+    url: 'api/quartzJob/updateQuartzJobResumeCron',
+    method: 'post',
     data: data
   })
 }

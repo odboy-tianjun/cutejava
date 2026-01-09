@@ -17,6 +17,7 @@ package cn.odboy.system.framework.quartz;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
+import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import java.util.Date;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class QuartzManage {
   @Resource
   private Scheduler scheduler;
 
-  public void addJob(SystemQuartzJobTb quartzJob) {
+  public void addJob(SystemQuartzJobVo quartzJob) {
     try {
       // 构建job信息
       JobDetail jobDetail =
@@ -74,7 +75,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void updateJobCron(SystemQuartzJobTb quartzJob) {
+  public void updateJobCron(SystemQuartzJobVo quartzJob) {
     try {
       TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -120,7 +121,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void resumeJob(SystemQuartzJobTb quartzJob) {
+  public void resumeJob(SystemQuartzJobVo quartzJob) {
     try {
       TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -141,7 +142,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void runJobNow(SystemQuartzJobTb quartzJob) {
+  public void runJobNow(SystemQuartzJobVo quartzJob) {
     try {
       TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -164,7 +165,7 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void pauseJob(SystemQuartzJobTb quartzJob) {
+  public void pauseJob(SystemQuartzJobVo quartzJob) {
     try {
       JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
       scheduler.pauseJob(jobKey);

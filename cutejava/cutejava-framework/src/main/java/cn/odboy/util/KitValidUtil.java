@@ -15,13 +15,17 @@
  */
 package cn.odboy.util;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.exception.BadRequestException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import lombok.experimental.UtilityClass;
 
@@ -47,6 +51,42 @@ public final class KitValidUtil {
     if (!violations.isEmpty()) {
       throw new BadRequestException(
           violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(",")));
+    }
+  }
+
+  public static void notNull(Object value) {
+    if (value == null) {
+      throw new BadRequestException("参数必填");
+    }
+  }
+
+  public static void isNull(Object value) {
+    if (value != null) {
+      throw new BadRequestException("参数非必填");
+    }
+  }
+
+  public static void notNull(Object value, @NotNull String name, @NotNull String code) {
+    if (value == null) {
+      throw new BadRequestException(String.format("参数 %s(%s) 必填", name, code));
+    }
+  }
+
+  public static void isBlank(CharSequence value, @NotNull String name, @NotNull String code) {
+    if (StrUtil.isNotBlank(value)) {
+      throw new BadRequestException(String.format("参数 %s(%s) 非必填", name, code));
+    }
+  }
+
+  public static void notBlank(CharSequence value, @NotNull String name, @NotNull String code) {
+    if (StrUtil.isBlank(value)) {
+      throw new BadRequestException(String.format("参数 %s(%s) 必填", name, code));
+    }
+  }
+
+  public static void notEmpty(List<?> data, @NotNull String code) {
+    if (CollUtil.isEmpty(data)) {
+      throw new BadRequestException(String.format("参数 %s 必填", code));
     }
   }
 }

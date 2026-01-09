@@ -1,0 +1,59 @@
+package cn.odboy.system.service;
+
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.odboy.constant.CaptchaCodeEnum;
+import cn.odboy.constant.SystemConst;
+import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.framework.properties.AppProperties;
+import cn.odboy.framework.redis.KitRedisHelper;
+import cn.odboy.system.dal.model.response.SystemCaptchaVo;
+import cn.odboy.system.dal.redis.SystemCacheKey;
+import com.wf.captcha.base.Captcha;
+import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * 验证码
+ */
+@Service
+public class SystemCaptchaService {
+
+  @Autowired
+  private KitRedisHelper redisHelper;
+  @Autowired
+  private AppProperties properties;
+
+  public SystemCaptchaVo getLoginCaptcha() {
+    // 获取运算的结果
+    Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
+    String uuid = SystemCacheKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
+    //当验证码类型为 arithmetic时且长度 >= 2 时, captcha.text()的结果有几率为浮点型
+    String captchaValue = captcha.text();
+    if (captcha.getCharType() - 1 == CaptchaCodeEnum.ARITHMETIC.ordinal() &&
+        captchaValue.contains(SystemConst.SYMBOL_DOT)) {
+      captchaValue = captchaValue.split("\\.")[0];
+    }
+    // 保存
+    redisHelper.set(uuid, captchaValue, properties.getLogin().getCaptchaSetting().getExpiration(), TimeUnit.MINUTES);
+    // 验证码信息
+    SystemCaptchaVo captchaVo = new SystemCaptchaVo();
+    captchaVo.setUuid(uuid);
+    captchaVo.setImg(captcha.toBase64());
+    return captchaVo;
+  }
+
+  public void validate(String uuid, String inputCode) {
+    // 查询验证码
+    String code = redisHelper.get(uuid, String.class);
+    if (StrUtil.isBlank(code)) {
+      throw new BadRequestException("验证码不存在或已过期");
+    }
+    // 清除验证码
+    redisHelper.del(uuid);
+    if (StrUtil.isBlank(inputCode) || !code.equalsIgnoreCase(inputCode)) {
+      throw new BadRequestException("验证码错误");
+    }
+  }
+}

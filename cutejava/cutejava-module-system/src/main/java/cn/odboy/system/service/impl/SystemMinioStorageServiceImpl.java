@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -24,15 +23,17 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
-import cn.odboy.system.dal.model.SystemOssStorageExportRowVo;
-import cn.odboy.system.dal.model.SystemOssStorageVo;
-import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.export.SystemOssStorageExportRowVo;
+import cn.odboy.system.dal.model.request.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.response.SystemOssStorageVo;
 import cn.odboy.system.dal.mysql.SystemOssStorageMapper;
 import cn.odboy.system.framework.storage.minio.MinioRepository;
 import cn.odboy.system.service.SystemOssStorageService;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitDateUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -68,33 +69,27 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   private SystemOssStorageMapper systemOssStorageMapper;
 
   @Override
-  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page) {
-    IPage<SystemOssStorageTb> ossStorageTbs = this.selectOssStorageByArgs(args, page);
-    IPage<SystemOssStorageVo> convert = ossStorageTbs.convert(c -> {
-      SystemOssStorageVo storageVo = BeanUtil.copyProperties(c, SystemOssStorageVo.class);
+  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
+    IPage<SystemOssStorageVo> ossStorageTbs = this.selectOssStorageByArgs(args, page);
+    for (SystemOssStorageVo storageVo : ossStorageTbs.getRecords()) {
       storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
-      return storageVo;
-    });
-    return KitPageUtil.toPage(convert);
+    }
+    return KitPageUtil.toPage(ossStorageTbs);
   }
 
-  private IPage<SystemOssStorageTb> selectOssStorageByArgs(SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page) {
+  private IPage<SystemOssStorageVo> selectOssStorageByArgs(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
-              .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
-              .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
-              .like(SystemOssStorageTb::getFileMd5, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFileMd5, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemOssStorageTb::getId);
-    return systemOssStorageMapper.selectPage(page, wrapper);
+    return systemOssStorageMapper.selectPage(page, wrapper).convert(i -> KitBeanUtil.copyToClass(i, SystemOssStorageVo.class));
   }
 
   @Override
@@ -157,8 +152,8 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   public void exportOssStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemOssStorageVo> systemOssStorageVos = this.queryOssStorage(args);
 //    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
-//        (dataObject) -> CollUtil.newArrayList(BeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
-    List<SystemOssStorageExportRowVo> rowVos = BeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
+//        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
+    List<SystemOssStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "OSS文件上传记录数据", SystemOssStorageExportRowVo.class, rowVos);
   }
 

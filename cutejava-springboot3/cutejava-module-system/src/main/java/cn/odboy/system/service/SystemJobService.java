@@ -15,17 +15,18 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
-import cn.odboy.system.dal.model.SystemCreateJobArgs;
-import cn.odboy.system.dal.model.SystemJobExportRowVo;
-import cn.odboy.system.dal.model.SystemQueryJobArgs;
+import cn.odboy.system.dal.model.export.SystemJobExportRowVo;
+import cn.odboy.system.dal.model.request.SystemCreateJobArgs;
+import cn.odboy.system.dal.model.request.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -43,7 +44,7 @@ public class SystemJobService {
   @Autowired
   private SystemJobMapper systemJobMapper;
   @Autowired
-  private SystemUserService systemUserService;
+  private SystemUserJobService systemUserJobService;
 
   /**
    * 创建
@@ -56,7 +57,8 @@ public class SystemJobService {
     if (job != null) {
       throw new BadRequestException("职位名称已存在");
     }
-    systemJobMapper.insert(BeanUtil.copyProperties(args, SystemJobTb.class));
+    SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
+    systemJobMapper.insert(systemJobTb);
   }
 
   /**
@@ -115,7 +117,7 @@ public class SystemJobService {
    * @param ids /
    */
   public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserService.countUserByJobIds(ids) > 0) {
+    if (systemUserJobService.countUserByJobIds(ids) > 0) {
       throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
     }
   }
@@ -127,26 +129,18 @@ public class SystemJobService {
   }
 
   public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
-    if (args != null) {
-      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
-      wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    KitValidUtil.notNull(args);
+    wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
+    wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
   }
 
   public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
     List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "岗位数据", systemJobTbs, SystemJobExportRowVo.class, (dataObject) -> {
-//      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemJobExportRowVo> rowVos = new ArrayList<>();
     for (SystemJobTb dataObject : systemJobTbs) {
       SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
@@ -156,5 +150,9 @@ public class SystemJobService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
+  }
+
+  public List<SystemJobTb> listByIds(Set<Long> jobIds) {
+    return systemJobMapper.selectByIds(jobIds);
   }
 }

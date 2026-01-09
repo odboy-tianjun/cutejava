@@ -16,7 +16,8 @@
 package cn.odboy.system.controller;
 
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
-import cn.odboy.system.dal.model.SystemCheckEmailCaptchaArgs;
+import cn.odboy.system.dal.model.request.SystemCheckEmailCaptchaArgs;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemEmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,23 +38,25 @@ public class SystemCaptchaController {
   @Autowired
   private SystemEmailService systemEmailService;
 
+  @OperationLog
   @ApiOperation("重置邮箱, 发送验证码")
-  @PostMapping(value = "/sendResetEmailCaptcha")
-  public ResponseEntity<Void> sendResetEmailCaptcha(@RequestParam String email) {
+  @PostMapping(value = "/sendResetEmailCode")
+  public ResponseEntity<Void> sendResetEmailCode(@RequestParam String email) {
     systemEmailService.sendCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, email);
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("重置密码，发送验证码")
-  @PostMapping(value = "/sendResetPasswordCaptcha")
-  public ResponseEntity<Void> sendResetPasswordCaptcha(@RequestParam String email) {
+  @PostMapping(value = "/sendResetPasswordCode")
+  public ResponseEntity<Void> sendResetPasswordCode(@RequestParam String email) {
     systemEmailService.sendCaptcha(SystemCaptchaBizEnum.EMAIL_RESET_PWD_CODE, email);
     return ResponseEntity.ok(null);
   }
 
   @ApiOperation("验证码验证")
-  @PostMapping(value = "/checkEmailCaptcha")
-  public ResponseEntity<Void> checkEmailCaptcha(@Validated @RequestBody SystemCheckEmailCaptchaArgs args) {
+  @PostMapping(value = "/verifyCode")
+  public ResponseEntity<Void> verifyCode(@Validated @RequestBody SystemCheckEmailCaptchaArgs args) {
     systemEmailService.checkEmailCaptcha(args);
     return ResponseEntity.ok(null);
   }

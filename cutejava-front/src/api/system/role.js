@@ -1,13 +1,7 @@
 import request from '@/utils/request'
-
-// 获取所有的Role
-export function queryRoleList() {
-  return request({
-    url: 'api/role/queryRoleList',
-    method: 'post'
-  })
-}
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/role/saveRole',
@@ -18,22 +12,15 @@ export function add(data) {
 
 export function get(id) {
   return request({
-    url: 'api/role/queryRoleById',
+    url: 'api/role/getRoleById',
     method: 'post',
     data: { id: id }
   })
 }
 
-export function getLevel() {
-  return request({
-    url: 'api/role/queryRoleLevel',
-    method: 'post'
-  })
-}
-
 export function del(ids) {
   return request({
-    url: 'api/role/removeRoleByIds',
+    url: 'api/role/deleteRoleByIds',
     method: 'post',
     data: ids
   })
@@ -41,18 +28,33 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/role/modifyRoleById',
+    url: 'api/role/updateRoleById',
     method: 'post',
     data: data
   })
 }
 
+// 获取所有的Role
+export function listAllRole() {
+  return request({
+    url: 'api/role/listAllRole',
+    method: 'post'
+  })
+}
+
+export function getCurrentUserRoleLevel() {
+  return request({
+    url: 'api/role/getCurrentUserRoleLevel',
+    method: 'post'
+  })
+}
+
 export function editMenu(data) {
   return request({
-    url: 'api/role/modifyBindMenuById',
+    url: 'api/role/updateBindMenuById',
     method: 'post',
     data
   })
 }
 
-export default { add, edit, del, get, editMenu, getLevel }
+export default { add, edit, del, get, editMenu, getCurrentUserRoleLevel }

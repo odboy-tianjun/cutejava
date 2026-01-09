@@ -15,7 +15,6 @@
  */
 package cn.odboy.task.core;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
@@ -31,6 +30,7 @@ import cn.odboy.task.dal.model.TaskTemplateNodeVo;
 import cn.odboy.task.service.TaskInstanceDetailService;
 import cn.odboy.task.service.TaskInstanceInfoService;
 import cn.odboy.task.service.TaskTemplateInfoService;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitDateUtil;
 import com.alibaba.fastjson2.JSON;
 import java.util.ArrayList;
@@ -228,12 +228,11 @@ public class TaskManage {
       record.setTemplate(templateInfo.getTemplateInfo());
       return record;
     }
-    record = BeanUtil.copyProperties(historyInstance, TaskInstanceInfoVo.class);
+    record = KitBeanUtil.copyToClass(historyInstance, TaskInstanceInfoVo.class);
     record.setHistory(buildNodeList(record));
-    TaskInstanceInfoTb runningInstance =
-        taskInstanceInfoService.getLastRunningInstance(contextName, language, envAlias, changeType);
+    TaskInstanceInfoTb runningInstance = taskInstanceInfoService.getLastRunningInstance(contextName, language, envAlias, changeType);
     if (runningInstance != null) {
-      TaskInstanceInfoVo taskInstanceInfoVo = BeanUtil.copyProperties(runningInstance, TaskInstanceInfoVo.class);
+      TaskInstanceInfoVo taskInstanceInfoVo = KitBeanUtil.copyToClass(runningInstance, TaskInstanceInfoVo.class);
       record.setCurrent(buildNodeList(taskInstanceInfoVo));
     }
     return record;

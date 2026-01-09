@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import java.math.BigDecimal;
@@ -34,14 +32,14 @@ public final class KitBigDecimalUtil {
    * @return 转换后的 BigDecimal
    */
   private static BigDecimal toBigDecimal(Object obj) {
-    if (obj instanceof BigDecimal b) {
-      return b;
-    } else if (obj instanceof Long l) {
-      return BigDecimal.valueOf(l);
-    } else if (obj instanceof Integer i) {
-      return BigDecimal.valueOf(i);
-    } else if (obj instanceof Double d) {
-      return new BigDecimal(d);
+    if (obj instanceof BigDecimal) {
+      return (BigDecimal) obj;
+    } else if (obj instanceof Long) {
+      return BigDecimal.valueOf((Long) obj);
+    } else if (obj instanceof Integer) {
+      return BigDecimal.valueOf((Integer) obj);
+    } else if (obj instanceof Double) {
+      return new BigDecimal(String.valueOf(obj));
     } else {
       throw new IllegalArgumentException("Unsupported type");
     }
@@ -78,12 +76,12 @@ public final class KitBigDecimalUtil {
    *
    * @param a 乘数
    * @param b 乘数
-   * @return 两个乘数的积, 保留两位小数
+   * @return 两个乘数的积, 保留6位小数
    */
   public static BigDecimal multiply(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.multiply(bdB).setScale(2, RoundingMode.HALF_UP);
+    return bdA.multiply(bdB).setScale(6, RoundingMode.HALF_UP);
   }
 
   /**
@@ -96,7 +94,7 @@ public final class KitBigDecimalUtil {
   public static BigDecimal divide(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.divide(bdB, 2, RoundingMode.HALF_UP);
+    return bdA.divide(bdB, 6, RoundingMode.HALF_UP);
   }
 
   /**
@@ -138,15 +136,12 @@ public final class KitBigDecimalUtil {
   public static void main(String[] args) {
     BigDecimal num1 = new BigDecimal("10.123");
     BigDecimal num2 = new BigDecimal("2.456");
-
     System.out.println("加法结果: " + add(num1, num2));
     System.out.println("减法结果: " + subtract(num1, num2));
     System.out.println("乘法结果: " + multiply(num1, num2));
     System.out.println("除法结果: " + divide(num1, num2));
-
     Long cents = 12345L;
     System.out.println("分转元结果: " + centsToYuan(cents));
-
     BigDecimal yuan = new BigDecimal("123.45");
     System.out.println("元转分结果: " + yuanToCents(yuan));
   }

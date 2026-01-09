@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { sendEmail } from '@/api/system/email'
+import { send } from '@/api/system/email'
 import { mapGetters } from 'vuex'
 import E from 'wangeditor'
 import { UploadFile } from '@/utils/CsDomUtil'
@@ -74,7 +74,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          sendEmail(this.form).then(res => {
+          send(this.form).then(res => {
             this.$notify({
               title: '发送成功',
               type: 'success',

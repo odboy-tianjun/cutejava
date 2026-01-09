@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,11 +68,10 @@ public class SwaggerConfig {
    * @return /
    */
   @Bean
-  @SuppressWarnings({"unchecked", "all"})
   public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
     return new BeanPostProcessor() {
       @Override
-      public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+      public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         if (bean instanceof WebMvcRequestHandlerProvider || bean instanceof WebFluxRequestHandlerProvider) {
           customizeSpringfoxHandlerMappings(getHandlerMappings(bean));
         }
@@ -111,7 +111,7 @@ public class SwaggerConfig {
 
   private ApiInfo apiInfo() {
     return new ApiInfoBuilder().description("一个简单且易上手的自动化运维平台").title("CuteJava 接口文档")
-        .version("1.4.1").build();
+        .version("1.5.0").build();
   }
 
   private List<SecurityScheme> securitySchemes() {

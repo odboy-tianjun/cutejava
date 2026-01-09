@@ -35,7 +35,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@SuppressWarnings({"unchecked", "all"})
 @ConditionalOnWebApplication
 @AutoConfigureAfter(DruidDataSourceAutoConfigure.class)
 @ConditionalOnProperty(name = "spring.datasource.druid.stat-view-servlet.enabled", havingValue = "true",
@@ -49,7 +48,7 @@ public class RemoveDruidAdConfig {
    * @return org.springframework.boot.web.servlet.FilterRegistrationBean
    */
   @Bean
-  public FilterRegistrationBean removeDruidAdFilterRegistrationBean(DruidStatProperties properties) {
+  public FilterRegistrationBean<Filter> removeDruidAdFilterRegistrationBean(DruidStatProperties properties) {
     // 获取web监控页面的参数
     DruidStatProperties.StatViewServlet config = properties.getStatViewServlet();
     // 提取common.js的配置路径
@@ -85,7 +84,7 @@ public class RemoveDruidAdConfig {
       public void destroy() {
       }
     };
-    FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
     registrationBean.setFilter(filter);
     registrationBean.addUrlPatterns(commonJsPattern);
     return registrationBean;

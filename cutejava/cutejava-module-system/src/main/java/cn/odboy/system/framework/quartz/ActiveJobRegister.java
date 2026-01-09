@@ -15,7 +15,7 @@
  */
 package cn.odboy.system.framework.quartz;
 
-import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
+import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.service.SystemQuartzJobService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class ActiveJobRegister implements ApplicationRunner {
    */
   @Override
   public void run(ApplicationArguments applicationArguments) {
-    List<SystemQuartzJobTb> quartzJobs = systemQuartzJobService.listEnableQuartzJob();
+    List<SystemQuartzJobVo> quartzJobs = systemQuartzJobService.listEnableQuartzJob();
     quartzJobs.forEach(quartzManage::addJob);
     log.info("Timing task injection complete");
   }

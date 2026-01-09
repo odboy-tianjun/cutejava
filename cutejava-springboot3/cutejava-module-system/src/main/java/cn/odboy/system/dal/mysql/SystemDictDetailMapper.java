@@ -16,7 +16,7 @@
 package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
-import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
+import cn.odboy.system.dal.model.request.SystemQueryDictDetailArgs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

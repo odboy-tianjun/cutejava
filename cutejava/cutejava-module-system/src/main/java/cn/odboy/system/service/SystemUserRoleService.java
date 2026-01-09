@@ -15,18 +15,18 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
-import cn.odboy.system.dal.model.SystemRoleVo;
-import cn.odboy.system.dal.model.SystemUserVo;
+import cn.odboy.system.dal.model.response.SystemMenuVo;
+import cn.odboy.system.dal.model.response.SystemRoleVo;
+import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,10 +84,9 @@ public class SystemUserRoleService {
     if (role == null) {
       return null;
     }
-    SystemRoleVo roleVo = BeanUtil.copyProperties(role, SystemRoleVo.class);
+    SystemRoleVo roleVo = KitBeanUtil.copyToClass(role, SystemRoleVo.class);
     // 查询关联的菜单信息
-    Set<SystemMenuTb> menus = systemRoleMenuService.queryMenuByRoleIds(
-        Collections.singleton(role.getId()));
+    Set<SystemMenuVo> menus = systemRoleMenuService.queryMenuByRoleIds(Collections.singleton(role.getId()));
     roleVo.setMenus(menus);
 
     // 查询关联的部门信息
@@ -141,10 +140,25 @@ public class SystemUserRoleService {
   public void checkLevel(SystemUserVo args) {
     Integer currentLevel = Collections.min(
         this.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-            .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+            .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
     Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
     if (currentLevel > optLevel) {
       throw new BadRequestException("角色权限不足");
     }
+  }
+
+  public List<SystemUserRoleTb> listUserRoleByUserId(Long userId) {
+    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserRoleTb::getUserId, userId);
+    return systemUserRoleMapper.selectList(wrapper);
+  }
+
+  public long countUserByRoleIds(Set<Long> ids) {
+    if (CollUtil.isEmpty(ids)) {
+      return 0L;
+    }
+    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserRoleTb::getRoleId, ids);
+    return systemUserRoleMapper.selectCount(wrapper);
   }
 }

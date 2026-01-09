@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.odboy.base.KitPageResult;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.experimental.UtilityClass;
@@ -66,13 +62,6 @@ public final class KitPageUtil extends cn.hutool.core.util.PageUtil {
   /**
    * 返回空数据
    */
-  public static <T> KitPageResult<T> emptyListData() {
-    return new KitPageResult<>(new ArrayList<>(), 0);
-  }
-
-  /**
-   * 返回空数据
-   */
   public static <T> KitPageResult<T> emptyData() {
     return new KitPageResult<>(null, 0);
   }
@@ -82,9 +71,5 @@ public final class KitPageUtil extends cn.hutool.core.util.PageUtil {
    */
   public static <T> KitPageResult<T> toPage(List<T> list, long totalElements) {
     return new KitPageResult<>(list, totalElements);
-  }
-
-  public static <T> Page<T> getCount(BaseMapper<T> baseMapper) {
-    return new Page<>(1, baseMapper.selectCount(null));
   }
 }

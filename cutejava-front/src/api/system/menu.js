@@ -1,15 +1,42 @@
 import request from '@/utils/request'
 
-export function queryMenuListByPid(pid) {
+/**
+ * 默认入口：add、del、edit、get
+ */
+export function add(data) {
   return request({
-    url: 'api/menu/queryMenuListByPid?pid=' + pid,
+    url: 'api/menu/saveMenu',
+    method: 'post',
+    data: data
+  })
+}
+
+export function del(ids) {
+  return request({
+    url: 'api/menu/deleteMenuByIds',
+    method: 'post',
+    data: ids
+  })
+}
+
+export function edit(data) {
+  return request({
+    url: 'api/menu/updateMenuById',
+    method: 'post',
+    data: data
+  })
+}
+
+export function listMenuByPid(pid) {
+  return request({
+    url: 'api/menu/listMenuByPid?pid=' + pid,
     method: 'post'
   })
 }
 
-export function queryMenuByArgs(params) {
+export function searchMenu(params) {
   return request({
-    url: 'api/menu/queryMenuByArgs',
+    url: 'api/menu/searchMenu',
     method: 'post',
     data: params
   })
@@ -24,9 +51,9 @@ export function queryMenuSuperior(ids) {
   })
 }
 
-export function queryChildMenuSet(id) {
+export function listChildMenuSetByMenuId(id) {
   return request({
-    url: 'api/menu/queryChildMenuSet?id=' + id,
+    url: 'api/menu/listChildMenuSetByMenuId?id=' + id,
     method: 'post'
   })
 }
@@ -38,28 +65,4 @@ export function buildMenus() {
   })
 }
 
-export function add(data) {
-  return request({
-    url: 'api/menu/saveMenu',
-    method: 'post',
-    data: data
-  })
-}
-
-export function del(ids) {
-  return request({
-    url: 'api/menu/removeMenuByIds',
-    method: 'post',
-    data: ids
-  })
-}
-
-export function edit(data) {
-  return request({
-    url: 'api/menu/modifyMenuById',
-    method: 'post',
-    data: data
-  })
-}
-
-export default { add, edit, del, queryMenuListByPid, queryMenuSuperior, queryMenuByArgs, queryChildMenuSet }
+export default { add, edit, del, listMenuByPid, queryMenuSuperior, searchMenu, listChildMenuSetByMenuId }

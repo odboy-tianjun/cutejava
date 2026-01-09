@@ -23,9 +23,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,8 +45,7 @@ public class SystemRoleTb extends KitBaseUserTimeTb {
   @ApiModelProperty(value = "名称", hidden = true)
   private String name;
   @ApiModelProperty(value = "数据权限，全部 、 本级 、 自定义")
-  private String dataScope =
-      SystemDataScopeEnum.THIS_LEVEL.getValue();
+  private String dataScope = SystemDataScopeEnum.THIS_LEVEL.getValue();
   @ApiModelProperty(value = "级别，数值越小，级别越大")
   private Integer level = 3;
   @ApiModelProperty(value = "描述")

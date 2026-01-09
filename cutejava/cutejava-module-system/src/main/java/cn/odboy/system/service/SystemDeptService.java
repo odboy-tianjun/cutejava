@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,14 +24,17 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.constant.SystemZhConst;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.model.SystemCreateDeptArgs;
-import cn.odboy.system.dal.model.SystemDeptExportRowVo;
-import cn.odboy.system.dal.model.SystemProductLineTreeVo;
-import cn.odboy.system.dal.model.SystemProductLineVo;
-import cn.odboy.system.dal.model.SystemQueryDeptArgs;
+import cn.odboy.system.dal.model.export.SystemDeptExportRowVo;
+import cn.odboy.system.dal.model.request.SystemCreateDeptArgs;
+import cn.odboy.system.dal.model.request.SystemQueryDeptArgs;
+import cn.odboy.system.dal.model.response.SystemDeptVo;
+import cn.odboy.system.dal.model.response.SystemProductLineTreeVo;
+import cn.odboy.system.dal.model.response.SystemProductLineVo;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitClassUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.lang.reflect.Field;
@@ -68,7 +70,8 @@ public class SystemDeptService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDept(SystemCreateDeptArgs args) {
-    systemDeptMapper.insert(BeanUtil.copyProperties(args, SystemDeptTb.class));
+    KitValidUtil.notNull(args);
+    systemDeptMapper.insert(KitBeanUtil.copyToClass(args, SystemDeptTb.class));
     this.updateDeptSubCnt(args.getPid());
   }
 
@@ -78,9 +81,11 @@ public class SystemDeptService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void updateDept(SystemDeptTb args) {
-    // 旧的部门
-    Long oldPid = this.getDeptById(args.getId()).getPid();
+  public void updateDeptById(SystemDeptTb args) {
+    KitValidUtil.notNull(args);
+    // 旧的父部门
+    Long oldPid = this.getDeptVoById(args.getId()).getPid();
+    // 新的父部门
     Long newPid = args.getPid();
     if (args.getPid() != null && args.getId().equals(args.getPid())) {
       throw new BadRequestException("上级不能为自己");
@@ -100,10 +105,10 @@ public class SystemDeptService {
   @Transactional(rollbackFor = Exception.class)
   public void deleteDeptByIds(Set<Long> ids) {
     // 获取部门, 和其所有子部门
-    Set<SystemDeptTb> depts = this.traverseDeptByIdWithPids(ids);
+    Set<SystemDeptVo> depts = this.traverseDeptByIdWithPids(ids);
     // 验证是否被角色或用户关联
     this.verifyBindRelationByIds(depts);
-    for (SystemDeptTb dept : depts) {
+    for (SystemDeptVo dept : depts) {
       systemDeptMapper.deleteById(dept.getId());
       this.updateDeptSubCnt(dept.getPid());
     }
@@ -145,17 +150,16 @@ public class SystemDeptService {
   }
 
   private List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.in(CollUtil.isNotEmpty(args.getIds()), SystemDeptTb::getId, args.getIds());
-      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemDeptTb::getName, args.getName());
-      wrapper.eq(args.getEnabled() != null, SystemDeptTb::getEnabled, args.getEnabled());
-      wrapper.eq(args.getPid() != null, SystemDeptTb::getPid, args.getPid());
-      wrapper.isNull(args.getPidIsNull() != null, SystemDeptTb::getPid);
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemDeptTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.in(CollUtil.isNotEmpty(args.getIds()), SystemDeptTb::getId, args.getIds());
+    wrapper.like(StrUtil.isNotBlank(args.getName()), SystemDeptTb::getName, args.getName());
+    wrapper.eq(args.getEnabled() != null, SystemDeptTb::getEnabled, args.getEnabled());
+    wrapper.eq(args.getPid() != null, SystemDeptTb::getPid, args.getPid());
+    wrapper.isNull(args.getPidIsNull() != null, SystemDeptTb::getPid);
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemDeptTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemDeptTb::getDeptSort);
     return systemDeptMapper.selectList(wrapper);
@@ -209,8 +213,8 @@ public class SystemDeptService {
    * @param id /
    * @return /
    */
-  public SystemDeptTb getDeptById(Long id) {
-    return systemDeptMapper.selectById(id);
+  public SystemDeptVo getDeptVoById(Long id) {
+    return KitBeanUtil.copyToClass(systemDeptMapper.selectById(id), SystemDeptVo.class);
   }
 
   /**
@@ -218,24 +222,22 @@ public class SystemDeptService {
    *
    * @param deptTbList /
    * @param depts      /
-   * @return /
    */
-  private Set<SystemDeptTb> queryRelationDeptByArgs(List<SystemDeptTb> deptTbList, Set<SystemDeptTb> depts) {
-    for (SystemDeptTb dept : deptTbList) {
+  private void queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptVo> depts) {
+    for (SystemDeptVo dept : deptTbList) {
       depts.add(dept);
-      List<SystemDeptTb> deptList = this.listDeptByPid(dept.getId());
+      List<SystemDeptVo> deptList = this.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptList)) {
         queryRelationDeptByArgs(deptList, depts);
       }
     }
-    return depts;
   }
 
-  public List<Long> queryChildDeptIdByDeptIds(List<SystemDeptTb> deptList) {
+  public List<Long> queryChildDeptIdByDeptIds(List<SystemDeptVo> deptList) {
     List<Long> list = new ArrayList<>();
-    for (SystemDeptTb systemDeptTb : deptList) {
+    for (SystemDeptVo systemDeptTb : deptList) {
       if (systemDeptTb != null && systemDeptTb.getEnabled()) {
-        List<SystemDeptTb> deptList1 = this.listDeptByPid(systemDeptTb.getId());
+        List<SystemDeptVo> deptList1 = this.listDeptByPid(systemDeptTb.getId());
         if (CollUtil.isNotEmpty(deptList1)) {
           list.addAll(queryChildDeptIdByDeptIds(deptList1));
         }
@@ -252,19 +254,19 @@ public class SystemDeptService {
    * @param deptList /
    * @return /
    */
-  private List<SystemDeptTb> querySuperiorDeptByPid(SystemDeptTb dept, List<SystemDeptTb> deptList) {
+  private List<SystemDeptVo> querySuperiorDeptByPid(SystemDeptVo dept, List<SystemDeptVo> deptList) {
     if (dept.getPid() == null) {
       deptList.addAll(this.listRootDept());
       return deptList;
     }
     deptList.addAll(this.listDeptByPid(dept.getPid()));
-    return querySuperiorDeptByPid(this.getDeptById(dept.getPid()), deptList);
+    return querySuperiorDeptByPid(this.getDeptVoById(dept.getPid()), deptList);
   }
 
-  private List<SystemDeptTb> listRootDept() {
+  private List<SystemDeptVo> listRootDept() {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.isNull(SystemDeptTb::getPid);
-    return systemDeptMapper.selectList(wrapper);
+    return KitBeanUtil.copyToList(systemDeptMapper.selectList(wrapper), SystemDeptVo.class);
   }
 
   /**
@@ -272,15 +274,15 @@ public class SystemDeptService {
    *
    * @return /
    */
-  public KitPageResult<SystemDeptTb> searchDeptTree(List<Long> ids, Boolean exclude) {
-    Set<SystemDeptTb> deptSet1 = new LinkedHashSet<>();
+  public KitPageResult<SystemDeptVo> searchDeptTree(List<Long> ids, Boolean exclude) {
+    Set<SystemDeptVo> deptSet1 = new LinkedHashSet<>();
     for (Long id : ids) {
       // 同级数据
-      SystemDeptTb dept = this.getDeptById(id);
+      SystemDeptVo dept = this.getDeptVoById(id);
       // 上级数据
-      List<SystemDeptTb> depts = this.querySuperiorDeptByPid(dept, new ArrayList<>());
+      List<SystemDeptVo> depts = this.querySuperiorDeptByPid(dept, new ArrayList<>());
       if (exclude) {
-        for (SystemDeptTb data : depts) {
+        for (SystemDeptVo data : depts) {
           if (data.getId().equals(dept.getPid())) {
             data.setSubCount(data.getSubCount() - 1);
           }
@@ -290,18 +292,18 @@ public class SystemDeptService {
       }
       deptSet1.addAll(depts);
     }
-    ArrayList<SystemDeptTb> deptList = new ArrayList<>(deptSet1);
+    List<SystemDeptVo> deptList = new ArrayList<>(deptSet1);
     // 构建部门树
-    Set<SystemDeptTb> trees = new LinkedHashSet<>();
-    Set<SystemDeptTb> deptSet = new LinkedHashSet<>();
-    List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
+    Set<SystemDeptVo> trees = new LinkedHashSet<>();
+    Set<SystemDeptVo> deptSet = new LinkedHashSet<>();
+    List<String> deptNames = deptList.stream().map(SystemDeptVo::getName).collect(Collectors.toList());
     boolean isChild;
-    for (SystemDeptTb dept : deptList) {
+    for (SystemDeptVo dept : deptList) {
       isChild = false;
       if (dept.getPid() == null) {
         trees.add(dept);
       }
-      for (SystemDeptTb it : deptList) {
+      for (SystemDeptVo it : deptList) {
         if (it.getPid() != null && dept.getId().equals(it.getPid())) {
           isChild = true;
           if (dept.getChildren() == null) {
@@ -312,14 +314,14 @@ public class SystemDeptService {
       }
       if (isChild) {
         deptSet.add(dept);
-      } else if (dept.getPid() != null && !deptNames.contains(this.getDeptById(dept.getPid()).getName())) {
+      } else if (dept.getPid() != null && !deptNames.contains(this.getDeptVoById(dept.getPid()).getName())) {
         deptSet.add(dept);
       }
     }
     if (CollectionUtil.isEmpty(trees)) {
       trees = deptSet;
     }
-    KitPageResult<SystemDeptTb> baseResult = new KitPageResult<>();
+    KitPageResult<SystemDeptVo> baseResult = new KitPageResult<>();
     baseResult.setContent(CollectionUtil.isEmpty(trees) ? new ArrayList<>(deptSet) : new ArrayList<>(trees));
     baseResult.setTotalElements(deptSet.size());
     return baseResult;
@@ -330,8 +332,8 @@ public class SystemDeptService {
    *
    * @param deptSet /
    */
-  public void verifyBindRelationByIds(Set<SystemDeptTb> deptSet) {
-    Set<Long> deptIds = deptSet.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
+  public void verifyBindRelationByIds(Set<SystemDeptVo> deptSet) {
+    Set<Long> deptIds = deptSet.stream().map(SystemDeptVo::getId).collect(Collectors.toSet());
     if (systemUserDeptService.countUserByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
     }
@@ -351,21 +353,21 @@ public class SystemDeptService {
    *
    * @param ids /
    */
-  public Set<SystemDeptTb> traverseDeptByIdWithPids(Set<Long> ids) {
-    Set<SystemDeptTb> depts = new HashSet<>();
+  public Set<SystemDeptVo> traverseDeptByIdWithPids(Set<Long> ids) {
+    Set<SystemDeptVo> depts = new HashSet<>();
     for (Long id : ids) {
       // 根部门
-      depts.add(this.getDeptById(id));
+      depts.add(this.getDeptVoById(id));
       // 子部门
-      List<SystemDeptTb> deptList = listDeptByPid(id);
+      List<SystemDeptVo> deptList = this.listDeptByPid(id);
       if (CollectionUtil.isNotEmpty(deptList)) {
-        depts = queryRelationDeptByArgs(deptList, depts);
+        queryRelationDeptByArgs(deptList, depts);
       }
     }
     return depts;
   }
 
-  public List<SystemProductLineVo> queryDeptSelectDataSource() {
+  public List<SystemProductLineVo> listDeptSelectDataSource() {
     List<SystemDeptTb> depts = this.listEnabledDepts();
     return buildDeptSelectOptions(depts);
   }
@@ -414,7 +416,7 @@ public class SystemDeptService {
     }
   }
 
-  public List<SystemProductLineTreeVo> queryDeptSelectProDataSource() {
+  public List<SystemProductLineTreeVo> listDeptSelectProDataSource() {
     List<SystemDeptTb> depts = this.listEnabledDepts();
     // 获取所有部门并按父子关系组织
     Map<Long, SystemDeptTb> deptMap =
@@ -463,21 +465,14 @@ public class SystemDeptService {
     return vo;
   }
 
-  public List<SystemDeptTb> listDeptByPid(long pid) {
+  public List<SystemDeptVo> listDeptByPid(long pid) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getPid, pid);
-    return systemDeptMapper.selectList(wrapper);
+    return KitBeanUtil.copyToList(systemDeptMapper.selectList(wrapper), SystemDeptVo.class);
   }
 
   public void exportDeptXlsx(HttpServletResponse response, SystemQueryDeptArgs args) throws Exception {
     List<SystemDeptTb> systemDeptTbs = this.queryAllDeptByArgs(args, false);
-//    KitXlsxExportUtil.exportFile(response, "部门数据", systemDeptTbs, SystemDeptExportRowVo.class, (dataObject) -> {
-//      SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setEnabled(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemDeptExportRowVo> rowVos = new ArrayList<>();
     for (SystemDeptTb dataObject : systemDeptTbs) {
       SystemDeptExportRowVo rowVo = new SystemDeptExportRowVo();

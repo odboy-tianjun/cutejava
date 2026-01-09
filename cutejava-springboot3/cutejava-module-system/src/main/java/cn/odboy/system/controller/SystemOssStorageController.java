@@ -18,13 +18,13 @@ package cn.odboy.system.controller;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemOssStorageTb;
-import cn.odboy.system.dal.model.SystemOssStorageVo;
-import cn.odboy.system.dal.model.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.request.SystemQueryStorageArgs;
+import cn.odboy.system.dal.model.response.SystemOssStorageVo;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemOssStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,22 +49,23 @@ public class SystemOssStorageController {
   private SystemOssStorageService systemOssStorageService;
 
   @ApiOperation("查询文件")
-  @PostMapping
+  @PostMapping(value = "/searchOssStorage")
   @PreAuthorize("@el.check('storage:list')")
-  public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(
-      @Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
+  public ResponseEntity<KitPageResult<SystemOssStorageVo>> queryOssStorage(@Validated @RequestBody KitPageArgs<SystemQueryStorageArgs> pageArgs) {
     Page<SystemOssStorageTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemOssStorageService.searchOssStorage(pageArgs.getArgs(), page));
   }
 
-  @ApiOperation("导出数据")
+  @OperationLog
+  @ApiOperation("导出OSS存储记录数据")
   @GetMapping(value = "/download")
   @PreAuthorize("@el.check('storage:list')")
-  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) throws IOException {
+  public void exportFile(HttpServletResponse response, SystemQueryStorageArgs args) {
     systemOssStorageService.exportOssStorageXlsx(response, args);
   }
 
-  @ApiOperation("上传文件")
+  @OperationLog
+  @ApiOperation("上传文件到OSS")
   @PostMapping(value = "/uploadFile")
   @PreAuthorize("@el.check('storage:add')")
   public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -72,9 +73,10 @@ public class SystemOssStorageController {
     return ResponseEntity.ok(fileUrl);
   }
 
-  @ApiOperation("多选删除")
-  @PostMapping(value = "/removeFileByIds")
-  public ResponseEntity<Void> removeFileByIds(@RequestBody Long[] ids) {
+  @OperationLog
+  @ApiOperation("从OSS删除文件")
+  @PostMapping(value = "/deleteFileByIds")
+  public ResponseEntity<Void> deleteFileByIds(@RequestBody Long[] ids) {
     systemOssStorageService.deleteFileByIds(ids);
     return ResponseEntity.ok(null);
   }

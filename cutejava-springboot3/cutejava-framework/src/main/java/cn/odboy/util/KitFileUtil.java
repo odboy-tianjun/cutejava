@@ -20,6 +20,7 @@ import static cn.odboy.constant.SystemConst.SYMBOL_AT;
 import static cn.odboy.constant.SystemConst.SYMBOL_EQUAL;
 import static cn.odboy.constant.SystemConst.SYMBOL_SUBTRACT;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
@@ -55,7 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @UtilityClass
-public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
+public final class KitFileUtil extends FileUtil {
 
   /**
    * 系统临时目录
@@ -80,10 +81,6 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
    * 定义KB的计算常量
    */
   private static final int KB = 1024;
-  /**
-   * 格式化小数
-   */
-  private static final DecimalFormat DF = new DecimalFormat("0.00");
 
   /**
    * MultipartFile转File
@@ -112,13 +109,13 @@ public final class KitFileUtil extends cn.hutool.core.io.FileUtil {
     String resultSize;
     if (size / GB >= 1) {
       //如果当前Byte的值大于等于1GB
-      resultSize = DF.format(size / (float) GB) + " GB";
+      resultSize = new DecimalFormat("0.00").format(size / (float) GB) + " GB";
     } else if (size / MB >= 1) {
       //如果当前Byte的值大于等于1MB
-      resultSize = DF.format(size / (float) MB) + " MB";
+      resultSize = new DecimalFormat("0.00").format(size / (float) MB) + " MB";
     } else if (size / KB >= 1) {
       //如果当前Byte的值大于等于1KB
-      resultSize = DF.format(size / (float) KB) + " KB";
+      resultSize = new DecimalFormat("0.00").format(size / (float) KB) + " KB";
     } else {
       resultSize = size + " B";
     }

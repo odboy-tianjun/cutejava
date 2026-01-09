@@ -15,7 +15,6 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,28 +26,26 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.constant.SystemZhConst;
-import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.SystemQueryUserArgs;
-import cn.odboy.system.dal.model.SystemUpdateUserPasswordArgs;
-import cn.odboy.system.dal.model.SystemUserExportRowVo;
-import cn.odboy.system.dal.model.SystemUserVo;
-import cn.odboy.system.dal.mysql.SystemDeptMapper;
-import cn.odboy.system.dal.mysql.SystemJobMapper;
-import cn.odboy.system.dal.mysql.SystemRoleMapper;
-import cn.odboy.system.dal.mysql.SystemUserJobMapper;
+import cn.odboy.system.dal.model.export.SystemUserExportRowVo;
+import cn.odboy.system.dal.model.request.SystemQueryUserArgs;
+import cn.odboy.system.dal.model.request.SystemUpdateUserPasswordArgs;
+import cn.odboy.system.dal.model.response.SystemDeptVo;
+import cn.odboy.system.dal.model.response.SystemRoleVo;
+import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
-import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.dal.redis.SystemUserOnlineInfoDAO;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -78,19 +75,17 @@ public class SystemUserService {
   @Autowired
   private SystemUserMapper systemUserMapper;
   @Autowired
-  private SystemJobMapper systemJobMapper;
+  private SystemJobService systemJobService;
   @Autowired
-  private SystemRoleMapper systemRoleMapper;
+  private SystemRoleService systemRoleService;
   @Autowired
-  private SystemDeptMapper systemDeptMapper;
+  private SystemDeptService systemDeptService;
   @Autowired
   private SystemUserJobService systemUserJobService;
   @Autowired
   private SystemUserRoleService systemUserRoleService;
   @Autowired
   private SystemEmailService systemEmailService;
-  @Autowired
-  private SystemDeptService systemDeptService;
   @Autowired
   private SystemDataService systemDataService;
   @Autowired
@@ -99,10 +94,6 @@ public class SystemUserService {
   private SystemUserOnlineInfoDAO systemUserOnlineInfoDAO;
   @Autowired
   private KitFileLocalUploadHelper fileUploadPathHelper;
-  @Autowired
-  private SystemUserJobMapper systemUserJobMapper;
-  @Autowired
-  private SystemUserRoleMapper systemUserRoleMapper;
   @Autowired
   private AppProperties properties;
   @Autowired
@@ -166,7 +157,6 @@ public class SystemUserService {
     user.setUsername(args.getUsername());
     user.setEmail(args.getEmail());
     user.setEnabled(args.getEnabled());
-    user.setDept(args.getDept());
     user.setPhone(args.getPhone());
     user.setNickName(args.getNickName());
     user.setGender(args.getGender());
@@ -209,15 +199,15 @@ public class SystemUserService {
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void removeUserByIds(Set<Long> ids) {
+  public void deleteUserByIds(Set<Long> ids) {
     Long currentUserId = KitSecurityHelper.getCurrentUserId();
     // 校验权限
     for (Long id : ids) {
       Integer currentLevel = Collections.min(
           systemUserRoleService.queryRoleByUsersId(currentUserId).stream()
-              .map(SystemRoleTb::getLevel).collect(Collectors.toList()));
+              .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
       Integer optLevel = Collections.min(
-          systemUserRoleService.queryRoleByUsersId(id).stream().map(SystemRoleTb::getLevel)
+          systemUserRoleService.queryRoleByUsersId(id).stream().map(SystemRoleVo::getLevel)
               .collect(Collectors.toList()));
       if (currentLevel > optLevel) {
         throw new BadRequestException(
@@ -406,62 +396,31 @@ public class SystemUserService {
   }
 
   /**
-   * 根据岗位ID统计用户数量
-   *
-   * @param jobIds 岗位ID集合
-   * @return /
-   */
-  public Long countUserByJobIds(Set<Long> jobIds) {
-    if (CollUtil.isEmpty(jobIds)) {
-      return 0L;
-    }
-    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserJobTb::getJobId, jobIds);
-    return systemUserJobMapper.selectCount(wrapper);
-  }
-
-  /**
-   * 根据角色ID统计用户数量
-   *
-   * @param roleIds 角色ID集合
-   * @return /
-   */
-  public Long countUserByRoleIds(Set<Long> roleIds) {
-    if (CollUtil.isEmpty(roleIds)) {
-      return 0L;
-    }
-    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserRoleTb::getRoleId, roleIds);
-    return systemUserRoleMapper.selectCount(wrapper);
-  }
-
-  /**
    * 构建用户查询条件
    *
    * @param args 查询条件
    * @return /
    */
   private LambdaQueryWrapper<SystemUserTb> buildUserQueryWrapper(SystemQueryUserArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      if (args.getId() != null) {
-        wrapper.eq(SystemUserTb::getId, args.getId());
-      }
-      if (args.getEnabled() != null) {
-        wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
-      }
-      if (CollUtil.isNotEmpty(args.getDeptIds())) {
-        wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
-      }
-      if (StrUtil.isNotBlank(args.getBlurry())) {
-        wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry())
-            .or().like(SystemUserTb::getNickName, args.getBlurry())
-            .or().like(SystemUserTb::getEmail, args.getBlurry()));
-      }
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    if (args.getId() != null) {
+      wrapper.eq(SystemUserTb::getId, args.getId());
+    }
+    if (args.getEnabled() != null) {
+      wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
+    }
+    if (CollUtil.isNotEmpty(args.getDeptIds())) {
+      wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
+    }
+    if (StrUtil.isNotBlank(args.getBlurry())) {
+      wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry())
+          .or().like(SystemUserTb::getNickName, args.getBlurry())
+          .or().like(SystemUserTb::getEmail, args.getBlurry()));
+    }
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByDesc(SystemUserTb::getCreateTime);
     return wrapper;
@@ -477,28 +436,24 @@ public class SystemUserService {
     if (user == null) {
       return null;
     }
-    SystemUserVo userVo = BeanUtil.copyProperties(user, SystemUserVo.class);
+    SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
-      SystemDeptTb dept = systemDeptMapper.selectById(user.getDeptId());
+      SystemDeptVo dept = systemDeptService.getDeptVoById(user.getDeptId());
       userVo.setDept(dept);
     }
     // 查询关联的岗位信息
-    LambdaQueryWrapper<SystemUserJobTb> jobWrapper = new LambdaQueryWrapper<>();
-    jobWrapper.eq(SystemUserJobTb::getUserId, user.getId());
-    List<SystemUserJobTb> userJobs = systemUserJobMapper.selectList(jobWrapper);
+    List<SystemUserJobTb> userJobs = systemUserJobService.listUserJobByUserId(user.getId());
     if (CollUtil.isNotEmpty(userJobs)) {
       Set<Long> jobIds = userJobs.stream().map(SystemUserJobTb::getJobId).collect(Collectors.toSet());
-      List<SystemJobTb> jobs = systemJobMapper.selectByIds(jobIds);
+      List<SystemJobTb> jobs = systemJobService.listByIds(jobIds);
       userVo.setJobs(new LinkedHashSet<>(jobs));
     }
     // 查询关联的角色信息
-    LambdaQueryWrapper<SystemUserRoleTb> roleWrapper = new LambdaQueryWrapper<>();
-    roleWrapper.eq(SystemUserRoleTb::getUserId, user.getId());
-    List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(roleWrapper);
+    List<SystemUserRoleTb> userRoles = systemUserRoleService.listUserRoleByUserId(user.getId());
     if (CollUtil.isNotEmpty(userRoles)) {
       Set<Long> roleIds = userRoles.stream().map(SystemUserRoleTb::getRoleId).collect(Collectors.toSet());
-      List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
+      List<SystemRoleTb> roles = systemRoleService.listByIds(roleIds);
       userVo.setRoles(new LinkedHashSet<>(roles));
     }
     return userVo;
@@ -533,13 +488,12 @@ public class SystemUserService {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
       args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
-      List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
+      List<SystemDeptVo> data = systemDeptService.listDeptByPid(args.getDeptId());
       // 然后把子节点的ID都加入到集合中
       args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
     }
     // 数据权限
-    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(
-        this.getUserByUsername(currentUsername));
+    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(this.getUserVoByUsername(currentUsername));
     // args.getDeptIds() 不为空并且数据权限不为空则取交集
     if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
       // 取交集
@@ -556,35 +510,6 @@ public class SystemUserService {
   }
 
   public void exportUserXlsx(HttpServletResponse response, SystemQueryUserArgs args) {
-    //    List<SystemUserVo> systemUserVos = systemUserService.queryUserVoByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "用户数据", systemUserVos, SystemUserExportRowVo.class, (dataObject) -> {
-//      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
-//      rowVo.setUsername(dataObject.getUsername());
-//      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setDept(dataObject.getDept().getName());
-//      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setEmail(dataObject.getEmail());
-//      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setMobile(dataObject.getPhone());
-//      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
-//    List<SystemUserExportRowVo> rowVos = new ArrayList<>();
-//    for (SystemUserVo dataObject : systemUserVos) {
-//      SystemUserExportRowVo rowVo = new SystemUserExportRowVo();
-//      rowVo.setUsername(dataObject.getUsername());
-//      rowVo.setRoles(dataObject.getRoles().stream().map(SystemRoleTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setDept(dataObject.getDept().getName());
-//      rowVo.setJobs(dataObject.getJobs().stream().map(SystemJobTb::getName).collect(Collectors.joining(",")));
-//      rowVo.setEmail(dataObject.getEmail());
-//      rowVo.setStatus(dataObject.getEnabled() ? SystemZhConst.ENABLE_STR : SystemZhConst.DISABLE_STR);
-//      rowVo.setMobile(dataObject.getPhone());
-//      rowVo.setUpdatePwdTime(dataObject.getPwdResetTime());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      rowVos.add(rowVo);
-//    }
-//    KitExcelExporter.exportSimple(response, "用户数据", SystemUserExportRowVo.class, rowVos);
     long totalCount = this.countUserByArgs(args);
     KitExcelExporter.exportByPage(response, "用户数据", SystemUserExportRowVo.class, totalCount, (long pageNum, long pageSize) -> {
       KitPageResult<SystemUserVo> pageResult = this.searchUserByArgs(args, new Page<>(pageNum, pageSize));

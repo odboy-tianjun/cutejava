@@ -16,9 +16,9 @@
 package cn.odboy.system.framework.permission.core.handler;
 
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.system.dal.model.SystemRoleCodeVo;
-import cn.odboy.system.dal.model.SystemUserJwtVo;
-import cn.odboy.system.dal.model.SystemUserVo;
+import cn.odboy.system.dal.model.response.SystemRoleCodeVo;
+import cn.odboy.system.dal.model.response.SystemUserJwtVo;
+import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemRoleService;
@@ -30,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 /**
- * TODO 通过用户名判断用户信息，并获取拥有的权限与部门
+ * 通过用户名判断用户信息，并获取拥有的权限与部门
  */
 @Slf4j
 @Service("userDetailsService")

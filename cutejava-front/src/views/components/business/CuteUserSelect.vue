@@ -67,15 +67,15 @@ export default {
         this.loading = true
         setTimeout(() => {
           this.loading = false
-          this.queryUserMetaPage(query)
+          this.queryUserMetadataOptions(query)
         }, 200)
       } else {
         this.options = []
       }
     },
-    queryUserMetaPage(query, options) {
+    queryUserMetadataOptions(query, options) {
       const that = this
-      UserService.queryUserMetaPage(query).then(res => {
+      UserService.queryUserMetadataOptions(query).then(res => {
         that.options = res
       })
     },

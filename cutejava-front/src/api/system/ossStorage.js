@@ -1,5 +1,7 @@
 import request from '@/utils/request'
-
+/**
+ * 默认入口：add、del、edit、get
+ */
 export function add(data) {
   return request({
     url: 'api/ossStorage/uploadFile',
@@ -10,7 +12,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/ossStorage/removeFileByIds',
+    url: 'api/ossStorage/deleteFileByIds',
     method: 'post',
     data: ids
   })

@@ -72,7 +72,8 @@ public class BizLockAspect {
     Object[] args = joinPoint.getArgs();
     for (int i = 0; i < parameterNames.length; i++) {
       context.setVariable(parameterNames[i], args[i]);
-      context.setVariable("p" + i, args[i]); // 支持#p0,#p1格式
+      // 支持#p0,#p1格式
+      context.setVariable("p" + i, args[i]);
     }
     // 设置方法相关信息
     context.setVariable("methodName", method.getName());

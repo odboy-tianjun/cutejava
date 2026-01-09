@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author odboy
  * @date 2025-04-05
  */
+@Deprecated
 public final class KitDistributedIdUtil {
 
   /**

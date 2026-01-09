@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021-2025 Odboy
  *
@@ -14,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import java.lang.reflect.Field;
@@ -28,8 +26,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class KitClassUtil {
 
-  @SuppressWarnings({"unchecked", "all"})
-  public static List<Field> getAllFields(Class clazz, List<Field> fields) {
+  public static List<Field> getAllFields(Class<?> clazz, List<Field> fields) {
     if (clazz != null) {
       fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
       getAllFields(clazz.getSuperclass(), fields);

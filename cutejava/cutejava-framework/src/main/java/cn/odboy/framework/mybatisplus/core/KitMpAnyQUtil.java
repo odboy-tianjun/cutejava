@@ -15,7 +15,7 @@
  */
 package cn.odboy.framework.mybatisplus.core;
 
-import cn.hutool.core.bean.BeanUtil;
+import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,7 +41,7 @@ public class KitMpAnyQUtil {
     if (mapperTarget == null) {
       return null;
     }
-    return BeanUtil.copyProperties(mapperTarget, mapperClazz);
+    return KitBeanUtil.copyToClass(mapperTarget, mapperClazz);
   }
 
   public static <T> List<T> selectList(BaseMapper<T> baseMapper, Object queryParams) {
@@ -55,7 +55,7 @@ public class KitMpAnyQUtil {
     if (mapperTarget == null) {
       return new ArrayList<>();
     }
-    return BeanUtil.copyToList(mapperTarget, mapperClazz);
+    return KitBeanUtil.copyToList(mapperTarget, mapperClazz);
   }
 
   public static <T> Long selectCount(BaseMapper<T> baseMapper, Object queryParams) {
@@ -73,7 +73,7 @@ public class KitMpAnyQUtil {
     QueryWrapper<T> queryWrapper = KitMpQUtil.build(queryParams);
     Page<T> tPage = baseMapper.selectPage(page, queryWrapper);
     Page<M> mapperTarget = new Page<>();
-    mapperTarget.setRecords(BeanUtil.copyToList(tPage.getRecords(), mapperClazz));
+    mapperTarget.setRecords(KitBeanUtil.copyToList(tPage.getRecords(), mapperClazz));
     mapperTarget.setTotal(tPage.getTotal());
     mapperTarget.setSize(tPage.getSize());
     mapperTarget.setCurrent(tPage.getCurrent());

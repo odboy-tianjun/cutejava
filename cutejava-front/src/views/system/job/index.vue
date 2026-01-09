@@ -70,6 +70,7 @@ export default {
     return CRUD({
       title: '岗位',
       url: 'api/job',
+      searchRouter: '/searchJob',
       crudMethod: { ...crudJob }
     })
   },

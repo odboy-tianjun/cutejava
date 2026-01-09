@@ -80,7 +80,7 @@ public class SpringSecurityConfig {
         .and().headers().frameOptions().disable()
         // 不创建会话
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-        // 静态资源等等
+        // 静态资源等
         .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/websocket/**").permitAll()
         // swagger 文档
         .antMatchers("/swagger-ui.html").permitAll().antMatchers("/swagger-resources/**").permitAll()

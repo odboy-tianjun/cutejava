@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.util;
 
 import cn.odboy.framework.exception.BadRequestException;
@@ -25,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author odboy
  * @date 2025-04-05
  */
+@Deprecated
 public final class KitDistributedIdUtil {
 
   /**
@@ -43,7 +43,6 @@ public final class KitDistributedIdUtil {
    * 序列号所占位数
    */
   private final long sequenceBits;
-
   /**
    * 数据中心 ID 最大值
    */
@@ -56,7 +55,6 @@ public final class KitDistributedIdUtil {
    * 序列号最大值
    */
   private final long sequenceMask;
-
   /**
    * 机器 ID 向左移位数
    */
@@ -69,7 +67,6 @@ public final class KitDistributedIdUtil {
    * 时间戳向左移位数
    */
   private final long timestampLeftShift;
-
   /**
    * 数据中心 ID
    */
@@ -101,15 +98,12 @@ public final class KitDistributedIdUtil {
     this.dataCenterIdBits = dataCenterIdBits;
     this.workerIdBits = workerIdBits;
     this.sequenceBits = sequenceBits;
-
     this.maxDataCenterId = ~(-1L << dataCenterIdBits);
     this.maxWorkerId = ~(-1L << workerIdBits);
     this.sequenceMask = ~(-1L << sequenceBits);
-
     this.workerIdShift = sequenceBits;
     this.dataCenterIdShift = sequenceBits + workerIdBits;
     this.timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
-
     if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
       throw new IllegalArgumentException(
           "Data center ID can't be greater than " + maxDataCenterId + " or less than 0");
@@ -153,14 +147,12 @@ public final class KitDistributedIdUtil {
    */
   public long nextId() {
     long currentTimestamp = System.currentTimeMillis();
-
     // 如果当前时间戳小于上一次生成 ID 的时间戳, 说明时钟回拨，抛出异常
     if (currentTimestamp < lastTimestamp.get()) {
       throw new BadRequestException(
           "Clock moved backwards. Refusing to generate id for " + (lastTimestamp.get() - currentTimestamp) +
               " milliseconds");
     }
-
     long lastTimestampValue = lastTimestamp.get();
     if (currentTimestamp == lastTimestampValue) {
       // 同一毫秒内，序列号自增

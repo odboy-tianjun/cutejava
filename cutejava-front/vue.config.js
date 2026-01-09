@@ -41,6 +41,13 @@ module.exports = {
         pathRewrite: {
           '^/auth': 'auth'
         }
+      },
+      '/captcha': {
+        target: process.env.VUE_APP_BASE_API,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/captcha': 'captcha'
+        }
       }
     }
   },

@@ -76,12 +76,12 @@ public final class KitBigDecimalUtil {
    *
    * @param a 乘数
    * @param b 乘数
-   * @return 两个乘数的积, 保留两位小数
+   * @return 两个乘数的积, 保留6位小数
    */
   public static BigDecimal multiply(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.multiply(bdB).setScale(2, RoundingMode.HALF_UP);
+    return bdA.multiply(bdB).setScale(6, RoundingMode.HALF_UP);
   }
 
   /**
@@ -94,7 +94,7 @@ public final class KitBigDecimalUtil {
   public static BigDecimal divide(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.divide(bdB, 2, RoundingMode.HALF_UP);
+    return bdA.divide(bdB, 6, RoundingMode.HALF_UP);
   }
 
   /**

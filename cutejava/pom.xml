@@ -5,7 +5,7 @@
   <groupId>cn.odboy</groupId>
   <artifactId>cutejava</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.1</version>
+  <version>1.5.0</version>
 
   <modules>
     <!-- 基础设施 -->

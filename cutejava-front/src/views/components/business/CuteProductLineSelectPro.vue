@@ -17,7 +17,7 @@
 
 <script>
 
-import { queryDeptSelectProDataSource } from '@/api/system/component'
+import { listDeptSelectProDataSource } from '@/api/system/component'
 import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
@@ -62,7 +62,7 @@ export default {
       })
     },
     fetchDeptData() {
-      queryDeptSelectProDataSource().then(data => {
+      listDeptSelectProDataSource().then(data => {
         this.deptOptions = this.cleanEmptyChildren(data)
         // console.error('deptOptions', this.deptOptions)
       }).catch(error => {

@@ -1,27 +1,27 @@
 import request from '@/utils/request'
 
-export function sendResetEmailCaptcha(email) {
+export function sendResetEmailCode(email) {
   return request({
-    url: 'api/captcha/sendResetEmailCaptcha?email=' + email,
+    url: 'api/captcha/sendResetEmailCode?email=' + email,
     method: 'post'
   })
 }
 
-export function sendResetPasswordCaptcha(email) {
+export function sendResetPasswordCode(email) {
   return request({
-    url: 'api/captcha/sendResetPasswordCaptcha?email=' + email,
+    url: 'api/captcha/sendResetPasswordCode?email=' + email,
     method: 'post'
   })
 }
 
-export function checkEmailCaptcha(email, code, bizCode) {
+export function verifyCode(email, code, bizCode) {
   const params = {
     email: email,
     code: code,
     bizCode: bizCode
   }
   return request({
-    url: 'api/captcha/checkEmailCaptcha',
+    url: 'api/captcha/verifyCode',
     method: 'post',
     data: params
   })

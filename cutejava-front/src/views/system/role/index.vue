@@ -151,9 +151,9 @@
 </template>
 
 <script>
-import crudRoles from '@/api/system/role'
-import { queryDeptList, queryDeptSuperiorTree } from '@/api/system/dept'
-import { queryChildMenuSet, queryMenuListByPid } from '@/api/system/menu'
+import crudRoles, {getCurrentUserRoleLevel} from '@/api/system/role'
+import { searchDept, searchDeptTree } from '@/api/system/dept'
+import { listChildMenuSetByMenuId, listMenuByPid } from '@/api/system/menu'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -168,7 +168,7 @@ export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '角色', url: 'api/role', crudMethod: { ...crudRoles }})
+    return CRUD({ title: '角色', url: 'api/role', searchRouter: '/searchRole', crudMethod: { ...crudRoles }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -190,14 +190,14 @@ export default {
     }
   },
   created() {
-    crudRoles.getLevel().then(data => {
+    crudRoles.getCurrentUserRoleLevel().then(data => {
       this.level = data.level
     })
   },
   methods: {
     getMenuDatas(node, resolve) {
       setTimeout(() => {
-        queryMenuListByPid(node.data.id ? node.data.id : 0).then(res => {
+        listMenuByPid(node.data.id ? node.data.id : 0).then(res => {
           resolve(res)
         })
       }, 100)
@@ -261,7 +261,7 @@ export default {
     },
     menuChange(menu) {
       // 获取该节点的所有子节点，id 包含自身
-      queryChildMenuSet(menu.id).then(childIds => {
+      listChildMenuSetByMenuId(menu.id).then(childIds => {
         // 判断是否在 menuIds 中，如果存在则删除，否则添加
         if (this.menuIds.indexOf(menu.id) !== -1) {
           for (let i = 0; i < childIds.length; i++) {
@@ -313,7 +313,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      queryDeptList({
+      searchDept({
         page: 1,
         size: 9999999,
         args: { enabled: true }
@@ -331,7 +331,7 @@ export default {
       depts.forEach(dept => {
         ids.push(dept.id)
       })
-      queryDeptSuperiorTree(ids).then(res => {
+      searchDeptTree(ids).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -350,7 +350,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        queryDeptList({
+        searchDept({
           page: 1,
           size: 9999999,
           args: { enabled: true, pid: parentNode.id }

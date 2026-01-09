@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 统计执行时长
+ * 统计执行时长（仅对代理方法有效）
  *
  * @author odboy
  */

@@ -25,7 +25,7 @@
 
 <script>
 
-import { queryDeptSelectDataSource } from '@/api/system/component'
+import { listDeptSelectDataSource } from '@/api/system/component'
 import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     fetchDeptData() {
-      queryDeptSelectDataSource().then(data => {
+      listDeptSelectDataSource().then(data => {
         this.deptOptions = data
       }).catch(error => {
         console.error('获取部门数据失败:', error)

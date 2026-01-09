@@ -15,24 +15,25 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.SystemCreateRoleArgs;
-import cn.odboy.system.dal.model.SystemQueryRoleArgs;
-import cn.odboy.system.dal.model.SystemRoleCodeVo;
-import cn.odboy.system.dal.model.SystemRoleExportRowVo;
-import cn.odboy.system.dal.model.SystemRoleVo;
+import cn.odboy.system.dal.model.export.SystemRoleExportRowVo;
+import cn.odboy.system.dal.model.request.SystemCreateRoleArgs;
+import cn.odboy.system.dal.model.request.SystemQueryRoleArgs;
+import cn.odboy.system.dal.model.response.SystemMenuVo;
+import cn.odboy.system.dal.model.response.SystemRoleCodeVo;
+import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -57,8 +58,6 @@ public class SystemRoleService {
   @Autowired
   private SystemRoleDeptService systemRoleDeptService;
   @Autowired
-  private SystemUserService systemUserService;
-  @Autowired
   private SystemUserRoleService systemUserRoleService;
 
   /**
@@ -72,7 +71,8 @@ public class SystemRoleService {
     if (this.getRoleByName(args.getName()) != null) {
       throw new BadRequestException("角色名称已存在");
     }
-    systemRoleMapper.insert(BeanUtil.copyProperties(args, SystemRoleTb.class));
+    SystemRoleTb roleTb = KitBeanUtil.copyToClass(args, SystemRoleTb.class);
+    systemRoleMapper.insert(roleTb);
     // 判断是否有部门数据, 若有, 则需创建关联
     if (CollectionUtil.isNotEmpty(args.getDepts())) {
       systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
@@ -93,7 +93,7 @@ public class SystemRoleService {
   @Transactional(rollbackFor = Exception.class)
   public void updateRoleById(SystemRoleVo args) {
     checkRoleLevels(args.getLevel());
-    SystemRoleVo role = BeanUtil.copyProperties(systemRoleMapper.selectById(args.getId()), SystemRoleVo.class);
+    SystemRoleTb role = this.getRoleTbById(args.getId());
     SystemRoleTb role1 = this.getRoleByName(args.getName());
     if (role1 != null && !role1.getId().equals(role.getId())) {
       throw new BadRequestException("角色名称已存在");
@@ -101,7 +101,6 @@ public class SystemRoleService {
     role.setName(args.getName());
     role.setDescription(args.getDescription());
     role.setDataScope(args.getDataScope());
-    role.setDepts(args.getDepts());
     role.setLevel(args.getLevel());
     // 更新
     systemRoleMapper.insertOrUpdate(role);
@@ -113,19 +112,25 @@ public class SystemRoleService {
     }
   }
 
+  private SystemRoleTb getRoleTbById(Long id) {
+    return systemRoleMapper.selectById(id);
+  }
+
   /**
    * 修改绑定的菜单
    *
    * @param args /
    */
+  @Transactional(rollbackFor = Exception.class)
   public void updateBindMenuById(SystemRoleVo args) {
     SystemRoleTb role = systemRoleMapper.selectById(args.getId());
     checkRoleLevels(role.getLevel());
     // 更新菜单
     systemRoleMenuService.deleteRoleMenuByRoleId(role.getId());
     // 判断是否为空
-    if (CollUtil.isNotEmpty(args.getMenus())) {
-      systemRoleMenuService.batchInsertRoleMenu(args.getMenus(), role.getId());
+    Set<SystemMenuVo> menus = args.getMenus();
+    if (CollUtil.isNotEmpty(menus)) {
+      systemRoleMenuService.batchInsertRoleMenu(menus, role.getId());
     }
   }
 
@@ -165,19 +170,18 @@ public class SystemRoleService {
    * @return /
    */
   public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args) {
+    KitValidUtil.notNull(args);
     // 查询角色基本信息
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+            .like(SystemRoleTb::getDescription, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemRoleTb::getLevel);
-    if (args != null && args.getSize() != null) {
+    if (args.getSize() != null) {
       Page<SystemRoleTb> rolePage = new Page<>(args.getPage(), args.getSize());
       Page<SystemRoleTb> page = systemRoleMapper.selectPage(rolePage, wrapper);
       List<SystemRoleTb> roles = page.getRecords();
@@ -217,7 +221,7 @@ public class SystemRoleService {
       return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
     List<SystemRoleVo> roles = systemUserRoleService.queryRoleByUsersId(user.getId());
-    permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuTb::getPermission)
+    permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuVo::getPermission)
         .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
     return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
   }
@@ -228,21 +232,20 @@ public class SystemRoleService {
    * @param ids /
    */
   public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserService.countUserByRoleIds(ids) > 0) {
+    if (systemUserRoleService.countUserByRoleIds(ids) > 0) {
       throw new BadRequestException("所选角色存在用户关联, 请解除关联再试！");
     }
   }
 
   public Long countRoleByArgs(SystemQueryRoleArgs args) {
+    KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-          c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
-              .like(SystemRoleTb::getDescription, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+        c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+            .like(SystemRoleTb::getDescription, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0),
+          args.getCreateTime().get(1));
     }
     return systemRoleMapper.selectCount(wrapper);
   }
@@ -255,7 +258,7 @@ public class SystemRoleService {
     return systemUserRoleService.convertToRoleVo(roleTb);
   }
 
-  public Dict getRoleLevel() {
+  public Dict getCurrentUserRoleLevel() {
     return Dict.create().set("level", checkRoleLevels(null));
   }
 
@@ -266,7 +269,7 @@ public class SystemRoleService {
    */
   private int checkRoleLevels(Integer level) {
     List<Integer> levels = systemUserRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-        .map(SystemRoleTb::getLevel).collect(Collectors.toList());
+        .map(SystemRoleVo::getLevel).collect(Collectors.toList());
     int min = Collections.min(levels);
     if (level != null) {
       if (level < min) {
@@ -278,14 +281,6 @@ public class SystemRoleService {
 
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
     List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "角色数据", systemRoleVos, SystemRoleExportRowVo.class, (dataObject) -> {
-//      SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
-//      rowVo.setName(dataObject.getName());
-//      rowVo.setLevel(dataObject.getLevel());
-//      rowVo.setDescription(dataObject.getDescription());
-//      rowVo.setCreateTime(dataObject.getCreateTime());
-//      return CollUtil.newArrayList(rowVo);
-//    });
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
     for (SystemRoleVo dataObject : systemRoleVos) {
       SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();
@@ -296,5 +291,9 @@ public class SystemRoleService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "部门数据", SystemRoleExportRowVo.class, rowVos);
+  }
+
+  public List<SystemRoleTb> listByIds(Set<Long> roleIds) {
+    return systemRoleMapper.selectByIds(roleIds);
   }
 }

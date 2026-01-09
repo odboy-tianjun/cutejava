@@ -18,9 +18,10 @@ package cn.odboy.system.controller;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
-import cn.odboy.system.dal.model.SystemCreateDictDetailArgs;
-import cn.odboy.system.dal.model.SystemDictDetailVo;
-import cn.odboy.system.dal.model.SystemQueryDictDetailArgs;
+import cn.odboy.system.dal.model.request.SystemCreateDictDetailArgs;
+import cn.odboy.system.dal.model.request.SystemQueryDictDetailArgs;
+import cn.odboy.system.dal.model.response.SystemDictDetailVo;
+import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemDictDetailService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -47,16 +48,8 @@ public class SystemDictDetailController {
   private SystemDictDetailService systemDictDetailService;
 
   @ApiOperation("查询字典详情")
-  @PostMapping
-  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByCrud(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> args) {
-    return queryDictDetailByArgs(args);
-  }
-
-  @ApiOperation("查询字典详情")
-  @PostMapping(value = "/queryDictDetailByArgs")
-  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
+  @PostMapping(value = "/searchDictDetail")
+  public ResponseEntity<KitPageResult<SystemDictDetailVo>> queryDictDetailByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictDetailArgs> pageArgs) {
     Page<SystemDictDetailTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemDictDetailService.searchDictDetail(pageArgs.getArgs(), page));
   }
@@ -68,6 +61,7 @@ public class SystemDictDetailController {
     return ResponseEntity.ok(dictMap);
   }
 
+  @OperationLog
   @ApiOperation("新增字典详情")
   @PostMapping(value = "/saveDictDetail")
   @PreAuthorize("@el.check('dict:add')")
@@ -76,19 +70,20 @@ public class SystemDictDetailController {
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("修改字典详情")
-  @PostMapping(value = "/modifyDictDetailById")
+  @PostMapping(value = "/updateDictDetailById")
   @PreAuthorize("@el.check('dict:edit')")
-  public ResponseEntity<Void> modifyDictDetailById(
-      @Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
+  public ResponseEntity<Void> updateDictDetailById(@Validated(SystemDictDetailTb.Update.class) @RequestBody SystemDictDetailTb args) {
     systemDictDetailService.updateDictDetailById(args);
     return ResponseEntity.ok(null);
   }
 
+  @OperationLog
   @ApiOperation("删除字典详情")
-  @PostMapping(value = "/removeDictDetailById")
+  @PostMapping(value = "/deleteDictDetailById")
   @PreAuthorize("@el.check('dict:del')")
-  public ResponseEntity<Void> removeDictDetailById(@RequestBody SystemDictDetailTb args) {
+  public ResponseEntity<Void> deleteDictDetailById(@RequestBody SystemDictDetailTb args) {
     systemDictDetailService.deleteDictDetailById(args.getId());
     return ResponseEntity.ok(null);
   }

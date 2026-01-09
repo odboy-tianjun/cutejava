@@ -55,4 +55,25 @@ public class SystemUserJobService {
       systemUserJobMapper.delete(wrapper);
     }
   }
+
+  /**
+   * 根据岗位ID统计用户数量
+   *
+   * @param jobIds 岗位ID集合
+   * @return /
+   */
+  public Long countUserByJobIds(Set<Long> jobIds) {
+    if (CollUtil.isEmpty(jobIds)) {
+      return 0L;
+    }
+    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserJobTb::getJobId, jobIds);
+    return systemUserJobMapper.selectCount(wrapper);
+  }
+
+  public List<SystemUserJobTb> listUserJobByUserId(Long userId) {
+    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserJobTb::getUserId, userId);
+    return systemUserJobMapper.selectList(wrapper);
+  }
 }

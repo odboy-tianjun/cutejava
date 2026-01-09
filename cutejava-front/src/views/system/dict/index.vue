@@ -114,7 +114,7 @@ export default {
   components: { crudOperation, pagination, rrOperation, udOperation, dictDetail },
   cruds() {
     return [
-      CRUD({ title: '字典', url: 'api/dict', crudMethod: { ...crudDict }})
+      CRUD({ title: '字典', url: 'api/dict', searchRouter: '/searchDict', crudMethod: { ...crudDict }})
     ]
   },
   mixins: [presenter(), header(), form(defaultForm)],

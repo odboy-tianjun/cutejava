@@ -18,9 +18,9 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.dataobject.SystemUserTb;
-import cn.odboy.system.dal.model.SystemRoleVo;
+import cn.odboy.system.dal.model.response.SystemDeptVo;
+import cn.odboy.system.dal.model.response.SystemRoleVo;
+import cn.odboy.system.dal.model.response.SystemUserVo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,12 +49,12 @@ public class SystemDataService {
    * @param user /
    * @return /
    */
-  public List<Long> queryDeptIdByArgs(SystemUserTb user) {
+  public List<Long> queryDeptIdByArgs(SystemUserVo user) {
     List<Long> deptIds = new ArrayList<>();
     // 查询用户角色
     List<SystemRoleVo> roleList = systemUserRoleService.queryRoleByUsersId(user.getId());
     // 获取对应的部门ID
-    for (SystemRoleTb role : roleList) {
+    for (SystemRoleVo role : roleList) {
       SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
       switch (Objects.requireNonNull(dataScopeEnum)) {
         case THIS_LEVEL:
@@ -77,11 +77,11 @@ public class SystemDataService {
    * @param role    角色
    * @return 数据权限ID
    */
-  private List<Long> queryCustomDataPermissionByArgs(List<Long> deptIds, SystemRoleTb role) {
+  private List<Long> queryCustomDataPermissionByArgs(List<Long> deptIds, SystemRoleVo role) {
     List<SystemDeptTb> deptList = systemRoleDeptService.listDeptByRoleId(role.getId());
     for (SystemDeptTb dept : deptList) {
       deptIds.add(dept.getId());
-      List<SystemDeptTb> deptChildren = systemDeptService.listDeptByPid(dept.getId());
+      List<SystemDeptVo> deptChildren = systemDeptService.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptChildren)) {
         deptIds.addAll(systemDeptService.queryChildDeptIdByDeptIds(deptChildren));
       }

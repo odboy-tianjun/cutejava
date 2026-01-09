@@ -15,17 +15,18 @@
  */
 package cn.odboy.system.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
-import cn.odboy.system.dal.model.SystemCreateDictArgs;
-import cn.odboy.system.dal.model.SystemDictDetailVo;
-import cn.odboy.system.dal.model.SystemDictExportRowVo;
-import cn.odboy.system.dal.model.SystemQueryDictArgs;
+import cn.odboy.system.dal.model.export.SystemDictExportRowVo;
+import cn.odboy.system.dal.model.request.SystemCreateDictArgs;
+import cn.odboy.system.dal.model.request.SystemQueryDictArgs;
+import cn.odboy.system.dal.model.response.SystemDictDetailVo;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -52,7 +53,8 @@ public class SystemDictService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDict(SystemCreateDictArgs args) {
-    systemDictMapper.insert(BeanUtil.copyProperties(args, SystemDictTb.class));
+    SystemDictTb dictTb = KitBeanUtil.copyToClass(args, SystemDictTb.class);
+    systemDictMapper.insert(dictTb);
   }
 
   /**
@@ -96,10 +98,9 @@ public class SystemDictService {
   }
 
   private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
-          .like(SystemDictTb::getDescription, args.getBlurry()));
-    }
+    KitValidUtil.notNull(args);
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+        .like(SystemDictTb::getDescription, args.getBlurry()));
   }
 
   public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
@@ -110,29 +111,6 @@ public class SystemDictService {
 
   public void exportDictXlsx(HttpServletResponse response, SystemQueryDictArgs args) {
     List<SystemDictTb> systemDictTbs = this.queryDictByArgs(args);
-//    KitXlsxExportUtil.exportFile(response, "字典数据", systemDictTbs, SystemDictExportRowVo.class, (dataObject) -> {
-//      List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());
-//      if (CollUtil.isEmpty(dictDetails)) {
-//        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
-//        rowVo.setName(dataObject.getName());
-//        rowVo.setDescription(dataObject.getDescription());
-//        rowVo.setCreateTime(dataObject.getCreateTime());
-//        rowVo.setLabel("");
-//        rowVo.setValue("");
-//        return CollUtil.newArrayList(rowVo);
-//      }
-//      List<SystemDictExportRowVo> rowVos = new ArrayList<>();
-//      for (SystemDictDetailVo dictDetail : dictDetails) {
-//        SystemDictExportRowVo rowVo = new SystemDictExportRowVo();
-//        rowVo.setName(dataObject.getName());
-//        rowVo.setDescription(dataObject.getDescription());
-//        rowVo.setCreateTime(dataObject.getCreateTime());
-//        rowVo.setLabel(dictDetail.getLabel());
-//        rowVo.setValue(dictDetail.getValue());
-//        rowVos.add(rowVo);
-//      }
-//      return rowVos;
-//    });
     List<SystemDictExportRowVo> rowVos = new ArrayList<>();
     for (SystemDictTb dataObject : systemDictTbs) {
       List<SystemDictDetailVo> dictDetails = systemDictDetailService.listDictDetailByName(dataObject.getName());

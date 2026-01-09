@@ -30,7 +30,7 @@
 
 <script>
 
-import { queryDeptList } from '@/api/system/dept'
+import { searchDept } from '@/api/system/dept'
 
 export default {
   name: 'CuteDeptTree',
@@ -61,7 +61,7 @@ export default {
         params['pid'] = node.data.id
       }
       setTimeout(() => {
-        queryDeptList({
+        searchDept({
           page: 1,
           size: 9999999,
           args: params

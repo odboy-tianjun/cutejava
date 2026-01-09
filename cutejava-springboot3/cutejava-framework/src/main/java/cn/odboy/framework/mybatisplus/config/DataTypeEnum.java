@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.config;
 
 import cn.odboy.framework.exception.BadRequestException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author /
- */
+@Getter
 @Slf4j
-@SuppressWarnings({"unchecked", "all"})
 public enum DataTypeEnum {
   /**
    * mysql
@@ -86,13 +83,13 @@ public enum DataTypeEnum {
    */
   IMPALA("impala", "impala", "com.cloudera.impala.jdbc41.Driver", "", "", "'", "'");
   private static final String JDBC_URL_PREFIX = "jdbc:";
-  private String feature;
-  private String desc;
-  private String driver;
-  private String keywordPrefix;
-  private String keywordSuffix;
-  private String aliasPrefix;
-  private String aliasSuffix;
+  private final String feature;
+  private final String desc;
+  private final String driver;
+  private final String keywordPrefix;
+  private final String keywordSuffix;
+  private final String aliasPrefix;
+  private final String aliasSuffix;
 
   DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix,
       String aliasPrefix, String aliasSuffix) {
@@ -110,10 +107,7 @@ public enum DataTypeEnum {
     for (DataTypeEnum dataTypeEnum : values()) {
       if (url.startsWith(JDBC_URL_PREFIX + dataTypeEnum.feature)) {
         try {
-          Class<?> aClass = Class.forName(dataTypeEnum.getDriver());
-          if (null == aClass) {
-            throw new BadRequestException("Unable to get driver instance for jdbcUrl: " + jdbcUrl);
-          }
+          Class.forName(dataTypeEnum.getDriver());
         } catch (ClassNotFoundException e) {
           throw new BadRequestException("Unable to get driver instance: " + jdbcUrl);
         }
@@ -123,31 +117,4 @@ public enum DataTypeEnum {
     return null;
   }
 
-  public String getFeature() {
-    return feature;
-  }
-
-  public String getDesc() {
-    return desc;
-  }
-
-  public String getDriver() {
-    return driver;
-  }
-
-  public String getKeywordPrefix() {
-    return keywordPrefix;
-  }
-
-  public String getKeywordSuffix() {
-    return keywordSuffix;
-  }
-
-  public String getAliasPrefix() {
-    return aliasPrefix;
-  }
-
-  public String getAliasSuffix() {
-    return aliasSuffix;
-  }
 }

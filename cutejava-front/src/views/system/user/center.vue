@@ -98,15 +98,15 @@
             <!--    操作日志    -->
             <el-tab-pane label="操作日志" name="second">
               <el-table v-loading="loading" :data="data" style="width: 100%;">
-                <el-table-column prop="description" label="行为" />
+                <el-table-column prop="bizName" label="业务名称" />
                 <el-table-column prop="requestIp" label="IP" />
                 <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
-                <el-table-column prop="browser" label="浏览器" />
-                <el-table-column prop="time" label="请求耗时" align="center">
+                <el-table-column prop="browserInfo" label="浏览器" />
+                <el-table-column prop="executeTime" label="请求耗时" align="center">
                   <template slot-scope="scope">
-                    <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
-                    <el-tag v-else-if="scope.row.time <= 1000" type="warning">{{ scope.row.time }}ms</el-tag>
-                    <el-tag v-else type="danger">{{ scope.row.time }}ms</el-tag>
+                    <el-tag v-if="scope.row.executeTime <= 300">{{ scope.row.time }}ms</el-tag>
+                    <el-tag v-else-if="scope.row.executeTime <= 1000" type="warning">{{ scope.row.executeTime }}ms</el-tag>
+                    <el-tag v-else type="danger">{{ scope.row.executeTime }}ms</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -151,7 +151,7 @@ import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { IsValidPhone } from '@/utils/CsValidateUtil'
 import crud from '@/mixins/crud'
-import { editUser } from '@/api/system/user'
+import { updateUserCenterInfoById } from '@/api/system/user'
 import Avatar from '@/assets/images/avatar.png'
 
 export default {
@@ -211,7 +211,7 @@ export default {
       }
     },
     beforeInit() {
-      this.url = 'api/logs/user'
+      this.url = 'api/logs/searchUserLog'
       return true
     },
     cropUploadSuccess(jsonData, field) {
@@ -223,7 +223,7 @@ export default {
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.saveLoading = true
-            editUser(this.form).then(() => {
+            updateUserCenterInfoById(this.form).then(() => {
               this.editSuccessNotify()
               store.dispatch('GetInfo').then(() => {
               })

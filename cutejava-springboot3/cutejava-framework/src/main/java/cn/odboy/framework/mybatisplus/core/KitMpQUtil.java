@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.mybatisplus.core;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -27,14 +26,15 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -84,21 +84,47 @@ public class KitMpQUtil {
   private static <R> void handleWrapper(KitMpQuery q, QueryWrapper<R> queryWrapper, String attributeName,
       Object fieldVal) {
     switch (q.type()) {
-      case EQUAL -> queryWrapper.eq(attributeName, fieldVal);
-      case GREATER_THAN -> queryWrapper.ge(attributeName, fieldVal);
-      case LESS_THAN -> queryWrapper.le(attributeName, fieldVal);
-      case LESS_THAN_NQ -> queryWrapper.lt(attributeName, fieldVal);
-      case INNER_LIKE -> queryWrapper.like(attributeName, fieldVal);
-      case LEFT_LIKE -> queryWrapper.likeLeft(attributeName, fieldVal);
-      case RIGHT_LIKE -> queryWrapper.likeRight(attributeName, fieldVal);
-      case IN -> handleInOrNotQuery(true, queryWrapper, attributeName, fieldVal);
-      case NOT_IN -> handleInOrNotQuery(false, queryWrapper, attributeName, fieldVal);
-      case NOT_EQUAL -> queryWrapper.ne(attributeName, fieldVal);
-      case NOT_NULL -> queryWrapper.isNotNull(attributeName);
-      case IS_NULL -> queryWrapper.isNull(attributeName);
-      case BETWEEN -> handleBetweenQuery(queryWrapper, fieldVal, attributeName);
-      default -> {
-      }
+      case EQUAL:
+        queryWrapper.eq(attributeName, fieldVal);
+        break;
+      case GREATER_THAN:
+        queryWrapper.ge(attributeName, fieldVal);
+        break;
+      case LESS_THAN:
+        queryWrapper.le(attributeName, fieldVal);
+        break;
+      case LESS_THAN_NQ:
+        queryWrapper.lt(attributeName, fieldVal);
+        break;
+      case INNER_LIKE:
+        queryWrapper.like(attributeName, fieldVal);
+        break;
+      case LEFT_LIKE:
+        queryWrapper.likeLeft(attributeName, fieldVal);
+        break;
+      case RIGHT_LIKE:
+        queryWrapper.likeRight(attributeName, fieldVal);
+        break;
+      case IN:
+        handleInOrNotQuery(true, queryWrapper, attributeName, fieldVal);
+        break;
+      case NOT_IN:
+        handleInOrNotQuery(false, queryWrapper, attributeName, fieldVal);
+        break;
+      case NOT_EQUAL:
+        queryWrapper.ne(attributeName, fieldVal);
+        break;
+      case NOT_NULL:
+        queryWrapper.isNotNull(attributeName);
+        break;
+      case IS_NULL:
+        queryWrapper.isNull(attributeName);
+        break;
+      case BETWEEN:
+        handleBetweenQuery(queryWrapper, fieldVal, attributeName);
+        break;
+      default:
+        break;
     }
   }
 
@@ -152,7 +178,8 @@ public class KitMpQUtil {
    * @param <R>          /
    */
   private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
-    List<String> blurryList = Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().toList();
+    List<String> blurryList =
+        Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
     queryWrapper.and(wrapper -> {
       for (String blurryItem : blurryList) {
         String column = StrUtil.toUnderlineCase(blurryItem);
@@ -171,7 +198,7 @@ public class KitMpQUtil {
   }
 
   public static void main(String[] args) {
-    QueryWrapper<TestDomain> query = new QueryWrapper<>();
+    QueryWrapper<TestDomain> query = new QueryWrapper<TestDomain>();
     query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
     query.eq("id", 1);
     query.orderByDesc("id");

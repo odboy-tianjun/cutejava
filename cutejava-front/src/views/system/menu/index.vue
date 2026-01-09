@@ -137,7 +137,7 @@
       ref="table"
       v-loading="crud.loading"
       lazy
-      :load="queryMenuByArgs"
+      :load="searchMenu"
       :data="crud.data"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       row-key="id"
@@ -239,7 +239,7 @@ export default {
   name: 'Menu',
   components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '菜单', url: 'api/menu', crudMethod: { ...crudMenu }})
+    return CRUD({ title: '菜单', url: 'api/menu', searchRouter: '/searchMenu', crudMethod: { ...crudMenu }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -273,14 +273,14 @@ export default {
         this.menus.push({ id: 0, label: '顶级类目', children: null })
       }
     },
-    queryMenuByArgs(tree, treeNode, resolve) {
+    searchMenu(tree, treeNode, resolve) {
       const params = {
         page: 1,
         size: 9999999,
         args: { pid: tree.id }
       }
       setTimeout(() => {
-        crudMenu.queryMenuByArgs(params).then(res => {
+        crudMenu.searchMenu(params).then(res => {
           resolve(res.content)
         })
       }, 100)
@@ -298,7 +298,7 @@ export default {
     },
     loadMenus({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudMenu.queryMenuListByPid(parentNode.id).then(res => {
+        crudMenu.listMenuByPid(parentNode.id).then(res => {
           parentNode.children = res.map(function(obj) {
             if (!obj.leaf) {
               obj.children = null

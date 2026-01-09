@@ -5,4 +5,4 @@
 | |___  | |_| |   | |   | |___  | |_| |  / /  | | | |/ /     / /  | |
 \_____| \_____/   |_|   |_____| \_____/ /_/   |_| |___/     /_/   |_|
 
-Spring Boot Version: (${spring-boot.version})，CuteJava Version: (1.4.1)
+Spring Boot Version: (${spring-boot.version})，CuteJava Version: (1.5.0)
