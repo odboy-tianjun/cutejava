@@ -73,7 +73,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
-      :page-size="6"
+      :page-size="size"
       style="margin-top:8px;"
       layout="total, prev, pager, next"
       @size-change="sizeChange"
@@ -110,7 +110,13 @@ export default {
     // 获取数据前设置好接口地址
     beforeInit() {
       this.url = 'api/quartzJob/searchQuartzLog'
-      this.size = 6
+      this.page = 1
+      this.isCustomParams = true
+      this.params = {
+        jobName: this.query.jobName,
+        createTime: this.query.createTime,
+        isSuccess: this.query.isSuccess
+      }
       return true
     },
     // 异常详情

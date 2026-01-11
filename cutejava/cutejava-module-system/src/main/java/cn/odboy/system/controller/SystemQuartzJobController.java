@@ -77,9 +77,9 @@ public class SystemQuartzJobController {
   @ApiOperation("查询定时任务执行日志")
   @PostMapping(value = "/searchQuartzLog")
   @PreAuthorize("@el.check('quartzJob:list')")
-  public ResponseEntity<KitPageResult<SystemQuartzLogTb>> queryQuartzJobLog(SystemQueryQuartzJobArgs args) {
-    Page<SystemQuartzLogTb> page = new Page<>(args.getPage(), args.getSize());
-    return ResponseEntity.ok(systemQuartzJobService.searchQuartzLogByArgs(args, page));
+  public ResponseEntity<KitPageResult<SystemQuartzLogTb>> queryQuartzJobLog(@Validated @RequestBody KitPageArgs<SystemQueryQuartzJobArgs> pageArgs) {
+    Page<SystemQuartzLogTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+    return ResponseEntity.ok(systemQuartzJobService.searchQuartzLogByArgs(pageArgs.getArgs(), page));
   }
 
   @OperationLog

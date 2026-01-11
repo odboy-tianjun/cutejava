@@ -19,6 +19,8 @@ export default {
       url: '',
       // 查询数据的参数
       params: {},
+      // 是否自定义参数
+      isCustomParams: false,
       // 待查询的对象
       query: {},
       // 等待时间
@@ -76,11 +78,21 @@ export default {
       Object.keys(this.params).length !== 0 && Object.keys(this.params).forEach(item => {
         if (this.params[item] === null || this.params[item] === '') this.params[item] = undefined
       })
-      return {
-        page: this.page,
-        size: this.size,
-        ...this.query,
-        ...this.params
+      if (this.isCustomParams) {
+        return {
+          page: this.page,
+          size: this.size,
+          args: {
+            ...this.params
+          }
+        }
+      } else {
+        return {
+          page: this.page,
+          size: this.size,
+          ...this.query,
+          ...this.params
+        }
       }
     },
     // 改变页码
