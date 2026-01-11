@@ -55,8 +55,7 @@ public class TaskJobBean extends QuartzJobBean {
   public void executeInternal(JobExecutionContext context) {
     // ========================== 获取代理类 ==========================
     TaskInstanceInfoService taskInstanceInfoService = KitSpringBeanHolder.getBean(TaskInstanceInfoService.class);
-    TaskInstanceDetailService taskInstanceDetailService =
-        KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
+    TaskInstanceDetailService taskInstanceDetailService = KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
     // ========================== 获取参数 ==========================
     JobDataMap dataMap = context.getMergedJobDataMap();
     long id = dataMap.getLong(TaskJobKeys.ID);
@@ -69,8 +68,7 @@ public class TaskJobBean extends QuartzJobBean {
     if (StrUtil.isBlank(retryNodeCode)) {
       executeNormalTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos);
     } else {
-      executeRetryTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos,
-          retryNodeCode);
+      executeRetryTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos, retryNodeCode);
     }
   }
 
@@ -83,19 +81,14 @@ public class TaskJobBean extends QuartzJobBean {
    * @param dataMap                   数据映射
    * @param taskTemplateNodeVos       模板节点列表
    */
-  private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService,
-      TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap,
-      List<TaskTemplateNodeVo> taskTemplateNodeVos) {
+  private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos) {
     // ========================== 初始化执行明细 ==========================
-    List<TaskInstanceDetailTb> taskInstanceDetails =
-        taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo))
-            .collect(Collectors.toList());
+    List<TaskInstanceDetailTb> taskInstanceDetails = taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo))
+        .collect(Collectors.toList());
     taskInstanceDetailService.saveBatch(taskInstanceDetails);
-    Map<String, Long> codeIdMap = taskInstanceDetails.stream()
-        .collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
+    Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
     // ========================== 顺序执行 ==========================
-    executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos,
-        codeIdMap);
+    executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos, codeIdMap);
   }
 
   /**
