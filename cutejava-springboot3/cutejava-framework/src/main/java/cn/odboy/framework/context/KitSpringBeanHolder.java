@@ -137,8 +137,7 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
   @Override
   public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
     if (KitSpringBeanHolder.applicationContext != null) {
-      log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" +
-          KitSpringBeanHolder.applicationContext);
+      log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:{}", KitSpringBeanHolder.applicationContext);
     }
     KitSpringBeanHolder.applicationContext = applicationContext;
     if (addCallback) {

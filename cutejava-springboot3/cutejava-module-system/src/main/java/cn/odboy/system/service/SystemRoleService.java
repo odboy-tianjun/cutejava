@@ -147,7 +147,7 @@ public class SystemRoleService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteRoleByIds(Set<Long> ids) {
-    List<Integer> roleLevels = systemRoleMapper.selectByIds(ids).stream().map(SystemRoleTb::getLevel).distinct().collect(Collectors.toList());
+    List<Integer> roleLevels = systemRoleMapper.selectByIds(ids).stream().map(SystemRoleTb::getLevel).distinct().toList();
     for (Integer roleLevel : roleLevels) {
       checkRoleLevels(roleLevel);
     }
@@ -274,7 +274,7 @@ public class SystemRoleService {
    */
   private int checkRoleLevels(Integer level) {
     List<Integer> levels = systemUserRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-        .map(SystemRoleVo::getLevel).collect(Collectors.toList());
+        .map(SystemRoleVo::getLevel).toList();
     int min = Collections.min(levels);
     if (level != null) {
       if (level < min) {
