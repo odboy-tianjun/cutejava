@@ -33,7 +33,6 @@ import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
-import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -140,15 +139,16 @@ public class SystemLocalStorageService {
   }
 
   private void injectQueryParams(SystemQueryStorageArgs args, LambdaQueryWrapper<SystemLocalStorageTb> wrapper) {
-    KitValidUtil.notNull(args);
-    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
-        c -> c.like(SystemLocalStorageTb::getName, args.getBlurry()).or()
-            .like(SystemLocalStorageTb::getSuffix, args.getBlurry()).or()
-            .like(SystemLocalStorageTb::getType, args.getBlurry()).or()
-            .like(SystemLocalStorageTb::getCreateBy, args.getBlurry()));
-    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-      wrapper.between(SystemLocalStorageTb::getUpdateTime, args.getCreateTime().get(0),
-          args.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemLocalStorageTb::getName, args.getBlurry()).or()
+              .like(SystemLocalStorageTb::getSuffix, args.getBlurry()).or()
+              .like(SystemLocalStorageTb::getType, args.getBlurry()).or()
+              .like(SystemLocalStorageTb::getCreateBy, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemLocalStorageTb::getUpdateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1));
+      }
     }
     wrapper.orderByDesc(SystemLocalStorageTb::getId);
   }

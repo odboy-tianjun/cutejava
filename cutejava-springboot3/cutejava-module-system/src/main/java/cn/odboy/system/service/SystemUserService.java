@@ -215,7 +215,7 @@ public class SystemUserService {
       }
     }
     // 清理缓存
-    List<String> usernameList = systemUserMapper.selectByIds(ids).stream().map(SystemUserTb::getUsername).distinct().toList();
+    List<String> usernameList = systemUserMapper.selectByIds(ids).stream().map(SystemUserTb::getUsername).distinct().collect(Collectors.toList());
     for (String username : usernameList) {
       systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
     }

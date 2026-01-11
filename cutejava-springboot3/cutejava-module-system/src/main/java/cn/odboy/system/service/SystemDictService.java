@@ -26,7 +26,6 @@ import cn.odboy.system.dal.model.response.SystemDictDetailVo;
 import cn.odboy.system.dal.mysql.SystemDictMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
-import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -98,9 +97,10 @@ public class SystemDictService {
   }
 
   private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
-    KitValidUtil.notNull(args);
-    wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
-        .like(SystemDictTb::getDescription, args.getBlurry()));
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+          .like(SystemDictTb::getDescription, args.getBlurry()));
+    }
   }
 
   public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
