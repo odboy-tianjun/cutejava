@@ -178,16 +178,14 @@ public class TaskJobBean extends QuartzJobBean {
    * @param taskTemplateNodes         需要执行的任务节点列表
    * @param codeIdMap                 节点编码与明细ID映射
    */
-  private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService,
-      TaskInstanceDetailService taskInstanceDetailService, Long id, JobDataMap dataMap,
-      List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
+  private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, Long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
     try {
       boolean isTerminate = false;
       for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodes) {
         String code = taskTemplateNodeVo.getCode();
         while (true) {
-          TaskInstanceDetailTb currentTaskInstanceNode =
-              taskInstanceDetailService.getOneByInstanceIdAndCode(id, code);
+          ThreadUtil.safeSleep(5000);
+          TaskInstanceDetailTb currentTaskInstanceNode = taskInstanceDetailService.getOneByInstanceIdAndCode(id, code);
           if (TaskStatusEnum.Fail.getCode().equals(currentTaskInstanceNode.getExecuteStatus())) {
             log.info("任务节点执行失败, instanceId={}, bizCode={}", id, code);
             isTerminate = true;
@@ -197,30 +195,30 @@ public class TaskJobBean extends QuartzJobBean {
             break;
           } else if (TaskStatusEnum.Pending.getCode().equals(currentTaskInstanceNode.getExecuteStatus())) {
             log.info("任务节点由待执行变更为执行中, instanceId={}, bizCode={}", id, code);
-            try {
-              TaskStepExecutor executor = KitSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
-              taskInstanceDetailService.fastStart(id, code, dataMap);
-              executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
-              taskInstanceDetailService.fastSuccessWithInfo(id, code, null);
-            } catch (Exception e) {
-              log.error("任务节点执行失败", e);
-              taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
-              throw new ServerException(e);
-            }
-            break;
+            ThreadUtil.execAsync(() -> {
+              try {
+                TaskStepExecutor executor = KitSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
+                taskInstanceDetailService.fastStart(id, code, dataMap);
+                executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
+                taskInstanceDetailService.fastSuccessWithInfo(id, code, null);
+              } catch (Exception e) {
+                log.error("任务节点执行失败", e);
+                taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
+              }
+            });
           } else if (TaskStatusEnum.Running.getCode().equals(currentTaskInstanceNode.getExecuteStatus())) {
-            ThreadUtil.safeSleep(5000);
+            log.info("任务节点执行中, instanceId={}, bizCode={}", id, code);
           } else {
             // 处理未知状态
-            log.warn("任务节点处于未知状态, instanceId={}, bizCode={}, status={}", id, code,
-                currentTaskInstanceNode.getExecuteStatus());
-            ThreadUtil.safeSleep(5000);
+            log.warn("任务节点处于未知状态, instanceId={}, bizCode={}, status={}", id, code, currentTaskInstanceNode.getExecuteStatus());
           }
         }
         if (isTerminate) {
+          // 跳出任务线
           break;
         }
       }
+      // 主动终止 或者 被动退出的
       if (isTerminate) {
         taskInstanceInfoService.fastFailWithMessageData(id, "任务执行失败", dataMap);
       } else {
