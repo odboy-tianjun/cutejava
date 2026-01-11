@@ -343,20 +343,6 @@ public class SystemUserService {
     return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
-//  /**
-//   * 查询全部不分页
-//   *
-//   * @param args 条件
-//   * @return /
-//   */
-//  public List<SystemUserVo> queryUserVoByArgs(SystemQueryUserArgs args) {
-//    // 查询用户基本信息
-//    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
-//    List<SystemUserTb> users = systemUserMapper.selectList(wrapper);
-//    // 转换为SystemUserVo并关联查询
-//    return users.stream().map(this::convertToUserVo).collect(Collectors.toList());
-//  }
-
   public long countUserByArgs(SystemQueryUserArgs args) {
     LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
     return systemUserMapper.selectCount(wrapper);
@@ -385,7 +371,7 @@ public class SystemUserService {
       c.or();
       c.like(SystemUserTb::getNickName, args.getBlurry());
     });
-    return systemUserMapper.selectPage(new Page<>(args.getPage(), 50), wrapper).getRecords().stream().map(m -> {
+    return systemUserMapper.selectPage(new Page<>(pageArgs.getPage(), 50), wrapper).getRecords().stream().map(m -> {
       Map<String, Object> ext = new HashMap<>(1);
       ext.put("id", m.getId());
       ext.put("deptId", m.getDeptId());

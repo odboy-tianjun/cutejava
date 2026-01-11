@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.mybatisplus;
 
 import cn.hutool.core.date.DateTime;
@@ -55,4 +54,3 @@ public class MpMetaObjectHandler implements MetaObjectHandler {
     this.strictUpdateFill(metaObject, "updateBy", String.class, username);
   }
 }
-

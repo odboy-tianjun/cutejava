@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import crudRoles, {getCurrentUserRoleLevel} from '@/api/system/role'
+import crudRoles from '@/api/system/role'
 import { searchDept, searchDeptTree } from '@/api/system/dept'
 import { listChildMenuSetByMenuId, listMenuByPid } from '@/api/system/menu'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'

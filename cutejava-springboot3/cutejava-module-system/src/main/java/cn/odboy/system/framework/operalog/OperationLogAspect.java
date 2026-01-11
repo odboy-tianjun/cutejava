@@ -27,8 +27,8 @@ import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -96,7 +96,7 @@ public class OperationLogAspect {
       }
     }
     if (StrUtil.isBlank(bizName)) {
-      bizName = "Default";
+      bizName = "默认业务";
     }
     String method = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
     Object[] args = joinPoint.getArgs();

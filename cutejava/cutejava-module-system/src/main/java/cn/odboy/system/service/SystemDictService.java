@@ -92,7 +92,7 @@ public class SystemDictService {
    */
   public KitPageResult<SystemDictTb> searchDict(SystemQueryDictArgs args, Page<SystemDictTb> page) {
     LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-    injectQueryParams(args, wrapper);
+    this.injectQueryParams(args, wrapper);
     Page<SystemDictTb> selectPage = systemDictMapper.selectPage(page, wrapper);
     return KitPageUtil.toPage(selectPage);
   }
@@ -105,7 +105,7 @@ public class SystemDictService {
 
   public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
     LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-    injectQueryParams(args, wrapper);
+    this.injectQueryParams(args, wrapper);
     return systemDictMapper.selectList(wrapper);
   }
 

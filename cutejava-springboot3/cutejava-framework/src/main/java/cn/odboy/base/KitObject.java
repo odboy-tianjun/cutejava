@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.base;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -27,6 +25,5 @@ import java.io.Serializable;
  */
 public class KitObject implements Serializable {
 
-  @Serial
   private static final long serialVersionUID = 1L;
 }

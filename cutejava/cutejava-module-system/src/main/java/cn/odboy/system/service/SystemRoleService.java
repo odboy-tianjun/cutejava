@@ -68,7 +68,7 @@ public class SystemRoleService {
   @Transactional(rollbackFor = Exception.class)
   public void saveRole(SystemCreateRoleArgs args) {
     checkRoleLevels(args.getLevel());
-    if (this.getRoleByName(args.getName()) != null) {
+    if (this.countRoleByName(args.getName()) > 0) {
       throw new BadRequestException("角色名称已存在");
     }
     SystemRoleTb roleTb = KitBeanUtil.copyToClass(args, SystemRoleTb.class);
@@ -83,6 +83,12 @@ public class SystemRoleService {
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemRoleTb::getName, name);
     return systemRoleMapper.selectOne(wrapper);
+  }
+
+  private long countRoleByName(String name) {
+    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemRoleTb::getName, name);
+    return systemRoleMapper.selectCount(wrapper);
   }
 
   /**
@@ -166,10 +172,11 @@ public class SystemRoleService {
   /**
    * 根据条件查询全部角色
    *
-   * @param args 条件
+   * @param args     条件
+   * @param rolePage 分页参数
    * @return /
    */
-  public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args) {
+  public List<SystemRoleVo> queryRoleByArgs(SystemQueryRoleArgs args, Page<SystemRoleTb> rolePage) {
     KitValidUtil.notNull(args);
     // 查询角色基本信息
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
@@ -181,27 +188,25 @@ public class SystemRoleService {
           args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemRoleTb::getLevel);
-    if (args.getSize() != null) {
-      Page<SystemRoleTb> rolePage = new Page<>(args.getPage(), args.getSize());
-      Page<SystemRoleTb> page = systemRoleMapper.selectPage(rolePage, wrapper);
-      List<SystemRoleTb> roles = page.getRecords();
-      return roles.stream().map(systemUserRoleService::convertToRoleVo).collect(Collectors.toList());
+    List<SystemRoleTb> roles;
+    if (rolePage == null) {
+      roles = systemRoleMapper.selectList(wrapper);
     } else {
-      List<SystemRoleTb> roles = systemRoleMapper.selectList(wrapper);
-      return roles.stream().map(systemUserRoleService::convertToRoleVo).collect(Collectors.toList());
+      Page<SystemRoleTb> page = systemRoleMapper.selectPage(rolePage, wrapper);
+      roles = page.getRecords();
     }
+    return roles.stream().map(systemUserRoleService::convertToRoleVo).collect(Collectors.toList());
   }
 
   /**
    * 分页查询角色
    *
    * @param args 条件
-   * @param page 分页参数
+   * @param page 分页条件
    * @return /
    */
-  public KitPageResult<SystemRoleVo> searchRoleByArgs(SystemQueryRoleArgs args, Page<Object> page) {
-    args.setOffset(page.offset());
-    List<SystemRoleVo> roles = this.queryRoleByArgs(args);
+  public KitPageResult<SystemRoleVo> searchRoleByArgs(SystemQueryRoleArgs args, Page<SystemRoleTb> page) {
+    List<SystemRoleVo> roles = this.queryRoleByArgs(args, page);
     Long total = this.countRoleByArgs(args);
     return KitPageUtil.toPage(roles, total);
   }
@@ -280,7 +285,7 @@ public class SystemRoleService {
   }
 
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
-    List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args);
+    List<SystemRoleVo> systemRoleVos = this.queryRoleByArgs(args, null);
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
     for (SystemRoleVo dataObject : systemRoleVos) {
       SystemRoleExportRowVo rowVo = new SystemRoleExportRowVo();

@@ -371,7 +371,7 @@ public class SystemUserService {
       c.or();
       c.like(SystemUserTb::getNickName, args.getBlurry());
     });
-    return systemUserMapper.selectPage(new Page<>(args.getPage(), 50), wrapper).getRecords().stream().map(m -> {
+    return systemUserMapper.selectPage(new Page<>(pageArgs.getPage(), 50), wrapper).getRecords().stream().map(m -> {
       Map<String, Object> ext = new HashMap<>(1);
       ext.put("id", m.getId());
       ext.put("deptId", m.getDeptId());

@@ -72,9 +72,8 @@ public class SystemRoleController {
   @ApiOperation("查询角色")
   @PostMapping(value = "/searchRole")
   @PreAuthorize("@el.check('roles:list')")
-  public ResponseEntity<KitPageResult<SystemRoleVo>> queryRoleByArgs(
-      @Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> pageArgs) {
-    Page<Object> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+  public ResponseEntity<KitPageResult<SystemRoleVo>> queryRoleByArgs(@Validated @RequestBody KitPageArgs<SystemQueryRoleArgs> pageArgs) {
+    Page<SystemRoleTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return ResponseEntity.ok(systemRoleService.searchRoleByArgs(pageArgs.getArgs(), page));
   }
 

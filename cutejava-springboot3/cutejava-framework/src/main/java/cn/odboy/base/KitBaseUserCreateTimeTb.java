@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.annotations.ApiModelProperty;
 import java.lang.reflect.Field;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
@@ -34,13 +33,12 @@ public class KitBaseUserCreateTimeTb extends KitObject {
 
   @CreatedBy
   @TableField(fill = FieldFill.INSERT)
-  @Schema(name = "创建人", hidden = true)
-  private String createBy;
-
+  @ApiModelProperty(value = "创建人", hidden = true)
+  private String
+      createBy;
   @TableField(fill = FieldFill.INSERT)
-  @Schema(name = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
-  private Date
-      createTime;
+  @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+  private Date createTime;
 
   @Override
   public String toString() {

@@ -17,6 +17,7 @@ package cn.odboy.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitSelectOptionVo;
+import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ import lombok.experimental.UtilityClass;
  * @date 2022-11-09
  */
 @UtilityClass
-public final class KitCollUtil extends CollUtil {
+public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
 
   private static <T, K> Predicate<T> distinctPredicate(Function<? super T, ? extends K> keyMapper) {
     Map<Object, Boolean> map = new HashMap<>(3);
