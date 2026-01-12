@@ -19,6 +19,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
+import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
@@ -32,7 +33,6 @@ import cn.odboy.util.KitResourceTemplateUtil;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +46,6 @@ public class SystemEmailService {
   private KitRedisHelper redisHelper;
   @Autowired
   private AppProperties properties;
-  @Value("${spring.application.title}")
-  private String applicationTitle;
 
   /**
    * 更新邮件配置
@@ -146,7 +144,7 @@ public class SystemEmailService {
           KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
     }
     SystemSendEmailArgs sendEmailRequest =
-        new SystemSendEmailArgs(Collections.singletonList(email), applicationTitle, content);
+        new SystemSendEmailArgs(Collections.singletonList(email), SystemConst.CURRENT_APP_TITLE, content);
     sendEmail(sendEmailRequest);
   }
 

@@ -46,4 +46,6 @@ public interface SystemConst {
   String SYMBOL_AT = "@";
   String PROPERTY_OS_NAME = "os.name";
   String OS_NAME_WINDOWS = "Windows";
+  String CURRENT_APP_NAME = "cutejava";
+  String CURRENT_APP_TITLE = "CuteJava";
 }
