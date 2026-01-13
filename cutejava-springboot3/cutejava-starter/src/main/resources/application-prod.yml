@@ -30,9 +30,6 @@ server:
   # IMMEDIATE(立即): 当应用程序以"IMMEDIATE"模式关闭时，它会立即终止，而不管当前是否有任何活动任务或请求。这种方式适用于那些可以立即停止而不会造成严重问题的情况。
   shutdown: graceful
 spring:
-  application:
-    name: cutejava
-    title: CuteJava
   lifecycle:
     # 采用java.time.Duration格式的值,如果在这个时间内，优雅停机没有停掉应用，超过这个时间就会强制停止应用
     timeout-per-shutdown-phase: 30s
