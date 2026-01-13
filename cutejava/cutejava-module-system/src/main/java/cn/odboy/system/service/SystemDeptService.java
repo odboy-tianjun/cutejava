@@ -16,7 +16,6 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -84,7 +83,7 @@ public class SystemDeptService {
   public void updateDeptById(SystemDeptTb args) {
     KitValidUtil.notNull(args);
     // 旧的父部门
-    Long oldPid = this.getDeptVoById(args.getId()).getPid();
+    Long oldPid = this.getDeptById(args.getId()).getPid();
     // 新的父部门
     Long newPid = args.getPid();
     if (args.getPid() != null && args.getId().equals(args.getPid())) {
@@ -95,6 +94,10 @@ public class SystemDeptService {
     systemDeptMapper.insertOrUpdate(args);
     this.updateDeptSubCnt(oldPid);
     this.updateDeptSubCnt(newPid);
+  }
+
+  private SystemDeptTb getDeptById(Long id) {
+    return systemDeptMapper.selectById(id);
   }
 
   /**
@@ -322,11 +325,11 @@ public class SystemDeptService {
         deptSet.add(dept);
       }
     }
-    if (CollectionUtil.isEmpty(trees)) {
+    if (CollUtil.isEmpty(trees)) {
       trees = deptSet;
     }
     KitPageResult<SystemDeptVo> baseResult = new KitPageResult<>();
-    baseResult.setContent(CollectionUtil.isEmpty(trees) ? new ArrayList<>(deptSet) : new ArrayList<>(trees));
+    baseResult.setContent(CollUtil.isEmpty(trees) ? new ArrayList<>(deptSet) : new ArrayList<>(trees));
     baseResult.setTotalElements(deptSet.size());
     return baseResult;
   }
@@ -364,7 +367,7 @@ public class SystemDeptService {
       depts.add(this.getDeptVoById(id));
       // 子部门
       List<SystemDeptVo> deptList = this.listDeptVoByPid(id);
-      if (CollectionUtil.isNotEmpty(deptList)) {
+      if (CollUtil.isNotEmpty(deptList)) {
         queryRelationDeptByArgs(deptList, depts);
       }
     }

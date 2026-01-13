@@ -16,7 +16,6 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
@@ -74,7 +73,7 @@ public class SystemRoleService {
     SystemRoleTb roleTb = KitBeanUtil.copyToClass(args, SystemRoleTb.class);
     systemRoleMapper.insert(roleTb);
     // 判断是否有部门数据, 若有, 则需创建关联
-    if (CollectionUtil.isNotEmpty(args.getDepts())) {
+    if (CollUtil.isNotEmpty(args.getDepts())) {
       systemRoleDeptService.batchInsertRoleDept(args.getDepts(), roleTb.getId());
     }
   }
@@ -113,7 +112,7 @@ public class SystemRoleService {
     // 删除关联部门数据
     systemRoleDeptService.batchDeleteRoleDept(Collections.singleton(args.getId()));
     // 判断是否有部门数据, 若有, 则需更新关联
-    if (CollectionUtil.isNotEmpty(args.getDepts())) {
+    if (CollUtil.isNotEmpty(args.getDepts())) {
       systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
     }
   }

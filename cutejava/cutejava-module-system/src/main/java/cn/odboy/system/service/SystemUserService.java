@@ -16,7 +16,6 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
@@ -62,7 +61,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,10 +69,6 @@ public class SystemUserService {
 
   @Autowired
   private SystemUserMapper systemUserMapper;
-  @Autowired
-  private SystemJobService systemJobService;
-  @Autowired
-  private SystemRoleService systemRoleService;
   @Autowired
   private SystemDeptService systemDeptService;
   @Autowired
@@ -479,10 +473,10 @@ public class SystemUserService {
     // 数据权限
     List<Long> dataScopes = systemDataService.queryDeptIdByArgs(this.getUserVoByUsername(currentUsername));
     // args.getDeptIds() 不为空并且数据权限不为空则取交集
-    if (!CollectionUtils.isEmpty(args.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
+    if (!CollUtil.isEmpty(args.getDeptIds()) && !CollUtil.isEmpty(dataScopes)) {
       // 取交集
       args.getDeptIds().retainAll(dataScopes);
-      if (!CollectionUtil.isEmpty(args.getDeptIds())) {
+      if (!CollUtil.isEmpty(args.getDeptIds())) {
         return this.searchUserByArgs(args, page);
       }
     } else {

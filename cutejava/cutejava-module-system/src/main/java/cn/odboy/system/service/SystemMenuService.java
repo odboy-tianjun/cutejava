@@ -16,11 +16,9 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.exception.BadRequestException;
-import cn.odboy.framework.logging.ExecutionTimeStatisticsFace;
 import cn.odboy.system.constant.SystemTransferProtocolConst;
 import cn.odboy.system.constant.SystemYesOrNoChConst;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
@@ -337,7 +335,7 @@ public class SystemMenuService {
           }
         }
         menuVo.setMeta(new SystemMenuMetaVo(menu.getTitle(), menu.getIcon(), !menu.getCache()));
-        if (CollectionUtil.isNotEmpty(menuList)) {
+        if (CollUtil.isNotEmpty(menuList)) {
           menuVo.setAlwaysShow(true);
           menuVo.setRedirect("noredirect");
           menuVo.setChildren(buildMenuVo(menuList));
@@ -441,7 +439,7 @@ public class SystemMenuService {
   public List<SystemMenuVo> listMenuSuperior(List<Long> ids) {
     Set<SystemMenuVo> menus;
     List<SystemMenuVo> systemMenuTbs;
-    if (CollectionUtil.isNotEmpty(ids)) {
+    if (CollUtil.isNotEmpty(ids)) {
       menus = new LinkedHashSet<>(this.listMenuByIds(ids));
       for (SystemMenuVo menu : menus) {
         List<SystemMenuVo> menuList = this.querySuperiorMenuByArgs(menu, new ArrayList<>());
