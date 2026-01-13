@@ -24,7 +24,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,23 +60,6 @@ public class SystemRoleDeptService {
   }
 
   /**
-   * 根据角色id查询
-   *
-   * @param roleId /
-   * @return /
-   */
-  public List<SystemDeptTb> listDeptByRoleId(Long roleId) {
-    LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemRoleDeptTb::getRoleId, roleId);
-    List<SystemRoleDeptTb> systemRoleDeptTbs = systemRoleDeptMapper.selectList(wrapper);
-    if (systemRoleDeptTbs.isEmpty()) {
-      return new ArrayList<>();
-    }
-    List<Long> deptIds = systemRoleDeptTbs.stream().map(SystemRoleDeptTb::getDeptId).collect(Collectors.toList());
-    return systemDeptMapper.selectByIds(deptIds);
-  }
-
-  /**
    * 根据部门ID统计角色数量
    *
    * @param deptIds 部门ID集合
@@ -91,5 +73,15 @@ public class SystemRoleDeptService {
     LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemRoleDeptTb::getDeptId, deptIds);
     return systemRoleDeptMapper.selectCount(wrapper);
+  }
+
+  /**
+   * 根据角色id查询部门信息
+   *
+   * @param roleId 角色id
+   * @return /
+   */
+  public Set<SystemDeptTb> listUserDeptByRoleId(Long roleId) {
+    return systemRoleDeptMapper.listUserDeptByRoleId(roleId);
   }
 }

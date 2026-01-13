@@ -71,9 +71,7 @@ public class SystemUserJobService {
     return systemUserJobMapper.selectCount(wrapper);
   }
 
-  public List<SystemUserJobTb> listUserJobByUserId(Long userId) {
-    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserJobTb::getUserId, userId);
-    return systemUserJobMapper.selectList(wrapper);
+  public Set<SystemJobTb> listUserJobByUserId(Long userId) {
+    return systemUserJobMapper.listUserJobByUserId(userId);
   }
 }

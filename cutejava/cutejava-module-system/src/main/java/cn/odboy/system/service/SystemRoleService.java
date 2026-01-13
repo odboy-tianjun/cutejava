@@ -22,13 +22,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.export.SystemRoleExportRowVo;
 import cn.odboy.system.dal.model.request.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.request.SystemQueryRoleArgs;
 import cn.odboy.system.dal.model.response.SystemMenuVo;
 import cn.odboy.system.dal.model.response.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.response.SystemRoleVo;
+import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
@@ -75,7 +75,7 @@ public class SystemRoleService {
     systemRoleMapper.insert(roleTb);
     // 判断是否有部门数据, 若有, 则需创建关联
     if (CollectionUtil.isNotEmpty(args.getDepts())) {
-      systemRoleDeptService.batchInsertRoleDept(args.getDepts(), args.getId());
+      systemRoleDeptService.batchInsertRoleDept(args.getDepts(), roleTb.getId());
     }
   }
 
@@ -218,14 +218,14 @@ public class SystemRoleService {
    * @param user 用户信息
    * @return 权限信息
    */
-  public List<SystemRoleCodeVo> buildUserRolePermissions(SystemUserTb user) {
+  public List<SystemRoleCodeVo> buildUserRolePermissions(SystemUserVo user) {
     Set<String> permissions = new HashSet<>();
     // 如果是管理员直接返回
     if (user.getIsAdmin()) {
       permissions.add("admin");
       return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
-    List<SystemRoleVo> roles = systemUserRoleService.queryRoleByUsersId(user.getId());
+    List<SystemRoleVo> roles = systemUserRoleService.queryRoleVoByUsersId(user.getId());
     permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuVo::getPermission)
         .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
     return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
@@ -273,7 +273,7 @@ public class SystemRoleService {
    * @return /
    */
   private int checkRoleLevels(Integer level) {
-    List<Integer> levels = systemUserRoleService.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
+    List<Integer> levels = systemUserRoleService.queryRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
         .map(SystemRoleVo::getLevel).collect(Collectors.toList());
     int min = Collections.min(levels);
     if (level != null) {

@@ -22,6 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户认证
+ */
 @Service
 public class SystemAuthService {
 
@@ -38,6 +41,9 @@ public class SystemAuthService {
   @Autowired
   private SystemCaptchaService systemCaptchaService;
 
+  /**
+   * 登录
+   */
   public SystemAuthVo doLogin(SystemUserLoginArgs loginArgs, HttpServletRequest request) throws Exception {
     KitValidUtil.notNull(loginArgs);
 
@@ -74,6 +80,9 @@ public class SystemAuthService {
     return authInfo;
   }
 
+  /**
+   * 获取当前登录人信息
+   */
   public SystemUserJwtVo getCurrentUserInfo() {
     SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();
     if (jwtUser.getUser() != null) {
@@ -82,6 +91,9 @@ public class SystemAuthService {
     return jwtUser;
   }
 
+  /**
+   * 退出登录
+   */
   public void doLogout(HttpServletRequest request) {
     String token = tokenProvider.getToken(request);
     systemUserOnlineInfoDAO.logoutByToken(token);

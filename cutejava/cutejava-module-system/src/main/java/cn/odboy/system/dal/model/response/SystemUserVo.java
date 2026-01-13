@@ -1,8 +1,8 @@
 package cn.odboy.system.dal.model.response;
 
+import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.dataobject.SystemUserTb;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SystemUserVo extends SystemUserTb {
+public class SystemUserVo extends KitBaseUserTimeTb {
 
   @ApiModelProperty(value = "ID", hidden = true)
   private Long id;

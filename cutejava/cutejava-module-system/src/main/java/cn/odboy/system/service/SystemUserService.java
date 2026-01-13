@@ -26,15 +26,13 @@ import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
 import cn.odboy.system.constant.SystemZhConst;
+import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
-import cn.odboy.system.dal.dataobject.SystemUserJobTb;
-import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.export.SystemUserExportRowVo;
 import cn.odboy.system.dal.model.request.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.request.SystemUpdateUserPasswordArgs;
-import cn.odboy.system.dal.model.response.SystemDeptVo;
 import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemUserMapper;
@@ -54,7 +52,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -108,24 +105,25 @@ public class SystemUserService {
   @Transactional(rollbackFor = Exception.class)
   public void saveUser(SystemUserVo args) {
     systemUserRoleService.checkLevel(args);
+    SystemUserTb record = KitBeanUtil.copyToClass(args, SystemUserTb.class);
     // 默认密码 123456
-    args.setPassword(passwordEncoder.encode("123456"));
-    args.setDeptId(args.getDept().getId());
-    if (this.getUserByUsername(args.getUsername()) != null) {
+    record.setPassword(passwordEncoder.encode("123456"));
+    record.setDeptId(args.getDept().getId());
+    if (this.getUserByUsername(record.getUsername()) != null) {
       throw new BadRequestException("用户名已存在");
     }
-    if (this.getUserByEmail(args.getEmail()) != null) {
+    if (this.getUserByEmail(record.getEmail()) != null) {
       throw new BadRequestException("邮箱已存在");
     }
-    if (this.getUserByPhone(args.getPhone()) != null) {
+    if (this.getUserByPhone(record.getPhone()) != null) {
       throw new BadRequestException("手机号已存在");
     }
     // 保存用户
-    systemUserMapper.insert(args);
+    systemUserMapper.insert(record);
     // 保存用户岗位
-    systemUserJobService.batchInsertUserJob(args.getJobs(), args.getId());
+    systemUserJobService.batchInsertUserJob(args.getJobs(), record.getId());
     // 保存用户角色
-    systemUserRoleService.batchInsertUserRole(args.getRoles(), args.getId());
+    systemUserRoleService.batchInsertUserRole(args.getRoles(), record.getId());
   }
 
   /**
@@ -160,7 +158,7 @@ public class SystemUserService {
     user.setPhone(args.getPhone());
     user.setNickName(args.getNickName());
     user.setGender(args.getGender());
-    systemUserMapper.insertOrUpdate(user);
+    systemUserMapper.updateById(user);
     // 清除用户登录缓存
     systemUserInfoDAO.deleteUserLoginInfoByUserName(user.getUsername());
     // 更新用户岗位
@@ -204,10 +202,10 @@ public class SystemUserService {
     // 校验权限
     for (Long id : ids) {
       Integer currentLevel = Collections.min(
-          systemUserRoleService.queryRoleByUsersId(currentUserId).stream()
+          systemUserRoleService.queryRoleVoByUsersId(currentUserId).stream()
               .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
       Integer optLevel = Collections.min(
-          systemUserRoleService.queryRoleByUsersId(id).stream().map(SystemRoleVo::getLevel)
+          systemUserRoleService.queryRoleVoByUsersId(id).stream().map(SystemRoleVo::getLevel)
               .collect(Collectors.toList()));
       if (currentLevel > optLevel) {
         throw new BadRequestException(
@@ -335,16 +333,16 @@ public class SystemUserService {
    */
   public KitPageResult<SystemUserVo> searchUserByArgs(SystemQueryUserArgs args, Page<SystemUserTb> page) {
     // 查询用户基本信息
-    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
+    LambdaQueryWrapper<SystemUserTb> wrapper = this.buildUserQueryWrapper(args);
     IPage<SystemUserTb> userPage = systemUserMapper.selectPage(page, wrapper);
     List<SystemUserTb> users = userPage.getRecords();
     // 转换为SystemUserVo并关联查询
-    List<SystemUserVo> userVos = users.stream().map(this::convertToUserVo).collect(Collectors.toList());
+    List<SystemUserVo> userVos = users.stream().map(m -> this.convertToUserVo(m, false)).collect(Collectors.toList());
     return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
   public long countUserByArgs(SystemQueryUserArgs args) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = buildUserQueryWrapper(args);
+    LambdaQueryWrapper<SystemUserTb> wrapper = this.buildUserQueryWrapper(args);
     return systemUserMapper.selectCount(wrapper);
   }
 
@@ -415,33 +413,27 @@ public class SystemUserService {
   /**
    * 转换为SystemUserVo并关联查询部门、角色、岗位信息
    *
-   * @param user 用户基本信息
+   * @param user            用户基本信息
+   * @param includePassword 是否包含用户密码
    * @return 包含关联信息的SystemUserVo
    */
-  private SystemUserVo convertToUserVo(SystemUserTb user) {
+  private SystemUserVo convertToUserVo(SystemUserTb user, boolean includePassword) {
     if (user == null) {
       return null;
+    }
+    if (!includePassword) {
+      // 查询用户时，清空密码
+      user.setPassword(null);
     }
     SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
-      SystemDeptVo dept = systemDeptService.getDeptVoById(user.getDeptId());
-      userVo.setDept(dept);
+      userVo.setDept(systemDeptService.getDeptVoById(user.getDeptId()));
     }
     // 查询关联的岗位信息
-    List<SystemUserJobTb> userJobs = systemUserJobService.listUserJobByUserId(user.getId());
-    if (CollUtil.isNotEmpty(userJobs)) {
-      Set<Long> jobIds = userJobs.stream().map(SystemUserJobTb::getJobId).collect(Collectors.toSet());
-      List<SystemJobTb> jobs = systemJobService.listByIds(jobIds);
-      userVo.setJobs(new LinkedHashSet<>(jobs));
-    }
+    userVo.setJobs(systemUserJobService.listUserJobByUserId(user.getId()));
     // 查询关联的角色信息
-    List<SystemUserRoleTb> userRoles = systemUserRoleService.listUserRoleByUserId(user.getId());
-    if (CollUtil.isNotEmpty(userRoles)) {
-      Set<Long> roleIds = userRoles.stream().map(SystemUserRoleTb::getRoleId).collect(Collectors.toSet());
-      List<SystemRoleTb> roles = systemRoleService.listByIds(roleIds);
-      userVo.setRoles(new LinkedHashSet<>(roles));
-    }
+    userVo.setRoles(systemUserRoleService.listUserRoleByUserId(user.getId()));
     return userVo;
   }
 
@@ -452,8 +444,12 @@ public class SystemUserService {
     return systemUserMapper.selectOne(wrapper);
   }
 
+  public SystemUserVo getUserVoWithPasswordByUsername(String username) {
+    return this.convertToUserVo(this.getUserByUsername(username), true);
+  }
+
   public SystemUserVo getUserVoByUsername(String username) {
-    return this.convertToUserVo(this.getUserByUsername(username));
+    return this.convertToUserVo(this.getUserByUsername(username), false);
   }
 
   public SystemUserTb getUserByEmail(String email) {
@@ -474,9 +470,11 @@ public class SystemUserService {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
       args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
-      List<SystemDeptVo> data = systemDeptService.listDeptByPid(args.getDeptId());
+      List<SystemDeptTb> data = systemDeptService.listDeptByPid(args.getDeptId());
+      Map<Long, List<SystemDeptTb>> deptPidMap = systemDeptService.listPidNonNull().stream()
+          .collect(Collectors.groupingBy(SystemDeptTb::getPid));
       // 然后把子节点的ID都加入到集合中
-      args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data));
+      args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data, deptPidMap));
     }
     // 数据权限
     List<Long> dataScopes = systemDataService.queryDeptIdByArgs(this.getUserVoByUsername(currentUsername));

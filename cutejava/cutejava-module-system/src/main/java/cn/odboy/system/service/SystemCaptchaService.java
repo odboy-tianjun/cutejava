@@ -25,6 +25,9 @@ public class SystemCaptchaService {
   @Autowired
   private AppProperties properties;
 
+  /**
+   * 获取登录验证码
+   */
   public SystemCaptchaVo getLoginCaptcha() {
     // 获取运算的结果
     Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
@@ -44,6 +47,12 @@ public class SystemCaptchaService {
     return captchaVo;
   }
 
+  /**
+   * 验证验证码
+   *
+   * @param uuid      验证码uuid
+   * @param inputCode 用户输入的验证码
+   */
   public void validate(String uuid, String inputCode) {
     // 查询验证码
     String code = redisHelper.get(uuid, String.class);

@@ -49,7 +49,7 @@ public class UserDetailsHandler implements UserDetailsService {
   public SystemUserJwtVo loadUserByUsername(String username) {
     SystemUserJwtVo userJwtVo = systemUserInfoDAO.getUserLoginInfoByUserName(username);
     if (userJwtVo == null) {
-      SystemUserVo user = systemUserService.getUserVoByUsername(username);
+      SystemUserVo user = systemUserService.getUserVoWithPasswordByUsername(username);
       if (user == null) {
         throw new BadRequestException("用户不存在");
       } else {

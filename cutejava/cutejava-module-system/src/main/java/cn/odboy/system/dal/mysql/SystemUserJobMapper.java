@@ -15,9 +15,13 @@
  */
 package cn.odboy.system.dal.mysql;
 
+import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 用户职位关联 Mapper
@@ -27,4 +31,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemUserJobMapper extends BaseMapper<SystemUserJobTb> {
 
+  Set<SystemJobTb> listUserJobByUserId(@Param("userId") Long userId);
 }

@@ -226,20 +226,24 @@ public class SystemDeptService {
   private void queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptVo> depts) {
     for (SystemDeptVo dept : deptTbList) {
       depts.add(dept);
-      List<SystemDeptVo> deptList = this.listDeptByPid(dept.getId());
+      List<SystemDeptVo> deptList = this.listDeptVoByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptList)) {
         queryRelationDeptByArgs(deptList, depts);
       }
     }
   }
 
-  public List<Long> queryChildDeptIdByDeptIds(List<SystemDeptVo> deptList) {
+  private List<SystemDeptVo> listDeptVoByPid(Long pid) {
+    return KitBeanUtil.copyToList(this.listDeptByPid(pid), SystemDeptVo.class);
+  }
+
+  public List<Long> queryChildDeptIdByDeptIds(List<SystemDeptTb> deptList, Map<Long, List<SystemDeptTb>> deptPidMap) {
     List<Long> list = new ArrayList<>();
-    for (SystemDeptVo systemDeptTb : deptList) {
+    for (SystemDeptTb systemDeptTb : deptList) {
       if (systemDeptTb != null && systemDeptTb.getEnabled()) {
-        List<SystemDeptVo> deptList1 = this.listDeptByPid(systemDeptTb.getId());
+        List<SystemDeptTb> deptList1 = deptPidMap.getOrDefault(systemDeptTb.getId(), null);
         if (CollUtil.isNotEmpty(deptList1)) {
-          list.addAll(queryChildDeptIdByDeptIds(deptList1));
+          list.addAll(this.queryChildDeptIdByDeptIds(deptList1, deptPidMap));
         }
         list.add(systemDeptTb.getId());
       }
@@ -259,7 +263,7 @@ public class SystemDeptService {
       deptList.addAll(this.listRootDept());
       return deptList;
     }
-    deptList.addAll(this.listDeptByPid(dept.getPid()));
+    deptList.addAll(this.listDeptVoByPid(dept.getPid()));
     return querySuperiorDeptByPid(this.getDeptVoById(dept.getPid()), deptList);
   }
 
@@ -359,7 +363,7 @@ public class SystemDeptService {
       // 根部门
       depts.add(this.getDeptVoById(id));
       // 子部门
-      List<SystemDeptVo> deptList = this.listDeptByPid(id);
+      List<SystemDeptVo> deptList = this.listDeptVoByPid(id);
       if (CollectionUtil.isNotEmpty(deptList)) {
         queryRelationDeptByArgs(deptList, depts);
       }
@@ -465,10 +469,10 @@ public class SystemDeptService {
     return vo;
   }
 
-  public List<SystemDeptVo> listDeptByPid(long pid) {
+  public List<SystemDeptTb> listDeptByPid(long pid) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getPid, pid);
-    return KitBeanUtil.copyToList(systemDeptMapper.selectList(wrapper), SystemDeptVo.class);
+    return systemDeptMapper.selectList(wrapper);
   }
 
   public void exportDeptXlsx(HttpServletResponse response, SystemQueryDeptArgs args) throws Exception {
@@ -482,5 +486,12 @@ public class SystemDeptService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "部门数据", SystemDeptExportRowVo.class, rowVos);
+  }
+
+  public List<SystemDeptTb> listPidNonNull() {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemDeptTb::getEnabled, 1);
+    wrapper.isNotNull(SystemDeptTb::getPid);
+    return systemDeptMapper.selectList(wrapper);
   }
 }
