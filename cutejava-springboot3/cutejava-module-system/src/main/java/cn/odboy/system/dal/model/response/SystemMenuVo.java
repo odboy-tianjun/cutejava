@@ -3,11 +3,11 @@ package cn.odboy.system.dal.model.response;
 import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter

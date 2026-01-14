@@ -15,7 +15,7 @@
  */
 package cn.odboy.framework.mybatisplus.core;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitBaseUserTimeTb;
@@ -131,7 +131,7 @@ public class KitMpQUtil {
   private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName,
       Object fieldVal) {
     Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
-    if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
+    if (CollUtil.isNotEmpty(wrapNotInVal)) {
       Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
       if (anyValOptional.isPresent()) {
         Object o = anyValOptional.get();
@@ -159,7 +159,7 @@ public class KitMpQUtil {
     if (fieldVal instanceof List) {
       List<Object> between = new ArrayList<>((List<?>) fieldVal);
       int minLength = 2;
-      if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
+      if (CollUtil.isNotEmpty(between) && between.size() >= minLength) {
         queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
       } else {
         throw new BadRequestException("BETWEEN类型的对象列表长度必须 >= 2");

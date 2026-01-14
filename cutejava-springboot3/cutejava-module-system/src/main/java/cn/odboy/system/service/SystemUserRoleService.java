@@ -28,137 +28,135 @@ import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SystemUserRoleService {
 
-  @Autowired
-  private SystemRoleMapper systemRoleMapper;
-  @Autowired
-  private SystemUserRoleMapper systemUserRoleMapper;
-  @Autowired
-  private SystemRoleMenuService systemRoleMenuService;
-  @Autowired
-  private SystemRoleDeptService systemRoleDeptService;
+    @Autowired
+    private SystemRoleMapper systemRoleMapper;
+    @Autowired
+    private SystemUserRoleMapper systemUserRoleMapper;
+    @Autowired
+    private SystemRoleMenuService systemRoleMenuService;
+    @Autowired
+    private SystemRoleDeptService systemRoleDeptService;
 
-  @Transactional(rollbackFor = Exception.class)
-  public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
-    if (CollUtil.isNotEmpty(roles)) {
-      List<SystemUserRoleTb> records = new ArrayList<>();
-      for (SystemRoleTb role : roles) {
-        SystemUserRoleTb record = new SystemUserRoleTb();
-        record.setUserId(userId);
-        record.setRoleId(role.getId());
-        records.add(record);
-      }
-      systemUserRoleMapper.insert(records);
+    @Transactional(rollbackFor = Exception.class)
+    public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
+        if (CollUtil.isNotEmpty(roles)) {
+            List<SystemUserRoleTb> records = new ArrayList<>();
+            for (SystemRoleTb role : roles) {
+                SystemUserRoleTb record = new SystemUserRoleTb();
+                record.setUserId(userId);
+                record.setRoleId(role.getId());
+                records.add(record);
+            }
+            systemUserRoleMapper.insert(records);
+        }
     }
-  }
 
-  @Transactional(rollbackFor = Exception.class)
-  public void batchDeleteUserRole(Set<Long> userIds) {
-    if (CollUtil.isNotEmpty(userIds)) {
-      LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-      wrapper.in(SystemUserRoleTb::getUserId, userIds);
-      systemUserRoleMapper.delete(wrapper);
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDeleteUserRole(Set<Long> userIds) {
+        if (CollUtil.isNotEmpty(userIds)) {
+            LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(SystemUserRoleTb::getUserId, userIds);
+            systemUserRoleMapper.delete(wrapper);
+        }
     }
-  }
 
-  /**
-   * 转换为SystemRoleVo并关联查询菜单和部门信息
-   *
-   * @param role 角色基本信息
-   * @return 包含关联信息的SystemRoleVo
-   */
-  public SystemRoleVo convertToRoleVo(SystemRoleTb role) {
-    if (role == null) {
-      return null;
+    /**
+     * 转换为SystemRoleVo并关联查询菜单和部门信息
+     *
+     * @param role 角色基本信息
+     * @return 包含关联信息的SystemRoleVo
+     */
+    public SystemRoleVo convertToRoleVo(SystemRoleTb role) {
+        if (role == null) {
+            return null;
+        }
+        SystemRoleVo roleVo = KitBeanUtil.copyToClass(role, SystemRoleVo.class);
+        // 查询关联的菜单信息
+        Set<SystemMenuVo> menus = systemRoleMenuService.queryMenuByRoleIds(Collections.singleton(role.getId()));
+        roleVo.setMenus(menus);
+        // 查询关联的部门信息
+        Set<SystemDeptTb> depts = systemRoleDeptService.listUserDeptByRoleId(role.getId());
+        roleVo.setDepts(depts);
+        return roleVo;
     }
-    SystemRoleVo roleVo = KitBeanUtil.copyToClass(role, SystemRoleVo.class);
-    // 查询关联的菜单信息
-    Set<SystemMenuVo> menus = systemRoleMenuService.queryMenuByRoleIds(Collections.singleton(role.getId()));
-    roleVo.setMenus(menus);
 
-    // 查询关联的部门信息
-    List<SystemDeptTb> depts = systemRoleDeptService.listDeptByRoleId(role.getId());
-    roleVo.setDepts(new LinkedHashSet<>(depts));
-
-    return roleVo;
-  }
-
-  /**
-   * 根据用户ID查询
-   *
-   * @param userId 用户ID
-   * @return /
-   */
-  public List<SystemRoleVo> queryRoleByUsersId(Long userId) {
-    // 查询用户角色关联
-    LambdaQueryWrapper<SystemUserRoleTb> userRoleWrapper = new LambdaQueryWrapper<>();
-    userRoleWrapper.eq(SystemUserRoleTb::getUserId, userId);
-    List<SystemUserRoleTb> userRoles = systemUserRoleMapper.selectList(userRoleWrapper);
-    if (CollUtil.isEmpty(userRoles)) {
-      return new ArrayList<>();
+    /**
+     * 根据用户ID查询
+     *
+     * @param userId 用户ID
+     * @return /
+     */
+    public List<SystemRoleVo> queryRoleVoByUsersId(Long userId) {
+        Set<SystemRoleTb> roles = this.listUserRoleByUserId(userId);
+        return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
     }
-    Set<Long> roleIds = userRoles.stream().map(SystemUserRoleTb::getRoleId).collect(Collectors.toSet());
-    List<SystemRoleTb> roles = systemRoleMapper.selectByIds(roleIds);
-    return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
-  }
 
-  /**
-   * 根据角色查询角色级别
-   *
-   * @param roles /
-   * @return /
-   */
-  public Integer getDeptLevelByRoles(Set<SystemRoleTb> roles) {
-    if (CollUtil.isEmpty(roles)) {
-      return Integer.MAX_VALUE;
+    /**
+     * 根据角色查询角色级别
+     *
+     * @param roles /
+     * @return /
+     */
+    public Integer getDeptLevelByRoles(Set<SystemRoleTb> roles) {
+        if (CollUtil.isEmpty(roles)) {
+            // 最小权限
+            return Integer.MAX_VALUE;
+        }
+        List<Long> roleIds =
+            roles.stream().map(SystemRoleTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        if (CollUtil.isEmpty(roleIds)) {
+            // 最小权限
+            return Integer.MAX_VALUE;
+        }
+        List<Integer> roleLevels = systemRoleMapper.selectList(
+                new LambdaQueryWrapper<SystemRoleTb>().select(SystemRoleTb::getLevel).isNotNull(SystemRoleTb::getLevel)
+                    .in(SystemRoleTb::getId, roleIds)).stream().map(SystemRoleTb::getLevel).distinct()
+            .collect(Collectors.toList());
+        if (CollUtil.isEmpty(roleLevels)) {
+            // 最小权限
+            return Integer.MAX_VALUE;
+        }
+        return Collections.min(roleLevels);
     }
-    Set<SystemRoleTb> roleSet = new HashSet<>();
-    for (SystemRoleTb role : roles) {
-      roleSet.add(systemRoleMapper.selectById(role.getId()));
-    }
-    return Collections.min(roleSet.stream().map(SystemRoleTb::getLevel).collect(Collectors.toList()));
-  }
 
-  /**
-   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
-   *
-   * @param args /
-   */
-  public void checkLevel(SystemUserVo args) {
-    Integer currentLevel = Collections.min(
-        this.queryRoleByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
-            .map(SystemRoleVo::getLevel).collect(Collectors.toList()));
-    Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
-    if (currentLevel > optLevel) {
-      throw new BadRequestException("角色权限不足");
+    /**
+     * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
+     *
+     * @param args /
+     */
+    public void checkLevel(SystemUserVo args) {
+        Integer currentLevel = Collections.min(
+            this.queryRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream().map(SystemRoleVo::getLevel)
+                .collect(Collectors.toList()));
+        Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
+        if (currentLevel > optLevel) {
+            throw new BadRequestException("角色权限不足");
+        }
     }
-  }
 
-  public List<SystemUserRoleTb> listUserRoleByUserId(Long userId) {
-    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserRoleTb::getUserId, userId);
-    return systemUserRoleMapper.selectList(wrapper);
-  }
-
-  public long countUserByRoleIds(Set<Long> ids) {
-    if (CollUtil.isEmpty(ids)) {
-      return 0L;
+    public long countUserByRoleIds(Set<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return 0L;
+        }
+        LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(SystemUserRoleTb::getRoleId, ids);
+        return systemUserRoleMapper.selectCount(wrapper);
     }
-    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserRoleTb::getRoleId, ids);
-    return systemUserRoleMapper.selectCount(wrapper);
-  }
+
+    public Set<SystemRoleTb> listUserRoleByUserId(Long userId) {
+        return systemUserRoleMapper.listUserRoleByUserId(userId);
+    }
 }

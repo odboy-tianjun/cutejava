@@ -62,7 +62,7 @@ public class SystemUserOnlineInfoDAO {
       userOnlineVo.setKey(KitDesEncryptUtil.desEncrypt(token));
       userOnlineVo.setLoginTime(new Date());
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
+      log.error("保存在线用户信息失败", e);
     }
     String loginKey = tokenProvider.loginKey(token);
     redisHelper.set(loginKey, userOnlineVo, properties.getJwt().getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);

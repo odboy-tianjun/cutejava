@@ -20,9 +20,9 @@ import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

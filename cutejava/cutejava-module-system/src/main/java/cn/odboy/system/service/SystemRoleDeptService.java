@@ -18,78 +18,67 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleDeptTb;
-import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleDeptMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class SystemRoleDeptService {
 
-  @Autowired
-  private SystemRoleDeptMapper systemRoleDeptMapper;
-  @Autowired
-  private SystemDeptMapper systemDeptMapper;
+    @Autowired
+    private SystemRoleDeptMapper systemRoleDeptMapper;
 
-  @Transactional(rollbackFor = Exception.class)
-  public void batchDeleteRoleDept(Set<Long> roleIds) {
-    if (CollUtil.isNotEmpty(roleIds)) {
-      LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
-      wrapper.in(SystemRoleDeptTb::getRoleId, roleIds);
-      systemRoleDeptMapper.delete(wrapper);
-    }
-  }
-
-  @Transactional(rollbackFor = Exception.class)
-  public void batchInsertRoleDept(Set<SystemDeptTb> depts, Long id) {
-    if (CollUtil.isNotEmpty(depts)) {
-      List<SystemRoleDeptTb> records = new ArrayList<>();
-      for (SystemDeptTb dept : depts) {
-        SystemRoleDeptTb record = new SystemRoleDeptTb();
-        record.setRoleId(id);
-        record.setDeptId(dept.getId());
-        records.add(record);
-      }
-      systemRoleDeptMapper.insert(records);
-    }
-  }
-
-  /**
-   * 根据角色id查询
-   *
-   * @param roleId /
-   * @return /
-   */
-  public List<SystemDeptTb> listDeptByRoleId(Long roleId) {
-    LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemRoleDeptTb::getRoleId, roleId);
-    List<SystemRoleDeptTb> systemRoleDeptTbs = systemRoleDeptMapper.selectList(wrapper);
-    if (systemRoleDeptTbs.isEmpty()) {
-      return new ArrayList<>();
-    }
-    List<Long> deptIds = systemRoleDeptTbs.stream().map(SystemRoleDeptTb::getDeptId).collect(Collectors.toList());
-    return systemDeptMapper.selectByIds(deptIds);
-  }
-
-  /**
-   * 根据部门ID统计角色数量
-   *
-   * @param deptIds 部门ID集合
-   * @return /
-   */
-  public Long countRoleByDeptIds(Set<Long> deptIds) {
-    if (CollUtil.isEmpty(deptIds)) {
-      return 0L;
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDeleteRoleDept(Set<Long> roleIds) {
+        if (CollUtil.isNotEmpty(roleIds)) {
+            LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(SystemRoleDeptTb::getRoleId, roleIds);
+            systemRoleDeptMapper.delete(wrapper);
+        }
     }
 
-    LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemRoleDeptTb::getDeptId, deptIds);
-    return systemRoleDeptMapper.selectCount(wrapper);
-  }
+    @Transactional(rollbackFor = Exception.class)
+    public void batchInsertRoleDept(Set<SystemDeptTb> depts, Long id) {
+        if (CollUtil.isNotEmpty(depts)) {
+            List<SystemRoleDeptTb> records = new ArrayList<>();
+            for (SystemDeptTb dept : depts) {
+                SystemRoleDeptTb record = new SystemRoleDeptTb();
+                record.setRoleId(id);
+                record.setDeptId(dept.getId());
+                records.add(record);
+            }
+            systemRoleDeptMapper.insert(records);
+        }
+    }
+
+    /**
+     * 根据部门ID统计角色数量
+     *
+     * @param deptIds 部门ID集合
+     * @return /
+     */
+    public Long countRoleByDeptIds(Set<Long> deptIds) {
+        if (CollUtil.isEmpty(deptIds)) {
+            return 0L;
+        }
+
+        LambdaQueryWrapper<SystemRoleDeptTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(SystemRoleDeptTb::getDeptId, deptIds);
+        return systemRoleDeptMapper.selectCount(wrapper);
+    }
+
+    /**
+     * 根据角色id查询部门信息
+     *
+     * @param roleId 角色id
+     * @return /
+     */
+    public Set<SystemDeptTb> listUserDeptByRoleId(Long roleId) {
+        return systemRoleDeptMapper.listUserDeptByRoleId(roleId);
+    }
 }
