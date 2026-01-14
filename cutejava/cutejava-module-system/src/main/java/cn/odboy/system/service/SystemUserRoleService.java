@@ -50,6 +50,9 @@ public class SystemUserRoleService {
   @Autowired
   private SystemRoleDeptService systemRoleDeptService;
 
+  /**
+   * 批量绑定用户角色 -> TestPassed
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
     if (CollUtil.isNotEmpty(roles)) {
@@ -64,6 +67,9 @@ public class SystemUserRoleService {
     }
   }
 
+  /**
+   * 批量解绑用户角色 -> TestPassed
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchDeleteUserRole(Set<Long> userIds) {
     if (CollUtil.isNotEmpty(userIds)) {
@@ -94,7 +100,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户ID查询
+   * 根据用户ID查询 -> TestPassed
    *
    * @param userId 用户ID
    * @return /
@@ -129,7 +135,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
+   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误 -> TestPassed
    *
    * @param args /
    */
@@ -151,10 +157,22 @@ public class SystemUserRoleService {
     return systemUserRoleMapper.selectCount(wrapper);
   }
 
+  /**
+   * 根据用户id列举角色 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
   public Set<SystemRoleTb> listUserRoleByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleByUserId(userId);
   }
 
+  /**
+   * 根据用户id列举角色级别 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
   public List<Integer> listUserRoleLevelByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleLevelByUserId(userId);
   }
