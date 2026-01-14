@@ -67,8 +67,8 @@ public class SystemMenuController {
   @ApiOperation("返回全部的菜单")
   @PostMapping(value = "/listMenuByPid")
   @PreAuthorize("@el.check('menu:list','roles:list')")
-  public ResponseEntity<List<SystemMenuVo>> listMenuByPid(@RequestParam Long pid) {
-    List<SystemMenuVo> systemMenuTbs = systemMenuService.listMenuByPid(pid);
+  public ResponseEntity<List<SystemMenuTb>> listMenuByPid(@RequestParam Long pid) {
+    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuByPid(pid);
     return ResponseEntity.ok(systemMenuTbs);
   }
 

@@ -115,7 +115,7 @@ public class SystemRoleMenuService {
    * @param menuIds 菜单id集合
    */
   @Transactional(rollbackFor = Exception.class)
-  public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
+  public void deleteRoleMenuByMenuIds(Set<Long> menuIds) {
     if (CollUtil.isEmpty(menuIds)) {
       return;
     }
