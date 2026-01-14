@@ -36,13 +36,13 @@ import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +60,7 @@ public class SystemRoleService {
   private SystemUserRoleService systemUserRoleService;
 
   /**
-   * 创建
+   * 创建 -> TestPassed
    *
    * @param args /
    */
@@ -91,7 +91,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 修改
+   * 修改 -> TestPassed
    *
    * @param args /
    */
@@ -122,7 +122,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 修改绑定的菜单
+   * 修改绑定的菜单 -> TestPassed
    *
    * @param args /
    */
@@ -140,7 +140,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 删除
+   * 删除 -> TestPassed
    *
    * @param ids /
    */
@@ -161,7 +161,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 查询全部角色
+   * 查询全部角色 -> TestPassed
    */
   public List<SystemRoleTb> listAllRole() {
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
@@ -170,7 +170,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 根据条件查询全部角色
+   * 根据条件查询全部角色 -> TestPassed
    *
    * @param args     条件
    * @param rolePage 分页参数
@@ -197,7 +197,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 分页查询角色
+   * 分页查询角色 -> TestPassed
    *
    * @param args 条件
    * @param page 分页条件
@@ -210,7 +210,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 获取用户权限信息
+   * 查询用户权限信息 -> TestPassed
    *
    * @param user 用户信息
    * @return 权限信息
@@ -222,14 +222,14 @@ public class SystemRoleService {
       permissions.add("admin");
       return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
-    List<SystemRoleVo> roles = systemUserRoleService.queryRoleVoByUsersId(user.getId());
+    List<SystemRoleVo> roles = systemUserRoleService.listRoleVoByUsersId(user.getId());
     permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuVo::getPermission)
         .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
     return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
   }
 
   /**
-   * 验证是否被用户关联
+   * 验证是否被用户关联 -> TestPassed
    *
    * @param ids /
    */
@@ -263,12 +263,12 @@ public class SystemRoleService {
   }
 
   /**
-   * 检查用户的角色级别
+   * 检查用户的角色级别 -> TestPassed
    *
    * @return /
    */
   private int checkRoleLevels(Integer level) {
-    List<Integer> levels = systemUserRoleService.queryRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
+    List<Integer> levels = systemUserRoleService.listRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
         .map(SystemRoleVo::getLevel).collect(Collectors.toList());
     int min = Collections.min(levels);
     if (level != null) {
@@ -291,9 +291,5 @@ public class SystemRoleService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "部门数据", SystemRoleExportRowVo.class, rowVos);
-  }
-
-  public List<SystemRoleTb> listByIds(Set<Long> roleIds) {
-    return systemRoleMapper.selectByIds(roleIds);
   }
 }

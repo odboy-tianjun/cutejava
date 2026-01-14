@@ -75,7 +75,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 获取磁盘信息
+   * 查询磁盘信息 -> TestPassed
    *
    * @return /
    */
@@ -109,7 +109,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 获取交换区信息
+   * 查询交换区信息 -> TestPassed
    *
    * @param memory /
    * @return /
@@ -131,7 +131,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 获取内存信息
+   * 查询内存信息 -> TestPassed
    *
    * @param memory /
    * @return /
@@ -147,7 +147,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 获取Cpu相关信息
+   * 查询Cpu相关信息 -> TestPassed
    *
    * @param processor /
    * @return /
@@ -194,7 +194,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 获取系统相关信息,系统、运行天数、系统IP
+   * 查询系统相关信息,系统、运行天数、系统IP -> TestPassed
    *
    * @param os /
    * @return /

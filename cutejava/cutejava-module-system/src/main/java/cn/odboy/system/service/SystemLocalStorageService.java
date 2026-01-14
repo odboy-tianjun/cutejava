@@ -156,6 +156,9 @@ public class SystemLocalStorageService {
     wrapper.orderByDesc(SystemLocalStorageTb::getId);
   }
 
+  /**
+   * 查询文件上传记录 -> TestPassed
+   */
   public List<SystemLocalStorageTb> queryLocalStorageByArgs(SystemQueryStorageArgs args) {
     LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQueryParams(args, wrapper);
@@ -163,7 +166,7 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 上传图片
+   * 上传图片 -> TestPassed
    */
   @Transactional(rollbackFor = Exception.class)
   public SystemLocalStorageTb uploadPicture(MultipartFile file) {
@@ -176,12 +179,11 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 导出文件上传记录
+   * 导出文件上传记录 -> TestPassed
    */
   public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);
-    List<SystemLocalStorageExportRowVo> rowVos =
-        KitBeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
+    List<SystemLocalStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemLocalStorageTbs, SystemLocalStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "文件上传记录数据", SystemLocalStorageExportRowVo.class, rowVos);
   }
 }

@@ -18,7 +18,7 @@ public class SystemOperationLogService {
   private SystemOperationLogMapper systemOperationLogMapper;
 
   /**
-   * 查询用户操作日志
+   * 查询用户操作日志 -> TestPassed
    */
   public IPage<SystemOperationLogTb> searchUserLog(KitPageArgs<SystemQueryOperationLogArgs> pageArgs) {
     LambdaQueryWrapper<SystemOperationLogTb> wrapper = new LambdaQueryWrapper<>();

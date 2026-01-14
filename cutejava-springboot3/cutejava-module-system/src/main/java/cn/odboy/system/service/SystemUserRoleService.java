@@ -50,6 +50,9 @@ public class SystemUserRoleService {
   @Autowired
   private SystemRoleDeptService systemRoleDeptService;
 
+  /**
+   * 批量绑定用户角色 -> TestPassed
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
     if (CollUtil.isNotEmpty(roles)) {
@@ -64,6 +67,9 @@ public class SystemUserRoleService {
     }
   }
 
+  /**
+   * 批量解绑用户角色 -> TestPassed
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchDeleteUserRole(Set<Long> userIds) {
     if (CollUtil.isNotEmpty(userIds)) {
@@ -94,18 +100,18 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户ID查询
+   * 根据用户ID查询 -> TestPassed
    *
    * @param userId 用户ID
    * @return /
    */
-  public List<SystemRoleVo> queryRoleVoByUsersId(Long userId) {
+  public List<SystemRoleVo> listRoleVoByUsersId(Long userId) {
     Set<SystemRoleTb> roles = this.listUserRoleByUserId(userId);
     return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
   }
 
   /**
-   * 根据角色查询角色级别
+   * 根据角色查询角色级别 -> TestPassed
    *
    * @param roles /
    * @return /
@@ -115,16 +121,12 @@ public class SystemUserRoleService {
       // 最小权限
       return Integer.MAX_VALUE;
     }
-    List<Long> roleIds =
-        roles.stream().map(SystemRoleTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+    List<Long> roleIds = roles.stream().map(SystemRoleTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
     if (CollUtil.isEmpty(roleIds)) {
       // 最小权限
       return Integer.MAX_VALUE;
     }
-    List<Integer> roleLevels = systemRoleMapper.selectList(
-            new LambdaQueryWrapper<SystemRoleTb>().select(SystemRoleTb::getLevel).isNotNull(SystemRoleTb::getLevel)
-                .in(SystemRoleTb::getId, roleIds)).stream().map(SystemRoleTb::getLevel).distinct()
-        .collect(Collectors.toList());
+    List<Integer> roleLevels = systemRoleMapper.listRoleLevelByRoleIds(roleIds);
     if (CollUtil.isEmpty(roleLevels)) {
       // 最小权限
       return Integer.MAX_VALUE;
@@ -133,14 +135,13 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
+   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误 -> TestPassed
    *
    * @param args /
    */
   public void checkLevel(SystemUserVo args) {
-    Integer currentLevel = Collections.min(
-        this.queryRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream().map(SystemRoleVo::getLevel)
-            .collect(Collectors.toList()));
+    List<Integer> roleLevels = systemUserRoleMapper.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
+    Integer currentLevel = Collections.min(roleLevels);
     Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
     if (currentLevel > optLevel) {
       throw new BadRequestException("角色权限不足");
@@ -156,7 +157,23 @@ public class SystemUserRoleService {
     return systemUserRoleMapper.selectCount(wrapper);
   }
 
+  /**
+   * 根据用户id列举角色 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
   public Set<SystemRoleTb> listUserRoleByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleByUserId(userId);
+  }
+
+  /**
+   * 根据用户id列举角色级别 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
+  public List<Integer> listUserRoleLevelByUserId(Long userId) {
+    return systemUserRoleMapper.listUserRoleLevelByUserId(userId);
   }
 }

@@ -15,8 +15,10 @@
  */
 package cn.odboy.system.framework.quartz;
 
+import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.service.SystemQuartzJobService;
+import cn.odboy.util.KitBeanUtil;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +42,9 @@ public class ActiveJobRegister implements ApplicationRunner {
    */
   @Override
   public void run(ApplicationArguments applicationArguments) {
-    List<SystemQuartzJobVo> quartzJobs = systemQuartzJobService.listEnableQuartzJob();
-    quartzJobs.forEach(quartzManage::addJob);
+    List<SystemQuartzJobTb> quartzJobTbs = systemQuartzJobService.listEnableQuartzJob();
+    List<SystemQuartzJobVo> quartzJobVos = KitBeanUtil.copyToList(quartzJobTbs, SystemQuartzJobVo.class);
+    quartzJobVos.forEach(quartzManage::addJob);
     log.info("Timing task injection complete");
   }
 }

@@ -34,15 +34,14 @@ import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
-import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,7 +78,7 @@ public class SystemQuartzJobService {
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void createJob(SystemQuartzJobVo args) {
+  public void createJob(SystemQuartzJobTb args) {
     if (args.getId() != null) {
       throw new BadRequestException("无效参数id");
     }
@@ -88,9 +87,9 @@ public class SystemQuartzJobService {
     if (!CronExpression.isValidExpression(args.getCronExpression())) {
       throw new BadRequestException("cron表达式格式错误");
     }
-    SystemQuartzJobTb record = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
-    systemQuartzJobMapper.insert(record);
-    quartzManage.addJob(args);
+    systemQuartzJobMapper.insert(args);
+    SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(args, SystemQuartzJobVo.class);
+    quartzManage.addJob(quartzJobVo);
   }
 
   /**
@@ -112,28 +111,27 @@ public class SystemQuartzJobService {
       }
     }
     SystemQuartzJobTb jobTb = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
-    systemQuartzJobMapper.insertOrUpdate(jobTb);
-    SystemQuartzJobVo jobVo = KitBeanUtil.copyToClass(args, SystemQuartzJobVo.class);
-    quartzManage.updateJobCron(jobVo);
+    systemQuartzJobMapper.updateById(jobTb);
+    quartzManage.updateJobCron(jobTb);
   }
 
   /**
    * 更改定时任务状态
    *
-   * @param quartzJob /
+   * @param quartzJobVo /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void switchQuartzJobStatus(SystemQuartzJobVo quartzJob) {
+  public void switchQuartzJobStatus(SystemQuartzJobVo quartzJobVo) {
     // 置换暂停状态
-    if (quartzJob.getIsPause()) {
-      quartzManage.resumeJob(quartzJob);
-      quartzJob.setIsPause(false);
+    if (quartzJobVo.getIsPause()) {
+      quartzManage.resumeJob(quartzJobVo);
+      quartzJobVo.setIsPause(false);
     } else {
-      quartzManage.pauseJob(quartzJob);
-      quartzJob.setIsPause(true);
+      quartzManage.pauseJob(quartzJobVo);
+      quartzJobVo.setIsPause(true);
     }
-    SystemQuartzJobTb quartzJobTb = KitBeanUtil.copyToClass(quartzJob, SystemQuartzJobTb.class);
-    systemQuartzJobMapper.insertOrUpdate(quartzJobTb);
+    SystemQuartzJobTb record = KitBeanUtil.copyToClass(quartzJobVo, SystemQuartzJobTb.class);
+    systemQuartzJobMapper.updateById(record);
   }
 
   /**
@@ -172,20 +170,20 @@ public class SystemQuartzJobService {
         // 如果是手动清除子任务id, 会出现id为空字符串的问题
         continue;
       }
-      SystemQuartzJobVo quartzJob = systemQuartzJobMapper.selectVoById(id);
-      if (quartzJob == null) {
+      SystemQuartzJobTb quartzJobTb = systemQuartzJobMapper.selectById(id);
+      if (quartzJobTb == null) {
         // 防止子任务不存在
         continue;
       }
+      SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(quartzJobTb, SystemQuartzJobVo.class);
       // 执行任务
       String uuid = IdUtil.simpleUUID();
-      quartzJob.setUuid(uuid);
-      // 执行任务
-      startQuartzJob(quartzJob);
-      // 获取执行状态, 如果执行失败则停止后面的子任务执行
+      quartzJobVo.setUuid(uuid);
+      startQuartzJob(quartzJobVo);
+      // 查询执行状态, 如果执行失败则停止后面的子任务执行
       Boolean result = redisHelper.get(uuid, Boolean.class);
       while (result == null) {
-        // 休眠5秒, 再次获取子任务执行情况
+        // 休眠5秒, 再次查询子任务执行情况
         Thread.sleep(5000);
         result = redisHelper.get(uuid, Boolean.class);
       }
@@ -203,25 +201,23 @@ public class SystemQuartzJobService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzJobTb> searchQuartzJobByArgs(SystemQueryQuartzJobArgs args,
-      Page<SystemQuartzJobTb> page) {
+  public KitPageResult<SystemQuartzJobTb> searchQuartzJobByArgs(SystemQueryQuartzJobArgs args, Page<SystemQuartzJobTb> page) {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQuartzJobQueryParams(args, wrapper);
     return KitPageUtil.toPage(systemQuartzJobMapper.selectPage(page, wrapper));
   }
 
-  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args,
-      LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
-    KitValidUtil.notNull(args);
-    wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName, args.getJobName());
-    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-      wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName, args.getJobName());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+      }
     }
     wrapper.orderByDesc(SystemQuartzJobTb::getId);
   }
 
-  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args,
-      LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
+  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
     if (args != null) {
       wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName, args.getJobName());
       wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
@@ -271,16 +267,15 @@ public class SystemQuartzJobService {
     return systemQuartzLogMapper.selectList(wrapper);
   }
 
-  public SystemQuartzJobVo getQuartzJobById(Long id) {
-    return KitBeanUtil.copyToClass(systemQuartzJobMapper.selectById(id), SystemQuartzJobVo.class);
-  }
-
-  public List<SystemQuartzJobVo> listEnableQuartzJob() {
+  public List<SystemQuartzJobTb> listEnableQuartzJob() {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemQuartzJobTb::getIsPause, 0);
-    return KitBeanUtil.copyToList(systemQuartzJobMapper.selectList(wrapper), SystemQuartzJobVo.class);
+    return systemQuartzJobMapper.selectList(wrapper);
   }
 
+  /**
+   * 导出定时任务数据 -> TestPassed
+   */
   public void exportQuartzJobXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     List<SystemQuartzJobTb> systemQuartzJobTbs = this.queryQuartzJobByArgs(args);
     List<SystemQuartzJobExportRowVo> rowVos = new ArrayList<>();
@@ -299,6 +294,9 @@ public class SystemQuartzJobService {
     KitExcelExporter.exportSimple(response, "定时任务数据", SystemQuartzJobExportRowVo.class, rowVos);
   }
 
+  /**
+   * 导出定时任务日志数据 -> TestPassed
+   */
   public void exportQuartzLogXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     List<SystemQuartzLogTb> systemQuartzLogTbs = this.queryQuartzLogByArgs(args);
     List<SystemQuartzLogExportRowVo> rowVos = new ArrayList<>();
@@ -316,5 +314,9 @@ public class SystemQuartzJobService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "定时任务日志数据", SystemQuartzLogExportRowVo.class, rowVos);
+  }
+
+  public SystemQuartzJobTb getQuartzJobById(Long id) {
+    return systemQuartzJobMapper.selectById(id);
   }
 }

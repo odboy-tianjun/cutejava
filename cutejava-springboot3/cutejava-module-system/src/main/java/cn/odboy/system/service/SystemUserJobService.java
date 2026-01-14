@@ -33,6 +33,9 @@ public class SystemUserJobService {
   @Autowired
   private SystemUserJobMapper systemUserJobMapper;
 
+  /**
+   * 批量绑定用户岗位 -> TestPassed
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchInsertUserJob(Set<SystemJobTb> jobs, Long userId) {
     if (CollUtil.isNotEmpty(jobs)) {
@@ -47,6 +50,9 @@ public class SystemUserJobService {
     }
   }
 
+  /**
+   * 批量解绑用户岗位 -> TestPassed
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchDeleteUserJob(Set<Long> userIds) {
     if (CollUtil.isNotEmpty(userIds)) {
@@ -57,9 +63,9 @@ public class SystemUserJobService {
   }
 
   /**
-   * 根据岗位ID统计用户数量
+   * 根据岗位ID统计用户数量 -> TestPassed
    *
-   * @param jobIds 岗位ID集合
+   * @param jobIds /
    * @return /
    */
   public Long countUserByJobIds(Set<Long> jobIds) {
@@ -71,6 +77,12 @@ public class SystemUserJobService {
     return systemUserJobMapper.selectCount(wrapper);
   }
 
+  /**
+   * 根据用户id列举岗位 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
   public Set<SystemJobTb> listUserJobByUserId(Long userId) {
     return systemUserJobMapper.listUserJobByUserId(userId);
   }

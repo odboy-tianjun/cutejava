@@ -29,10 +29,10 @@ import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +52,7 @@ public class SystemJobService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveJob(SystemCreateJobArgs args) {
-    SystemJobTb job = this.getJobByName(args.getName());
-    if (job != null) {
+    if (this.existJobWithName(args.getName())) {
       throw new BadRequestException("职位名称已存在");
     }
     SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
@@ -68,8 +67,7 @@ public class SystemJobService {
   @Transactional(rollbackFor = Exception.class)
   public void updateJobById(SystemJobTb args) {
     SystemJobTb job = systemJobMapper.selectById(args.getId());
-    SystemJobTb old = this.getJobByName(args.getName());
-    if (old != null && !old.getId().equals(args.getId())) {
+    if (this.existJobWithNameNeSelf(args.getName(), job.getId())) {
       throw new BadRequestException("职位名称已存在");
     }
     args.setId(job.getId());
@@ -121,13 +119,26 @@ public class SystemJobService {
     }
   }
 
-  public SystemJobTb getJobByName(String name) {
+  /**
+   * 根据岗位名称查询岗位是否存在 -> TestPassed
+   */
+  private boolean existJobWithName(String name) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemJobTb::getName, name);
-    return systemJobMapper.selectOne(wrapper);
+    return systemJobMapper.exists(wrapper);
   }
 
-  public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
+  /**
+   * 根据岗位名称和岗位id查询岗位是否存在 -> TestPassed
+   */
+  private boolean existJobWithNameNeSelf(String name, Long currentJobId) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemJobTb::getName, name);
+    wrapper.ne(SystemJobTb::getId, currentJobId);
+    return systemJobMapper.exists(wrapper);
+  }
+
+  private void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
     if (args != null) {
       wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
       wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
@@ -138,6 +149,9 @@ public class SystemJobService {
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
   }
 
+  /**
+   * 导出岗位数据 -> TestPassed
+   */
   public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
     List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
     List<SystemJobExportRowVo> rowVos = new ArrayList<>();
@@ -149,9 +163,5 @@ public class SystemJobService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
-  }
-
-  public List<SystemJobTb> listByIds(Set<Long> jobIds) {
-    return systemJobMapper.selectByIds(jobIds);
   }
 }

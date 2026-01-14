@@ -36,7 +36,6 @@ import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,6 +45,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -212,19 +212,19 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据当前用户获取菜单
+   * 根据当前用户查询菜单
    *
    * @param currentUserId /
    * @return /
    */
   public List<SystemMenuVo> listMenuByUserId(Long currentUserId) {
-    List<SystemRoleVo> roles = systemUserRoleService.queryRoleVoByUsersId(currentUserId);
+    List<SystemRoleVo> roles = systemUserRoleService.listRoleVoByUsersId(currentUserId);
     Set<Long> roleIds = roles.stream().map(SystemRoleVo::getId).collect(Collectors.toSet());
     return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIds(roleIds));
   }
 
   /**
-   * 获取所有子节点, 包含自身ID
+   * 查询所有子节点, 包含自身ID
    *
    * @param menuList /
    * @param menuSet  /
@@ -261,7 +261,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据ID获取同级与上级数据
+   * 根据ID查询同级与上级数据
    *
    * @param menu  /
    * @param menus /
@@ -355,7 +355,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 获取 MenuResponse
+   * 查询 MenuResponse
    *
    * @param menu   /
    * @param menuVo /
