@@ -158,7 +158,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户id列举角色 -> TestPassed
+   * 根据用户id查询角色 -> TestPassed
    *
    * @param userId /
    * @return /
@@ -168,7 +168,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户id列举角色级别 -> TestPassed
+   * 根据用户id查询角色级别 -> TestPassed
    *
    * @param userId /
    * @return /

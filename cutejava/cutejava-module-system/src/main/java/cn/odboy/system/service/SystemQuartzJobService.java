@@ -73,7 +73,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 创建
+   * 创建 -> TestPassed
    *
    * @param args /
    */
@@ -93,7 +93,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 修改任务并重新调度
+   * 修改任务并重新调度 -> TestPassed
    *
    * @param args /
    */
@@ -116,7 +116,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 更改定时任务状态
+   * 更改定时任务状态 -> TestPassed
    *
    * @param quartzJobVo /
    */
@@ -135,7 +135,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 立即执行定时任务
+   * 立即执行定时任务 -> TestPassed
    *
    * @param quartzJob /
    */
@@ -144,7 +144,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 删除任务
+   * 删除任务 -> TestPassed
    *
    * @param ids /
    */
@@ -158,7 +158,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 执行子任务
+   * 执行子任务 -> TestPassed
    *
    * @param tasks /
    * @throws InterruptedException /
@@ -195,7 +195,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 分页查询
+   * 分页查询 -> TestPassed
    *
    * @param args 条件
    * @param page 分页参数
@@ -230,21 +230,20 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 分页查询日志
+   * 分页查询日志 -> TestPassed
    *
    * @param args 条件
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemQuartzLogTb> searchQuartzLogByArgs(SystemQueryQuartzJobArgs args,
-      Page<SystemQuartzLogTb> page) {
+  public KitPageResult<SystemQuartzLogTb> searchQuartzLogByArgs(SystemQueryQuartzJobArgs args, Page<SystemQuartzLogTb> page) {
     LambdaQueryWrapper<SystemQuartzLogTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQuartzLogQueryParams(args, wrapper);
     return KitPageUtil.toPage(systemQuartzLogMapper.selectPage(page, wrapper));
   }
 
   /**
-   * 查询全部
+   * 查询全部 -> TestPassed
    *
    * @param args 条件
    * @return /
@@ -256,7 +255,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 查询全部
+   * 查询全部 -> TestPassed
    *
    * @param args 条件
    * @return /
@@ -267,6 +266,9 @@ public class SystemQuartzJobService {
     return systemQuartzLogMapper.selectList(wrapper);
   }
 
+  /**
+   * 查询启用的定时任务 -> TestPassed
+   */
   public List<SystemQuartzJobTb> listEnableQuartzJob() {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemQuartzJobTb::getIsPause, 0);
@@ -316,6 +318,9 @@ public class SystemQuartzJobService {
     KitExcelExporter.exportSimple(response, "定时任务日志数据", SystemQuartzLogExportRowVo.class, rowVos);
   }
 
+  /**
+   * 根据任务id查询定时任务 -> TestPassed
+   */
   public SystemQuartzJobTb getQuartzJobById(Long id) {
     return systemQuartzJobMapper.selectById(id);
   }

@@ -78,7 +78,7 @@ public class SystemUserJobService {
   }
 
   /**
-   * 根据用户id列举岗位 -> TestPassed
+   * 根据用户id查询岗位 -> TestPassed
    *
    * @param userId /
    * @return /

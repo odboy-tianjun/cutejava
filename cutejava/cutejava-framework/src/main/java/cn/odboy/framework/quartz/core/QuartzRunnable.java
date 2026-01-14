@@ -49,7 +49,7 @@ public class QuartzRunnable implements Callable<Object> {
     if (StringUtils.isNotBlank(params)) {
       return method.invoke(target, params);
     } else {
-      return method.invoke(target, "");
+      return method.invoke(target, null);
     }
   }
 }

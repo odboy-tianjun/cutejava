@@ -105,8 +105,8 @@
                 <el-table-column prop="executeTime" label="请求耗时" align="center">
                   <template slot-scope="scope">
                     <el-tag v-if="scope.row.executeTime <= 300">{{ scope.row.time || 0 }}ms</el-tag>
-                    <el-tag v-else-if="scope.row.executeTime <= 1000" type="warning">{{ scope.row.executeTime }}ms</el-tag>
-                    <el-tag v-else type="danger">{{ scope.row.executeTime }}ms</el-tag>
+                    <el-tag v-else-if="scope.row.executeTime <= 1000" type="warning">{{ scope.row.executeTime || 0 }}ms</el-tag>
+                    <el-tag v-else type="danger">{{ scope.row.executeTime || 0 }}ms</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column

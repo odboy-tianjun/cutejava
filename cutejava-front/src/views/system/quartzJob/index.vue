@@ -28,6 +28,7 @@
         >日志
         </el-button>
       </crudOperation>
+      <el-link type="primary" href="https://cron.ciding.cc/" target="_blank">Cron在线表达式生成</el-link>
       <Log ref="log" />
     </div>
     <!--Form表单-->
