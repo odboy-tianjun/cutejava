@@ -18,6 +18,7 @@ package cn.odboy.system.dal.mysql;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,4 +27,5 @@ import org.apache.ibatis.annotations.Param;
 public interface SystemUserRoleMapper extends BaseMapper<SystemUserRoleTb> {
 
   Set<SystemRoleTb> listUserRoleByUserId(@Param("userId") Long userId);
+  List<Integer> listUserRoleLevelByUserId(@Param("userId") Long userId);
 }

@@ -150,8 +150,4 @@ public class SystemJobService {
     }
     KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
   }
-
-  public List<SystemJobTb> listByIds(Set<Long> jobIds) {
-    return systemJobMapper.selectByIds(jobIds);
-  }
 }

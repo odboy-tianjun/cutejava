@@ -218,7 +218,7 @@ public class SystemMenuService {
    * @return /
    */
   public List<SystemMenuVo> listMenuByUserId(Long currentUserId) {
-    List<SystemRoleVo> roles = systemUserRoleService.queryRoleVoByUsersId(currentUserId);
+    List<SystemRoleVo> roles = systemUserRoleService.listRoleVoByUsersId(currentUserId);
     Set<Long> roleIds = roles.stream().map(SystemRoleVo::getId).collect(Collectors.toSet());
     return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIds(roleIds));
   }

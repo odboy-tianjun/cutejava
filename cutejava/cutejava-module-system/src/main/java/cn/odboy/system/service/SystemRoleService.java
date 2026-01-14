@@ -222,7 +222,7 @@ public class SystemRoleService {
       permissions.add("admin");
       return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
     }
-    List<SystemRoleVo> roles = systemUserRoleService.queryRoleVoByUsersId(user.getId());
+    List<SystemRoleVo> roles = systemUserRoleService.listRoleVoByUsersId(user.getId());
     permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuVo::getPermission)
         .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
     return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
@@ -268,7 +268,7 @@ public class SystemRoleService {
    * @return /
    */
   private int checkRoleLevels(Integer level) {
-    List<Integer> levels = systemUserRoleService.queryRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
+    List<Integer> levels = systemUserRoleService.listRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream()
         .map(SystemRoleVo::getLevel).collect(Collectors.toList());
     int min = Collections.min(levels);
     if (level != null) {

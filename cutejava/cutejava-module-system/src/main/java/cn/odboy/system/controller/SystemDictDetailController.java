@@ -54,13 +54,6 @@ public class SystemDictDetailController {
     return ResponseEntity.ok(systemDictDetailService.searchDictDetail(pageArgs.getArgs(), page));
   }
 
-  @ApiOperation("查询多个字典详情")
-  @GetMapping(value = "/getDictDetailMaps")
-  public ResponseEntity<Map<String, List<SystemDictDetailVo>>> getDictDetailMaps(@RequestParam String dictName) {
-    Map<String, List<SystemDictDetailVo>> dictMap = systemDictDetailService.getDictDetailMap(dictName);
-    return ResponseEntity.ok(dictMap);
-  }
-
   @OperationLog
   @ApiOperation("新增字典详情")
   @PostMapping(value = "/saveDictDetail")

@@ -99,7 +99,7 @@ public class SystemUserRoleService {
    * @param userId 用户ID
    * @return /
    */
-  public List<SystemRoleVo> queryRoleVoByUsersId(Long userId) {
+  public List<SystemRoleVo> listRoleVoByUsersId(Long userId) {
     Set<SystemRoleTb> roles = this.listUserRoleByUserId(userId);
     return roles.stream().map(this::convertToRoleVo).collect(Collectors.toList());
   }
@@ -115,16 +115,12 @@ public class SystemUserRoleService {
       // 最小权限
       return Integer.MAX_VALUE;
     }
-    List<Long> roleIds =
-        roles.stream().map(SystemRoleTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+    List<Long> roleIds = roles.stream().map(SystemRoleTb::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
     if (CollUtil.isEmpty(roleIds)) {
       // 最小权限
       return Integer.MAX_VALUE;
     }
-    List<Integer> roleLevels = systemRoleMapper.selectList(
-            new LambdaQueryWrapper<SystemRoleTb>().select(SystemRoleTb::getLevel).isNotNull(SystemRoleTb::getLevel)
-                .in(SystemRoleTb::getId, roleIds)).stream().map(SystemRoleTb::getLevel).distinct()
-        .collect(Collectors.toList());
+    List<Integer> roleLevels = systemRoleMapper.listRoleLevelByRoleIds(roleIds);
     if (CollUtil.isEmpty(roleLevels)) {
       // 最小权限
       return Integer.MAX_VALUE;
@@ -138,9 +134,8 @@ public class SystemUserRoleService {
    * @param args /
    */
   public void checkLevel(SystemUserVo args) {
-    Integer currentLevel = Collections.min(
-        this.queryRoleVoByUsersId(KitSecurityHelper.getCurrentUserId()).stream().map(SystemRoleVo::getLevel)
-            .collect(Collectors.toList()));
+    List<Integer> roleLevels = systemUserRoleMapper.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
+    Integer currentLevel = Collections.min(roleLevels);
     Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
     if (currentLevel > optLevel) {
       throw new BadRequestException("角色权限不足");
@@ -158,5 +153,9 @@ public class SystemUserRoleService {
 
   public Set<SystemRoleTb> listUserRoleByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleByUserId(userId);
+  }
+
+  public List<Integer> listUserRoleLevelByUserId(Long userId) {
+    return systemUserRoleMapper.listUserRoleLevelByUserId(userId);
   }
 }

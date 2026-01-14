@@ -32,7 +32,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -139,14 +138,5 @@ public class SystemDictDetailService {
       }
     }
     return detailVos;
-  }
-
-  public Map<String, List<SystemDictDetailVo>> getDictDetailMap(String dictName) {
-    String[] names = dictName.split("[,, ]");
-    Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
-    for (String name : names) {
-      dictMap.put(name, this.listDictDetailByName(name));
-    }
-    return dictMap;
   }
 }
