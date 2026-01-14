@@ -52,7 +52,7 @@ public class SystemAuthService {
         KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginArgs.getPassword());
     // 校验验证码
     systemCaptchaService.validate(loginArgs.getUuid(), loginArgs.getCode());
-    // 获取用户信息
+    // 查询用户信息
     SystemUserJwtVo jwtUser = userDetailsService.loadUserByUsername(loginArgs.getUsername());
     // 验证用户密码
     if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
@@ -83,7 +83,7 @@ public class SystemAuthService {
   }
 
   /**
-   * 获取当前登录人信息 -> TestPassed
+   * 查询当前登录人信息 -> TestPassed
    */
   public SystemUserJwtVo getCurrentUserInfo() {
     SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();

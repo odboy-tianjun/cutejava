@@ -13,6 +13,9 @@ public class SystemUserDeptService {
   @Autowired
   private SystemUserMapper systemUserMapper;
 
+  /**
+   * 根据部门id统计用户数量 -> TestPassed
+   */
   public long countUserByDeptIds(Set<Long> deptIds) {
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemUserTb::getDeptId, deptIds);

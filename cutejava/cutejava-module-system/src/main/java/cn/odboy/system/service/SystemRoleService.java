@@ -210,7 +210,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 获取用户权限信息 -> TestPassed
+   * 查询用户权限信息 -> TestPassed
    *
    * @param user 用户信息
    * @return 权限信息

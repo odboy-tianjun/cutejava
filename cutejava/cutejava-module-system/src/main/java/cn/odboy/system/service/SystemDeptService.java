@@ -100,7 +100,7 @@ public class SystemDeptService {
   }
 
   /**
-   * 根据部门id获取部门信息 -> TestPassed
+   * 根据部门id查询部门信息 -> TestPassed
    *
    * @param id 部门id
    * @return /
@@ -116,7 +116,7 @@ public class SystemDeptService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteDeptByIds(Set<Long> ids) {
-    // 获取部门, 和其所有子部门
+    // 查询部门, 和其所有子部门
     Set<SystemDeptVo> depts = this.traverseDeptByIdWithPids(ids);
     // 验证是否被角色或用户关联
     this.verifyBindRelationByIds(depts);
@@ -229,7 +229,7 @@ public class SystemDeptService {
   }
 
   /**
-   * 获取部门下所有关联的部门
+   * 查询部门下所有关联的部门
    *
    * @param deptTbList /
    * @param depts      /
@@ -263,7 +263,7 @@ public class SystemDeptService {
   }
 
   /**
-   * 根据ID获取同级与上级数据
+   * 根据ID查询同级与上级数据
    *
    * @param dept     /
    * @param deptList /
@@ -388,7 +388,7 @@ public class SystemDeptService {
   }
 
   private List<SystemProductLineVo> buildDeptSelectOptions(List<SystemDeptTb> depts) {
-    // 获取所有部门并按父子关系组织
+    // 查询所有部门并按父子关系组织
     Map<Long, SystemDeptTb> deptMap =
         depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
     List<SystemProductLineVo> options = new ArrayList<>();
@@ -433,7 +433,7 @@ public class SystemDeptService {
 
   public List<SystemProductLineTreeVo> listDeptSelectProDataSource() {
     List<SystemDeptTb> depts = this.listEnabledDepts();
-    // 获取所有部门并按父子关系组织
+    // 查询所有部门并按父子关系组织
     Map<Long, SystemDeptTb> deptMap =
         depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
     List<SystemProductLineTreeVo> options = new ArrayList<>();

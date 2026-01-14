@@ -45,7 +45,7 @@ public class SystemDataService {
   private SystemRoleDeptService systemRoleDeptService;
 
   /**
-   * 获取数据权限 -> TestPassed
+   * 查询数据权限 -> TestPassed
    *
    * @param user /
    * @return /
@@ -54,7 +54,7 @@ public class SystemDataService {
     List<Long> deptIds = new ArrayList<>();
     // 查询用户角色
     Set<SystemRoleTb> roleList = systemUserRoleService.listUserRoleByUserId(user.getId());
-    // 获取对应的部门ID
+    // 查询对应的部门ID
     for (SystemRoleTb role : roleList) {
       SystemDataScopeEnum dataScopeEnum = SystemDataScopeEnum.find(role.getDataScope());
       switch (Objects.requireNonNull(dataScopeEnum)) {
@@ -75,7 +75,7 @@ public class SystemDataService {
   }
 
   /**
-   * 获取自定义的数据权限 -> TestPassed
+   * 查询自定义的数据权限 -> TestPassed
    *
    * @param deptIds 部门ID（外部数据）
    * @param roleId  角色ID

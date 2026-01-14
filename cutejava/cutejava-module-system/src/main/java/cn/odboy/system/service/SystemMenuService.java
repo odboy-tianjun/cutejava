@@ -212,7 +212,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据当前用户获取菜单
+   * 根据当前用户查询菜单
    *
    * @param currentUserId /
    * @return /
@@ -224,7 +224,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 获取所有子节点, 包含自身ID
+   * 查询所有子节点, 包含自身ID
    *
    * @param menuList /
    * @param menuSet  /
@@ -261,7 +261,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据ID获取同级与上级数据
+   * 根据ID查询同级与上级数据
    *
    * @param menu  /
    * @param menus /
@@ -355,7 +355,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 获取 MenuResponse
+   * 查询 MenuResponse
    *
    * @param menu   /
    * @param menuVo /

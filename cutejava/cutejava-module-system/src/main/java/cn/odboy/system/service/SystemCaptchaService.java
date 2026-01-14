@@ -26,10 +26,10 @@ public class SystemCaptchaService {
   private AppProperties properties;
 
   /**
-   * 获取登录验证码 -> TestPassed
+   * 查询登录验证码 -> TestPassed
    */
   public SystemCaptchaVo getLoginCaptcha() {
-    // 获取运算的结果
+    // 查询运算的结果
     Captcha captcha = properties.getLogin().getCaptchaSetting().getCaptcha();
     String uuid = SystemCacheKey.CAPTCHA_LOGIN + IdUtil.simpleUUID();
     //当验证码类型为 arithmetic时且长度 >= 2 时, captcha.text()的结果有几率为浮点型

@@ -182,10 +182,10 @@ public class SystemQuartzJobService {
       quartzJob.setUuid(uuid);
       // 执行任务
       startQuartzJob(quartzJob);
-      // 获取执行状态, 如果执行失败则停止后面的子任务执行
+      // 查询执行状态, 如果执行失败则停止后面的子任务执行
       Boolean result = redisHelper.get(uuid, Boolean.class);
       while (result == null) {
-        // 休眠5秒, 再次获取子任务执行情况
+        // 休眠5秒, 再次查询子任务执行情况
         Thread.sleep(5000);
         result = redisHelper.get(uuid, Boolean.class);
       }

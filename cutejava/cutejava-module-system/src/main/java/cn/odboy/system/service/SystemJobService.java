@@ -121,13 +121,17 @@ public class SystemJobService {
     }
   }
 
+  /**
+   * 根据岗位名称查询启用的岗位信息 -> TestPassed
+   */
   public SystemJobTb getJobByName(String name) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemJobTb::getName, name);
+    wrapper.eq(SystemJobTb::getEnabled, 1);
     return systemJobMapper.selectOne(wrapper);
   }
 
-  public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
+  private void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
     if (args != null) {
       wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
       wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
@@ -138,6 +142,9 @@ public class SystemJobService {
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
   }
 
+  /**
+   * 导出岗位数据 -> TestPassed
+   */
   public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
     List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
     List<SystemJobExportRowVo> rowVos = new ArrayList<>();

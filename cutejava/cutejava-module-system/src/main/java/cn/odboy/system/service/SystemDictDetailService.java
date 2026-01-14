@@ -116,7 +116,7 @@ public class SystemDictDetailService {
   }
 
   /**
-   * 根据字典名称获取字典详情 -> TestPassed
+   * 根据字典名称查询字典详情 -> TestPassed
    *
    * @param name 字典名称
    * @return /
