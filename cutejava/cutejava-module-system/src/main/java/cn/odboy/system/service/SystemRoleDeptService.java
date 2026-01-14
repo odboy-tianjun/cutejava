@@ -18,7 +18,6 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleDeptTb;
-import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.dal.mysql.SystemRoleDeptMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,6 @@ public class SystemRoleDeptService {
 
     @Autowired
     private SystemRoleDeptMapper systemRoleDeptMapper;
-    @Autowired
-    private SystemDeptMapper systemDeptMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteRoleDept(Set<Long> roleIds) {
