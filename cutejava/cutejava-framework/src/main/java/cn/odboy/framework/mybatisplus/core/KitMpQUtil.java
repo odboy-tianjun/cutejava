@@ -35,6 +35,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -198,7 +199,7 @@ public class KitMpQUtil {
   }
 
   public static void main(String[] args) {
-    QueryWrapper<TestDomain> query = new QueryWrapper<TestDomain>();
+    QueryWrapper<TestDomain> query = new QueryWrapper<>();
     query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
     query.eq("id", 1);
     query.orderByDesc("id");
@@ -214,13 +215,13 @@ public class KitMpQUtil {
     System.err.println(query.getTargetSql());
   }
 
+  @Data
   @TableName("test_domain")
   private static class TestDomain {
 
     @NotNull(groups = KitBaseUserTimeTb.Update.class)
     @TableId(value = "user_id", type = IdType.AUTO)
-    private Long
-        id;
+    private Long id;
     @TableField(value = "dept_id")
     private Long deptId;
     @NotBlank
