@@ -22,7 +22,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.constant.FileTypeEnum;
-import cn.odboy.framework.context.KitSpringBeanHolder;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
@@ -40,11 +39,14 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class SystemLocalStorageService {
 
@@ -54,6 +56,9 @@ public class SystemLocalStorageService {
   private KitFileLocalUploadHelper fileUploadPathHelper;
   @Autowired
   private AppProperties properties;
+  @Lazy
+  @Autowired
+  private SystemLocalStorageService localStorageService;
 
   /**
    * 上传 -> TestPassed
@@ -75,8 +80,7 @@ public class SystemLocalStorageService {
     }
     try {
       String formatSize = KitFileUtil.getSize(size);
-      String prefixName =
-          StrUtil.isBlank(name) ? KitFileUtil.getPrefix(multipartFile.getOriginalFilename()) : name;
+      String prefixName = KitFileUtil.getPrefix(multipartFile.getOriginalFilename(), name);
       SystemLocalStorageTb localStorage = new SystemLocalStorageTb();
       localStorage.setRealName(file.getName());
       localStorage.setName(prefixName);
@@ -88,6 +92,7 @@ public class SystemLocalStorageService {
       systemLocalStorageMapper.insert(localStorage);
       return localStorage;
     } catch (Exception e) {
+      log.error("上传文件失败", e);
       KitFileUtil.del(file);
       throw e;
     }
@@ -100,9 +105,7 @@ public class SystemLocalStorageService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateLocalStorageById(SystemLocalStorageTb args) {
-    SystemLocalStorageTb localStorage = systemLocalStorageMapper.selectById(args.getId());
-    localStorage.copy(args);
-    systemLocalStorageMapper.insertOrUpdate(localStorage);
+    systemLocalStorageMapper.updateById(args);
   }
 
   /**
@@ -159,15 +162,22 @@ public class SystemLocalStorageService {
     return systemLocalStorageMapper.selectList(wrapper);
   }
 
-  public SystemLocalStorageTb uploadPictureV1(MultipartFile file) {
+  /**
+   * 上传图片
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public SystemLocalStorageTb uploadPicture(MultipartFile file) {
     // 判断文件是否为图片
     String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
     if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
       throw new BadRequestException("只能上传图片");
     }
-    return KitSpringBeanHolder.getBean(SystemLocalStorageService.class).uploadFile(null, file);
+    return localStorageService.uploadFile(null, file);
   }
 
+  /**
+   * 导出文件上传记录
+   */
   public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);
     List<SystemLocalStorageExportRowVo> rowVos =

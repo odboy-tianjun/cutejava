@@ -23,6 +23,7 @@ import static cn.odboy.constant.SystemConst.SYMBOL_SUBTRACT;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.odboy.constant.FileTypeEnum;
@@ -385,5 +386,16 @@ public final class KitFileUtil extends FileUtil {
 
   public static String getMd5(File file) {
     return getMd5(getByte(file));
+  }
+
+  /**
+   * 获取文件名前缀
+   *
+   * @param originalFilename 原始文件名
+   * @param firstName        首选文件名，如果不为空，则返回
+   * @return /
+   */
+  public static String getPrefix(String originalFilename, String firstName) {
+    return StrUtil.isBlank(firstName) ? getPrefix(originalFilename) : firstName;
   }
 }

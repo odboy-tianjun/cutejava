@@ -74,7 +74,7 @@ public class SystemLocalStorageController {
   @ApiOperation("上传图片")
   @PostMapping("/uploadPicture")
   public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
-    SystemLocalStorageTb localStorage = localStorageService.uploadPictureV1(file);
+    SystemLocalStorageTb localStorage = localStorageService.uploadPicture(file);
     return ResponseEntity.ok(localStorage);
   }
 

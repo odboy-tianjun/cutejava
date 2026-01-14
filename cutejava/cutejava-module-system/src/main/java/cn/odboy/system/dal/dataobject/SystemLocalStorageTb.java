@@ -16,7 +16,6 @@
 package cn.odboy.system.dal.dataobject;
 
 import cn.odboy.base.KitBaseUserTimeTb;
-import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -46,8 +45,4 @@ public class SystemLocalStorageTb extends KitBaseUserTimeTb {
   private String size;
   @ApiModelProperty(value = "日期分组")
   private String dateGroup;
-
-  public void copy(SystemLocalStorageTb source) {
-    KitBeanUtil.copyToTarget(source, this);
-  }
 }
