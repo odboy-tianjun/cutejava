@@ -52,8 +52,7 @@ public class SystemJobService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveJob(SystemCreateJobArgs args) {
-    SystemJobTb job = this.getJobByName(args.getName());
-    if (job != null) {
+    if (this.existJobWithName(args.getName())) {
       throw new BadRequestException("职位名称已存在");
     }
     SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
@@ -68,8 +67,7 @@ public class SystemJobService {
   @Transactional(rollbackFor = Exception.class)
   public void updateJobById(SystemJobTb args) {
     SystemJobTb job = systemJobMapper.selectById(args.getId());
-    SystemJobTb old = this.getJobByName(args.getName());
-    if (old != null && !old.getId().equals(args.getId())) {
+    if (this.existJobWithNameNeSelf(args.getName(), job.getId())) {
       throw new BadRequestException("职位名称已存在");
     }
     args.setId(job.getId());
@@ -122,13 +120,22 @@ public class SystemJobService {
   }
 
   /**
-   * 根据岗位名称查询启用的岗位信息 -> TestPassed
+   * 根据岗位名称查询岗位是否存在 -> TestPassed
    */
-  public SystemJobTb getJobByName(String name) {
+  private boolean existJobWithName(String name) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemJobTb::getName, name);
-    wrapper.eq(SystemJobTb::getEnabled, 1);
-    return systemJobMapper.selectOne(wrapper);
+    return systemJobMapper.exists(wrapper);
+  }
+
+  /**
+   * 根据岗位名称和岗位id查询岗位是否存在 -> TestPassed
+   */
+  private boolean existJobWithNameNeSelf(String name, Long currentJobId) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemJobTb::getName, name);
+    wrapper.ne(SystemJobTb::getId, currentJobId);
+    return systemJobMapper.exists(wrapper);
   }
 
   private void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
