@@ -21,7 +21,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 /**
  * 用户职位关联 Mapper

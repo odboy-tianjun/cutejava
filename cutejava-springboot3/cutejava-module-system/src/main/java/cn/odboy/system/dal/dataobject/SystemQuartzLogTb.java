@@ -22,9 +22,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.util.Date;
 
 @Data
 @TableName("system_quartz_log")

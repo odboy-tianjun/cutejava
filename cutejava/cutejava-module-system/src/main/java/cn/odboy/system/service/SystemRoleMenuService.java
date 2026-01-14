@@ -23,82 +23,82 @@ import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
 import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemRoleMenuService {
 
-    @Autowired
-    private SystemRoleMenuMapper systemRoleMenuMapper;
-    @Autowired
-    private SystemMenuMapper systemMenuMapper;
+  @Autowired
+  private SystemRoleMenuMapper systemRoleMenuMapper;
+  @Autowired
+  private SystemMenuMapper systemMenuMapper;
 
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRoleMenuByRoleId(Long roleId) {
-        LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SystemRoleMenuTb::getRoleId, roleId);
-        systemRoleMenuMapper.delete(wrapper);
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteRoleMenuByRoleId(Long roleId) {
+    LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemRoleMenuTb::getRoleId, roleId);
+    systemRoleMenuMapper.delete(wrapper);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void batchInsertRoleMenu(Set<SystemMenuVo> menus, Long roleId) {
+    if (CollUtil.isNotEmpty(menus)) {
+      List<SystemRoleMenuTb> records = new ArrayList<>();
+      for (SystemMenuVo menu : menus) {
+        SystemRoleMenuTb record = new SystemRoleMenuTb();
+        record.setMenuId(menu.getId());
+        record.setRoleId(roleId);
+        records.add(record);
+      }
+      systemRoleMenuMapper.insert(records);
     }
+  }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void batchInsertRoleMenu(Set<SystemMenuVo> menus, Long roleId) {
-        if (CollUtil.isNotEmpty(menus)) {
-            List<SystemRoleMenuTb> records = new ArrayList<>();
-            for (SystemMenuVo menu : menus) {
-                SystemRoleMenuTb record = new SystemRoleMenuTb();
-                record.setMenuId(menu.getId());
-                record.setRoleId(roleId);
-                records.add(record);
-            }
-            systemRoleMenuMapper.insert(records);
-        }
+  @Transactional(rollbackFor = Exception.class)
+  public void batchDeleteRoleMenu(Set<Long> roleIds) {
+    if (CollUtil.isNotEmpty(roleIds)) {
+      LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
+      wrapper.in(SystemRoleMenuTb::getRoleId, roleIds);
+      systemRoleMenuMapper.delete(wrapper);
     }
+  }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteRoleMenu(Set<Long> roleIds) {
-        if (CollUtil.isNotEmpty(roleIds)) {
-            LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
-            wrapper.in(SystemRoleMenuTb::getRoleId, roleIds);
-            systemRoleMenuMapper.delete(wrapper);
-        }
+  public LinkedHashSet<SystemMenuVo> queryMenuByRoleIds(Set<Long> roleIds) {
+    if (CollUtil.isEmpty(roleIds)) {
+      return new LinkedHashSet<>();
     }
-
-    public LinkedHashSet<SystemMenuVo> queryMenuByRoleIds(Set<Long> roleIds) {
-        if (CollUtil.isEmpty(roleIds)) {
-            return new LinkedHashSet<>();
-        }
-        LambdaQueryWrapper<SystemRoleMenuTb> roleMenuWrapper = new LambdaQueryWrapper<>();
-        roleMenuWrapper.in(SystemRoleMenuTb::getRoleId, roleIds);
-        List<Long> menuIds = systemRoleMenuMapper.selectList(roleMenuWrapper).stream().map(SystemRoleMenuTb::getMenuId)
-            .collect(Collectors.toList());
-        if (CollUtil.isEmpty(menuIds)) {
-            return new LinkedHashSet<>();
-        }
-        LambdaQueryWrapper<SystemMenuTb> menuWrapper = new LambdaQueryWrapper<>();
-        menuWrapper.in(SystemMenuTb::getId, menuIds);
-        // 排除"按钮"
-        menuWrapper.ne(SystemMenuTb::getType, 2);
-        menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
-
-        List<SystemMenuTb> systemMenuTbs = systemMenuMapper.selectList(menuWrapper);
-        List<SystemMenuVo> systemMenuVos = KitBeanUtil.copyToList(systemMenuTbs, SystemMenuVo.class);
-        return new LinkedHashSet<>(systemMenuVos);
+    LambdaQueryWrapper<SystemRoleMenuTb> roleMenuWrapper = new LambdaQueryWrapper<>();
+    roleMenuWrapper.in(SystemRoleMenuTb::getRoleId, roleIds);
+    List<Long> menuIds = systemRoleMenuMapper.selectList(roleMenuWrapper).stream().map(SystemRoleMenuTb::getMenuId)
+        .collect(Collectors.toList());
+    if (CollUtil.isEmpty(menuIds)) {
+      return new LinkedHashSet<>();
     }
+    LambdaQueryWrapper<SystemMenuTb> menuWrapper = new LambdaQueryWrapper<>();
+    menuWrapper.in(SystemMenuTb::getId, menuIds);
+    // 排除"按钮"
+    menuWrapper.ne(SystemMenuTb::getType, 2);
+    menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
 
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
-        if (CollUtil.isEmpty(menuIds)) {
-            return;
-        }
-        LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
-        systemRoleMenuMapper.delete(wrapper);
+    List<SystemMenuTb> systemMenuTbs = systemMenuMapper.selectList(menuWrapper);
+    List<SystemMenuVo> systemMenuVos = KitBeanUtil.copyToList(systemMenuTbs, SystemMenuVo.class);
+    return new LinkedHashSet<>(systemMenuVos);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
+    if (CollUtil.isEmpty(menuIds)) {
+      return;
     }
+    LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
+    systemRoleMenuMapper.delete(wrapper);
+  }
 }

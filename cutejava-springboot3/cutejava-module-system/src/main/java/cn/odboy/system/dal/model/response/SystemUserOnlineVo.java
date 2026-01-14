@@ -16,8 +16,8 @@
 package cn.odboy.system.dal.model.response;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 在线用户

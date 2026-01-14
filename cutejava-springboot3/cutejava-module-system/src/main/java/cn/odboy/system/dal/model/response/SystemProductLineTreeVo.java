@@ -16,9 +16,9 @@
 package cn.odboy.system.dal.model.response;
 
 import cn.odboy.base.KitObject;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
 
 @Getter
 @Setter

@@ -16,9 +16,9 @@
 package cn.odboy.system.dal.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class SystemQueryDeptArgs {

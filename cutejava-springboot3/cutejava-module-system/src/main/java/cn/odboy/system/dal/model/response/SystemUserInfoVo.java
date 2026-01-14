@@ -16,11 +16,11 @@
 package cn.odboy.system.dal.model.response;
 
 import cn.odboy.base.KitObject;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

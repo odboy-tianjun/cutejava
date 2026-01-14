@@ -17,9 +17,9 @@ package cn.odboy.system.dal.model.response;
 
 import cn.odboy.base.KitObject;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.util.List;
 
 /**
  * 构建前端路由时用到

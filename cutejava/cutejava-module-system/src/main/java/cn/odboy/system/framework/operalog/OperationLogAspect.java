@@ -48,7 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class OperationLogAspect {
 
-  @Autowired private SystemOperationLogMapper systemOperationLogMapper;
+  @Autowired
+  private SystemOperationLogMapper systemOperationLogMapper;
 
   @Around("@annotation(operationLog)")
   public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog)

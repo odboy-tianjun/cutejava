@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SystemQuartzJobVo extends KitBaseUserTimeTb {
+
   private Long id;
   @ApiModelProperty(value = "定时器名称")
   private String jobName;
