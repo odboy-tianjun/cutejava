@@ -129,7 +129,7 @@ public class SystemDeptService {
   /**
    * 更新父节点中子节点数目 -> TestPassed
    *
-   * @param deptId /
+   * @param deptId 部门id
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateDeptSubCnt(Long deptId) {
@@ -179,7 +179,7 @@ public class SystemDeptService {
   /**
    * 查询所有数据
    *
-   * @param args    条件
+   * @param args    /
    * @param isQuery /
    * @return /
    * @throws Exception /

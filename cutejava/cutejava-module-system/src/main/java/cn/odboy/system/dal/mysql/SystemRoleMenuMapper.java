@@ -17,7 +17,9 @@ package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 角色菜单关联 Mapper
@@ -27,4 +29,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemRoleMenuMapper extends BaseMapper<SystemRoleMenuTb> {
 
+  List<String> listMenuPermissionByRoleIds(@Param("roleIds") List<Long> roleIds);
 }

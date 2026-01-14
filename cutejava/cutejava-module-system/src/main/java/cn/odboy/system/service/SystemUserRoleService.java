@@ -148,15 +148,6 @@ public class SystemUserRoleService {
     }
   }
 
-  public long countUserByRoleIds(Set<Long> ids) {
-    if (CollUtil.isEmpty(ids)) {
-      return 0L;
-    }
-    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.in(SystemUserRoleTb::getRoleId, ids);
-    return systemUserRoleMapper.selectCount(wrapper);
-  }
-
   /**
    * 根据用户id查询角色 -> TestPassed
    *
@@ -168,12 +159,37 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户id查询角色级别 -> TestPassed
+   * 根据用户id查询角色级别集合 -> TestPassed
    *
    * @param userId /
    * @return /
    */
   public List<Integer> listUserRoleLevelByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleLevelByUserId(userId);
+  }
+
+  /**
+   * 根据用户id查询角色id集合 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
+  public List<Long> listUserRoleIdByUserId(Long userId) {
+    return systemUserRoleMapper.listUserRoleIdByUserId(userId);
+  }
+
+  /**
+   * 根据角色id集合判断是否存在关联用户 -> TestPassed
+   *
+   * @param ids 角色id集合
+   * @return /
+   */
+  public boolean existUserWithRoleIds(Set<Long> ids) {
+    if (CollUtil.isEmpty(ids)) {
+      return false;
+    }
+    LambdaQueryWrapper<SystemUserRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserRoleTb::getRoleId, ids);
+    return systemUserRoleMapper.exists(wrapper);
   }
 }

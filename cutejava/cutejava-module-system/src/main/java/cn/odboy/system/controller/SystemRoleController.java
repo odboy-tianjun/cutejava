@@ -52,7 +52,7 @@ public class SystemRoleController {
   @PostMapping(value = "/getRoleById")
   @PreAuthorize("@el.check('roles:list')")
   public ResponseEntity<SystemRoleVo> getRoleById(@RequestBody SystemRoleTb args) {
-    return ResponseEntity.ok(systemRoleService.getRoleById(args.getId()));
+    return ResponseEntity.ok(systemRoleService.getRoleVoById(args.getId()));
   }
 
   @ApiOperation("导出角色数据")

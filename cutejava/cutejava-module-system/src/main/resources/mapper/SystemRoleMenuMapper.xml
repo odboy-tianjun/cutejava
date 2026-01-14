@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.odboy.system.dal.mysql.SystemRoleMenuMapper">
+  <select id="listMenuPermissionByRoleIds" resultType="java.lang.String">
+    SELECT DISTINCT
+    t2.permission
+    FROM
+    system_roles_menus t1
+    LEFT JOIN system_menu t2 ON t1.menu_id = t2.menu_id
+    WHERE
+    t1.role_id IN
+    <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+      #{roleId}
+    </foreach>
+  </select>
+</mapper>

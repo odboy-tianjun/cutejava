@@ -16,6 +16,7 @@
 package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
 import cn.odboy.system.dal.model.response.SystemMenuVo;
@@ -40,6 +41,11 @@ public class SystemRoleMenuService {
   @Autowired
   private SystemMenuMapper systemMenuMapper;
 
+  /**
+   * 删除角色菜单关联 -> TestPassed
+   *
+   * @param roleId 角色id
+   */
   @Transactional(rollbackFor = Exception.class)
   public void deleteRoleMenuByRoleId(Long roleId) {
     LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
@@ -47,6 +53,12 @@ public class SystemRoleMenuService {
     systemRoleMenuMapper.delete(wrapper);
   }
 
+  /**
+   * 批量绑定角色菜单关联 -> TestPassed
+   *
+   * @param menus  菜单集合
+   * @param roleId 角色id
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchInsertRoleMenu(Set<SystemMenuVo> menus, Long roleId) {
     if (CollUtil.isNotEmpty(menus)) {
@@ -61,6 +73,11 @@ public class SystemRoleMenuService {
     }
   }
 
+  /**
+   * 批量删除角色菜单关联 -> TestPassed
+   *
+   * @param roleIds 角色id集合
+   */
   @Transactional(rollbackFor = Exception.class)
   public void batchDeleteRoleMenu(Set<Long> roleIds) {
     if (CollUtil.isNotEmpty(roleIds)) {
@@ -92,6 +109,11 @@ public class SystemRoleMenuService {
     return new LinkedHashSet<>(systemMenuVos);
   }
 
+  /**
+   * 批量删除菜单角色关联 -> TestPassed
+   *
+   * @param menuIds 菜单id集合
+   */
   @Transactional(rollbackFor = Exception.class)
   public void deleteRoleMenuByMenuIds(List<Long> menuIds) {
     if (CollUtil.isEmpty(menuIds)) {
@@ -100,5 +122,10 @@ public class SystemRoleMenuService {
     LambdaQueryWrapper<SystemRoleMenuTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.in(SystemRoleMenuTb::getMenuId, menuIds);
     systemRoleMenuMapper.delete(wrapper);
+  }
+
+  public List<String> listMenuPermissionByRoleIds(List<Long> roleIds) {
+    List<String> permissions = systemRoleMenuMapper.listMenuPermissionByRoleIds(roleIds);
+    return permissions.stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
   }
 }
