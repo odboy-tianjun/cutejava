@@ -15,9 +15,12 @@
  */
 package cn.odboy.system.dal.mysql;
 
+import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemRoleDeptTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import java.util.Set;
 
 /**
  * 角色部门关联 Mapper
@@ -27,4 +30,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemRoleDeptMapper extends BaseMapper<SystemRoleDeptTb> {
 
+  Set<SystemDeptTb> listUserDeptByRoleId(@Param("roleId") Long roleId);
 }

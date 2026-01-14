@@ -17,11 +17,13 @@ package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemDictDetailTb;
 import cn.odboy.system.dal.model.request.SystemQueryDictDetailArgs;
+import cn.odboy.system.dal.model.response.SystemDictDetailVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import java.util.List;
 
 /**
  * 字典明细 Mapper
@@ -31,5 +33,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
 
-  IPage<SystemDictDetailTb> selectPageByArgs(Page<SystemDictDetailTb> page, @Param("args") SystemQueryDictDetailArgs args);
+    IPage<SystemDictDetailVo> selectPageByArgs(Page<SystemDictDetailTb> page, @Param("args") SystemQueryDictDetailArgs args);
+
+    List<SystemDictDetailVo> listDictDetailByName(@Param("name") String name);
 }
