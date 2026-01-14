@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,49 +21,11 @@ package cn.odboy.system.dal.redis;
 public interface SystemCacheKey {
 
   /**
-   * 用户
-   */
-  String USER_ID = "user::id:";
-  /**
-   * 数据
-   */
-  String DATA_USER = "data::user:";
-  /**
-   * 菜单
-   */
-  String MENU_ID = "menu::id:";
-  String MENU_USER = "menu::user:";
-  /**
-   * 角色授权
-   */
-  String ROLE_AUTH = "role::auth:";
-  String ROLE_USER = "role::user:";
-  /**
-   * 角色信息
-   */
-  String ROLE_ID = "role::id:";
-  /**
-   * 部门
-   */
-  String DEPT_ID = "dept::id:";
-  /**
-   * 岗位
-   */
-  String JOB_ID = "job::id:";
-  /**
-   * 数据字典
-   */
-  String DICT_NAME = "dict::name:";
-  /**
    * 在线用户
    */
-  String ONLINE_USER = "online::token:";
+  String ONLINE_USER = "user::token:";
   /**
    * 登录验证码
    */
   String CAPTCHA_LOGIN = "captcha::login:";
-  /**
-   * 用户信息
-   */
-  String USER_INFO = "user::info:";
 }
