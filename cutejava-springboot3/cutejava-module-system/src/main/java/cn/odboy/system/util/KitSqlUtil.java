@@ -54,12 +54,12 @@ public final class KitSqlUtil {
     try {
       className = DriverManager.getDriver(jdbcUrl.trim()).getClass().getName();
     } catch (SQLException e) {
-      throw new BadRequestException("Get class name error: =" + jdbcUrl);
+      throw new BadRequestException("获取驱动类名失败，jdbcUrl=" + jdbcUrl);
     }
     if (StringUtils.isEmpty(className)) {
       DataTypeEnum dataTypeEnum = DataTypeEnum.urlOf(jdbcUrl);
       if (null == dataTypeEnum) {
-        throw new BadRequestException("Not supported data type: jdbcUrl=" + jdbcUrl);
+        throw new BadRequestException("不支持的数据库类型，jdbcUrl=" + jdbcUrl);
       }
       druidDataSource.setDriverClassName(dataTypeEnum.getDriver());
     } else {
@@ -82,12 +82,12 @@ public final class KitSqlUtil {
     try {
       int timeOut = 5;
       if (null == connection || connection.isClosed() || !connection.isValid(timeOut)) {
-        log.info("connection is closed or invalid, retry get connection!");
+        log.info("连接已关闭或者错误，重试获取连接");
         connection = dataSource.getConnection();
       }
     } catch (Exception e) {
-      log.error("create connection error, jdbcUrl: {}", jdbcUrl);
-      throw new BadRequestException("create connection error, jdbcUrl: " + jdbcUrl);
+      log.error("创建连接失败, jdbcUrl={}", jdbcUrl);
+      throw new BadRequestException("创建连接失败, jdbcUrl=" + jdbcUrl);
     } finally {
       KitCloseUtil.close(connection);
     }

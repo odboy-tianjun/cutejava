@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.storage;
 
 import cn.odboy.framework.exception.BadRequestException;

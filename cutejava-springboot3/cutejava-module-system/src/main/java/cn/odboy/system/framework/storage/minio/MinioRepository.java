@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.system.framework.storage.minio;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
@@ -44,13 +43,13 @@ import io.minio.Result;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -153,13 +152,11 @@ public class MinioRepository {
     String type = FileTypeUtil.getType(tempFile);
     String prefix = KitFileUtil.getPrefix(tempFile);
     String suffix = KitFileUtil.getSuffix(tempFile);
-
     String fileCode = IdUtil.fastSimpleUUID();
     String fileName = fileCode + FileUtil.getSuffix(originalFilename);
     String objectName = KitDateUtil.getNowDateStr() + "/" + fileName;
     log.info("上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
     String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
-
     SystemOssStorageTb systemOssStorageTb = new SystemOssStorageTb();
     systemOssStorageTb.setServiceType("minio");
     systemOssStorageTb.setEndpoint(ossMinioConfig.getEndpoint());
@@ -173,7 +170,6 @@ public class MinioRepository {
     systemOssStorageTb.setFileUrl(fileUrl);
     systemOssStorageTb.setFileCode(fileCode);
     systemOssStorageTb.setObjectName(objectName);
-
     try (InputStream fileInputStream = KitFileUtil.getInputStream(tempFile)) {
       PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(ossMinioConfig.getBucketName()).object(objectName)
           .stream(fileInputStream, fileSize, -1).contentType(contentType).build();
@@ -203,14 +199,11 @@ public class MinioRepository {
     if (StrUtil.isBlank(originalFilename)) {
       throw new BadRequestException("文件名不能为空");
     }
-
     long size = file.getSize();
     KitFileUtil.checkSize(properties.getOss().getMaxSize(), size);
-
     String fileName = UUID.randomUUID() + FileUtil.getSuffix(originalFilename);
     // yyyy/MM/dd/fileName.xxx
     String objectName = KitDateUtil.getNowDateTimeStr() + "/" + fileName;
-
     log.info("准备上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
     try (InputStream fileInputStream = file.getInputStream()) {
       PutObjectArgs objectArgs =
@@ -286,17 +279,14 @@ public class MinioRepository {
   public void download(String fileName, HttpServletResponse res) {
     GetObjectArgs objectArgs =
         GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
-
     try (GetObjectResponse response = minioClient.getObject(objectArgs);
         FastByteArrayOutputStream os = new FastByteArrayOutputStream()) {
-
       byte[] buf = new byte[1024];
       int len;
       while ((len = response.read(buf)) != -1) {
         os.write(buf, 0, len);
       }
       os.flush();
-
       byte[] bytes = os.toByteArray();
       res.setCharacterEncoding("utf-8");
       res.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -318,12 +308,10 @@ public class MinioRepository {
   public void downloadOptimizedVersion(String fileName, HttpServletResponse res) {
     GetObjectArgs objectArgs =
         GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
-
     try (GetObjectResponse response = minioClient.getObject(objectArgs)) {
       // 增大缓冲区
       byte[] buf = new byte[1024 * 4];
       int len;
-
       // 分块下载并输出到响应流
       try (ServletOutputStream stream = res.getOutputStream()) {
         res.setCharacterEncoding("utf-8");
@@ -331,7 +319,6 @@ public class MinioRepository {
         res.setHeader("Cache-Control", "no-store");
         res.setHeader("Pragma", "no-cache");
         res.setHeader("Expires", "0");
-
         while ((len = response.read(buf)) != -1) {
           stream.write(buf, 0, len);
           // 确保实时写入

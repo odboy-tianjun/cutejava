@@ -26,6 +26,5 @@ public interface TaskStepExecutor {
    * @param jobDataMap       执行参数
    * @param taskTemplateNode 任务节点信息
    */
-  void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode)
-      throws BadRequestException;
+  void execute(Long instanceDetailId, JobDataMap jobDataMap, TaskTemplateNodeVo taskTemplateNode) throws BadRequestException;
 }

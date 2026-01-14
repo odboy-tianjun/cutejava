@@ -55,8 +55,7 @@ public class TaskJobBean extends QuartzJobBean {
   public void executeInternal(JobExecutionContext context) {
     // ========================== 获取代理类 ==========================
     TaskInstanceInfoService taskInstanceInfoService = KitSpringBeanHolder.getBean(TaskInstanceInfoService.class);
-    TaskInstanceDetailService taskInstanceDetailService =
-        KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
+    TaskInstanceDetailService taskInstanceDetailService = KitSpringBeanHolder.getBean(TaskInstanceDetailService.class);
     // ========================== 获取参数 ==========================
     JobDataMap dataMap = context.getMergedJobDataMap();
     long id = dataMap.getLong(TaskJobKeys.ID);
@@ -69,8 +68,7 @@ public class TaskJobBean extends QuartzJobBean {
     if (StrUtil.isBlank(retryNodeCode)) {
       executeNormalTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos);
     } else {
-      executeRetryTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos,
-          retryNodeCode);
+      executeRetryTask(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos, retryNodeCode);
     }
   }
 
@@ -83,19 +81,14 @@ public class TaskJobBean extends QuartzJobBean {
    * @param dataMap                   数据映射
    * @param taskTemplateNodeVos       模板节点列表
    */
-  private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService,
-      TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap,
-      List<TaskTemplateNodeVo> taskTemplateNodeVos) {
+  private void executeNormalTask(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodeVos) {
     // ========================== 初始化执行明细 ==========================
-    List<TaskInstanceDetailTb> taskInstanceDetails =
-        taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo))
-            .collect(Collectors.toList());
+    List<TaskInstanceDetailTb> taskInstanceDetails = taskTemplateNodeVos.stream().map(taskTemplateNodeVo -> buildTaskInstanceDetail(id, taskTemplateNodeVo))
+        .collect(Collectors.toList());
     taskInstanceDetailService.saveBatch(taskInstanceDetails);
-    Map<String, Long> codeIdMap = taskInstanceDetails.stream()
-        .collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
+    Map<String, Long> codeIdMap = taskInstanceDetails.stream().collect(Collectors.toMap(TaskInstanceDetailTb::getBizCode, TaskInstanceDetailTb::getId));
     // ========================== 顺序执行 ==========================
-    executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos,
-        codeIdMap);
+    executeTaskSteps(taskInstanceInfoService, taskInstanceDetailService, id, dataMap, taskTemplateNodeVos, codeIdMap);
   }
 
   /**
@@ -178,16 +171,14 @@ public class TaskJobBean extends QuartzJobBean {
    * @param taskTemplateNodes         需要执行的任务节点列表
    * @param codeIdMap                 节点编码与明细ID映射
    */
-  private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService,
-      TaskInstanceDetailService taskInstanceDetailService, Long id, JobDataMap dataMap,
-      List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
+  private void executeTaskSteps(TaskInstanceInfoService taskInstanceInfoService, TaskInstanceDetailService taskInstanceDetailService, Long id, JobDataMap dataMap, List<TaskTemplateNodeVo> taskTemplateNodes, Map<String, Long> codeIdMap) {
     try {
       boolean isTerminate = false;
       for (TaskTemplateNodeVo taskTemplateNodeVo : taskTemplateNodes) {
         String code = taskTemplateNodeVo.getCode();
         while (true) {
-          TaskInstanceDetailTb currentTaskInstanceNode =
-              taskInstanceDetailService.getOneByInstanceIdAndCode(id, code);
+          ThreadUtil.safeSleep(5000);
+          TaskInstanceDetailTb currentTaskInstanceNode = taskInstanceDetailService.getOneByInstanceIdAndCode(id, code);
           if (TaskStatusEnum.Fail.getCode().equals(currentTaskInstanceNode.getExecuteStatus())) {
             log.info("任务节点执行失败, instanceId={}, bizCode={}", id, code);
             isTerminate = true;
@@ -197,30 +188,30 @@ public class TaskJobBean extends QuartzJobBean {
             break;
           } else if (TaskStatusEnum.Pending.getCode().equals(currentTaskInstanceNode.getExecuteStatus())) {
             log.info("任务节点由待执行变更为执行中, instanceId={}, bizCode={}", id, code);
-            try {
-              TaskStepExecutor executor = KitSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
-              taskInstanceDetailService.fastStart(id, code, dataMap);
-              executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
-              taskInstanceDetailService.fastSuccessWithInfo(id, code, null);
-            } catch (Exception e) {
-              log.error("任务节点执行失败", e);
-              taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
-              throw new ServerException(e);
-            }
-            break;
+            ThreadUtil.execAsync(() -> {
+              try {
+                TaskStepExecutor executor = KitSpringBeanHolder.getBean("taskStep" + getBeanAlias(code));
+                taskInstanceDetailService.fastStart(id, code, dataMap);
+                executor.execute(codeIdMap.getOrDefault(code, null), dataMap, taskTemplateNodeVo);
+                taskInstanceDetailService.fastSuccessWithInfo(id, code, null);
+              } catch (Exception e) {
+                log.error("任务节点执行失败", e);
+                taskInstanceDetailService.fastFailWithInfo(id, code, e.getMessage());
+              }
+            });
           } else if (TaskStatusEnum.Running.getCode().equals(currentTaskInstanceNode.getExecuteStatus())) {
-            ThreadUtil.safeSleep(5000);
+            log.info("任务节点执行中, instanceId={}, bizCode={}", id, code);
           } else {
             // 处理未知状态
-            log.warn("任务节点处于未知状态, instanceId={}, bizCode={}, status={}", id, code,
-                currentTaskInstanceNode.getExecuteStatus());
-            ThreadUtil.safeSleep(5000);
+            log.warn("任务节点处于未知状态, instanceId={}, bizCode={}, status={}", id, code, currentTaskInstanceNode.getExecuteStatus());
           }
         }
         if (isTerminate) {
+          // 跳出任务线
           break;
         }
       }
+      // 主动终止 或者 被动退出的
       if (isTerminate) {
         taskInstanceInfoService.fastFailWithMessageData(id, "任务执行失败", dataMap);
       } else {

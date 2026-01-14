@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.constant;
 
 /**
@@ -25,22 +24,18 @@ public interface SystemConst {
    * win 系统
    */
   String WIN = "win";
-
   /**
    * mac 系统
    */
   String MAC = "mac";
-
   /**
    * 请求头名称
    */
   String HEADER_NAME = "Authorization";
-
   /**
    * Token前缀
    */
   String TOKEN_PREFIX = "Bearer";
-
   /**
    * 小数点
    */
@@ -51,4 +46,6 @@ public interface SystemConst {
   String SYMBOL_AT = "@";
   String PROPERTY_OS_NAME = "os.name";
   String OS_NAME_WINDOWS = "Windows";
+  String CURRENT_APP_NAME = "cutejava";
+  String CURRENT_APP_TITLE = "CuteJava";
 }

@@ -41,7 +41,7 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
    */
   public synchronized static void addCallBacks(CallBack callBack) {
     if (addCallback) {
-      KitSpringBeanHolder.CALL_BACKS.add(callBack);
+      CALL_BACKS.add(callBack);
     } else {
       log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
       callBack.executor();
@@ -116,7 +116,7 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
    * 清除SpringContextHolder中的ApplicationContext为Null.
    */
   private static void clearHolder() {
-    log.debug("清除SpringContextHolder中的ApplicationContext:" + applicationContext);
+    log.debug("清除SpringContextHolder中的ApplicationContext:{}", applicationContext);
     applicationContext = null;
   }
 
@@ -137,8 +137,7 @@ public class KitSpringBeanHolder implements ApplicationContextAware, DisposableB
   @Override
   public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
     if (KitSpringBeanHolder.applicationContext != null) {
-      log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" +
-          KitSpringBeanHolder.applicationContext);
+      log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:{}", KitSpringBeanHolder.applicationContext);
     }
     KitSpringBeanHolder.applicationContext = applicationContext;
     if (addCallback) {

@@ -219,11 +219,12 @@ public class SystemQuartzJobService {
   }
 
   private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
-    KitValidUtil.notNull(args);
-    wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName, args.getJobName());
-    wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
-    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-      wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName, args.getJobName());
+      wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+      }
     }
     wrapper.orderByDesc(SystemQuartzLogTb::getId);
   }

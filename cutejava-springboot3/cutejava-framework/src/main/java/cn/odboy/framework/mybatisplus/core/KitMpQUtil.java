@@ -179,7 +179,7 @@ public class KitMpQUtil {
    */
   private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
     List<String> blurryList =
-        Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
+        Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().toList();
     queryWrapper.and(wrapper -> {
       for (String blurryItem : blurryList) {
         String column = StrUtil.toUnderlineCase(blurryItem);

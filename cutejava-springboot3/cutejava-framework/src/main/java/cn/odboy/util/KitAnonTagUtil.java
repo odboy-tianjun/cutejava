@@ -48,7 +48,7 @@ public class KitAnonTagUtil {
     RequestMappingHandlerMapping requestMappingHandlerMapping =
         (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
     Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
-    Map<String, Set<String>> anonymousUrls = new HashMap<>(8);
+    Map<String, java.util.Set<String>> anonymousUrls = new HashMap<>(8);
     // 获取匿名标记
     Set<String> get = new HashSet<>();
     Set<String> post = new HashSet<>();

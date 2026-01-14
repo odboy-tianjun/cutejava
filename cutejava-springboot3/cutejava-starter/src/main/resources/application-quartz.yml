@@ -9,7 +9,7 @@ spring:
         quartz:
           scheduler:
             # 必需，指定调度器实例的名称
-            instanceName: ${spring.application.name}
+            instanceName: cutejava
             # 必需，指定调度器实例的 ID
             instanceId: auto
           threadPool:
