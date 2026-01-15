@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class QuartzRunnable implements Callable<Object> {
     if (StringUtils.isNotBlank(params)) {
       return method.invoke(target, params);
     } else {
-      return method.invoke(target, "");
+      return method.invoke(target, null);
     }
   }
 }

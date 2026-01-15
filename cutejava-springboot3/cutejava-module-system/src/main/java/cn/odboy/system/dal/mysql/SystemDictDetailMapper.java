@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.List;
 @Mapper
 public interface SystemDictDetailMapper extends BaseMapper<SystemDictDetailTb> {
 
-    IPage<SystemDictDetailVo> selectPageByArgs(Page<SystemDictDetailTb> page, @Param("args") SystemQueryDictDetailArgs args);
+  IPage<SystemDictDetailVo> selectPageByArgs(Page<SystemDictDetailTb> page, @Param("args") SystemQueryDictDetailArgs args);
 
-    List<SystemDictDetailVo> listDictDetailByName(@Param("name") String name);
+  List<SystemDictDetailVo> listDictDetailByName(@Param("name") String name);
 }

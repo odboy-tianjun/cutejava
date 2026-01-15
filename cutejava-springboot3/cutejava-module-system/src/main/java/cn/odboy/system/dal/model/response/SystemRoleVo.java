@@ -1,8 +1,24 @@
+/*
+ * Copyright 2021-2026 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.odboy.system.dal.model.response;
 
 import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.system.constant.SystemDataScopeEnum;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
+import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -30,7 +46,7 @@ public class SystemRoleVo extends KitBaseUserTimeTb {
   @ApiModelProperty(value = "用户", hidden = true)
   private Set<SystemUserTb> users;
   @ApiModelProperty(value = "菜单", hidden = true)
-  private Set<SystemMenuVo> menus;
+  private Set<SystemMenuTb> menus;
   @ApiModelProperty(value = "部门", hidden = true)
   private Set<SystemDeptTb> depts;
 
@@ -50,6 +66,5 @@ public class SystemRoleVo extends KitBaseUserTimeTb {
   public int hashCode() {
     return Objects.hash(id);
   }
-
 
 }

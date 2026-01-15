@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@ import java.util.List;
  */
 public interface SystemOssStorageService extends IService<SystemOssStorageTb> {
 
-    KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page);
+  KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page);
 
-    List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args);
+  List<SystemOssStorageVo> queryOssStorage(SystemQueryStorageArgs args);
 
-    String uploadFile(MultipartFile file);
+  String uploadFile(MultipartFile file);
 
-    void deleteFileByIds(Long[] ids);
+  void deleteFileByIds(Long[] ids);
 
-    void exportOssStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args);
+  void exportOssStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args);
 }

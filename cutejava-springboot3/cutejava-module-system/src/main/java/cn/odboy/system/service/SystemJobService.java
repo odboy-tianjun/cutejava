@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,118 +40,128 @@ import java.util.Set;
 @Service
 public class SystemJobService {
 
-    @Autowired
-    private SystemJobMapper systemJobMapper;
-    @Autowired
-    private SystemUserJobService systemUserJobService;
+  @Autowired
+  private SystemJobMapper systemJobMapper;
+  @Autowired
+  private SystemUserJobService systemUserJobService;
 
-    /**
-     * 创建 -> TestPassed
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void saveJob(SystemCreateJobArgs args) {
-        SystemJobTb job = this.getJobByName(args.getName());
-        if (job != null) {
-            throw new BadRequestException("职位名称已存在");
-        }
-        SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
-        systemJobMapper.insert(systemJobTb);
+  /**
+   * 创建 -> TestPassed
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void saveJob(SystemCreateJobArgs args) {
+    if (this.existJobWithName(args.getName())) {
+      throw new BadRequestException("职位名称已存在");
     }
+    SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
+    systemJobMapper.insert(systemJobTb);
+  }
 
-    /**
-     * 编辑 -> TestPassed
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void updateJobById(SystemJobTb args) {
-        SystemJobTb job = systemJobMapper.selectById(args.getId());
-        SystemJobTb old = this.getJobByName(args.getName());
-        if (old != null && !old.getId().equals(args.getId())) {
-            throw new BadRequestException("职位名称已存在");
-        }
-        args.setId(job.getId());
-        systemJobMapper.updateById(args);
+  /**
+   * 编辑 -> TestPassed
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void updateJobById(SystemJobTb args) {
+    SystemJobTb job = systemJobMapper.selectById(args.getId());
+    if (this.existJobWithNameNeSelf(args.getName(), job.getId())) {
+      throw new BadRequestException("职位名称已存在");
     }
+    args.setId(job.getId());
+    systemJobMapper.updateById(args);
+  }
 
-    /**
-     * 删除 -> TestPassed
-     *
-     * @param ids /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteJobByIds(Set<Long> ids) {
-        // 验证是否被用户关联
-        this.verifyBindRelationByIds(ids);
-        systemJobMapper.deleteByIds(ids);
-    }
+  /**
+   * 删除 -> TestPassed
+   *
+   * @param ids /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteJobByIds(Set<Long> ids) {
+    // 验证是否被用户关联
+    this.verifyBindRelationByIds(ids);
+    systemJobMapper.deleteByIds(ids);
+  }
 
-    /**
-     * 分页查询 -> TestPassed
-     *
-     * @param args 条件
-     * @param page 分页参数
-     */
-    public KitPageResult<SystemJobTb> searchJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        this.injectQueryParams(args, wrapper);
-        Page<SystemJobTb> selectPage = systemJobMapper.selectPage(page, wrapper);
-        return KitPageUtil.toPage(selectPage);
-    }
+  /**
+   * 分页查询 -> TestPassed
+   *
+   * @param args 条件
+   * @param page 分页参数
+   */
+  public KitPageResult<SystemJobTb> searchJobByArgs(SystemQueryJobArgs args, Page<SystemJobTb> page) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    Page<SystemJobTb> selectPage = systemJobMapper.selectPage(page, wrapper);
+    return KitPageUtil.toPage(selectPage);
+  }
 
-    /**
-     * 查询全部数据 -> TestPassed
-     */
-    public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        this.injectQueryParams(args, wrapper);
-        return systemJobMapper.selectList(wrapper);
-    }
+  /**
+   * 查询全部数据 -> TestPassed
+   */
+  public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
+    return systemJobMapper.selectList(wrapper);
+  }
 
-    /**
-     * 验证是否被用户关联 -> TestPassed
-     *
-     * @param ids /
-     */
-    public void verifyBindRelationByIds(Set<Long> ids) {
-        if (systemUserJobService.countUserByJobIds(ids) > 0) {
-            throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
-        }
+  /**
+   * 验证是否被用户关联 -> TestPassed
+   *
+   * @param ids /
+   */
+  public void verifyBindRelationByIds(Set<Long> ids) {
+    if (systemUserJobService.countUserByJobIds(ids) > 0) {
+      throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
     }
+  }
 
-    public SystemJobTb getJobByName(String name) {
-        LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(SystemJobTb::getName, name);
-        return systemJobMapper.selectOne(wrapper);
-    }
+  /**
+   * 根据岗位名称查询岗位是否存在 -> TestPassed
+   */
+  private boolean existJobWithName(String name) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemJobTb::getName, name);
+    return systemJobMapper.exists(wrapper);
+  }
 
-    public void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
-        if (args != null) {
-            wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
-            wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
-            if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-                wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
-            }
-        }
-        wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
-    }
+  /**
+   * 根据岗位名称和岗位id查询岗位是否存在 -> TestPassed
+   */
+  private boolean existJobWithNameNeSelf(String name, Long currentJobId) {
+    LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemJobTb::getName, name);
+    wrapper.ne(SystemJobTb::getId, currentJobId);
+    return systemJobMapper.exists(wrapper);
+  }
 
-    public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
-        List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
-        List<SystemJobExportRowVo> rowVos = new ArrayList<>();
-        for (SystemJobTb dataObject : systemJobTbs) {
-            SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
-            rowVo.setName(dataObject.getName());
-            rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
-            rowVo.setCreateTime(dataObject.getCreateTime());
-            rowVos.add(rowVo);
-        }
-        KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
+  private void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
+      wrapper.eq(args.getEnabled() != null, SystemJobTb::getEnabled, args.getEnabled());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemJobTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+      }
     }
+    wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
+  }
 
-    public List<SystemJobTb> listByIds(Set<Long> jobIds) {
-        return systemJobMapper.selectByIds(jobIds);
+  /**
+   * 导出岗位数据 -> TestPassed
+   */
+  public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
+    List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
+    List<SystemJobExportRowVo> rowVos = new ArrayList<>();
+    for (SystemJobTb dataObject : systemJobTbs) {
+      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
     }
+    KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
+  }
 }

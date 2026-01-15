@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package cn.odboy.framework.mybatisplus.core;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitBaseUserTimeTb;
@@ -26,6 +26,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +35,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -131,7 +132,7 @@ public class KitMpQUtil {
   private static <R> void handleInOrNotQuery(boolean b, QueryWrapper<R> queryWrapper, String attributeName,
       Object fieldVal) {
     Collection<?> wrapNotInVal = (Collection<?>) fieldVal;
-    if (CollectionUtil.isNotEmpty(wrapNotInVal)) {
+    if (CollUtil.isNotEmpty(wrapNotInVal)) {
       Optional<?> anyValOptional = wrapNotInVal.stream().findAny();
       if (anyValOptional.isPresent()) {
         Object o = anyValOptional.get();
@@ -159,7 +160,7 @@ public class KitMpQUtil {
     if (fieldVal instanceof List) {
       List<Object> between = new ArrayList<>((List<?>) fieldVal);
       int minLength = 2;
-      if (CollectionUtil.isNotEmpty(between) && between.size() >= minLength) {
+      if (CollUtil.isNotEmpty(between) && between.size() >= minLength) {
         queryWrapper.between(finalAttributeName, between.get(0), between.get(1));
       } else {
         throw new BadRequestException("BETWEEN类型的对象列表长度必须 >= 2");
@@ -179,7 +180,7 @@ public class KitMpQUtil {
    */
   private static <R> void handleBlurryQuery(QueryWrapper<R> queryWrapper, String blurry, Object fieldVal) {
     List<String> blurryList =
-        Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().toList();
+        Arrays.stream(blurry.split(",")).filter(StrUtil::isNotBlank).distinct().collect(Collectors.toList());
     queryWrapper.and(wrapper -> {
       for (String blurryItem : blurryList) {
         String column = StrUtil.toUnderlineCase(blurryItem);
@@ -198,7 +199,7 @@ public class KitMpQUtil {
   }
 
   public static void main(String[] args) {
-    QueryWrapper<TestDomain> query = new QueryWrapper<TestDomain>();
+    QueryWrapper<TestDomain> query = new QueryWrapper<>();
     query.or(wrapper -> wrapper.eq("username", 1).or().eq("nickname", 2));
     query.eq("id", 1);
     query.orderByDesc("id");
@@ -214,13 +215,13 @@ public class KitMpQUtil {
     System.err.println(query.getTargetSql());
   }
 
+  @Data
   @TableName("test_domain")
   private static class TestDomain {
 
     @NotNull(groups = KitBaseUserTimeTb.Update.class)
     @TableId(value = "user_id", type = IdType.AUTO)
-    private Long
-        id;
+    private Long id;
     @TableField(value = "dept_id")
     private Long deptId;
     @NotBlank

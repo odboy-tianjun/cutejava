@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class SystemRoleController {
   @PostMapping(value = "/getRoleById")
   @PreAuthorize("@el.check('roles:list')")
   public ResponseEntity<SystemRoleVo> getRoleById(@RequestBody SystemRoleTb args) {
-    return ResponseEntity.ok(systemRoleService.getRoleById(args.getId()));
+    return ResponseEntity.ok(systemRoleService.getRoleVoById(args.getId()));
   }
 
   @ApiOperation("导出角色数据")

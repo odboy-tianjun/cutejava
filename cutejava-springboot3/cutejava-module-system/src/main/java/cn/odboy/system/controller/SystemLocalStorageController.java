@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import cn.odboy.system.service.SystemLocalStorageService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @Api(tags = "工具：本地存储管理")
@@ -74,7 +74,7 @@ public class SystemLocalStorageController {
   @ApiOperation("上传图片")
   @PostMapping("/uploadPicture")
   public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
-    SystemLocalStorageTb localStorage = localStorageService.uploadPictureV1(file);
+    SystemLocalStorageTb localStorage = localStorageService.uploadPicture(file);
     return ResponseEntity.ok(localStorage);
   }
 

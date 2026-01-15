@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package cn.odboy.system.framework.quartz;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
+import cn.odboy.util.KitBeanUtil;
 import java.util.Date;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -45,12 +46,17 @@ public class QuartzManage {
 
   public void addJob(SystemQuartzJobVo quartzJob) {
     try {
+      String uuid = JOB_NAME + quartzJob.getId();
       // 构建job信息
-      JobDetail jobDetail =
-          JobBuilder.newJob(ExecutionJobBean.class).withIdentity(JOB_NAME + quartzJob.getId()).build();
+      JobDetail jobDetail = JobBuilder.newJob(ExecutionJobBean.class)
+          .withIdentity(uuid)
+          .build();
       // 通过触发器名和cron 表达式创建 Trigger
-      Trigger trigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME + quartzJob.getId()).startNow()
-          .withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression())).build();
+      Trigger trigger = TriggerBuilder.newTrigger()
+          .withIdentity(uuid)
+          .startNow()
+          .withSchedule(CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression()))
+          .build();
       trigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
       // 重置启动时间
       ((CronTriggerImpl) trigger).setStartTime(new Date());
@@ -75,24 +81,25 @@ public class QuartzManage {
    *
    * @param quartzJob /
    */
-  public void updateJobCron(SystemQuartzJobVo quartzJob) {
+  public void updateJobCron(SystemQuartzJobTb quartzJob) {
     try {
-      TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
+      SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(quartzJob, SystemQuartzJobVo.class);
+      TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJobVo.getId());
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
       // 如果不存在则创建一个定时任务
       if (trigger == null) {
-        addJob(quartzJob);
+        addJob(quartzJobVo);
         trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
       }
-      CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(quartzJob.getCronExpression());
+      CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(quartzJobVo.getCronExpression());
       trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
       // 重置启动时间
       ((CronTriggerImpl) trigger).setStartTime(new Date());
-      trigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJob);
+      trigger.getJobDataMap().put(SystemQuartzJobTb.JOB_KEY, quartzJobVo);
       scheduler.rescheduleJob(triggerKey, trigger);
       // 暂停任务
-      if (quartzJob.getIsPause()) {
-        pauseJob(quartzJob);
+      if (quartzJobVo.getIsPause()) {
+        pauseJob(quartzJobVo);
       }
     } catch (Exception e) {
       log.error("更新定时任务失败", e);
@@ -144,7 +151,8 @@ public class QuartzManage {
    */
   public void runJobNow(SystemQuartzJobVo quartzJob) {
     try {
-      TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
+      String uuid = JOB_NAME + quartzJob.getId();
+      TriggerKey triggerKey = TriggerKey.triggerKey(uuid);
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
       // 如果不存在则创建一个定时任务
       if (trigger == null) {
@@ -152,7 +160,7 @@ public class QuartzManage {
       }
       JobDataMap dataMap = new JobDataMap();
       dataMap.put(SystemQuartzJobTb.JOB_KEY, quartzJob);
-      JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
+      JobKey jobKey = JobKey.jobKey(uuid);
       scheduler.triggerJob(jobKey, dataMap);
     } catch (Exception e) {
       log.error("定时任务执行失败", e);

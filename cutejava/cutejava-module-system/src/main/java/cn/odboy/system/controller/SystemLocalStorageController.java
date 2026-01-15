@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class SystemLocalStorageController {
   @ApiOperation("上传图片")
   @PostMapping("/uploadPicture")
   public ResponseEntity<SystemLocalStorageTb> uploadPicture(@RequestParam MultipartFile file) {
-    SystemLocalStorageTb localStorage = localStorageService.uploadPictureV1(file);
+    SystemLocalStorageTb localStorage = localStorageService.uploadPicture(file);
     return ResponseEntity.ok(localStorage);
   }
 

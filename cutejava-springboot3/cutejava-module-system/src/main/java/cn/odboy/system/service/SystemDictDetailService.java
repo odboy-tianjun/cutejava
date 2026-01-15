@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,109 +43,100 @@ import java.util.stream.Collectors;
 @Service
 public class SystemDictDetailService {
 
-    @Autowired
-    private SystemDictDetailMapper systemDictDetailMapper;
-    @Autowired
-    private SystemDictMapper systemDictMapper;
+  @Autowired
+  private SystemDictDetailMapper systemDictDetailMapper;
+  @Autowired
+  private SystemDictMapper systemDictMapper;
 
-    /**
-     * 创建 -> TestPassed
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void saveDictDetail(SystemCreateDictDetailArgs args) {
-        KitValidUtil.notNull(args);
-        KitValidUtil.notNull(args.getDict());
-        SystemDictDetailTb dictDetail = KitBeanUtil.copyToClass(args, SystemDictDetailTb.class);
-        dictDetail.setDictId(args.getDict().getId());
-        systemDictDetailMapper.insert(dictDetail);
+  /**
+   * 创建 -> TestPassed
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void saveDictDetail(SystemCreateDictDetailArgs args) {
+    KitValidUtil.notNull(args);
+    KitValidUtil.notNull(args.getDict());
+    SystemDictDetailTb dictDetail = KitBeanUtil.copyToClass(args, SystemDictDetailTb.class);
+    dictDetail.setDictId(args.getDict().getId());
+    systemDictDetailMapper.insert(dictDetail);
+  }
+
+  /**
+   * 编辑 -> TestPassed
+   *
+   * @param args /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void updateDictDetailById(SystemDictDetailTb args) {
+    SystemDictDetailTb dictDetail = systemDictDetailMapper.selectById(args.getId());
+    args.setId(dictDetail.getId());
+    systemDictDetailMapper.insertOrUpdate(args);
+  }
+
+  /**
+   * 删除 -> TestPassed
+   *
+   * @param id /
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteDictDetailById(Long id) {
+    systemDictDetailMapper.deleteById(id);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteDictDetailByDictIds(Set<Long> ids) {
+    if (CollUtil.isNotEmpty(ids)) {
+      LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
+      wrapper.in(SystemDictDetailTb::getDictId, ids);
+      systemDictDetailMapper.delete(wrapper);
     }
+  }
 
-    /**
-     * 编辑 -> TestPassed
-     *
-     * @param args /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void updateDictDetailById(SystemDictDetailTb args) {
-        SystemDictDetailTb dictDetail = systemDictDetailMapper.selectById(args.getId());
-        args.setId(dictDetail.getId());
-        systemDictDetailMapper.insertOrUpdate(args);
+  /**
+   * 分页查询 -> TestPassed
+   *
+   * @param args 条件
+   * @param page 分页参数
+   * @return /
+   */
+  public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
+      Page<SystemDictDetailTb> page) {
+    IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args);
+    List<Long> dictIds =
+        iPage.getRecords().stream().map(SystemDictDetailVo::getDictId).collect(Collectors.toList());
+    if (CollUtil.isNotEmpty(dictIds)) {
+      Map<Long, SystemDictTb> id2ItemMap =
+          systemDictMapper.selectByIds(dictIds).stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
+      for (SystemDictDetailVo record : iPage.getRecords()) {
+        record.setDict(id2ItemMap.get(record.getDictId()));
+      }
     }
+    return KitPageUtil.toPage(iPage);
+  }
 
-    /**
-     * 删除 -> TestPassed
-     *
-     * @param id /
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteDictDetailById(Long id) {
-        systemDictDetailMapper.deleteById(id);
+  /**
+   * 根据字典名称查询字典详情 -> TestPassed
+   *
+   * @param name 字典名称
+   * @return /
+   */
+  public List<SystemDictDetailVo> listDictDetailByName(String name) {
+    if (StrUtil.isBlank(name)) {
+      return new ArrayList<>();
     }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteDictDetailByDictIds(Set<Long> ids) {
-        if (CollUtil.isNotEmpty(ids)) {
-            LambdaQueryWrapper<SystemDictDetailTb> wrapper = new LambdaQueryWrapper<>();
-            wrapper.in(SystemDictDetailTb::getDictId, ids);
-            systemDictDetailMapper.delete(wrapper);
+    List<SystemDictDetailVo> detailVos = systemDictDetailMapper.listDictDetailByName(name);
+    if (CollUtil.isNotEmpty(detailVos)) {
+      SystemDictDetailVo systemDictDetailVo = detailVos.stream().findFirst().orElse(null);
+      if (systemDictDetailVo != null) {
+        SystemDictTb systemDictTb = systemDictMapper.selectById(systemDictDetailVo.getDictId());
+        if (systemDictTb != null) {
+          for (SystemDictDetailVo detailVo : detailVos) {
+            detailVo.setDict(systemDictTb);
+          }
         }
+      }
     }
-
-    /**
-     * 分页查询 -> TestPassed
-     *
-     * @param args 条件
-     * @param page 分页参数
-     * @return /
-     */
-    public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
-        Page<SystemDictDetailTb> page) {
-        IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args);
-        List<Long> dictIds =
-            iPage.getRecords().stream().map(SystemDictDetailVo::getDictId).collect(Collectors.toList());
-        if (CollUtil.isNotEmpty(dictIds)) {
-            Map<Long, SystemDictTb> id2ItemMap =
-                systemDictMapper.selectByIds(dictIds).stream().collect(Collectors.toMap(SystemDictTb::getId, i -> i));
-            for (SystemDictDetailVo record : iPage.getRecords()) {
-                record.setDict(id2ItemMap.get(record.getDictId()));
-            }
-        }
-        return KitPageUtil.toPage(iPage);
-    }
-
-    /**
-     * 根据字典名称获取字典详情 -> TestPassed
-     *
-     * @param name 字典名称
-     * @return /
-     */
-    public List<SystemDictDetailVo> listDictDetailByName(String name) {
-        if (StrUtil.isBlank(name)) {
-            return new ArrayList<>();
-        }
-        List<SystemDictDetailVo> detailVos = systemDictDetailMapper.listDictDetailByName(name);
-        if (CollUtil.isNotEmpty(detailVos)) {
-            SystemDictDetailVo systemDictDetailVo = detailVos.stream().findFirst().orElse(null);
-            if (systemDictDetailVo != null) {
-                SystemDictTb systemDictTb = systemDictMapper.selectById(systemDictDetailVo.getDictId());
-                if (systemDictTb != null) {
-                    for (SystemDictDetailVo detailVo : detailVos) {
-                        detailVo.setDict(systemDictTb);
-                    }
-                }
-            }
-        }
-        return detailVos;
-    }
-
-    public Map<String, List<SystemDictDetailVo>> getDictDetailMap(String dictName) {
-        String[] names = dictName.split("[,, ]");
-        Map<String, List<SystemDictDetailVo>> dictMap = new HashMap<>(16);
-        for (String name : names) {
-            dictMap.put(name, this.listDictDetailByName(name));
-        }
-        return dictMap;
-    }
+    return detailVos;
+  }
 }

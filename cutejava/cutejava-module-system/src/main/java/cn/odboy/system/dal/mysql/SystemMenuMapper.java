@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package cn.odboy.system.dal.mysql;
 
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -27,4 +28,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemMenuMapper extends BaseMapper<SystemMenuTb> {
 
+  default List<SystemMenuTb> listAll() {
+    return selectList(null);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,58 +20,70 @@ import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import cn.odboy.system.dal.mysql.SystemUserJobMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemUserJobService {
 
-    @Autowired
-    private SystemUserJobMapper systemUserJobMapper;
+  @Autowired
+  private SystemUserJobMapper systemUserJobMapper;
 
-    @Transactional(rollbackFor = Exception.class)
-    public void batchInsertUserJob(Set<SystemJobTb> jobs, Long userId) {
-        if (CollUtil.isNotEmpty(jobs)) {
-            List<SystemUserJobTb> records = new ArrayList<>();
-            for (SystemJobTb job : jobs) {
-                SystemUserJobTb record = new SystemUserJobTb();
-                record.setUserId(userId);
-                record.setJobId(job.getId());
-                records.add(record);
-            }
-            systemUserJobMapper.insert(records);
-        }
+  /**
+   * 批量绑定用户岗位 -> TestPassed
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void batchInsertUserJob(Set<SystemJobTb> jobs, Long userId) {
+    if (CollUtil.isNotEmpty(jobs)) {
+      List<SystemUserJobTb> records = new ArrayList<>();
+      for (SystemJobTb job : jobs) {
+        SystemUserJobTb record = new SystemUserJobTb();
+        record.setUserId(userId);
+        record.setJobId(job.getId());
+        records.add(record);
+      }
+      systemUserJobMapper.insert(records);
     }
+  }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void batchDeleteUserJob(Set<Long> userIds) {
-        if (CollUtil.isNotEmpty(userIds)) {
-            LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
-            wrapper.in(SystemUserJobTb::getUserId, userIds);
-            systemUserJobMapper.delete(wrapper);
-        }
+  /**
+   * 批量解绑用户岗位 -> TestPassed
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public void batchDeleteUserJob(Set<Long> userIds) {
+    if (CollUtil.isNotEmpty(userIds)) {
+      LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
+      wrapper.in(SystemUserJobTb::getUserId, userIds);
+      systemUserJobMapper.delete(wrapper);
     }
+  }
 
-    /**
-     * 根据岗位ID统计用户数量
-     *
-     * @param jobIds 岗位ID集合
-     * @return /
-     */
-    public Long countUserByJobIds(Set<Long> jobIds) {
-        if (CollUtil.isEmpty(jobIds)) {
-            return 0L;
-        }
-        LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(SystemUserJobTb::getJobId, jobIds);
-        return systemUserJobMapper.selectCount(wrapper);
+  /**
+   * 根据岗位ID统计用户数量 -> TestPassed
+   *
+   * @param jobIds /
+   * @return /
+   */
+  public Long countUserByJobIds(Set<Long> jobIds) {
+    if (CollUtil.isEmpty(jobIds)) {
+      return 0L;
     }
+    LambdaQueryWrapper<SystemUserJobTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(SystemUserJobTb::getJobId, jobIds);
+    return systemUserJobMapper.selectCount(wrapper);
+  }
 
-    public Set<SystemJobTb> listUserJobByUserId(Long userId) {
-        return systemUserJobMapper.listUserJobByUserId(userId);
-    }
+  /**
+   * 根据用户id查询岗位 -> TestPassed
+   *
+   * @param userId /
+   * @return /
+   */
+  public Set<SystemJobTb> listUserJobByUserId(Long userId) {
+    return systemUserJobMapper.listUserJobByUserId(userId);
+  }
 }

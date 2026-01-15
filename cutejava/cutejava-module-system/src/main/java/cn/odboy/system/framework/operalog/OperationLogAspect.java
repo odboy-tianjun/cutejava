@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class OperationLogAspect {
 
-  @Autowired private SystemOperationLogMapper systemOperationLogMapper;
+  @Autowired
+  private SystemOperationLogMapper systemOperationLogMapper;
 
   @Around("@annotation(operationLog)")
   public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,7 +36,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.lang.reflect.Method;
 
 /**
  * 捕捉操作日志
@@ -48,7 +48,8 @@ import java.lang.reflect.Method;
 @Component
 public class OperationLogAspect {
 
-  @Autowired private SystemOperationLogMapper systemOperationLogMapper;
+  @Autowired
+  private SystemOperationLogMapper systemOperationLogMapper;
 
   @Around("@annotation(operationLog)")
   public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog)

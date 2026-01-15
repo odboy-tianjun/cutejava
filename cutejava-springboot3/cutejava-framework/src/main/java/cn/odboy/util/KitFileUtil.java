@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,15 @@ import static cn.odboy.constant.SystemConst.SYMBOL_SUBTRACT;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.odboy.constant.FileTypeEnum;
 import cn.odboy.constant.SystemConst;
 import cn.odboy.framework.exception.BadRequestException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,9 +46,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.util.IOUtils;
@@ -385,5 +386,16 @@ public final class KitFileUtil extends FileUtil {
 
   public static String getMd5(File file) {
     return getMd5(getByte(file));
+  }
+
+  /**
+   * 获取文件名前缀
+   *
+   * @param originalFilename 原始文件名
+   * @param firstName        首选文件名，如果不为空，则返回
+   * @return /
+   */
+  public static String getPrefix(String originalFilename, String firstName) {
+    return StrUtil.isBlank(firstName) ? getPrefix(originalFilename) : firstName;
   }
 }

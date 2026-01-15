@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Odboy
+ * Copyright 2021-2026 Odboy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,8 +67,8 @@ public class SystemMenuController {
   @ApiOperation("返回全部的菜单")
   @PostMapping(value = "/listMenuByPid")
   @PreAuthorize("@el.check('menu:list','roles:list')")
-  public ResponseEntity<List<SystemMenuVo>> listMenuByPid(@RequestParam Long pid) {
-    List<SystemMenuVo> systemMenuTbs = systemMenuService.listMenuByPid(pid);
+  public ResponseEntity<List<SystemMenuTb>> listMenuByPid(@RequestParam Long pid) {
+    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuByPid(pid);
     return ResponseEntity.ok(systemMenuTbs);
   }
 
