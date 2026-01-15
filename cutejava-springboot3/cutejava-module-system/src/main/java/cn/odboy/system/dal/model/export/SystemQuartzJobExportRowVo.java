@@ -2,9 +2,9 @@ package cn.odboy.system.dal.model.export;
 
 import cn.idev.excel.annotation.ExcelProperty;
 import cn.odboy.base.KitObject;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Date;
 
 @Getter
 @Setter

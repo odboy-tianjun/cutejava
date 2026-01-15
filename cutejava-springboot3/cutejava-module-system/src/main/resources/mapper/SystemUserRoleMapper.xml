@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.odboy.system.dal.mysql.SystemUserRoleMapper">
+  <select id="listUserRoleByUserId" resultType="cn.odboy.system.dal.dataobject.SystemRoleTb">
+    SELECT DISTINCT t1.*, t1.role_id as id
+    FROM system_role t1
+           LEFT JOIN system_users_roles t2 ON t1.role_id = t2.role_id
+    WHERE t2.user_id = #{userId}
+  </select>
+</mapper>

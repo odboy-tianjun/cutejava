@@ -14,13 +14,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class SystemOperationLogService {
 
-  @Autowired
-  private SystemOperationLogMapper systemOperationLogMapper;
+    @Autowired
+    private SystemOperationLogMapper systemOperationLogMapper;
 
-  public IPage<SystemOperationLogTb> searchUserLog(KitPageArgs<SystemQueryOperationLogArgs> pageArgs) {
-    LambdaQueryWrapper<SystemOperationLogTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemOperationLogTb::getUsername, KitSecurityHelper.getCurrentUsername());
-    Page<SystemOperationLogTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
-    return systemOperationLogMapper.selectPage(page, wrapper);
-  }
+    /**
+     * 查询用户操作日志
+     */
+    public IPage<SystemOperationLogTb> searchUserLog(KitPageArgs<SystemQueryOperationLogArgs> pageArgs) {
+        LambdaQueryWrapper<SystemOperationLogTb> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SystemOperationLogTb::getUsername, KitSecurityHelper.getCurrentUsername());
+        Page<SystemOperationLogTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
+        return systemOperationLogMapper.selectPage(page, wrapper);
+    }
 }

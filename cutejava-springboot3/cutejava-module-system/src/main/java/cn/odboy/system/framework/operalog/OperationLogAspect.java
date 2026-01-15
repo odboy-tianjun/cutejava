@@ -27,7 +27,6 @@ import cn.odboy.util.KitBrowserUtil;
 import cn.odboy.util.KitIPUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.annotations.ApiOperation;
-import java.lang.reflect.Method;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -36,6 +35,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.lang.reflect.Method;
 
 /**
  * 捕捉操作日志
@@ -48,44 +48,48 @@ import org.springframework.stereotype.Component;
 @Component
 public class OperationLogAspect {
 
-  @Autowired
-  private SystemOperationLogMapper systemOperationLogMapper;
+  @Autowired private SystemOperationLogMapper systemOperationLogMapper;
 
   @Around("@annotation(operationLog)")
-  public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {
+  public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog)
+      throws Throwable {
     return handleLog(joinPoint, operationLog);
   }
 
-  private Object handleLog(ProceedingJoinPoint joinPoint, OperationLog annotation) throws Throwable {
+  private Object handleLog(ProceedingJoinPoint joinPoint, OperationLog annotation)
+      throws Throwable {
     TimeInterval timeInterval = new TimeInterval();
     try {
       Object result = joinPoint.proceed();
       long interval = timeInterval.interval();
       SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
-      ThreadUtil.execAsync(() -> {
-        try {
-          systemOperationLogMapper.insert(record);
-        } catch (Exception e) {
-          // 忽略
-        }
-      });
+      ThreadUtil.execAsync(
+          () -> {
+            try {
+              systemOperationLogMapper.insert(record);
+            } catch (Exception e) {
+              // 忽略
+            }
+          });
       return result;
     } catch (Throwable exception) {
       long interval = timeInterval.interval();
       SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
       record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
-      ThreadUtil.execAsync(() -> {
-        try {
-          systemOperationLogMapper.insert(record);
-        } catch (Exception e) {
-          // 忽略
-        }
-      });
+      ThreadUtil.execAsync(
+          () -> {
+            try {
+              systemOperationLogMapper.insert(record);
+            } catch (Exception e) {
+              // 忽略
+            }
+          });
       throw exception;
     }
   }
 
-  private SystemOperationLogTb getOperationLogTb(ProceedingJoinPoint joinPoint, OperationLog annotation, long executeTime) {
+  private SystemOperationLogTb getOperationLogTb(
+      ProceedingJoinPoint joinPoint, OperationLog annotation, long executeTime) {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     String bizName = annotation.bizName();
     if (StrUtil.isBlank(bizName)) {
@@ -100,7 +104,12 @@ public class OperationLogAspect {
     }
     String method = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
     Object[] args = joinPoint.getArgs();
-    String params = JSON.toJSONString(args);
+    String params = "";
+    try {
+      params = JSON.toJSONString(args);
+    } catch (Exception e) {
+      // 忽略异常
+    }
     HttpServletRequest request = KitRequestHolder.getHttpServletRequest();
     String requestIp = KitBrowserUtil.getIp(request);
     String browserInfo = KitBrowserUtil.getVersion(request);
