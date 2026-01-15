@@ -19,9 +19,9 @@ import cn.odboy.base.KitObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 邮件配置类，数据存覆盖式存入数据存

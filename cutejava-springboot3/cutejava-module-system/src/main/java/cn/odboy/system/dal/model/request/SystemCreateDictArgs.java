@@ -16,9 +16,9 @@
 package cn.odboy.system.dal.model.request;
 
 import cn.odboy.base.KitObject;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

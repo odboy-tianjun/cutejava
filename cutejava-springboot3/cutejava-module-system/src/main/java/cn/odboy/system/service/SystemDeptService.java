@@ -36,6 +36,10 @@ import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,10 +51,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDeptService {
@@ -129,7 +129,7 @@ public class SystemDeptService {
   /**
    * 更新父节点中子节点数目 -> TestPassed
    *
-   * @param deptId /
+   * @param deptId 部门id
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateDeptSubCnt(Long deptId) {
@@ -179,7 +179,7 @@ public class SystemDeptService {
   /**
    * 查询所有数据
    *
-   * @param args    条件
+   * @param args    /
    * @param isQuery /
    * @return /
    * @throws Exception /

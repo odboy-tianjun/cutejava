@@ -20,11 +20,11 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
+import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.export.SystemRoleExportRowVo;
 import cn.odboy.system.dal.model.request.SystemCreateRoleArgs;
 import cn.odboy.system.dal.model.request.SystemQueryRoleArgs;
-import cn.odboy.system.dal.model.response.SystemMenuVo;
 import cn.odboy.system.dal.model.response.SystemRoleCodeVo;
 import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.model.response.SystemUserVo;
@@ -36,16 +36,16 @@ import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemRoleService {
@@ -128,7 +128,7 @@ public class SystemRoleService {
     checkRoleLevels(role.getLevel());
     // 更新菜单
     systemRoleMenuService.deleteRoleMenuByRoleId(role.getId());
-    Set<SystemMenuVo> menus = args.getMenus();
+    Set<SystemMenuTb> menus = args.getMenus();
     if (CollUtil.isNotEmpty(menus)) {
       systemRoleMenuService.batchInsertRoleMenu(menus, role.getId());
     }
@@ -218,7 +218,7 @@ public class SystemRoleService {
 //    permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(SystemMenuVo::getPermission)
 //        .filter(StrUtil::isNotBlank).collect(Collectors.toSet());
 //    return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
-    List<Long> roleIds = systemUserRoleService.listUserRoleIdByUserId(user.getId());
+    Set<Long> roleIds = systemUserRoleService.listUserRoleIdByUserId(user.getId());
     // 查询角色权限
     if (CollUtil.isNotEmpty(roleIds)) {
       return systemRoleMenuService.listMenuPermissionByRoleIds(roleIds).stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
@@ -257,7 +257,7 @@ public class SystemRoleService {
    * @return /
    */
   private int checkRoleLevels(Integer level) {
-    List<Integer> levels = systemUserRoleService.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
+    Set<Integer> levels = systemUserRoleService.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
     int min = Collections.min(levels);
     if (level != null) {
       if (level < min) {

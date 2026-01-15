@@ -18,9 +18,9 @@ package cn.odboy.system.dal.mysql;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemUserJobTb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import java.util.Set;
 
 /**
  * 用户职位关联 Mapper

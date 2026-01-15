@@ -18,9 +18,9 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
+import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.dataobject.SystemUserRoleTb;
-import cn.odboy.system.dal.model.response.SystemMenuVo;
 import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.model.response.SystemUserVo;
 import cn.odboy.system.dal.mysql.SystemRoleMapper;
@@ -28,15 +28,16 @@ import cn.odboy.system.dal.mysql.SystemUserRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemUserRoleService {
@@ -91,8 +92,8 @@ public class SystemUserRoleService {
     }
     SystemRoleVo roleVo = KitBeanUtil.copyToClass(role, SystemRoleVo.class);
     // 查询关联的菜单信息
-    Set<SystemMenuVo> menus = systemRoleMenuService.queryMenuByRoleIds(Collections.singleton(role.getId()));
-    roleVo.setMenus(menus);
+    List<SystemMenuTb> menus = systemRoleMenuService.listMenuByRoleIds(Collections.singleton(role.getId()), true);
+    roleVo.setMenus(new HashSet<>(menus));
     // 查询关联的部门信息
     Set<SystemDeptTb> depts = systemRoleDeptService.listUserDeptByRoleId(role.getId());
     roleVo.setDepts(depts);
@@ -140,7 +141,7 @@ public class SystemUserRoleService {
    * @param args /
    */
   public void checkLevel(SystemUserVo args) {
-    List<Integer> roleLevels = systemUserRoleMapper.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
+    Set<Integer> roleLevels = systemUserRoleMapper.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
     Integer currentLevel = Collections.min(roleLevels);
     Integer optLevel = this.getDeptLevelByRoles(args.getRoles());
     if (currentLevel > optLevel) {
@@ -164,7 +165,7 @@ public class SystemUserRoleService {
    * @param userId /
    * @return /
    */
-  public List<Integer> listUserRoleLevelByUserId(Long userId) {
+  public Set<Integer> listUserRoleLevelByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleLevelByUserId(userId);
   }
 
@@ -174,7 +175,7 @@ public class SystemUserRoleService {
    * @param userId /
    * @return /
    */
-  public List<Long> listUserRoleIdByUserId(Long userId) {
+  public Set<Long> listUserRoleIdByUserId(Long userId) {
     return systemUserRoleMapper.listUserRoleIdByUserId(userId);
   }
 

@@ -30,11 +30,11 @@ import cn.odboy.system.dal.model.request.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
 import cn.odboy.util.KitDesEncryptUtil;
 import cn.odboy.util.KitResourceTemplateUtil;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Collections;
 
 @Slf4j
 @Service

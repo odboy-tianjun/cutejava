@@ -19,27 +19,21 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleMenuTb;
-import cn.odboy.system.dal.model.response.SystemMenuVo;
-import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.dal.mysql.SystemRoleMenuMapper;
-import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SystemRoleMenuService {
 
   @Autowired
   private SystemRoleMenuMapper systemRoleMenuMapper;
-  @Autowired
-  private SystemMenuMapper systemMenuMapper;
 
   /**
    * 删除角色菜单关联 -> TestPassed
@@ -60,10 +54,10 @@ public class SystemRoleMenuService {
    * @param roleId 角色id
    */
   @Transactional(rollbackFor = Exception.class)
-  public void batchInsertRoleMenu(Set<SystemMenuVo> menus, Long roleId) {
+  public void batchInsertRoleMenu(Set<SystemMenuTb> menus, Long roleId) {
     if (CollUtil.isNotEmpty(menus)) {
       List<SystemRoleMenuTb> records = new ArrayList<>();
-      for (SystemMenuVo menu : menus) {
+      for (SystemMenuTb menu : menus) {
         SystemRoleMenuTb record = new SystemRoleMenuTb();
         record.setMenuId(menu.getId());
         record.setRoleId(roleId);
@@ -87,26 +81,31 @@ public class SystemRoleMenuService {
     }
   }
 
-  public LinkedHashSet<SystemMenuVo> queryMenuByRoleIds(Set<Long> roleIds) {
+  /**
+   * @param roleIds 角色id集合 -> TestPassed
+   * @return /
+   */
+  public List<SystemMenuTb> listMenuByRoleIds(Set<Long> roleIds, boolean hasButton) {
     if (CollUtil.isEmpty(roleIds)) {
-      return new LinkedHashSet<>();
+      return new ArrayList<>();
     }
-    LambdaQueryWrapper<SystemRoleMenuTb> roleMenuWrapper = new LambdaQueryWrapper<>();
-    roleMenuWrapper.in(SystemRoleMenuTb::getRoleId, roleIds);
-    List<Long> menuIds = systemRoleMenuMapper.selectList(roleMenuWrapper).stream().map(SystemRoleMenuTb::getMenuId)
-        .collect(Collectors.toList());
-    if (CollUtil.isEmpty(menuIds)) {
-      return new LinkedHashSet<>();
+//    LambdaQueryWrapper<SystemRoleMenuTb> roleMenuWrapper = new LambdaQueryWrapper<>();
+//    roleMenuWrapper.in(SystemRoleMenuTb::getRoleId, roleIds);
+//    List<Long> menuIds = systemRoleMenuMapper.selectList(roleMenuWrapper).stream().map(SystemRoleMenuTb::getMenuId)
+//        .collect(Collectors.toList());
+//    if (CollUtil.isEmpty(menuIds)) {
+//      return new ArrayList<>();
+//    }
+//    LambdaQueryWrapper<SystemMenuTb> menuWrapper = new LambdaQueryWrapper<>();
+//    menuWrapper.in(SystemMenuTb::getId, menuIds);
+//    // 排除"按钮"
+//    menuWrapper.ne(SystemMenuTb::getType, 2);
+//    menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
+//    return systemMenuMapper.selectList(menuWrapper);
+    if (hasButton){
+      return systemRoleMenuMapper.listMenuWithRoleIds(roleIds);
     }
-    LambdaQueryWrapper<SystemMenuTb> menuWrapper = new LambdaQueryWrapper<>();
-    menuWrapper.in(SystemMenuTb::getId, menuIds);
-    // 排除"按钮"
-    menuWrapper.ne(SystemMenuTb::getType, 2);
-    menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
-
-    List<SystemMenuTb> systemMenuTbs = systemMenuMapper.selectList(menuWrapper);
-    List<SystemMenuVo> systemMenuVos = KitBeanUtil.copyToList(systemMenuTbs, SystemMenuVo.class);
-    return new LinkedHashSet<>(systemMenuVos);
+    return systemRoleMenuMapper.listMenuWithRoleIdsNeButton(roleIds);
   }
 
   /**
@@ -124,8 +123,14 @@ public class SystemRoleMenuService {
     systemRoleMenuMapper.delete(wrapper);
   }
 
-  public List<String> listMenuPermissionByRoleIds(List<Long> roleIds) {
-    List<String> permissions = systemRoleMenuMapper.listMenuPermissionByRoleIds(roleIds);
+  /**
+   * 根据角色id集合查询菜单权限 -> TestPassed
+   *
+   * @param roleIds 角色id集合
+   * @return /
+   */
+  public List<String> listMenuPermissionByRoleIds(Set<Long> roleIds) {
+    Set<String> permissions = systemRoleMenuMapper.listMenuPermissionByRoleIds(roleIds);
     return permissions.stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
   }
 }

@@ -28,7 +28,7 @@ public interface SystemUserRoleMapper extends BaseMapper<SystemUserRoleTb> {
 
   Set<SystemRoleTb> listUserRoleByUserId(@Param("userId") Long userId);
 
-  List<Integer> listUserRoleLevelByUserId(@Param("userId") Long userId);
+  Set<Integer> listUserRoleLevelByUserId(@Param("userId") Long userId);
 
-  List<Long> listUserRoleIdByUserId(@Param("userId") Long userId);
+  Set<Long> listUserRoleIdByUserId(@Param("userId") Long userId);
 }

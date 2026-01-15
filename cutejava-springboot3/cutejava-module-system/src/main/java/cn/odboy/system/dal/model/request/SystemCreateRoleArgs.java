@@ -17,11 +17,11 @@ package cn.odboy.system.dal.model.request;
 
 import cn.odboy.base.KitObject;
 import cn.odboy.system.dal.dataobject.SystemDeptTb;
-import java.util.Set;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

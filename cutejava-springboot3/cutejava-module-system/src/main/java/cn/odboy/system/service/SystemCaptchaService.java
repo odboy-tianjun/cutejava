@@ -25,9 +25,9 @@ import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.response.SystemCaptchaVo;
 import cn.odboy.system.dal.redis.SystemCacheKey;
 import com.wf.captcha.base.Captcha;
-import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码

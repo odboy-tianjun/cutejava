@@ -16,10 +16,10 @@
 package cn.odboy.system.dal.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Date;
-import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor

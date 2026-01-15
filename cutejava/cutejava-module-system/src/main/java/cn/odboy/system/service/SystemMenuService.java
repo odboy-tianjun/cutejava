@@ -27,14 +27,19 @@ import cn.odboy.system.dal.model.request.SystemQueryMenuArgs;
 import cn.odboy.system.dal.model.response.SystemMenuMetaVo;
 import cn.odboy.system.dal.model.response.SystemMenuRouterVo;
 import cn.odboy.system.dal.model.response.SystemMenuVo;
-import cn.odboy.system.dal.model.response.SystemRoleVo;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
+import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitClassUtil;
 import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,11 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemMenuService {
@@ -202,20 +202,20 @@ public class SystemMenuService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteMenuByIds(Set<Long> ids) {
-//    Set<SystemMenuVo> menuSet = new HashSet<>();
-//    for (Long id : ids) {
-//      List<SystemMenuVo> menuList = this.listMenuByPid(id);
-//      menuSet.add(this.getMenuVoById(id));
-//      menuSet = this.queryChildMenuByArgs(menuList, menuSet);
-//    }
-//    List<Long> menuIds = menuSet.stream().map(SystemMenuVo::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-//    if (CollUtil.isNotEmpty(menuIds)) {
-//      systemRoleMenuService.deleteRoleMenuByMenuIds(menuIds);
-//      systemMenuMapper.deleteByIds(menuIds);
-//    }
-//    for (SystemMenuVo menu : menuSet) {
-//      this.updateMenuSubCnt(menu.getPid());
-//    }
+    //    Set<SystemMenuVo> menuSet = new HashSet<>();
+    //    for (Long id : ids) {
+    //      List<SystemMenuVo> menuList = this.listMenuByPid(id);
+    //      menuSet.add(this.getMenuVoById(id));
+    //      menuSet = this.queryChildMenuByArgs(menuList, menuSet);
+    //    }
+    //    List<Long> menuIds = menuSet.stream().map(SystemMenuVo::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+    //    if (CollUtil.isNotEmpty(menuIds)) {
+    //      systemRoleMenuService.deleteRoleMenuByMenuIds(menuIds);
+    //      systemMenuMapper.deleteByIds(menuIds);
+    //    }
+    //    for (SystemMenuVo menu : menuSet) {
+    //      this.updateMenuSubCnt(menu.getPid());
+    //    }
     // ========= 优化 20260114 =========
     if (CollUtil.isEmpty(ids)) {
       return;
@@ -245,8 +245,7 @@ public class SystemMenuService {
     Set<Long> result = new HashSet<>(rootIds);
     Set<Long> currentLevelIds = new HashSet<>(rootIds);
     // 构建父ID到子菜单的映射
-    Map<Long, List<SystemMenuTb>> parentToChildrenMap = allMenus.stream()
-        .filter(menu -> menu.getPid() != null)
+    Map<Long, List<SystemMenuTb>> parentToChildrenMap = allMenus.stream().filter(menu -> menu.getPid() != null)
         .collect(Collectors.groupingBy(SystemMenuTb::getPid));
     while (!currentLevelIds.isEmpty()) {
       Set<Long> nextLevelIds = new HashSet<>();
@@ -271,10 +270,9 @@ public class SystemMenuService {
    */
   private void updateParentMenuCounts(Set<Long> deletedMenuIds, List<SystemMenuTb> allMenus) {
     // 获取被删除菜单的父ID
-    Set<Long> parentIds = allMenus.stream()
-        .filter(menu -> deletedMenuIds.contains(menu.getId()) && menu.getPid() != null)
-        .map(SystemMenuTb::getPid)
-        .collect(Collectors.toSet());
+    Set<Long> parentIds =
+        allMenus.stream().filter(menu -> deletedMenuIds.contains(menu.getId()) && menu.getPid() != null)
+            .map(SystemMenuTb::getPid).collect(Collectors.toSet());
     // 更新每个父菜单的子节点计数
     for (Long parentId : parentIds) {
       proxyService.updateMenuSubCnt(parentId);
@@ -336,29 +334,30 @@ public class SystemMenuService {
    * @param currentUserId /
    * @return /
    */
-  public List<SystemMenuVo> listMenuByUserId(Long currentUserId) {
-    List<SystemRoleVo> roles = systemUserRoleService.listRoleVoByUsersId(currentUserId);
-    Set<Long> roleIds = roles.stream().map(SystemRoleVo::getId).collect(Collectors.toSet());
-    return new ArrayList<>(systemRoleMenuService.queryMenuByRoleIds(roleIds));
+  public List<SystemMenuTb> listMenuByUserId(Long currentUserId) {
+//    List<SystemRoleVo> roles = systemUserRoleService.listRoleVoByUsersId(currentUserId);
+//    Set<Long> roleIds = roles.stream().map(SystemRoleVo::getId).collect(Collectors.toSet());
+    Set<Long> roleIds = systemUserRoleService.listUserRoleIdByUserId(currentUserId);
+    return systemRoleMenuService.listMenuByRoleIds(roleIds, false);
   }
 
-  /**
-   * 查询所有子节点, 包含自身ID
-   *
-   * @param menuList /
-   * @param menuSet  /
-   * @return /
-   */
-  public Set<SystemMenuTb> queryChildMenuByArgs(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
-    for (SystemMenuTb menu : menuList) {
-      menuSet.add(menu);
-      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId());
-      if (CollUtil.isNotEmpty(menus)) {
-        queryChildMenuByArgs(menus, menuSet);
-      }
-    }
-    return menuSet;
-  }
+//  /**
+//   * 查询所有子节点, 包含自身ID
+//   *
+//   * @param menuList /
+//   * @param menuSet  /
+//   * @return /
+//   */
+//  public Set<SystemMenuTb> queryChildMenuByArgs(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
+//    for (SystemMenuTb menu : menuList) {
+//      menuSet.add(menu);
+//      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId());
+//      if (CollUtil.isNotEmpty(menus)) {
+//        queryChildMenuByArgs(menus, menuSet);
+//      }
+//    }
+//    return menuSet;
+//  }
 
   /**
    * 懒加载菜单数据
@@ -401,14 +400,15 @@ public class SystemMenuService {
    * @param menus 原始数据
    * @return /
    */
-  public List<SystemMenuVo> buildMenuTree(List<SystemMenuVo> menus) {
+  public List<SystemMenuVo> buildMenuTree(List<SystemMenuTb> menus) {
+    List<SystemMenuVo> systemMenuVos = KitBeanUtil.copyToList(menus, SystemMenuVo.class);
     List<SystemMenuVo> trees = new ArrayList<>();
     Set<Long> ids = new HashSet<>();
-    for (SystemMenuVo menu : menus) {
+    for (SystemMenuVo menu : systemMenuVos) {
       if (menu.getPid() == null) {
         trees.add(menu);
       }
-      for (SystemMenuVo it : menus) {
+      for (SystemMenuVo it : systemMenuVos) {
         if (menu.getId().equals(it.getPid())) {
           if (menu.getChildren() == null) {
             menu.setChildren(new ArrayList<>());
@@ -419,7 +419,7 @@ public class SystemMenuService {
       }
     }
     if (CollUtil.isNotEmpty(trees)) {
-      trees = menus.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
+      trees = systemMenuVos.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
     }
     return trees;
   }
@@ -530,27 +530,28 @@ public class SystemMenuService {
   }
 
   public List<SystemMenuRouterVo> buildFrontMenus() {
-    List<SystemMenuVo> originMenus = this.listMenuByUserId(KitSecurityHelper.getCurrentUserId());
+    List<SystemMenuTb> originMenus = this.listMenuByUserId(KitSecurityHelper.getCurrentUserId());
     List<SystemMenuVo> targetMenus = this.buildMenuTree(originMenus);
     return this.buildMenuVo(targetMenus);
   }
 
   public Set<Long> listChildMenuSetByMenuId(Long id) {
-    Set<SystemMenuTb> menuSet = new HashSet<>();
-    List<SystemMenuTb> menuList = this.listMenuByPid(id);
-    menuSet.add(this.getMenuById(id));
-    menuSet = this.queryChildMenuByArgs(menuList, menuSet);
-    return menuSet.stream().map(SystemMenuVo::getId).collect(Collectors.toSet());
+//    Set<SystemMenuTb> menuSet = new HashSet<>();
+//    List<SystemMenuTb> menuList = this.listMenuByPid(id);
+//    menuSet.add(this.getMenuById(id));
+//    menuSet = this.queryChildMenuByArgs(menuList, menuSet);
+//    return menuSet.stream().map(SystemMenuTb::getId).collect(Collectors.toSet());
+    List<SystemMenuTb> allMenus = systemMenuMapper.listAll();
+    return this.getAllMenuIdsWithChildren(CollUtil.newHashSet(id), allMenus);
   }
 
   public List<SystemMenuVo> listMenuSuperior(List<Long> ids) {
     Set<SystemMenuTb> menus;
-    List<SystemMenuVo> systemMenuTbs;
     if (CollUtil.isNotEmpty(ids)) {
       menus = new LinkedHashSet<>(this.listMenuByIds(ids));
       for (SystemMenuTb menu : menus) {
-        List<SystemMenuVo> menuList = this.querySuperiorMenuByArgs(menu, new ArrayList<>());
-        for (SystemMenuVo data : menuList) {
+        List<SystemMenuTb> menuList = this.querySuperiorMenuByArgs(menu, new ArrayList<>());
+        for (SystemMenuTb data : menuList) {
           if (data.getId().equals(menu.getPid())) {
             data.setSubCount(data.getSubCount() - 1);
           }
@@ -559,12 +560,12 @@ public class SystemMenuService {
       }
       // 编辑菜单时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
       menus = menus.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
-      List<SystemMenuVo> newMenuList = new ArrayList<>(menus);
-      systemMenuTbs = this.buildMenuTree(newMenuList);
+      List<SystemMenuTb> newMenuList = new ArrayList<>(menus);
+      return this.buildMenuTree(newMenuList);
     } else {
-      systemMenuTbs = this.listMenuByPid(null);
+      List<SystemMenuTb> records = this.listMenuByPid(null);
+      return KitBeanUtil.copyToList(records, SystemMenuVo.class);
     }
-    return systemMenuTbs;
   }
 
   public void exportMenuXlsx(HttpServletResponse response, SystemQueryMenuArgs args) throws Exception {
