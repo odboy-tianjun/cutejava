@@ -13,7 +13,7 @@
     :headers="headers"
     :on-success="handleSuccess"
     :on-error="handleError"
-    :action="ossUploadApi"
+    :action="mode === 'oss' ? ossUploadApplicationApi: fileUploadApplicationApi"
   >
     <el-button size="small" type="primary">点击上传</el-button>
     <div slot="tip" class="el-upload__tip">只能上传不超过100MB的文件</div>
@@ -34,7 +34,7 @@ export default {
       default: null
     },
     /**
-     * 上传方式：server、oss
+     * 上传方式：local、oss
      */
     mode: {
       type: String,
@@ -50,7 +50,8 @@ export default {
   computed: {
     ...mapGetters([
       'baseApi',
-      'ossUploadApi'
+      'fileUploadApplicationApi',
+      'ossUploadApplicationApi'
     ])
   },
   methods: {

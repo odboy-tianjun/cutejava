@@ -3,8 +3,6 @@
  * @type {any}
  */
 const getters = {
-  deployUploadApi: state => state.api.deployUploadApi,
-  databaseUploadApi: state => state.api.databaseUploadApi,
   size: state => state.app.size,
   sidebar: state => state.app.sidebar,
   device: state => state.app.device,
@@ -24,6 +22,9 @@ const getters = {
   swaggerApi: state => state.api.swaggerApi,
   websocketApi: state => state.api.websocketApi,
   sidebarRouters: state => state.permission.sidebarRouters,
-  statusConst: state => state.pipeline.statusConst
+  statusConst: state => state.pipeline.statusConst,
+  // 上传组件专用
+  fileUploadApplicationApi: state => state.api.fileUploadApplicationApi,
+  ossUploadApplicationApi: state => state.api.ossUploadApplicationApi
 }
 export default getters

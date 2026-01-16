@@ -11,7 +11,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl">
-        <cute-file-drag-upload v-model="form" />
+        <cute-file-drag-upload v-model="form" mode="local" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')">提 交</el-button>
