@@ -141,13 +141,6 @@ public class SystemUserController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("查询用户基础数据")
-  @PostMapping(value = "/queryUserMetadataOptions")
-  @PreAuthorize("@el.check('user:list')")
-  public ResponseEntity<List<KitSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
-    List<KitSelectOptionVo> collect = systemUserService.queryUserMetadataOptions(args);
-    return ResponseEntity.ok(collect);
-  }
 
   @ApiOperation("获取用户信息")
   @PostMapping(value = "/getCurrentUserInfo")

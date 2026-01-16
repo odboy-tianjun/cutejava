@@ -27,8 +27,6 @@ import cn.odboy.system.dal.model.export.SystemDeptExportRowVo;
 import cn.odboy.system.dal.model.request.SystemCreateDeptArgs;
 import cn.odboy.system.dal.model.request.SystemQueryDeptArgs;
 import cn.odboy.system.dal.model.response.SystemDeptVo;
-import cn.odboy.system.dal.model.response.SystemProductLineTreeVo;
-import cn.odboy.system.dal.model.response.SystemProductLineVo;
 import cn.odboy.system.dal.mysql.SystemDeptMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
@@ -42,14 +40,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -294,43 +289,6 @@ public class SystemDeptService {
   }
 
   /**
-   * 产品线选择组件 数据源
-   *
-   * @return /
-   */
-  public List<SystemProductLineVo> listDeptSelectDataSource() {
-    List<SystemDeptTb> depts = this.listEnabledDepts();
-    return this.buildDeptSelectOptions(depts);
-  }
-
-  /**
-   * 产品线选择组件Pro版 数据源
-   *
-   * @return /
-   */
-  public List<SystemProductLineTreeVo> listDeptSelectProDataSource() {
-    List<SystemDeptTb> depts = this.listEnabledDepts();
-    // 查询所有部门并按父子关系组织
-    Map<Long, SystemDeptTb> deptMap =
-        depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
-    List<SystemProductLineTreeVo> options = new ArrayList<>();
-    // 构建树形结构
-    for (SystemDeptTb dept : depts) {
-      // 只处理顶级部门（pid为null或0的部门）
-      if (dept.getPid() == null || dept.getPid() == 0) {
-        SystemProductLineTreeVo vo = this.buildDeptTreePro(dept, deptMap);
-        options.add(vo);
-      }
-    }
-    // 按排序字段排序
-    options.sort(Comparator.comparingInt(o -> {
-      Long id = Long.valueOf(o.getValue());
-      return deptMap.get(id) != null ? deptMap.get(id).getDeptSort() : 0;
-    }));
-    return options;
-  }
-
-  /**
    * 根据父部门id查询部门集合
    *
    * @param pid 父部门id
@@ -370,103 +328,6 @@ public class SystemDeptService {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemDeptTb::getEnabled, 1);
     wrapper.isNotNull(SystemDeptTb::getPid);
-    return systemDeptMapper.selectList(wrapper);
-  }
-
-  /**
-   * 递归构建部门树
-   *
-   * @param dept    当前部门
-   * @param deptMap 部门映射
-   * @return SystemProductLineTreeVo 树节点
-   */
-  private SystemProductLineTreeVo buildDeptTreePro(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap) {
-    SystemProductLineTreeVo vo = new SystemProductLineTreeVo();
-    vo.setValue(String.valueOf(dept.getId()));
-    vo.setLabel(dept.getName());
-    // 查找子部门
-    List<SystemProductLineTreeVo> children = new ArrayList<>();
-    for (SystemDeptTb childDept : deptMap.values()) {
-      if (dept.getId().equals(childDept.getPid())) {
-        children.add(this.buildDeptTreePro(childDept, deptMap));
-      }
-    }
-    // 子部门按排序字段排序
-    children.sort(Comparator.comparingInt(o -> {
-      Long id = Long.valueOf(o.getValue());
-      return deptMap.get(id) != null ? deptMap.get(id).getDeptSort() : 0;
-    }));
-    vo.setChildren(children);
-    return vo;
-  }
-
-  /**
-   * 产品线选择组件使用
-   *
-   * @param depts 部门集合
-   * @return /
-   */
-  private List<SystemProductLineVo> buildDeptSelectOptions(List<SystemDeptTb> depts) {
-    // 查询所有部门并按父子关系组织
-    Map<Long, SystemDeptTb> deptMap =
-        depts.stream().collect(Collectors.toMap(SystemDeptTb::getId, Function.identity()));
-    List<SystemProductLineVo> options = new ArrayList<>();
-    for (SystemDeptTb dept : depts) {
-      // 构建部门ID路径
-      List<Long> pathIds = new ArrayList<>();
-      this.buildDeptIdPath(dept, deptMap, pathIds);
-      // 反转路径，从顶级部门到当前部门
-      Collections.reverse(pathIds);
-      SystemProductLineVo dto = new SystemProductLineVo();
-      dto.setValue(dept.getId());
-      dto.setIdPath(pathIds.stream().map(String::valueOf).collect(Collectors.joining("-")));
-      // 保留名称路径用于显示
-      dto.setLabel(this.buildNamePath(dept, deptMap));
-      options.add(dto);
-    }
-    // 按部门名称路径排序
-    options.sort(Comparator.comparing(SystemProductLineVo::getLabel));
-    return options;
-  }
-
-  /**
-   * 产品线选择组件使用
-   */
-  private void buildDeptIdPath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap, List<Long> pathIds) {
-    pathIds.add(dept.getId());
-    if (dept.getPid() != null && dept.getPid() != 0 && deptMap.containsKey(dept.getPid())) {
-      this.buildDeptIdPath(deptMap.get(dept.getPid()), deptMap, pathIds);
-    }
-  }
-
-  /**
-   * 产品线选择组件使用
-   */
-  private String buildNamePath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap) {
-    List<String> pathNames = new ArrayList<>();
-    this.buildDeptNamePath(dept, deptMap, pathNames);
-    Collections.reverse(pathNames);
-    return String.join(" / ", pathNames);
-  }
-
-  /**
-   * 产品线选择组件使用
-   */
-  private void buildDeptNamePath(SystemDeptTb dept, Map<Long, SystemDeptTb> deptMap, List<String> pathNames) {
-    pathNames.add(dept.getName());
-    if (dept.getPid() != null && dept.getPid() != 0 && deptMap.containsKey(dept.getPid())) {
-      this.buildDeptNamePath(deptMap.get(dept.getPid()), deptMap, pathNames);
-    }
-  }
-
-  /**
-   * 查询启用的所有部门集合
-   *
-   * @return /
-   */
-  private List<SystemDeptTb> listEnabledDepts() {
-    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemDeptTb::getEnabled, 1);
     return systemDeptMapper.selectList(wrapper);
   }
 

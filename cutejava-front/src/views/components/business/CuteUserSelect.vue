@@ -28,7 +28,7 @@
 
 <script>
 
-import UserService from '@/api/system/user'
+import CuteUserSelectApi from '@/api/application/cute-user-select'
 
 export default {
   name: 'CuteUserSelect',
@@ -67,15 +67,15 @@ export default {
         this.loading = true
         setTimeout(() => {
           this.loading = false
-          this.queryUserMetadataOptions(query)
+          this.listMetadata(query)
         }, 200)
       } else {
         this.options = []
       }
     },
-    queryUserMetadataOptions(query, options) {
+    listMetadata(query, options) {
       const that = this
-      UserService.queryUserMetadataOptions(query).then(res => {
+      CuteUserSelectApi.listMetadata(query).then(res => {
         that.options = res
       })
     },

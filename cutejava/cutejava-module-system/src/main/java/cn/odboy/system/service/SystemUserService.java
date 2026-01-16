@@ -17,7 +17,6 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
@@ -334,36 +333,6 @@ public class SystemUserService {
   }
 
   /**
-   * 模糊查询用户基础信息，限制返回的条数
-   *
-   * @param pageArgs 分页参数
-   * @return /
-   */
-  public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> pageArgs) {
-    SystemQueryUserArgs args = pageArgs.getArgs();
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.select(
-        SystemUserTb::getId, SystemUserTb::getUsername, SystemUserTb::getNickName, SystemUserTb::getDeptId, SystemUserTb::getEmail, SystemUserTb::getPhone);
-    wrapper.and(c -> {
-      c.eq(SystemUserTb::getPhone, args.getBlurry());
-      c.or();
-      c.eq(SystemUserTb::getEmail, args.getBlurry());
-      c.or();
-      c.like(SystemUserTb::getUsername, args.getBlurry());
-      c.or();
-      c.like(SystemUserTb::getNickName, args.getBlurry());
-    });
-    return systemUserMapper.selectPage(new Page<>(pageArgs.getPage(), 50), wrapper).getRecords().stream().map(m -> {
-      Map<String, Object> ext = new HashMap<>(1);
-      ext.put("id", m.getId());
-      ext.put("deptId", m.getDeptId());
-      ext.put("email", m.getEmail());
-      ext.put("phone", m.getPhone());
-      return KitSelectOptionVo.builder().label(m.getNickName()).value(String.valueOf(m.getId())).ext(ext).build();
-    }).collect(Collectors.toList());
-  }
-
-  /**
    * 根据用户名查询启用的用户信息
    *
    * @param username 用户名
@@ -592,4 +561,5 @@ public class SystemUserService {
     userVo.setRoles(systemUserRoleService.listUserRoleByUserId(user.getId()));
     return userVo;
   }
+
 }

@@ -1,6 +1,6 @@
 package cn.odboy.system.application;
 
-import cn.odboy.system.service.SystemDeptService;
+import cn.odboy.system.application.service.CuteProductLineSelectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class CuteProductLineSelectApi {
 
   @Autowired
-  private SystemDeptService systemDeptService;
+  private CuteProductLineSelectService cuteProductLineSelectService;
 
   @ApiOperation("查询部门下拉选择数据源")
   @PostMapping(value = "/listMetadata")
   @PreAuthorize("@el.check()")
   public ResponseEntity<?> listMetadata() {
-    return ResponseEntity.ok(systemDeptService.listDeptSelectDataSource());
+    return ResponseEntity.ok(cuteProductLineSelectService.listMetadata());
   }
 }

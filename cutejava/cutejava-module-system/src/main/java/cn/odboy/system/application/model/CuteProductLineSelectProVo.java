@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.system.dal.model.response;
+package cn.odboy.system.application.model;
 
 import cn.odboy.base.KitObject;
 import java.util.List;
@@ -22,9 +22,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SystemProductLineTreeVo extends KitObject {
+public class CuteProductLineSelectProVo extends KitObject {
 
   private String value;
   private String label;
-  private List<SystemProductLineTreeVo> children;
+  private List<CuteProductLineSelectProVo> children;
 }
