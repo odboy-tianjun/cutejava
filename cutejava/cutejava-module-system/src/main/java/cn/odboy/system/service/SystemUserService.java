@@ -342,7 +342,8 @@ public class SystemUserService {
   public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> pageArgs) {
     SystemQueryUserArgs args = pageArgs.getArgs();
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.select(SystemUserTb::getId, SystemUserTb::getDeptId, SystemUserTb::getEmail, SystemUserTb::getPhone);
+    wrapper.select(
+        SystemUserTb::getId, SystemUserTb::getUsername, SystemUserTb::getNickName, SystemUserTb::getDeptId, SystemUserTb::getEmail, SystemUserTb::getPhone);
     wrapper.and(c -> {
       c.eq(SystemUserTb::getPhone, args.getBlurry());
       c.or();
