@@ -243,11 +243,15 @@ public class SystemMenuService {
    * @param pid /
    * @return /
    */
-  public List<SystemMenuTb> listMenuByPid(Long pid) {
+  public List<SystemMenuTb> listMenuByPid(Long pid, boolean includeButton) {
     List<SystemMenuTb> menus;
     if (pid != null && !pid.equals(0L)) {
       LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
       wrapper.eq(SystemMenuTb::getPid, pid);
+      if (!includeButton) {
+        // 是否剔除按钮
+        wrapper.ne(SystemMenuTb::getType, 2);
+      }
       wrapper.orderByAsc(SystemMenuTb::getMenuSort);
       return systemMenuMapper.selectList(wrapper);
     } else {
@@ -268,7 +272,7 @@ public class SystemMenuService {
       menus.addAll(this.listRootMenu());
       return menus;
     }
-    menus.addAll(this.listMenuByPid(menu.getPid()));
+    menus.addAll(this.listMenuByPid(menu.getPid(), true));
     return querySuperiorMenuByArgs(this.getMenuById(menu.getPid()), menus);
   }
 
@@ -389,7 +393,7 @@ public class SystemMenuService {
       List<SystemMenuTb> newMenuList = new ArrayList<>(menus);
       return this.buildMenuTree(newMenuList);
     } else {
-      List<SystemMenuTb> records = this.listMenuByPid(null);
+      List<SystemMenuTb> records = this.listMenuByPid(null, true);
       return KitBeanUtil.copyToList(records, SystemMenuVo.class);
     }
   }
@@ -577,7 +581,7 @@ public class SystemMenuService {
   private Set<SystemMenuTb> queryChildMenuByArgs(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
     for (SystemMenuTb menu : menuList) {
       menuSet.add(menu);
-      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId());
+      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId(), true);
       if (CollUtil.isNotEmpty(menus)) {
         queryChildMenuByArgs(menus, menuSet);
       }
