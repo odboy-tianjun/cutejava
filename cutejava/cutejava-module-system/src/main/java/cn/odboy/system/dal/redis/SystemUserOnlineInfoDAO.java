@@ -19,6 +19,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
+import cn.odboy.system.constant.SystemCacheKey;
 import cn.odboy.system.dal.model.export.SystemUserOnlineExportRowVo;
 import cn.odboy.system.dal.model.response.SystemUserJwtVo;
 import cn.odboy.system.dal.model.response.SystemUserOnlineVo;
@@ -122,7 +123,7 @@ public class SystemUserOnlineInfoDAO {
    * @param username /
    */
   public void kickOutByUsername(String username) {
-    String loginKey = SystemRedisKey.ONLINE_USER + username + "*";
+    String loginKey = SystemCacheKey.ONLINE_USER + username + "*";
     redisHelper.scanDel(loginKey);
   }
 
@@ -133,15 +134,13 @@ public class SystemUserOnlineInfoDAO {
    * @param pageable /
    * @return /
    */
-  public KitPageResult<SystemUserOnlineVo> searchOnlineUser(SystemUserOnlineVo onlineVo,
-      IPage<SystemUserOnlineVo> pageable) {
+  public KitPageResult<SystemUserOnlineVo> searchOnlineUser(SystemUserOnlineVo onlineVo, IPage<SystemUserOnlineVo> pageable) {
     String username = null;
     if (onlineVo != null) {
       username = onlineVo.getUserName();
     }
-    List<SystemUserOnlineVo> onlineUserList = queryUserOnlineModelListByUsername(username);
-    List<SystemUserOnlineVo> paging =
-        KitPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
+    List<SystemUserOnlineVo> onlineUserList = this.queryUserOnlineModelListByUsername(username);
+    List<SystemUserOnlineVo> paging = KitPageUtil.softPaging(pageable.getCurrent(), pageable.getSize(), onlineUserList);
     return KitPageUtil.toPage(paging, onlineUserList.size());
   }
 
@@ -152,7 +151,7 @@ public class SystemUserOnlineInfoDAO {
    * @return /
    */
   public List<SystemUserOnlineVo> queryUserOnlineModelListByUsername(String username) {
-    String loginKey = SystemRedisKey.ONLINE_USER + (StrUtil.isBlank(username) ? "" : "*" + username);
+    String loginKey = SystemCacheKey.ONLINE_USER + (StrUtil.isBlank(username) ? "" : "*" + username);
     List<String> keys = redisHelper.scan(loginKey + "*");
     Collections.reverse(keys);
     List<SystemUserOnlineVo> onlineUserList = new ArrayList<>();

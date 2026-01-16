@@ -23,7 +23,7 @@ import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.model.response.SystemCaptchaVo;
-import cn.odboy.system.dal.redis.SystemCacheKey;
+import cn.odboy.system.constant.SystemCacheKey;
 import com.wf.captcha.base.Captcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

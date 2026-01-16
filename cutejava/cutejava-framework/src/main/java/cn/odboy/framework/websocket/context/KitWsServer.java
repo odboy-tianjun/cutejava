@@ -61,12 +61,12 @@ public class KitWsServer {
    * @param message 客户端发送过来的消息
    */
   @OnMessage
-  public void onMessage(String message, Session session) {
+  public void onMessage(String message, Session session) throws IOException {
     KitWsMessage wsMessage = JSON.parseObject(message, KitWsMessage.class);
     String bizCode = wsMessage.getBizCode();
     Object data = wsMessage.getData();
-    log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode,
-        JSON.toJSONString(data));
+    log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode, JSON.toJSONString(data));
+    session.getBasicRemote().sendText(message);
   }
 
   /**
