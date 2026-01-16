@@ -84,6 +84,11 @@ public class SystemDictDetailService {
     systemDictDetailMapper.deleteById(id);
   }
 
+  /**
+   * 根据字典id集合删除字典明细
+   *
+   * @param ids 字典id集合
+   */
   @Transactional(rollbackFor = Exception.class)
   public void deleteDictDetailByDictIds(Set<Long> ids) {
     if (CollUtil.isNotEmpty(ids)) {
@@ -100,8 +105,10 @@ public class SystemDictDetailService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
-      Page<SystemDictDetailTb> page) {
+  public KitPageResult<SystemDictDetailVo> searchDictDetail(
+      SystemQueryDictDetailArgs args,
+      Page<SystemDictDetailTb> page
+  ) {
     IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args);
     List<Long> dictIds =
         iPage.getRecords().stream().map(SystemDictDetailVo::getDictId).collect(Collectors.toList());

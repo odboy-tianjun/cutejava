@@ -102,7 +102,7 @@ public class SystemRoleMenuService {
 //    menuWrapper.ne(SystemMenuTb::getType, 2);
 //    menuWrapper.orderByAsc(SystemMenuTb::getMenuSort);
 //    return systemMenuMapper.selectList(menuWrapper);
-    if (hasButton){
+    if (hasButton) {
       return systemRoleMenuMapper.listMenuWithRoleIds(roleIds);
     }
     return systemRoleMenuMapper.listMenuWithRoleIdsNeButton(roleIds);

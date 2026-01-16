@@ -69,8 +69,10 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   private SystemOssStorageMapper systemOssStorageMapper;
 
   @Override
-  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page) {
+  public KitPageResult<SystemOssStorageVo> searchOssStorage(
+      SystemQueryStorageArgs args,
+      Page<SystemOssStorageTb> page
+  ) {
     IPage<SystemOssStorageVo> ossStorageTbs = this.selectOssStorageByArgs(args, page);
     for (SystemOssStorageVo storageVo : ossStorageTbs.getRecords()) {
       storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
@@ -78,18 +80,23 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
     return KitPageUtil.toPage(ossStorageTbs);
   }
 
-  private IPage<SystemOssStorageVo> selectOssStorageByArgs(SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page) {
+  private IPage<SystemOssStorageVo> selectOssStorageByArgs(
+      SystemQueryStorageArgs args,
+      Page<SystemOssStorageTb> page
+  ) {
     KitValidUtil.notNull(args);
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.and(StrUtil.isNotBlank(args.getBlurry()),
+    wrapper.and(
+        StrUtil.isNotBlank(args.getBlurry()),
         c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
             .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
             .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
-            .like(SystemOssStorageTb::getFileMd5, args.getBlurry()));
+            .like(SystemOssStorageTb::getFileMd5, args.getBlurry())
+    );
     if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
       wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0),
-          args.getCreateTime().get(1));
+          args.getCreateTime().get(1)
+      );
     }
     wrapper.orderByAsc(SystemOssStorageTb::getId);
     return systemOssStorageMapper.selectPage(page, wrapper)

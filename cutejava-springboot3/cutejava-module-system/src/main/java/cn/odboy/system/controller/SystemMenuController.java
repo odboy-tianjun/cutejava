@@ -68,7 +68,7 @@ public class SystemMenuController {
   @PostMapping(value = "/listMenuByPid")
   @PreAuthorize("@el.check('menu:list','roles:list')")
   public ResponseEntity<List<SystemMenuTb>> listMenuByPid(@RequestParam Long pid) {
-    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuByPid(pid);
+    List<SystemMenuTb> systemMenuTbs = systemMenuService.listMenuByPid(pid, false);
     return ResponseEntity.ok(systemMenuTbs);
   }
 

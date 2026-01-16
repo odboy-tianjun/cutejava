@@ -141,8 +141,10 @@ public class SystemMonitorService {
     memoryInfo.put("total", FormatUtil.formatBytes(memory.getTotal()));
     memoryInfo.put("available", FormatUtil.formatBytes(memory.getAvailable()));
     memoryInfo.put("used", FormatUtil.formatBytes(memory.getTotal() - memory.getAvailable()));
-    memoryInfo.put("usageRate",
-        df.format((memory.getTotal() - memory.getAvailable()) / (double) memory.getTotal() * 100));
+    memoryInfo.put(
+        "usageRate",
+        df.format((memory.getTotal() - memory.getAvailable()) / (double) memory.getTotal() * 100)
+    );
     return memoryInfo;
   }
 

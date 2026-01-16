@@ -66,7 +66,7 @@ public class SystemRoleService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveRole(SystemCreateRoleArgs args) {
-    checkRoleLevels(args.getLevel());
+    this.checkRoleLevels(args.getLevel());
     if (this.existRoleWithName(args.getName())) {
       throw new BadRequestException("角色名称已存在");
     }
@@ -78,19 +78,6 @@ public class SystemRoleService {
     }
   }
 
-  private boolean existRoleWithName(String name) {
-    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemRoleTb::getName, name);
-    return systemRoleMapper.exists(wrapper);
-  }
-
-  private boolean existRoleWithNameNeSelf(String name, Long roleId) {
-    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemRoleTb::getName, name);
-    wrapper.eq(SystemRoleTb::getId, roleId);
-    return systemRoleMapper.exists(wrapper);
-  }
-
   /**
    * 修改 -> TestPassed
    *
@@ -98,7 +85,7 @@ public class SystemRoleService {
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateRoleById(SystemRoleVo args) {
-    checkRoleLevels(args.getLevel());
+    this.checkRoleLevels(args.getLevel());
     SystemRoleTb role = systemRoleMapper.selectById(args.getId());
     if (this.existRoleWithNameNeSelf(args.getName(), role.getId())) {
       throw new BadRequestException("角色名称已存在");
@@ -125,7 +112,7 @@ public class SystemRoleService {
   @Transactional(rollbackFor = Exception.class)
   public void updateBindMenuById(SystemRoleVo args) {
     SystemRoleTb role = systemRoleMapper.selectById(args.getId());
-    checkRoleLevels(role.getLevel());
+    this.checkRoleLevels(role.getLevel());
     // 更新菜单
     systemRoleMenuService.deleteRoleMenuByRoleId(role.getId());
     Set<SystemMenuTb> menus = args.getMenus();
@@ -143,7 +130,7 @@ public class SystemRoleService {
   public void deleteRoleByIds(Set<Long> ids) {
     List<Integer> roleLevels = systemRoleMapper.listRoleLevelByRoleIds(new ArrayList<>(ids));
     for (Integer roleLevel : roleLevels) {
-      checkRoleLevels(roleLevel);
+      this.checkRoleLevels(roleLevel);
     }
     // 验证是否被用户关联
     this.verifyBindRelationByIds(ids);
@@ -174,17 +161,6 @@ public class SystemRoleService {
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQueryParams(args, wrapper);
     return systemRoleMapper.selectList(wrapper);
-  }
-
-  private void injectQueryParams(SystemQueryRoleArgs args, LambdaQueryWrapper<SystemRoleTb> wrapper) {
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
-          .like(SystemRoleTb::getDescription, args.getBlurry()));
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
-      }
-    }
-    wrapper.orderByAsc(SystemRoleTb::getLevel);
   }
 
   /**
@@ -239,6 +215,12 @@ public class SystemRoleService {
     }
   }
 
+  /**
+   * 根据角色id查询用户可访问的部门和菜单信息
+   *
+   * @param id 角色id
+   * @return /
+   */
   public SystemRoleVo getRoleVoById(Long id) {
     SystemRoleTb roleTb = systemRoleMapper.selectById(id);
     if (roleTb == null) {
@@ -247,8 +229,55 @@ public class SystemRoleService {
     return systemUserRoleService.convertToRoleVo(roleTb);
   }
 
+  /**
+   * 查询当前用户角色级别
+   *
+   * @return /
+   */
   public Dict getCurrentUserRoleLevel() {
-    return Dict.create().set("level", checkRoleLevels(null));
+    return Dict.create().set("level", this.checkRoleLevels(null));
+  }
+
+  /**
+   * 构建查询条件
+   *
+   * @param args    /
+   * @param wrapper /
+   */
+  private void injectQueryParams(SystemQueryRoleArgs args, LambdaQueryWrapper<SystemRoleTb> wrapper) {
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemRoleTb::getName, args.getBlurry()).or()
+          .like(SystemRoleTb::getDescription, args.getBlurry()));
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemRoleTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByAsc(SystemRoleTb::getLevel);
+  }
+
+  /**
+   * 查询角色名称是否存在
+   *
+   * @param name 角色名称
+   * @return /
+   */
+  private boolean existRoleWithName(String name) {
+    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemRoleTb::getName, name);
+    return systemRoleMapper.exists(wrapper);
+  }
+
+  /**
+   * 查询角色名称是否存在（排除本身）
+   *
+   * @param name 角色名称
+   * @return /
+   */
+  private boolean existRoleWithNameNeSelf(String name, Long roleId) {
+    LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemRoleTb::getName, name);
+    wrapper.eq(SystemRoleTb::getId, roleId);
+    return systemRoleMapper.exists(wrapper);
   }
 
   /**
@@ -267,6 +296,12 @@ public class SystemRoleService {
     return min;
   }
 
+  /**
+   * 导出部门数据
+   *
+   * @param response /
+   * @param args     /
+   */
   public void exportRoleXlsx(HttpServletResponse response, SystemQueryRoleArgs args) {
     List<SystemRoleTb> systemRoleVos = this.queryRoleByArgs(args, null);
     List<SystemRoleExportRowVo> rowVos = new ArrayList<>();
