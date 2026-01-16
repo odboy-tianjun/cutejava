@@ -32,6 +32,14 @@ export default {
       type: Object,
       required: true,
       default: null
+    },
+    /**
+     * 上传方式：server、oss
+     */
+    mode: {
+      type: String,
+      required: true,
+      default: 'oss'
     }
   },
   data() {

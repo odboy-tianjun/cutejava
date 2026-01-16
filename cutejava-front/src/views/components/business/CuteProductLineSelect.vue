@@ -25,7 +25,7 @@
 
 <script>
 
-import { listDeptSelectDataSource } from '@/api/system/component'
+import { listMetadata } from '@/api/application/cute-product-line-select'
 import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     fetchDeptData() {
-      listDeptSelectDataSource().then(data => {
+      listMetadata().then(data => {
         this.deptOptions = data
       }).catch(error => {
         console.error('获取部门数据失败:', error)
