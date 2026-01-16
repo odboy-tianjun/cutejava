@@ -18,6 +18,7 @@ package cn.odboy.system.dal.redis;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.framework.redis.KitRedisHelper;
+import cn.odboy.system.constant.SystemCacheKey;
 import cn.odboy.system.dal.model.response.SystemUserJwtVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -42,7 +43,7 @@ public class SystemUserInfoDAO {
     if (StrUtil.isNotEmpty(userName)) {
       // 添加数据, 避免数据同时过期（2小时左右）
       long time = 7200 + RandomUtil.randomInt(900, 1800);
-      redisHelper.set(SystemRedisKey.USER_INFO + userName, user, time);
+      redisHelper.set(SystemCacheKey.USER_INFO + userName, user, time);
     }
   }
 
@@ -55,7 +56,7 @@ public class SystemUserInfoDAO {
   public void deleteUserLoginInfoByUserName(String userName) {
     if (StrUtil.isNotEmpty(userName)) {
       // 清除数据
-      redisHelper.del(SystemRedisKey.USER_INFO + userName);
+      redisHelper.del(SystemCacheKey.USER_INFO + userName);
     }
   }
 
@@ -68,7 +69,7 @@ public class SystemUserInfoDAO {
   public SystemUserJwtVo getUserLoginInfoByUserName(String username) {
     if (StrUtil.isNotEmpty(username)) {
       // 获取数据
-      return redisHelper.get(SystemRedisKey.USER_INFO + username, SystemUserJwtVo.class);
+      return redisHelper.get(SystemCacheKey.USER_INFO + username, SystemUserJwtVo.class);
     }
     return null;
   }

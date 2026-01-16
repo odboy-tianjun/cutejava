@@ -96,56 +96,6 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据组件名称查询菜单是否存在 -> TestPassed
-   *
-   * @param componentName 组件名称
-   * @return /
-   */
-  private boolean existMenuWithComponentName(String componentName) {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemMenuTb::getComponentName, componentName);
-    return systemMenuMapper.exists(wrapper);
-  }
-
-  /**
-   * 根据组件名称查询菜单是否存在 -> TestPassed
-   *
-   * @param componentName 组件名称
-   * @return /
-   */
-  private boolean existMenuWithComponentNameNeSelf(String componentName, Long currentMenuId) {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemMenuTb::getComponentName, componentName);
-    wrapper.ne(SystemMenuTb::getId, currentMenuId);
-    return systemMenuMapper.exists(wrapper);
-  }
-
-  /**
-   * 根据菜单标题查询菜单是否存在 -> TestPassed
-   *
-   * @param title 菜单标题
-   * @return /
-   */
-  private boolean existMenuWithTitle(String title) {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemMenuTb::getTitle, title);
-    return systemMenuMapper.exists(wrapper);
-  }
-
-  /**
-   * 根据菜单标题查询菜单是否存在 -> TestPassed
-   *
-   * @param title 菜单标题
-   * @return /
-   */
-  private boolean existMenuWithTitleNeSelf(String title, Long currentMenuId) {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemMenuTb::getTitle, title);
-    wrapper.ne(SystemMenuTb::getId, currentMenuId);
-    return systemMenuMapper.exists(wrapper);
-  }
-
-  /**
    * 编辑 -> TestPassed
    *
    * @param args /
@@ -222,7 +172,7 @@ public class SystemMenuService {
     }
     // 查询所有菜单数据
     List<SystemMenuTb> allMenus = systemMenuMapper.listAll();
-    // 根据ID集合获取当前菜单和其子菜单
+    // 根据ID集合查询当前菜单和其子菜单
     Set<Long> allMenuIds = this.getAllMenuIdsWithChildren(ids, allMenus);
     if (CollUtil.isNotEmpty(allMenuIds)) {
       // 删除角色菜单关联
@@ -232,60 +182,6 @@ public class SystemMenuService {
       // 更新父级菜单子节点数量
       this.updateParentMenuCounts(allMenuIds, allMenus);
     }
-  }
-
-  /**
-   * 从所有菜单中找出指定ID及其子菜单ID
-   *
-   * @param rootIds  要删除的根菜单ID集合
-   * @param allMenus 所有菜单数据
-   * @return 包含根菜单及其所有子菜单的ID集合
-   */
-  private Set<Long> getAllMenuIdsWithChildren(Set<Long> rootIds, List<SystemMenuTb> allMenus) {
-    Set<Long> result = new HashSet<>(rootIds);
-    Set<Long> currentLevelIds = new HashSet<>(rootIds);
-    // 构建父ID到子菜单的映射
-    Map<Long, List<SystemMenuTb>> parentToChildrenMap = allMenus.stream().filter(menu -> menu.getPid() != null)
-        .collect(Collectors.groupingBy(SystemMenuTb::getPid));
-    while (!currentLevelIds.isEmpty()) {
-      Set<Long> nextLevelIds = new HashSet<>();
-      // 对于当前层级的每个菜单ID，查找其子菜单
-      for (Long parentId : currentLevelIds) {
-        List<SystemMenuTb> children = parentToChildrenMap.get(parentId);
-        if (children != null && !children.isEmpty()) {
-          for (SystemMenuTb child : children) {
-            if (result.add(child.getId())) { // 如果成功添加（之前不存在），则继续查找其子菜单
-              nextLevelIds.add(child.getId());
-            }
-          }
-        }
-      }
-      currentLevelIds = nextLevelIds;
-    }
-    return result;
-  }
-
-  /**
-   * 更新被删除菜单的父菜单子节点计数
-   */
-  private void updateParentMenuCounts(Set<Long> deletedMenuIds, List<SystemMenuTb> allMenus) {
-    // 获取被删除菜单的父ID
-    Set<Long> parentIds =
-        allMenus.stream().filter(menu -> deletedMenuIds.contains(menu.getId()) && menu.getPid() != null)
-            .map(SystemMenuTb::getPid).collect(Collectors.toSet());
-    // 更新每个父菜单的子节点计数
-    for (Long parentId : parentIds) {
-      proxyService.updateMenuSubCnt(parentId);
-    }
-  }
-
-  /**
-   * 根据菜单id查询目录 -> TestPassed
-   *
-   * @param id 菜单id
-   */
-  private SystemMenuTb getMenuById(Long id) {
-    return systemMenuMapper.selectById(id);
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -341,35 +237,21 @@ public class SystemMenuService {
     return systemRoleMenuService.listMenuByRoleIds(roleIds, false);
   }
 
-//  /**
-//   * 查询所有子节点, 包含自身ID
-//   *
-//   * @param menuList /
-//   * @param menuSet  /
-//   * @return /
-//   */
-//  public Set<SystemMenuTb> queryChildMenuByArgs(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
-//    for (SystemMenuTb menu : menuList) {
-//      menuSet.add(menu);
-//      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId());
-//      if (CollUtil.isNotEmpty(menus)) {
-//        queryChildMenuByArgs(menus, menuSet);
-//      }
-//    }
-//    return menuSet;
-//  }
-
   /**
    * 懒加载菜单数据
    *
    * @param pid /
    * @return /
    */
-  public List<SystemMenuTb> listMenuByPid(Long pid) {
+  public List<SystemMenuTb> listMenuByPid(Long pid, boolean includeButton) {
     List<SystemMenuTb> menus;
     if (pid != null && !pid.equals(0L)) {
       LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
       wrapper.eq(SystemMenuTb::getPid, pid);
+      if (!includeButton) {
+        // 是否剔除按钮
+        wrapper.ne(SystemMenuTb::getType, 2);
+      }
       wrapper.orderByAsc(SystemMenuTb::getMenuSort);
       return systemMenuMapper.selectList(wrapper);
     } else {
@@ -390,7 +272,7 @@ public class SystemMenuService {
       menus.addAll(this.listRootMenu());
       return menus;
     }
-    menus.addAll(this.listMenuByPid(menu.getPid()));
+    menus.addAll(this.listMenuByPid(menu.getPid(), true));
     return querySuperiorMenuByArgs(this.getMenuById(menu.getPid()), menus);
   }
 
@@ -473,60 +355,8 @@ public class SystemMenuService {
     return list;
   }
 
-  /**
-   * 查询 MenuResponse
-   *
-   * @param menu   /
-   * @param menuVo /
-   * @return /
-   */
-  private SystemMenuRouterVo getMenuVo(SystemMenuVo menu, SystemMenuRouterVo menuVo) {
-    SystemMenuRouterVo menuVo1 = new SystemMenuRouterVo();
-    menuVo1.setMeta(menuVo.getMeta());
-    // 非外链
-    if (!menu.getIFrame()) {
-      menuVo1.setPath("index");
-      menuVo1.setName(menuVo.getName());
-      menuVo1.setComponent(menuVo.getComponent());
-    } else {
-      menuVo1.setPath(menu.getPath());
-    }
-    return menuVo1;
-  }
-
   public List<SystemMenuTb> listMenuByIds(List<Long> ids) {
     return systemMenuMapper.selectByIds(ids);
-  }
-
-  private Long countMenuByPid(Long pid) {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemMenuTb::getPid, pid);
-    return systemMenuMapper.selectCount(wrapper);
-  }
-
-  private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs args) {
-    KitValidUtil.notNull(args);
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.isNull(args.getPidIsNull() != null, SystemMenuTb::getPid);
-    wrapper.eq(args.getPid() != null, SystemMenuTb::getPid, args.getPid());
-    wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemMenuTb::getTitle, args.getBlurry()).or()
-        .like(SystemMenuTb::getComponentName, args.getBlurry()).or()
-        .like(SystemMenuTb::getPermission, args.getBlurry()));
-    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-      wrapper.between(SystemMenuTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
-    }
-    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
-    return systemMenuMapper.selectList(wrapper);
-  }
-
-  /**
-   * 查询根目录 -> TestPassed
-   */
-  private List<SystemMenuTb> listRootMenu() {
-    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.isNull(SystemMenuTb::getPid);
-    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
-    return systemMenuMapper.selectList(wrapper);
   }
 
   public List<SystemMenuRouterVo> buildFrontMenus() {
@@ -563,7 +393,7 @@ public class SystemMenuService {
       List<SystemMenuTb> newMenuList = new ArrayList<>(menus);
       return this.buildMenuTree(newMenuList);
     } else {
-      List<SystemMenuTb> records = this.listMenuByPid(null);
+      List<SystemMenuTb> records = this.listMenuByPid(null, true);
       return KitBeanUtil.copyToList(records, SystemMenuVo.class);
     }
   }
@@ -583,5 +413,179 @@ public class SystemMenuService {
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "菜单数据", SystemMenuExportRowVo.class, rowVos);
+  }
+
+  /**
+   * 查询 MenuResponse
+   *
+   * @param menu   /
+   * @param menuVo /
+   * @return /
+   */
+  private SystemMenuRouterVo getMenuVo(SystemMenuVo menu, SystemMenuRouterVo menuVo) {
+    SystemMenuRouterVo menuVo1 = new SystemMenuRouterVo();
+    menuVo1.setMeta(menuVo.getMeta());
+    // 非外链
+    if (!menu.getIFrame()) {
+      menuVo1.setPath("index");
+      menuVo1.setName(menuVo.getName());
+      menuVo1.setComponent(menuVo.getComponent());
+    } else {
+      menuVo1.setPath(menu.getPath());
+    }
+    return menuVo1;
+  }
+
+  private Long countMenuByPid(Long pid) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getPid, pid);
+    return systemMenuMapper.selectCount(wrapper);
+  }
+
+  private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs args) {
+    KitValidUtil.notNull(args);
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.isNull(args.getPidIsNull() != null, SystemMenuTb::getPid);
+    wrapper.eq(args.getPid() != null, SystemMenuTb::getPid, args.getPid());
+    wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemMenuTb::getTitle, args.getBlurry()).or()
+        .like(SystemMenuTb::getComponentName, args.getBlurry()).or()
+        .like(SystemMenuTb::getPermission, args.getBlurry()));
+    if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+      wrapper.between(SystemMenuTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+    }
+    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
+    return systemMenuMapper.selectList(wrapper);
+  }
+
+  /**
+   * 查询根目录 -> TestPassed
+   */
+  private List<SystemMenuTb> listRootMenu() {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.isNull(SystemMenuTb::getPid);
+    wrapper.orderByAsc(SystemMenuTb::getMenuSort);
+    return systemMenuMapper.selectList(wrapper);
+  }
+
+  /**
+   * 根据组件名称查询菜单是否存在 -> TestPassed
+   *
+   * @param componentName 组件名称
+   * @return /
+   */
+  private boolean existMenuWithComponentName(String componentName) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getComponentName, componentName);
+    return systemMenuMapper.exists(wrapper);
+  }
+
+  /**
+   * 根据组件名称查询菜单是否存在 -> TestPassed
+   *
+   * @param componentName 组件名称
+   * @return /
+   */
+  private boolean existMenuWithComponentNameNeSelf(String componentName, Long currentMenuId) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getComponentName, componentName);
+    wrapper.ne(SystemMenuTb::getId, currentMenuId);
+    return systemMenuMapper.exists(wrapper);
+  }
+
+  /**
+   * 根据菜单标题查询菜单是否存在 -> TestPassed
+   *
+   * @param title 菜单标题
+   * @return /
+   */
+  private boolean existMenuWithTitle(String title) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getTitle, title);
+    return systemMenuMapper.exists(wrapper);
+  }
+
+  /**
+   * 根据菜单标题查询菜单是否存在 -> TestPassed
+   *
+   * @param title 菜单标题
+   * @return /
+   */
+  private boolean existMenuWithTitleNeSelf(String title, Long currentMenuId) {
+    LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemMenuTb::getTitle, title);
+    wrapper.ne(SystemMenuTb::getId, currentMenuId);
+    return systemMenuMapper.exists(wrapper);
+  }
+
+  /**
+   * 从所有菜单中找出指定ID及其子菜单ID
+   *
+   * @param rootIds  要删除的根菜单ID集合
+   * @param allMenus 所有菜单数据
+   * @return 包含根菜单及其所有子菜单的ID集合
+   */
+  private Set<Long> getAllMenuIdsWithChildren(Set<Long> rootIds, List<SystemMenuTb> allMenus) {
+    Set<Long> result = new HashSet<>(rootIds);
+    Set<Long> currentLevelIds = new HashSet<>(rootIds);
+    // 构建父ID到子菜单的映射
+    Map<Long, List<SystemMenuTb>> parentToChildrenMap = allMenus.stream().filter(menu -> menu.getPid() != null)
+        .collect(Collectors.groupingBy(SystemMenuTb::getPid));
+    while (!currentLevelIds.isEmpty()) {
+      Set<Long> nextLevelIds = new HashSet<>();
+      // 对于当前层级的每个菜单ID，查找其子菜单
+      for (Long parentId : currentLevelIds) {
+        List<SystemMenuTb> children = parentToChildrenMap.get(parentId);
+        if (children != null && !children.isEmpty()) {
+          for (SystemMenuTb child : children) {
+            if (result.add(child.getId())) { // 如果成功添加（之前不存在），则继续查找其子菜单
+              nextLevelIds.add(child.getId());
+            }
+          }
+        }
+      }
+      currentLevelIds = nextLevelIds;
+    }
+    return result;
+  }
+
+  /**
+   * 更新被删除菜单的父菜单子节点计数
+   */
+  private void updateParentMenuCounts(Set<Long> deletedMenuIds, List<SystemMenuTb> allMenus) {
+    // 查询被删除菜单的父ID
+    Set<Long> parentIds =
+        allMenus.stream().filter(menu -> deletedMenuIds.contains(menu.getId()) && menu.getPid() != null)
+            .map(SystemMenuTb::getPid).collect(Collectors.toSet());
+    // 更新每个父菜单的子节点计数
+    for (Long parentId : parentIds) {
+      proxyService.updateMenuSubCnt(parentId);
+    }
+  }
+
+  /**
+   * 根据菜单id查询目录 -> TestPassed
+   *
+   * @param id 菜单id
+   */
+  private SystemMenuTb getMenuById(Long id) {
+    return systemMenuMapper.selectById(id);
+  }
+
+  /**
+   * 查询所有子节点, 包含自身ID
+   *
+   * @param menuList /
+   * @param menuSet  /
+   * @return /
+   */
+  private Set<SystemMenuTb> queryChildMenuByArgs(List<SystemMenuTb> menuList, Set<SystemMenuTb> menuSet) {
+    for (SystemMenuTb menu : menuList) {
+      menuSet.add(menu);
+      List<SystemMenuTb> menus = this.listMenuByPid(menu.getId(), true);
+      if (CollUtil.isNotEmpty(menus)) {
+        queryChildMenuByArgs(menus, menuSet);
+      }
+    }
+    return menuSet;
   }
 }

@@ -109,19 +109,6 @@ public class SystemEmailService {
   }
 
   /**
-   * 校验邮箱验证码 -> TestPassed
-   */
-  public void checkEmailCaptchaV1(SystemCaptchaBizEnum biEnum, String email, String code) {
-    String redisKey = biEnum.getRedisKey() + email;
-    String value = redisHelper.get(redisKey, String.class);
-    if (value == null || !value.equals(code)) {
-      throw new BadRequestException("无效验证码");
-    } else {
-      redisHelper.del(redisKey);
-    }
-  }
-
-  /**
    * 发送给邮箱验证码
    */
   public void sendCaptcha(SystemCaptchaBizEnum biEnum, String email) {
@@ -148,16 +135,34 @@ public class SystemEmailService {
     sendEmail(sendEmailRequest);
   }
 
+  /**
+   * 查询邮箱配置
+   *
+   * @return /
+   */
   public SystemEmailConfigTb getLastEmailConfig() {
     SystemEmailConfigTb systemEmailConfigTb = systemEmailConfigMapper.selectById(1L);
     return systemEmailConfigTb == null ? new SystemEmailConfigTb() : systemEmailConfigTb;
   }
 
+  /**
+   * 校验邮箱验证码 -> TestPassed
+   */
   public void checkEmailCaptcha(SystemCheckEmailCaptchaArgs args) {
     SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(args.getBizCode());
     if (biEnum == null) {
       throw new BadRequestException("不支持的业务");
     }
     this.checkEmailCaptchaV1(biEnum, args.getEmail(), args.getCode());
+  }
+
+  public void checkEmailCaptchaV1(SystemCaptchaBizEnum biEnum, String email, String code) {
+    String redisKey = biEnum.getRedisKey() + email;
+    String value = redisHelper.get(redisKey, String.class);
+    if (value == null || !value.equals(code)) {
+      throw new BadRequestException("无效验证码");
+    } else {
+      redisHelper.del(redisKey);
+    }
   }
 }

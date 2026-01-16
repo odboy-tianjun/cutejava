@@ -43,31 +43,42 @@ public class SystemUserTb extends KitBaseUserTimeTb {
   private Long deptId;
   @NotBlank
   @ApiModelProperty(value = "用户名称")
+  @TableField(value = "username")
   private String username;
   @NotBlank
   @ApiModelProperty(value = "用户昵称")
+  @TableField(value = "nick_name")
   private String nickName;
   @Email
   @NotBlank
   @ApiModelProperty(value = "邮箱")
+  @TableField(value = "email")
   private String email;
   @NotBlank
   @ApiModelProperty(value = "电话号码")
+  @TableField(value = "phone")
   private String phone;
   @ApiModelProperty(value = "用户性别")
+  @TableField(value = "gender")
   private String gender;
   @ApiModelProperty(value = "头像真实名称", hidden = true)
+  @TableField(value = "avatar_name")
   private String avatarName;
   @ApiModelProperty(value = "头像存储的路径", hidden = true)
+  @TableField(value = "avatar_path")
   private String avatarPath;
   @ApiModelProperty(value = "密码")
+  @TableField(value = "password")
   private String password;
   @NotNull
   @ApiModelProperty(value = "是否启用")
+  @TableField(value = "enabled")
   private Boolean enabled;
   @ApiModelProperty(value = "是否为admin账号", hidden = true)
+  @TableField(value = "is_admin")
   private Boolean isAdmin = false;
   @ApiModelProperty(value = "最后修改密码的时间", hidden = true)
+  @TableField(value = "pwd_reset_time")
   private Date pwdResetTime;
 
   @Override
