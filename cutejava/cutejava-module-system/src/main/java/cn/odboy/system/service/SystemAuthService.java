@@ -29,13 +29,13 @@ import cn.odboy.system.framework.permission.core.handler.UserDetailsHandler;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
 import cn.odboy.util.KitValidUtil;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户认证

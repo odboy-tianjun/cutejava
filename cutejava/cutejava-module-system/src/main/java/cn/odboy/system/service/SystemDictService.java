@@ -29,13 +29,13 @@ import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class SystemDictService {
@@ -96,19 +96,24 @@ public class SystemDictService {
     return KitPageUtil.toPage(selectPage);
   }
 
-  private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
-    if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
-          .like(SystemDictTb::getDescription, args.getBlurry()));
-    }
-  }
-
+  /**
+   * 复杂条件查询字典列表
+   *
+   * @param args /
+   * @return /
+   */
   public List<SystemDictTb> queryDictByArgs(SystemQueryDictArgs args) {
     LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
     this.injectQueryParams(args, wrapper);
     return systemDictMapper.selectList(wrapper);
   }
 
+  /**
+   * 导出字典数据
+   *
+   * @param response /
+   * @param args     /
+   */
   public void exportDictXlsx(HttpServletResponse response, SystemQueryDictArgs args) {
     List<SystemDictTb> systemDictTbs = this.queryDictByArgs(args);
     List<SystemDictExportRowVo> rowVos = new ArrayList<>();
@@ -135,5 +140,18 @@ public class SystemDictService {
       }
     }
     KitExcelExporter.exportSimple(response, "字典数据", SystemDictExportRowVo.class, rowVos);
+  }
+
+  /**
+   * 构建查询条件
+   *
+   * @param args    /
+   * @param wrapper /
+   */
+  private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
+    if (args != null) {
+      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
+          .like(SystemDictTb::getDescription, args.getBlurry()));
+    }
   }
 }

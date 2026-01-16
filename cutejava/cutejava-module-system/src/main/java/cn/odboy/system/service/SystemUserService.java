@@ -45,6 +45,13 @@ import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,13 +61,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class SystemUserService {
@@ -117,27 +117,6 @@ public class SystemUserService {
     systemUserRoleService.batchInsertUserRole(args.getRoles(), record.getId());
   }
 
-  private boolean existUserWithPhone(String phone) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getPhone, phone);
-    wrapper.eq(SystemUserTb::getEnabled, 1);
-    return systemUserMapper.exists(wrapper);
-  }
-
-  private boolean existUserWithEmail(String email) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getEmail, email);
-    wrapper.eq(SystemUserTb::getEnabled, 1);
-    return systemUserMapper.exists(wrapper);
-  }
-
-  private boolean existUserWithUsername(String username) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getUsername, username);
-    wrapper.eq(SystemUserTb::getEnabled, 1);
-    return systemUserMapper.exists(wrapper);
-  }
-
   /**
    * 编辑用户 -> TestPassed
    *
@@ -176,27 +155,6 @@ public class SystemUserService {
     // 更新用户角色
     systemUserRoleService.batchDeleteUserRole(Collections.singleton(args.getId()));
     systemUserRoleService.batchInsertUserRole(args.getRoles(), args.getId());
-  }
-
-  private boolean existUserWithPhoneNeSelf(String phone, Long currentUserId) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getPhone, phone);
-    wrapper.ne(SystemUserTb::getId, currentUserId);
-    return systemUserMapper.exists(wrapper);
-  }
-
-  private boolean existUserWithEmailNeSelf(String email, Long currentUserId) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getEmail, email);
-    wrapper.ne(SystemUserTb::getId, currentUserId);
-    return systemUserMapper.exists(wrapper);
-  }
-
-  private boolean existUserWithUsernameNeSelf(String username, Long currentUserId) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    wrapper.eq(SystemUserTb::getUsername, username);
-    wrapper.ne(SystemUserTb::getId, currentUserId);
-    return systemUserMapper.exists(wrapper);
   }
 
   /**
@@ -354,8 +312,8 @@ public class SystemUserService {
    * @return /
    */
   public KitPageResult<SystemUserVo> searchUserByArgs(SystemQueryUserArgs args, Page<SystemUserTb> page) {
-    // 查询用户基本信息
-    LambdaQueryWrapper<SystemUserTb> wrapper = this.buildUserQueryWrapper(args);
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
     IPage<SystemUserTb> userPage = systemUserMapper.selectPage(page, wrapper);
     List<SystemUserTb> users = userPage.getRecords();
     // 转换为SystemUserVo并关联查询
@@ -363,11 +321,24 @@ public class SystemUserService {
     return KitPageUtil.toPage(userVos, userPage.getTotal());
   }
 
+  /**
+   * 复杂条件统计用户数量
+   *
+   * @param args /
+   * @return /
+   */
   public long countUserByArgs(SystemQueryUserArgs args) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = this.buildUserQueryWrapper(args);
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    this.injectQueryParams(args, wrapper);
     return systemUserMapper.selectCount(wrapper);
   }
 
+  /**
+   * 模糊查询用户基础信息，限制返回的条数
+   *
+   * @param pageArgs 分页参数
+   * @return /
+   */
   public List<KitSelectOptionVo> queryUserMetadataOptions(KitPageArgs<SystemQueryUserArgs> pageArgs) {
     SystemQueryUserArgs args = pageArgs.getArgs();
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
@@ -392,62 +363,11 @@ public class SystemUserService {
   }
 
   /**
-   * 构建用户查询条件 -> TestPassed
+   * 根据用户名查询启用的用户信息
    *
-   * @param args 查询条件
+   * @param username 用户名
    * @return /
    */
-  private LambdaQueryWrapper<SystemUserTb> buildUserQueryWrapper(SystemQueryUserArgs args) {
-    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
-    if (args != null) {
-      if (args.getId() != null) {
-        wrapper.eq(SystemUserTb::getId, args.getId());
-      }
-      if (args.getEnabled() != null) {
-        wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
-      }
-      if (CollUtil.isNotEmpty(args.getDeptIds())) {
-        wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
-      }
-      if (StrUtil.isNotBlank(args.getBlurry())) {
-        wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry()).or()
-            .like(SystemUserTb::getNickName, args.getBlurry()).or().like(SystemUserTb::getEmail, args.getBlurry()));
-      }
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
-      }
-    }
-    wrapper.orderByDesc(SystemUserTb::getCreateTime);
-    return wrapper;
-  }
-
-  /**
-   * 转换为SystemUserVo并关联查询部门、角色、岗位信息 -> TestPassed
-   *
-   * @param user            用户基本信息
-   * @param includePassword 是否包含用户密码
-   * @return 包含关联信息的SystemUserVo
-   */
-  private SystemUserVo convertToUserVo(SystemUserTb user, boolean includePassword) {
-    if (user == null) {
-      return null;
-    }
-    if (!includePassword) {
-      // 查询用户时，清空密码
-      user.setPassword(null);
-    }
-    SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
-    // 查询关联的部门信息
-    if (user.getDeptId() != null) {
-      userVo.setDept(systemDeptService.getDeptVoById(user.getDeptId()));
-    }
-    // 查询关联的岗位信息
-    userVo.setJobs(systemUserJobService.listUserJobByUserId(user.getId()));
-    // 查询关联的角色信息
-    userVo.setRoles(systemUserRoleService.listUserRoleByUserId(user.getId()));
-    return userVo;
-  }
-
   public SystemUserTb getUserByUsername(String username) {
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemUserTb::getUsername, username);
@@ -455,10 +375,22 @@ public class SystemUserService {
     return systemUserMapper.selectOne(wrapper);
   }
 
+  /**
+   * 根据用户名查询用户的部门、岗位和角色信息，用户信息中有密码数据
+   *
+   * @param username 用户名
+   * @return /
+   */
   public SystemUserVo getUserVoWithPasswordByUsername(String username) {
     return this.convertToUserVo(this.getUserByUsername(username), true);
   }
 
+  /**
+   * 根据用户名查询用户的部门、岗位和角色信息，用户信息中无密码数据
+   *
+   * @param username 用户名
+   * @return /
+   */
   public SystemUserVo getUserVoByUsername(String username) {
     return this.convertToUserVo(this.getUserByUsername(username), false);
   }
@@ -466,8 +398,10 @@ public class SystemUserService {
   /**
    * 聚合查询 -> TestPassed
    */
-  public KitPageResult<SystemUserVo> aggregationSearchUserByArgs(Page<SystemUserTb> page, SystemQueryUserArgs args,
-      String currentUsername) {
+  public KitPageResult<SystemUserVo> aggregationSearchUserByArgs(
+      Page<SystemUserTb> page, SystemQueryUserArgs args,
+      String currentUsername
+  ) {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
       args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
@@ -518,6 +452,143 @@ public class SystemUserService {
             rowVos.add(rowVo);
           }
           return rowVos;
-        });
+        }
+    );
+  }
+
+  /**
+   * 查询手机号是否存在
+   *
+   * @param phone 手机号
+   * @return /
+   */
+  private boolean existUserWithPhone(String phone) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getPhone, phone);
+    wrapper.eq(SystemUserTb::getEnabled, 1);
+    return systemUserMapper.exists(wrapper);
+  }
+
+  /**
+   * 查询邮箱是否存在
+   *
+   * @param email 邮箱
+   * @return /
+   */
+  private boolean existUserWithEmail(String email) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getEmail, email);
+    wrapper.eq(SystemUserTb::getEnabled, 1);
+    return systemUserMapper.exists(wrapper);
+  }
+
+  /**
+   * 查询用户名是否存在
+   *
+   * @param username 用户名
+   * @return /
+   */
+  private boolean existUserWithUsername(String username) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getUsername, username);
+    wrapper.eq(SystemUserTb::getEnabled, 1);
+    return systemUserMapper.exists(wrapper);
+  }
+
+  /**
+   * 查询手机号是否存在（排除指定用户）
+   *
+   * @param phone         手机号
+   * @param currentUserId 指定用户id
+   * @return /
+   */
+  private boolean existUserWithPhoneNeSelf(String phone, Long currentUserId) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getPhone, phone);
+    wrapper.ne(SystemUserTb::getId, currentUserId);
+    return systemUserMapper.exists(wrapper);
+  }
+
+  /**
+   * 查询邮箱是否存在（排除指定用户）
+   *
+   * @param email         邮箱
+   * @param currentUserId 指定用户id
+   * @return /
+   */
+  private boolean existUserWithEmailNeSelf(String email, Long currentUserId) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getEmail, email);
+    wrapper.ne(SystemUserTb::getId, currentUserId);
+    return systemUserMapper.exists(wrapper);
+  }
+
+  /**
+   * 查询用户名是否存在（排除指定用户）
+   *
+   * @param username      用户名
+   * @param currentUserId 指定用户id
+   * @return /
+   */
+  private boolean existUserWithUsernameNeSelf(String username, Long currentUserId) {
+    LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SystemUserTb::getUsername, username);
+    wrapper.ne(SystemUserTb::getId, currentUserId);
+    return systemUserMapper.exists(wrapper);
+  }
+
+  /**
+   * 构建查询条件
+   *
+   * @param args    /
+   * @param wrapper /
+   */
+  private void injectQueryParams(SystemQueryUserArgs args, LambdaQueryWrapper<SystemUserTb> wrapper) {
+    if (args != null) {
+      if (args.getId() != null) {
+        wrapper.eq(SystemUserTb::getId, args.getId());
+      }
+      if (args.getEnabled() != null) {
+        wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
+      }
+      if (CollUtil.isNotEmpty(args.getDeptIds())) {
+        wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
+      }
+      if (StrUtil.isNotBlank(args.getBlurry())) {
+        wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry()).or()
+            .like(SystemUserTb::getNickName, args.getBlurry()).or().like(SystemUserTb::getEmail, args.getBlurry()));
+      }
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemUserTb::getCreateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByDesc(SystemUserTb::getCreateTime);
+  }
+
+  /**
+   * 转换为SystemUserVo并关联查询部门、角色、岗位信息 -> TestPassed
+   *
+   * @param user            用户基本信息
+   * @param includePassword 是否包含用户密码
+   * @return 包含关联信息的SystemUserVo
+   */
+  private SystemUserVo convertToUserVo(SystemUserTb user, boolean includePassword) {
+    if (user == null) {
+      return null;
+    }
+    if (!includePassword) {
+      // 查询用户时，清空密码
+      user.setPassword(null);
+    }
+    SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
+    // 查询关联的部门信息
+    if (user.getDeptId() != null) {
+      userVo.setDept(systemDeptService.getDeptVoById(user.getDeptId()));
+    }
+    // 查询关联的岗位信息
+    userVo.setJobs(systemUserJobService.listUserJobByUserId(user.getId()));
+    // 查询关联的角色信息
+    userVo.setRoles(systemUserRoleService.listUserRoleByUserId(user.getId()));
+    return userVo;
   }
 }

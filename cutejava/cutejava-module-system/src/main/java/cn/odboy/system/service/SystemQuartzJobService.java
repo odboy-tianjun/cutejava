@@ -37,15 +37,15 @@ import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class SystemQuartzJobService {
@@ -58,19 +58,6 @@ public class SystemQuartzJobService {
   private QuartzManage quartzManage;
   @Autowired
   private KitRedisHelper redisHelper;
-
-  /**
-   * 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
-   *
-   * @param beanName Bean名称
-   */
-  private void checkBean(String beanName) {
-    // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
-    // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
-    if (!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
-      throw new BadRequestException("非法的 Bean，请重新输入！");
-    }
-  }
 
   /**
    * 创建 -> TestPassed
@@ -207,28 +194,6 @@ public class SystemQuartzJobService {
     return KitPageUtil.toPage(systemQuartzJobMapper.selectPage(page, wrapper));
   }
 
-  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
-    if (args != null) {
-      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName, args.getJobName());
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
-      }
-    }
-    wrapper.orderByDesc(SystemQuartzJobTb::getId);
-  }
-
-  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
-    if (args != null) {
-      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName, args.getJobName());
-      wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
-      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-        wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0),
-            args.getCreateTime().get(1));
-      }
-    }
-    wrapper.orderByDesc(SystemQuartzLogTb::getId);
-  }
-
   /**
    * 分页查询日志 -> TestPassed
    *
@@ -323,5 +288,53 @@ public class SystemQuartzJobService {
    */
   public SystemQuartzJobTb getQuartzJobById(Long id) {
     return systemQuartzJobMapper.selectById(id);
+  }
+
+  /**
+   * 构建查询条件
+   *
+   * @param args    /
+   * @param wrapper /
+   */
+  private void injectQuartzJobQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzJobTb> wrapper) {
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzJobTb::getJobName, args.getJobName());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemQuartzJobTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
+      }
+    }
+    wrapper.orderByDesc(SystemQuartzJobTb::getId);
+  }
+
+  /**
+   * 构建查询条件
+   *
+   * @param args    /
+   * @param wrapper /
+   */
+  private void injectQuartzLogQueryParams(SystemQueryQuartzJobArgs args, LambdaQueryWrapper<SystemQuartzLogTb> wrapper) {
+    if (args != null) {
+      wrapper.like(StrUtil.isNotBlank(args.getJobName()), SystemQuartzLogTb::getJobName, args.getJobName());
+      wrapper.eq(args.getIsSuccess() != null, SystemQuartzLogTb::getIsSuccess, args.getIsSuccess());
+      if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
+        wrapper.between(SystemQuartzLogTb::getCreateTime, args.getCreateTime().get(0),
+            args.getCreateTime().get(1)
+        );
+      }
+    }
+    wrapper.orderByDesc(SystemQuartzLogTb::getId);
+  }
+
+  /**
+   * 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
+   *
+   * @param beanName Bean名称
+   */
+  private void checkBean(String beanName) {
+    // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
+    // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
+    if (!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
+      throw new BadRequestException("非法的 Bean，请重新输入！");
+    }
   }
 }

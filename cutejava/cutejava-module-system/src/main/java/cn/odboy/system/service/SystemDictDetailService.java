@@ -31,14 +31,14 @@ import cn.odboy.util.KitValidUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemDictDetailService {
@@ -84,6 +84,11 @@ public class SystemDictDetailService {
     systemDictDetailMapper.deleteById(id);
   }
 
+  /**
+   * 根据字典id集合删除字典明细
+   *
+   * @param ids 字典id集合
+   */
   @Transactional(rollbackFor = Exception.class)
   public void deleteDictDetailByDictIds(Set<Long> ids) {
     if (CollUtil.isNotEmpty(ids)) {
@@ -100,8 +105,10 @@ public class SystemDictDetailService {
    * @param page 分页参数
    * @return /
    */
-  public KitPageResult<SystemDictDetailVo> searchDictDetail(SystemQueryDictDetailArgs args,
-      Page<SystemDictDetailTb> page) {
+  public KitPageResult<SystemDictDetailVo> searchDictDetail(
+      SystemQueryDictDetailArgs args,
+      Page<SystemDictDetailTb> page
+  ) {
     IPage<SystemDictDetailVo> iPage = systemDictDetailMapper.selectPageByArgs(page, args);
     List<Long> dictIds =
         iPage.getRecords().stream().map(SystemDictDetailVo::getDictId).collect(Collectors.toList());

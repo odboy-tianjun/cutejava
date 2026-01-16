@@ -29,13 +29,13 @@ import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class SystemJobService {
@@ -120,6 +120,22 @@ public class SystemJobService {
   }
 
   /**
+   * 导出岗位数据 -> TestPassed
+   */
+  public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
+    List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
+    List<SystemJobExportRowVo> rowVos = new ArrayList<>();
+    for (SystemJobTb dataObject : systemJobTbs) {
+      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
+      rowVo.setName(dataObject.getName());
+      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
+      rowVo.setCreateTime(dataObject.getCreateTime());
+      rowVos.add(rowVo);
+    }
+    KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
+  }
+
+  /**
    * 根据岗位名称查询岗位是否存在 -> TestPassed
    */
   private boolean existJobWithName(String name) {
@@ -138,6 +154,12 @@ public class SystemJobService {
     return systemJobMapper.exists(wrapper);
   }
 
+  /**
+   * 构建查询条件
+   *
+   * @param args    /
+   * @param wrapper /
+   */
   private void injectQueryParams(SystemQueryJobArgs args, LambdaQueryWrapper<SystemJobTb> wrapper) {
     if (args != null) {
       wrapper.like(StrUtil.isNotBlank(args.getName()), SystemJobTb::getName, args.getName());
@@ -147,21 +169,5 @@ public class SystemJobService {
       }
     }
     wrapper.orderByDesc(SystemJobTb::getJobSort, SystemJobTb::getId);
-  }
-
-  /**
-   * 导出岗位数据 -> TestPassed
-   */
-  public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
-    List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
-    List<SystemJobExportRowVo> rowVos = new ArrayList<>();
-    for (SystemJobTb dataObject : systemJobTbs) {
-      SystemJobExportRowVo rowVo = new SystemJobExportRowVo();
-      rowVo.setName(dataObject.getName());
-      rowVo.setEnabled(dataObject.getEnabled() ? "启用" : "停用");
-      rowVo.setCreateTime(dataObject.getCreateTime());
-      rowVos.add(rowVo);
-    }
-    KitExcelExporter.exportSimple(response, "岗位数据", SystemJobExportRowVo.class, rowVos);
   }
 }
