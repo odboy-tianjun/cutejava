@@ -102,10 +102,10 @@ public class SystemDeptService {
   @Transactional(rollbackFor = Exception.class)
   public void deleteDeptByIds(Set<Long> ids) {
     // 查询部门, 和其所有子部门
-    Set<SystemDeptVo> depts = this.traverseDeptByIdWithPids(ids);
+    Set<SystemDeptTb> depts = this.traverseDeptByIdWithPids(ids);
     // 验证是否被角色或用户关联
     this.verifyBindRelationByIds(depts);
-    for (SystemDeptVo dept : depts) {
+    for (SystemDeptTb dept : depts) {
       systemDeptMapper.deleteById(dept.getId());
       this.updateDeptSubCnt(dept.getPid());
     }
@@ -167,16 +167,6 @@ public class SystemDeptService {
   }
 
   /**
-   * 根据ID查询
-   *
-   * @param id /
-   * @return /
-   */
-  public SystemDeptVo getDeptVoById(Long id) {
-    return KitBeanUtil.copyToClass(systemDeptMapper.selectById(id), SystemDeptVo.class);
-  }
-
-  /**
    * 根据部门id遍历所有部门和子部门id集合
    *
    * @param deptList   部门集合
@@ -202,14 +192,15 @@ public class SystemDeptService {
    * @return /
    */
   public KitPageResult<SystemDeptVo> searchDeptTree(List<Long> ids, Boolean exclude) {
-    Set<SystemDeptVo> deptSet1 = new LinkedHashSet<>();
+    Map<Long, SystemDeptTb> allDeptMap = this.getAllDeptMap();
+    Set<SystemDeptTb> deptSet1 = new LinkedHashSet<>();
     for (Long id : ids) {
       // 同级数据
-      SystemDeptVo dept = this.getDeptVoById(id);
+      SystemDeptTb dept = allDeptMap.get(id);
       // 上级数据
-      List<SystemDeptVo> depts = this.querySuperiorDeptByPid(dept, new ArrayList<>());
+      List<SystemDeptTb> depts = this.querySuperiorDeptByPid(dept, new ArrayList<>(), allDeptMap);
       if (exclude) {
-        for (SystemDeptVo data : depts) {
+        for (SystemDeptTb data : depts) {
           if (data.getId().equals(dept.getPid())) {
             data.setSubCount(data.getSubCount() - 1);
           }
@@ -219,18 +210,20 @@ public class SystemDeptService {
       }
       deptSet1.addAll(depts);
     }
-    List<SystemDeptVo> deptList = new ArrayList<>(deptSet1);
+    List<SystemDeptTb> deptList = new ArrayList<>(deptSet1);
     // 构建部门树
     Set<SystemDeptVo> trees = new LinkedHashSet<>();
     Set<SystemDeptVo> deptSet = new LinkedHashSet<>();
-    List<String> deptNames = deptList.stream().map(SystemDeptVo::getName).collect(Collectors.toList());
+    List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
+
     boolean isChild;
-    for (SystemDeptVo dept : deptList) {
+    List<SystemDeptVo> systemDeptVos = KitBeanUtil.copyToList(deptList, SystemDeptVo.class);
+    for (SystemDeptVo dept : systemDeptVos) {
       isChild = false;
       if (dept.getPid() == null) {
         trees.add(dept);
       }
-      for (SystemDeptVo it : deptList) {
+      for (SystemDeptVo it : systemDeptVos) {
         if (it.getPid() != null && dept.getId().equals(it.getPid())) {
           isChild = true;
           if (dept.getChildren() == null) {
@@ -241,7 +234,7 @@ public class SystemDeptService {
       }
       if (isChild) {
         deptSet.add(dept);
-      } else if (dept.getPid() != null && !deptNames.contains(this.getDeptVoById(dept.getPid()).getName())) {
+      } else if (dept.getPid() != null && !deptNames.contains(allDeptMap.get(dept.getPid()).getName())) {
         deptSet.add(dept);
       }
     }
@@ -254,13 +247,18 @@ public class SystemDeptService {
     return baseResult;
   }
 
+  private Map<Long, SystemDeptTb> getAllDeptMap() {
+    LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
+    return systemDeptMapper.selectList(wrapper).stream().collect(Collectors.toMap(SystemDeptTb::getId, i -> i, (m, n) -> m));
+  }
+
   /**
    * 验证是否被角色或用户关联
    *
    * @param deptSet /
    */
-  public void verifyBindRelationByIds(Set<SystemDeptVo> deptSet) {
-    Set<Long> deptIds = deptSet.stream().map(SystemDeptVo::getId).collect(Collectors.toSet());
+  public void verifyBindRelationByIds(Set<SystemDeptTb> deptSet) {
+    Set<Long> deptIds = deptSet.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
     if (systemUserDeptService.countUserByDeptIds(deptIds) > 0) {
       throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
     }
@@ -274,13 +272,13 @@ public class SystemDeptService {
    *
    * @param ids 部门id集合
    */
-  public Set<SystemDeptVo> traverseDeptByIdWithPids(Set<Long> ids) {
-    Set<SystemDeptVo> depts = new HashSet<>();
+  public Set<SystemDeptTb> traverseDeptByIdWithPids(Set<Long> ids) {
+    Set<SystemDeptTb> depts = new HashSet<>();
     for (Long id : ids) {
       // 根部门
-      depts.add(this.getDeptVoById(id));
+      depts.add(systemDeptMapper.selectById(id));
       // 子部门
-      List<SystemDeptVo> deptList = this.listDeptVoByPid(id);
+      List<SystemDeptTb> deptList = this.listDeptByPid(id);
       if (CollUtil.isNotEmpty(deptList)) {
         this.queryRelationDeptByArgs(deptList, depts);
       }
@@ -337,34 +335,31 @@ public class SystemDeptService {
    * @param deptTbList /
    * @param depts      /
    */
-  private void queryRelationDeptByArgs(List<SystemDeptVo> deptTbList, Set<SystemDeptVo> depts) {
-    for (SystemDeptVo dept : deptTbList) {
+  private void queryRelationDeptByArgs(List<SystemDeptTb> deptTbList, Set<SystemDeptTb> depts) {
+    for (SystemDeptTb dept : deptTbList) {
       depts.add(dept);
-      List<SystemDeptVo> deptList = this.listDeptVoByPid(dept.getId());
+      List<SystemDeptTb> deptList = this.listDeptByPid(dept.getId());
       if (CollUtil.isNotEmpty(deptList)) {
         this.queryRelationDeptByArgs(deptList, depts);
       }
     }
   }
 
-  private List<SystemDeptVo> listDeptVoByPid(Long pid) {
-    return KitBeanUtil.copyToList(this.listDeptByPid(pid), SystemDeptVo.class);
-  }
-
   /**
    * 根据ID查询同级与上级数据
    *
-   * @param dept     /
-   * @param deptList /
+   * @param dept       /
+   * @param deptList   /
+   * @param allDeptMap
    * @return /
    */
-  private List<SystemDeptVo> querySuperiorDeptByPid(SystemDeptVo dept, List<SystemDeptVo> deptList) {
+  private List<SystemDeptTb> querySuperiorDeptByPid(SystemDeptTb dept, List<SystemDeptTb> deptList, Map<Long, SystemDeptTb> allDeptMap) {
     if (dept.getPid() == null) {
       deptList.addAll(this.listRootDept());
       return deptList;
     }
-    deptList.addAll(this.listDeptVoByPid(dept.getPid()));
-    return querySuperiorDeptByPid(this.getDeptVoById(dept.getPid()), deptList);
+    deptList.addAll(this.listDeptByPid(dept.getPid()));
+    return querySuperiorDeptByPid(allDeptMap.get(dept.getPid()), deptList, allDeptMap);
   }
 
   /**
@@ -372,10 +367,10 @@ public class SystemDeptService {
    *
    * @return /
    */
-  private List<SystemDeptVo> listRootDept() {
+  private List<SystemDeptTb> listRootDept() {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.isNull(SystemDeptTb::getPid);
-    return KitBeanUtil.copyToList(systemDeptMapper.selectList(wrapper), SystemDeptVo.class);
+    return systemDeptMapper.selectList(wrapper);
   }
 
   /**
@@ -384,7 +379,7 @@ public class SystemDeptService {
    * @param id 部门id
    * @return /
    */
-  private SystemDeptTb getDeptById(Long id) {
+  public SystemDeptTb getDeptById(Long id) {
     return systemDeptMapper.selectById(id);
   }
 

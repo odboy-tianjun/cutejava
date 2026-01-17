@@ -18,7 +18,6 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
@@ -368,10 +367,7 @@ public class SystemUserService {
   /**
    * 聚合查询 -> TestPassed
    */
-  public KitPageResult<SystemUserVo> aggregationSearchUserByArgs(
-      Page<SystemUserTb> page, SystemQueryUserArgs args,
-      String currentUsername
-  ) {
+  public KitPageResult<SystemUserVo> aggregationSearchUserByArgs(Page<SystemUserTb> page, SystemQueryUserArgs args, String currentUsername) {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
       args.getDeptIds().add(args.getDeptId());
       // 先查找是否存在子节点
@@ -553,7 +549,7 @@ public class SystemUserService {
     SystemUserVo userVo = KitBeanUtil.copyToClass(user, SystemUserVo.class);
     // 查询关联的部门信息
     if (user.getDeptId() != null) {
-      userVo.setDept(systemDeptService.getDeptVoById(user.getDeptId()));
+      userVo.setDept(systemDeptService.getDeptById(user.getDeptId()));
     }
     // 查询关联的岗位信息
     userVo.setJobs(systemUserJobService.listUserJobByUserId(user.getId()));
