@@ -30,4 +30,12 @@ public class CuteUserSelectApi {
     List<CuteUserSelectVo> collect = cuteUserSelectService.listMetadata(args);
     return ResponseEntity.ok(collect);
   }
+
+  @ApiOperation("根据用户名称集合查询用户基础数据")
+  @PostMapping(value = "/listMetadataByUsernames")
+  @PreAuthorize("@el.check()")
+  public ResponseEntity<List<CuteUserSelectVo>> listMetadataByUsernames(@RequestBody List<String> usernameList) {
+    List<CuteUserSelectVo> collect = cuteUserSelectService.listMetadataByUsernames(usernameList);
+    return ResponseEntity.ok(collect);
+  }
 }

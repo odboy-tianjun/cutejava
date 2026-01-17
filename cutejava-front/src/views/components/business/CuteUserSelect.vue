@@ -37,16 +37,11 @@ export default {
       type: Array,
       required: false,
       default: null
-    },
-    dataSource: {
-      type: Array,
-      required: false,
-      default: null
     }
   },
   data() {
     return {
-      users: this.value,
+      users: [],
       loading: false,
       options: []
     }
@@ -56,9 +51,11 @@ export default {
       this.users = newVal
     }
   },
-  mounted() {
-    if (this.dataSource && this.dataSource.length > 0) {
-      this.options = this.dataSource
+  async mounted() {
+    const that = this
+    if (that.value && that.value.length > 0) {
+      that.options = await CuteUserSelectApi.listMetadataByUsernames(that.value)
+      that.users = that.value
     }
   },
   methods: {

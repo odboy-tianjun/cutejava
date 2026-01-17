@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      user: this.value,
+      user: [],
       loading: false,
       options: []
     }
@@ -49,6 +49,13 @@ export default {
   watch: {
     value(newVal) {
       this.user = newVal
+    }
+  },
+  async mounted() {
+    const that = this
+    if (that.value && that.value.length > 0) {
+      that.options = await CuteUserSelectApi.listMetadataByUsernames(that.value)
+      that.users = that.value
     }
   },
   methods: {

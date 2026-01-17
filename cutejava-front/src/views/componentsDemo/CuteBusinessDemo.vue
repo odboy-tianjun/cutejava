@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       form: {
-        user: null,
+        user: [],
         dept: null,
         productLine: null,
         productLinePro: null
