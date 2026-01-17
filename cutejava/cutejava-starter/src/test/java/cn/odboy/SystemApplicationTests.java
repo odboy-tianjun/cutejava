@@ -16,6 +16,7 @@
 package cn.odboy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.response.SystemDeptVo;
@@ -40,7 +41,7 @@ public class SystemApplicationTests {
 
   @Test
   public void contextLoads() {
-    SystemDeptVo systemDept = new SystemDeptVo();
+    SystemDeptTb systemDept = new SystemDeptTb();
     systemDept.setId(2L);
     SystemJobTb systemJob = new SystemJobTb();
     systemJob.setId(11L);
