@@ -30,13 +30,13 @@
 
 <script>
 
-import { searchDept } from '@/api/system/dept'
+import CuteDeptTreeApi from '@/api/application/cute-dept-tree'
 
 export default {
   name: 'CuteDeptTree',
   props: {
     value: {
-      type: [Number, String],
+      type: String,
       required: false,
       default: null
     }
@@ -61,15 +61,11 @@ export default {
         params['pid'] = node.data.id
       }
       setTimeout(() => {
-        searchDept({
-          page: 1,
-          size: 9999999,
-          args: params
-        }).then(res => {
+        CuteDeptTreeApi.listMetadata(params).then(res => {
           if (resolve) {
-            resolve(res.content)
+            resolve(res)
           } else {
-            this.deptData = res.content
+            this.deptData = res
           }
         })
       }, 100)

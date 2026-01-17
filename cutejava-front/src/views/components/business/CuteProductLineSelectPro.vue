@@ -17,7 +17,7 @@
 
 <script>
 
-import { listDeptSelectProDataSource } from '@/api/system/component'
+import { listMetadata } from '@/api/application/cute-product-line-select-pro'
 import CsMessage from '@/utils/elementui/CsMessage'
 
 export default {
@@ -62,7 +62,7 @@ export default {
       })
     },
     fetchDeptData() {
-      listDeptSelectProDataSource().then(data => {
+      listMetadata().then(data => {
         this.deptOptions = this.cleanEmptyChildren(data)
         // console.error('deptOptions', this.deptOptions)
       }).catch(error => {

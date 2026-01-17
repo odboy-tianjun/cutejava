@@ -16,14 +16,15 @@
 package cn.odboy.system.dal.model.response;
 
 import cn.odboy.base.KitBaseUserTimeTb;
+import cn.odboy.system.dal.dataobject.SystemDeptTb;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -60,7 +61,7 @@ public class SystemUserVo extends KitBaseUserTimeTb {
    * 扩展字段
    */
   @ApiModelProperty(value = "用户部门")
-  private SystemDeptVo dept;
+  private SystemDeptTb dept;
   @ApiModelProperty(value = "用户角色")
   private Set<SystemRoleTb> roles;
   @ApiModelProperty(value = "用户岗位")

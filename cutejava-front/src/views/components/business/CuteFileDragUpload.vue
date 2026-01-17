@@ -14,7 +14,7 @@
     :headers="headers"
     :on-success="handleSuccess"
     :on-error="handleError"
-    :action="ossUploadApi"
+    :action="mode === 'oss' ? ossUploadApplicationApi: fileUploadApplicationApi"
   >
     <i class="el-icon-upload" />
     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -34,6 +34,14 @@ export default {
       type: Object,
       required: true,
       default: null
+    },
+    /**
+     * 上传方式：local、oss
+     */
+    mode: {
+      type: String,
+      required: true,
+      default: 'oss'
     }
   },
   data() {
@@ -44,7 +52,8 @@ export default {
   computed: {
     ...mapGetters([
       'baseApi',
-      'ossUploadApi'
+      'fileUploadApplicationApi',
+      'ossUploadApplicationApi'
     ])
   },
   methods: {

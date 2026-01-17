@@ -68,20 +68,5 @@ export function updateUserEmailByUsername(form) {
   })
 }
 
-export function queryUserMetadataOptions(query) {
-  const params = {
-    page: 1,
-    size: 50,
-    args: {
-      blurry: query
-    }
-  }
-  return request({
-    url: 'api/user/queryUserMetadataOptions',
-    method: 'post',
-    data: params
-  })
-}
-
-export default { add, edit, del, resetUserPasswordByIds, queryUserMetadataOptions }
+export default { add, edit, del, resetUserPasswordByIds }
 

@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import crudDictDetail from '@/api/system/dictDetail'
+import crudDictDetail from '@/api/system/dict-detail'
 import CRUD, { form, header, presenter } from '@crud/crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'

@@ -16,6 +16,9 @@ const api = {
     fileUploadApi: baseUrl + '/api/localStorage/uploadFile',
     // oss上传
     ossUploadApi: baseUrl + '/api/ossStorage/uploadFile',
+    // 上传组件专用
+    fileUploadApplicationApi: baseUrl + '/api/component/CuteFileUpload/uploadLocal',
+    ossUploadApplicationApi: baseUrl + '/api/component/CuteFileUpload/uploadOSS',
     // baseUrl，
     baseApi: baseUrl
   }
