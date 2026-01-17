@@ -403,7 +403,7 @@ public class SystemDeptService {
   /**
    * 筛选出 list 中没有父部门（即 pid 不在其他部门 id 列表中的部门）的部门列表
    */
-  private List<SystemDeptTb> filterRootDeptList(List<SystemDeptTb> list) {
+  public List<SystemDeptTb> filterRootDeptList(List<SystemDeptTb> list) {
     List<SystemDeptTb> deptList = new ArrayList<>();
     // 使用 Set 存储所有部门的 id
     Set<Long> idSet = list.stream().map(SystemDeptTb::getId).collect(Collectors.toSet());
@@ -422,7 +422,7 @@ public class SystemDeptService {
    * @param args /
    * @return /
    */
-  private List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs args) {
+  public List<SystemDeptTb> queryDeptByArgs(SystemQueryDeptArgs args) {
     LambdaQueryWrapper<SystemDeptTb> wrapper = new LambdaQueryWrapper<>();
     if (args != null) {
       wrapper.in(CollUtil.isNotEmpty(args.getIds()), SystemDeptTb::getId, args.getIds());
