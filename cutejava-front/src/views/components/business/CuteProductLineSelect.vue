@@ -32,7 +32,7 @@ export default {
   name: 'CuteProductLineSelect',
   props: {
     value: {
-      type: [Number, String],
+      type: String,
       default: null
     },
     disabled: {

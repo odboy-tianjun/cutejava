@@ -23,8 +23,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CuteProductLineSelectProVo extends KitObject {
-
+  /**
+   * 部门ID（select的value）
+   */
   private String value;
+  /**
+   * 产品线，如"研发部/华南分部/devops组"
+   */
   private String label;
   private List<CuteProductLineSelectProVo> children;
 }

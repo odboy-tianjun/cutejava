@@ -26,7 +26,7 @@ public class CuteProductLineSelectVo extends KitObject {
   /**
    * 部门ID（select的value）
    */
-  private Long value;
+  private String value;
   /**
    * 产品线，如"研发部/华南分部/devops组"
    */

@@ -36,7 +36,7 @@ public class CuteProductLineSelectService extends CuteBaseService {
       // 反转路径，从顶级部门到当前部门
       Collections.reverse(pathIds);
       CuteProductLineSelectVo dto = new CuteProductLineSelectVo();
-      dto.setValue(dept.getId());
+      dto.setValue(Long.toString(dept.getId()));
       dto.setIdPath(pathIds.stream().map(String::valueOf).collect(Collectors.joining("-")));
       // 保留名称路径用于显示
       dto.setLabel(this.buildNamePath(dept, deptMap));
