@@ -17,7 +17,6 @@ package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.request.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.request.SystemUpdateUserPasswordArgs;
@@ -43,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Set;
 
 @Api(tags = "系统：用户管理")
@@ -141,13 +139,6 @@ public class SystemUserController {
     return ResponseEntity.ok(null);
   }
 
-  @ApiOperation("查询用户基础数据")
-  @PostMapping(value = "/queryUserMetadataOptions")
-  @PreAuthorize("@el.check('user:list')")
-  public ResponseEntity<List<KitSelectOptionVo>> queryUserMetadataOptions(@Validated @RequestBody KitPageArgs<SystemQueryUserArgs> args) {
-    List<KitSelectOptionVo> collect = systemUserService.queryUserMetadataOptions(args);
-    return ResponseEntity.ok(collect);
-  }
 
   @ApiOperation("获取用户信息")
   @PostMapping(value = "/getCurrentUserInfo")

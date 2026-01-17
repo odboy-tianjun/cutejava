@@ -43,7 +43,7 @@ public class SystemUserInfoDAO {
     if (StrUtil.isNotEmpty(userName)) {
       // 添加数据, 避免数据同时过期（2小时左右）
       long time = 7200 + RandomUtil.randomInt(900, 1800);
-      redisHelper.set(SystemCacheKey.ONLINE_USER + userName, user, time);
+      redisHelper.set(SystemCacheKey.USER_INFO + userName, user, time);
     }
   }
 
@@ -56,7 +56,7 @@ public class SystemUserInfoDAO {
   public void deleteUserLoginInfoByUserName(String userName) {
     if (StrUtil.isNotEmpty(userName)) {
       // 清除数据
-      redisHelper.del(SystemCacheKey.ONLINE_USER + userName);
+      redisHelper.del(SystemCacheKey.USER_INFO + userName);
     }
   }
 
@@ -69,7 +69,7 @@ public class SystemUserInfoDAO {
   public SystemUserJwtVo getUserLoginInfoByUserName(String username) {
     if (StrUtil.isNotEmpty(username)) {
       // 获取数据
-      return redisHelper.get(SystemCacheKey.ONLINE_USER + username, SystemUserJwtVo.class);
+      return redisHelper.get(SystemCacheKey.USER_INFO + username, SystemUserJwtVo.class);
     }
     return null;
   }

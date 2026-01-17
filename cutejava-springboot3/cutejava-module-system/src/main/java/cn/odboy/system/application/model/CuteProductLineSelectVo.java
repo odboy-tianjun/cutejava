@@ -13,18 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.system.dal.model.response;
+package cn.odboy.system.application.model;
 
 import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
 
 @Getter
 @Setter
-public class SystemProductLineTreeVo extends KitObject {
+public class CuteProductLineSelectVo extends KitObject {
 
+  /**
+   * 部门ID（select的value）
+   */
   private String value;
+  /**
+   * 产品线，如"研发部/华南分部/devops组"
+   */
   private String label;
-  private List<SystemProductLineTreeVo> children;
+  /**
+   * ID路径，如"1-2-3"
+   */
+  private String idPath;
 }
