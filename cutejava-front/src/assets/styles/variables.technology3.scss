@@ -1,0 +1,35 @@
+// 科技现代：深空极客（好看）
+// base color
+$blue: #4A90E2;
+$light-blue: #66CCFF;
+$red: #FF6B6B;
+$pink: #FF9E9E;
+$green: #66FFCC;
+$tiffany: #81D8D0;
+$yellow: #FFD93D;
+$panGreen: #66FFCC;
+
+// sidebar
+$menuText: #A0AABF;
+$menuActiveText: #66FFCC;
+$subMenuActiveText: #FFFFFF;
+$menuBg: #0F1520;
+$menuHover: #1C2430;
+$subMenuBg: #1A2332;
+$subMenuHover: #2A3B5C;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

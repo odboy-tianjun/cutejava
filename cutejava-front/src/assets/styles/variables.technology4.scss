@@ -1,0 +1,35 @@
+// 科技现代：赛博蓝光（好看）
+// base color
+$blue: #4FC3F7;
+$light-blue: #81D4FA;
+$red: #FF8A80;
+$pink: #FFB3B8;
+$green: #80DEEA;
+$tiffany: #81D4FA;
+$yellow: #FFD54F;
+$panGreen: #80DEEA;
+
+// sidebar
+$menuText: #B0B8D0;
+$menuActiveText: #4FC3F7;
+$subMenuActiveText: #FFFFFF;
+$menuBg: #0A0E17;
+$menuHover: #151A2A;
+$subMenuBg: #12182D;
+$subMenuHover: #1E3A8A;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
