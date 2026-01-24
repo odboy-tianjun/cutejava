@@ -23,11 +23,11 @@ import cn.odboy.system.dal.redis.SystemUserInfoDAO;
 import cn.odboy.system.service.SystemDataService;
 import cn.odboy.system.service.SystemRoleService;
 import cn.odboy.system.service.SystemUserService;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 /**
  * 通过用户名判断用户信息，并获取拥有的权限与部门
@@ -49,7 +49,7 @@ public class UserDetailsHandler implements UserDetailsService {
   public SystemUserJwtVo loadUserByUsername(String username) {
     SystemUserJwtVo userJwtVo = systemUserInfoDAO.getUserLoginInfoByUserName(username);
     if (userJwtVo == null) {
-      SystemUserVo user = systemUserService.getUserVoByUsername(username);
+      SystemUserVo user = systemUserService.getUserVoWithPasswordByUsername(username);
       if (user == null) {
         throw new BadRequestException("用户不存在");
       } else {

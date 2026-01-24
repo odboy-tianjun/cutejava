@@ -15,9 +15,7 @@
  */
 package cn.odboy.util;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.odboy.base.KitSelectOptionVo;
-import cn.odboy.framework.exception.BadRequestException;
 import com.alibaba.fastjson2.JSON;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -194,7 +192,7 @@ public final class KitCollUtil extends cn.hutool.core.collection.CollUtil {
    * @return /
    */
   public static BigDecimal streamBigDecimalAvg(List<BigDecimal> data) {
-    KitValidUtil.notEmpty(data, "data");
+    KitValidUtil.isEmpty(data, "data");
     return data.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)
         .divide(BigDecimal.valueOf(data.size()), 6, RoundingMode.FLOOR);
   }

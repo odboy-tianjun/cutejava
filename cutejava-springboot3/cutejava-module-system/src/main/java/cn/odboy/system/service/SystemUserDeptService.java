@@ -29,7 +29,7 @@ public class SystemUserDeptService {
   private SystemUserMapper systemUserMapper;
 
   /**
-   * 根据部门id统计用户数量 -> TestPassed
+   * 根据部门id统计用户数量
    */
   public long countUserByDeptIds(Set<Long> deptIds) {
     LambdaQueryWrapper<SystemUserTb> wrapper = new LambdaQueryWrapper<>();

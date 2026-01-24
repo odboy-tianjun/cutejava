@@ -34,7 +34,7 @@ public class SystemRoleDeptService {
   private SystemRoleDeptMapper systemRoleDeptMapper;
 
   /**
-   * 批量删除角色部门关联 -> TestPassed
+   * 批量删除角色部门关联
    *
    * @param roleIds 角色id集合
    */
@@ -48,7 +48,7 @@ public class SystemRoleDeptService {
   }
 
   /**
-   * 批量绑定角色部门关联 -> TestPassed
+   * 批量绑定角色部门关联
    *
    * @param depts  部门集合
    * @param roleId 角色id
@@ -68,7 +68,7 @@ public class SystemRoleDeptService {
   }
 
   /**
-   * 根据部门ID统计角色数量 -> TestPassed
+   * 根据部门ID统计角色数量
    *
    * @param deptIds 部门id集合
    * @return /
@@ -83,7 +83,7 @@ public class SystemRoleDeptService {
   }
 
   /**
-   * 根据角色id查询部门信息 -> TestPassed
+   * 根据角色id查询部门信息
    *
    * @param roleId 角色id
    * @return /

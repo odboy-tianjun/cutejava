@@ -80,11 +80,8 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
     return KitPageUtil.toPage(ossStorageTbs);
   }
 
-  private IPage<SystemOssStorageVo> selectOssStorageByArgs(
-      SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page
-  ) {
-    KitValidUtil.notNull(args);
+  private IPage<SystemOssStorageVo> selectOssStorageByArgs(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
+    KitValidUtil.isNull(args);
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.and(
         StrUtil.isNotBlank(args.getBlurry()),

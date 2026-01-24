@@ -17,8 +17,8 @@ package cn.odboy.util;
 
 import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.util.IdUtil;
-import java.nio.charset.StandardCharsets;
 import lombok.experimental.UtilityClass;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 加密令牌生成工具

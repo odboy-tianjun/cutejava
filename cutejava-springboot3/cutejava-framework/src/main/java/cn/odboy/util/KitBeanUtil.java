@@ -17,10 +17,10 @@ package cn.odboy.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import lombok.experimental.UtilityClass;
 
 /**
  * Bean拷贝相关

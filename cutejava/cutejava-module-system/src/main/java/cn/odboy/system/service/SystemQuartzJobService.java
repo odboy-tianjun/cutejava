@@ -28,24 +28,24 @@ import cn.odboy.system.dal.model.export.SystemQuartzJobExportRowVo;
 import cn.odboy.system.dal.model.export.SystemQuartzLogExportRowVo;
 import cn.odboy.system.dal.model.request.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.request.SystemUpdateQuartzJobArgs;
-import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.dal.mysql.SystemQuartzJobMapper;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.framework.quartz.QuartzManage;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.quartz.CronExpression;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import org.quartz.CronExpression;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemQuartzJobService {
@@ -60,27 +60,23 @@ public class SystemQuartzJobService {
   private KitRedisHelper redisHelper;
 
   /**
-   * 创建 -> TestPassed
+   * 创建
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void createJob(SystemQuartzJobTb args) {
-    if (args.getId() != null) {
-      throw new BadRequestException("无效参数id");
-    }
     // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
     checkBean(args.getBeanName());
     if (!CronExpression.isValidExpression(args.getCronExpression())) {
       throw new BadRequestException("cron表达式格式错误");
     }
     systemQuartzJobMapper.insert(args);
-    SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(args, SystemQuartzJobVo.class);
-    quartzManage.addJob(quartzJobVo);
+    quartzManage.addJob(args);
   }
 
   /**
-   * 修改任务并重新调度 -> TestPassed
+   * 修改任务并重新调度
    *
    * @param args /
    */
@@ -88,14 +84,10 @@ public class SystemQuartzJobService {
   public void updateQuartzJobResumeCron(SystemUpdateQuartzJobArgs args) {
     // 验证Bean是不是合法的, 合法的定时任务 Bean 需要用 @Service 定义
     checkBean(args.getBeanName());
-    if (!CronExpression.isValidExpression(args.getCronExpression())) {
-      throw new BadRequestException("cron表达式格式错误");
-    }
+    KitValidUtil.isTrue(!CronExpression.isValidExpression(args.getCronExpression()), "Cron表达式格式错误");
     if (StrUtil.isNotBlank(args.getSubTask())) {
       List<String> tasks = Arrays.asList(args.getSubTask().split("[,，]"));
-      if (tasks.contains(args.getId().toString())) {
-        throw new BadRequestException("子任务中不能添加当前任务ID");
-      }
+      KitValidUtil.isTrue(tasks.contains(args.getId().toString()), "子任务中不能添加当前任务ID");
     }
     SystemQuartzJobTb jobTb = KitBeanUtil.copyToClass(args, SystemQuartzJobTb.class);
     systemQuartzJobMapper.updateById(jobTb);
@@ -103,35 +95,34 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 更改定时任务状态 -> TestPassed
+   * 更改定时任务状态
    *
-   * @param quartzJobVo /
+   * @param quartzJobTb /
    */
   @Transactional(rollbackFor = Exception.class)
-  public void switchQuartzJobStatus(SystemQuartzJobVo quartzJobVo) {
+  public void switchQuartzJobStatus(SystemQuartzJobTb quartzJobTb) {
     // 置换暂停状态
-    if (quartzJobVo.getIsPause()) {
-      quartzManage.resumeJob(quartzJobVo);
-      quartzJobVo.setIsPause(false);
+    if (quartzJobTb.getIsPause()) {
+      quartzManage.resumeJob(quartzJobTb);
+      quartzJobTb.setIsPause(false);
     } else {
-      quartzManage.pauseJob(quartzJobVo);
-      quartzJobVo.setIsPause(true);
+      quartzManage.pauseJob(quartzJobTb);
+      quartzJobTb.setIsPause(true);
     }
-    SystemQuartzJobTb record = KitBeanUtil.copyToClass(quartzJobVo, SystemQuartzJobTb.class);
-    systemQuartzJobMapper.updateById(record);
+    systemQuartzJobMapper.updateById(quartzJobTb);
   }
 
   /**
-   * 立即执行定时任务 -> TestPassed
+   * 立即执行定时任务
    *
    * @param quartzJob /
    */
-  public void startQuartzJob(SystemQuartzJobVo quartzJob) {
+  public void startQuartzJob(SystemQuartzJobTb quartzJob) {
     quartzManage.runJobNow(quartzJob);
   }
 
   /**
-   * 删除任务 -> TestPassed
+   * 删除任务
    *
    * @param ids /
    */
@@ -145,7 +136,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 执行子任务 -> TestPassed
+   * 执行子任务
    *
    * @param tasks /
    * @throws InterruptedException /
@@ -162,11 +153,10 @@ public class SystemQuartzJobService {
         // 防止子任务不存在
         continue;
       }
-      SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(quartzJobTb, SystemQuartzJobVo.class);
       // 执行任务
       String uuid = IdUtil.simpleUUID();
-      quartzJobVo.setUuid(uuid);
-      startQuartzJob(quartzJobVo);
+      quartzJobTb.setUuid(uuid);
+      startQuartzJob(quartzJobTb);
       // 查询执行状态, 如果执行失败则停止后面的子任务执行
       Boolean result = redisHelper.get(uuid, Boolean.class);
       while (result == null) {
@@ -182,7 +172,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 分页查询 -> TestPassed
+   * 分页查询
    *
    * @param args 条件
    * @param page 分页参数
@@ -195,7 +185,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 分页查询日志 -> TestPassed
+   * 分页查询日志
    *
    * @param args 条件
    * @param page 分页参数
@@ -208,7 +198,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 查询全部 -> TestPassed
+   * 查询全部
    *
    * @param args 条件
    * @return /
@@ -220,7 +210,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 查询全部 -> TestPassed
+   * 查询全部
    *
    * @param args 条件
    * @return /
@@ -232,7 +222,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 查询启用的定时任务 -> TestPassed
+   * 查询启用的定时任务
    */
   public List<SystemQuartzJobTb> listEnableQuartzJob() {
     LambdaQueryWrapper<SystemQuartzJobTb> wrapper = new LambdaQueryWrapper<>();
@@ -241,7 +231,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 导出定时任务数据 -> TestPassed
+   * 导出定时任务数据
    */
   public void exportQuartzJobXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     List<SystemQuartzJobTb> systemQuartzJobTbs = this.queryQuartzJobByArgs(args);
@@ -262,7 +252,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 导出定时任务日志数据 -> TestPassed
+   * 导出定时任务日志数据
    */
   public void exportQuartzLogXlsx(HttpServletResponse response, SystemQueryQuartzJobArgs args) {
     List<SystemQuartzLogTb> systemQuartzLogTbs = this.queryQuartzLogByArgs(args);
@@ -284,7 +274,7 @@ public class SystemQuartzJobService {
   }
 
   /**
-   * 根据任务id查询定时任务 -> TestPassed
+   * 根据任务id查询定时任务
    */
   public SystemQuartzJobTb getQuartzJobById(Long id) {
     return systemQuartzJobMapper.selectById(id);
@@ -332,9 +322,7 @@ public class SystemQuartzJobService {
    */
   private void checkBean(String beanName) {
     // 避免调用攻击者可以从SpringContextHolder获得控制jdbcTemplate类
-    // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令。
-    if (!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName)) {
-      throw new BadRequestException("非法的 Bean，请重新输入！");
-    }
+    // 并使用getDeclaredMethod调用jdbcTemplate的queryForMap函数，执行任意sql命令
+    KitValidUtil.isTrue(!KitSpringBeanHolder.getAllServiceBeanName().contains(beanName), "非法的 Bean，请重新输入");
   }
 }

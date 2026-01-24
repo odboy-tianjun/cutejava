@@ -15,8 +15,8 @@
  */
 package cn.odboy.util;
 
-import java.io.Closeable;
 import lombok.experimental.UtilityClass;
+import java.io.Closeable;
 
 /**
  * 用于关闭各种连接, 缺啥补啥

@@ -46,7 +46,7 @@ public class SystemDictService {
   private SystemDictDetailService systemDictDetailService;
 
   /**
-   * 创建 -> TestPassed
+   * 创建
    *
    * @param args /
    */
@@ -57,7 +57,7 @@ public class SystemDictService {
   }
 
   /**
-   * 编辑 -> TestPassed
+   * 编辑
    *
    * @param args /
    */
@@ -70,7 +70,7 @@ public class SystemDictService {
   }
 
   /**
-   * 删除 -> TestPassed
+   * 删除
    *
    * @param ids /
    */
@@ -83,7 +83,7 @@ public class SystemDictService {
   }
 
   /**
-   * 分页查询 -> TestPassed
+   * 分页查询
    *
    * @param args 条件
    * @param page 分页参数

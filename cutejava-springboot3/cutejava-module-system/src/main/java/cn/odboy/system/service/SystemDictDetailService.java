@@ -49,21 +49,21 @@ public class SystemDictDetailService {
   private SystemDictMapper systemDictMapper;
 
   /**
-   * 创建 -> TestPassed
+   * 创建
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveDictDetail(SystemCreateDictDetailArgs args) {
-    KitValidUtil.notNull(args);
-    KitValidUtil.notNull(args.getDict());
+    KitValidUtil.isNull(args);
+    KitValidUtil.isNull(args.getDict());
     SystemDictDetailTb dictDetail = KitBeanUtil.copyToClass(args, SystemDictDetailTb.class);
     dictDetail.setDictId(args.getDict().getId());
     systemDictDetailMapper.insert(dictDetail);
   }
 
   /**
-   * 编辑 -> TestPassed
+   * 编辑
    *
    * @param args /
    */
@@ -71,11 +71,11 @@ public class SystemDictDetailService {
   public void updateDictDetailById(SystemDictDetailTb args) {
     SystemDictDetailTb dictDetail = systemDictDetailMapper.selectById(args.getId());
     args.setId(dictDetail.getId());
-    systemDictDetailMapper.insertOrUpdate(args);
+    systemDictDetailMapper.updateById(args);
   }
 
   /**
-   * 删除 -> TestPassed
+   * 删除
    *
    * @param id /
    */
@@ -99,7 +99,7 @@ public class SystemDictDetailService {
   }
 
   /**
-   * 分页查询 -> TestPassed
+   * 分页查询
    *
    * @param args 条件
    * @param page 分页参数
@@ -123,7 +123,7 @@ public class SystemDictDetailService {
   }
 
   /**
-   * 根据字典名称查询字典详情 -> TestPassed
+   * 根据字典名称查询字典详情
    *
    * @param name 字典名称
    * @return /

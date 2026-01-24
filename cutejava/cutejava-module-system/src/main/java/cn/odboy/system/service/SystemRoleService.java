@@ -19,7 +19,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.dataobject.SystemRoleTb;
 import cn.odboy.system.dal.model.export.SystemRoleExportRowVo;
@@ -32,20 +31,21 @@ import cn.odboy.system.dal.mysql.SystemRoleMapper;
 import cn.odboy.system.framework.permission.core.KitSecurityHelper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemRoleService {
@@ -60,16 +60,14 @@ public class SystemRoleService {
   private SystemUserRoleService systemUserRoleService;
 
   /**
-   * 创建 -> TestPassed
+   * 创建
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveRole(SystemCreateRoleArgs args) {
     this.checkRoleLevels(args.getLevel());
-    if (this.existRoleWithName(args.getName())) {
-      throw new BadRequestException("角色名称已存在");
-    }
+    KitValidUtil.isTrue(this.existRoleWithName(args.getName()), "角色名称已存在");
     SystemRoleTb roleTb = KitBeanUtil.copyToClass(args, SystemRoleTb.class);
     systemRoleMapper.insert(roleTb);
     // 判断是否有部门数据, 若有, 则需创建关联
@@ -79,7 +77,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 修改 -> TestPassed
+   * 修改
    *
    * @param args /
    */
@@ -87,9 +85,7 @@ public class SystemRoleService {
   public void updateRoleById(SystemRoleVo args) {
     this.checkRoleLevels(args.getLevel());
     SystemRoleTb role = systemRoleMapper.selectById(args.getId());
-    if (this.existRoleWithNameNeSelf(args.getName(), role.getId())) {
-      throw new BadRequestException("角色名称已存在");
-    }
+    KitValidUtil.isTrue(this.existRoleWithNameNeSelf(args.getName(), role.getId()), "角色名称已存在");
     role.setName(args.getName());
     role.setDescription(args.getDescription());
     role.setDataScope(args.getDataScope());
@@ -105,7 +101,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 修改绑定的菜单 -> TestPassed
+   * 修改绑定的菜单
    *
    * @param args /
    */
@@ -122,7 +118,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 删除 -> TestPassed
+   * 删除
    *
    * @param ids /
    */
@@ -133,7 +129,7 @@ public class SystemRoleService {
       this.checkRoleLevels(roleLevel);
     }
     // 验证是否被用户关联
-    this.verifyBindRelationByIds(ids);
+    KitValidUtil.isTrue(systemUserRoleService.existUserWithRoleIds(ids), "所选角色存在用户关联, 请解除关联再试");
     // 删除角色
     systemRoleMapper.deleteByIds(ids);
     // 删除角色部门关联数据、角色菜单关联数据
@@ -142,7 +138,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 查询全部角色 -> TestPassed
+   * 查询全部角色
    */
   public List<SystemRoleTb> listAllRole() {
     LambdaQueryWrapper<SystemRoleTb> wrapper = new LambdaQueryWrapper<>();
@@ -151,7 +147,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 根据条件查询全部角色 -> TestPassed
+   * 根据条件查询全部角色
    *
    * @param args     条件
    * @param rolePage 分页参数
@@ -164,7 +160,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 分页查询角色 -> TestPassed
+   * 分页查询角色
    *
    * @param args 条件
    * @param page 分页条件
@@ -178,7 +174,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 查询用户权限信息 -> TestPassed?
+   * 查询用户权限信息?
    *
    * @param user 用户信息
    * @return 权限信息
@@ -202,17 +198,6 @@ public class SystemRoleService {
     // 没有包含任何角色，赋予默认权限
     permissions.add("IsAJoker");
     return permissions.stream().map(SystemRoleCodeVo::new).collect(Collectors.toList());
-  }
-
-  /**
-   * 验证是否被用户关联 -> TestPassed
-   *
-   * @param ids /
-   */
-  public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserRoleService.existUserWithRoleIds(ids)) {
-      throw new BadRequestException("所选角色存在用户关联, 请解除关联再试！");
-    }
   }
 
   /**
@@ -281,7 +266,7 @@ public class SystemRoleService {
   }
 
   /**
-   * 检查用户的角色级别 -> TestPassed
+   * 检查用户的角色级别
    *
    * @return /
    */
@@ -289,9 +274,7 @@ public class SystemRoleService {
     Set<Integer> levels = systemUserRoleService.listUserRoleLevelByUserId(KitSecurityHelper.getCurrentUserId());
     int min = Collections.min(levels);
     if (level != null) {
-      if (level < min) {
-        throw new BadRequestException("权限不足, 你的角色级别：" + min + ", 低于操作的角色级别：" + level);
-      }
+      KitValidUtil.isTrue(level < min, "权限不足, 你的角色级别：" + min + ", 低于操作的角色级别：" + level);
     }
     return min;
   }

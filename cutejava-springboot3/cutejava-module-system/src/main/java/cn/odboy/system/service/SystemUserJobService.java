@@ -34,7 +34,7 @@ public class SystemUserJobService {
   private SystemUserJobMapper systemUserJobMapper;
 
   /**
-   * 批量绑定用户岗位 -> TestPassed
+   * 批量绑定用户岗位
    */
   @Transactional(rollbackFor = Exception.class)
   public void batchInsertUserJob(Set<SystemJobTb> jobs, Long userId) {
@@ -51,7 +51,7 @@ public class SystemUserJobService {
   }
 
   /**
-   * 批量解绑用户岗位 -> TestPassed
+   * 批量解绑用户岗位
    */
   @Transactional(rollbackFor = Exception.class)
   public void batchDeleteUserJob(Set<Long> userIds) {
@@ -63,7 +63,7 @@ public class SystemUserJobService {
   }
 
   /**
-   * 根据岗位ID统计用户数量 -> TestPassed
+   * 根据岗位ID统计用户数量
    *
    * @param jobIds /
    * @return /
@@ -78,7 +78,7 @@ public class SystemUserJobService {
   }
 
   /**
-   * 根据用户id查询岗位 -> TestPassed
+   * 根据用户id查询岗位
    *
    * @param userId /
    * @return /

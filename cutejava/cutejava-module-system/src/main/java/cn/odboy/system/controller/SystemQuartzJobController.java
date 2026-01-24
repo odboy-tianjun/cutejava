@@ -21,10 +21,8 @@ import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.request.SystemQueryQuartzJobArgs;
 import cn.odboy.system.dal.model.request.SystemUpdateQuartzJobArgs;
-import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.framework.operalog.OperationLog;
 import cn.odboy.system.service.SystemQuartzJobService;
-import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -96,8 +94,7 @@ public class SystemQuartzJobController {
   @ApiOperation("修改定时任务")
   @PostMapping(value = "/updateQuartzJobResumeCron")
   @PreAuthorize("@el.check('quartzJob:edit')")
-  public ResponseEntity<Void> updateQuartzJob(
-      @Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {
+  public ResponseEntity<Void> updateQuartzJob(@Validated(SystemQuartzJobTb.Update.class) @RequestBody SystemUpdateQuartzJobArgs args) {
     systemQuartzJobService.updateQuartzJobResumeCron(args);
     return ResponseEntity.ok(null);
   }
@@ -108,8 +105,7 @@ public class SystemQuartzJobController {
   @PreAuthorize("@el.check('quartzJob:edit')")
   public ResponseEntity<Void> switchQuartzJobStatus(@PathVariable Long id) {
     SystemQuartzJobTb quartzJobTb = systemQuartzJobService.getQuartzJobById(id);
-    SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(quartzJobTb, SystemQuartzJobVo.class);
-    systemQuartzJobService.switchQuartzJobStatus(quartzJobVo);
+    systemQuartzJobService.switchQuartzJobStatus(quartzJobTb);
     return ResponseEntity.ok(null);
   }
 
@@ -119,8 +115,7 @@ public class SystemQuartzJobController {
   @PreAuthorize("@el.check('quartzJob:edit')")
   public ResponseEntity<Void> startQuartzJob(@PathVariable Long id) {
     SystemQuartzJobTb quartzJobTb = systemQuartzJobService.getQuartzJobById(id);
-    SystemQuartzJobVo quartzJobVo = KitBeanUtil.copyToClass(quartzJobTb, SystemQuartzJobVo.class);
-    systemQuartzJobService.startQuartzJob(quartzJobVo);
+    systemQuartzJobService.startQuartzJob(quartzJobTb);
     return ResponseEntity.ok(null);
   }
 

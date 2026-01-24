@@ -47,7 +47,7 @@ public class SystemMonitorService {
   private final DecimalFormat df = new DecimalFormat("0.00");
 
   /**
-   * 查询服务器监控信息 -> TestPassed
+   * 查询服务器监控信息
    *
    * @return Map<String, Object>
    */
@@ -75,7 +75,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 查询磁盘信息 -> TestPassed
+   * 查询磁盘信息
    *
    * @return /
    */
@@ -109,7 +109,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 查询交换区信息 -> TestPassed
+   * 查询交换区信息
    *
    * @param memory /
    * @return /
@@ -131,7 +131,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 查询内存信息 -> TestPassed
+   * 查询内存信息
    *
    * @param memory /
    * @return /
@@ -149,7 +149,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 查询Cpu相关信息 -> TestPassed
+   * 查询Cpu相关信息
    *
    * @param processor /
    * @return /
@@ -196,7 +196,7 @@ public class SystemMonitorService {
   }
 
   /**
-   * 查询系统相关信息,系统、运行天数、系统IP -> TestPassed
+   * 查询系统相关信息,系统、运行天数、系统IP
    *
    * @param os /
    * @return /

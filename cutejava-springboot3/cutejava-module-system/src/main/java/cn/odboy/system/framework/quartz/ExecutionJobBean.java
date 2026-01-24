@@ -27,19 +27,19 @@ import cn.odboy.framework.redis.KitRedisHelper;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.dal.dataobject.SystemQuartzLogTb;
 import cn.odboy.system.dal.model.request.SystemSendEmailArgs;
-import cn.odboy.system.dal.model.response.SystemQuartzJobVo;
 import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.service.SystemEmailService;
 import cn.odboy.system.service.SystemQuartzJobService;
+import cn.odboy.util.KitBeanUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobExecutionContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
-import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobExecutionContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 
 @Slf4j
 public class ExecutionJobBean extends QuartzJobBean {
@@ -52,7 +52,7 @@ public class ExecutionJobBean extends QuartzJobBean {
   @Override
   public void executeInternal(JobExecutionContext context) {
     // 获取任务
-    SystemQuartzJobVo quartzJob = (SystemQuartzJobVo) context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
+    SystemQuartzJobTb quartzJob = (SystemQuartzJobTb) context.getMergedJobDataMap().get(SystemQuartzJobTb.JOB_KEY);
     // 获取spring bean
     SystemQuartzLogMapper quartzLogMapper = KitSpringBeanHolder.getBean(SystemQuartzLogMapper.class);
     SystemQuartzJobService systemQuartzJobService = KitSpringBeanHolder.getBean(SystemQuartzJobService.class);
@@ -99,7 +99,8 @@ public class ExecutionJobBean extends QuartzJobBean {
       if (quartzJob.getPauseAfterFailure() != null && quartzJob.getPauseAfterFailure()) {
         quartzJob.setIsPause(false);
         // 更新状态
-        systemQuartzJobService.switchQuartzJobStatus(quartzJob);
+        SystemQuartzJobTb quartzJobTb = KitBeanUtil.copyToClass(quartzJob, SystemQuartzJobTb.class);
+        systemQuartzJobService.switchQuartzJobStatus(quartzJobTb);
       }
       if (quartzJob.getEmail() != null) {
         SystemEmailService emailService = KitSpringBeanHolder.getBean(SystemEmailService.class);
@@ -114,7 +115,7 @@ public class ExecutionJobBean extends QuartzJobBean {
     }
   }
 
-  private SystemSendEmailArgs taskAlarm(SystemQuartzJobVo quartzJob, String msg) {
+  private SystemSendEmailArgs taskAlarm(SystemQuartzJobTb quartzJob, String msg) {
     SystemSendEmailArgs sendEmailRequest = new SystemSendEmailArgs();
     sendEmailRequest.setSubject("定时任务【" + quartzJob.getJobName() + "】执行失败，请尽快处理！");
     Map<String, Object> data = new HashMap<>(16);

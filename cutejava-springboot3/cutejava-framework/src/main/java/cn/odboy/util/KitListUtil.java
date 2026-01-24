@@ -17,11 +17,11 @@ package cn.odboy.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.odboy.base.KitBaseUserTimeTb;
+import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lombok.experimental.UtilityClass;
 
 /**
  * List 工具
@@ -40,7 +40,7 @@ public final class KitListUtil {
    */
   public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
     return items.stream().collect(Collectors.groupingBy(classifier)).values().stream()
-        .map(List::getFirst).collect(Collectors.toList());
+        .map(monitorItem -> monitorItem.iterator().next()).collect(Collectors.toList());
   }
 
   /**

@@ -30,6 +30,7 @@ import cn.odboy.system.dal.model.request.SystemSendEmailArgs;
 import cn.odboy.system.dal.mysql.SystemEmailConfigMapper;
 import cn.odboy.util.KitDesEncryptUtil;
 import cn.odboy.util.KitResourceTemplateUtil;
+import cn.odboy.util.KitValidUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class SystemEmailService {
   private AppProperties properties;
 
   /**
-   * 更新邮件配置 -> TestPassed
+   * 更新邮件配置
    *
    * @param emailConfig 邮箱配置
    */
@@ -64,15 +65,13 @@ public class SystemEmailService {
   }
 
   /**
-   * 发送邮件 -> TestPassed
+   * 发送邮件
    *
    * @param sendEmailRequest 邮件发送的内容
    */
   public void sendEmail(SystemSendEmailArgs sendEmailRequest) {
     SystemEmailConfigTb systemEmailConfigTb = getLastEmailConfig();
-    if (systemEmailConfigTb.getId() == null) {
-      throw new BadRequestException("请先配置, 再操作");
-    }
+    KitValidUtil.isNull(systemEmailConfigTb.getId(), "请先配置, 再操作");
     // 封装
     MailAccount account = new MailAccount();
     // 设置用户
@@ -112,23 +111,18 @@ public class SystemEmailService {
    * 发送给邮箱验证码
    */
   public void sendCaptcha(SystemCaptchaBizEnum biEnum, String email) {
-    if (biEnum == null) {
-      throw new BadRequestException("biEnum必填");
-    }
+    KitValidUtil.isNull(biEnum, "biEnum必填");
     String content;
     String redisKey = biEnum.getRedisKey() + email;
     String oldCode = redisHelper.get(redisKey, String.class);
     if (oldCode == null) {
       String code = RandomUtil.randomNumbers(6);
       // 存入缓存
-      if (!redisHelper.set(redisKey, code, properties.getCaptcha().getExpireTime())) {
-        throw new BadRequestException("服务异常, 请联系网站负责人");
-      }
+      KitValidUtil.isTrue(!redisHelper.set(redisKey, code, properties.getCaptcha().getExpireTime()), "服务异常, 请联系网站负责人");
       // 存在就再次发送原来的验证码
       content = KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", code));
     } else {
-      content =
-          KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
+      content = KitResourceTemplateUtil.render(null, biEnum.getTemplateName(), Dict.create().set("code", oldCode));
     }
     SystemSendEmailArgs sendEmailRequest =
         new SystemSendEmailArgs(Collections.singletonList(email), SystemConst.CURRENT_APP_TITLE, content);
@@ -146,23 +140,18 @@ public class SystemEmailService {
   }
 
   /**
-   * 校验邮箱验证码 -> TestPassed
+   * 校验邮箱验证码
    */
   public void checkEmailCaptcha(SystemCheckEmailCaptchaArgs args) {
     SystemCaptchaBizEnum biEnum = SystemCaptchaBizEnum.getByBizCode(args.getBizCode());
-    if (biEnum == null) {
-      throw new BadRequestException("不支持的业务");
-    }
+    KitValidUtil.isNull(biEnum, "不支持的业务");
     this.checkEmailCaptchaV1(biEnum, args.getEmail(), args.getCode());
   }
 
   public void checkEmailCaptchaV1(SystemCaptchaBizEnum biEnum, String email, String code) {
     String redisKey = biEnum.getRedisKey() + email;
     String value = redisHelper.get(redisKey, String.class);
-    if (value == null || !value.equals(code)) {
-      throw new BadRequestException("无效验证码");
-    } else {
-      redisHelper.del(redisKey);
-    }
+    KitValidUtil.isTrue(value == null || !value.equals(code), "无效验证码");
+    redisHelper.del(redisKey);
   }
 }

@@ -52,7 +52,7 @@ public class SystemUserRoleService {
   private SystemRoleDeptService systemRoleDeptService;
 
   /**
-   * 批量绑定用户角色 -> TestPassed
+   * 批量绑定用户角色
    */
   @Transactional(rollbackFor = Exception.class)
   public void batchInsertUserRole(Set<SystemRoleTb> roles, Long userId) {
@@ -69,7 +69,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 批量解绑用户角色 -> TestPassed
+   * 批量解绑用户角色
    */
   @Transactional(rollbackFor = Exception.class)
   public void batchDeleteUserRole(Set<Long> userIds) {
@@ -101,7 +101,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户ID查询 -> TestPassed
+   * 根据用户ID查询
    *
    * @param userId 用户ID
    * @return /
@@ -112,7 +112,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据角色查询角色级别 -> TestPassed
+   * 根据角色查询角色级别
    *
    * @param roles /
    * @return /
@@ -136,7 +136,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误 -> TestPassed
+   * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
    *
    * @param args /
    */
@@ -150,7 +150,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户id查询角色 -> TestPassed
+   * 根据用户id查询角色
    *
    * @param userId /
    * @return /
@@ -160,7 +160,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户id查询角色级别集合 -> TestPassed
+   * 根据用户id查询角色级别集合
    *
    * @param userId /
    * @return /
@@ -170,7 +170,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据用户id查询角色id集合 -> TestPassed
+   * 根据用户id查询角色id集合
    *
    * @param userId /
    * @return /
@@ -180,7 +180,7 @@ public class SystemUserRoleService {
   }
 
   /**
-   * 根据角色id集合判断是否存在关联用户 -> TestPassed
+   * 根据角色id集合判断是否存在关联用户
    *
    * @param ids 角色id集合
    * @return /

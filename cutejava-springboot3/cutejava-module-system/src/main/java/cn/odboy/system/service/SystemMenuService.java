@@ -64,19 +64,15 @@ public class SystemMenuService {
   private SystemMenuService proxyService;
 
   /**
-   * 创建 -> TestPassed
+   * 创建
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveMenu(SystemMenuTb args) {
-    if (this.existMenuWithTitle(args.getTitle())) {
-      throw new BadRequestException("菜单标题已存在");
-    }
+    KitValidUtil.isTrue(this.existMenuWithTitle(args.getTitle()), "菜单标题已存在");
     if (StrUtil.isNotBlank(args.getComponentName())) {
-      if (this.existMenuWithComponentName(args.getComponentName())) {
-        throw new BadRequestException("菜单组件名称已存在");
-      }
+      KitValidUtil.isTrue(this.existMenuWithComponentName(args.getComponentName()), "菜单组件名称已存在");
     }
     if (Long.valueOf(0L).equals(args.getPid())) {
       // 顶级目录
@@ -96,25 +92,20 @@ public class SystemMenuService {
   }
 
   /**
-   * 编辑 -> TestPassed
+   * 编辑
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateMenuById(SystemMenuTb args) {
-    if (args.getId().equals(args.getPid())) {
-      throw new BadRequestException("上级不能为自己");
-    }
+    KitValidUtil.isNullF(args.getId(), "id");
+    KitValidUtil.isTrue(args.getId().equals(args.getPid()), "上级不能为自己");
     SystemMenuTb menu = systemMenuMapper.selectById(args.getId());
     if (args.getIFrame()) {
-      if (!(args.getPath().toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTP) || args.getPath()
-          .toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTPS))) {
-        throw new BadRequestException(SystemTransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
-      }
+      KitValidUtil.isTrue(!(args.getPath().toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTP) || args.getPath()
+          .toLowerCase().startsWith(SystemTransferProtocolConst.PREFIX_HTTPS)), SystemTransferProtocolConst.PREFIX_HTTPS_BAD_REQUEST);
     }
-    if (this.existMenuWithTitleNeSelf(args.getTitle(), menu.getId())) {
-      throw new BadRequestException("菜单标题已存在");
-    }
+    KitValidUtil.isTrue(this.existMenuWithTitleNeSelf(args.getTitle(), menu.getId()), "菜单标题已存在");
     if (args.getPid().equals(0L)) {
       args.setPid(null);
     }
@@ -122,9 +113,7 @@ public class SystemMenuService {
     Long oldPid = menu.getPid();
     Long newPid = args.getPid();
     if (StrUtil.isNotBlank(args.getComponentName())) {
-      if (this.existMenuWithComponentNameNeSelf(args.getTitle(), menu.getId())) {
-        throw new BadRequestException("菜单组件名称已存在");
-      }
+      KitValidUtil.isTrue(this.existMenuWithComponentNameNeSelf(args.getTitle(), menu.getId()), "菜单组件名称已存在");
     }
     menu.setTitle(args.getTitle());
     menu.setComponent(args.getComponent());
@@ -148,7 +137,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 删除 -> TestPassed
+   * 删除
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteMenuByIds(Set<Long> ids) {
@@ -261,7 +250,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据ID查询同级与上级数据 -> TestPassed
+   * 根据ID查询同级与上级数据
    *
    * @param menu  /
    * @param menus /
@@ -443,7 +432,7 @@ public class SystemMenuService {
   }
 
   private List<SystemMenuTb> queryMenuByArgs(SystemQueryMenuArgs args) {
-    KitValidUtil.notNull(args);
+    KitValidUtil.isNull(args);
     LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.isNull(args.getPidIsNull() != null, SystemMenuTb::getPid);
     wrapper.eq(args.getPid() != null, SystemMenuTb::getPid, args.getPid());
@@ -458,7 +447,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 查询根目录 -> TestPassed
+   * 查询根目录
    */
   private List<SystemMenuTb> listRootMenu() {
     LambdaQueryWrapper<SystemMenuTb> wrapper = new LambdaQueryWrapper<>();
@@ -468,7 +457,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据组件名称查询菜单是否存在 -> TestPassed
+   * 根据组件名称查询菜单是否存在
    *
    * @param componentName 组件名称
    * @return /
@@ -480,7 +469,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据组件名称查询菜单是否存在 -> TestPassed
+   * 根据组件名称查询菜单是否存在
    *
    * @param componentName 组件名称
    * @return /
@@ -493,7 +482,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据菜单标题查询菜单是否存在 -> TestPassed
+   * 根据菜单标题查询菜单是否存在
    *
    * @param title 菜单标题
    * @return /
@@ -505,7 +494,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据菜单标题查询菜单是否存在 -> TestPassed
+   * 根据菜单标题查询菜单是否存在
    *
    * @param title 菜单标题
    * @return /
@@ -537,7 +526,8 @@ public class SystemMenuService {
         List<SystemMenuTb> children = parentToChildrenMap.get(parentId);
         if (children != null && !children.isEmpty()) {
           for (SystemMenuTb child : children) {
-            if (result.add(child.getId())) { // 如果成功添加（之前不存在），则继续查找其子菜单
+            // 如果成功添加（之前不存在），则继续查找其子菜单
+            if (result.add(child.getId())) {
               nextLevelIds.add(child.getId());
             }
           }
@@ -563,7 +553,7 @@ public class SystemMenuService {
   }
 
   /**
-   * 根据菜单id查询目录 -> TestPassed
+   * 根据菜单id查询目录
    *
    * @param id 菜单id
    */

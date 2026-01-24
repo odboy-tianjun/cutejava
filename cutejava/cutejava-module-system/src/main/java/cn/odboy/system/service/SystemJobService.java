@@ -18,7 +18,6 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemJobTb;
 import cn.odboy.system.dal.model.export.SystemJobExportRowVo;
 import cn.odboy.system.dal.model.request.SystemCreateJobArgs;
@@ -26,16 +25,17 @@ import cn.odboy.system.dal.model.request.SystemQueryJobArgs;
 import cn.odboy.system.dal.mysql.SystemJobMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SystemJobService {
@@ -46,48 +46,44 @@ public class SystemJobService {
   private SystemUserJobService systemUserJobService;
 
   /**
-   * 创建 -> TestPassed
+   * 创建
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void saveJob(SystemCreateJobArgs args) {
-    if (this.existJobWithName(args.getName())) {
-      throw new BadRequestException("职位名称已存在");
-    }
+    KitValidUtil.isTrue(this.existJobWithName(args.getName()), "职位名称已存在");
     SystemJobTb systemJobTb = KitBeanUtil.copyToClass(args, SystemJobTb.class);
     systemJobMapper.insert(systemJobTb);
   }
 
   /**
-   * 编辑 -> TestPassed
+   * 编辑
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateJobById(SystemJobTb args) {
     SystemJobTb job = systemJobMapper.selectById(args.getId());
-    if (this.existJobWithNameNeSelf(args.getName(), job.getId())) {
-      throw new BadRequestException("职位名称已存在");
-    }
+    KitValidUtil.isTrue(this.existJobWithNameNeSelf(args.getName(), job.getId()), "职位名称已存在");
     args.setId(job.getId());
     systemJobMapper.updateById(args);
   }
 
   /**
-   * 删除 -> TestPassed
+   * 删除
    *
    * @param ids /
    */
   @Transactional(rollbackFor = Exception.class)
   public void deleteJobByIds(Set<Long> ids) {
     // 验证是否被用户关联
-    this.verifyBindRelationByIds(ids);
+    KitValidUtil.isTrue(systemUserJobService.countUserByJobIds(ids) > 0, "所选的岗位中存在用户关联, 请解除关联再试");
     systemJobMapper.deleteByIds(ids);
   }
 
   /**
-   * 分页查询 -> TestPassed
+   * 分页查询
    *
    * @param args 条件
    * @param page 分页参数
@@ -100,7 +96,7 @@ public class SystemJobService {
   }
 
   /**
-   * 查询全部数据 -> TestPassed
+   * 查询全部数据
    */
   public List<SystemJobTb> queryJobByArgs(SystemQueryJobArgs args) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
@@ -109,18 +105,7 @@ public class SystemJobService {
   }
 
   /**
-   * 验证是否被用户关联 -> TestPassed
-   *
-   * @param ids /
-   */
-  public void verifyBindRelationByIds(Set<Long> ids) {
-    if (systemUserJobService.countUserByJobIds(ids) > 0) {
-      throw new BadRequestException("所选的岗位中存在用户关联, 请解除关联再试！");
-    }
-  }
-
-  /**
-   * 导出岗位数据 -> TestPassed
+   * 导出岗位数据
    */
   public void exportJobXlsx(HttpServletResponse response, SystemQueryJobArgs args) {
     List<SystemJobTb> systemJobTbs = this.queryJobByArgs(args);
@@ -136,7 +121,7 @@ public class SystemJobService {
   }
 
   /**
-   * 根据岗位名称查询岗位是否存在 -> TestPassed
+   * 根据岗位名称查询岗位是否存在
    */
   private boolean existJobWithName(String name) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();
@@ -145,7 +130,7 @@ public class SystemJobService {
   }
 
   /**
-   * 根据岗位名称和岗位id查询岗位是否存在 -> TestPassed
+   * 根据岗位名称和岗位id查询岗位是否存在
    */
   private boolean existJobWithNameNeSelf(String name, Long currentJobId) {
     LambdaQueryWrapper<SystemJobTb> wrapper = new LambdaQueryWrapper<>();

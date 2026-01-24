@@ -45,7 +45,7 @@ public class SystemDataService {
   private SystemRoleDeptService systemRoleDeptService;
 
   /**
-   * 查询数据权限 -> TestPassed
+   * 查询数据权限
    *
    * @param user /
    * @return /
@@ -75,7 +75,7 @@ public class SystemDataService {
   }
 
   /**
-   * 查询自定义的数据权限 -> TestPassed
+   * 查询自定义的数据权限
    *
    * @param deptIds 部门ID（外部数据）
    * @param roleId  角色ID

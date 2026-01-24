@@ -16,7 +16,6 @@
 package cn.odboy.system.service;
 
 import cn.odboy.constant.SystemConst;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.system.dal.model.request.SystemUserLoginArgs;
 import cn.odboy.system.dal.model.response.SystemAuthVo;
@@ -57,25 +56,23 @@ public class SystemAuthService {
   private SystemCaptchaService systemCaptchaService;
 
   /**
-   * 登录 -> TestPassed
+   * 登录
    *
    * @param loginArgs /
    * @param request   /
    */
   public SystemAuthVo doLogin(SystemUserLoginArgs loginArgs, HttpServletRequest request) throws Exception {
-    KitValidUtil.notNull(loginArgs);
+    KitValidUtil.isNull(loginArgs);
 
     // 密码解密
-    String password =
-        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginArgs.getPassword());
+    String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginArgs.getPassword());
     // 校验验证码
     systemCaptchaService.validate(loginArgs.getUuid(), loginArgs.getCode());
     // 查询用户信息
     SystemUserJwtVo jwtUser = userDetailsService.loadUserByUsername(loginArgs.getUsername());
+
     // 验证用户密码
-    if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
-      throw new BadRequestException("登录密码错误");
-    }
+    KitValidUtil.isTrue(!passwordEncoder.matches(password, jwtUser.getPassword()), "登录密码错误");
 
     // 登录验证
     Authentication authentication =
@@ -101,7 +98,7 @@ public class SystemAuthService {
   }
 
   /**
-   * 查询当前登录人信息 -> TestPassed
+   * 查询当前登录人信息
    */
   public SystemUserJwtVo getCurrentUserInfo() {
     SystemUserJwtVo jwtUser = (SystemUserJwtVo) KitSecurityHelper.getCurrentUser();
@@ -112,7 +109,7 @@ public class SystemAuthService {
   }
 
   /**
-   * 退出登录 -> TestPassed
+   * 退出登录
    *
    * @param request /
    */

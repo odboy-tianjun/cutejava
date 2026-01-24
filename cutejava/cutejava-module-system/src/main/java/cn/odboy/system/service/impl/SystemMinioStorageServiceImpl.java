@@ -39,13 +39,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.io.File;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.util.List;
 
 /**
  * <p>
@@ -80,11 +80,8 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
     return KitPageUtil.toPage(ossStorageTbs);
   }
 
-  private IPage<SystemOssStorageVo> selectOssStorageByArgs(
-      SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page
-  ) {
-    KitValidUtil.notNull(args);
+  private IPage<SystemOssStorageVo> selectOssStorageByArgs(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
+    KitValidUtil.isNull(args);
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.and(
         StrUtil.isNotBlank(args.getBlurry()),

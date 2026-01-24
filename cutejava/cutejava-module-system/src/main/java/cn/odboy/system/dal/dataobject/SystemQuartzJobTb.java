@@ -63,4 +63,10 @@ public class SystemQuartzJobTb extends KitBaseUserTimeTb {
   @ApiModelProperty(value = "备注")
   @TableField(updateStrategy = FieldStrategy.ALWAYS)
   private String description;
+  /**
+   * 扩展字段
+   */
+  @TableField(exist = false)
+  @ApiModelProperty(value = "用于子任务唯一标识", hidden = true)
+  private String uuid;
 }

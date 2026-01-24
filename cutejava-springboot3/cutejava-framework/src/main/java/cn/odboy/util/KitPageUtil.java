@@ -17,9 +17,9 @@ package cn.odboy.util;
 
 import cn.odboy.base.KitPageResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.experimental.UtilityClass;
 import java.util.Collections;
 import java.util.List;
-import lombok.experimental.UtilityClass;
 
 /**
  * 分页工具

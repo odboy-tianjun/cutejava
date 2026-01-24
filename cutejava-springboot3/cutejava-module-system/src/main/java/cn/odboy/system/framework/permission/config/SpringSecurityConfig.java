@@ -85,8 +85,10 @@ public class SpringSecurityConfig {
         .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
         // 授权异常
         .exceptionHandling(
-            exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationErrorHandler)
-                .accessDeniedHandler(jwtAccessDeniedHandler))
+            exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(authenticationErrorHandler)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+        )
         // 防止iframe 造成跨域
         .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         // 不创建会话
@@ -106,20 +108,15 @@ public class SpringSecurityConfig {
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 自定义匿名访问所有url放行：允许匿名和带Token访问，细腻化到每个 Request 类型
             // GET
-            .requestMatchers(HttpMethod.GET,
-                anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0])).permitAll()
+            .requestMatchers(HttpMethod.GET, anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0])).permitAll()
             // POST
-            .requestMatchers(HttpMethod.POST,
-                anonymousUrls.get(RequestMethodEnum.POST.getType()).toArray(new String[0])).permitAll()
+            .requestMatchers(HttpMethod.POST, anonymousUrls.get(RequestMethodEnum.POST.getType()).toArray(new String[0])).permitAll()
             // PUT
-            .requestMatchers(HttpMethod.PUT,
-                anonymousUrls.get(RequestMethodEnum.PUT.getType()).toArray(new String[0])).permitAll()
+            .requestMatchers(HttpMethod.PUT, anonymousUrls.get(RequestMethodEnum.PUT.getType()).toArray(new String[0])).permitAll()
             // PATCH
-            .requestMatchers(HttpMethod.PATCH,
-                anonymousUrls.get(RequestMethodEnum.PATCH.getType()).toArray(new String[0])).permitAll()
+            .requestMatchers(HttpMethod.PATCH, anonymousUrls.get(RequestMethodEnum.PATCH.getType()).toArray(new String[0])).permitAll()
             // DELETE
-            .requestMatchers(HttpMethod.DELETE,
-                anonymousUrls.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0])).permitAll()
+            .requestMatchers(HttpMethod.DELETE, anonymousUrls.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0])).permitAll()
             // 所有类型的接口都放行
             .requestMatchers(anonymousUrls.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
             // 所有请求都需要认证

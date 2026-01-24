@@ -17,9 +17,9 @@ package cn.odboy.util;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
+import lombok.experimental.UtilityClass;
 import java.util.List;
 import java.util.Map;
-import lombok.experimental.UtilityClass;
 
 /**
  * Json工具

@@ -17,6 +17,7 @@ package cn.odboy.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -131,6 +132,23 @@ public final class KitBigDecimalUtil {
   public static Long yuanToCents(Object obj) {
     BigDecimal yuan = toBigDecimal(obj);
     return yuan.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValue();
+  }
+
+  /**
+   * 格式化为 xxx,xxx,xxx 格式
+   *
+   * @param obj 金额
+   * @return /
+   */
+  public static String formatGroupingAmount(Object obj) {
+    if (obj == null) {
+      return "0";
+    }
+    BigDecimal bigDecimal = toBigDecimal(obj);
+    NumberFormat nf = NumberFormat.getInstance();
+    // 启用千位分隔符
+    nf.setGroupingUsed(true);
+    return nf.format(bigDecimal.setScale(0, RoundingMode.HALF_UP));
   }
 
   public static void main(String[] args) {

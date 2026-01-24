@@ -15,8 +15,6 @@
  */
 package cn.odboy.util;
 
-import java.util.Calendar;
-import java.util.Date;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,20 +94,5 @@ public final class KitStringUtil {
       sb.append(Character.toLowerCase(c));
     }
     return sb.toString();
-  }
-
-  /**
-   * 获得当天是周几
-   */
-  public static String getWeekDay() {
-    //        String[] weekDays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-    String[] weekDays = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"};
-    Calendar cal = Calendar.getInstance();
-    cal.setTime(new Date());
-    int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
-    if (w < 0) {
-      w = 0;
-    }
-    return weekDays[w];
   }
 }

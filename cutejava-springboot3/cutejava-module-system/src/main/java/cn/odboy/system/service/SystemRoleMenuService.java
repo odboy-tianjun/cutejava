@@ -36,7 +36,7 @@ public class SystemRoleMenuService {
   private SystemRoleMenuMapper systemRoleMenuMapper;
 
   /**
-   * 删除角色菜单关联 -> TestPassed
+   * 删除角色菜单关联
    *
    * @param roleId 角色id
    */
@@ -48,7 +48,7 @@ public class SystemRoleMenuService {
   }
 
   /**
-   * 批量绑定角色菜单关联 -> TestPassed
+   * 批量绑定角色菜单关联
    *
    * @param menus  菜单集合
    * @param roleId 角色id
@@ -68,7 +68,7 @@ public class SystemRoleMenuService {
   }
 
   /**
-   * 批量删除角色菜单关联 -> TestPassed
+   * 批量删除角色菜单关联
    *
    * @param roleIds 角色id集合
    */
@@ -82,7 +82,7 @@ public class SystemRoleMenuService {
   }
 
   /**
-   * @param roleIds 角色id集合 -> TestPassed
+   * @param roleIds 角色id集合
    * @return /
    */
   public List<SystemMenuTb> listMenuByRoleIds(Set<Long> roleIds, boolean hasButton) {
@@ -109,7 +109,7 @@ public class SystemRoleMenuService {
   }
 
   /**
-   * 批量删除菜单角色关联 -> TestPassed
+   * 批量删除菜单角色关联
    *
    * @param menuIds 菜单id集合
    */
@@ -124,7 +124,7 @@ public class SystemRoleMenuService {
   }
 
   /**
-   * 根据角色id集合查询菜单权限 -> TestPassed
+   * 根据角色id集合查询菜单权限
    *
    * @param roleIds 角色id集合
    * @return /

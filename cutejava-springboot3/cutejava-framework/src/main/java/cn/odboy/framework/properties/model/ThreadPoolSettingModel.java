@@ -13,21 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.task.dal.model;
+package cn.odboy.framework.properties.model;
 
 import cn.odboy.base.KitObject;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 线程池 配置
+ *
+ * @author odboy
+ * @date 2025-04-13
+ */
 @Getter
 @Setter
-public class TaskTemplateInfoVo extends KitObject {
+public class ThreadPoolSettingModel extends KitObject {
 
-  private String changeType;
-  private String name;
-  private String description;
-  private String envAlias;
-  private String language;
-  private String contextName;
-  private String templateInfo;
+  /**
+   * 核心线程池大小
+   */
+  private int corePoolSize;
+  /**
+   * 最大线程数
+   */
+  private int maxPoolSize;
+  /**
+   * 活跃时间
+   */
+  private int keepAliveSeconds;
+  /**
+   * 队列容量
+   */
+  private int queueCapacity;
 }

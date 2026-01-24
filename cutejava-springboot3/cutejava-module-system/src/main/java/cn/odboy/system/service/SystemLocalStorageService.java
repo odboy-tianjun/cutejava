@@ -32,6 +32,7 @@ import cn.odboy.system.dal.mysql.SystemLocalStorageMapper;
 import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -61,7 +62,7 @@ public class SystemLocalStorageService {
   private SystemLocalStorageService localStorageService;
 
   /**
-   * 上传 -> TestPassed
+   * 上传
    *
    * @param name          文件名称
    * @param multipartFile 文件
@@ -75,9 +76,7 @@ public class SystemLocalStorageService {
     String type = KitFileUtil.getFileType(suffix);
     String uploadDateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT);
     File file = KitFileUtil.upload(multipartFile, fileUploadPathHelper.getPath() + uploadDateStr + File.separator);
-    if (file == null) {
-      throw new BadRequestException("上传失败");
-    }
+    KitValidUtil.isNull(file, "上传失败");
     try {
       String formatSize = KitFileUtil.getSize(size);
       String prefixName = KitFileUtil.getPrefix(multipartFile.getOriginalFilename(), name);
@@ -99,7 +98,7 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 编辑 -> TestPassed
+   * 编辑
    *
    * @param args 文件信息
    */
@@ -109,7 +108,7 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 多选删除 -> TestPassed
+   * 多选删除
    *
    * @param ids /
    */
@@ -127,7 +126,7 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 分页查询 -> TestPassed
+   * 分页查询
    *
    * @param args 条件
    * @param page 分页参数
@@ -141,7 +140,7 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 查询文件上传记录 -> TestPassed
+   * 查询文件上传记录
    */
   public List<SystemLocalStorageTb> queryLocalStorageByArgs(SystemQueryStorageArgs args) {
     LambdaQueryWrapper<SystemLocalStorageTb> wrapper = new LambdaQueryWrapper<>();
@@ -150,20 +149,18 @@ public class SystemLocalStorageService {
   }
 
   /**
-   * 上传图片 -> TestPassed
+   * 上传图片
    */
   @Transactional(rollbackFor = Exception.class)
   public SystemLocalStorageTb uploadPicture(MultipartFile file) {
     // 判断文件是否为图片
     String suffix = KitFileUtil.getSuffix(file.getOriginalFilename());
-    if (!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix))) {
-      throw new BadRequestException("只能上传图片");
-    }
+    KitValidUtil.isTrue(!FileTypeEnum.IMAGE.getCode().equals(KitFileUtil.getFileType(suffix)), "只能上传图片");
     return localStorageService.uploadFile(null, file);
   }
 
   /**
-   * 导出文件上传记录 -> TestPassed
+   * 导出文件上传记录
    */
   public void exportLocalStorageXlsx(HttpServletResponse response, SystemQueryStorageArgs args) {
     List<SystemLocalStorageTb> systemLocalStorageTbs = this.queryLocalStorageByArgs(args);

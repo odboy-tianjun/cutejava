@@ -18,7 +18,6 @@ package cn.odboy.system.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.server.core.KitFileLocalUploadHelper;
 import cn.odboy.system.constant.SystemCaptchaBizEnum;
@@ -39,6 +38,7 @@ import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitFileUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.KitRsaEncryptUtil;
+import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -87,7 +87,7 @@ public class SystemUserService {
   private PasswordEncoder passwordEncoder;
 
   /**
-   * 新增用户 -> TestPassed
+   * 新增用户
    *
    * @param args /
    */
@@ -98,15 +98,9 @@ public class SystemUserService {
     // 默认密码 123456
     record.setPassword(passwordEncoder.encode("123456"));
     record.setDeptId(args.getDept().getId());
-    if (this.existUserWithUsername(record.getUsername())) {
-      throw new BadRequestException("用户名已存在");
-    }
-    if (this.existUserWithEmail(record.getEmail())) {
-      throw new BadRequestException("邮箱已存在");
-    }
-    if (this.existUserWithPhone(record.getPhone())) {
-      throw new BadRequestException("手机号已存在");
-    }
+    KitValidUtil.isTrue(this.existUserWithUsername(record.getUsername()), "用户名已存在");
+    KitValidUtil.isTrue(this.existUserWithEmail(record.getEmail()), "邮箱已存在");
+    KitValidUtil.isTrue(this.existUserWithPhone(record.getPhone()), "手机号已存在");
     // 保存用户
     systemUserMapper.insert(record);
     // 保存用户岗位
@@ -116,7 +110,7 @@ public class SystemUserService {
   }
 
   /**
-   * 编辑用户 -> TestPassed
+   * 编辑用户
    *
    * @param args /
    */
@@ -124,15 +118,9 @@ public class SystemUserService {
   public void updateUserById(SystemUserVo args) {
     systemUserRoleService.checkLevel(args);
     SystemUserTb user = systemUserMapper.selectById(args.getId());
-    if (this.existUserWithUsernameNeSelf(args.getUsername(), user.getId())) {
-      throw new BadRequestException("用户名已存在");
-    }
-    if (this.existUserWithEmailNeSelf(args.getEmail(), user.getId())) {
-      throw new BadRequestException("邮箱已存在");
-    }
-    if (this.existUserWithPhoneNeSelf(args.getPhone(), user.getId())) {
-      throw new BadRequestException("手机号已存在");
-    }
+    KitValidUtil.isTrue(this.existUserWithUsernameNeSelf(args.getUsername(), user.getId()), "用户名已存在");
+    KitValidUtil.isTrue(this.existUserWithEmailNeSelf(args.getEmail(), user.getId()), "邮箱已存在");
+    KitValidUtil.isTrue(this.existUserWithPhoneNeSelf(args.getPhone(), user.getId()), "手机号已存在");
     // 如果用户被禁用, 则清除用户登录信息
     if (!args.getEnabled()) {
       systemUserOnlineInfoDAO.kickOutByUsername(args.getUsername());
@@ -156,19 +144,15 @@ public class SystemUserService {
   }
 
   /**
-   * 用户自助修改资料 -> TestPassed
+   * 用户自助修改资料
    *
    * @param args /
    */
   @Transactional(rollbackFor = Exception.class)
   public void updateUserCenterInfoById(SystemUserTb args) {
-    if (!args.getId().equals(KitSecurityHelper.getCurrentUserId())) {
-      throw new BadRequestException("不能修改他人资料");
-    }
+    KitValidUtil.isTrue(!args.getId().equals(KitSecurityHelper.getCurrentUserId()), "不能修改他人资料");
     SystemUserTb user = systemUserMapper.selectById(args.getId());
-    if (this.existUserWithPhoneNeSelf(args.getPhone(), user.getId())) {
-      throw new BadRequestException("手机号已存在");
-    }
+    KitValidUtil.isTrue(this.existUserWithPhoneNeSelf(args.getPhone(), user.getId()), "手机号已存在");
     user.setNickName(args.getNickName());
     user.setPhone(args.getPhone());
     user.setGender(args.getGender());
@@ -177,7 +161,7 @@ public class SystemUserService {
   }
 
   /**
-   * 删除用户 -> TestPassed
+   * 删除用户
    *
    * @param ids /
    */
@@ -186,12 +170,10 @@ public class SystemUserService {
     Long currentUserId = KitSecurityHelper.getCurrentUserId();
     // 校验权限
     for (Long id : ids) {
+      SystemUserTb systemUserTb = systemUserMapper.selectById(id);
       Integer currentLevel = Collections.min(systemUserRoleService.listUserRoleLevelByUserId(currentUserId));
       Integer optLevel = Collections.min(systemUserRoleService.listUserRoleLevelByUserId(id));
-      if (currentLevel > optLevel) {
-        SystemUserTb systemUserTb = systemUserMapper.selectById(id);
-        throw new BadRequestException("角色权限不足, 不能删除：" + systemUserTb.getUsername());
-      }
+      KitValidUtil.isTrue(currentLevel > optLevel, "角色权限不足, 不能删除：" + systemUserTb.getUsername());
     }
     // 清理缓存
     List<String> usernameList = systemUserMapper.listUsernameByIds(ids);
@@ -207,7 +189,7 @@ public class SystemUserService {
   }
 
   /**
-   * 修改密码 -> TestPassed
+   * 修改密码
    *
    * @param username 用户名
    * @param args     参数
@@ -217,19 +199,15 @@ public class SystemUserService {
     String oldPass = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getOldPass());
     String newPass = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getNewPass());
     SystemUserTb user = this.getUserByUsername(username);
-    if (!passwordEncoder.matches(oldPass, user.getPassword())) {
-      throw new BadRequestException("修改失败，旧密码错误");
-    }
-    if (passwordEncoder.matches(newPass, user.getPassword())) {
-      throw new BadRequestException("新密码不能与旧密码相同");
-    }
+    KitValidUtil.isTrue(!passwordEncoder.matches(oldPass, user.getPassword()), "修改失败，旧密码错误");
+    KitValidUtil.isTrue(passwordEncoder.matches(newPass, user.getPassword()), "新密码不能与旧密码相同");
     String encryptPassword = passwordEncoder.encode(newPass);
     systemUserMapper.updateUserPasswordByUsername(username, encryptPassword);
     systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
   }
 
   /**
-   * 重置密码 -> TestPassed
+   * 重置密码
    *
    * @param ids 用户id
    */
@@ -249,7 +227,7 @@ public class SystemUserService {
   }
 
   /**
-   * 修改头像 -> TestPassed
+   * 修改头像
    *
    * @param multipartFile 文件
    * @return /
@@ -258,17 +236,13 @@ public class SystemUserService {
   public Map<String, String> updateUserAvatar(MultipartFile multipartFile) {
     SystemUserTb user = this.getUserByUsername(KitSecurityHelper.getCurrentUsername());
     String username = user.getUsername();
-    if (StrUtil.isBlank(username)) {
-      throw new BadRequestException("异常用户数据, 请联系管理员处理！");
-    }
+    KitValidUtil.isBlank(username, "异常用户数据, 请联系管理员处理");
     // 文件大小验证
     KitFileUtil.checkSize(fileUploadPathHelper.getAvatarMaxSize(), multipartFile.getSize());
     // 验证文件上传的格式
     String image = "gif jpg png jpeg";
     String fileType = KitFileUtil.getSuffix(multipartFile.getOriginalFilename());
-    if (fileType != null && !image.contains(fileType)) {
-      throw new BadRequestException("文件格式错误, 仅支持 " + image + " 格式！");
-    }
+    KitValidUtil.isTrue(fileType != null && !image.contains(fileType), "文件格式错误, 仅支持 " + image + " 格式");
     String oldPath = user.getAvatarPath();
     File file = KitFileUtil.upload(multipartFile, fileUploadPathHelper.getPath());
     user.setAvatarPath(Objects.requireNonNull(file).getPath());
@@ -284,7 +258,7 @@ public class SystemUserService {
   }
 
   /**
-   * 修改邮箱 -> TestPassed
+   * 修改邮箱
    *
    * @param username 用户名
    * @param args     参数
@@ -294,16 +268,14 @@ public class SystemUserService {
   public void updateUserEmailByUsername(String username, SystemUserTb args, String code) throws Exception {
     String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), args.getPassword());
     SystemUserTb user = this.getUserByUsername(username);
-    if (!passwordEncoder.matches(password, user.getPassword())) {
-      throw new BadRequestException("密码错误");
-    }
+    KitValidUtil.isTrue(!passwordEncoder.matches(password, user.getPassword()), "密码错误");
     systemEmailService.checkEmailCaptchaV1(SystemCaptchaBizEnum.EMAIL_RESET_EMAIL_CODE, args.getEmail(), code);
     systemUserMapper.updateUserEmailByUsername(username, args.getEmail());
     systemUserInfoDAO.deleteUserLoginInfoByUserName(username);
   }
 
   /**
-   * 查询全部 -> TestPassed
+   * 查询全部
    *
    * @param args 条件
    * @param page 分页参数
@@ -360,12 +332,12 @@ public class SystemUserService {
    * @param username 用户名
    * @return /
    */
-  public SystemUserVo getUserVoByUsername(String username) {
-    return this.convertToUserVo(this.getUserByUsername(username), false);
+  public SystemUserVo getUserVoByUsername(String username, boolean includePassword) {
+    return this.convertToUserVo(this.getUserByUsername(username), includePassword);
   }
 
   /**
-   * 聚合查询 -> TestPassed
+   * 聚合查询
    */
   public KitPageResult<SystemUserVo> aggregationSearchUserByArgs(Page<SystemUserTb> page, SystemQueryUserArgs args, String currentUsername) {
     if (!ObjectUtils.isEmpty(args.getDeptId())) {
@@ -377,7 +349,7 @@ public class SystemUserService {
       args.getDeptIds().addAll(systemDeptService.queryChildDeptIdByDeptIds(data, deptPidMap));
     }
     // 数据权限
-    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(this.getUserVoByUsername(currentUsername));
+    List<Long> dataScopes = systemDataService.queryDeptIdByArgs(this.getUserVoByUsername(currentUsername, false));
     // args.getDeptIds() 不为空并且数据权限不为空则取交集
     if (!CollUtil.isEmpty(args.getDeptIds()) && !CollUtil.isEmpty(dataScopes)) {
       // 取交集
@@ -394,7 +366,7 @@ public class SystemUserService {
   }
 
   /**
-   * 导出 -> TestPassed
+   * 导出
    */
   public void exportUserXlsx(HttpServletResponse response, SystemQueryUserArgs args) {
     long totalCount = this.countUserByArgs(args);
@@ -511,15 +483,9 @@ public class SystemUserService {
    */
   private void injectQueryParams(SystemQueryUserArgs args, LambdaQueryWrapper<SystemUserTb> wrapper) {
     if (args != null) {
-      if (args.getId() != null) {
-        wrapper.eq(SystemUserTb::getId, args.getId());
-      }
-      if (args.getEnabled() != null) {
-        wrapper.eq(SystemUserTb::getEnabled, args.getEnabled());
-      }
-      if (CollUtil.isNotEmpty(args.getDeptIds())) {
-        wrapper.in(SystemUserTb::getDeptId, args.getDeptIds());
-      }
+      wrapper.eq(args.getId() != null, SystemUserTb::getId, args.getId());
+      wrapper.eq(args.getEnabled() != null, SystemUserTb::getEnabled, args.getEnabled());
+      wrapper.in(CollUtil.isNotEmpty(args.getDeptIds()), SystemUserTb::getDeptId, args.getDeptIds());
       if (StrUtil.isNotBlank(args.getBlurry())) {
         wrapper.and(w -> w.like(SystemUserTb::getUsername, args.getBlurry()).or()
             .like(SystemUserTb::getNickName, args.getBlurry()).or().like(SystemUserTb::getEmail, args.getBlurry()));
@@ -532,7 +498,7 @@ public class SystemUserService {
   }
 
   /**
-   * 转换为SystemUserVo并关联查询部门、角色、岗位信息 -> TestPassed
+   * 转换为SystemUserVo并关联查询部门、角色、岗位信息
    *
    * @param user            用户基本信息
    * @param includePassword 是否包含用户密码

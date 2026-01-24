@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.exception.handler;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
@@ -77,8 +76,8 @@ public class GlobalExceptionHandler {
     log.error(ExceptionUtil.stacktraceToString(e));
     ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
     String message = objectError.getDefaultMessage();
-    if (objectError instanceof FieldError fieldError) {
-      message = fieldError.getField() + ": " + message;
+    if (objectError instanceof FieldError) {
+      message = ((FieldError) objectError).getField() + ": " + message;
     }
     return buildResponseEntity(ApiError.error(message));
   }

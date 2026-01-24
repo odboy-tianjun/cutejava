@@ -19,15 +19,15 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.constant.CaptchaCodeEnum;
 import cn.odboy.constant.SystemConst;
-import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.properties.AppProperties;
 import cn.odboy.framework.redis.KitRedisHelper;
-import cn.odboy.system.dal.model.response.SystemCaptchaVo;
 import cn.odboy.system.constant.SystemCacheKey;
+import cn.odboy.system.dal.model.response.SystemCaptchaVo;
+import cn.odboy.util.KitValidUtil;
 import com.wf.captcha.base.Captcha;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码
@@ -41,7 +41,7 @@ public class SystemCaptchaService {
   private AppProperties properties;
 
   /**
-   * 查询登录验证码 -> TestPassed
+   * 查询登录验证码
    */
   public SystemCaptchaVo getLoginCaptcha() {
     // 查询运算的结果
@@ -63,7 +63,7 @@ public class SystemCaptchaService {
   }
 
   /**
-   * 验证验证码 -> TestPassed
+   * 验证验证码
    *
    * @param uuid      验证码uuid
    * @param inputCode 用户输入的验证码
@@ -71,13 +71,9 @@ public class SystemCaptchaService {
   public void validate(String uuid, String inputCode) {
     // 查询验证码
     String code = redisHelper.get(uuid, String.class);
-    if (StrUtil.isBlank(code)) {
-      throw new BadRequestException("验证码不存在或已过期");
-    }
+    KitValidUtil.isBlank(code, "验证码不存在或已过期");
     // 清除验证码
     redisHelper.del(uuid);
-    if (StrUtil.isBlank(inputCode) || !code.equalsIgnoreCase(inputCode)) {
-      throw new BadRequestException("验证码错误");
-    }
+    KitValidUtil.isTrue(StrUtil.isBlank(inputCode) || !code.equalsIgnoreCase(inputCode), "验证码错误");
   }
 }

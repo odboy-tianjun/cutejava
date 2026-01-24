@@ -102,9 +102,6 @@ public class SystemMenuController {
   @PostMapping(value = "/saveMenu")
   @PreAuthorize("@el.check('menu:add')")
   public ResponseEntity<Void> saveMenu(@Validated @RequestBody SystemMenuTb args) {
-    if (args.getId() != null) {
-      throw new BadRequestException("无效参数id");
-    }
     systemMenuService.saveMenu(args);
     return ResponseEntity.ok(null);
   }

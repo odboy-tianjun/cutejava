@@ -17,6 +17,7 @@ package cn.odboy.util;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import java.util.Calendar;
 import java.util.Date;
 import lombok.experimental.UtilityClass;
 
@@ -128,5 +129,23 @@ public class KitDateUtil {
       result.append("0毫秒");
     }
     return result.toString();
+  }
+
+  /**
+   * 获得当天是周几
+   */
+  public static String getWeekDay() {
+    String[] weekDays = {"星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date());
+    int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+    if (w < 0) {
+      w = 0;
+    }
+    return weekDays[w];
+  }
+
+  public static void main(String[] args) {
+    System.err.println(getWeekDay());
   }
 }
