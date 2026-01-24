@@ -12,10 +12,9 @@
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip content="布局设置" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
+        <!--<el-tooltip content="布局设置" effect="dark" placement="bottom">-->
+        <!--  <size-select id="size-select" class="right-menu-item hover-effect" />-->
+        <!--</el-tooltip>-->
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -50,7 +49,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
+// import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import Avatar from '@/assets/images/avatar.png'
 
@@ -59,7 +58,7 @@ export default {
     Breadcrumb,
     Hamburger,
     Screenfull,
-    SizeSelect,
+    // SizeSelect,
     Search
   },
   data() {
@@ -110,6 +109,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@/assets/styles/variables";
 .navbar {
   height: 50px;
   overflow: hidden;
