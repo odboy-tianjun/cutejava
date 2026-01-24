@@ -1,6 +1,6 @@
 <template>
   <a
-    href="https://github.com/odboy-tianjun/cutejava"
+    href="https://gitee.com/odboy-tianjun/cutejava"
     target="_blank"
     class="github-corner"
     aria-label="View source on Github"
