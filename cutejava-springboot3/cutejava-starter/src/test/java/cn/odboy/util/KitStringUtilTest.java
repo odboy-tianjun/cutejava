@@ -16,18 +16,16 @@
 
 package cn.odboy.util;
 
-import static cn.odboy.util.KitStringUtil.getWeekDay;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import static cn.odboy.util.KitStringUtil.toCamelCase;
 import static cn.odboy.util.KitStringUtil.toCapitalizeCamelCase;
 import static cn.odboy.util.KitStringUtil.toUnderScoreCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 public class KitStringUtilTest {
 
@@ -53,7 +51,7 @@ public class KitStringUtilTest {
   @Test
   public void testGetWeekDay() {
     SimpleDateFormat simpleDateformat = new SimpleDateFormat("E");
-    assertEquals(simpleDateformat.format(new Date()), getWeekDay());
+    assertEquals(simpleDateformat.format(new Date()), KitDateUtil.getWeekDay());
   }
 
   @Test

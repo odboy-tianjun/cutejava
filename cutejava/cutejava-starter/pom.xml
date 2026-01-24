@@ -9,13 +9,15 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cutejava-starter</artifactId>
   <name>启动模块</name>
+
   <dependencies>
     <dependency>
       <groupId>cn.odboy</groupId>
-      <artifactId>cutejava-module-task-v1</artifactId>
+      <artifactId>cutejava-module-system</artifactId>
       <version>1.5.2</version>
     </dependency>
   </dependencies>
+
   <!-- 打包 -->
   <build>
     <!-- 和应用名一致 -->

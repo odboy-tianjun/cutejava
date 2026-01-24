@@ -15,6 +15,7 @@
  */
 package cn.odboy.framework.redis;
 
+import cn.odboy.framework.properties.AppProperties;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONFactory;
 import com.alibaba.fastjson2.JSONWriter;
@@ -25,6 +26,7 @@ import java.util.Map;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.MurmurHash3;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.Cache;
@@ -50,17 +52,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @AutoConfigureBefore(RedisAutoConfiguration.class)
 public class RedisConfiguration extends CachingConfigurerSupport {
 
-  /**
-   * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/> 未配置可能导致, 登录失败, 反复登录等问题
-   */
-  private static final String[] WHITELIST_STR =
-      {
-          "org.springframework",
-          "cn.odboy.system.dal.dataobject",
-          "cn.odboy.system.dal.model",
-          "cn.odboy.task.dal.dataobject",
-          "cn.odboy.task.dal.model",
-      };
+  @Autowired
+  private AppProperties properties;
 
   /**
    * 设置 redis 数据默认过期时间，默认2小时 设置@cacheable 序列化方式
@@ -83,8 +76,9 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     template.setValueSerializer(fastJsonRedisSerializer);
     template.setHashValueSerializer(fastJsonRedisSerializer);
     // 设置fastJson的序列化白名单
-    for (String pack : WHITELIST_STR) {
+    for (String pack : properties.getSerialWhiteList()) {
       JSONFactory.getDefaultObjectReaderProvider().addAutoTypeAccept(pack);
+      log.warn("设置fastJson的序列化白名单：{}", pack);
     }
     // key的序列化采用StringRedisSerializer
     template.setKeySerializer(new StringRedisSerializer());

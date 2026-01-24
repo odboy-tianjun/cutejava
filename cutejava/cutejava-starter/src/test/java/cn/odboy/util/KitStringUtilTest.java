@@ -18,8 +18,6 @@ package cn.odboy.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -43,12 +41,6 @@ public class KitStringUtilTest {
     assertEquals("hello_world", KitStringUtil.toUnderScoreCase("helloWorld"));
     assertEquals("\u0000\u0000", KitStringUtil.toUnderScoreCase("\u0000\u0000"));
     assertEquals("\u0000_a", KitStringUtil.toUnderScoreCase("\u0000A"));
-  }
-
-  @Test
-  public void testGetWeekDay() {
-    SimpleDateFormat simpleDateformat = new SimpleDateFormat("E");
-    assertEquals(simpleDateformat.format(new Date()), KitStringUtil.getWeekDay());
   }
 
   @Test

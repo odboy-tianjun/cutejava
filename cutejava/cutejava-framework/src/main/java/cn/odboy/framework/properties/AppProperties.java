@@ -22,6 +22,7 @@ import cn.odboy.framework.properties.model.StorageOSSModel;
 import cn.odboy.framework.properties.model.SwaggerApiDocSettingModel;
 import cn.odboy.framework.properties.model.ThreadPoolSettingModel;
 import cn.odboy.framework.properties.model.UserLoginSettingModel;
+import java.util.List;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -44,4 +45,8 @@ public class AppProperties {
   private ThreadPoolSettingModel asyncTaskPool;
   private CaptchaModel captcha;
   private StorageOSSModel oss;
+  /**
+   * 自动识别json对象白名单配置（仅允许解析的包名, 范围越小越安全）<br/> 未配置可能导致, 登录失败, 反复登录等问题
+   */
+  private List<String> serialWhiteList;
 }

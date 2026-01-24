@@ -206,6 +206,13 @@ app:
       secretKey: 8BiK5UbmvXGJNVQ98CGiohHzT1N1FMRZqHRdJllj
   captcha:
     expireTime: 300
+  # 序列化白名单
+  serial-white-list:
+    - "org.springframework"
+    - "cn.odboy.system.dal.dataobject"
+    - "cn.odboy.system.dal.model"
+    - "cn.odboy.task.dal.dataobject"
+    - "cn.odboy.task.dal.model"
 # debug
 #debug: true
 # 日志配置
