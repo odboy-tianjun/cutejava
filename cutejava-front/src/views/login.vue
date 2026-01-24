@@ -220,7 +220,7 @@ export default {
 
 .login-form-box {
   width: 360px;
-  height: 370px;
+  height: 390px;
   background-color: #FFFFFF;
 }
 

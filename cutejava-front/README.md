@@ -45,7 +45,3 @@ npm run build:prod
 2、加速node-sass安装
 
 https://www.ydyno.com/archives/1219.html
-
-#### 特别鸣谢
-
-- 感谢 [elunez](https://github.com/elunez/eladmin-mp) 大佬提供的基础框架

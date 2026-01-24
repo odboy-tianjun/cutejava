@@ -55,8 +55,8 @@
                 <svg-icon icon-class="anq" />
                 安全设置
                 <div class="user-right">
-                  <a @click="$refs.pass.dialog = true">修改密码</a>
-                  <a @click="$refs.email.dialog = true">修改邮箱</a>
+                  <el-button type="text" style="padding: 0" @click="$refs.pass.dialog = true">修改密码</el-button>
+                  <el-button type="text" style="padding: 0" @click="$refs.email.dialog = true">修改邮箱</el-button>
                 </div>
               </li>
             </ul>
