@@ -26,7 +26,7 @@ export default {
     href: {
       type: String,
       required: true,
-      default: 'https://github.com/odboy-tianjun'
+      default: 'https://gitee.com/odboy-tianjun'
     }
   }
 }
