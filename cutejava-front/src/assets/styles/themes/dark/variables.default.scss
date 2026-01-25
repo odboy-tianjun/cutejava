@@ -1,0 +1,100 @@
+// 默认风格
+// base color
+$blue: #324157;
+$light-blue: #3A71A8;
+$red: #C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow: #FEC171;
+$panGreen: #30B08F;
+
+// sidebar 默认
+$menuText: #bfcbd9;
+$menuActiveText: #409EFF;
+$subMenuActiveText: #f4f4f5; // https://github.com/ElemeFE/element/issues/12951
+$menuBg: #304156;
+$menuHover: #263445;
+$subMenuBg: #1f2d3d;
+$subMenuHover: #001528;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// ===== Navbar 顶部导航栏样式变量 =====
+// Navbar 背景渐变色（从侧边栏颜色过渡到深蓝色）
+$navbarBgStart: $menuBg;
+$navbarBgEnd: #263445;
+
+// Navbar 阴影颜色和透明度
+$navbarShadowColor: rgba(0, 21, 41, 0.15);
+$navbarShadowY: 1px;
+$navbarShadowBlur: 4px;
+$navbarShadowSpread: 0px;
+
+// Navbar 底部边框颜色和透明度
+$navbarBorderColor: rgba(0, 21, 41, 0.2);
+$navbarBorderWidth: 1px;
+
+// Navbar 悬停背景色（hamburger 和右侧菜单项）
+$navbarHoverBg: rgba(0, 0, 0, 0.025);
+
+// 右侧菜单项文字颜色
+$navbarRightMenuColor: #5a5e66;
+
+// 右侧菜单项悬停效果颜色
+$navbarRightMenuHoverColor: $menuActiveText;
+$navbarRightMenuHoverGlow: transparent;
+
+// 头像边框颜色
+$navbarAvatarBorderColor: transparent;
+$navbarAvatarHoverBorderColor: transparent;
+$navbarAvatarHoverGlow: transparent;
+
+// 下拉箭头颜色
+$navbarCaretColor: #5a5e66;
+
+// ===== Hamburger 汉堡菜单按钮样式变量 =====
+// Hamburger 默认颜色
+$hamburgerColor: $menuText;
+
+// Hamburger 激活状态颜色
+$hamburgerActiveColor: $menuActiveText;
+
+// Hamburger 发光效果
+$hamburgerGlow: transparent;
+
+// ===== Breadcrumb 面包屑导航样式变量 =====
+// Breadcrumb 文字颜色
+$breadcrumbTextColor: #97a8be;
+
+// Breadcrumb 链接颜色（可点击项）
+$breadcrumbLinkColor: #97a8be;
+
+// Breadcrumb 发光效果
+$breadcrumbTextGlow: transparent;
+
+// Breadcrumb 悬停颜色
+$breadcrumbHoverColor: $menuActiveText;
+
+// Breadcrumb 悬停发光效果
+$breadcrumbHoverGlow: transparent;
+
+// Breadcrumb 分隔符颜色
+$breadcrumbSeparatorColor: #97a8be;
+
+// Breadcrumb 当前页面文字颜色（不可点击项）
+$breadcrumbNoRedirectColor: #97a8be;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between/js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
