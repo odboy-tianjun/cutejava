@@ -1,0 +1,100 @@
+// 清新明亮：天空云朵（清新舒适）
+// base color
+$blue: #5BA3F0;
+$light-blue: #7BC4FF;
+$red: #FF6B8A;
+$pink: #FF8FA8;
+$green: #6BCB77;
+$tiffany: #7FD1AE;
+$yellow: #FFD93D;
+$panGreen: #6BCB77;
+
+// sidebar
+$menuText: #2A3A4A;
+$menuActiveText: #2B7BD9;
+$subMenuActiveText: #2B7BD9;
+$menuBg: #FFFFFF;
+$menuHover: #F0F5FF;
+$subMenuBg: #F8FAFC;
+$subMenuHover: #E1E8F5;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// ===== Navbar 顶部导航栏样式变量 =====
+// Navbar 背景渐变色（从白色过渡到浅蓝）
+$navbarBgStart: #FFFFFF;
+$navbarBgEnd: #F5F9FF;
+
+// Navbar 阴影颜色和透明度
+$navbarShadowColor: rgba(91, 163, 240, 0.15);
+$navbarShadowY: 1px;
+$navbarShadowBlur: 4px;
+$navbarShadowSpread: 0px;
+
+// Navbar 底部边框颜色和透明度
+$navbarBorderColor: rgba(91, 163, 240, 0.2);
+$navbarBorderWidth: 1px;
+
+// Navbar 悬停背景色（hamburger 和右侧菜单项）
+$navbarHoverBg: #F0F5FF;
+
+// 右侧菜单项文字颜色
+$navbarRightMenuColor: #5A6C7D;
+
+// 右侧菜单项悬停效果颜色
+$navbarRightMenuHoverColor: $menuActiveText;
+$navbarRightMenuHoverGlow: rgba(91, 163, 240, 0.2);
+
+// 头像边框颜色
+$navbarAvatarBorderColor: rgba(91, 163, 240, 0.25);
+$navbarAvatarHoverBorderColor: $menuActiveText;
+$navbarAvatarHoverGlow: rgba(91, 163, 240, 0.3);
+
+// 下拉箭头颜色
+$navbarCaretColor: #5A6C7D;
+
+// ===== Hamburger 汉堡菜单按钮样式变量 =====
+// Hamburger 默认颜色
+$hamburgerColor: #5A6C7D;
+
+// Hamburger 激活状态颜色
+$hamburgerActiveColor: $menuActiveText;
+
+// Hamburger 发光效果
+$hamburgerGlow: 0 0 4px rgba(91, 163, 240, 0.3);
+
+// ===== Breadcrumb 面包屑导航样式变量 =====
+// Breadcrumb 文字颜色
+$breadcrumbTextColor: #3A4A5A;
+
+// Breadcrumb 链接颜色（可点击项）
+$breadcrumbLinkColor: #3A4A5A;
+
+// Breadcrumb 发光效果
+$breadcrumbTextGlow: transparent;
+
+// Breadcrumb 悬停颜色
+$breadcrumbHoverColor: $menuActiveText;
+
+// Breadcrumb 悬停发光效果
+$breadcrumbHoverGlow: transparent;
+
+// Breadcrumb 分隔符颜色
+$breadcrumbSeparatorColor: rgba(91, 163, 240, 0.4);
+
+// Breadcrumb 当前页面文字颜色（不可点击项）
+$breadcrumbNoRedirectColor: #2A3A4A;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between/js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

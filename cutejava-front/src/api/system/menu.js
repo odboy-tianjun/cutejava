@@ -34,6 +34,13 @@ export function listMenuByPid(pid) {
   })
 }
 
+export function listRoleMenuByPid(pid) {
+  return request({
+    url: 'api/menu/listRoleMenuByPid?pid=' + pid,
+    method: 'post'
+  })
+}
+
 export function searchMenu(params) {
   return request({
     url: 'api/menu/searchMenu',

@@ -114,19 +114,25 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  background: linear-gradient(90deg, $navbarBgStart 0%, $navbarBgEnd 100%);
+  box-shadow: 0 $navbarShadowY $navbarShadowBlur $navbarShadowSpread $navbarShadowColor;
+  border-bottom: $navbarBorderWidth solid $navbarBorderColor;
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
+    transition: all 0.3s ease;
     -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: $navbarHoverBg;
+
+      .hamburger {
+        color: $menuActiveText;
+        filter: drop-shadow($hamburgerGlow);
+      }
     }
   }
 
@@ -153,15 +159,17 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: $menuText;
       vertical-align: text-bottom;
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: all 0.3s ease;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: $navbarHoverBg;
+          color: $navbarRightMenuHoverColor;
+          filter: drop-shadow(0 0 8px $navbarRightMenuHoverGlow);
         }
       }
     }
@@ -178,6 +186,13 @@ export default {
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          border: 2px solid $navbarAvatarBorderColor;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: $navbarAvatarHoverBorderColor;
+            box-shadow: 0 0 15px $navbarAvatarHoverGlow;
+          }
         }
 
         .el-icon-caret-bottom {
@@ -186,6 +201,12 @@ export default {
           right: -20px;
           top: 25px;
           font-size: 12px;
+          color: $navbarCaretColor;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: $menuActiveText;
+          }
         }
       }
     }
