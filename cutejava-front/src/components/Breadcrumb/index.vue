@@ -70,15 +70,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@/assets/styles/variables";
+
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
   line-height: 50px;
   margin-left: 8px;
 
+  ::v-deep .el-breadcrumb__item {
+    .el-breadcrumb__inner {
+      color: $menuText;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: $menuActiveText;
+        filter: drop-shadow(0 0 4px rgba(102, 255, 204, 0.3));
+      }
+
+      &.is-link {
+        font-weight: 500;
+      }
+    }
+
+    .el-breadcrumb__separator {
+      color: rgba(102, 255, 204, 0.4);
+    }
+  }
+
   .no-redirect {
-    color: #97a8be;
+    color: $menuText;
     cursor: text;
+    font-weight: 500;
   }
 }
 </style>

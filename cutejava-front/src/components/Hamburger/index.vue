@@ -32,15 +32,25 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "~@/assets/styles/variables";
+
 .hamburger {
   display: inline-block;
   vertical-align: middle;
   width: 20px;
   height: 20px;
+  fill: $menuText;
+  transition: all 0.3s ease;
 }
 
 .hamburger.is-active {
   transform: rotate(180deg);
+  fill: $menuActiveText;
+  filter: drop-shadow(0 0 6px $menuActiveText);
+}
+
+.hamburger:hover {
+  fill: $menuActiveText;
 }
 </style>

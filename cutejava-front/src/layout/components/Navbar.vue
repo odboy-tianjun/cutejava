@@ -114,19 +114,25 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  background: linear-gradient(90deg, $menuBg 0%, #162035 100%);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.15);
+  border-bottom: 1px solid rgba(74, 144, 226, 0.2);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
+    transition: all 0.3s ease;
     -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(74, 144, 226, 0.1);
+
+      .hamburger {
+        color: $menuActiveText;
+        filter: drop-shadow(0 0 6px $menuActiveText);
+      }
     }
   }
 
@@ -153,15 +159,17 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: $menuText;
       vertical-align: text-bottom;
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: all 0.3s ease;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(74, 144, 226, 0.1);
+          color: $menuActiveText;
+          filter: drop-shadow(0 0 8px rgba(102, 255, 204, 0.3));
         }
       }
     }
@@ -178,6 +186,13 @@ export default {
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          border: 2px solid rgba(102, 255, 204, 0.3);
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: $menuActiveText;
+            box-shadow: 0 0 15px rgba(102, 255, 204, 0.4);
+          }
         }
 
         .el-icon-caret-bottom {
@@ -186,6 +201,12 @@ export default {
           right: -20px;
           top: 25px;
           font-size: 12px;
+          color: $menuText;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: $menuActiveText;
+          }
         }
       }
     }
