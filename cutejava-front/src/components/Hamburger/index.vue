@@ -40,17 +40,17 @@ export default {
   vertical-align: middle;
   width: 20px;
   height: 20px;
-  fill: $menuText;
+  fill: $hamburgerColor;
   transition: all 0.3s ease;
 }
 
 .hamburger.is-active {
   transform: rotate(180deg);
-  fill: $menuActiveText;
-  filter: drop-shadow(0 0 6px $menuActiveText);
+  fill: $hamburgerActiveColor;
+  filter: drop-shadow($hamburgerGlow);
 }
 
 .hamburger:hover {
-  fill: $menuActiveText;
+  fill: $hamburgerActiveColor;
 }
 </style>

@@ -71,7 +71,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/assets/styles/variables";
-@import "~@/assets/styles/variables.technology3";
 
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
@@ -81,47 +80,47 @@ export default {
 
   ::v-deep .el-breadcrumb__item {
     .el-breadcrumb__inner {
-      color: #FFFFFF !important;
+      color: $breadcrumbTextColor !important;
       font-weight: 500;
       transition: all 0.3s ease;
 
       &.is-link {
-        color: #FFFFFF !important;
-        text-shadow: 0 0 4px rgba(102, 255, 204, 0.3);
+        color: $breadcrumbLinkColor !important;
+        text-shadow: 0 0 4px $breadcrumbTextGlow;
 
         &:hover {
-          color: $menuActiveText !important;
-          filter: drop-shadow(0 0 6px rgba(102, 255, 204, 0.4));
+          color: $breadcrumbHoverColor !important;
+          filter: drop-shadow($breadcrumbHoverGlow);
         }
       }
 
       &:hover {
-        color: $menuActiveText !important;
-        filter: drop-shadow(0 0 6px rgba(102, 255, 204, 0.4));
+        color: $breadcrumbHoverColor !important;
+        filter: drop-shadow($breadcrumbHoverGlow);
       }
     }
 
     .el-breadcrumb__separator {
-      color: rgba(102, 255, 204, 0.5);
+      color: $breadcrumbSeparatorColor;
     }
   }
 
   a {
-    color: #FFFFFF !important;
+    color: $breadcrumbLinkColor !important;
     font-weight: 500;
-    text-shadow: 0 0 4px rgba(102, 255, 204, 0.3);
+    text-shadow: 0 0 4px $breadcrumbTextGlow;
 
     &:hover {
-      color: $menuActiveText !important;
-      filter: drop-shadow(0 0 6px rgba(102, 255, 204, 0.4));
+      color: $breadcrumbHoverColor !important;
+      filter: drop-shadow($breadcrumbHoverGlow);
     }
   }
 
   .no-redirect {
-    color: #FFFFFF !important;
+    color: $breadcrumbNoRedirectColor !important;
     cursor: text;
     font-weight: 500;
-    text-shadow: 0 0 4px rgba(102, 255, 204, 0.3);
+    text-shadow: 0 0 4px $breadcrumbTextGlow;
   }
 }
 </style>

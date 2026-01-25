@@ -114,9 +114,9 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(90deg, $menuBg 0%, #162035 100%);
-  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.15);
-  border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+  background: linear-gradient(90deg, $navbarBgStart 0%, $navbarBgEnd 100%);
+  box-shadow: 0 $navbarShadowY $navbarShadowBlur $navbarShadowSpread $navbarShadowColor;
+  border-bottom: $navbarBorderWidth solid $navbarBorderColor;
 
   .hamburger-container {
     line-height: 46px;
@@ -127,11 +127,11 @@ export default {
     -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(74, 144, 226, 0.1);
+      background: $navbarHoverBg;
 
       .hamburger {
         color: $menuActiveText;
-        filter: drop-shadow(0 0 6px $menuActiveText);
+        filter: drop-shadow($hamburgerGlow);
       }
     }
   }
@@ -167,9 +167,9 @@ export default {
         transition: all 0.3s ease;
 
         &:hover {
-          background: rgba(74, 144, 226, 0.1);
-          color: $menuActiveText;
-          filter: drop-shadow(0 0 8px rgba(102, 255, 204, 0.3));
+          background: $navbarHoverBg;
+          color: $navbarRightMenuHoverColor;
+          filter: drop-shadow(0 0 8px $navbarRightMenuHoverGlow);
         }
       }
     }
@@ -186,12 +186,12 @@ export default {
           width: 40px;
           height: 40px;
           border-radius: 10px;
-          border: 2px solid rgba(102, 255, 204, 0.3);
+          border: 2px solid $navbarAvatarBorderColor;
           transition: all 0.3s ease;
 
           &:hover {
-            border-color: $menuActiveText;
-            box-shadow: 0 0 15px rgba(102, 255, 204, 0.4);
+            border-color: $navbarAvatarHoverBorderColor;
+            box-shadow: 0 0 15px $navbarAvatarHoverGlow;
           }
         }
 
@@ -201,7 +201,7 @@ export default {
           right: -20px;
           top: 25px;
           font-size: 12px;
-          color: $menuText;
+          color: $navbarCaretColor;
           transition: all 0.3s ease;
 
           &:hover {
