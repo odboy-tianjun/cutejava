@@ -71,6 +71,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/assets/styles/variables";
+@import "~@/assets/styles/variables.technology3";
 
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
@@ -80,28 +81,47 @@ export default {
 
   ::v-deep .el-breadcrumb__item {
     .el-breadcrumb__inner {
-      color: $menuText;
+      color: #FFFFFF !important;
+      font-weight: 500;
       transition: all 0.3s ease;
 
-      &:hover {
-        color: $menuActiveText;
-        filter: drop-shadow(0 0 4px rgba(102, 255, 204, 0.3));
+      &.is-link {
+        color: #FFFFFF !important;
+        text-shadow: 0 0 4px rgba(102, 255, 204, 0.3);
+
+        &:hover {
+          color: $menuActiveText !important;
+          filter: drop-shadow(0 0 6px rgba(102, 255, 204, 0.4));
+        }
       }
 
-      &.is-link {
-        font-weight: 500;
+      &:hover {
+        color: $menuActiveText !important;
+        filter: drop-shadow(0 0 6px rgba(102, 255, 204, 0.4));
       }
     }
 
     .el-breadcrumb__separator {
-      color: rgba(102, 255, 204, 0.4);
+      color: rgba(102, 255, 204, 0.5);
+    }
+  }
+
+  a {
+    color: #FFFFFF !important;
+    font-weight: 500;
+    text-shadow: 0 0 4px rgba(102, 255, 204, 0.3);
+
+    &:hover {
+      color: $menuActiveText !important;
+      filter: drop-shadow(0 0 6px rgba(102, 255, 204, 0.4));
     }
   }
 
   .no-redirect {
-    color: $menuText;
+    color: #FFFFFF !important;
     cursor: text;
     font-weight: 500;
+    text-shadow: 0 0 4px rgba(102, 255, 204, 0.3);
   }
 }
 </style>
