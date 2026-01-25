@@ -1,0 +1,100 @@
+// 清新明亮：海风浅蓝（宁静舒适）
+// base color
+$blue: #4A90E2;
+$light-blue: #6BB3FF;
+$red: #FF7F7F;
+$pink: #FFA3A3;
+$green: #7DD3C0;
+$tiffany: #9CE6DC;
+$yellow: #FFEAA7;
+$panGreen: #7DD3C0;
+
+// sidebar
+$menuText: #3A4A5A;
+$menuActiveText: #4A90E2;
+$subMenuActiveText: #4A90E2;
+$menuBg: #F5FAFF;
+$menuHover: #EBF4FF;
+$subMenuBg: #F8FCFF;
+$subMenuHover: #D9EBFF;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// ===== Navbar 顶部导航栏样式变量 =====
+// Navbar 背景渐变色（从白色过渡到浅蓝色）
+$navbarBgStart: #FFFFFF;
+$navbarBgEnd: #F5FAFF;
+
+// Navbar 阴影颜色和透明度
+$navbarShadowColor: rgba(74, 144, 226, 0.12);
+$navbarShadowY: 1px;
+$navbarShadowBlur: 4px;
+$navbarShadowSpread: 0px;
+
+// Navbar 底部边框颜色和透明度
+$navbarBorderColor: rgba(74, 144, 226, 0.15);
+$navbarBorderWidth: 1px;
+
+// Navbar 悬停背景色（hamburger 和右侧菜单项）
+$navbarHoverBg: #EBF4FF;
+
+// 右侧菜单项文字颜色
+$navbarRightMenuColor: #5A6C7D;
+
+// 右侧菜单项悬停效果颜色
+$navbarRightMenuHoverColor: $menuActiveText;
+$navbarRightMenuHoverGlow: rgba(74, 144, 226, 0.2);
+
+// 头像边框颜色
+$navbarAvatarBorderColor: rgba(74, 144, 226, 0.25);
+$navbarAvatarHoverBorderColor: $menuActiveText;
+$navbarAvatarHoverGlow: rgba(74, 144, 226, 0.3);
+
+// 下拉箭头颜色
+$navbarCaretColor: #5A6C7D;
+
+// ===== Hamburger 汉堡菜单按钮样式变量 =====
+// Hamburger 默认颜色
+$hamburgerColor: #5A6C7D;
+
+// Hamburger 激活状态颜色
+$hamburgerActiveColor: $menuActiveText;
+
+// Hamburger 发光效果
+$hamburgerGlow: 0 0 4px rgba(74, 144, 226, 0.3);
+
+// ===== Breadcrumb 面包屑导航样式变量 =====
+// Breadcrumb 文字颜色
+$breadcrumbTextColor: #3A4A5A;
+
+// Breadcrumb 链接颜色（可点击项）
+$breadcrumbLinkColor: #3A4A5A;
+
+// Breadcrumb 发光效果
+$breadcrumbTextGlow: transparent;
+
+// Breadcrumb 悬停颜色
+$breadcrumbHoverColor: $menuActiveText;
+
+// Breadcrumb 悬停发光效果
+$breadcrumbHoverGlow: transparent;
+
+// Breadcrumb 分隔符颜色
+$breadcrumbSeparatorColor: rgba(90, 108, 125, 0.4);
+
+// Breadcrumb 当前页面文字颜色（不可点击项）
+$breadcrumbNoRedirectColor: #2A3A4A;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between/js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
