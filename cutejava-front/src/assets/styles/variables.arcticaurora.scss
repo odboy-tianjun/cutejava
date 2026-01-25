@@ -1,0 +1,100 @@
+// 科技现代：极光幻境（梦幻唯美）
+// base color
+$blue: #6C5CE7;
+$light-blue: #A29BFE;
+$red: #FF7675;
+$pink: #FD79A8;
+$green: #00B894;
+$tiffany: #81ECEC;
+$yellow: #FFEAA7;
+$panGreen: #00B894;
+
+// sidebar
+$menuText: #B2BEC3;
+$menuActiveText: #A29BFE;
+$subMenuActiveText: #FFFFFF;
+$menuBg: #0F0F1F;
+$menuHover: #1A1A35;
+$subMenuBg: #14142A;
+$subMenuHover: #2C2C5A;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// ===== Navbar 顶部导航栏样式变量 =====
+// Navbar 背景渐变色（从深靛蓝过渡到深紫蓝色）
+$navbarBgStart: $menuBg;
+$navbarBgEnd: #0A0A18;
+
+// Navbar 阴影颜色和透明度
+$navbarShadowColor: rgba(162, 155, 254, 0.18);
+$navbarShadowY: 2px;
+$navbarShadowBlur: 8px;
+$navbarShadowSpread: 0px;
+
+// Navbar 底部边框颜色和透明度
+$navbarBorderColor: rgba(162, 155, 254, 0.25);
+$navbarBorderWidth: 1px;
+
+// Navbar 悬停背景色（hamburger 和右侧菜单项）
+$navbarHoverBg: rgba(162, 155, 254, 0.1);
+
+// 右侧菜单项文字颜色
+$navbarRightMenuColor: $menuText;
+
+// 右侧菜单项悬停效果颜色
+$navbarRightMenuHoverColor: $menuActiveText;
+$navbarRightMenuHoverGlow: rgba(162, 155, 254, 0.32);
+
+// 头像边框颜色
+$navbarAvatarBorderColor: rgba(162, 155, 254, 0.3);
+$navbarAvatarHoverBorderColor: $menuActiveText;
+$navbarAvatarHoverGlow: rgba(162, 155, 254, 0.42);
+
+// 下拉箭头颜色
+$navbarCaretColor: $menuText;
+
+// ===== Hamburger 汉堡菜单按钮样式变量 =====
+// Hamburger 默认颜色
+$hamburgerColor: $menuText;
+
+// Hamburger 激活状态颜色
+$hamburgerActiveColor: $menuActiveText;
+
+// Hamburger 发光效果
+$hamburgerGlow: 0 0 6px rgba(162, 155, 254, 0.45);
+
+// ===== Breadcrumb 面包屑导航样式变量 =====
+// Breadcrumb 文字颜色
+$breadcrumbTextColor: #F0F1F8;
+
+// Breadcrumb 链接颜色（可点击项）
+$breadcrumbLinkColor: #F0F1F8;
+
+// Breadcrumb 发光效果
+$breadcrumbTextGlow: rgba(162, 155, 254, 0.18);
+
+// Breadcrumb 悬停颜色
+$breadcrumbHoverColor: $menuActiveText;
+
+// Breadcrumb 悬停发光效果
+$breadcrumbHoverGlow: 0 0 6px rgba(162, 155, 254, 0.4);
+
+// Breadcrumb 分隔符颜色
+$breadcrumbSeparatorColor: rgba(129, 236, 236, 0.55);
+
+// Breadcrumb 当前页面文字颜色（不可点击项）
+$breadcrumbNoRedirectColor: #F7F8FC;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between/js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
