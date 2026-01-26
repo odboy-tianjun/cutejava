@@ -1,0 +1,71 @@
+// 紫罗兰梦（神秘优雅）
+// base color
+$blue: #7C3AED;
+$light-blue: #A78BFA;
+$red: #DC2626;
+$pink: #EC4899;
+$green: #059669;
+$tiffany: #10B981;
+$yellow: #F59E0B;
+$panGreen: #059669;
+
+// sidebar
+$menuText: #F3E8FF;
+$menuActiveText: #A78BFA;
+$subMenuActiveText: #FFFFFF;
+$menuBg: #1F1128;
+$menuHover: #2D1B3E;
+$subMenuBg: #150C1C;
+$subMenuHover: #3D2560;
+
+// 左侧菜单栏宽度
+$sideBarWidth: 250px;
+
+// ===== Navbar 顶部导航栏样式变量 =====
+$navbarBgStart: $menuBg;
+$navbarBgEnd: #0F0814;
+
+$navbarShadowColor: rgba(167, 139, 250, 0.22);
+$navbarShadowY: 2px;
+$navbarShadowBlur: 8px;
+$navbarShadowSpread: 0px;
+
+$navbarBorderColor: rgba(167, 139, 250, 0.32);
+$navbarBorderWidth: 1px;
+
+$navbarHoverBg: rgba(167, 139, 250, 0.12);
+
+$navbarRightMenuColor: #E9D5FF;
+$navbarRightMenuHoverColor: $menuActiveText;
+$navbarRightMenuHoverGlow: rgba(167, 139, 250, 0.38);
+
+$navbarAvatarBorderColor: rgba(167, 139, 250, 0.35);
+$navbarAvatarHoverBorderColor: $menuActiveText;
+$navbarAvatarHoverGlow: rgba(167, 139, 250, 0.48);
+
+$navbarCaretColor: #E9D5FF;
+
+// ===== Hamburger 汉堡菜单按钮样式变量 =====
+$hamburgerColor: #F3E8FF;
+$hamburgerActiveColor: $menuActiveText;
+$hamburgerGlow: 0 0 8px rgba(167, 139, 250, 0.45);
+
+// ===== Breadcrumb 面包屑导航样式变量 =====
+$breadcrumbTextColor: #FAF5FF;
+$breadcrumbLinkColor: #FAF5FF;
+$breadcrumbTextGlow: rgba(167, 139, 250, 0.15);
+$breadcrumbHoverColor: $menuActiveText;
+$breadcrumbHoverGlow: 0 0 8px rgba(167, 139, 250, 0.45);
+$breadcrumbSeparatorColor: $menuActiveText;
+$breadcrumbNoRedirectColor: #FFFFFF;
+
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
