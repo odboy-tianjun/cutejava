@@ -1,35 +1,33 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-editor-container">
-      <github-corner class="github-corner" />
+  <div class="dashboard-editor-container">
+    <github-corner class="github-corner" />
 
-      <el-row :gutter="40" style="background-color: white;margin-left: 2px;margin-right: 2px;padding: 6px">
-        <el-col>系统API文档：<el-link type="primary" :href="swaggerApi" target="_blank">{{ swaggerApi }}</el-link></el-col>
-      </el-row>
+    <el-row :gutter="40" style="background-color: white;margin-left: 2px;margin-right: 2px;padding: 6px">
+      <el-col>系统API文档：<el-link type="primary" :href="swaggerApi" target="_blank">{{ swaggerApi }}</el-link></el-col>
+    </el-row>
 
-      <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <line-chart :chart-data="lineChartData" />
-      </el-row>
-      <el-row :gutter="32">
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <radar-chart />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <pie-chart />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <bar-chart />
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart :chart-data="lineChartData" />
+    </el-row>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <radar-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pie-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <bar-chart />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -99,10 +97,10 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" scoped>
 .dashboard-editor-container {
   padding: 32px;
-  background-color: rgb(240, 242, 245);
+  background-color: #F2F6FC;
   position: relative;
 
   .github-corner {
