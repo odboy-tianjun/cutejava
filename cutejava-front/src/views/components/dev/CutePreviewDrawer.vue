@@ -18,7 +18,9 @@
     :modal="false"
   >
     <!-- 这里是插槽，用于渲染传入的组件 -->
-    <slot />
+    <div style="padding-left: 20px">
+      <slot />
+    </div>
   </el-drawer>
 </template>
 
@@ -61,7 +63,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .container-form {
   overflow-y: scroll; /* 启用滚动 */
   scrollbar-width: none; /* Firefox */

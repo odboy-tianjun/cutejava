@@ -46,6 +46,11 @@
       <el-button type="danger" size="mini">操作按钮2</el-button>
       <el-button type="danger" size="mini">操作按钮3</el-button>
     </cute-section-title>
+    <cute-section-title title="主标题" sub-title="副标题" third-title="三级标题">
+      <el-button type="danger" size="mini">操作按钮1</el-button>
+      <el-button type="danger" size="mini">操作按钮2</el-button>
+      <el-button type="danger" size="mini">操作按钮3</el-button>
+    </cute-section-title>
   </div>
 </template>
 

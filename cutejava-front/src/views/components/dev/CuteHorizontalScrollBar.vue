@@ -17,7 +17,7 @@ export default {
   props: {
     width: {
       type: String,
-      required: true,
+      required: false,
       default: '1280px'
     }
   }

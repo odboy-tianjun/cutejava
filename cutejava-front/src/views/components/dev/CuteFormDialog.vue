@@ -14,13 +14,13 @@
     :modal="false"
   >
     <div class="container-form">
-      <el-form ref="form" :model="model" :rules="rules">
+      <el-form ref="form" :model="model" :rules="rules" :inline="inline">
         <!-- 这里是插槽，用于渲染传入的 el-form-item -->
         <slot />
       </el-form>
     </div>
     <el-divider />
-    <div class="dialog-footer" style="padding-right: 30px;text-align: right">
+    <div class="dialog-footer">
       <el-button type="danger" @click="hidden">取 消</el-button>
       <!--<el-button @click="resetForm('form')">重 置</el-button>-->
       <el-button v-prevent-re-click type="primary" @click="submitForm('form')">提 交</el-button>
@@ -41,7 +41,7 @@ export default {
     width: {
       type: String,
       required: false,
-      default: '40%'
+      default: '30%'
     },
     fullscreen: {
       type: Boolean,
@@ -57,6 +57,12 @@ export default {
       type: Object,
       required: true,
       default: null
+    },
+    // 是否平铺表单
+    inline: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -90,16 +96,42 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .container-form {
   overflow-y: scroll; /* 启用滚动 */
   scrollbar-width: none; /* Firefox */
   padding-right: 20px;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
+  max-height: calc(100vh - 200px); /* 调整高度以适应页头和底部按钮 */
 }
 
 .container-form::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
+}
+
+.dialog-content-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-footer {
+  text-align: right;
+  border-top: 1px solid #ebeef5;
+  padding: 16px 0 0 0;
+  background-color: white;
+  margin-top: auto;
+}
+
+::v-deep(.el-dialog__body) {
+  padding: 20px 20px !important;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+::v-deep(.el-divider--horizontal) {
+  margin: 0 !important;
 }
 </style>
 
