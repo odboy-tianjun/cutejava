@@ -31,9 +31,9 @@
     <fastjson2.version>2.0.59</fastjson2.version>
     <druid.version>1.2.27</druid.version>
     <commons-pool2.version>2.11.1</commons-pool2.version>
-    <mybatis-plus.version>3.5.14</mybatis-plus.version>
-    <hutool.version>5.8.41</hutool.version>
-    <jjwt.version>0.12.6</jjwt.version>
+    <mybatis-plus.version>3.5.15</mybatis-plus.version>
+    <hutool.version>5.8.43</hutool.version>
+    <jjwt.version>0.13.0</jjwt.version>
     <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
     <jna.version>5.8.0</jna.version>
     <mail.version>1.4.7</mail.version>
@@ -41,19 +41,22 @@
     <freemarker.version>2.3.34</freemarker.version>
     <p6spy.version>3.9.1</p6spy.version>
     <knife4j.version>4.5.0</knife4j.version>
-    <mysql.version>9.4.0</mysql.version>
-    <ip2region.version>3.5.6</ip2region.version>
-    <springaop.version>1.9.7</springaop.version>
+    <mysql.version>9.5.0</mysql.version>
+    <ip2region.version>3.5.7</ip2region.version>
+<!--    <springaop.version>1.9.7</springaop.version>-->
+    <springaop.version>1.9.25.1</springaop.version>
     <captcha.version>1.6.2</captcha.version>
-    <commons-text.version>1.13.0</commons-text.version>
+<!--    <commons-text.version>1.13.0</commons-text.version>-->
     <transmittable.version>2.14.5</transmittable.version>
     <ganymed-ssh2.version>build210</ganymed-ssh2.version>
-    <jsch.version>0.1.55</jsch.version>
-    <oshi.version>6.6.5</oshi.version>
-    <quartz.version>2.5.0</quartz.version>
-    <c3p0.version>0.10.1</c3p0.version>
-    <commons-net.version>3.11.1</commons-net.version>
-    <joda-time.version>2.12.7</joda-time.version>
+<!--    <oshi.version>6.6.5</oshi.version>-->
+    <oshi.version>6.9.2</oshi.version>
+<!--    <quartz.version>2.5.0</quartz.version>-->
+    <quartz.version>2.5.2</quartz.version>
+<!--    <c3p0.version>0.10.1</c3p0.version>-->
+    <c3p0.version>0.11.2</c3p0.version>
+<!--    <commons-net.version>3.11.1</commons-net.version>-->
+    <commons-net.version>3.12.0</commons-net.version>
     <pinyin.version>2.0.3.RELEASE</pinyin.version>
     <fastexcel.version>1.3.0</fastexcel.version>
     <rhino.version>1.8.0</rhino.version>
@@ -172,6 +175,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+      <version>3.20.0</version>
     </dependency>
 
     <!-- 监控sql日志 -->
@@ -256,11 +260,11 @@
       <version>${captcha.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-      <version>${commons-text.version}</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.apache.commons</groupId>-->
+<!--      <artifactId>commons-text</artifactId>-->
+<!--      <version>${commons-text.version}</version>-->
+<!--    </dependency>-->
 
     <!-- 提供增强的 InheritableThreadLocal, 即使用线程池组件也可以在线程之间传输值 -->
     <dependency>
@@ -305,10 +309,15 @@
       <artifactId>ganymed-ssh2</artifactId>
       <version>${ganymed-ssh2.version}</version>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.jcraft</groupId>-->
+<!--      <artifactId>jsch</artifactId>-->
+<!--      <version>0.1.55</version>-->
+<!--    </dependency>-->
     <dependency>
-      <groupId>com.jcraft</groupId>
+      <groupId>com.github.mwiede</groupId>
       <artifactId>jsch</artifactId>
-      <version>${jsch.version}</version>
+      <version>2.27.7</version>
     </dependency>
 
     <!-- 获取系统信息 -->
@@ -341,10 +350,16 @@
       <artifactId>quartz</artifactId>
       <version>${quartz.version}</version>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.mchange</groupId>-->
+<!--      <artifactId>c3p0</artifactId>-->
+<!--      <version>${c3p0.version}</version>-->
+<!--    </dependency>-->
     <dependency>
-      <groupId>com.mchange</groupId>
-      <artifactId>c3p0</artifactId>
-      <version>${c3p0.version}</version>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>7.0.2</version>
+      <scope>compile</scope>
     </dependency>
 
     <!-- CIDR解析 -->
@@ -352,12 +367,6 @@
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
       <version>${commons-net.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${joda-time.version}</version>
     </dependency>
 
     <!-- 拼音库 -->
@@ -377,11 +386,6 @@
     </dependency>
 
     <!-- Nashorn被弃用 -->
-    <dependency>
-      <groupId>org.mozilla</groupId>
-      <artifactId>rhino</artifactId>
-      <version>${rhino.version}</version>
-    </dependency>
     <!--        Expression expression = new Expression("2 + 3 * 4");-->
     <!--        EvaluationValue result = expression.evaluate();-->
     <!--        System.out.println(result.getNumberValue()); // 输出 14-->

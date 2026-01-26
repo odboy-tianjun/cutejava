@@ -30,9 +30,9 @@
     <fastjson2.version>2.0.60</fastjson2.version>
     <druid.version>1.2.27</druid.version>
     <commons-pool2.version>2.11.1</commons-pool2.version>
-    <mybatis-plus.version>3.5.14</mybatis-plus.version>
-    <hutool.version>5.8.40</hutool.version>
-    <jjwt.version>0.12.6</jjwt.version>
+    <mybatis-plus.version>3.5.15</mybatis-plus.version>
+    <hutool.version>5.8.43</hutool.version>
+    <jjwt.version>0.13.0</jjwt.version>
     <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
     <jna.version>5.8.0</jna.version>
     <mail.version>1.4.7</mail.version>
@@ -151,6 +151,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+      <version>3.20.0</version>
     </dependency>
 
     <!--监控sql日志-->
@@ -183,7 +184,7 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>9.3.0</version>
+      <version>9.5.0</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -205,13 +206,15 @@
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
-      <version>1.9.7</version>
+<!--      <version>1.9.7</version>-->
+      <version>1.9.25.1</version>
     </dependency>
     <!-- jvm启动参数 javaagent 支持 -->
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
-      <version>1.9.7</version>
+<!--      <version>1.9.7</version>-->
+      <version>1.9.25.1</version>
     </dependency>
 
     <!-- lombok插件 -->
@@ -248,11 +251,11 @@
       <version>1.6.2</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-      <version>1.13.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.apache.commons</groupId>-->
+<!--      <artifactId>commons-text</artifactId>-->
+<!--      <version>1.13.0</version>-->
+<!--    </dependency>-->
 
     <!-- 提供增强的 InheritableThreadLocal, 即使用线程池组件也可以在线程之间传输值 -->
     <dependency>
@@ -297,17 +300,23 @@
       <artifactId>ganymed-ssh2</artifactId>
       <version>build210</version>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.jcraft</groupId>-->
+<!--      <artifactId>jsch</artifactId>-->
+<!--      <version>0.1.55</version>-->
+<!--    </dependency>-->
     <dependency>
-      <groupId>com.jcraft</groupId>
+      <groupId>com.github.mwiede</groupId>
       <artifactId>jsch</artifactId>
-      <version>0.1.55</version>
+      <version>2.27.7</version>
     </dependency>
 
     <!-- 获取系统信息 -->
     <dependency>
       <groupId>com.github.oshi</groupId>
       <artifactId>oshi-core</artifactId>
-      <version>6.6.5</version>
+<!--      <version>6.6.5</version>-->
+      <version>6.9.2</version>
     </dependency>
 
     <!-- 邮件依赖 -->
@@ -331,26 +340,35 @@
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
-      <version>2.5.0</version>
+<!--      <version>2.5.0</version>-->
+      <version>2.5.2</version>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.mchange</groupId>-->
+<!--      <artifactId>c3p0</artifactId>-->
+<!--&lt;!&ndash;      <version>0.10.1</version>&ndash;&gt;-->
+<!--      <version>0.11.2</version>-->
+<!--    </dependency>-->
     <dependency>
-      <groupId>com.mchange</groupId>
-      <artifactId>c3p0</artifactId>
-      <version>0.10.1</version>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>7.0.2</version>
+      <scope>compile</scope>
     </dependency>
 
     <!-- CIDR解析 -->
     <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
-      <version>3.11.1</version>
+<!--      <version>3.11.1</version>-->
+      <version>3.12.0</version>
     </dependency>
 
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>2.12.7</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>joda-time</groupId>-->
+<!--      <artifactId>joda-time</artifactId>-->
+<!--      <version>2.12.7</version>-->
+<!--    </dependency>-->
 
     <!-- 拼音库 -->
     <dependency>
@@ -369,11 +387,6 @@
     </dependency>
 
     <!-- Nashorn被弃用 -->
-    <dependency>
-      <groupId>org.mozilla</groupId>
-      <artifactId>rhino</artifactId>
-      <version>1.8.0</version>
-    </dependency>
     <!--        Expression expression = new Expression("2 + 3 * 4");-->
     <!--        EvaluationValue result = expression.evaluate();-->
     <!--        System.out.println(result.getNumberValue()); // 输出 14-->

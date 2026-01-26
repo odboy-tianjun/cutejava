@@ -105,7 +105,7 @@ spring:
             multi-statement-allow: true
       aop-patterns: "cn.odboy.mapper.*,cn.odboy.service.*,cn.odboy.*.mapper.*,cn.odboy.*.service.*"
   redis:
-    database: ${REDIS_DB:10}
+    database: ${REDIS_DB:2}
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PWD:kd123456}

@@ -11,15 +11,34 @@ spring:
             # 必需，指定调度器实例的名称
             instanceName: cutejava
             # 必需，指定调度器实例的 ID
-            instanceId: auto
+            instanceId: AUTO
           threadPool:
-            # 可选，线程池的线程数量，可以根据需要调整
-            threadCount: 5
+            # Scheduler使用的线程池名称，实现了ThreadPool接口，参考org.quartz.simpl.SimpleThreadPool
+            class: org.quartz.simpl.SimpleThreadPool
+            # 可选，并发个数（1～100）
+            threadCount: 10
+            # 可选，线程的优先级（1～10）
+            threadPriority: 5
+            # 可选，指定在线程池里面创建的线程是否是守护线程
+            makeThreadsDaemons: false
+            # 可选，线程上下文类加载器是否继承自初始线程的加载器
+            threadsInheritContextClassLoaderOfInitializingThread: true
+          dataSource:
+            jobStoreDataSource:
+              provider: hikaricp
+              driver: com.mysql.cj.jdbc.Driver
+              URL: jdbc:mysql://127.0.0.1:3306/cutejava?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+              user: root
+              password: kd123456
+              maxConnections: 10
+              validationQuery: select 1
           jobStore:
             # 可选，如果你不需要集群，可以去掉
             isClustered: true
             # 可选，集群检查间隔时间，可以根据需要调整
             clusterCheckinInterval: 10000
+            # 可选，分布式事务类
+#            class: org.quartz.impl.jdbcjobstore.JobStoreTX
             # 必需，指定 JDBC 驱动代理类
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
             # 可选，是否使用属性存储，可以根据需要调整
@@ -28,3 +47,4 @@ spring:
             tablePrefix: qrtz_
             # 可选，指定误触发阈值，可以根据需要调整
             misfireThreshold: 60000
+            dataSource: jobStoreDataSource

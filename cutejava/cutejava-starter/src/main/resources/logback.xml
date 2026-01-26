@@ -4,8 +4,7 @@
     <property name="log.name" value="cutejava"/>
     <property name="log.home" value="/var/logs"/>
     <property name="log.charset" value="utf-8"/>
-    <property name="log.pattern"
-              value="%red(%contextName) - %red(%d{yyyy-MM-dd HH:mm:ss.SSS}) - %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n"/>
+    <property name="log.pattern" value="%red(%contextName) - %red(%d{yyyy-MM-dd HH:mm:ss.SSS}) - %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n"/>
 
     <!-- Spring 日志级别控制 -->
     <logger name="org.springframework" level="warn"/>
