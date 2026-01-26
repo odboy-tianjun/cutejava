@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.context;
 
+import com.ezylang.evalex.EvaluationException;
+import com.ezylang.evalex.Expression;
+import com.ezylang.evalex.data.EvaluationValue;
+import com.ezylang.evalex.parser.ParseException;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,32 +33,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class KitScriptHelper {
 
-  public Object evalObj(String script, Map<String, Object> args) {
-    try (Context rhino = Context.enter()) {
-      Scriptable scope = rhino.initStandardObjects();
-      bindArgumentsToScope(scope, args);
-      Object result = rhino.evaluateString(scope, script, "JavaScript", 1, null);
-      log.info("执行结果: {}", Context.toString(result));
-      return result;
+    public Object evalObj(String script, Map<String, Object> args) throws EvaluationException, ParseException {
+        Expression expression = new Expression(script);
+        expression.withValues(args);
+        EvaluationValue result = expression.evaluate();
+        return result.getValue();
     }
-  }
-
-  private void bindArgumentsToScope(Scriptable scope, Map<?, ?> args) {
-    if (args == null) {
-      return;
-    }
-    for (Map.Entry<?, ?> entry : args.entrySet()) {
-      Object jsValue = Context.javaToJS(entry.getValue(), scope);
-      scope.put(entry.getKey().toString(), scope, jsValue);
-    }
-  }
-
-  private void bindArgumentsToScope(Scriptable scope, Object args) {
-    if (args == null) {
-      return;
-    }
-    // 单个对象参数
-    Object jsValue = Context.javaToJS(args, scope);
-    scope.put("args", scope, jsValue);
-  }
 }
