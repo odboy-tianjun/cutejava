@@ -16,10 +16,11 @@
 package cn.odboy.util;
 
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import lombok.experimental.UtilityClass;
 import java.util.Calendar;
 import java.util.Date;
+import lombok.experimental.UtilityClass;
 
 /**
  * 时间相关工具
@@ -145,7 +146,21 @@ public class KitDateUtil {
     return weekDays[w];
   }
 
-  public static void main(String[] args) {
-    System.err.println(getWeekDay());
+  /**
+   * 格式化毫秒时间戳字符串为'yyyy-MM-dd'格式
+   *
+   * @param timestamp 例如：1767196800000
+   * @return 例如：2026-01-01
+   */
+  public static String formatMsTimestamp(String timestamp) {
+    String formatDate;
+    if (timestamp.matches("\\d{13}")) {
+      long ts = Long.parseLong(timestamp);
+      formatDate = DateUtil.format(new Date(ts), DatePattern.NORM_DATE_PATTERN);
+    } else {
+      DateTime dateTime = DateTime.of(timestamp, DatePattern.NORM_DATETIME_PATTERN);
+      formatDate = DateUtil.format(dateTime, DatePattern.NORM_DATE_PATTERN);
+    }
+    return formatDate;
   }
 }
