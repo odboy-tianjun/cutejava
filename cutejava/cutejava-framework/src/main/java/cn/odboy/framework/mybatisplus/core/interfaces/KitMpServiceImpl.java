@@ -20,15 +20,19 @@ import cn.odboy.base.KitPageResult;
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.framework.mybatisplus.core.KitMpQUtil;
 import cn.odboy.util.KitBeanUtil;
+import cn.odboy.util.KitValidUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+
 import org.apache.ibatis.binding.MapperMethod;
 
 /**
@@ -39,147 +43,59 @@ import org.apache.ibatis.binding.MapperMethod;
  */
 public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M, T> {
 
-  /**
-   * 快速插入
-   *
-   * @param resources /
-   */
   public <G> int saveFeatureClazz(G resources) {
     return getBaseMapper().insert(KitBeanUtil.copyToClass(resources, this.getEntityClass()));
   }
 
-  /**
-   * 快速批量插入
-   *
-   * @param resources /
-   */
-  public <G> int saveFeatureClazzList(List<G> resources) {
-    return getBaseMapper().insertBatchSomeColumn(KitBeanUtil.copyToList(resources, this.getEntityClass()));
+  public <G> int batchSaveFeatureClazz(List<G> resources) {
+    return getBaseMapper().insert(KitBeanUtil.copyToList(resources, this.getEntityClass())).size();
   }
 
-  /**
-   * 快速更新
-   *
-   * @param resources /
-   */
-  public <G> int modifyFeatureClazzById(G resources) {
+  public <G> int updateFeatureClazzById(G resources) {
     return getBaseMapper().updateById(KitBeanUtil.copyToClass(resources, this.getEntityClass()));
   }
 
-  /**
-   * 快速批量更新
-   *
-   * @param resources /
-   * @param batchSize 每批数量
-   */
-  public <G> boolean modifyFeatureClazzListById(Collection<G> resources, int batchSize) {
-    String sqlStatement = this.getSqlStatement(SqlMethod.UPDATE_BY_ID);
-    return this.executeBatch(resources, batchSize, (sqlSession, entity) -> {
-      MapperMethod.ParamMap<T> param = new MapperMethod.ParamMap<>();
-      param.put("et", KitBeanUtil.copyToClass(entity, this.getEntityClass()));
-      sqlSession.update(sqlStatement, param);
-    });
+  public <G> int batchUpdateFeatureClazzById(Collection<G> resources, int batchSize) {
+    return getBaseMapper().updateById(KitBeanUtil.copyToList(resources, this.getEntityClass()), batchSize).size();
+//    String sqlStatement = this.getSqlStatement(SqlMethod.UPDATE_BY_ID);
+//    return this.executeBatch(
+//        resources, batchSize, (sqlSession, entity) -> {
+//          MapperMethod.ParamMap<T> param = new MapperMethod.ParamMap<>();
+//          param.put("et", KitBeanUtil.copyToClass(entity, this.getEntityClass()));
+//          sqlSession.update(sqlStatement, param);
+//        }
+//    );
   }
 
-  /**
-   * 通过id查询
-   *
-   * @param id          /
-   * @param targetClazz 目标类型
-   */
-  public <G> G queryFeatureClazzById(Serializable id, Class<G> targetClazz) {
-    T entity = this.getById(id);
-    return entity == null ? null : KitBeanUtil.copyToClass(entity, targetClazz);
+  public <G> G getFeatureClazzById(Serializable id, Class<G> targetClazz) {
+    return KitBeanUtil.copyToClass(this.getById(id), targetClazz);
   }
 
-  /**
-   * 查一条数据
-   *
-   * @param wrapper 制造条件
-   */
-  public T queryClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn) {
-    if (orderColumn == null) {
-      throw new BadRequestException("参数orderColumn(排序的列)必填");
-    }
+  public T getClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn) {
+    KitValidUtil.isNull(orderColumn, "排序列", "orderColumn");
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
-    wrapper.last("limit 1");
     wrapper.orderByDesc(orderColumn);
-    List<T> ts = baseMapper.selectList(wrapper);
-    if (ts.isEmpty()) {
-      return null;
-    }
-    return ts.stream().findFirst().get();
+    wrapper.last("limit 1");
+    return baseMapper.selectOne(wrapper);
   }
 
-  public <G> G queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> clazz) {
-    if (orderColumn == null) {
-      throw new BadRequestException("参数orderColumn(排序的列)必填");
-    }
+  public <G> G getFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn, Class<G> targetClazz) {
+    KitValidUtil.isNull(orderColumn, "排序列", "orderColumn");
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
-    wrapper.last("limit 1");
     wrapper.orderByDesc(orderColumn);
-    List<T> ts = baseMapper.selectList(wrapper);
-    if (ts.isEmpty()) {
-      return null;
-    }
-    return KitBeanUtil.copyToClass(ts.stream().findFirst().get(), clazz);
+    wrapper.last("limit 1");
+    return KitBeanUtil.copyToClass(baseMapper.selectOne(wrapper), targetClazz);
   }
 
-  /**
-   * 通过id集合查询
-   *
-   * @param ids         /
-   * @param targetClazz 目标类型
-   */
   public <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz) {
     List<T> entitys = this.listByIds(ids);
-    return entitys == null || entitys.isEmpty() ? CollUtil.newArrayList() : KitBeanUtil.copyToList(entitys, targetClazz);
+    return KitBeanUtil.copyToList(entitys, targetClazz);
   }
 
-  /**
-   * 查有关的数据
-   *
-   * @param args 动态条件
-   */
-  public <Q> List<T> queryClazzListByArgs(Q args) {
-    QueryWrapper<T> predicate = KitMpQUtil.build(args);
-    return baseMapper.selectList(predicate);
-  }
-
-  /**
-   * 查有关的数据
-   *
-   * @param wrapper 制造条件
-   */
-  public List<T> queryClazzListByArgs(LambdaQueryWrapper<T> wrapper) {
-    if (wrapper == null) {
-      wrapper = new LambdaQueryWrapper<>();
-    }
-    return baseMapper.selectList(wrapper);
-  }
-
-  /**
-   * 查有关的数据并转成目标类型的数据
-   *
-   * @param args        动态条件
-   * @param targetClazz 目标类型
-   */
-  public <G, Q> List<G> queryFeatureClazzListByArgs(Q args, Class<G> targetClazz) {
-    QueryWrapper<T> predicate = KitMpQUtil.build(args);
-    List<T> data = baseMapper.selectList(predicate);
-    return KitBeanUtil.copyToList(data, targetClazz);
-  }
-
-  /**
-   * 查有关的数据并转换为目标类型
-   *
-   * @param wrapper     制造条件
-   * @param targetClazz 目标类型
-   */
   public <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz) {
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
@@ -187,13 +103,7 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     return KitBeanUtil.copyToList(baseMapper.selectList(wrapper), targetClazz);
   }
 
-  /**
-   * 查有关的分页数据
-   *
-   * @param wrapper  制造条件
-   * @param pageable 分页参数
-   */
-  public KitPageResult<T> queryClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
+  public KitPageResult<T> searchClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
@@ -201,58 +111,19 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     return new KitPageResult<>(originPageData.getRecords(), originPageData.getTotal());
   }
 
-  /**
-   * 查有关的分页数据
-   *
-   * @param wrapper     制造条件
-   * @param pageable    分页参数
-   * @param targetClazz 目标类型
-   */
-  public <G> KitPageResult<G> queryFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable,
-      Class<G> targetClazz) {
+  public <G> KitPageResult<G> searchFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-    return new KitPageResult<>(KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz),
-        originPageData.getTotal());
+    return new KitPageResult<>(
+        KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz),
+        originPageData.getTotal()
+    );
   }
 
-  public <G, Q> KitPageResult<G> queryFeatureClazzPageByArgs(Q args, IPage<T> pageable, Class<G> targetClazz) {
-    QueryWrapper<T> wrapper = KitMpQUtil.build(args);
-    IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-    return new KitPageResult<>(KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz),
-        originPageData.getTotal());
-  }
-
-  public <Q> KitPageResult<T> queryClazzPageByArgs(Q args, IPage<T> pageable) {
-    QueryWrapper<T> wrapper = KitMpQUtil.build(args);
-    IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-    return new KitPageResult<>(originPageData.getRecords(), originPageData.getTotal());
-  }
-
-  /**
-   * 条件更新
-   *
-   * @param wrapper 制造条件
-   * @param entity  更新内容
-   */
-  public int modifyClazzByArgs(LambdaQueryWrapper<T> wrapper, T entity) {
-    if (wrapper == null) {
-      throw new BadRequestException("参数wrapper必填");
-    }
-    return baseMapper.update(entity, wrapper);
-  }
-
-  /**
-   * 条件删除
-   *
-   * @param wrapper 制造条件
-   */
-  public int removeClazzByArgs(LambdaQueryWrapper<T> wrapper) {
-    if (wrapper == null) {
-      throw new BadRequestException("参数wrapper必填");
-    }
-    return baseMapper.delete(wrapper);
+  public int updateClazzByArgs(LambdaUpdateWrapper<T> wrapper) {
+    KitValidUtil.isNull(wrapper, "查询条件与值", "wrapper");
+    return baseMapper.update(null, wrapper);
   }
 }

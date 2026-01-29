@@ -17,9 +17,11 @@ package cn.odboy.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import lombok.experimental.UtilityClass;
 
 /**
@@ -32,18 +34,26 @@ import lombok.experimental.UtilityClass;
 public class KitBeanUtil {
 
   public static <T> T copyToClass(Object source, Class<T> tClass) {
+    if (source == null) {
+      return null;
+    }
     return BeanUtil.copyProperties(source, tClass);
   }
 
   public static void copyToTarget(Object source, Object target) {
+    if (source == null || target == null) {
+      return;
+    }
     BeanUtil.copyProperties(source, target, CopyOptions.create().setIgnoreNullValue(true));
   }
 
   public static <T> List<T> copyToList(Collection<?> collection, Class<T> targetType) {
-    List<T> ts = BeanUtil.copyToList(collection, targetType);
-    if (ts == null) {
+    if (collection == null) {
       return new ArrayList<>(0);
     }
-    return ts;
+    if (collection.isEmpty()) {
+      return new ArrayList<>(0);
+    }
+    return BeanUtil.copyToList(collection, targetType);
   }
 }
