@@ -211,8 +211,6 @@ app:
     - "org.springframework"
     - "cn.odboy.system.dal.dataobject"
     - "cn.odboy.system.dal.model"
-    - "cn.odboy.task.dal.dataobject"
-    - "cn.odboy.task.dal.model"
 # debug
 #debug: true
 # 日志配置
