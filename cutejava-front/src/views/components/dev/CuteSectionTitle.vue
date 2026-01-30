@@ -5,8 +5,8 @@
  * @created 2025-08-13
  -->
 <template>
-  <el-row>
-    <el-col :span="12">
+  <el-row style="margin: 10px;" class="container-height">
+    <el-col :span="12" class="container-height">
       <div class="title-container">
         <div class="main-title-line">
           <i class="el-icon-platform-eleme" style="color: #409EFF;font-size: 18px" />
@@ -16,8 +16,8 @@
         <div v-if="thirdTitle" class="third-title-with-text-align">{{ thirdTitle }}</div>
       </div>
     </el-col>
-    <el-col :span="12" style="text-align: right;line-height: 64px;height: 64px;padding-right: 30px">
-      <slot />
+    <el-col v-if="$slots.operation" :span="12" class="container-height postfix-operation">
+      <slot name="operation" />
     </el-col>
   </el-row>
 </template>
@@ -58,12 +58,13 @@ export default {
   color: #303133;
 
   i:first-child {
-    margin-right: 8px; // 图标与文字的间距
+    // 图标与文字的间距
+    margin-right: 8px;
   }
 }
 
 .sub-title-with-icon-align {
-  font-size: 14px;
+  font-size: 13px;
   color: #606266;
   margin-bottom: 8px;
 }
@@ -73,5 +74,16 @@ export default {
   color: #909399;
   margin-left: 26px;
   margin-bottom: 0;
+}
+
+.container-height {
+  min-height: 27px;
+  max-height: 27px;
+}
+
+.postfix-operation {
+  text-align: right;
+  line-height: 27px;
+  padding-right: 30px;
 }
 </style>
