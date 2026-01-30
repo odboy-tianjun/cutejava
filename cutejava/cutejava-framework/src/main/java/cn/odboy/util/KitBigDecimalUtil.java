@@ -18,6 +18,7 @@ package cn.odboy.util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+
 import lombok.experimental.UtilityClass;
 
 /**
@@ -35,14 +36,17 @@ public final class KitBigDecimalUtil {
   private static BigDecimal toBigDecimal(Object obj) {
     if (obj instanceof BigDecimal) {
       return (BigDecimal) obj;
-    } else if (obj instanceof Long) {
-      return BigDecimal.valueOf((Long) obj);
-    } else if (obj instanceof Integer) {
-      return BigDecimal.valueOf((Integer) obj);
-    } else if (obj instanceof Double) {
-      return new BigDecimal(String.valueOf(obj));
+    } else if (obj instanceof Long || obj instanceof Integer ||
+        obj instanceof Short || obj instanceof Byte) {
+      return BigDecimal.valueOf(((Number) obj).longValue());
+    } else if (obj instanceof Double || obj instanceof Float) {
+      return BigDecimal.valueOf(((Number) obj).doubleValue());
+    } else if (obj instanceof String) {
+      return new BigDecimal((String) obj);
+    } else if (obj instanceof Number) {
+      return BigDecimal.valueOf(((Number) obj).doubleValue());
     } else {
-      throw new IllegalArgumentException("Unsupported type");
+      throw new IllegalArgumentException("Unsupported type: " + obj.getClass().getName());
     }
   }
 
@@ -51,12 +55,12 @@ public final class KitBigDecimalUtil {
    *
    * @param a 加数
    * @param b 加数
-   * @return 两个加数的和, 保留两位小数
+   * @return 两个加数的和,
    */
   public static BigDecimal add(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.add(bdB).setScale(2, RoundingMode.HALF_UP);
+    return bdA.add(bdB);
   }
 
   /**
@@ -64,12 +68,12 @@ public final class KitBigDecimalUtil {
    *
    * @param a 被减数
    * @param b 减数
-   * @return 两数的差, 保留两位小数
+   * @return 两数的差,
    */
   public static BigDecimal subtract(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.subtract(bdB).setScale(2, RoundingMode.HALF_UP);
+    return bdA.subtract(bdB);
   }
 
   /**
@@ -82,7 +86,7 @@ public final class KitBigDecimalUtil {
   public static BigDecimal multiply(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.multiply(bdB).setScale(6, RoundingMode.HALF_UP);
+    return bdA.multiply(bdB);
   }
 
   /**
@@ -90,37 +94,23 @@ public final class KitBigDecimalUtil {
    *
    * @param a 被除数
    * @param b 除数
-   * @return 两数的商，保留两位小数
+   * @return 两数的商
    */
   public static BigDecimal divide(Object a, Object b) {
     BigDecimal bdA = toBigDecimal(a);
     BigDecimal bdB = toBigDecimal(b);
-    return bdA.divide(bdB, 6, RoundingMode.HALF_UP);
-  }
-
-  /**
-   * 除法
-   *
-   * @param a     被除数
-   * @param b     除数
-   * @param scale 保留小数位数
-   * @return 两数的商，保留两位小数
-   */
-  public static BigDecimal divide(Object a, Object b, int scale) {
-    BigDecimal bdA = toBigDecimal(a);
-    BigDecimal bdB = toBigDecimal(b);
-    return bdA.divide(bdB, scale, RoundingMode.HALF_UP);
+    return bdA.divide(bdB, 6, RoundingMode.DOWN);
   }
 
   /**
    * 分转元
    *
    * @param obj 分的金额
-   * @return 转换后的元，保留两位小数
+   * @return 转换后的元
    */
   public static BigDecimal centsToYuan(Object obj) {
     BigDecimal cents = toBigDecimal(obj);
-    return cents.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+    return cents.divide(BigDecimal.valueOf(100), 6, RoundingMode.DOWN);
   }
 
   /**
@@ -129,9 +119,29 @@ public final class KitBigDecimalUtil {
    * @param obj 元的金额
    * @return 转换后的分
    */
-  public static Long yuanToCents(Object obj) {
+  public static long yuanToCents(Object obj) {
     BigDecimal yuan = toBigDecimal(obj);
-    return yuan.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValue();
+    return yuan.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_EVEN).longValue();
+  }
+
+  /**
+   * 取整，采用银行家算法
+   *
+   * @param obj 金额
+   * @return /
+   */
+  public static BigDecimal toRound(Object obj) {
+    return toBigDecimal(obj).setScale(0, RoundingMode.HALF_EVEN);
+  }
+
+  /**
+   * 取整，采用银行家算法
+   *
+   * @param obj 金额
+   * @return /
+   */
+  public static long toRoundLong(Object obj) {
+    return toBigDecimal(obj).setScale(0, RoundingMode.HALF_EVEN).longValue();
   }
 
   /**
@@ -162,5 +172,11 @@ public final class KitBigDecimalUtil {
     System.out.println("分转元结果: " + centsToYuan(cents));
     BigDecimal yuan = new BigDecimal("123.45");
     System.out.println("元转分结果: " + yuanToCents(yuan));
+    BigDecimal toRo = new BigDecimal("123.1548456");
+    System.out.println("取整: " + toRound(toRo));
+    BigDecimal toRoLong = new BigDecimal("123.1548456");
+    System.out.println("取整转long: " + toRoundLong(toRoLong));
+    BigDecimal formatGa = new BigDecimal("1231548456123123");
+    System.out.println("格式化千分位: " + formatGroupingAmount(formatGa));
   }
 }
