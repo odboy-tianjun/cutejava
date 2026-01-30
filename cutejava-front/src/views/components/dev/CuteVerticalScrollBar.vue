@@ -5,7 +5,7 @@
  * @created 2025-08-20
  -->
 <template>
-  <div class="overflow-panel" :style="{height: height}">
+  <div class="overflow-panel" :style="{width: '100%', height: height, maxHeight: height}">
     <slot />
   </div>
 </template>

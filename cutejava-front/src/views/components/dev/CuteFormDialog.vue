@@ -14,7 +14,7 @@
     :modal="false"
   >
     <div class="container-form">
-      <el-form ref="form" :model="model" :rules="rules" :inline="inline">
+      <el-form ref="form" :model="model" :rules="rules" :inline="inline" size="mini">
         <!-- 这里是插槽，用于渲染传入的 el-form-item -->
         <slot />
       </el-form>
@@ -41,7 +41,7 @@ export default {
     width: {
       type: String,
       required: false,
-      default: '30%'
+      default: '40%'
     },
     fullscreen: {
       type: Boolean,

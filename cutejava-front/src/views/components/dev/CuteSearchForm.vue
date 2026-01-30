@@ -12,12 +12,15 @@
     label-position="right"
     label-width="90px"
     :disabled="disabled"
+    size="mini"
   >
+    <!-- 通过  <template v-slot:suffix> 插槽前置查询条件 -->
     <slot name="suffix" />
     <el-form-item>
       <el-button type="primary" @click="onFormSubmit('searchForm')">查询</el-button>
       <el-button @click="onFormReset('searchForm')">重置</el-button>
     </el-form-item>
+    <!-- 通过  <template v-slot:operation> 插槽后置操作按钮 -->
     <slot name="operation" />
   </el-form>
 </template>

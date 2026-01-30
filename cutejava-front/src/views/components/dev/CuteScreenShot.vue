@@ -11,10 +11,10 @@
         type="primary"
         icon="el-icon-camera"
         :loading="capturing"
-        size="small"
+        size="mini"
         @click="capture"
       >
-        截图并下载
+        截屏
       </el-button>
     </div>
     <div id="elementIdSelector" style="padding: 15px">
