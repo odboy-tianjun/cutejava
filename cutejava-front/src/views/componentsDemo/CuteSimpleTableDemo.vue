@@ -9,6 +9,7 @@
         label-position="right"
         label-width="80px"
         :rules="form.rules"
+        size="mini"
       >
         <el-form-item label="模糊查询" prop="blurry">
           <el-input v-model="form.model.blurry" clearable />
@@ -28,18 +29,26 @@
     <!-- params-transform: 组装查询参数 -->
     <!-- responseTransform: 组装表格对象。对响应结果做处理 -->
     <!-- primary-key: 主键 -->
-    <!-- mode: 模式。不传默认，传multi为多选 -->
+    <!-- showSelect: 是否多选。不传默认false，传true为多选 -->
     <!-- @selection-change: 当且仅当mode为multi时启用 -->
+    <!-- @order-change: 当排序字段被单击，el-table-column 需添加 sortable="custom" 属性 -->
     <cute-simple-table
       ref="instance"
       :fetch="curd.fetch"
       :params-transform="curd.paramsTransform"
       primary-key="id"
       :page-props="curd.pageProps"
+      show-select
     >
+      <template v-slot:batchArea>
+        <cute-button type="primary">批量绑定</cute-button>
+      </template>
+      <template v-slot:toolArea>
+        <cute-button type="primary">导出</cute-button>
+      </template>
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="description" label="描述" />
-      <el-table-column prop="createTime" label="创建时间" :formatter="FormatRowDateTimeStr" />
+      <el-table-column prop="createTime" label="创建时间" sortable="custom" :formatter="FormatRowDateTimeStr" />
       <el-table-column prop="createBy" label="创建人" />
       <el-table-column label="操作" width="150" min-width="150" fixed="right">
         <template slot-scope="scope">
@@ -50,7 +59,13 @@
         </template>
       </el-table-column>
     </cute-simple-table>
-    <cute-form-dialog ref="dialogForm" :model="createFormModel" :rules="createFormRules" title="演示:表单对话框" @submit="onDialogFormSubmit">
+    <cute-form-dialog
+      ref="dialogForm"
+      :model="createFormModel"
+      :rules="createFormRules"
+      title="演示:表单对话框"
+      @submit="onDialogFormSubmit"
+    >
       <el-form-item label="活动名称" prop="name" label-width="100px">
         <el-input v-model="createFormModel.name" placeholder="请输入" style="width: 100%" />
       </el-form-item>
@@ -61,7 +76,14 @@
         </el-select>
       </el-form-item>
     </cute-form-dialog>
-    <cute-form-drawer ref="drawerFrom" :model="createFormModel" :rules="createFormRules" title="演示:表单抽屉" @submit="onDrawerFormSubmit">
+    <cute-form-drawer
+      ref="drawerFrom"
+      :model="createFormModel"
+      :rules="createFormRules"
+      title="演示:表单抽屉"
+      width="45%"
+      @submit="onDrawerFormSubmit"
+    >
       <el-form-item label="活动名称" prop="name" label-width="100px">
         <el-input v-model="createFormModel.name" placeholder="请输入" style="width: 100%" />
       </el-form-item>
@@ -70,6 +92,12 @@
           <el-option label="区域一" value="shanghai" />
           <el-option label="区域二" value="beijing" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="活动模式" prop="modeList" label-width="100px">
+        <cute-transfer v-model="createFormModel.modeList" :data-source="modeDataSource">
+          <el-table-column prop="name" label="姓名" />
+          <el-table-column prop="description" label="备注" />
+        </cute-transfer>
       </el-form-item>
     </cute-form-drawer>
   </div>
@@ -81,12 +109,21 @@ import DictService from '@/api/system/dict'
 import CuteFormDialog from '@/views/components/dev/CuteFormDialog'
 import CuteFormDrawer from '@/views/components/dev/CuteFormDrawer'
 import { FormatRowDateTimeStr } from '@/utils/CsUtil'
+import CuteButton from '@/views/components/dev/CuteButton.vue'
+import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',
-  components: { CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
+  components: { CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
   data() {
     return {
+      modeDataSource: [
+        { id: 1, name: '小明', description: '小明牛P' },
+        { id: 2, name: '小明', description: '小明牛P' },
+        { id: 3, name: '小明', description: '小明牛P' },
+        { id: 4, name: '小明', description: '小明牛P' },
+        { id: 5, name: '小明', description: '小明牛P' }
+      ],
       form: {
         model: {
           blurry: ''
@@ -137,7 +174,8 @@ export default {
       },
       createFormModel: {
         name: '',
-        region: ''
+        region: '',
+        modeList: []
       },
       createFormRules: {
         name: [

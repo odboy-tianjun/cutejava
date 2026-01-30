@@ -6,6 +6,19 @@
  -->
 <template>
   <div>
+    <el-row>
+      <el-col v-if="showSelect" :span="2" class="selection-box">
+        已选 <font class="selection-count">{{ crud.selection && crud.selection.length }}</font> 条
+      </el-col>
+      <el-col :span="11" style="text-align: left">
+        <!-- 通过  <template v-slot:batchArea> 插槽，数据表格上方左侧 添加 批量操作入口 -->
+        <slot name="batchArea" />
+      </el-col>
+      <el-col :span="11" style="text-align: right">
+        <!-- 通过  <template v-slot:toolArea> 插槽，数据表格上方右侧 添加 工具入口，比如导出 -->
+        <slot name="toolArea" />
+      </el-col>
+    </el-row>
     <el-table
       ref="table"
       v-loading="crud.loading"
@@ -17,9 +30,12 @@
       style="width: 100%;"
       :height="height"
       :max-height="height"
+      highlight-current-row
+      highlight-selection-row
+      @sort-change="onTableSortChange"
       @selection-change="onTableSelectionChange"
     >
-      <el-table-column v-if="mode === 'multi'" type="selection" width="55" />
+      <el-table-column v-if="showSelect" type="selection" width="55" />
       <slot />
     </el-table>
     <el-pagination
@@ -60,10 +76,10 @@ export default {
       required: false,
       default: null
     },
-    mode: {
-      type: String,
+    showSelect: {
+      type: Boolean,
       required: false,
-      default: 'none'
+      default: false
     },
     paging: {
       type: Boolean,
@@ -100,7 +116,9 @@ export default {
           console.log('on-page-change', currentPage, pageSize)
           // this.$emit('onPageChange', currentPage, pageSize, total)
           this.refresh()
-        }
+        },
+        orderBy: '',
+        selection: []
       }
     }
   },
@@ -117,6 +135,8 @@ export default {
   },
   methods: {
     refresh() {
+      this.crud.orderBy = ''
+      this.crud.selection = []
       this.initData()
     },
     async initData() {
@@ -124,6 +144,10 @@ export default {
       // 自定义请求参数
       if (this.paramsTransform) {
         params = this.paramsTransform(this.pageProps)
+      }
+      // 排序字段
+      if (this.crud.orderBy) {
+        params.orderBy = this.crud.orderBy
       }
       if (this.fetch) {
         try {
@@ -141,15 +165,55 @@ export default {
             this.crud.dataSource = response.content
           }
           return response
+        } catch (e) {
+          console.error('CuteSimpleTable请求远程数据异常', e)
+          this.pageProps.total = 0
+          this.crud.dataSource = []
         } finally {
           this.crud.loading = false
         }
       }
     },
     onTableSelectionChange(selection) {
+      this.crud.selection = selection
       this.$emit('selection-change', selection)
+    },
+    getDataSource() {
+      return this.crud.dataSource
+    },
+    onTableSortChange(sortProps) {
+      const prop = sortProps.prop
+      const order = sortProps.order
+      let result
+      if (order === 'ascending') {
+        result = { column: prop, orderType: 'asc' }
+      } else if (order === 'descending') {
+        result = { column: prop, orderType: 'desc' }
+      } else {
+        result = { column: prop, orderType: 'desc' }
+      }
+      // this.$emit('order-change', result)
+      this.crud.orderBy = result
+      this.refresh()
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "~@/assets/styles/variables.scss";
+
+.selection-box {
+  text-align: left;
+  font-size: 12px;
+  padding-left: 10px;
+  min-height: 26.7px;
+  max-height: 26.7px;
+  padding-top: 7px;
+}
+
+.selection-count {
+  color: $menuActiveText;
+}
+</style>
 

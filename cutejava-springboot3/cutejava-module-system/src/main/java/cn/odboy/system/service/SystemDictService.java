@@ -17,6 +17,7 @@ package cn.odboy.system.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
 import cn.odboy.system.dal.dataobject.SystemDictTb;
 import cn.odboy.system.dal.model.export.SystemDictExportRowVo;
@@ -28,11 +29,12 @@ import cn.odboy.util.KitBeanUtil;
 import cn.odboy.util.KitPageUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -85,14 +87,19 @@ public class SystemDictService {
   /**
    * 分页查询
    *
-   * @param args 条件
-   * @param page 分页参数
+   * @param args    条件
+   * @param page    分页参数
+   * @param orderBy 排序参数
    * @return /
    */
-  public KitPageResult<SystemDictTb> searchDict(SystemQueryDictArgs args, Page<SystemDictTb> page) {
-    LambdaQueryWrapper<SystemDictTb> wrapper = new LambdaQueryWrapper<>();
-    this.injectQueryParams(args, wrapper);
-    Page<SystemDictTb> selectPage = systemDictMapper.selectPage(page, wrapper);
+  public KitPageResult<SystemDictTb> searchDict(SystemQueryDictArgs args, Page<SystemDictTb> page, KitPageArgs.OrderBy orderBy) {
+    QueryWrapper<SystemDictTb> wrapper = new QueryWrapper<>();
+    if (orderBy != null) {
+      orderBy.bindWrapper(wrapper);
+    }
+    LambdaQueryWrapper<SystemDictTb> lambda = wrapper.lambda();
+    this.injectQueryParams(args, lambda);
+    Page<SystemDictTb> selectPage = systemDictMapper.selectPage(page, lambda);
     return KitPageUtil.toPage(selectPage);
   }
 
@@ -150,8 +157,10 @@ public class SystemDictService {
    */
   private void injectQueryParams(SystemQueryDictArgs args, LambdaQueryWrapper<SystemDictTb> wrapper) {
     if (args != null) {
-      wrapper.and(StrUtil.isNotBlank(args.getBlurry()), c -> c.like(SystemDictTb::getName, args.getBlurry()).or()
-          .like(SystemDictTb::getDescription, args.getBlurry()));
+      wrapper.and(
+          StrUtil.isNotBlank(args.getBlurry()),
+          c -> c.like(SystemDictTb::getName, args.getBlurry()).or().like(SystemDictTb::getDescription, args.getBlurry())
+      );
     }
   }
 }

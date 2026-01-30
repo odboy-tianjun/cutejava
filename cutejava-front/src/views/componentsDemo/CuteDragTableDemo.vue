@@ -9,6 +9,7 @@
         label-position="right"
         label-width="80px"
         :rules="form.rules"
+        size="mini"
       >
         <el-form-item label="模糊查询" prop="blurry">
           <el-input v-model="form.model.blurry" clearable />
@@ -24,9 +25,9 @@
     <!-- params-transform: 组装查询参数 -->
     <!-- responseTransform: 组装表格对象。对响应结果做处理 -->
     <!-- primary-key: 主键 -->
-    <!-- data-source: 数据源。当data-source不为空时，以data-source的数据为主 -->
-    <!-- mode: 模式。不传默认，传multi为多选 -->
+    <!-- showSelect: 是否多选。不传默认false，传true为多选 -->
     <!-- @selection-change: 当且仅当mode为multi时启用 -->
+    <!-- @order-change: 当排序字段被单击，el-table-column 需添加 sortable="custom" 属性 -->
     <cute-drag-table
       ref="instance"
       :fetch="curd.fetch"

@@ -67,7 +67,7 @@ public class SystemDictController {
   @PreAuthorize("@el.check('dict:list')")
   public ResponseEntity<KitPageResult<SystemDictTb>> queryDictByArgs(@Validated @RequestBody KitPageArgs<SystemQueryDictArgs> pageArgs) {
     Page<SystemDictTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
-    return ResponseEntity.ok(systemDictService.searchDict(pageArgs.getArgs(), page));
+    return ResponseEntity.ok(systemDictService.searchDict(pageArgs.getArgs(), page, pageArgs.getOrderBy()));
   }
 
   @OperationLog
