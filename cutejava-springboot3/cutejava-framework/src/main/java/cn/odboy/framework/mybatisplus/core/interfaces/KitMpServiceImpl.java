@@ -84,19 +84,18 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     return KitBeanUtil.copyToClass(baseMapper.selectOne(wrapper), targetClazz);
   }
 
-  public <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz) {
-    List<T> entitys = this.listByIds(ids);
-    return KitBeanUtil.copyToList(entitys, targetClazz);
+  public <G> List<G> listFeatureClazzByIds(List<Serializable> ids, Class<G> targetClazz) {
+    return KitBeanUtil.copyToList(this.listByIds(ids), targetClazz);
   }
 
-  public <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz) {
+  public <G> List<G> queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz) {
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
     return KitBeanUtil.copyToList(baseMapper.selectList(wrapper), targetClazz);
   }
 
-  public KitPageResult<T> searchClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
+  public KitPageResult<T> searchClazzByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable) {
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
@@ -104,15 +103,12 @@ public class KitMpServiceImpl<M extends KitMpMapper<T>, T> extends ServiceImpl<M
     return new KitPageResult<>(originPageData.getRecords(), originPageData.getTotal());
   }
 
-  public <G> KitPageResult<G> searchFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz) {
+  public <G> KitPageResult<G> searchFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz, IPage<T> pageable) {
     if (wrapper == null) {
       wrapper = new LambdaQueryWrapper<>();
     }
     IPage<T> originPageData = baseMapper.selectPage(pageable, wrapper);
-    return new KitPageResult<>(
-        KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz),
-        originPageData.getTotal()
-    );
+    return new KitPageResult<>(KitBeanUtil.copyToList(originPageData.getRecords(), targetClazz), originPageData.getTotal());
   }
 
   public int updateClazzByArgs(LambdaUpdateWrapper<T> wrapper) {

@@ -83,7 +83,7 @@ public interface KitMpService<T> extends IService<T> {
   T getClazzByArgs(LambdaQueryWrapper<T> wrapper, SFunction<T, ?> orderColumn);
 
   /**
-   * 根据条件查询一条数据（已测试）
+   * 根据条件查询一条目标类型的数据（已测试）
    *
    * @param wrapper     查询条件
    * @param orderColumn 排序字段
@@ -99,7 +99,7 @@ public interface KitMpService<T> extends IService<T> {
    * @param targetClazz 目标类型
    * @return /
    */
-  <G> List<G> queryFeatureClazzListByIds(List<Serializable> ids, Class<G> targetClazz);
+  <G> List<G> listFeatureClazzByIds(List<Serializable> ids, Class<G> targetClazz);
 
   /**
    * 根据条件查询目标数据（已测试）
@@ -108,7 +108,7 @@ public interface KitMpService<T> extends IService<T> {
    * @param targetClazz 目标类型
    * @return /
    */
-  <G> List<G> queryFeatureClazzListByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
+  <G> List<G> queryFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz);
 
   /**
    * 根据条件分页查询数据（已测试）
@@ -117,17 +117,17 @@ public interface KitMpService<T> extends IService<T> {
    * @param pageable 分页参数
    * @return /
    */
-  KitPageResult<T> searchClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
+  KitPageResult<T> searchClazzByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable);
 
   /**
    * 根据条件分页查询目标数据（已测试）
    *
    * @param wrapper     查询条件
-   * @param pageable    分页参数
    * @param targetClazz 目标类型
+   * @param pageable    分页参数
    * @return /
    */
-  <G> KitPageResult<G> searchFeatureClazzPageByArgs(LambdaQueryWrapper<T> wrapper, IPage<T> pageable, Class<G> targetClazz);
+  <G> KitPageResult<G> searchFeatureClazzByArgs(LambdaQueryWrapper<T> wrapper, Class<G> targetClazz, IPage<T> pageable);
 
   /**
    * 根据条件更新数据（已测试）
