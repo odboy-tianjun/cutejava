@@ -10,7 +10,7 @@
     <el-col :span="11">
       <el-input
         v-model="searchValue"
-        size="mini"
+        size="small"
         placeholder="输入关键字搜索"
         style="width: 100%;"
         @input="onSearchValueChange"
@@ -31,7 +31,7 @@
         highlight-selection-row
         @selection-change="onLeftTableSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
+        <el-table-column type="selection" width="55" :selectable="onTableSelectionRender" />
         <slot />
       </el-table>
       <el-col :span="24" class="selection-box">
@@ -43,7 +43,7 @@
         <el-button
           type="primary"
           icon="el-icon-d-arrow-right"
-          size="mini"
+          size="small"
           :disabled="leftSelection.length === 0"
           @click="onTransferRight"
         />
@@ -52,7 +52,7 @@
         <el-button
           type="primary"
           icon="el-icon-d-arrow-left"
-          size="mini"
+          size="small"
           :disabled="rightSelection.length === 0"
           @click="onTransferLeft"
         />
@@ -74,7 +74,7 @@
         highlight-selection-row
         @selection-change="onRightTableSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
+        <el-table-column type="selection" width="55" :selectable="onTableSelectionRender" />
         <slot />
       </el-table>
       <el-col :span="24" class="selection-box">
@@ -175,6 +175,9 @@ export default {
         this.leftDataSource = this.searchCacheDS
         this.searchCacheDS = []
       }
+    },
+    onTableSelectionRender(row, index) {
+      return !(row.disabled && row.disabled === true)
     },
     onLeftTableSelectionChange(selection) {
       this.leftSelection = selection
