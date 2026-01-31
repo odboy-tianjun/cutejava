@@ -8,8 +8,17 @@
   <el-row>
     <!--    <el-button @click="onTestValue">测试值</el-button>-->
     <el-col :span="11">
+      <el-input
+        v-model="searchValue"
+        size="mini"
+        placeholder="输入关键字搜索"
+        style="width: 100%;"
+        @input="onSearchValueChange"
+      />
       <el-table
+        ref="leftTableRef"
         v-loading="loading"
+        :disabled="disabled"
         stripe
         border
         empty-text="暂无数据"
@@ -25,6 +34,9 @@
         <el-table-column type="selection" width="55" />
         <slot />
       </el-table>
+      <el-col :span="24" class="selection-box">
+        共计 <font class="selection-count">{{ leftDataSource && leftDataSource.length }}</font> 条，已选 <font class="selection-count">{{ leftSelection && leftSelection.length }}</font> 条
+      </el-col>
     </el-col>
     <el-col :span="2" style="text-align: center">
       <el-row style="margin-top: 130px">
@@ -48,7 +60,8 @@
     </el-col>
     <el-col :span="11">
       <el-table
-        ref="selectedTable"
+        ref="rightTableRef"
+        :disabled="disabled"
         stripe
         border
         empty-text="暂无数据"
@@ -64,6 +77,9 @@
         <el-table-column type="selection" width="55" />
         <slot />
       </el-table>
+      <el-col :span="24" class="selection-box">
+        共计 <font class="selection-count">{{ rightDataSource && rightDataSource.length }}</font> 条，已选 <font class="selection-count">{{ rightSelection && rightSelection.length }}</font> 条
+      </el-col>
     </el-col>
   </el-row>
 </template>
@@ -118,11 +134,13 @@ export default {
   data() {
     return {
       height: 350,
+      searchValue: '',
       leftDataSource: [],
       leftSelection: [],
       rightDataSource: [],
       rightSelection: [],
-      rightValues: []
+      rightValues: [],
+      searchCacheDS: []
     }
   },
   mounted() {
@@ -147,6 +165,17 @@ export default {
     }
   },
   methods: {
+    onSearchValueChange(value) {
+      if (this.searchCacheDS.length === 0) {
+        this.searchCacheDS = this.leftDataSource
+      }
+      if (value) {
+        this.leftDataSource = this.searchCacheDS.filter(data => !value || JSON.stringify(data).includes(value))
+      } else {
+        this.leftDataSource = this.searchCacheDS
+        this.searchCacheDS = []
+      }
+    },
     onLeftTableSelectionChange(selection) {
       this.leftSelection = selection
     },
@@ -218,3 +247,22 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+@import "~@/assets/styles/variables.scss";
+
+.selection-box {
+  text-align: left;
+  font-size: 12px;
+  padding-left: 10px;
+  min-height: 26.7px;
+  max-height: 26.7px;
+  padding-top: 7px;
+  border-left: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+}
+
+.selection-count {
+  color: $menuActiveText;
+}
+</style>
