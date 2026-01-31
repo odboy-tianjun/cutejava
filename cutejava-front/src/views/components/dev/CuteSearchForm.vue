@@ -12,7 +12,7 @@
     label-position="right"
     label-width="90px"
     :disabled="disabled"
-    size="mini"
+    size="small"
   >
     <!-- 通过  <template v-slot:suffix> 插槽前置查询条件 -->
     <slot name="suffix" />

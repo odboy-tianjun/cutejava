@@ -10,7 +10,7 @@
     v-clipboard:copy="content"
     v-clipboard:success="onCopy"
     v-clipboard:error="onError"
-    size="mini"
+    size="small"
     icon="el-icon-document-copy"
   />
 </template>

@@ -14,7 +14,7 @@
     :modal="false"
   >
     <div class="container-form">
-      <el-form ref="form" :model="model" :rules="rules" :inline="inline" size="mini">
+      <el-form ref="form" :model="model" :rules="rules" :inline="inline" size="small">
         <!-- 这里是插槽，用于渲染传入的 el-form-item -->
         <slot />
       </el-form>

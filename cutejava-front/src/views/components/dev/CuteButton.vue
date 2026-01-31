@@ -7,7 +7,7 @@
 <template>
   <el-button
     :type="type"
-    size="mini"
+    size="small"
     :disabled="disabled"
     :loading="loading"
     @click="handleClick"

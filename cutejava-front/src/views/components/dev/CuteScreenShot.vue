@@ -11,7 +11,7 @@
         type="primary"
         icon="el-icon-camera"
         :loading="capturing"
-        size="mini"
+        size="small"
         @click="capture"
       >
         截屏
