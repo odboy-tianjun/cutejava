@@ -20,6 +20,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onDialogClick">演示:表单对话框</el-button>
+          <el-button type="primary" @click="onDialogProClick">演示:表单对话框Pro</el-button>
           <el-button type="primary" @click="onDrawerClick">演示:表单抽屉</el-button>
         </el-form-item>
       </el-form>
@@ -103,6 +104,13 @@
         <cute-edit-table v-model="editTableDataSource" primary-key="id" :schema="editTableSchema" />
       </el-form-item>
     </cute-form-drawer>
+    <cute-form-pro-dialog
+      ref="dialogProForm"
+      :model="createFormProModel"
+      :schema="createFormProSchema"
+      title="演示:表单对话框Pro"
+      @submit="onDialogFormSubmit"
+    />
   </div>
 </template>
 
@@ -115,10 +123,11 @@ import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 import CuteEditTable from '@/views/components/dev/CuteEditTable.vue'
+import CuteFormProDialog from '@/views/components/dev/CuteFormProDialog.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',
-  components: { CuteEditTable, CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
+  components: { CuteFormProDialog, CuteEditTable, CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
   data() {
     return {
       modeDataSource: [
@@ -190,6 +199,7 @@ export default {
           total: 0
         }
       },
+      // CuteFormDialog
       createFormModel: {
         name: '',
         region: '',
@@ -203,7 +213,15 @@ export default {
         region: [
           { required: true, message: '请选择活动区域', trigger: 'change' }
         ]
-      }
+      },
+      // CuteFormProDialog
+      createFormProModel: {},
+      createFormProSchema: [
+        { name: 'name', title: '姓名', type: 'input', required: true },
+        { name: 'sex', title: '性别', type: 'select', required: true, dataSource: [{ label: '男', value: 'nn' }, { label: '女', value: 'mm' }] },
+        { name: 'createDate', title: '创建日期', type: 'date', required: false },
+        { name: 'createTime', title: '创建时间', type: 'datetime', required: false }
+      ]
     }
   },
   mounted() {
@@ -233,6 +251,9 @@ export default {
     },
     onDialogClick() {
       this.$refs.dialogForm.show()
+    },
+    onDialogProClick() {
+      this.$refs.dialogProForm.show()
     },
     onDialogFormSubmit(values) {
       console.log('onDialogFormSubmit', values)

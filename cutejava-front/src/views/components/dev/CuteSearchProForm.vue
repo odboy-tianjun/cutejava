@@ -14,7 +14,6 @@
     :disabled="disabled"
     size="small"
   >
-    <!--    <el-form-item v-for="item in schema" :key="item.name" :prop="item.name" :label="item.title" :required="item.required === true">-->
     <el-form-item v-for="item in schema" :key="item.name" :prop="item.name" :label="item.title">
       <!-- 输入框 -->
       <el-input
@@ -81,9 +80,12 @@
 <script>
 
 export default {
-  name: 'CuteSearchFormPro',
+  name: 'CuteSearchProForm',
   components: {},
   props: {
+    /**
+     * 表单定义
+     */
     schema: {
       type: Array,
       required: true,
@@ -91,10 +93,16 @@ export default {
         return []
       }
     },
+    /**
+     * 绑定值
+     */
     model: {
       type: Object,
       required: true
     },
+    /**
+     * 是否禁用
+     */
     disabled: {
       type: Boolean,
       required: false,
@@ -103,7 +111,6 @@ export default {
   },
   data() {
     return {
-      // formRules: {},
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -133,22 +140,6 @@ export default {
       }
     }
   },
-  // mounted() {
-  //   const schema = this.schema
-  //   const formRules = this.formRules
-  //   let trigger = 'blur'
-  //   for (const element of schema) {
-  //     if (element.type === 'input') {
-  //       trigger = 'blur'
-  //     } else {
-  //       trigger = 'change'
-  //     }
-  //     formRules[element.name] = [
-  //       { required: element.required === true, message: '请输入' + element.title, trigger: trigger }
-  //     ]
-  //   }
-  //   this.formRules = formRules
-  // },
   methods: {
     onFormSubmit(formName) {
       const that = this

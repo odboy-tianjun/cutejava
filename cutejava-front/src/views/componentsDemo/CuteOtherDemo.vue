@@ -11,8 +11,8 @@
         <el-button type="primary">查询后置按钮</el-button>
       </template>
     </cute-search-form>
-    <cute-section-title title="高级搜索Pro版 CuteSearchFormPro" />
-    <cute-search-form-pro :model="searchFormProValues" :schema="searchFormProSchema" />
+    <cute-section-title title="高级搜索Pro版 CuteSearchProForm" />
+    <cute-search-pro-form :model="searchFormProValues" :schema="searchFormProSchema" />
     <cute-section-title title="横向滚动 CuteHorizontalScrollBar" />
     <cute-horizontal-scroll-bar>
       <div style="width: 3000px;min-width: 3000px">模拟超长内容</div>
@@ -75,12 +75,12 @@ import CuteSectionTitle from '@/views/components/dev/CuteSectionTitle.vue'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 import CuteTextAreaInput from '@/views/components/dev/CuteTextAreaInput.vue'
-import CuteSearchFormPro from '@/views/components/dev/CuteSearchFormPro.vue'
+import CuteSearchProForm from '@/views/components/dev/CuteSearchProForm.vue'
 
 export default {
   name: 'CuteOtherDemo',
   components: {
-    CuteSearchFormPro,
+    CuteSearchProForm,
     CuteTextAreaInput,
     CuteTransfer,
     CuteButton,
