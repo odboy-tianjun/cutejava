@@ -35,7 +35,9 @@
         <slot />
       </el-table>
       <el-col :span="24" class="selection-box">
-        共计 <font class="selection-count">{{ leftDataSource && leftDataSource.length }}</font> 条，已选 <font class="selection-count">{{ leftSelection && leftSelection.length }}</font> 条
+        共计 <font class="selection-count">{{ leftDataSource && leftDataSource.length }}</font> 条，已选 <font
+          class="selection-count"
+        >{{ leftSelection && leftSelection.length }}</font> 条
       </el-col>
     </el-col>
     <el-col :span="2" style="text-align: center">
@@ -68,7 +70,7 @@
         :row-key="primaryKey"
         fit
         :data="rightDataSource"
-        style="width: 100%;"
+        style="width: 100%;margin-top: 32px"
         :height="height"
         :max-height="height"
         highlight-selection-row
@@ -78,7 +80,9 @@
         <slot />
       </el-table>
       <el-col :span="24" class="selection-box">
-        共计 <font class="selection-count">{{ rightDataSource && rightDataSource.length }}</font> 条，已选 <font class="selection-count">{{ rightSelection && rightSelection.length }}</font> 条
+        共计 <font class="selection-count">{{ rightDataSource && rightDataSource.length }}</font> 条，已选 <font
+          class="selection-count"
+        >{{ rightSelection && rightSelection.length }}</font> 条
       </el-col>
     </el-col>
   </el-row>
@@ -267,5 +271,10 @@ export default {
 
 .selection-count {
   color: $menuActiveText;
+}
+
+// 搜索框边框剔除弧度
+::v-deep .el-input .el-input__inner {
+  border-radius: 1px;
 }
 </style>
