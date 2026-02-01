@@ -25,12 +25,14 @@
             v-if="item.type === 'input'"
             v-model="scope.row[item.name]"
             :placeholder="`请输入${item.title}`"
+            clearable
             @input="(val) => onRowChange(val, scope.$index, item.name)"
           />
           <el-select
             v-if="item.type === 'select'"
             v-model="scope.row[item.name]"
             :placeholder="`请选择${item.title}`"
+            clearable
             @change="(val) => onRowChange(val, scope.$index, item.name)"
           >
             <el-option

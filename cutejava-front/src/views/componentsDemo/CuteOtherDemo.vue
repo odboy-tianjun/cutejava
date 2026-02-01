@@ -11,6 +11,8 @@
         <el-button type="primary">查询后置按钮</el-button>
       </template>
     </cute-search-form>
+    <cute-section-title title="高级搜索Pro版 CuteSearchFormPro" />
+    <cute-search-form-pro :model="searchFormProValues" :schema="searchFormProSchema" />
     <cute-section-title title="横向滚动 CuteHorizontalScrollBar" />
     <cute-horizontal-scroll-bar>
       <div style="width: 3000px;min-width: 3000px">模拟超长内容</div>
@@ -73,10 +75,12 @@ import CuteSectionTitle from '@/views/components/dev/CuteSectionTitle.vue'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 import CuteTextAreaInput from '@/views/components/dev/CuteTextAreaInput.vue'
+import CuteSearchFormPro from '@/views/components/dev/CuteSearchFormPro.vue'
 
 export default {
   name: 'CuteOtherDemo',
   components: {
+    CuteSearchFormPro,
     CuteTextAreaInput,
     CuteTransfer,
     CuteButton,
@@ -92,6 +96,13 @@ export default {
   data() {
     return {
       searchFormModel: {},
+      searchFormProSchema: [
+        { name: 'name', title: '姓名', type: 'input' },
+        { name: 'sex', title: '性别', type: 'select', dataSource: [{ label: '男', value: 'nn' }, { label: '女', value: 'mm' }] },
+        { name: 'createDate', title: '创建日期', type: 'date' },
+        { name: 'createTime', title: '创建时间', type: 'datetime' }
+      ],
+      searchFormProValues: { name: '小明', sex: 'mm' },
       leftDataSource: [
         { id: 1, name: '小明', description: '小明牛P' },
         { id: 2, name: '小红', description: '小红牛P', disabled: true },
