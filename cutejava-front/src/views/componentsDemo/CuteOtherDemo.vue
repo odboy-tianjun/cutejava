@@ -24,6 +24,8 @@
       <el-table-column prop="name" label="姓名" />
       <el-table-column prop="description" label="备注" />
     </cute-transfer>
+    <cute-section-title title="多行输入文本 CuteTextAreaInput" />
+    <cute-text-area-input />
     <cute-section-title title="链接 CuteLink" />
     <cute-link title="百度一下" href="https://www.baidu.com" />
     <cute-section-title title="空状态 CuteNoData" />
@@ -70,10 +72,12 @@ import CuteScreenShot from '@/views/components/dev/CuteScreenShot.vue'
 import CuteSectionTitle from '@/views/components/dev/CuteSectionTitle.vue'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
+import CuteTextAreaInput from '@/views/components/dev/CuteTextAreaInput.vue'
 
 export default {
   name: 'CuteOtherDemo',
   components: {
+    CuteTextAreaInput,
     CuteTransfer,
     CuteButton,
     CuteSectionTitle,
