@@ -5,40 +5,60 @@
  * @created 2026-02-01
  -->
 <template>
-  <el-table
-    ref="table"
-    stripe
-    empty-text="暂无数据"
-    :row-key="primaryKey"
-    fit
-    :data="dataSource"
-    style="width: 100%;"
-    :height="height"
-    :max-height="height"
-    highlight-current-row
-  >
-    <el-table-column type="index" width="70" />
-    <el-table-column v-for="item in schema" :key="item[primaryKey]" :prop="item.name" :label="item.title">
-      <template slot-scope="scope">
-        <el-input v-if="item.type === 'input'" v-model="scope.row[item.name]" @input="(val) => onRowChange(val, scope.$index, item.name)" />
-        <el-select v-if="item.type === 'select'" v-model="scope.row[item.name]" @change="(val) => onRowChange(val, scope.$index, item.name)">
-          <el-option
-            v-for="option in (item.dataSource || [])"
-            :key="option.value"
-            :label="option.label"
-            :value="option.value"
+  <div>
+    <el-table
+      ref="table"
+      stripe
+      empty-text="暂无数据"
+      :row-key="primaryKey"
+      fit
+      :data="dataSource"
+      style="width: 100%;"
+      :height="height"
+      :max-height="height"
+      highlight-current-row
+    >
+      <el-table-column type="index" width="70" />
+      <el-table-column v-for="item in schema" :key="item[primaryKey]" :prop="item.name" :label="item.title">
+        <template slot-scope="scope">
+          <el-input
+            v-if="item.type === 'input'"
+            v-model="scope.row[item.name]"
+            :placeholder="`请输入${item.title}`"
+            @input="(val) => onRowChange(val, scope.$index, item.name)"
           />
-        </el-select>
-      </template>
-    </el-table-column>
-    <el-table-column>
-      <template slot-scope="scope">
-        <el-button type="text" size="small" @click="onRowRemove(scope.$index)">删除</el-button>
-        <el-button type="text" size="small" :disabled="scope.$index < 1" @click="onRowUpMove(scope.$index)">上移</el-button>
-        <el-button type="text" size="small" :disabled="scope.$index + 1 >= dataSource.length" @click="onRowDownMove(scope.$index)">下移</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+          <el-select
+            v-if="item.type === 'select'"
+            v-model="scope.row[item.name]"
+            :placeholder="`请选择${item.title}`"
+            @change="(val) => onRowChange(val, scope.$index, item.name)"
+          >
+            <el-option
+              v-for="option in (item.dataSource || [])"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column>
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="onRowRemove(scope.$index)">删除</el-button>
+          <el-button type="text" size="small" :disabled="scope.$index < 1" @click="onRowUpMove(scope.$index)">上移
+          </el-button>
+          <el-button
+            type="text"
+            size="small"
+            :disabled="scope.$index + 1 >= dataSource.length"
+            @click="onRowDownMove(scope.$index)"
+          >下移
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-button size="small" plain icon="el-icon-plus" style="width: 100%" @click="onRowAddClick">新增一行数据</el-button>
+  </div>
 </template>
 
 <script>
@@ -68,28 +88,23 @@ export default {
      */
     schema: {
       type: Array,
-      require: true
+      require: true,
+      default: function() {
+        return []
+      }
     },
     /**
-     * 自定义高度
+     * 表格高度
      */
-    customHeight: {
+    height: {
       type: Number,
       required: false,
-      default: null
+      default: 240
     }
   },
   data() {
     return {
       dataSource: []
-    }
-  },
-  computed: {
-    height() {
-      if (this.customHeight) {
-        return this.customHeight
-      }
-      return document.documentElement.clientHeight - 300
     }
   },
   mounted() {
@@ -140,7 +155,6 @@ export default {
      * @param index
      */
     onRowDownMove(index) {
-      console.log('=====onRowDownMove1', index)
       if (index >= this.dataSource.length - 1) {
         return
       }
@@ -150,6 +164,19 @@ export default {
       dataSource[index + 1] = temp
       this.dataSource = [...dataSource]
       this.$emit('input', this.dataSource)
+    },
+    /**
+     * 当添加数据按钮被点击
+     */
+    onRowAddClick() {
+      const dataSource = this.dataSource
+      const schema = this.schema
+      const newObj = {}
+      for (const element of schema) {
+        newObj[element.name] = null
+      }
+      dataSource.push(newObj)
+      this.dataSource = [...dataSource]
     }
   }
 }
