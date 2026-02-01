@@ -99,6 +99,9 @@
           <el-table-column prop="description" label="备注" />
         </cute-transfer>
       </el-form-item>
+      <el-form-item label="可编辑表格" prop="editValues" label-width="100px">
+        <cute-edit-table v-model="editTableDataSource" primary-key="id" :schema="editTableSchema" />
+      </el-form-item>
     </cute-form-drawer>
   </div>
 </template>
@@ -111,18 +114,33 @@ import CuteFormDrawer from '@/views/components/dev/CuteFormDrawer'
 import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
+import CuteEditTable from '@/views/components/dev/CuteEditTable.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',
-  components: { CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
+  components: { CuteEditTable, CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
   data() {
     return {
       modeDataSource: [
         { id: 1, name: '小明', description: '小明牛P' },
-        { id: 2, name: '小明', description: '小明牛P' },
-        { id: 3, name: '小明', description: '小明牛P' },
-        { id: 4, name: '小明', description: '小明牛P' },
-        { id: 5, name: '小明', description: '小明牛P' }
+        { id: 4, name: '小绿', description: '小绿牛P' },
+        { id: 5, name: '小黄', description: '小黄牛P' },
+        { id: 6, name: '小紫', description: '小紫牛P' },
+        { id: 17, name: '小郑', description: '小郑牛P' },
+        { id: 18, name: '小王', description: '小王牛P' }
+      ],
+      editTableSchema: [
+        { name: 'name', title: '姓名', type: 'input' },
+        { name: 'sex', title: '性别', type: 'select', dataSource: [{ label: '男', value: 'nn' }, { label: '女', value: 'mm' }] },
+        { name: 'description', title: '描述', type: 'input' }
+      ],
+      editTableDataSource: [
+        { id: 1, name: '小明', sex: 'mm', description: '小明牛P' },
+        { id: 4, name: '小绿', sex: 'nn', description: '小绿牛P' },
+        { id: 5, name: '小黄', sex: 'nn', description: '小黄牛P' },
+        { id: 6, name: '小紫', sex: 'nn', description: '小紫牛P' },
+        { id: 17, name: '小郑', sex: 'mm', description: '小郑牛P' },
+        { id: 18, name: '小王', sex: 'nn', description: '小王牛P' }
       ],
       form: {
         model: {
