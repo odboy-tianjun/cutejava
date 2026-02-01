@@ -125,8 +125,13 @@ export default {
   padding: 16px 20px;
 }
 
+::v-deep(.el-drawer__header) {
+  padding: 10px;
+  border-bottom: 1px solid #DCDFE6;
+}
+
 ::v-deep(.el-drawer__body) {
-  padding: 20px 20px !important;
+  padding: 10px 10px !important;
 }
 
 ::v-deep(.el-divider--horizontal) {

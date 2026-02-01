@@ -18,9 +18,7 @@
     :modal="false"
   >
     <!-- 这里是插槽，用于渲染传入的组件 -->
-    <div style="padding-left: 20px">
-      <slot />
-    </div>
+    <slot />
   </el-drawer>
 </template>
 
@@ -74,6 +72,15 @@ export default {
 
 .container-form::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
+}
+
+::v-deep(.el-drawer__header) {
+  padding: 10px;
+  border-bottom: 1px solid #DCDFE6;
+}
+
+::v-deep(.el-drawer__body) {
+  padding: 10px 10px !important;
 }
 </style>
 
