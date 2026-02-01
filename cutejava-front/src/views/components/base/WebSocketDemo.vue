@@ -11,7 +11,7 @@
   </el-card>
 </template>
 <script>
-import CsWsClient from '@/utils/CsWsClient'
+import KitWsClient from '@/utils/KitWsClient'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -36,7 +36,7 @@ export default {
     onConnectClick() {
       const that = this
       // console.error('userInfo', that.user)
-      that.client = new CsWsClient(that.user.username)
+      that.client = new KitWsClient(that.user.username)
       that.client.connect(function(event) {
         console.info('=============== MyWebSocket:event', event)
       }, function(msgEvent) {

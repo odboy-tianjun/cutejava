@@ -101,7 +101,7 @@ import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 import Clipboard from 'clipboard'
-import CsMessage from '@/utils/elementui/CsMessage'
+import CsMessage from '@/utils/elementui/KitMessage'
 
 const defaultForm = { id: null }
 export default {

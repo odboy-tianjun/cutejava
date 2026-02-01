@@ -3,7 +3,7 @@ import Vue from 'vue'
 /**
  * 全屏锁定加载动画
  */
-// export default function CsLoading() {
+// export default function KitLoading() {
 //   this.instance = null
 //   this.show = function() {
 //     this.instance = Vue.prototype.$loading({
@@ -20,7 +20,7 @@ import Vue from 'vue'
 //   }
 // }
 
-export default class CsLoading {
+export default class KitLoading {
   constructor() {
     this.instance = null
   }

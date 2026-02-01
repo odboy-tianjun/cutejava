@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { encrypt } from '@/utils/CsRsaUtil'
+import { encrypt } from '@/utils/KitRsaUtil'
 import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'

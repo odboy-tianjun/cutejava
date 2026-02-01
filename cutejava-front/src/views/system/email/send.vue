@@ -24,7 +24,7 @@
 import { send } from '@/api/system/email'
 import { mapGetters } from 'vuex'
 import E from 'wangeditor'
-import { UploadFile } from '@/utils/CsDomUtil'
+import { UploadFile } from '@/utils/KitDomUtil'
 
 export default {
   name: 'Index',

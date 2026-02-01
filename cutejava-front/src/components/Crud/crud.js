@@ -1,6 +1,6 @@
 import { download, initData } from '@/api/data'
 import Vue from 'vue'
-import { DownloadFile } from '@/utils/CsDomUtil'
+import { DownloadFile } from '@/utils/KitDomUtil'
 
 /**
  * CRUD配置

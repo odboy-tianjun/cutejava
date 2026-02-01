@@ -34,7 +34,7 @@
 
 <script>
 import store from '@/store'
-import { IsValidEmail } from '@/utils/CsValidateUtil'
+import { IsValidEmail } from '@/utils/KitValidateUtil'
 import { updateUserEmailByUsername } from '@/api/system/user'
 import { sendResetEmailCode } from '@/api/system/code'
 

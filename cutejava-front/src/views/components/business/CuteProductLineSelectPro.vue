@@ -18,7 +18,7 @@
 <script>
 
 import { listMetadata } from '@/api/application/cute-product-line-select-pro'
-import CsMessage from '@/utils/elementui/CsMessage'
+import CsMessage from '@/utils/elementui/KitMessage'
 
 export default {
   name: 'CuteProductLineSelectPro',

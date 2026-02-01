@@ -2,7 +2,7 @@ import {
   initData,
   download
 } from '@/api/data'
-import { DownloadFile } from '@/utils/CsDomUtil'
+import { DownloadFile } from '@/utils/KitDomUtil'
 
 export default {
   data() {

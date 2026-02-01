@@ -26,7 +26,7 @@
 
 <script>
 import path from 'path'
-import { IsExternal } from '@/utils/CsValidateUtil'
+import { IsExternal } from '@/utils/KitValidateUtil'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'

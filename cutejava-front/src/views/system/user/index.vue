@@ -195,7 +195,7 @@
 
 <script>
 import crudUser from '@/api/system/user'
-import { IsValidPhone } from '@/utils/CsValidateUtil'
+import { IsValidPhone } from '@/utils/KitValidateUtil'
 import { searchDept, searchDeptTree } from '@/api/system/dept'
 import { getCurrentUserRoleLevel, listAllRole } from '@/api/system/role'
 import { searchJob } from '@/api/system/job'

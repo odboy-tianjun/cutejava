@@ -10,7 +10,7 @@
 <script>
 import Clipboard from 'clipboard'
 import CuteOneKeyCopy from '@/views/components/dev/CuteOneKeyCopy'
-import CsMessage from '@/utils/elementui/CsMessage'
+import CsMessage from '@/utils/elementui/KitMessage'
 
 export default {
   components: { CuteOneKeyCopy },

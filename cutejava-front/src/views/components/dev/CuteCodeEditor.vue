@@ -29,7 +29,7 @@ import 'codemirror/mode/ruby/ruby'
 import 'codemirror/mode/sql/sql'
 import 'codemirror/mode/vue/vue'
 import 'codemirror/mode/xml/xml'
-import CsMessage from '@/utils/elementui/CsMessage'
+import CsMessage from '@/utils/elementui/KitMessage'
 
 const SupportModeList = ['yaml', 'java', 'go', 'swift', 'dockerfile', 'groovy', 'lua', 'perl', 'python', 'ruby', 'sql', 'xml', 'vue']
 export default {

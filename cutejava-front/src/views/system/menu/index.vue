@@ -216,7 +216,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
-import CsMessage from '@/utils/elementui/CsMessage'
+import CsMessage from '@/utils/elementui/KitMessage'
 
 // crud交由presenter持有
 const defaultForm = {

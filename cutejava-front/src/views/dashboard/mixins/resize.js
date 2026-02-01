@@ -1,4 +1,4 @@
-import { DeBounce } from '@/utils/CsUtil'
+import { DeBounce } from '@/utils/KitUtil'
 
 export default {
   data() {

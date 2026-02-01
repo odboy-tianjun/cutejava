@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { encrypt } from '@/utils/CsRsaUtil'
+import { encrypt } from '@/utils/KitRsaUtil'
 
 /**
  * 默认入口：add、del、edit、get

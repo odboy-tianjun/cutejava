@@ -32,8 +32,8 @@
 import { mapGetters } from 'vuex'
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { UploadFile } from '@/utils/CsDomUtil'
-import CsMessage from '@/utils/elementui/CsMessage'
+import { UploadFile } from '@/utils/KitDomUtil'
+import CsMessage from '@/utils/elementui/KitMessage'
 
 export default {
   name: 'CuteRichTextEditor',

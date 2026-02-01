@@ -108,7 +108,7 @@ import CuteSimpleTable from '@/views/components/dev/CuteSimpleTable'
 import DictService from '@/api/system/dict'
 import CuteFormDialog from '@/views/components/dev/CuteFormDialog'
 import CuteFormDrawer from '@/views/components/dev/CuteFormDrawer'
-import { FormatRowDateTimeStr } from '@/utils/CsUtil'
+import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 

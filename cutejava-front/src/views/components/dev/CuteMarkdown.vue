@@ -25,7 +25,7 @@
 import { mapGetters } from 'vuex'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import { UploadFile } from '@/utils/CsDomUtil'
+import { UploadFile } from '@/utils/KitDomUtil'
 
 const dynamicHeight = 160
 export default {

@@ -54,7 +54,7 @@
 <script>
 import DictService from '@/api/system/dict'
 import CuteDragTable from '@/views/components/dev/CuteDragTable.vue'
-import { FormatRowDateTimeStr } from '@/utils/CsUtil'
+import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 
 export default {
   name: 'CuteDragTableDemo',

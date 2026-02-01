@@ -25,8 +25,8 @@
 
 <script>
 
-import CsMessage from '@/utils/elementui/CsMessage'
-import { FormatDateTimeShortStr } from '@/utils/CsUtil'
+import CsMessage from '@/utils/elementui/KitMessage'
+import { FormatDateTimeShortStr } from '@/utils/KitUtil'
 import html2canvas from 'html2canvas'
 
 export default {

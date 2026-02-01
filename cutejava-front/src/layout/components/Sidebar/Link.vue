@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { IsExternal } from '@/utils/CsValidateUtil'
+import { IsExternal } from '@/utils/KitValidateUtil'
 
 export default {
   props: {

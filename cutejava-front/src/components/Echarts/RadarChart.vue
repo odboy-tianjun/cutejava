@@ -4,7 +4,7 @@
 
 <script>
 import echarts from 'echarts'
-import { DeBounce } from '@/utils/CsUtil'
+import { DeBounce } from '@/utils/KitUtil'
 
 require('echarts/theme/macarons') // echarts theme
 

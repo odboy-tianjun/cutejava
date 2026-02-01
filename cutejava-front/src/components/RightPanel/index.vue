@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { AddClass, RemoveClass } from '@/utils/CsDomUtil'
+import { AddClass, RemoveClass } from '@/utils/KitDomUtil'
 
 export default {
   name: 'RightPanel',
