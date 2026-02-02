@@ -24,7 +24,7 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'primary'
+      default: 'normal'
     },
     icon: {
       type: String,
@@ -39,40 +39,33 @@ export default {
       default: false
     }
   },
-  computed: {
-    innerType() {
-      if (this.type) {
-        if (this.type === 'primary') {
-          return 'primary'
-        }
-        if (this.type === 'secondary') {
-          return 'primary'
-        }
-        if (this.type === 'normal') {
-          return null
-        }
-        if (this.type === 'text') {
-          return 'text'
-        }
+  data() {
+    return {
+      innerType: null,
+      innerPlain: false
+    }
+  },
+  created() {
+    if (this.type) {
+      if (this.type === 'primary') {
+        this.innerType = 'primary'
+        this.innerPlain = false
+      } else if (this.type === 'secondary') {
+        this.innerType = 'primary'
+        this.innerPlain = true
+      } else if (this.type === 'normal') {
+        this.innerType = null
+        this.innerPlain = false
+      } else if (this.type === 'text') {
+        this.innerType = 'text'
+        this.innerPlain = false
+      } else {
+        this.innerType = null
+        this.innerPlain = false
       }
-      return null
-    },
-    innerPlain() {
-      if (this.type) {
-        if (this.type === 'primary') {
-          return false
-        }
-        if (this.type === 'secondary') {
-          return true
-        }
-        if (this.type === 'normal') {
-          return false
-        }
-        if (this.type === 'text') {
-          return false
-        }
-      }
-      return false
+    } else {
+      this.innerType = null
+      this.innerPlain = false
     }
   },
   methods: {

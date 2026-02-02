@@ -10,6 +10,7 @@
     :underline="false"
     :href="href"
     target="_blank"
+    :disabled="disabled"
   >{{ title }}</el-link>
 </template>
 
@@ -27,6 +28,11 @@ export default {
       type: String,
       required: true,
       default: 'https://gitee.com/odboy-tianjun'
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   }
 }
