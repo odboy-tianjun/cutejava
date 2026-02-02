@@ -6,10 +6,12 @@
  -->
 <template>
   <el-button
-    :type="type"
-    size="small"
+    :type="innerType"
+    :plain="innerPlain"
+    size="mini"
     :disabled="disabled"
     :loading="loading"
+    :icon="icon"
     @click="handleClick"
   >
     <slot />
@@ -24,6 +26,10 @@ export default {
       type: String,
       default: 'primary'
     },
+    icon: {
+      type: String,
+      default: ''
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -31,6 +37,42 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    innerType() {
+      if (this.type) {
+        if (this.type === 'primary') {
+          return 'primary'
+        }
+        if (this.type === 'secondary') {
+          return 'primary'
+        }
+        if (this.type === 'normal') {
+          return null
+        }
+        if (this.type === 'text') {
+          return 'text'
+        }
+      }
+      return null
+    },
+    innerPlain() {
+      if (this.type) {
+        if (this.type === 'primary') {
+          return false
+        }
+        if (this.type === 'secondary') {
+          return true
+        }
+        if (this.type === 'normal') {
+          return false
+        }
+        if (this.type === 'text') {
+          return false
+        }
+      }
+      return false
     }
   },
   methods: {
