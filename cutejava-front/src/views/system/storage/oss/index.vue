@@ -101,7 +101,7 @@ import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 import Clipboard from 'clipboard'
-import CsMessage from '@/utils/elementui/KitMessage'
+import KitMessage from '@/utils/elementui/KitMessage'
 
 const defaultForm = { id: null }
 export default {
@@ -169,12 +169,12 @@ export default {
       })
       // 复制成功
       clipboard.on('success', (e) => {
-        CsMessage.Success('复制成功')
+        KitMessage.Success('复制成功')
         clipboard.destroy()
       })
       // //复制失败
       clipboard.on('error', (e) => {
-        CsMessage.Error('复制失败')
+        KitMessage.Error('复制失败')
         clipboard.destroy()
       })
     }

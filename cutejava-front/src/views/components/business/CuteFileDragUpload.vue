@@ -25,7 +25,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
-import CsMessage from '@/utils/elementui/KitMessage'
+import KitMessage from '@/utils/elementui/KitMessage'
 
 export default {
   name: 'CuteFileUpload',
@@ -68,7 +68,7 @@ export default {
     },
     // 监听上传失成功
     handleSuccess(response, file, fileList) {
-      CsMessage.Success('上传成功')
+      KitMessage.Success('上传成功')
       // this.$refs.upload.clearFiles()
       // console.error('response', response)
       // console.error('file', file)
@@ -80,7 +80,7 @@ export default {
     // 监听上传失败
     handleError(e, file, fileList) {
       const msg = JSON.parse(e.message)
-      CsMessage.Error(msg.message)
+      KitMessage.Error(msg.message)
       // 绑定on-error事件
       this.$emit('on-error', e, file, fileList)
     }

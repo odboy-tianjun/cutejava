@@ -33,7 +33,7 @@ import { mapGetters } from 'vuex'
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { UploadFile } from '@/utils/KitDomUtil'
-import CsMessage from '@/utils/elementui/KitMessage'
+import KitMessage from '@/utils/elementui/KitMessage'
 
 export default {
   name: 'CuteRichTextEditor',
@@ -159,19 +159,19 @@ export default {
     customAlert(info, type) {
       switch (type) {
         case 'success':
-          CsMessage.Error(info)
+          KitMessage.Error(info)
           break
         case 'info':
-          CsMessage.Info(info)
+          KitMessage.Info(info)
           break
         case 'warning':
-          CsMessage.Warning(info)
+          KitMessage.Warning(info)
           break
         case 'error':
-          CsMessage.Error(info)
+          KitMessage.Error(info)
           break
         default:
-          CsMessage.Info(info)
+          KitMessage.Info(info)
           break
       }
     },

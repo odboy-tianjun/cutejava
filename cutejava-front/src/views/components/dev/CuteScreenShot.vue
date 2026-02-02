@@ -25,7 +25,7 @@
 
 <script>
 
-import CsMessage from '@/utils/elementui/KitMessage'
+import KitMessage from '@/utils/elementui/KitMessage'
 import { FormatDateTimeShortStr } from '@/utils/KitUtil'
 import html2canvas from 'html2canvas'
 
@@ -41,7 +41,7 @@ export default {
       this.capturing = true
       const element = document.querySelector('#elementIdSelector')
       if (!element) {
-        CsMessage.Error('未找到匹配的元素，请检查选择器是否正确')
+        KitMessage.Error('未找到匹配的元素，请检查选择器是否正确')
         this.capturing = false
         return
       }

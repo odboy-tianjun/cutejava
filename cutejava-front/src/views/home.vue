@@ -77,16 +77,16 @@ export default {
   },
   mounted() {
     // setTimeout(() => {
-    //   CsMessage.Info('CsMessage Info')
+    //   KitMessage.Info('KitMessage Info')
     // }, 1000)
     // setTimeout(() => {
-    //   CsMessage.Warning('CsMessage Warning')
+    //   KitMessage.Warning('KitMessage Warning')
     // }, 2000)
     // setTimeout(() => {
-    //   CsMessage.Error('CsMessage Error')
+    //   KitMessage.Error('KitMessage Error')
     // }, 3000)
     // setTimeout(() => {
-    //   CsMessage.Success('CsMessage Success')
+    //   KitMessage.Success('KitMessage Success')
     // }, 4000)
   },
   methods: {

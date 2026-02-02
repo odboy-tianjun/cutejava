@@ -1,5 +1,5 @@
 <!--
- * 文字超链接
+ * 文字链接
  * @author odboy
  * @email tianjun@odboy.cn
  * @created 2025-08-26

@@ -6,7 +6,7 @@
  -->
 <template>
   <el-row style="margin: 10px;" class="container-height">
-    <el-col :span="12" class="container-height">
+    <el-col :span="12">
       <div class="title-container">
         <div class="main-title-line">
           <i class="el-icon-platform-eleme" style="color: #409EFF;font-size: 18px" />
@@ -16,7 +16,7 @@
         <div v-if="thirdTitle" class="third-title-with-text-align">{{ thirdTitle }}</div>
       </div>
     </el-col>
-    <el-col v-if="$slots.operation" :span="12" class="container-height postfix-operation">
+    <el-col v-if="$slots.operation" :span="12" class="postfix-operation">
       <slot name="operation" />
     </el-col>
   </el-row>
@@ -54,7 +54,7 @@ export default {
 .main-title-line {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 3px;
   color: #303133;
 
   i:first-child {
@@ -66,7 +66,7 @@ export default {
 .sub-title-with-icon-align {
   font-size: 13px;
   color: #606266;
-  margin-bottom: 8px;
+  margin-bottom: 3px;
 }
 
 .third-title-with-text-align {
@@ -74,11 +74,6 @@ export default {
   color: #909399;
   margin-left: 26px;
   margin-bottom: 0;
-}
-
-.container-height {
-  min-height: 27px;
-  max-height: 27px;
 }
 
 .postfix-operation {

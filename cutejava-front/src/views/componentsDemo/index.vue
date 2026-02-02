@@ -9,6 +9,21 @@
           <el-collapse-item title="文字链接 CuteLink" name="CuteLink">
             <CuteLinkDemo />
           </el-collapse-item>
+          <el-collapse-item title="页面 CutePage" name="CutePage">
+            <CutePageDemo />
+          </el-collapse-item>
+          <el-collapse-item title="空状态 CuteNoData" name="CuteNoData">
+            <CuteNoDataDemo />
+          </el-collapse-item>
+          <el-collapse-item title="段落标题 CuteSectionTitle" name="CuteSectionTitle">
+            <CuteSectionTitleDemo />
+          </el-collapse-item>
+          <el-collapse-item title="一键复制 CuteOneKeyCopy" name="CuteOneKeyCopy">
+            <CuteOneKeyCopyDemo />
+          </el-collapse-item>
+          <el-collapse-item title="Markdown编辑框 CuteMarkdown" name="CuteMarkdown">
+            <CuteMarkdownDemo />
+          </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
       <el-tab-pane label="快捷组件" name="kit">
@@ -42,10 +57,20 @@ import KitNotificationDemo from '@/views/componentsDemo/dev/KitNotificationDemo.
 import KitDialogDemo from '@/views/componentsDemo/dev/KitDialogDemo.vue'
 import KitWsClientDemo from '@/views/componentsDemo/dev/KitWsClientDemo.vue'
 import CuteLinkDemo from '@/views/componentsDemo/dev/CuteLinkDemo.vue'
+import CutePageDemo from '@/views/componentsDemo/dev/CutePageDemo.vue'
+import CuteNoDataDemo from '@/views/componentsDemo/dev/CuteNoDataDemo.vue'
+import CuteSectionTitleDemo from '@/views/componentsDemo/dev/CuteSectionTitleDemo.vue'
+import CuteOneKeyCopyDemo from '@/views/componentsDemo/dev/CuteOneKeyCopyDemo.vue'
+import CuteMarkdownDemo from '@/views/componentsDemo/dev/CuteMarkdownDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteMarkdownDemo,
+    CuteOneKeyCopyDemo,
+    CuteSectionTitleDemo,
+    CuteNoDataDemo,
+    CutePageDemo,
     CuteLinkDemo, KitWsClientDemo, KitDialogDemo, KitNotificationDemo, KitMessageDemo, CuteButtonDemo, CutePage },
   props: {
     value: {

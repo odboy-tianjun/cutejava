@@ -1,7 +1,3 @@
-<!--<p class="warn-content">-->
-<!--Markdown 基于-->
-<!--<el-link type="primary" href="" target="_blank">MavonEditor</el-link>-->
-<!--</p>-->
 <!--
  * Markdown编辑器
  * @author odboy

@@ -18,7 +18,7 @@
 <script>
 
 import { listMetadata } from '@/api/application/cute-product-line-select-pro'
-import CsMessage from '@/utils/elementui/KitMessage'
+import KitMessage from '@/utils/elementui/KitMessage'
 
 export default {
   name: 'CuteProductLineSelectPro',
@@ -67,7 +67,7 @@ export default {
         // console.error('deptOptions', this.deptOptions)
       }).catch(error => {
         console.error('获取部门数据失败:', error)
-        CsMessage.Error('获取部门数据失败')
+        KitMessage.Error('获取部门数据失败')
       })
     },
     handleChange(value) {

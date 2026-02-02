@@ -3,7 +3,7 @@
  * @author odboy
  * @email tianjun@odboy.cn
  * @created 2025-08-01
- * @description 使用方式：<cute-one-key-copy style="margin-left: 10pt" :content.sync="data" />
+ * @description 使用方式：<cute-one-key-copy :content.sync="data" />
  -->
 <template>
   <el-button
