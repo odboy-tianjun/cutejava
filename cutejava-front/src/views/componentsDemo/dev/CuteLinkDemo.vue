@@ -33,8 +33,8 @@ export default {
   data() {
     return {
       apiData: [
-        { name: 'title', remark: '按钮类型', type: 'primary| secondary | normal | text', defaultValue: 'normal', required: '否' },
-        { name: 'href', remark: '内置图标占位', type: '参考ElementUI icon', defaultValue: '-', required: '否' }
+        { name: 'title', remark: '标题', type: 'string', defaultValue: '-', required: '是' },
+        { name: 'href', remark: '任何有效文档的相对或绝对URL', type: 'string', defaultValue: '-', required: '是' }
       ]
     }
   }
