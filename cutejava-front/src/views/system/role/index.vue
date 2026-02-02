@@ -68,7 +68,7 @@
     </el-dialog>
     <el-row :gutter="15">
       <!--角色管理-->
-      <el-col span="18" style="margin-bottom: 10px">
+      <el-col :span="18" style="margin-bottom: 10px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <span class="role-span">角色列表</span>
@@ -113,7 +113,7 @@
         </el-card>
       </el-col>
       <!-- 菜单授权 -->
-      <el-col span="6">
+      <el-col :span="6">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <el-tooltip class="item" effect="dark" content="选择指定角色分配菜单" placement="top">
