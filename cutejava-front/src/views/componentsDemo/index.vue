@@ -39,6 +39,15 @@
           <el-collapse-item title="富文本框 CuteRichTextEditor" name="CuteRichTextEditor">
             <CuteRichTextEditorDemo />
           </el-collapse-item>
+          <el-collapse-item title="截图工具 CuteScreenShot" name="CuteScreenShot">
+            <CuteScreenShotDemo />
+          </el-collapse-item>
+          <el-collapse-item title="预览抽屉 CutePreviewDrawer" name="CutePreviewDrawer">
+            <CutePreviewDrawerDemo />
+          </el-collapse-item>
+          <el-collapse-item title="穿梭框 CuteTransfer" name="CuteTransfer">
+            <CuteTransferDemo />
+          </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
       <el-tab-pane label="快捷组件" name="kit">
@@ -74,6 +83,12 @@
           <el-collapse-item title="产品线选择框Pro CuteProductLineSelectPro" name="CuteProductLineSelectPro">
             <CuteProductLineSelectProDemo />
           </el-collapse-item>
+          <el-collapse-item title="文件上传 CuteFileUpload" name="CuteFileUpload">
+            <CuteFileUploadDemo />
+          </el-collapse-item>
+          <el-collapse-item title="文件拖放上传 CuteFileDragUpload" name="CuteFileDragUpload">
+            <CuteFileDragUploadDemo />
+          </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
       <el-tab-pane label="高级组件" name="advanced" />
@@ -103,14 +118,22 @@ import CuteUserSelectDemo from '@/views/componentsDemo/business/CuteUserSelectDe
 import CuteSingleUserSelectDemo from '@/views/componentsDemo/business/CuteSingleUserSelectDemo.vue'
 import CuteProductLineSelectDemo from '@/views/componentsDemo/business/CuteProductLineSelectDemo.vue'
 import CuteProductLineSelectProDemo from '@/views/componentsDemo/business/CuteProductLineSelectProDemo.vue'
-import CuteDeptTree from '@/views/components/business/CuteDeptTree.vue'
 import CuteDeptTreeDemo from '@/views/componentsDemo/business/CuteDeptTreeDemo.vue'
+import CuteScreenShotDemo from '@/views/componentsDemo/dev/CuteScreenShotDemo.vue'
+import CutePreviewDrawerDemo from '@/views/componentsDemo/dev/CutePreviewDrawerDemo.vue'
+import CuteTransferDemo from '@/views/componentsDemo/dev/CuteTransferDemo.vue'
+import CuteFileUploadDemo from '@/views/componentsDemo/business/CuteFileUploadDemo.vue'
+import CuteFileDragUploadDemo from '@/views/componentsDemo/business/CuteFileDragUploadDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteFileDragUploadDemo,
+    CuteFileUploadDemo,
+    CuteTransferDemo,
+    CutePreviewDrawerDemo,
+    CuteScreenShotDemo,
     CuteDeptTreeDemo,
-    CuteDeptTree,
     CuteProductLineSelectProDemo,
     CuteProductLineSelectDemo,
     CuteSingleUserSelectDemo,
@@ -124,7 +147,14 @@ export default {
     CuteSectionTitleDemo,
     CuteNoDataDemo,
     CutePageDemo,
-    CuteLinkDemo, KitWsClientDemo, KitDialogDemo, KitNotificationDemo, KitMessageDemo, CuteButtonDemo, CutePage },
+    CuteLinkDemo,
+    KitWsClientDemo,
+    KitDialogDemo,
+    KitNotificationDemo,
+    KitMessageDemo,
+    CuteButtonDemo,
+    CutePage
+  },
   props: {
     value: {
       type: Object,

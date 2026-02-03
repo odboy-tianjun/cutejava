@@ -4,7 +4,7 @@
     <ul class="description">
       <li>选择单个用户信息</li>
       <li>支持用户姓名、手机号、邮箱、用户名查询</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端） @Odboy（设计）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（后端）</li>
     </ul>
     <h4>基础用法</h4>
     <cute-single-user-select v-model="user" @change="onUserSelectChange" />

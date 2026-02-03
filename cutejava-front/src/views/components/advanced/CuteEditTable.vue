@@ -185,7 +185,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/styles/variables.scss";
+@import "~@/assets/styles/variables";
 
 .selection-box {
   text-align: left;

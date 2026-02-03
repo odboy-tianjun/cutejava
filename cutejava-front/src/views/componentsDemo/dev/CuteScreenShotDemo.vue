@@ -2,14 +2,16 @@
   <div>
     <h4>何时使用</h4>
     <ul class="description">
-      <li>当需要在容器内展示大量内容，需要纵向滚动查看时</li>
-      <li>当希望在不同操作系统（Windows/Mac）上保持一致的滚动条样式时</li>
+      <li>保存区域内已生成的结果为图片</li>
+      <li>需要页面截图，或者需要将表格滚动部分展开后截图，且页面不能有明显变化的时候</li>
       <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>基础用法</h4>
-    <cute-vertical-scroll-bar>
-      <div style="height: 3000px;min-height: 3000px">模拟超高内容</div>
-    </cute-vertical-scroll-bar>
+    <cute-screen-shot>
+      <cute-page>
+        测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
+      </cute-page>
+    </cute-screen-shot>
     <h4>API</h4>
     <el-table :data="apiData">
       <el-table-column prop="name" label="参数" width="220" />
@@ -21,15 +23,16 @@
   </div>
 </template>
 <script>
-import CuteVerticalScrollBar from '@/views/components/dev/CuteVerticalScrollBar.vue'
+import CuteScreenShot from '@/views/components/dev/CuteScreenShot.vue'
+import CutePage from '@/views/components/dev/CutePage.vue'
 
 export default {
-  name: 'CuteHorizontalScrollBarDemo',
-  components: { CuteVerticalScrollBar },
+  name: 'CuteScreenShotDemo',
+  components: { CutePage, CuteScreenShot },
   data() {
     return {
       apiData: [
-        { name: 'height', remark: '内部容器高度', type: 'string', defaultValue: '100px', required: '否' }
+        { name: 'type', remark: '按钮类型', type: 'primary| secondary | normal | text', defaultValue: 'normal', required: '否' }
       ]
     }
   }

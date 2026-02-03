@@ -4,7 +4,7 @@
     <ul class="description">
       <li>输入备注、说明等大量普通文本时</li>
       <li>需要限制输入文本的长度</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端） @Odboy（设计）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>基础用法</h4>
     <cute-text-area-input v-model="content" />

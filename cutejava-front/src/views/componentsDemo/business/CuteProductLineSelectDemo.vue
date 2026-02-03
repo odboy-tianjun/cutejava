@@ -4,7 +4,7 @@
     <ul class="description">
       <li>选择、绑定部门明细信息，需要根部门和子部门以及路径的信息等</li>
       <li>统一部门数据来源</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端） @Odboy（设计）@Odboy（后端）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（后端）</li>
     </ul>
     <h4>基础用法</h4>
     <cute-product-line-select @change="onProductLineChange" @detail="onProductLineDetailChange" />

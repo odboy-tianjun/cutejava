@@ -18,7 +18,6 @@
       <el-table
         ref="leftTableRef"
         v-loading="loading"
-        :disabled="disabled"
         stripe
         border
         empty-text="暂无数据"
@@ -63,7 +62,6 @@
     <el-col :span="11">
       <el-table
         ref="rightTableRef"
-        :disabled="disabled"
         stripe
         border
         empty-text="暂无数据"
@@ -117,21 +115,15 @@ export default {
      */
     primaryKey: {
       type: String,
-      require: true,
+      require: false,
       default: 'id'
-    },
-    /**
-     * 是否禁用
-     */
-    disabled: {
-      type: Boolean,
-      default: false
     },
     /**
      * 是否加载中
      */
     loading: {
       type: Boolean,
+      require: false,
       default: false
     }
   },

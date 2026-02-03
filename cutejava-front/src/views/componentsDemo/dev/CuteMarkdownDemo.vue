@@ -3,7 +3,7 @@
     <h4>何时使用</h4>
     <ul class="description">
       <li>需求输入Markdown格式数据</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（设计）@Odboy（后端）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（后端）</li>
     </ul>
     <h4>基础用法</h4>
     <cute-markdown

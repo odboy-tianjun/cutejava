@@ -3,7 +3,7 @@
     <h4>何时使用</h4>
     <ul class="description">
       <li>需求输入各种代码数据</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（设计）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>Java编辑器</h4>
     <cute-code-editor :content="javaContent" mode="java" @change="onJavaChange" />

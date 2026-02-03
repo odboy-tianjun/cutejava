@@ -115,15 +115,15 @@
 </template>
 
 <script>
-import CuteSimpleTable from '@/views/components/dev/CuteSimpleTable'
+import CuteSimpleTable from '@/views/components/advanced/CuteSimpleTable.vue'
 import DictService from '@/api/system/dict'
-import CuteFormDialog from '@/views/components/dev/CuteFormDialog'
-import CuteFormDrawer from '@/views/components/dev/CuteFormDrawer'
+import CuteFormDialog from '@/views/components/advanced/CuteFormDialog.vue'
+import CuteFormDrawer from '@/views/components/advanced/CuteFormDrawer.vue'
 import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
-import CuteEditTable from '@/views/components/dev/CuteEditTable.vue'
-import CuteFormDialogPro from '@/views/components/dev/CuteFormDialogPro.vue'
+import CuteEditTable from '@/views/components/advanced/CuteEditTable.vue'
+import CuteFormDialogPro from '@/views/components/advanced/CuteFormDialogPro.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',

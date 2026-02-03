@@ -4,7 +4,7 @@
     <ul class="description">
       <li>选择、绑定部门信息时</li>
       <li>统一部门数据来源</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端） @Odboy（设计）@Odboy（后端）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（后端）</li>
     </ul>
     <h4>基础用法</h4>
     <el-row>

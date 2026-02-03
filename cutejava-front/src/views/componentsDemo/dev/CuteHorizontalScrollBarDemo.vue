@@ -4,7 +4,7 @@
     <ul class="description">
       <li>当需要在容器内展示大量内容，需要横向滚动查看时</li>
       <li>当希望在不同操作系统（Windows/Mac）上保持一致的滚动条样式时</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（设计）</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>基础用法</h4>
     <cute-horizontal-scroll-bar>
