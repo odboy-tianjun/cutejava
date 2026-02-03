@@ -123,11 +123,11 @@ import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 import CuteEditTable from '@/views/components/dev/CuteEditTable.vue'
-import CuteFormProDialog from '@/views/components/dev/CuteFormProDialog.vue'
+import CuteFormDialogPro from '@/views/components/dev/CuteFormDialogPro.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',
-  components: { CuteFormProDialog, CuteEditTable, CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
+  components: { CuteFormProDialog: CuteFormDialogPro, CuteEditTable, CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
   data() {
     return {
       modeDataSource: [
@@ -214,7 +214,7 @@ export default {
           { required: true, message: '请选择活动区域', trigger: 'change' }
         ]
       },
-      // CuteFormProDialog
+      // CuteFormDialogPro
       createFormProModel: {},
       createFormProSchema: [
         { name: 'name', title: '姓名', type: 'input', required: true },

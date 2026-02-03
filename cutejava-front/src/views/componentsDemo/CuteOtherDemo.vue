@@ -39,12 +39,6 @@
         </template>
       </cute-search-form>
     </cute-screen-shot>
-    <cute-section-title title="段落标题 CuteSectionTitle" />
-    <cute-section-title title="主标题" sub-title="副标题" third-title="三级标题">
-      <cute-button type="danger">操作按钮1</cute-button>
-      <cute-button type="danger">操作按钮2</cute-button>
-      <cute-button type="danger">操作按钮3</cute-button>
-    </cute-section-title>
   </div>
 </template>
 
@@ -56,12 +50,12 @@ import CuteScreenShot from '@/views/components/dev/CuteScreenShot.vue'
 import CuteSectionTitle from '@/views/components/dev/CuteSectionTitle.vue'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
-import CuteSearchProForm from '@/views/components/dev/CuteSearchProForm.vue'
+import CuteSearchFormPro from '@/views/components/dev/CuteSearchFormPro.vue'
 
 export default {
   name: 'CuteOtherDemo',
   components: {
-    CuteSearchProForm,
+    CuteSearchProForm: CuteSearchFormPro,
     CuteTransfer,
     CuteButton,
     CuteSectionTitle,

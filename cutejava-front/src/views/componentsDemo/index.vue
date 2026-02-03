@@ -57,7 +57,25 @@
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
-      <el-tab-pane label="业务组件" name="business" />
+      <el-tab-pane label="业务组件" name="business">
+        <el-collapse accordion>
+          <el-collapse-item title="用户单选框 CuteSingleUserSelect" name="CuteSingleUserSelect">
+            <CuteSingleUserSelectDemo />
+          </el-collapse-item>
+          <el-collapse-item title="用户多选框 CuteUserSelect" name="CuteUserSelect">
+            <CuteUserSelectDemo />
+          </el-collapse-item>
+          <el-collapse-item title="部门树 CuteDeptTree" name="CuteDeptTree">
+            <CuteDeptTreeDemo />
+          </el-collapse-item>
+          <el-collapse-item title="产品线选择框 CuteProductLineSelect" name="CuteProductLineSelect">
+            <CuteProductLineSelectDemo />
+          </el-collapse-item>
+          <el-collapse-item title="产品线选择框Pro CuteProductLineSelectPro" name="CuteProductLineSelectPro">
+            <CuteProductLineSelectProDemo />
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
       <el-tab-pane label="高级组件" name="advanced" />
     </el-tabs>
   </cute-page>
@@ -81,10 +99,22 @@ import CuteCodeEditorDemo from '@/views/componentsDemo/dev/CuteCodeEditorDemo.vu
 import CuteRichTextEditorDemo from '@/views/componentsDemo/dev/CuteRichTextEditorDemo.vue'
 import CuteHorizontalScrollBarDemo from '@/views/componentsDemo/dev/CuteHorizontalScrollBarDemo.vue'
 import CuteTextAreaInputDemo from '@/views/componentsDemo/dev/CuteTextAreaInputDemo.vue'
+import CuteUserSelectDemo from '@/views/componentsDemo/business/CuteUserSelectDemo.vue'
+import CuteSingleUserSelectDemo from '@/views/componentsDemo/business/CuteSingleUserSelectDemo.vue'
+import CuteProductLineSelectDemo from '@/views/componentsDemo/business/CuteProductLineSelectDemo.vue'
+import CuteProductLineSelectProDemo from '@/views/componentsDemo/business/CuteProductLineSelectProDemo.vue'
+import CuteDeptTree from '@/views/components/business/CuteDeptTree.vue'
+import CuteDeptTreeDemo from '@/views/componentsDemo/business/CuteDeptTreeDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteDeptTreeDemo,
+    CuteDeptTree,
+    CuteProductLineSelectProDemo,
+    CuteProductLineSelectDemo,
+    CuteSingleUserSelectDemo,
+    CuteUserSelectDemo,
     CuteTextAreaInputDemo,
     CuteHorizontalScrollBarDemo,
     CuteRichTextEditorDemo,

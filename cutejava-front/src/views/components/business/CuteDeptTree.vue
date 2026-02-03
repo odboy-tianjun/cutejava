@@ -5,7 +5,7 @@
  * @created 2025-07-29
  -->
 <template>
-  <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4">
+  <el-col :span="6">
     <div class="head-container">
       <el-input
         v-model="deptName"
@@ -51,11 +51,11 @@ export default {
   },
   methods: {
     getDeptData(node, resolve) {
+      this.$emit('search', node)
       const params = {}
       if (typeof node !== 'object') {
         if (node) {
           params['name'] = node
-          this.$emit('search', node)
         }
       } else if (node.level !== 0) {
         params['pid'] = node.data.id
