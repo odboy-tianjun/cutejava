@@ -15,11 +15,14 @@
           <el-collapse-item title="空状态 CuteNoData" name="CuteNoData">
             <CuteNoDataDemo />
           </el-collapse-item>
+          <el-collapse-item title="多行输入文本 CuteTextAreaInput" name="CuteTextAreaInput">
+            <CuteTextAreaInputDemo />
+          </el-collapse-item>
           <el-collapse-item title="段落标题 CuteSectionTitle" name="CuteSectionTitle">
             <CuteSectionTitleDemo />
           </el-collapse-item>
           <el-collapse-item title="横向滚动区域 CuteHorizontalScrollBar" name="CuteHorizontalScrollBar">
-            <CuteSectionTitleDemo />
+            <CuteHorizontalScrollBarDemo />
           </el-collapse-item>
           <el-collapse-item title="纵向滚动区域 CuteVerticalScrollBar" name="CuteVerticalScrollBar">
             <CuteSectionTitleDemo />
@@ -76,10 +79,14 @@ import CuteOneKeyCopyDemo from '@/views/componentsDemo/dev/CuteOneKeyCopyDemo.vu
 import CuteMarkdownDemo from '@/views/componentsDemo/dev/CuteMarkdownDemo.vue'
 import CuteCodeEditorDemo from '@/views/componentsDemo/dev/CuteCodeEditorDemo.vue'
 import CuteRichTextEditorDemo from '@/views/componentsDemo/dev/CuteRichTextEditorDemo.vue'
+import CuteHorizontalScrollBarDemo from '@/views/componentsDemo/dev/CuteHorizontalScrollBarDemo.vue'
+import CuteTextAreaInputDemo from '@/views/componentsDemo/dev/CuteTextAreaInputDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteTextAreaInputDemo,
+    CuteHorizontalScrollBarDemo,
     CuteRichTextEditorDemo,
     CuteCodeEditorDemo,
     CuteMarkdownDemo,

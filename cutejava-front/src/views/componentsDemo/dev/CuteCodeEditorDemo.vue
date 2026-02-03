@@ -11,8 +11,8 @@
     <cute-code-editor :content="yamlContent" mode="yaml" @change="onYamlChange" />
     <h4>API</h4>
     <el-table :data="apiData">
-      <el-table-column prop="name" label="参数" />
-      <el-table-column prop="remark" label="说明" />
+      <el-table-column prop="name" label="参数" width="220" />
+      <el-table-column prop="remark" label="说明" width="450" />
       <el-table-column prop="type" label="类型" />
       <el-table-column prop="defaultValue" label="默认值" />
       <el-table-column prop="required" label="是否必填" />
@@ -79,7 +79,7 @@ export default {
       apiData: [
         { name: 'content', remark: '内容', type: 'string', defaultValue: '-', required: '是' },
         { name: 'height', remark: '编辑框高度', type: 'string', defaultValue: '500px', required: '否' },
-        { name: 'read-only', remark: '是否只读', type: 'boolean', defaultValue: 'false', required: '否' },
+        { name: 'readonly', remark: '是否只读', type: 'boolean', defaultValue: 'false', required: '否' },
         { name: 'mode', remark: '语法模式。支持：yaml | java | go | swift | dockerfile | groovy | lua | perl | python | ruby | sql | xml | vue', type: 'string', defaultValue: 'yaml', required: '否' },
         { name: 'change', remark: '内容变化回调', type: '(value) => {}', defaultValue: '-', required: '否' }
       ]

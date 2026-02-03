@@ -13,25 +13,11 @@
     </cute-search-form>
     <cute-section-title title="高级搜索Pro版 CuteSearchProForm" />
     <cute-search-pro-form :model="searchFormProValues" :schema="searchFormProSchema" />
-    <cute-section-title title="横向滚动 CuteHorizontalScrollBar" />
-    <cute-horizontal-scroll-bar>
-      <div style="width: 3000px;min-width: 3000px">模拟超长内容</div>
-    </cute-horizontal-scroll-bar>
-    <cute-section-title title="纵向滚动 CuteVerticalScrollBar" />
-    <cute-vertical-scroll-bar>
-      <div style="height: 3000px;min-height: 3000px">模拟超高内容</div>
-    </cute-vertical-scroll-bar>
     <cute-section-title title="数据穿梭 CuteTransfer" />
     <cute-transfer :data-source="leftDataSource" primary-key="id">
       <el-table-column prop="name" label="姓名" />
       <el-table-column prop="description" label="备注" />
     </cute-transfer>
-    <cute-section-title title="多行输入文本 CuteTextAreaInput" />
-    <cute-text-area-input />
-    <cute-section-title title="链接 CuteLink" />
-    <cute-link title="百度一下" href="https://www.baidu.com" />
-    <cute-section-title title="空状态 CuteNoData" />
-    <cute-no-data desc="自定义提示语" />
     <cute-section-title title="预览抽屉 CutePreviewDrawer">
       <template v-slot:operation>
         <cute-button type="primary" @click="handleCutePreviewDrawerShow">显示</cute-button>
@@ -65,32 +51,22 @@
 <script>
 
 import CuteSearchForm from '@/views/components/dev/CuteSearchForm.vue'
-import CuteHorizontalScrollBar from '@/views/components/dev/CuteHorizontalScrollBar.vue'
-import CuteVerticalScrollBar from '@/views/components/dev/CuteVerticalScrollBar.vue'
-import CuteLink from '@/views/components/dev/CuteLink.vue'
-import CuteNoData from '@/views/components/dev/CuteNoData.vue'
 import CutePreviewDrawer from '@/views/components/dev/CutePreviewDrawer.vue'
 import CuteScreenShot from '@/views/components/dev/CuteScreenShot.vue'
 import CuteSectionTitle from '@/views/components/dev/CuteSectionTitle.vue'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
-import CuteTextAreaInput from '@/views/components/dev/CuteTextAreaInput.vue'
 import CuteSearchProForm from '@/views/components/dev/CuteSearchProForm.vue'
 
 export default {
   name: 'CuteOtherDemo',
   components: {
     CuteSearchProForm,
-    CuteTextAreaInput,
     CuteTransfer,
     CuteButton,
     CuteSectionTitle,
     CuteScreenShot,
     CutePreviewDrawer,
-    CuteNoData,
-    CuteLink,
-    CuteVerticalScrollBar,
-    CuteHorizontalScrollBar,
     CuteSearchForm
   },
   data() {

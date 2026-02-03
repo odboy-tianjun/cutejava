@@ -39,7 +39,7 @@ export default {
   name: 'CuteRichTextEditor',
   components: { Toolbar, Editor },
   props: {
-    readOnly: {
+    readonly: {
       type: Boolean,
       required: false,
       default: false
@@ -56,7 +56,7 @@ export default {
       toolbarConfig: {},
       editorConfig: {
         placeholder: '请输入内容...',
-        readOnly: that.readOnly,
+        readOnly: that.readonly,
         autoFocus: true,
         scroll: false,
         // 会造成卡顿

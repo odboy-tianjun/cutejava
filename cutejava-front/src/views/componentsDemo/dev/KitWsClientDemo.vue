@@ -19,8 +19,8 @@
     </el-card>
     <h4>快捷调用</h4>
     <el-table :data="apiData">
-      <el-table-column prop="name" label="参数" />
-      <el-table-column prop="remark" label="说明" />
+      <el-table-column prop="name" label="参数" width="220" />
+      <el-table-column prop="remark" label="说明" width="450" />
       <el-table-column prop="type" label="类型" />
       <el-table-column prop="defaultValue" label="默认值" />
       <el-table-column prop="required" label="是否必填" />

@@ -45,7 +45,7 @@ export default {
       required: false,
       default: '500px'
     },
-    readOnly: {
+    readonly: {
       type: Boolean,
       required: false,
       default: false
@@ -95,7 +95,7 @@ export default {
       if (this.content) {
         this.editor.setValue(this.content)
       }
-      this.editor.setOption('readOnly', this.readOnly)
+      this.editor.setOption('readOnly', this.readonly)
       this.editor.on('change', cm => {
         this.$emit('change', cm.getValue())
       })

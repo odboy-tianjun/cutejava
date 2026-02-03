@@ -29,20 +29,28 @@ export default {
   props: {
     disabled: {
       type: Boolean,
+      required: false,
       default: false
     },
     readonly: {
       type: Boolean,
+      required: false,
       default: false
     },
     maxlength: {
       type: Number,
+      required: false,
       default: 120
+    },
+    value: {
+      type: String,
+      required: true,
+      default: ''
     }
   },
   data() {
     return {
-      content: ''
+      content: this.value
     }
   },
   methods: {
