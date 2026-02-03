@@ -18,11 +18,23 @@
           <el-collapse-item title="段落标题 CuteSectionTitle" name="CuteSectionTitle">
             <CuteSectionTitleDemo />
           </el-collapse-item>
+          <el-collapse-item title="横向滚动区域 CuteHorizontalScrollBar" name="CuteHorizontalScrollBar">
+            <CuteSectionTitleDemo />
+          </el-collapse-item>
+          <el-collapse-item title="纵向滚动区域 CuteVerticalScrollBar" name="CuteVerticalScrollBar">
+            <CuteSectionTitleDemo />
+          </el-collapse-item>
           <el-collapse-item title="一键复制 CuteOneKeyCopy" name="CuteOneKeyCopy">
             <CuteOneKeyCopyDemo />
           </el-collapse-item>
           <el-collapse-item title="Markdown编辑框 CuteMarkdown" name="CuteMarkdown">
             <CuteMarkdownDemo />
+          </el-collapse-item>
+          <el-collapse-item title="代码编辑框 CuteCodeEditor" name="CuteCodeEditor">
+            <CuteCodeEditorDemo />
+          </el-collapse-item>
+          <el-collapse-item title="富文本框 CuteRichTextEditor" name="CuteRichTextEditor">
+            <CuteRichTextEditorDemo />
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
@@ -62,10 +74,14 @@ import CuteNoDataDemo from '@/views/componentsDemo/dev/CuteNoDataDemo.vue'
 import CuteSectionTitleDemo from '@/views/componentsDemo/dev/CuteSectionTitleDemo.vue'
 import CuteOneKeyCopyDemo from '@/views/componentsDemo/dev/CuteOneKeyCopyDemo.vue'
 import CuteMarkdownDemo from '@/views/componentsDemo/dev/CuteMarkdownDemo.vue'
+import CuteCodeEditorDemo from '@/views/componentsDemo/dev/CuteCodeEditorDemo.vue'
+import CuteRichTextEditorDemo from '@/views/componentsDemo/dev/CuteRichTextEditorDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteRichTextEditorDemo,
+    CuteCodeEditorDemo,
     CuteMarkdownDemo,
     CuteOneKeyCopyDemo,
     CuteSectionTitleDemo,

@@ -294,6 +294,9 @@ export default {
       }
       this.editor.insertText(text)
     },
+    /**
+     * el-form重置联动
+     */
     resetField() {
       this.setHtml('')
     }
