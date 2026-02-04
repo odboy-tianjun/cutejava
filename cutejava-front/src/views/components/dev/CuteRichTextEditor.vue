@@ -299,6 +299,7 @@ export default {
      */
     resetField() {
       this.setHtml('')
+      this.$emit('input', '')
     }
   }
 }

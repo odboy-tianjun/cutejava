@@ -24,6 +24,7 @@
           <el-input
             v-if="item.type === 'input'"
             v-model="scope.row[item.name]"
+            style="width: 100%"
             :placeholder="`请输入${item.title}`"
             clearable
             @input="(val) => onRowChange(val, scope.$index, item.name)"
@@ -31,6 +32,7 @@
           <el-select
             v-if="item.type === 'select'"
             v-model="scope.row[item.name]"
+            style="width: 100%"
             :placeholder="`请选择${item.title}`"
             clearable
             @change="(val) => onRowChange(val, scope.$index, item.name)"
@@ -179,6 +181,13 @@ export default {
       }
       dataSource.push(newObj)
       this.dataSource = [...dataSource]
+    },
+    /**
+     * el-form重置联动
+     */
+    resetField() {
+      this.dataSource = []
+      this.$emit('input', this.dataSource)
     }
   }
 }

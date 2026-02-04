@@ -91,7 +91,19 @@
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
-      <el-tab-pane label="高级组件" name="advanced" />
+      <el-tab-pane label="高级组件" name="advanced">
+        <el-collapse accordion>
+          <el-collapse-item title="简单数据表格 CuteSimpleTable" name="CuteSimpleTable">
+            <CuteSimpleTableDemo />
+          </el-collapse-item>
+          <el-collapse-item title="可拖拽排序的数据表格 CuteDragTable" name="CuteDragTable">
+            <CuteDragTableDemo />
+          </el-collapse-item>
+          <el-collapse-item title="可编辑表格 CuteEditTable" name="CuteEditTable">
+            <CuteEditTableDemo />
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
     </el-tabs>
   </cute-page>
 </template>
@@ -124,10 +136,16 @@ import CutePreviewDrawerDemo from '@/views/componentsDemo/dev/CutePreviewDrawerD
 import CuteTransferDemo from '@/views/componentsDemo/dev/CuteTransferDemo.vue'
 import CuteFileUploadDemo from '@/views/componentsDemo/business/CuteFileUploadDemo.vue'
 import CuteFileDragUploadDemo from '@/views/componentsDemo/business/CuteFileDragUploadDemo.vue'
+import CuteSimpleTableDemo from '@/views/componentsDemo/CuteSimpleTableDemo.vue'
+import CuteDragTableDemo from '@/views/componentsDemo/advanced/CuteDragTableDemo.vue'
+import CuteEditTableDemo from '@/views/componentsDemo/advanced/CuteEditTableDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteEditTableDemo,
+    CuteDragTableDemo,
+    CuteSimpleTableDemo,
     CuteFileDragUploadDemo,
     CuteFileUploadDemo,
     CuteTransferDemo,

@@ -88,7 +88,7 @@ export default {
     },
     pageProps: {
       type: Object,
-      required: true,
+      required: false,
       default: function() {
         return {
           current: 1,
@@ -113,8 +113,7 @@ export default {
         onPageChange: (currentPage, pageSize) => {
           this.pageProps.current = currentPage
           this.pageProps.pageSize = pageSize
-          console.log('on-page-change', currentPage, pageSize)
-          // this.$emit('onPageChange', currentPage, pageSize, total)
+          this.$emit('page-change', currentPage, pageSize)
           this.refresh()
         },
         orderBy: '',
@@ -192,7 +191,7 @@ export default {
       } else {
         result = { column: prop, orderType: 'desc' }
       }
-      // this.$emit('order-change', result)
+      this.$emit('order-change', result.column, result.orderType)
       this.crud.orderBy = result
       this.refresh()
     }

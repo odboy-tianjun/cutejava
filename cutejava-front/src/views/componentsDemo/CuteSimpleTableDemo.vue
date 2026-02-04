@@ -25,41 +25,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <!-- 表格渲染 -->
-    <!-- fetch: 获取远程数据 -->
-    <!-- params-transform: 组装查询参数 -->
-    <!-- responseTransform: 组装表格对象。对响应结果做处理 -->
-    <!-- primary-key: 主键 -->
-    <!-- showSelect: 是否多选。不传默认false，传true为多选 -->
-    <!-- @selection-change: 当且仅当mode为multi时启用 -->
-    <!-- @order-change: 当排序字段被单击，el-table-column 需添加 sortable="custom" 属性 -->
-    <cute-simple-table
-      ref="instance"
-      :fetch="curd.fetch"
-      :params-transform="curd.paramsTransform"
-      primary-key="id"
-      :page-props="curd.pageProps"
-      show-select
-    >
-      <template v-slot:batchArea>
-        <cute-button type="primary">批量绑定</cute-button>
-      </template>
-      <template v-slot:toolArea>
-        <cute-button type="primary">导出</cute-button>
-      </template>
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="description" label="描述" />
-      <el-table-column prop="createTime" label="创建时间" sortable="custom" :formatter="FormatRowDateTimeStr" />
-      <el-table-column prop="createBy" label="创建人" />
-      <el-table-column label="操作" width="150" min-width="150" fixed="right">
-        <template slot-scope="scope">
-          <div>
-            <el-button type="text" @click="onTableEditClick(scope.row)">编辑</el-button>
-            <el-button type="text" @click="onTableDeleteClick(scope.row)">删除</el-button>
-          </div>
-        </template>
-      </el-table-column>
-    </cute-simple-table>
     <cute-form-dialog
       ref="dialogForm"
       :model="createFormModel"
@@ -115,19 +80,16 @@
 </template>
 
 <script>
-import CuteSimpleTable from '@/views/components/advanced/CuteSimpleTable.vue'
-import DictService from '@/api/system/dict'
 import CuteFormDialog from '@/views/components/advanced/CuteFormDialog.vue'
 import CuteFormDrawer from '@/views/components/advanced/CuteFormDrawer.vue'
 import { FormatRowDateTimeStr } from '@/utils/KitUtil'
-import CuteButton from '@/views/components/dev/CuteButton.vue'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
 import CuteEditTable from '@/views/components/advanced/CuteEditTable.vue'
 import CuteFormDialogPro from '@/views/components/advanced/CuteFormDialogPro.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',
-  components: { CuteFormProDialog: CuteFormDialogPro, CuteEditTable, CuteTransfer, CuteButton, CuteFormDrawer, CuteFormDialog, CuteSimpleTable },
+  components: { CuteFormProDialog: CuteFormDialogPro, CuteEditTable: CuteEditTable, CuteTransfer, CuteFormDrawer, CuteFormDialog },
   data() {
     return {
       modeDataSource: [
@@ -156,48 +118,6 @@ export default {
           blurry: ''
         },
         rules: {}
-      },
-      curd: {
-        paramsTransform: (pageProps) => {
-          const values = this.form.model
-          return {
-            page: pageProps.current,
-            size: pageProps.pageSize,
-            args: {
-              ...values
-            }
-          }
-        },
-        fetch: async(queryParams) => {
-          return DictService.searchDict(queryParams)
-        },
-        columns: [
-          { prop: 'name', label: '名称' },
-          { prop: 'description', label: '描述' },
-          { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
-          { prop: 'createBy', label: '创建人' }
-        ],
-        operateColumn: {
-          width: '150',
-          fixed: 'right',
-          formatter: (row, column, cellValue, index) => {
-            return (<div>
-              <el-button type='text' onClick={() => {
-                console.log('编辑')
-              }}>编辑
-              </el-button>
-              <el-button type='text' onClick={() => {
-                console.log('删除')
-              }}>删除
-              </el-button>
-            </div>)
-          }
-        },
-        pageProps: {
-          current: 1,
-          pageSize: 10,
-          total: 0
-        }
       },
       // CuteFormDialog
       createFormModel: {
@@ -228,7 +148,6 @@ export default {
     this.initData()
   },
   methods: {
-    FormatRowDateTimeStr,
     initData() {
       this.$refs.instance.refresh()
     },
@@ -263,12 +182,6 @@ export default {
     },
     onDrawerFormSubmit(values) {
       console.log('onDrawerFormSubmit', values)
-    },
-    onTableEditClick(row) {
-      console.log('编辑', row)
-    },
-    onTableDeleteClick(row) {
-      console.log('删除', row)
     }
   }
 }
