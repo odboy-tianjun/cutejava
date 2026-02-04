@@ -1,5 +1,6 @@
 import store from '@/store'
 import dayjs from 'dayjs'
+import { FormatDateTime } from '@/utils/filters'
 
 /**
  * 权限校验
@@ -32,16 +33,6 @@ export function StringToNumber(value) {
   } catch (e) {
     return value
   }
-}
-
-/**
- * 保留几位小数
- * @param num Number
- * @param accuracy 精度
- * @returns {string|number}
- */
-export function NumberToFixed(num, accuracy) {
-  return num instanceof Number ? num.toFixed(accuracy) : num
 }
 
 /**
@@ -88,69 +79,6 @@ export function CountArraysObjectByPropKey(arr, propKey, targetValue) {
 }
 
 /**
- * 根据value获取label
- * @param options /
- * @param value /
- * @returns {*}
- */
-export function GetOptionLabelByValue(options, value) {
-  if (options instanceof Array) {
-    const find = options.find(f => f.value === value)
-    if (find) {
-      return find.label
-    }
-    return ''
-  }
-}
-
-/**
- * 格式化字节数字符串
- * @param value
- * @returns {string}
- * @constructor
- */
-export function FormatBytesStr(value) {
-  if (typeof value !== 'number' || isNaN(value) || value <= 0) {
-    return '0 Bytes'
-  }
-  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const index = Math.floor(Math.log(value) / Math.log(1024))
-  const unit = units[Math.min(index, units.length - 1)]
-  const result = (value / Math.pow(1024, index)).toFixed(2)
-  return `${result} ${unit}`
-}
-
-/**
- * 格式化日期字符串
- * @param originVal
- * @returns {string}
- * @constructor
- */
-export function FormatDateStr(originVal) {
-  if (originVal === undefined) {
-    return ''
-  }
-  const dt = new Date(originVal)
-  const y = dt.getFullYear()
-  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
-  const d = (dt.getDate() + '').padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
-/**
- * 格式化日期时间字符串
- * @param originVal
- * @returns {string}
- * @constructor
- */
-export function FormatDateTimeStr(originVal) {
-  if (originVal) {
-    return dayjs(originVal).format('YYYY-MM-DD HH:mm:ss')
-  }
-  return ''
-}
-
-/**
  * 格式化日期时间字符串，不带分割符号
  * @param originVal
  * @returns {string}
@@ -173,17 +101,7 @@ export function FormatDateTimeShortStr(originVal) {
  * @constructor
  */
 export function FormatRowDateTimeStr(row, column, cellValue, index) {
-  if (cellValue === undefined) {
-    return ''
-  }
-  const dt = new Date(cellValue)
-  const y = dt.getFullYear()
-  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
-  const d = (dt.getDate() + '').padStart(2, '0')
-  const hh = (dt.getHours() + '').padStart(2, '0')
-  const mm = (dt.getMinutes() + '').padStart(2, '0')
-  const ss = (dt.getSeconds() + '').padStart(2, '0')
-  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+  return FormatDateTime(cellValue)
 }
 
 /**
@@ -204,39 +122,6 @@ export function GetValueType(value) {
  */
 export function UniqueArrays(arr) {
   return [...new Set(arr)]
-}
-
-/**
- * 手机号掩码
- * @param mobile
- * @returns {*|string}
- * @constructor
- */
-export function MaskMobile(mobile) {
-  if (mobile.length > 7) {
-    return mobile.substr(0, 3) + '****' + mobile.substr(7)
-  }
-  return mobile
-}
-
-/**
- * 邮箱掩码
- * @param email
- * @returns {string}
- * @constructor
- */
-export function MaskEmail(email) {
-  if (String(email).indexOf('@') > 0) {
-    const str = email.split('@')
-    let _s = ''
-    if (str[0].length > 3) {
-      for (let i = 0; i < str[0].length - 3; i++) {
-        _s += '*'
-      }
-    }
-    return str[0].substr(0, 3) + _s + '@' + str[1]
-  }
-  return email
 }
 
 /**
