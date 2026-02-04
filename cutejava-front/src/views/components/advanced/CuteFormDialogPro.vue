@@ -177,14 +177,16 @@ export default {
       const schema = this.schema
       const formRules = {}
       let trigger = 'blur'
+      let tip = '请输入'
       for (const element of schema) {
         if (element.type === 'input') {
           trigger = 'blur'
         } else {
           trigger = 'change'
+          tip = '请选择'
         }
         formRules[element.name] = [
-          { required: element.required === true, message: '请输入' + element.title, trigger: trigger }
+          { required: element.required === true, message: tip + element.title, trigger: trigger }
         ]
       }
       return formRules
@@ -260,7 +262,7 @@ export default {
 }
 
 ::v-deep(.el-dialog__body) {
-  padding: 20px 20px !important;
+  padding: 10px 10px !important;
   height: 90%;
   display: flex;
   flex-direction: column;

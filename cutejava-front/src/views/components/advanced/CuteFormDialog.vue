@@ -51,7 +51,9 @@ export default {
     model: {
       type: Object,
       required: true,
-      default: null
+      default: function() {
+        return {}
+      }
     },
     rules: {
       type: Object,
@@ -132,7 +134,7 @@ export default {
 }
 
 ::v-deep(.el-dialog__body) {
-  padding: 20px 20px !important;
+  padding: 10px 10px !important;
   height: 90%;
   display: flex;
   flex-direction: column;

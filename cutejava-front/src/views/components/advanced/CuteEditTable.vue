@@ -17,7 +17,7 @@
       style="width: 100%;"
       highlight-current-row
     >
-      <el-table-column v-for="item in schema" :key="item[primaryKey]" :prop="item.name" :label="item.title">
+      <el-table-column v-for="item in schema" :key="item.name" :prop="item.name" :label="item.title">
         <template v-slot="scope">
           <el-input
             v-if="item.type === 'input'"
@@ -86,7 +86,7 @@ export default {
      */
     schema: {
       type: Array,
-      require: true,
+      required: true,
       default: function() {
         return []
       }
@@ -97,7 +97,14 @@ export default {
       dataSource: []
     }
   },
-  mounted() {
+  watch: {
+    value(newVal) {
+      if (newVal && newVal.length > 0) {
+        this.dataSource = newVal
+      }
+    }
+  },
+  created() {
     if (this.value && this.value.length > 0) {
       this.dataSource = this.value
     }
@@ -205,21 +212,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import "~@/assets/styles/variables";
-
-.selection-box {
-  text-align: left;
-  font-size: 12px;
-  padding-left: 10px;
-  min-height: 26.7px;
-  max-height: 26.7px;
-  padding-top: 7px;
-}
-
-.selection-count {
-  color: $menuActiveText;
-}
-</style>
-

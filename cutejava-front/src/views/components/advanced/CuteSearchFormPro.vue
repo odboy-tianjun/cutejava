@@ -8,7 +8,7 @@
   <el-form
     ref="searchForm"
     :inline="true"
-    :model.sync="model"
+    :model="model"
     label-position="right"
     label-width="90px"
     size="small"
@@ -79,7 +79,7 @@
 <script>
 
 export default {
-  name: 'CuteSearchProForm',
+  name: 'CuteSearchFormPro',
   components: {},
   props: {
     /**

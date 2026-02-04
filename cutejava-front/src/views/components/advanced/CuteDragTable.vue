@@ -10,11 +10,11 @@
       <el-col v-if="showSelect" :span="2" class="selection-box">
         已选 <font class="selection-count">{{ crud.selection && crud.selection.length }}</font> 条
       </el-col>
-      <el-col :span="11" style="text-align: left">
+      <el-col :span="showSelect ? 11 : 12" style="text-align: left">
         <!-- 通过  <template v-slot:batchArea> 插槽，数据表格上方左侧 添加 批量操作入口 -->
         <slot name="batchArea" />
       </el-col>
-      <el-col :span="11" style="text-align: left">
+      <el-col :span="showSelect ? 11 : 12" style="text-align: left">
         <!-- 通过  <template v-slot:toolArea> 插槽，数据表格上方右侧 添加 工具入口，比如导出 -->
         <slot name="toolArea" />
       </el-col>
@@ -59,7 +59,7 @@ export default {
     primaryKey: {
       type: String,
       required: true,
-      default: null
+      default: 'id'
     },
     fetch: {
       type: Function,
