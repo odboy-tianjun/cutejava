@@ -93,6 +93,12 @@
       </el-tab-pane>
       <el-tab-pane label="高级组件" name="advanced">
         <el-collapse accordion>
+          <el-collapse-item title="标准搜索区域 CuteSearchForm" name="CuteSearchForm">
+            <CuteSearchFormDemo />
+          </el-collapse-item>
+          <el-collapse-item title="标准搜索区域(Schema版) CuteSearchFormPro" name="CuteSearchFormPro">
+            <CuteSearchFormProDemo />
+          </el-collapse-item>
           <el-collapse-item title="简单数据表格 CuteSimpleTable" name="CuteSimpleTable">
             <CuteSimpleTableDemo />
           </el-collapse-item>
@@ -110,6 +116,9 @@
           </el-collapse-item>
           <el-collapse-item title="表单抽屉 CuteFormDrawer" name="CuteFormDrawer">
             <CuteFormDrawerDemo />
+          </el-collapse-item>
+          <el-collapse-item title="表单抽屉(Schema版) CuteFormDrawerPro" name="CuteFormDrawerPro">
+            <CuteFormDrawerProDemo />
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
@@ -145,22 +154,28 @@ import CutePreviewDrawerDemo from '@/views/componentsDemo/dev/CutePreviewDrawerD
 import CuteTransferDemo from '@/views/componentsDemo/dev/CuteTransferDemo.vue'
 import CuteFileUploadDemo from '@/views/componentsDemo/business/CuteFileUploadDemo.vue'
 import CuteFileDragUploadDemo from '@/views/componentsDemo/business/CuteFileDragUploadDemo.vue'
-import CuteSimpleTableDemo from '@/views/componentsDemo/CuteSimpleTableDemo.vue'
 import CuteDragTableDemo from '@/views/componentsDemo/advanced/CuteDragTableDemo.vue'
 import CuteEditTableDemo from '@/views/componentsDemo/advanced/CuteEditTableDemo.vue'
 import CuteFormDialogDemo from '@/views/componentsDemo/advanced/CuteFormDialogDemo.vue'
 import CuteFormDialogProDemo from '@/views/componentsDemo/advanced/CuteFormDialogProDemo.vue'
 import CuteFormDrawerDemo from '@/views/componentsDemo/advanced/CuteFormDrawerDemo.vue'
+import CuteFormDrawerProDemo from '@/views/componentsDemo/advanced/CuteFormDrawerProDemo.vue'
+import CuteSearchFormDemo from '@/views/componentsDemo/advanced/CuteSearchFormDemo.vue'
+import CuteSearchFormProDemo from '@/views/componentsDemo/advanced/CuteSearchFormProDemo.vue'
+import CuteSimpleTableDemo from '@/views/componentsDemo/advanced/CuteSimpleTableDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteSimpleTableDemo,
+    CuteSearchFormProDemo,
+    CuteSearchFormDemo,
+    CuteFormDrawerProDemo,
     CuteFormDrawerDemo,
     CuteFormDialogProDemo,
     CuteFormDialogDemo,
     CuteEditTableDemo,
     CuteDragTableDemo,
-    CuteSimpleTableDemo,
     CuteFileDragUploadDemo,
     CuteFileUploadDemo,
     CuteTransferDemo,

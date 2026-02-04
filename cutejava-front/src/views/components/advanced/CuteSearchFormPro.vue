@@ -11,7 +11,6 @@
     :model.sync="model"
     label-position="right"
     label-width="90px"
-    :disabled="disabled"
     size="small"
   >
     <el-form-item v-for="item in schema" :key="item.name" :prop="item.name" :label="item.title">
@@ -99,14 +98,6 @@ export default {
     model: {
       type: Object,
       required: true
-    },
-    /**
-     * 是否禁用
-     */
-    disabled: {
-      type: Boolean,
-      required: false,
-      default: false
     }
   },
   data() {
@@ -145,7 +136,7 @@ export default {
       const that = this
       that.$refs[formName].validate((valid) => {
         if (valid) {
-          that.$emit('submit', that.model)
+          that.$emit('search', that.model)
         } else {
           return false
         }
@@ -169,7 +160,6 @@ export default {
         }
         this.model = { ...model }
         this.onFormSubmit(formName)
-        // this.$emit('reset')
       } catch (e) {
         console.error(e)
       }

@@ -11,7 +11,6 @@
     :model.sync="model"
     label-position="right"
     label-width="90px"
-    :disabled="disabled"
     size="small"
   >
     <!-- 通过  <template v-slot:suffix> 插槽前置查询条件 -->
@@ -34,11 +33,6 @@ export default {
     model: {
       type: Object,
       required: true
-    },
-    disabled: {
-      type: Boolean,
-      required: false,
-      default: false
     }
   },
   methods: {
@@ -46,7 +40,7 @@ export default {
       const that = this
       that.$refs[formName].validate((valid) => {
         if (valid) {
-          that.$emit('submit', that.model)
+          that.$emit('search', that.model)
         } else {
           return false
         }
@@ -56,7 +50,6 @@ export default {
       try {
         this.$refs[formName].resetFields()
         this.onFormSubmit(formName)
-        // this.$emit('reset')
       } catch (e) {
         console.error(e)
       }

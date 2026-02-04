@@ -69,6 +69,9 @@ export default {
   components: { CuteDragTable, CuteButton },
   data() {
     return {
+      form: {
+        model: ''
+      },
       curd: {
         paramsTransform: (pageProps) => {
           const values = this.form.model
@@ -131,10 +134,13 @@ export default {
     }
   },
   mounted() {
-    this.$refs.instance.refresh()
+    this.refreshData()
   },
   methods: {
     FormatRowDateTimeStr,
+    refreshData() {
+      this.$refs.instance.refresh()
+    },
     onTableEditClick(row) {
       console.log('编辑', row)
     },

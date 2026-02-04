@@ -1,16 +1,20 @@
 <!--
- * 表单弹窗Pro
+ * 表单抽屉Pro
  * @author odboy
  * @email tianjun@odboy.cn
- * @created 2026-02-01
+ * @created 2026-02-04
  -->
 <template>
-  <el-dialog
+  <el-drawer
     :title="title"
     :visible.sync="visible"
-    :width="width"
-    :fullscreen="fullscreen"
+    :size="width"
     :before-close="beforeClose"
+    :append-to-body="true"
+    :close-on-press-escape="false"
+    :wrapper-closable="false"
+    :destroy-on-close="true"
+    :show-close="true"
     :modal="false"
   >
     <div class="container-form">
@@ -84,13 +88,13 @@
       <el-button v-if="showReset" @click="resetForm('form')">重 置</el-button>
       <el-button v-prevent-re-click type="primary" @click="submitForm('form')">提 交</el-button>
     </div>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>
 
 export default {
-  name: 'CuteFormDialogPro',
+  name: 'CuteFormDrawerPro',
   props: {
     /**
      * 弹窗标题
@@ -107,14 +111,6 @@ export default {
       type: String,
       required: false,
       default: '40%'
-    },
-    /**
-     * 是否全屏
-     */
-    fullscreen: {
-      type: Boolean,
-      required: false,
-      default: false
     },
     /**
      * 表单定义

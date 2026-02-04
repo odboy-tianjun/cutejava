@@ -7,12 +7,12 @@
       <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>基础用法</h4>
-    <cute-button type="primary" @click="showDialogForm">显示</cute-button>
-    <cute-form-dialog-pro
-      ref="formDialogPro"
+    <cute-button type="primary" @click="showDrawerForm">显示</cute-button>
+    <cute-form-drawer-pro
+      ref="formDrawerPro"
       :model="model"
       :schema="schema"
-      title="表单对话框Pro"
+      title="表单抽屉Pro"
       @submit="onSubmit"
     />
 
@@ -41,12 +41,12 @@
   </div>
 </template>
 <script>
-import CuteFormDialogPro from '@/views/components/advanced/CuteFormDialogPro.vue'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
+import CuteFormDrawerPro from '@/views/components/advanced/CuteFormDrawerPro.vue'
 
 export default {
-  name: 'CuteFormDialogProDemo',
-  components: { CuteButton, CuteFormDialogPro },
+  name: 'CuteFormDrawerProDemo',
+  components: { CuteFormDrawerPro, CuteButton },
   data() {
     return {
       model: {},
@@ -59,7 +59,6 @@ export default {
       apiData: [
         { name: 'title', remark: '弹窗的标题', type: 'string', defaultValue: '默认标题', required: '否' },
         { name: 'width', remark: '弹窗的宽度', type: 'string', defaultValue: '40%', required: '否' },
-        { name: 'fullscreen', remark: '是否全屏', type: 'boolean', defaultValue: 'false', required: '否' },
         { name: 'model', remark: '绑定的表单对象', type: 'object', defaultValue: '-', required: '是' },
         { name: 'schema', remark: '表单定义', type: 'object', defaultValue: '-', required: '是' },
         { name: 'showReset', remark: '是否显示重置按钮', type: 'boolean', defaultValue: 'false', required: '否' },
@@ -81,8 +80,8 @@ export default {
     }
   },
   methods: {
-    showDialogForm() {
-      this.$refs.formDialogPro.show()
+    showDrawerForm() {
+      this.$refs.formDrawerPro.show()
     },
     onSubmit(values) {
       console.log('onSubmit', values)

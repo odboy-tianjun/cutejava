@@ -23,10 +23,10 @@
       show-select
     >
       <template v-slot:batchArea>
-        <cute-button type="primary">批量绑定</cute-button>
+        <cute-button type="primary" @click="refreshData">批量绑定</cute-button>
       </template>
       <template v-slot:toolArea>
-        <cute-button type="primary">导出</cute-button>
+        <cute-button type="primary" @click="refreshData">导出</cute-button>
       </template>
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="description" label="描述" />
@@ -69,6 +69,9 @@ export default {
   components: { CuteSimpleTable, CuteButton },
   data() {
     return {
+      form: {
+        model: ''
+      },
       curd: {
         paramsTransform: (pageProps) => {
           const values = this.form.model
@@ -131,10 +134,13 @@ export default {
     }
   },
   mounted() {
-    this.$refs.instance.refresh()
+    this.refreshData()
   },
   methods: {
     FormatRowDateTimeStr,
+    refreshData() {
+      this.$refs.instance.refresh()
+    },
     onTableEditClick(row) {
       console.log('onTableEditClick', row)
     },
