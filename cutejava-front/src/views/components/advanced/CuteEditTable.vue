@@ -12,13 +12,11 @@
       empty-text="暂无数据"
       :row-key="primaryKey"
       fit
+      border
       :data="dataSource"
       style="width: 100%;"
-      :height="height"
-      :max-height="height"
       highlight-current-row
     >
-      <el-table-column type="index" width="70" />
       <el-table-column v-for="item in schema" :key="item[primaryKey]" :prop="item.name" :label="item.title">
         <template v-slot="scope">
           <el-input
@@ -92,14 +90,6 @@ export default {
       default: function() {
         return []
       }
-    },
-    /**
-     * 表格高度
-     */
-    height: {
-      type: Number,
-      required: false,
-      default: 240
     }
   },
   data() {

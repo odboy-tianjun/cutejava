@@ -8,7 +8,7 @@
     <h4>基础用法</h4>
     <cute-edit-table v-model="dataSource" primary-key="id" :schema="schema" />
     <h4>与CuteFormDrawer集成 <el-button type="text" @click="showFormDrawer">显示抽屉</el-button></h4>
-    <cute-form-drawer ref="formDrawer" title="与CuteFormDrawer集成" :model="form">
+    <cute-form-drawer ref="formDrawer" title="与CuteFormDrawer集成" :model="form" width="55%">
       <el-form-item label="可编辑表格" prop="editValues" label-width="100px">
         <cute-edit-table v-model="form.editValues" primary-key="id" :schema="schema" />
       </el-form-item>
@@ -77,7 +77,7 @@ export default {
         { name: 'name', remark: '表单项名称', type: 'string', defaultValue: '-', required: '是' },
         { name: 'title', remark: '表单项标题', type: 'string', defaultValue: '-', required: '是' },
         { name: 'type', remark: '表单项类型。input 输入框 | select 单选框', type: 'string', defaultValue: '-', required: '是' },
-        { name: 'dataSource', remark: '当type=select时必填', type: 'array', defaultValue: '[]', required: '否' }
+        { name: 'dataSource', remark: '数据源。当type=select时必填。当数据源中包含disabled字段时，当前行会随着disabled的值禁用与启用', type: 'array', defaultValue: '[]', required: '否' }
       ]
     }
   },
