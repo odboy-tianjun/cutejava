@@ -7,7 +7,7 @@
     </ul>
     <h4>基础用法</h4>
     <cute-edit-table v-model="dataSource" primary-key="id" :schema="schema" />
-    <h4>与CuteFormDrawer集成 <el-button type="text" @click="showFormDrawer">显示抽屉</el-button></h4>
+    <h4>与CuteFormDrawer集成 <el-button type="text" @click="showFormDrawer">显示</el-button></h4>
     <cute-form-drawer ref="formDrawer" title="与CuteFormDrawer集成" :model="form" width="55%">
       <el-form-item label="可编辑表格" prop="editValues" label-width="100px">
         <cute-edit-table v-model="form.editValues" primary-key="id" :schema="schema" />

@@ -8,7 +8,7 @@
       <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>基础用法</h4>
-    <cute-button type="primary" @click="showDialogForm">显示对话框表单</cute-button>
+    <cute-button type="primary" @click="showDialogForm">显示</cute-button>
     <cute-form-dialog
       ref="formDialog"
       :model="model"

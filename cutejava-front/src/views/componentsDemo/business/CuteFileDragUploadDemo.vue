@@ -25,7 +25,7 @@
       </el-form-item>
     </el-form>
     <h4>与CuteFormDialog集成</h4>
-    <cute-button type="primary" @click="showFormDialog">显示对话框</cute-button>
+    <cute-button type="primary" @click="showFormDialog">显示</cute-button>
     <cute-form-dialog ref="formDialog" title="与CuteFormDialog集成" :model="form">
       <el-form-item label="活动名称" prop="name" label-width="80px">
         <el-input v-model="form.name" style="width: 100%" />
@@ -41,7 +41,7 @@
       </el-form-item>
     </cute-form-dialog>
     <h4>与CuteFormDrawer集成</h4>
-    <cute-button type="primary" @click="showFormDrawer">显示抽屉</cute-button>
+    <cute-button type="primary" @click="showFormDrawer">显示</cute-button>
     <cute-form-drawer ref="formDrawer" title="与CuteFormDrawer集成" :model="form">
       <el-form-item label="活动名称" prop="name" label-width="80px">
         <el-input v-model="form.name" style="width: 100%" />
