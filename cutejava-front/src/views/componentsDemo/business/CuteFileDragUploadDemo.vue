@@ -24,7 +24,8 @@
         <el-button type="primary" @click="submitForm('form')">提 交</el-button>
       </el-form-item>
     </el-form>
-    <h4>与CuteFormDialog集成 <el-button type="text" @click="showFormDialog">显示对话框</el-button></h4>
+    <h4>与CuteFormDialog集成</h4>
+    <cute-button type="primary" @click="showFormDialog">显示对话框</cute-button>
     <cute-form-dialog ref="formDialog" title="与CuteFormDialog集成" :model="form">
       <el-form-item label="活动名称" prop="name" label-width="80px">
         <el-input v-model="form.name" style="width: 100%" />
@@ -39,7 +40,8 @@
         <cute-file-drag-upload v-model="form" mode="local" />
       </el-form-item>
     </cute-form-dialog>
-    <h4>与CuteFormDrawer集成 <el-button type="text" @click="showFormDrawer">显示抽屉</el-button></h4>
+    <h4>与CuteFormDrawer集成</h4>
+    <cute-button type="primary" @click="showFormDrawer">显示抽屉</cute-button>
     <cute-form-drawer ref="formDrawer" title="与CuteFormDrawer集成" :model="form">
       <el-form-item label="活动名称" prop="name" label-width="80px">
         <el-input v-model="form.name" style="width: 100%" />
@@ -68,10 +70,11 @@
 import CuteFormDialog from '@/views/components/advanced/CuteFormDialog.vue'
 import CuteFileDragUpload from '@/views/components/business/CuteFileDragUpload.vue'
 import CuteFormDrawer from '@/views/components/advanced/CuteFormDrawer.vue'
+import CuteButton from '@/views/components/dev/CuteButton.vue'
 
 export default {
   name: 'CuteFileDragUploadDemo',
-  components: { CuteFormDrawer, CuteFormDialog, CuteFileDragUpload },
+  components: { CuteButton, CuteFormDrawer, CuteFormDialog, CuteFileDragUpload },
   data() {
     return {
       form: {

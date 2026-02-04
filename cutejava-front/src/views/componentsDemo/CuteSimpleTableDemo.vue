@@ -1,47 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- 工具栏 -->
-    <div class="head-container">
-      <el-form
-        ref="searchForm"
-        :inline="true"
-        :model="form.model"
-        label-position="right"
-        label-width="80px"
-        :rules="form.rules"
-        size="mini"
-      >
-        <el-form-item label="模糊查询" prop="blurry">
-          <el-input v-model="form.model.blurry" clearable />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onFormSubmit('searchForm')">查询</el-button>
-          <el-button @click="onFormReset('searchForm')">重置</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onDialogClick">演示:表单对话框</el-button>
-          <el-button type="primary" @click="onDialogProClick">演示:表单对话框Pro</el-button>
-          <el-button type="primary" @click="onDrawerClick">演示:表单抽屉</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-    <cute-form-dialog
-      ref="dialogForm"
-      :model="createFormModel"
-      :rules="createFormRules"
-      title="演示:表单对话框"
-      @submit="onDialogFormSubmit"
-    >
-      <el-form-item label="活动名称" prop="name" label-width="100px">
-        <el-input v-model="createFormModel.name" placeholder="请输入" style="width: 100%" />
-      </el-form-item>
-      <el-form-item label="活动区域" prop="region" label-width="100px">
-        <el-select v-model="createFormModel.region" placeholder="请选择" style="width: 100%">
-          <el-option label="区域一" value="shanghai" />
-          <el-option label="区域二" value="beijing" />
-        </el-select>
-      </el-form-item>
-    </cute-form-dialog>
     <cute-form-drawer
       ref="drawerFrom"
       :model="createFormModel"
@@ -65,31 +23,17 @@
           <el-table-column prop="description" label="备注" />
         </cute-transfer>
       </el-form-item>
-      <el-form-item label="可编辑表格" prop="editValues" label-width="100px">
-        <cute-edit-table v-model="editTableDataSource" primary-key="id" :schema="editTableSchema" />
-      </el-form-item>
     </cute-form-drawer>
-    <cute-form-pro-dialog
-      ref="dialogProForm"
-      :model="createFormProModel"
-      :schema="createFormProSchema"
-      title="演示:表单对话框Pro"
-      @submit="onDialogFormSubmit"
-    />
   </div>
 </template>
 
 <script>
-import CuteFormDialog from '@/views/components/advanced/CuteFormDialog.vue'
 import CuteFormDrawer from '@/views/components/advanced/CuteFormDrawer.vue'
-import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteTransfer from '@/views/components/dev/CuteTransfer.vue'
-import CuteEditTable from '@/views/components/advanced/CuteEditTable.vue'
-import CuteFormDialogPro from '@/views/components/advanced/CuteFormDialogPro.vue'
 
 export default {
   name: 'CuteSimpleTableDemo',
-  components: { CuteFormProDialog: CuteFormDialogPro, CuteEditTable: CuteEditTable, CuteTransfer, CuteFormDrawer, CuteFormDialog },
+  components: { CuteTransfer, CuteFormDrawer },
   data() {
     return {
       modeDataSource: [
@@ -118,30 +62,7 @@ export default {
           blurry: ''
         },
         rules: {}
-      },
-      // CuteFormDialog
-      createFormModel: {
-        name: '',
-        region: '',
-        modeList: []
-      },
-      createFormRules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
-        ]
-      },
-      // CuteFormDialogPro
-      createFormProModel: {},
-      createFormProSchema: [
-        { name: 'name', title: '姓名', type: 'input', required: true },
-        { name: 'sex', title: '性别', type: 'select', required: true, dataSource: [{ label: '男', value: 'nn' }, { label: '女', value: 'mm' }] },
-        { name: 'createDate', title: '创建日期', type: 'date', required: false },
-        { name: 'createTime', title: '创建时间', type: 'datetime', required: false }
-      ]
+      }
     }
   },
   mounted() {
@@ -173,9 +94,6 @@ export default {
     },
     onDialogProClick() {
       this.$refs.dialogProForm.show()
-    },
-    onDialogFormSubmit(values) {
-      console.log('onDialogFormSubmit', values)
     },
     onDrawerClick() {
       this.$refs.drawerFrom.show()

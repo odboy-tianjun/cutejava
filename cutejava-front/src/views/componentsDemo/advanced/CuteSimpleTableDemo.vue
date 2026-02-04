@@ -136,10 +136,10 @@ export default {
   methods: {
     FormatRowDateTimeStr,
     onTableEditClick(row) {
-      console.log('编辑', row)
+      console.log('onTableEditClick', row)
     },
     onTableDeleteClick(row) {
-      console.log('删除', row)
+      console.log('onTableDeleteClick', row)
     }
   }
 }

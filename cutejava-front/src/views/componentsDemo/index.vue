@@ -99,8 +99,17 @@
           <el-collapse-item title="可拖拽排序的数据表格 CuteDragTable" name="CuteDragTable">
             <CuteDragTableDemo />
           </el-collapse-item>
-          <el-collapse-item title="可编辑表格 CuteEditTable" name="CuteEditTable">
+          <el-collapse-item title="可编辑表格(Schema版) CuteEditTable" name="CuteEditTable">
             <CuteEditTableDemo />
+          </el-collapse-item>
+          <el-collapse-item title="表单弹窗 CuteFormDialog" name="CuteFormDialog">
+            <CuteFormDialogDemo />
+          </el-collapse-item>
+          <el-collapse-item title="表单弹窗(Schema版) CuteFormDialogPro" name="CuteFormDialogPro">
+            <CuteFormDialogProDemo />
+          </el-collapse-item>
+          <el-collapse-item title="表单抽屉 CuteFormDrawer" name="CuteFormDrawer">
+            <CuteFormDrawerDemo />
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
@@ -139,10 +148,16 @@ import CuteFileDragUploadDemo from '@/views/componentsDemo/business/CuteFileDrag
 import CuteSimpleTableDemo from '@/views/componentsDemo/CuteSimpleTableDemo.vue'
 import CuteDragTableDemo from '@/views/componentsDemo/advanced/CuteDragTableDemo.vue'
 import CuteEditTableDemo from '@/views/componentsDemo/advanced/CuteEditTableDemo.vue'
+import CuteFormDialogDemo from '@/views/componentsDemo/advanced/CuteFormDialogDemo.vue'
+import CuteFormDialogProDemo from '@/views/componentsDemo/advanced/CuteFormDialogProDemo.vue'
+import CuteFormDrawerDemo from '@/views/componentsDemo/advanced/CuteFormDrawerDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteFormDrawerDemo,
+    CuteFormDialogProDemo,
+    CuteFormDialogDemo,
     CuteEditTableDemo,
     CuteDragTableDemo,
     CuteSimpleTableDemo,

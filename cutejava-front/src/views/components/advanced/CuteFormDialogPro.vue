@@ -21,6 +21,7 @@
             v-if="item.type === 'input'"
             v-model="model[item.name]"
             :placeholder="`请输入${item.title}`"
+            :disabled="model.disabled === true"
             clearable
             style="width: 100%"
           />
@@ -30,6 +31,7 @@
             v-model="model[item.name]"
             clearable
             :placeholder="`请选择${item.title}`"
+            :disabled="model.disabled === true"
             style="width: 100%"
           >
             <el-option
@@ -46,6 +48,7 @@
             type="daterange"
             align="right"
             unlink-panels
+            :disabled="model.disabled === true"
             clearable
             range-separator="至"
             start-placeholder="开始日期"
@@ -62,6 +65,7 @@
             type="datetimerange"
             align="right"
             clearable
+            :disabled="model.disabled === true"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -77,7 +81,7 @@
     <el-divider />
     <div class="dialog-footer">
       <el-button type="danger" @click="hidden">取 消</el-button>
-      <!--<el-button @click="resetForm('form')">重 置</el-button>-->
+      <el-button v-if="showReset" @click="resetForm('form')">重 置</el-button>
       <el-button v-prevent-re-click type="primary" @click="submitForm('form')">提 交</el-button>
     </div>
   </el-dialog>
@@ -128,6 +132,11 @@ export default {
     model: {
       type: Object,
       required: true
+    },
+    showReset: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -214,9 +223,11 @@ export default {
         }
       }
       this.model = { ...model }
+      this.$emit('reset')
     },
     beforeClose() {
       this.hidden()
+      this.$emit('cancel')
     }
   }
 }

@@ -22,7 +22,7 @@
     <el-divider />
     <div class="dialog-footer">
       <el-button type="danger" @click="hidden">取 消</el-button>
-      <!--<el-button @click="resetForm('form')">重 置</el-button>-->
+      <el-button v-if="showReset" @click="resetForm('form')">重 置</el-button>
       <el-button v-prevent-re-click type="primary" @click="submitForm('form')">提 交</el-button>
     </div>
   </el-dialog>
@@ -35,7 +35,7 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
+      required: false,
       default: '默认标题'
     },
     width: {
@@ -60,8 +60,12 @@ export default {
         return {}
       }
     },
-    // 是否平铺表单
     inline: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    showReset: {
       type: Boolean,
       required: false,
       default: false
@@ -91,9 +95,11 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.$emit('reset')
     },
     beforeClose() {
       this.hidden()
+      this.$emit('cancel')
     }
   }
 }

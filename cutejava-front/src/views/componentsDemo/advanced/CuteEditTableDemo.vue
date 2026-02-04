@@ -63,7 +63,7 @@ export default {
         ]
       },
       apiData: [
-        { name: 'value', remark: '绑定的值', type: 'array', defaultValue: '-', required: '否' },
+        { name: 'value', remark: '绑定的值。当数据源中包含disabled字段时，当前行会随着disabled的值禁用与启用', type: 'array', defaultValue: '-', required: '否' },
         { name: 'primary-key', remark: '对象中的哪个字段设置为主键', type: 'string', defaultValue: 'id', required: '是' },
         { name: 'height', remark: '表格高度', type: 'number', defaultValue: 'height', required: '否' },
         { name: 'schema', remark: '表格定义', type: 'array', defaultValue: '[]', required: '是' },
@@ -77,7 +77,7 @@ export default {
         { name: 'name', remark: '表单项名称', type: 'string', defaultValue: '-', required: '是' },
         { name: 'title', remark: '表单项标题', type: 'string', defaultValue: '-', required: '是' },
         { name: 'type', remark: '表单项类型。input 输入框 | select 单选框', type: 'string', defaultValue: '-', required: '是' },
-        { name: 'dataSource', remark: '数据源。当type=select时必填。当数据源中包含disabled字段时，当前行会随着disabled的值禁用与启用', type: 'array', defaultValue: '[]', required: '否' }
+        { name: 'dataSource', remark: '数据源，当type=select时必填。', type: 'array', defaultValue: '[]', required: '否' }
       ]
     }
   },
