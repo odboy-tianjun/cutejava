@@ -20,13 +20,14 @@
     >
       <el-table-column type="index" width="70" />
       <el-table-column v-for="item in schema" :key="item[primaryKey]" :prop="item.name" :label="item.title">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-input
             v-if="item.type === 'input'"
             v-model="scope.row[item.name]"
             style="width: 100%"
             :placeholder="`请输入${item.title}`"
             clearable
+            :disabled="scope.row.disabled === true"
             @input="(val) => onRowChange(val, scope.$index, item.name)"
           />
           <el-select
@@ -35,6 +36,7 @@
             style="width: 100%"
             :placeholder="`请选择${item.title}`"
             clearable
+            :disabled="scope.row.disabled === true"
             @change="(val) => onRowChange(val, scope.$index, item.name)"
           >
             <el-option
@@ -47,17 +49,11 @@
         </template>
       </el-table-column>
       <el-table-column>
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="onRowRemove(scope.$index)">删除</el-button>
-          <el-button type="text" size="small" :disabled="scope.$index < 1" @click="onRowUpMove(scope.$index)">上移
-          </el-button>
-          <el-button
-            type="text"
-            size="small"
-            :disabled="scope.$index + 1 >= dataSource.length"
-            @click="onRowDownMove(scope.$index)"
-          >下移
-          </el-button>
+        <template v-slot="scope">
+          <el-button type="text" size="small" :disabled="scope.row.disabled === true" @click="onRowDelete(scope.$index)">删除</el-button>
+          <el-button type="text" size="small" :disabled="scope.$index < 1 || scope.row.disabled === true" @click="onRowUpMove(scope.$index)">上移</el-button>
+          <el-button type="text" size="small" :disabled="scope.$index + 1 >= dataSource.length || scope.row.disabled === true" @click="onRowDownMove(scope.$index)">下移</el-button>
+          <el-button v-if="scope.$index === dataSource.length - 1" type="text" size="small" :disabled="scope.row.disabled === true" @click="onRowForceUp(scope.$index)">置顶</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -128,16 +124,18 @@ export default {
       dataSource[index][name] = val
       this.dataSource = [...dataSource]
       this.$emit('input', this.dataSource)
+      this.$emit('row-change', index, name, val)
     },
     /**
      * 当删除按钮被点击
      * @param index
      */
-    onRowRemove(index) {
+    onRowDelete(index) {
       const dataSource = this.dataSource
       dataSource.splice(index, 1)
       this.dataSource = [...dataSource]
       this.$emit('input', this.dataSource)
+      this.$emit('row-delete', index)
     },
     /**
      * 当上移按钮被点击
@@ -149,10 +147,12 @@ export default {
       }
       const dataSource = this.dataSource
       const temp = dataSource[index]
-      dataSource[index] = dataSource[index - 1]
-      dataSource[index - 1] = temp
+      const newIndex = index - 1
+      dataSource[index] = dataSource[newIndex]
+      dataSource[newIndex] = temp
       this.dataSource = [...dataSource]
       this.$emit('input', this.dataSource)
+      this.$emit('row-up', index, newIndex, temp)
     },
     /**
      * 当下移按钮被点击
@@ -164,10 +164,32 @@ export default {
       }
       const dataSource = this.dataSource
       const temp = dataSource[index]
-      dataSource[index] = dataSource[index + 1]
-      dataSource[index + 1] = temp
+      const newIndex = index + 1
+      dataSource[index] = dataSource[newIndex]
+      dataSource[newIndex] = temp
       this.dataSource = [...dataSource]
       this.$emit('input', this.dataSource)
+      this.$emit('row-down', index, newIndex, temp)
+    },
+    /**
+     * 当置顶按钮被点击
+     * @param index
+     */
+    onRowForceUp(index) {
+      const dataSource = this.dataSource
+      // 校验是否为最后一行
+      if (index !== dataSource.length - 1) {
+        return
+      }
+      // 获取需要置顶的数据项
+      const targetRow = dataSource[index]
+      // 删除当前索引数据
+      dataSource.splice(index, 1)
+      // 插入到数据开头
+      dataSource.unshift(targetRow)
+      this.dataSource = [...dataSource]
+      this.$emit('input', this.dataSource)
+      this.$emit('row-force-up', targetRow)
     },
     /**
      * 当添加数据按钮被点击

@@ -46,7 +46,7 @@ export default {
       ],
       dataSource: [
         { id: 1, name: '小明', sex: 'mm', description: '小明牛P' },
-        { id: 4, name: '小绿', sex: 'nn', description: '小绿牛P' },
+        { id: 4, name: '小绿', sex: 'nn', description: '小绿牛P', disabled: true },
         { id: 5, name: '小黄', sex: 'nn', description: '小黄牛P' },
         { id: 6, name: '小紫', sex: 'nn', description: '小紫牛P' },
         { id: 17, name: '小郑', sex: 'mm', description: '小郑牛P' },
@@ -66,7 +66,12 @@ export default {
         { name: 'value', remark: '绑定的值', type: 'array', defaultValue: '-', required: '否' },
         { name: 'primary-key', remark: '对象中的哪个字段设置为主键', type: 'string', defaultValue: 'id', required: '是' },
         { name: 'height', remark: '表格高度', type: 'number', defaultValue: 'height', required: '否' },
-        { name: 'schema', remark: '表格定义', type: 'array', defaultValue: '[]', required: '是' }
+        { name: 'schema', remark: '表格定义', type: 'array', defaultValue: '[]', required: '是' },
+        { name: 'row-change', remark: '行数据发生改变的时候触发的回调', type: '(index, name, val) => {}', defaultValue: '-', required: '否' },
+        { name: 'row-delete', remark: '行被删除的时候触发的回调', type: '(index) => {}', defaultValue: '-', required: '否' },
+        { name: 'row-up', remark: '行被向上移动的时候触发的回调', type: '(index, newIndex, row) => {}', defaultValue: '-', required: '否' },
+        { name: 'row-down', remark: '行被向下移动的时候触发的回调', type: '(index, newIndex, row) => {}', defaultValue: '-', required: '否' },
+        { name: 'row-force-up', remark: '行被置顶的时候触发的回调', type: '(row) => {}', defaultValue: '-', required: '否' }
       ],
       schemaData: [
         { name: 'name', remark: '表单项名称', type: 'string', defaultValue: '-', required: '是' },

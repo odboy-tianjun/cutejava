@@ -60,7 +60,7 @@ export default {
         { name: 'dataSource', remark: '左侧表格数据', type: 'array', defaultValue: '[]', required: '是' },
         { name: 'primary-key', remark: '取对象的哪个值作为value', type: 'string', defaultValue: 'id', required: '否' },
         { name: 'loading', remark: '是否加载中', type: 'boolean', defaultValue: 'false', required: '是' },
-        { name: 'change', remark: '右侧已选值发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' }
+        { name: 'change', remark: '右侧数据源发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' }
       ]
     }
   }
