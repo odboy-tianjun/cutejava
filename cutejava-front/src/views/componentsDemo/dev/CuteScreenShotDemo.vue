@@ -7,7 +7,7 @@
       <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>基础用法</h4>
-    <cute-screen-shot>
+    <cute-screen-shot key="test">
       <cute-page>
         测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
       </cute-page>
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       apiData: [
-        { name: 'type', remark: '按钮类型', type: 'primary| secondary | normal | text', defaultValue: 'normal', required: '否' }
+        { name: 'key', remark: '全局唯一key', type: 'string', defaultValue: 'elementIdSelector', required: '是' }
       ]
     }
   }

@@ -17,7 +17,7 @@
         截屏
       </el-button>
     </div>
-    <div id="elementIdSelector" style="padding: 15px">
+    <div id="{{ key }}" style="padding: 15px">
       <slot />
     </div>
   </div>
@@ -31,6 +31,13 @@ import html2canvas from 'html2canvas'
 
 export default {
   name: 'CuteScreenShot',
+  props: {
+    key: {
+      type: String,
+      required: true,
+      default: 'elementIdSelector'
+    }
+  },
   data() {
     return {
       capturing: false

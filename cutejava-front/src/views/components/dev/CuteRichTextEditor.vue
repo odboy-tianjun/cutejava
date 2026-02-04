@@ -156,7 +156,7 @@ export default {
     customAlert(info, type) {
       switch (type) {
         case 'success':
-          KitMessage.Error(info)
+          KitMessage.Success(info)
           break
         case 'info':
           KitMessage.Info(info)
@@ -219,7 +219,7 @@ export default {
       if (this.editor == null) {
         return ''
       }
-      this.editor.getHtml()
+      return this.editor.getHtml()
     },
     /**
      * 清空编辑器内容

@@ -9,7 +9,7 @@
   <mavon-editor
     ref="md"
     v-model="innerValue"
-    :style="`height: + ${height};overflow-y: hidden`"
+    :style="`height: ${height};overflow-y: hidden`"
     :ishljs="true"
     @imgAdd="imgAdd"
     @change="onChange"
@@ -52,6 +52,9 @@ export default {
     value(newVal) {
       this.innerValue = newVal
     }
+  },
+  beforeDestroy() {
+    window.onresize = null
   },
   mounted() {
     const that = this

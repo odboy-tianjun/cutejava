@@ -58,7 +58,7 @@ export default {
   },
   data() {
     return {
-      editor: false
+      editor: null
     }
   },
   watch: {

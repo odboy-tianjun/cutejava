@@ -95,7 +95,7 @@ export default {
      */
     value: {
       type: Array,
-      require: false,
+      required: false,
       default: function() {
         return []
       }
@@ -105,7 +105,7 @@ export default {
      */
     dataSource: {
       type: Array,
-      require: true,
+      required: true,
       default: function() {
         return []
       }
@@ -115,7 +115,7 @@ export default {
      */
     primaryKey: {
       type: String,
-      require: true,
+      required: true,
       default: 'id'
     },
     /**
@@ -123,7 +123,7 @@ export default {
      */
     loading: {
       type: Boolean,
-      require: false,
+      required: false,
       default: false
     }
   },
