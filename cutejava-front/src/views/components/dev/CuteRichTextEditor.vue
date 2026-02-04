@@ -13,7 +13,7 @@
       :mode="editMode"
     />
     <Editor
-      v-model="editValue"
+      v-model="innerValue"
       :style="`height: 500px;overflow-y: hidden`"
       :default-config="editorConfig"
       :mode="editMode"
@@ -44,7 +44,7 @@ export default {
       required: false,
       default: false
     },
-    content: {
+    value: {
       type: String,
       required: false,
       default: ''
@@ -80,7 +80,7 @@ export default {
       // 'default' or 'simple'
       editMode: 'simple',
       editor: null,
-      editValue: ''
+      innerValue: ''
     }
   },
   computed: {
@@ -88,6 +88,11 @@ export default {
       'imagesUploadApi',
       'baseApi'
     ])
+  },
+  watch: {
+    value(newVal) {
+      this.innerValue = newVal
+    }
   },
   methods: {
     /**
@@ -97,7 +102,7 @@ export default {
     onCreated(editor) {
       // 一定要用 Object.seal(), 否则会报错
       this.editor = Object.seal(editor)
-      this.editValue = this.content
+      this.innerValue = this.value
     },
     /**
      * 编辑器内容、选区变化时的回调函数
@@ -112,6 +117,7 @@ export default {
       // 纯文本内容
       const text = editor.getText()
       this.$emit('change', html, text)
+      this.$emit('input', html)
     },
     /**
      * 编辑器销毁时的回调函数。调用 editor.destroy() 即可销毁编辑器
@@ -122,15 +128,6 @@ export default {
         return
       }
       editor.destroy()
-    },
-    /**
-     * 编辑器内容达到最大长度时的回调函数(会导致卡顿)
-     * @param editor
-     */
-    onMaxLength(editor) {
-      if (editor == null) {
-        return
-      }
     },
     /**
      * 编辑器 focus 时的回调函数
@@ -211,6 +208,9 @@ export default {
         return
       }
       this.editor.dangerouslyInsertHtml(html)
+      const content = this.getHtml()
+      this.$emit('change', content)
+      this.$emit('input', content)
     },
     /**
      * 获取编辑器html内容
@@ -229,6 +229,9 @@ export default {
         return
       }
       this.editor.clear()
+      const content = this.getHtml()
+      this.$emit('change', content)
+      this.$emit('input', content)
     },
     /**
      * 撤销
@@ -238,6 +241,9 @@ export default {
         return
       }
       this.editor.undo()
+      const content = this.getHtml()
+      this.$emit('change', content)
+      this.$emit('input', content)
     },
     /**
      * 重做
@@ -247,6 +253,9 @@ export default {
         return
       }
       this.editor.redo()
+      const content = this.getText()
+      this.$emit('change', content)
+      this.$emit('input', content)
     },
     /**
      * 获取选中的文本
@@ -265,6 +274,9 @@ export default {
         return
       }
       this.editor.deleteFragment()
+      const content = this.getHtml()
+      this.$emit('change', content)
+      this.$emit('input', content)
     },
     /**
      * 获取选中的内容。JSON格式
@@ -293,12 +305,16 @@ export default {
         return
       }
       this.editor.insertText(text)
+      const content = this.getHtml()
+      this.$emit('change', content)
+      this.$emit('input', content)
     },
     /**
      * el-form重置联动
      */
     resetField() {
-      this.setHtml('')
+      this.clear()
+      this.$emit('change', '')
       this.$emit('input', '')
     }
   }

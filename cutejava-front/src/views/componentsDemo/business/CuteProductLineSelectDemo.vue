@@ -40,7 +40,7 @@ export default {
         productLine: null
       },
       apiData: [
-        { name: 'value', remark: '绑定的值', type: 'string', defaultValue: '-', required: '否' },
+        { name: 'value | v-model', remark: '绑定的值', type: 'string', defaultValue: '-', required: '否' },
         { name: 'disabled', remark: '是否禁用', type: 'boolean', defaultValue: 'false', required: '否' },
         { name: 'change', remark: '产品线发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' },
         { name: 'detail', remark: '产品线明细发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' }

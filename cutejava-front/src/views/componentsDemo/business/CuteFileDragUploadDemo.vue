@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl">
-        <cute-file-drag-upload v-model="form" mode="local" />
+        <cute-file-drag-upload v-model="form.fileUrl" mode="local" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')">提 交</el-button>
@@ -37,7 +37,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl" label-width="80px">
-        <cute-file-drag-upload v-model="form" mode="local" />
+        <cute-file-drag-upload v-model="form.fileUrl" mode="local" />
       </el-form-item>
     </cute-form-dialog>
     <h4>与CuteFormDrawer集成</h4>
@@ -53,7 +53,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl" label-width="80px">
-        <cute-file-drag-upload v-model="form" mode="local" />
+        <cute-file-drag-upload v-model="form.fileUrl" mode="local" />
       </el-form-item>
     </cute-form-drawer>
     <h4>API</h4>
@@ -83,7 +83,7 @@ export default {
         fileUrl: ''
       },
       apiData: [
-        { name: 'value', remark: '上传的文件路径', type: 'string', defaultValue: '-', required: '是' },
+        { name: 'value | v-model', remark: '上传的文件路径', type: 'string', defaultValue: '-', required: '否' },
         { name: 'mode', remark: '上传方式。local本地、oss对象存储', type: 'string', defaultValue: 'local', required: '否' }
       ]
     }

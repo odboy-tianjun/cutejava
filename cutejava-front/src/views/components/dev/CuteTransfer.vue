@@ -6,7 +6,6 @@
  -->
 <template>
   <el-row>
-    <!--    <el-button @click="onTestValue">测试值</el-button>-->
     <el-col :span="11">
       <el-input
         v-model="searchValue"
@@ -96,6 +95,7 @@ export default {
      */
     value: {
       type: Array,
+      require: false,
       default: function() {
         return []
       }
@@ -115,7 +115,7 @@ export default {
      */
     primaryKey: {
       type: String,
-      require: false,
+      require: true,
       default: 'id'
     },
     /**
@@ -139,25 +139,27 @@ export default {
       searchCacheDS: []
     }
   },
-  mounted() {
-    this.rightValues = this.value
-    this.leftDataSource = this.dataSource
+  watch: {
+    value(newVal) {
+      this.rightValues = newVal
+      this.leftDataSource = this.dataSource
 
-    const key = this.primaryKey
-    const leftDataSource = this.leftDataSource || []
-    const rightValues = this.rightValues
+      const key = this.primaryKey
+      const leftDataSource = this.leftDataSource || []
+      const rightValues = this.rightValues
 
-    if (rightValues && rightValues.length > 0) {
-      const rightDataSource = []
-      for (const element of leftDataSource) {
-        if (rightValues.indexOf(element[key]) !== -1) {
-          rightDataSource.push(element)
+      if (rightValues && rightValues.length > 0) {
+        const rightDataSource = []
+        for (const element of leftDataSource) {
+          if (rightValues.indexOf(element[key]) !== -1) {
+            rightDataSource.push(element)
+          }
         }
+        this.rightDataSource = rightDataSource
+        this.leftDataSource = leftDataSource.filter(item => !rightValues.includes(item[key]))
+      } else {
+        this.leftDataSource = leftDataSource
       }
-      this.rightDataSource = rightDataSource
-      this.leftDataSource = leftDataSource.filter(item => !rightValues.includes(item[key]))
-    } else {
-      this.leftDataSource = leftDataSource
     }
   },
   methods: {
@@ -234,14 +236,24 @@ export default {
         this.$emit('change', this.rightValues)
         this.$emit('input', this.rightValues)
       }
+    },
+    /**
+     * el-form重置联动
+     */
+    resetField() {
+      const searchCacheDS = this.searchCacheDS
+      if (searchCacheDS && searchCacheDS.length > 0) {
+        this.leftDataSource = [...searchCacheDS, ...this.rightDataSource]
+        this.searchCacheDS = []
+      } else {
+        this.leftDataSource = [...this.leftDataSource, ...this.rightDataSource]
+      }
+      this.searchValue = ''
+      this.leftSelection = []
+      this.rightSelection = []
+      this.rightDataSource = []
+      this.rightValues = []
     }
-    // onTestValue() {
-    //   console.error('==============leftDataSource', this.leftDataSource)
-    //   console.error('==============leftSelection', this.leftSelection)
-    //   console.error('==============rightDataSource', this.rightDataSource)
-    //   console.error('==============rightSelection', this.rightSelection)
-    //   console.error('==============rightValues', this.rightValues)
-    // }
   }
 }
 </script>

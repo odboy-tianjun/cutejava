@@ -42,7 +42,7 @@ export default {
         user: []
       },
       apiData: [
-        { name: 'value', remark: '绑定的值', type: 'array', defaultValue: '[]', required: '否' },
+        { name: 'value | v-model', remark: '绑定的值', type: 'array', defaultValue: '[]', required: '否' },
         { name: 'change', remark: '选中用户发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' }
       ]
     }

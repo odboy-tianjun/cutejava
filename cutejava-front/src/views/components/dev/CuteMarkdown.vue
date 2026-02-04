@@ -8,7 +8,7 @@
 <template>
   <mavon-editor
     ref="md"
-    v-model="content"
+    v-model="innerValue"
     :style="`height: + ${height};overflow-y: hidden`"
     :ishljs="true"
     @imgAdd="imgAdd"
@@ -30,7 +30,7 @@ export default {
     mavonEditor
   },
   props: {
-    content: {
+    value: {
       type: String,
       required: true,
       default: ''
@@ -38,7 +38,8 @@ export default {
   },
   data() {
     return {
-      height: document.documentElement.clientHeight - dynamicHeight + 'px'
+      height: document.documentElement.clientHeight - dynamicHeight + 'px',
+      innerValue: ''
     }
   },
   computed: {
@@ -46,6 +47,11 @@ export default {
       'imagesUploadApi',
       'baseApi'
     ])
+  },
+  watch: {
+    value(newVal) {
+      this.innerValue = newVal
+    }
   },
   mounted() {
     const that = this
@@ -64,12 +70,17 @@ export default {
     },
     onChange(value, render) {
       this.$emit('change', value, render)
+      this.$emit('input', value)
     },
     onSave(value, render) {
       this.$emit('save', value, render)
+      this.$emit('change', value)
+      this.$emit('input', value)
     },
     resetField() {
-      this.content = ''
+      this.innerValue = ''
+      this.$emit('change', '')
+      this.$emit('input', '')
     }
   }
 }

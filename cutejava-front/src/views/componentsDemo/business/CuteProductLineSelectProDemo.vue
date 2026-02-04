@@ -41,7 +41,7 @@ export default {
         productLine: null
       },
       apiData: [
-        { name: 'value', remark: '绑定的值', type: 'string', defaultValue: '-', required: '否' }
+        { name: 'value | v-model', remark: '绑定的值', type: 'string', defaultValue: '-', required: '否' }
       ]
     }
   },

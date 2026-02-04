@@ -34,7 +34,7 @@ export default {
     return {
       content: '',
       apiData: [
-        { name: 'content', remark: '内容', type: 'string', defaultValue: '-', required: '是' },
+        { name: 'value | v-model', remark: '内容', type: 'string', defaultValue: '-', required: '否' },
         { name: 'readonly', remark: '是否只读', type: 'boolean', defaultValue: 'false', required: '否' },
         { name: 'change', remark: '内容改变回调事件', type: '(html, text) => {}', defaultValue: '-', required: '否' },
         { name: 'focus', remark: '编辑器获得焦点回调事件', type: '(editor) => {}', defaultValue: '-', required: '否' },

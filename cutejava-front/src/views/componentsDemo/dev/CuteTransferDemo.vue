@@ -56,7 +56,7 @@ export default {
         { id: 18, name: '小王', description: '小王牛P' }
       ],
       apiData: [
-        { name: 'value', remark: '右侧已选值', type: 'array', defaultValue: '[]', required: '否' },
+        { name: 'value | v-model', remark: '右侧数据对象属性值集合', type: 'array', defaultValue: '[]', required: '否' },
         { name: 'dataSource', remark: '左侧表格数据', type: 'array', defaultValue: '[]', required: '是' },
         { name: 'primary-key', remark: '取对象的哪个值作为value', type: 'string', defaultValue: 'id', required: '否' },
         { name: 'loading', remark: '是否加载中', type: 'boolean', defaultValue: 'false', required: '是' },

@@ -199,7 +199,8 @@ export default {
      */
     resetField() {
       this.dataSource = []
-      this.$emit('input', this.dataSource)
+      this.$emit('change', [])
+      this.$emit('input', [])
     }
   }
 }

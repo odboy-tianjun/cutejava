@@ -6,20 +6,14 @@
  * @description 使用方式：<cute-one-key-copy :content.sync="data" />
  -->
 <template>
-  <el-button
-    v-clipboard:copy="content"
-    v-clipboard:success="onCopy"
-    v-clipboard:error="onError"
-    size="small"
-    icon="el-icon-document-copy"
-  />
+  <el-button v-clipboard:copy="value" v-clipboard:success="onCopy" v-clipboard:error="onError" size="small" icon="el-icon-document-copy" />
 </template>
 
 <script>
 export default {
   name: 'CuteOneKeyCopy',
   props: {
-    content: {
+    value: {
       type: String,
       required: true,
       default: ''

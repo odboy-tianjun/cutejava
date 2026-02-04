@@ -44,9 +44,9 @@ export default {
         dept: null
       },
       apiData: [
-        { name: 'value', remark: '绑定的值', type: 'string', defaultValue: '-', required: '否' },
-        { name: 'node-click', remark: '部门节点发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' },
-        { name: 'search', remark: '搜索部门回调事件', type: '(value) => {}', defaultValue: '-', required: '否' }
+        { name: 'value | v-model', remark: '绑定的值', type: 'string', defaultValue: '-', required: '否' },
+        { name: 'search', remark: '搜索部门回调事件', type: '(value) => {}', defaultValue: '-', required: '否' },
+        { name: 'node-click', remark: '部门节点发生改变的时候触发的回调', type: '(value) => {}', defaultValue: '-', required: '否' }
       ]
     }
   },

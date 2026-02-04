@@ -6,7 +6,7 @@
  -->
 <template>
   <el-select
-    v-model="user"
+    v-model="innerValue"
     style="width: 100%"
     filterable
     remote
@@ -41,21 +41,21 @@ export default {
   },
   data() {
     return {
-      user: [],
+      innerValue: [],
       loading: false,
       options: []
     }
   },
   watch: {
     value(newVal) {
-      this.user = newVal
+      this.innerValue = newVal
     }
   },
-  async mounted() {
+  async created() {
     const that = this
-    if (that.value && that.value.length > 0) {
-      that.options = await CuteUserSelectApi.listMetadataByUsernames(that.value)
-      that.users = that.value
+    if (that.value) {
+      that.options = await CuteUserSelectApi.listMetadataByUsernames([that.value])
+      that.innerValue = that.value
     }
   },
   methods: {
@@ -81,6 +81,11 @@ export default {
       this.$emit('change', value)
       // 绑定form value
       this.$emit('input', value)
+    },
+    resetField() {
+      this.innerValue = null
+      this.$emit('change', null)
+      this.$emit('input', null)
     }
   }
 }

@@ -8,7 +8,8 @@
     <h4>基础用法：clipboard版</h4>
     <div id="btn" @click="copy">复制</div>
     <h4>基础用法：OneKeyCopy组件版（推荐）</h4>
-    <cute-one-key-copy :content.sync="msg" />
+    <!-- v-model 会自动绑定元素的 value 属性，并监听 input 事件（某些元素如复选框监听 change 事件）-->
+    <cute-one-key-copy v-model="msg" />
     <h4>API</h4>
     <el-table :data="apiData">
       <el-table-column prop="name" label="参数" width="220" />
@@ -30,7 +31,7 @@ export default {
     return {
       msg: '来复制我吧',
       apiData: [
-        { name: 'content', remark: '待复制的内容', type: 'string', defaultValue: '-', required: '是' }
+        { name: 'value | v-model', remark: '待复制的内容', type: 'string', defaultValue: '-', required: '否' }
       ]
     }
   },

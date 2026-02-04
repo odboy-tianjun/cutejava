@@ -50,7 +50,7 @@
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
-      <el-tab-pane label="快捷组件" name="kit">
+      <el-tab-pane label="快捷组件" name="util">
         <el-collapse accordion>
           <el-collapse-item title="信息提示 KitMessage" name="KitMessage">
             <KitMessageDemo />
@@ -130,10 +130,10 @@
 
 import CutePage from '@/views/components/dev/CutePage.vue'
 import CuteButtonDemo from '@/views/componentsDemo/dev/CuteButtonDemo.vue'
-import KitMessageDemo from '@/views/componentsDemo/dev/KitMessageDemo.vue'
-import KitNotificationDemo from '@/views/componentsDemo/dev/KitNotificationDemo.vue'
-import KitDialogDemo from '@/views/componentsDemo/dev/KitDialogDemo.vue'
-import KitWsClientDemo from '@/views/componentsDemo/dev/KitWsClientDemo.vue'
+import KitMessageDemo from '@/views/componentsDemo/util/KitMessageDemo.vue'
+import KitNotificationDemo from '@/views/componentsDemo/util/KitNotificationDemo.vue'
+import KitDialogDemo from '@/views/componentsDemo/util/KitDialogDemo.vue'
+import KitWsClientDemo from '@/views/componentsDemo/util/KitWsClientDemo.vue'
 import CuteLinkDemo from '@/views/componentsDemo/dev/CuteLinkDemo.vue'
 import CutePageDemo from '@/views/componentsDemo/dev/CutePageDemo.vue'
 import CuteNoDataDemo from '@/views/componentsDemo/dev/CuteNoDataDemo.vue'

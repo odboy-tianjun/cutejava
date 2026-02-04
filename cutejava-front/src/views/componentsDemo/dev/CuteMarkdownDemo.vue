@@ -7,7 +7,7 @@
     </ul>
     <h4>基础用法</h4>
     <cute-markdown
-      :content="content"
+      v-model="content"
       @change="onChange"
       @save="onSave"
     />
@@ -38,20 +38,20 @@ export default {
         '- HTML 标签；\n' +
         '- 流程图和序列图 \n',
       apiData: [
-        { name: 'content', remark: 'markdown格式内容', type: 'string', defaultValue: '-', required: '是' },
-        { name: 'change', remark: '编辑区发生变化的回调事件', type: '(text, markdown) => {}', defaultValue: '-', required: '否' },
-        { name: 'save', remark: 'ctrl + s 的回调事件(保存按键,同样触发该回调)', type: '(text, markdown) => {}', defaultValue: '-', required: '否' }
+        { name: 'value | v-model', remark: 'markdown格式内容', type: 'string', defaultValue: '-', required: '否' },
+        { name: 'change', remark: '编辑区发生变化的回调事件', type: '(markdown, html) => {}', defaultValue: '-', required: '否' },
+        { name: 'save', remark: 'ctrl + s 的回调事件(保存按键,同样触发该回调)', type: '(markdown, html) => {}', defaultValue: '-', required: '否' }
       ]
     }
   },
   methods: {
-    onChange(text, markdown) {
-      console.log('onChange:text', text)
+    onChange(markdown, html) {
       console.log('onChange:markdown', markdown)
+      console.log('onChange:html', html)
     },
-    onSave(text, markdown) {
-      console.log('onSave:text', text)
+    onSave(markdown, html) {
       console.log('onSave:markdown', markdown)
+      console.log('onSave:html', html)
     }
   }
 }

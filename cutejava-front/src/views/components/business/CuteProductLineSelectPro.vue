@@ -6,7 +6,7 @@
  -->
 <template>
   <el-cascader
-    v-model="productLine"
+    v-model="innerValue"
     :disabled="disabled"
     :options="deptOptions"
     style="width: 100%"
@@ -25,22 +25,24 @@ export default {
   props: {
     value: {
       type: Array,
+      required: false,
       default: null
     },
     disabled: {
       type: Boolean,
+      required: false,
       default: false
     }
   },
   data() {
     return {
       deptOptions: [],
-      productLine: this.value
+      innerValue: this.value
     }
   },
   watch: {
     value(newVal) {
-      this.productLine = newVal
+      this.innerValue = newVal
     }
   },
   created() {
@@ -71,12 +73,17 @@ export default {
       })
     },
     handleChange(value) {
-      this.productLine = value
+      this.innerValue = value
       // console.error('value', value)
       // 绑定change事件
       this.$emit('change', value)
       // 绑定form value
       this.$emit('input', value)
+    },
+    resetField() {
+      this.innerValue = null
+      this.$emit('change', null)
+      this.$emit('input', null)
     }
   }
 }

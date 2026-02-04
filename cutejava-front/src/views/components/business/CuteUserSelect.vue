@@ -6,7 +6,7 @@
  -->
 <template>
   <el-select
-    v-model="users"
+    v-model="innerValue"
     style="width: 100%"
     multiple
     filterable
@@ -36,26 +36,28 @@ export default {
     value: {
       type: Array,
       required: false,
-      default: null
+      default: function() {
+        return []
+      }
     }
   },
   data() {
     return {
-      users: [],
+      innerValue: [],
       loading: false,
       options: []
     }
   },
   watch: {
     value(newVal) {
-      this.users = newVal
+      this.innerValue = newVal
     }
   },
   async mounted() {
     const that = this
     if (that.value && that.value.length > 0) {
       that.options = await CuteUserSelectApi.listMetadataByUsernames(that.value)
-      that.users = that.value
+      that.innerValue = that.value
     }
   },
   methods: {
@@ -81,6 +83,11 @@ export default {
       this.$emit('change', value)
       // 绑定form value
       this.$emit('input', value)
+    },
+    resetField() {
+      this.innerValue = []
+      this.$emit('change', [])
+      this.$emit('input', [])
     }
   }
 }

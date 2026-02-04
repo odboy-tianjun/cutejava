@@ -6,7 +6,7 @@
  -->
 <template>
   <el-input
-    v-model="content"
+    v-model="innerValue"
     type="textarea"
     :autosize="{ minRows: 1, maxRows: 5}"
     placeholder="请输入内容"
@@ -50,12 +50,23 @@ export default {
   },
   data() {
     return {
-      content: this.value
+      innerValue: ''
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.innerValue = newVal
     }
   },
   methods: {
     handleInput(value) {
+      this.$emit('change', value)
       this.$emit('input', value)
+    },
+    resetField() {
+      this.innerValue = ''
+      this.$emit('change', '')
+      this.$emit('input', '')
     }
   }
 }

@@ -29,7 +29,7 @@ export default {
   name: 'CuteFileUpload',
   props: {
     value: {
-      type: Object,
+      type: String,
       required: true,
       default: null
     },
@@ -70,9 +70,10 @@ export default {
       // console.error('response', response)
       // console.error('file', file)
       // console.error('fileList', fileList)
-      this.value.fileUrl = response
       // 绑定on-success事件
       this.$emit('on-success', response, file, fileList)
+      this.$emit('change', response)
+      this.$emit('input', response)
     },
     // 监听上传失败
     handleError(e, file, fileList) {
@@ -80,6 +81,13 @@ export default {
       KitMessage.Error(msg.message)
       // 绑定on-error事件
       this.$emit('on-error', e, file, fileList)
+      this.$emit('change', null)
+      this.$emit('input', null)
+    },
+    resetField() {
+      this.$refs.upload.clearFiles()
+      this.$emit('change', null)
+      this.$emit('input', null)
     }
   }
 }

@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl">
-        <cute-file-upload v-model="form" mode="local" />
+        <cute-file-upload v-model="form.fileUrl" mode="local" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')">提 交</el-button>
@@ -37,7 +37,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl" label-width="80px">
-        <cute-file-upload v-model="form" mode="local" />
+        <cute-file-upload v-model="form.fileUrl" mode="local" />
       </el-form-item>
     </cute-form-dialog>
     <h4>与CuteFormDrawer集成</h4>
@@ -53,7 +53,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文件上传" prop="fileUrl" label-width="80px">
-        <cute-file-upload v-model="form" mode="local" />
+        <cute-file-upload v-model="form.fileUrl" mode="local" />
       </el-form-item>
     </cute-form-drawer>
     <h4>API</h4>

@@ -6,7 +6,7 @@
  -->
 <template>
   <el-select
-    v-model="productLine"
+    v-model="innerValue"
     filterable
     clearable
     placeholder="请选择产品线"
@@ -33,22 +33,24 @@ export default {
   props: {
     value: {
       type: String,
+      required: false,
       default: null
     },
     disabled: {
       type: Boolean,
+      required: false,
       default: false
     }
   },
   data() {
     return {
       deptOptions: [],
-      productLine: this.value
+      innerValue: this.value
     }
   },
   watch: {
     value(newVal) {
-      this.productLine = newVal
+      this.innerValue = newVal
     }
   },
   created() {
@@ -64,7 +66,7 @@ export default {
       })
     },
     handleChange(value) {
-      this.productLine = value
+      this.innerValue = value
       for (const item of this.deptOptions) {
         if (item.value === value) {
           this.$emit('detail', item)
@@ -75,6 +77,11 @@ export default {
       this.$emit('change', value)
       // 绑定form value
       this.$emit('input', value)
+    },
+    resetField() {
+      this.innerValue = null
+      this.$emit('change', null)
+      this.$emit('input', null)
     }
   }
 }

@@ -18,6 +18,7 @@
       />
     </div>
     <el-tree
+      ref="deptTree"
       :data="deptData"
       :load="getDeptData"
       :props="defaultProps"
@@ -45,8 +46,7 @@ export default {
     return {
       deptName: '',
       deptData: [],
-      defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
-      currentDept: null
+      defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' }
     }
   },
   methods: {
@@ -74,7 +74,13 @@ export default {
       // 绑定node-click事件
       this.$emit('node-click', value)
       // 绑定form value
+      this.$emit('change', value.id)
       this.$emit('input', value.id)
+    },
+    resetField() {
+      this.$refs.deptTree.setCurrentNode(null)
+      this.$emit('change', null)
+      this.$emit('input', null)
     }
   }
 }

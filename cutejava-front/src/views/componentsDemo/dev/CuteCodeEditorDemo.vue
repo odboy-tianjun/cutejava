@@ -6,9 +6,9 @@
       <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
     </ul>
     <h4>Java编辑器</h4>
-    <cute-code-editor :content="javaContent" mode="java" @change="onJavaChange" />
+    <cute-code-editor v-model="javaContent" mode="java" @change="onJavaChange" />
     <h4>Yaml编辑器</h4>
-    <cute-code-editor :content="yamlContent" mode="yaml" @change="onYamlChange" />
+    <cute-code-editor v-model="yamlContent" mode="yaml" @change="onYamlChange" />
     <h4>API</h4>
     <el-table :data="apiData">
       <el-table-column prop="name" label="参数" width="220" />
@@ -77,7 +77,7 @@ export default {
         '  # IMMEDIATE(立即): 当应用程序以"IMMEDIATE"模式关闭时，它会立即终止，而不管当前是否有任何活动任务或请求。这种方式适用于那些可以立即停止而不会造成严重问题的情况。\n' +
         '  shutdown: graceful\n',
       apiData: [
-        { name: 'content', remark: '内容', type: 'string', defaultValue: '-', required: '是' },
+        { name: 'value | v-model', remark: '内容', type: 'string', defaultValue: '-', required: '否' },
         { name: 'height', remark: '编辑框高度', type: 'string', defaultValue: '500px', required: '否' },
         { name: 'readonly', remark: '是否只读', type: 'boolean', defaultValue: 'false', required: '否' },
         { name: 'mode', remark: '语法模式。支持：yaml | java | go | swift | dockerfile | groovy | lua | perl | python | ruby | sql | xml | vue', type: 'string', defaultValue: 'yaml', required: '否' },
