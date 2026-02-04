@@ -45,7 +45,7 @@
       <el-table-column :show-overflow-tooltip="true" prop="params" width="120px" label="参数" />
       <el-table-column :show-overflow-tooltip="true" prop="cronExpression" label="cron表达式" />
       <el-table-column prop="createTime" label="异常详情" width="110px">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button
             v-show="scope.row.exceptionDetail"
             size="mini"
@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" align="center" prop="time" width="100px" label="耗时(毫秒)" />
       <el-table-column align="center" prop="isSuccess" width="80px" label="状态">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag :type="scope.row.isSuccess ? 'success' : 'danger'">{{
             scope.row.isSuccess ? '成功' : '失败'
           }}

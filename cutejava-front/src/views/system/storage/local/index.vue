@@ -76,7 +76,7 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="文件名">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-popover
             :content="'file/' + scope.row.dateGroup + '/' + scope.row.realName"
             placement="top-start"
@@ -97,10 +97,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="path" label="预览图">
-        <template slot-scope="{row}">
+        <template v-slot="scope">
           <el-image
-            :src=" baseApi + '/file/' + row.dateGroup + '/' + row.realName"
-            :preview-src-list="[baseApi + '/file/' + row.dateGroup + '/' + row.realName]"
+            :src=" baseApi + '/file/' + scope.row.dateGroup + '/' + scope.row.realName"
+            :preview-src-list="[baseApi + '/file/' + scope.row.dateGroup + '/' + scope.row.realName]"
             fit="contain"
             lazy
             class="el-avatar"

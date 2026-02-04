@@ -81,7 +81,7 @@
       <el-table-column prop="createBy" label="操作人" />
       <el-table-column prop="createTime" label="创建日期" />
       <el-table-column label="操作" fixed="right">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button id="ossFileUrl" type="text" @click="handleCopyFileUrl(scope.row.fileUrl)">复制链接</el-button>
         </template>
       </el-table-column>

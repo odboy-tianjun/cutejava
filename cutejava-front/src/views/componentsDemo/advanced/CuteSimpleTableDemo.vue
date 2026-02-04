@@ -33,7 +33,7 @@
       <el-table-column prop="createTime" label="创建时间" sortable="custom" :formatter="FormatRowDateTimeStr" />
       <el-table-column prop="createBy" label="创建人" />
       <el-table-column label="操作" width="150" min-width="150" fixed="right">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <div>
             <el-button type="text" @click="onTableEditClick(scope.row)">编辑</el-button>
             <el-button type="text" @click="onTableDeleteClick(scope.row)">删除</el-button>
@@ -92,22 +92,6 @@ export default {
           { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
           { prop: 'createBy', label: '创建人' }
         ],
-        operateColumn: {
-          width: '150',
-          fixed: 'right',
-          formatter: (row, column, cellValue, index) => {
-            return (<div>
-              <el-button type='text' onClick={() => {
-                console.log('编辑')
-              }}>编辑
-              </el-button>
-              <el-button type='text' onClick={() => {
-                console.log('删除')
-              }}>删除
-              </el-button>
-            </div>)
-          }
-        },
         pageProps: {
           current: 1,
           pageSize: 10,

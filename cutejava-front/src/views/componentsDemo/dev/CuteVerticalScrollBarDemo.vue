@@ -24,7 +24,7 @@
 import CuteVerticalScrollBar from '@/views/components/dev/CuteVerticalScrollBar.vue'
 
 export default {
-  name: 'CuteHorizontalScrollBarDemo',
+  name: 'CuteVerticalScrollBarDemo',
   components: { CuteVerticalScrollBar },
   data() {
     return {

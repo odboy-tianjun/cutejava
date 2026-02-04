@@ -16,12 +16,12 @@
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="jobSort" label="排序">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ scope.row.jobSort }}
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" align="center">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-switch
             v-model="scope.row.enabled"
             active-color="#67C23A"
@@ -39,7 +39,7 @@
         align="center"
         fixed="right"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <udOperation
             :data="scope.row"
             :permission="permission"

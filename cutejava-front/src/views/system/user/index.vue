@@ -154,12 +154,12 @@
           <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="手机号" />
           <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
           <el-table-column :show-overflow-tooltip="true" prop="dept" label="部门">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <div>{{ scope.row.dept.name }}</div>
             </template>
           </el-table-column>
           <el-table-column label="状态" align="center" prop="enabled">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <el-switch
                 v-model="scope.row.enabled"
                 :disabled="user.id === scope.row.id"
@@ -177,7 +177,7 @@
             align="center"
             fixed="right"
           >
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <udOperation
                 :data="scope.row"
                 :permission="permission"

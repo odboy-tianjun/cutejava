@@ -25,7 +25,7 @@
             <CuteHorizontalScrollBarDemo />
           </el-collapse-item>
           <el-collapse-item title="纵向滚动区域 CuteVerticalScrollBar" name="CuteVerticalScrollBar">
-            <CuteSectionTitleDemo />
+            <CuteVerticalScrollBarDemo />
           </el-collapse-item>
           <el-collapse-item title="一键复制 CuteOneKeyCopy" name="CuteOneKeyCopy">
             <CuteOneKeyCopyDemo />
@@ -163,10 +163,12 @@ import CuteFormDrawerProDemo from '@/views/componentsDemo/advanced/CuteFormDrawe
 import CuteSearchFormDemo from '@/views/componentsDemo/advanced/CuteSearchFormDemo.vue'
 import CuteSearchFormProDemo from '@/views/componentsDemo/advanced/CuteSearchFormProDemo.vue'
 import CuteSimpleTableDemo from '@/views/componentsDemo/advanced/CuteSimpleTableDemo.vue'
+import CuteVerticalScrollBarDemo from '@/views/componentsDemo/dev/CuteVerticalScrollBarDemo.vue'
 
 export default {
   name: 'SystemComponents',
   components: {
+    CuteVerticalScrollBarDemo,
     CuteSimpleTableDemo,
     CuteSearchFormProDemo,
     CuteSearchFormDemo,
@@ -202,13 +204,6 @@ export default {
     KitMessageDemo,
     CuteButtonDemo,
     CutePage
-  },
-  props: {
-    value: {
-      type: Object,
-      required: true,
-      default: null
-    }
   },
   data() {
     return {

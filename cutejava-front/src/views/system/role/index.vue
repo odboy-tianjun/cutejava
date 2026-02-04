@@ -87,7 +87,7 @@
             <el-table-column prop="dataScope" label="数据权限" />
             <el-table-column prop="level" label="角色级别" />
             <el-table-column :show-overflow-tooltip="true" prop="description" label="描述">
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 {{ scope.row.description == null ? '-' : scope.row.description }}
               </template>
             </el-table-column>
@@ -99,7 +99,7 @@
               align="center"
               fixed="right"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <udOperation
                   v-if="scope.row.level >= level"
                   :data="scope.row"

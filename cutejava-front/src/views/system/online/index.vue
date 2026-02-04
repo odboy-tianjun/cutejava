@@ -46,7 +46,7 @@
       <el-table-column prop="browser" label="浏览器" />
       <el-table-column prop="loginTime" label="登录时间" />
       <el-table-column label="操作" width="70px" fixed="right">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-popover
             :ref="scope.$index"
             v-permission="['admin']"
