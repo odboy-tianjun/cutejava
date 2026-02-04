@@ -15,7 +15,7 @@
     @change="handleChange"
   >
     <el-option
-      v-for="item in deptOptions"
+      v-for="item in productLineOptions"
       :key="item.value"
       :label="item.label"
       :value="item.value"
@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      deptOptions: [],
+      productLineOptions: [],
       innerValue: this.value
     }
   },
@@ -59,7 +59,7 @@ export default {
   methods: {
     fetchDeptData() {
       listMetadata().then(data => {
-        this.deptOptions = data
+        this.productLineOptions = data
       }).catch(error => {
         console.error('获取部门数据失败:', error)
         KitMessage.Error('获取部门数据失败')
@@ -67,7 +67,7 @@ export default {
     },
     handleChange(value) {
       this.innerValue = value
-      for (const item of this.deptOptions) {
+      for (const item of this.productLineOptions) {
         if (item.value === value) {
           this.$emit('detail', item)
           break

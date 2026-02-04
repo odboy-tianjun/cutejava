@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      innerValue: [],
+      innerValue: null,
       loading: false,
       options: []
     }

@@ -74,8 +74,8 @@ export default {
       // 绑定node-click事件
       this.$emit('node-click', value)
       // 绑定form value
-      this.$emit('change', value.id)
-      this.$emit('input', value.id)
+      this.$emit('change', value ? value.id : null)
+      this.$emit('input', value ? value.id : null)
     },
     resetField() {
       this.$refs.deptTree.setCurrentNode(null)

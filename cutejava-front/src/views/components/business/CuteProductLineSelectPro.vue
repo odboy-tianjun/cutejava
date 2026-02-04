@@ -8,7 +8,7 @@
   <el-cascader
     v-model="innerValue"
     :disabled="disabled"
-    :options="deptOptions"
+    :options="productLineOptions"
     style="width: 100%"
     placeholder="请选择产品线"
     @change="handleChange"
@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      deptOptions: [],
+      productLineOptions: [],
       innerValue: this.value
     }
   },
@@ -51,6 +51,9 @@ export default {
   methods: {
     // 递归清理空的children属性
     cleanEmptyChildren(data) {
+      if (!data || !Array.isArray(data)) {
+        return []
+      }
       return data.map(item => {
         const newItem = { ...item }
         if (newItem.children && newItem.children.length > 0) {
@@ -65,8 +68,7 @@ export default {
     },
     fetchDeptData() {
       listMetadata().then(data => {
-        this.deptOptions = this.cleanEmptyChildren(data)
-        // console.error('deptOptions', this.deptOptions)
+        this.productLineOptions = this.cleanEmptyChildren(data)
       }).catch(error => {
         console.error('获取部门数据失败:', error)
         KitMessage.Error('获取部门数据失败')

@@ -61,7 +61,7 @@ export default {
       let isLt2M = true
       isLt2M = file.size / 1024 ** 2 < 100
       if (!isLt2M) {
-        this.$message.error('上传文件大小不能超过 100MB')
+        KitMessage.Error('上传文件大小不能超过 100MB')
         return false
       }
       return isLt2M
