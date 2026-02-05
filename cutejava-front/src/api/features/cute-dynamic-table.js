@@ -8,5 +8,13 @@ export function searchMenu(query) {
   })
 }
 
-export default { searchMenu }
+export function searchMenu2(query) {
+  return request({
+    url: 'api/features/CuteDynamicTable/searchMenu2',
+    method: 'post',
+    data: query
+  })
+}
+
+export default { searchMenu, searchMenu2 }
 

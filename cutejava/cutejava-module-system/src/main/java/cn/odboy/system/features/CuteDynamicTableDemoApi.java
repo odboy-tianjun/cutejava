@@ -17,11 +17,13 @@ package cn.odboy.system.features;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
+import cn.odboy.framework.mybatisplus.core.KitMpQUtil;
 import cn.odboy.system.features.core.KitDynamicTableResponse;
 import cn.odboy.system.features.model.SystemMenuDynamicTableModel;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.request.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
+import cn.odboy.system.features.util.KitDynamicTableUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -45,10 +47,10 @@ public class CuteDynamicTableDemoApi {
   @Autowired
   private SystemMenuMapper systemMenuMapper;
 
-  @ApiOperation("查询动态数据")
+  @ApiOperation("写法1：查询动态数据")
   @PostMapping(value = "/searchMenu")
   @PreAuthorize("@el.check()")
-  public ResponseEntity<KitDynamicTableResponse<SystemMenuDynamicTableModel>> searchMenu(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) {
+  public ResponseEntity<KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel>> searchMenu(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) {
     // 请求参数
     Integer page = pageArgs.getPage();
     Integer size = pageArgs.getSize();
@@ -66,6 +68,32 @@ public class CuteDynamicTableDemoApi {
     }
     IPage<SystemMenuTb> pageResult = systemMenuMapper.selectPage(iPage, wrapper);
     // 响应结果
-    return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, "id", pageResult));
+    return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, pageResult, "id"));
+  }
+
+  @ApiOperation("写法2：查询动态数据")
+  @PostMapping(value = "/searchMenu2")
+  @PreAuthorize("@el.check()")
+  public ResponseEntity<KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel>> searchMenu2(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) {
+    // 渲染排序（非必须）
+    QueryWrapper<SystemMenuTb> wrapper = KitDynamicTableUtil.renderOrder(pageArgs);
+    LambdaQueryWrapper<SystemMenuTb> lambda = wrapper.lambda();
+    // 查询条件
+    SystemQueryMenuArgs args = pageArgs.getArgs();
+    if (args != null) {
+      lambda.like(StrUtil.isNotBlank(args.getBlurry()), SystemMenuTb::getTitle, args.getBlurry());
+    }
+    // 响应结果
+    return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, pageArgs, "id", systemMenuMapper, lambda));
+  }
+
+  @ApiOperation("写法3：查询动态数据")
+  @PostMapping(value = "/searchMenu3")
+  @PreAuthorize("@el.check()")
+  public ResponseEntity<KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel>> searchMenu3(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) {
+    // 渲染查询条件
+    LambdaQueryWrapper<SystemMenuTb> wrapper = KitDynamicTableUtil.renderAll(pageArgs);
+    // 响应结果
+    return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, pageArgs, "id", systemMenuMapper, wrapper));
   }
 }

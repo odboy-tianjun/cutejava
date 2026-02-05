@@ -17,9 +17,12 @@ package cn.odboy.system.features.core;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.odboy.base.KitObject;
+import cn.odboy.base.KitPageArgs;
 import cn.odboy.system.features.model.SystemMenuDynamicTableModel;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.util.KitBeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Getter;
@@ -32,11 +35,13 @@ import java.util.List;
 /**
  * 动态表格
  *
+ * @param <E> 数据表对象
+ * @param <T> 渲染对象
  * @author odboy
  * @date 2026-02-05
  */
 @Getter
-public class KitDynamicTableResponse<T> extends KitObject {
+public class KitDynamicTableResponse<E, T> extends KitObject {
 
   /**
    * 主键
@@ -56,17 +61,57 @@ public class KitDynamicTableResponse<T> extends KitObject {
    */
   private List<T> content;
 
-  public KitDynamicTableResponse(Class<T> clazz, IPage<SystemMenuTb> pageResult) {
+  /**
+   * @param clazz      渲染类型
+   * @param pageResult 渲染类型分页参数
+   */
+  public KitDynamicTableResponse(Class<T> clazz, IPage<E> pageResult) {
     this.renderColumns(clazz);
-    this.setPage(clazz, pageResult);
+    this.setContent(clazz, pageResult);
   }
 
-  public KitDynamicTableResponse(Class<T> clazz, String id, IPage<SystemMenuTb> pageResult) {
-    this.primaryKey = id;
+  /**
+   * @param clazz      渲染类型
+   * @param pageResult 渲染类型分页参数
+   * @param primaryKey 主键
+   */
+  public KitDynamicTableResponse(Class<T> clazz, IPage<E> pageResult, String primaryKey) {
+    this.primaryKey = primaryKey;
     this.renderColumns(clazz);
-    this.setPage(clazz, pageResult);
+    this.setContent(clazz, pageResult);
   }
 
+  /**
+   * @param clazz      渲染类型
+   * @param pageArgs   分页参数
+   * @param baseMapper 数据表Mapper
+   * @param wrapper    查询条件
+   */
+  public KitDynamicTableResponse(Class<T> clazz, KitPageArgs<?> pageArgs, BaseMapper<E> baseMapper, LambdaQueryWrapper<E> wrapper) {
+    this.renderColumns(clazz);
+    Page<?> pageResult = baseMapper.selectPage(new Page<>(pageArgs.getPage(), pageArgs.getSize()), wrapper);
+    this.setContent(clazz, pageResult);
+  }
+
+  /**
+   * @param clazz      渲染类型
+   * @param pageArgs   分页参数
+   * @param primaryKey 主键
+   * @param baseMapper 数据表Mapper
+   * @param wrapper    查询条件
+   */
+  public KitDynamicTableResponse(Class<T> clazz, KitPageArgs<?> pageArgs, String primaryKey, BaseMapper<E> baseMapper, LambdaQueryWrapper<E> wrapper) {
+    this.primaryKey = primaryKey;
+    this.renderColumns(clazz);
+    Page<?> pageResult = baseMapper.selectPage(new Page<>(pageArgs.getPage(), pageArgs.getSize()), wrapper);
+    this.setContent(clazz, pageResult);
+  }
+
+  /**
+   * 渲染表格列
+   *
+   * @param clazz 渲染类型
+   */
   private void renderColumns(Class<T> clazz) {
     List<Column> columns = new ArrayList<>();
     if (clazz == null) {
@@ -94,7 +139,11 @@ public class KitDynamicTableResponse<T> extends KitObject {
     this.columns = columns;
   }
 
-  public void setPage(Class<T> clazz, IPage<SystemMenuTb> pageResult) {
+  /**
+   * @param clazz      渲染类型
+   * @param pageResult 渲染结果
+   */
+  public void setContent(Class<T> clazz, IPage<?> pageResult) {
     if (pageResult == null) {
       return;
     }
@@ -125,7 +174,8 @@ public class KitDynamicTableResponse<T> extends KitObject {
   }
 
   public static void main(String[] args) {
-    KitDynamicTableResponse<SystemMenuDynamicTableModel> response = new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, "id", new Page<>());
+    KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel> response = new KitDynamicTableResponse<>(
+        SystemMenuDynamicTableModel.class, new Page<>(), "id");
     System.err.println(response);
   }
 }

@@ -15,6 +15,8 @@
  */
 package cn.odboy.system.dal.model.request;
 
+import cn.odboy.framework.mybatisplus.config.KitMpQTypeEnum;
+import cn.odboy.framework.mybatisplus.config.KitMpQuery;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,7 @@ import lombok.Data;
 public class SystemQueryMenuArgs {
 
   @ApiModelProperty(value = "模糊查询")
+  @KitMpQuery(type = KitMpQTypeEnum.INNER_LIKE)
   private String blurry;
   @ApiModelProperty(value = "创建时间")
   private List<Date> createTime;

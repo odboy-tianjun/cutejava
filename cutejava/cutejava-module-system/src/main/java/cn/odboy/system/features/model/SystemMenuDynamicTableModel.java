@@ -20,6 +20,9 @@ import cn.odboy.system.features.core.KitDynamicTableColumn;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 例子：渲染对象
+ */
 @Getter
 @Setter
 public class SystemMenuDynamicTableModel extends KitObject {
