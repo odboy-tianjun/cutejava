@@ -86,12 +86,6 @@ export default {
         fetch: async(queryParams) => {
           return DictService.searchDict(queryParams)
         },
-        columns: [
-          { prop: 'name', label: '名称' },
-          { prop: 'description', label: '描述' },
-          { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
-          { prop: 'createBy', label: '创建人' }
-        ],
         pageProps: {
           current: 1,
           pageSize: 10,
