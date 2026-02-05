@@ -1,3 +1,6 @@
+/**
+ * 过滤器规则 https://v2.cn.vuejs.org/v2/guide/filters.html
+ */
 import dayjs from 'dayjs'
 
 /**
