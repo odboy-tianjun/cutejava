@@ -152,18 +152,14 @@ export default {
         try {
           this.crud.loading = true
           // 请求远程数据
-          const response = await this.fetch(params)
-          // console.error('response', response)
-          // { content: [], totalElements: 0 }
+          let transformData = await this.fetch(params)
           // 转换为表格所需要的数据
           if (this.responseTransform) {
-            return this.responseTransform(response)
+            transformData = this.responseTransform(transformData)
           }
-          if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
-            this.pageProps.total = response.totalElements
-            this.crud.dataSource = response.content
-          }
-          return response
+          // if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
+          this.pageProps.total = transformData.totalElements
+          this.crud.dataSource = transformData.content
         } catch (e) {
           console.error('CuteSimpleTable请求远程数据异常', e)
           this.pageProps.total = 0

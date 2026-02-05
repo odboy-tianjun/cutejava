@@ -74,7 +74,7 @@ export default {
       },
       curd: {
         paramsTransform: (pageProps) => {
-          const values = this.form.model
+          const values = this.form
           return {
             page: pageProps.current,
             size: pageProps.pageSize,

@@ -37,17 +37,18 @@
     >
       <el-table-column v-if="showSelect" type="selection" width="55" />
       <slot />
-      <el-pagination
-        v-if="paging"
-        :current-page="pageProps.current"
-        :page-sizes="[10, 20, 50]"
-        :page-size="pageProps.pageSize"
-        layout="total, sizes, prev, pager, next"
-        :total="pageProps.total"
-        @size-change="(size) => crud.onPageChange(pageProps.current, size, pageProps.total)"
-        @current-change="(current) => crud.onPageChange(current, pageProps.pageSize, pageProps.total)"
-      />
-    </el-table></div>
+    </el-table>
+    <el-pagination
+      v-if="paging"
+      :current-page="pageProps.current"
+      :page-sizes="[10, 20, 50]"
+      :page-size="pageProps.pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="pageProps.total"
+      @size-change="(size) => crud.onPageChange(pageProps.current, size, pageProps.total)"
+      @current-change="(current) => crud.onPageChange(current, pageProps.pageSize, pageProps.total)"
+    />
+  </div>
 </template>
 
 <script>
@@ -145,18 +146,14 @@ export default {
         try {
           this.crud.loading = true
           // 请求远程数据
-          const response = await this.fetch(params)
-          // console.error('response', response)
-          // { content: [], totalElements: 0 }
+          let transformData = await this.fetch(params)
           // 转换为表格所需要的数据
           if (this.responseTransform) {
-            return this.responseTransform(response)
+            transformData = this.responseTransform(transformData)
           }
-          if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
-            this.pageProps.total = response.totalElements
-            this.crud.dataSource = response.content
-          }
-          return response
+          // if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
+          this.pageProps.total = transformData.totalElements
+          this.crud.dataSource = transformData.content
         } catch (e) {
           console.error('CuteDragTable请求远程数据异常', e)
           this.pageProps.total = 0
