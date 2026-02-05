@@ -17,7 +17,7 @@
         截屏
       </el-button>
     </div>
-    <div :id="key" style="padding: 15px">
+    <div id="CuteScreenShot" style="padding: 15px">
       <slot />
     </div>
   </div>
@@ -28,16 +28,8 @@
 import KitMessage from '@/utils/elementui/KitMessage'
 import { FormatDateTimeShortStr } from '@/utils/KitUtil'
 import html2canvas from 'html2canvas'
-
 export default {
   name: 'CuteScreenShot',
-  props: {
-    key: {
-      type: String,
-      required: true,
-      default: 'elementIdSelector'
-    }
-  },
   data() {
     return {
       capturing: false
@@ -46,7 +38,7 @@ export default {
   methods: {
     async capture() {
       this.capturing = true
-      const element = document.querySelector('#elementIdSelector')
+      const element = document.querySelector('#CuteScreenShot')
       if (!element) {
         KitMessage.Error('未找到匹配的元素，请检查选择器是否正确')
         this.capturing = false

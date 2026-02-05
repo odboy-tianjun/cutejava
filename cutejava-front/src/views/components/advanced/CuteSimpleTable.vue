@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     refresh() {
-      this.crud.orderBy = ''
+      // this.crud.orderBy = null
       this.crud.selection = []
       this.initData()
     },
