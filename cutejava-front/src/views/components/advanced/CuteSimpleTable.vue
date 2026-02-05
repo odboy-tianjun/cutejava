@@ -130,7 +130,7 @@ export default {
     }
   },
   mounted() {
-    this.initData()
+    this.refresh()
   },
   methods: {
     refresh() {
