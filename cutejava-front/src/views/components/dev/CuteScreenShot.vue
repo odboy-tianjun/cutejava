@@ -17,7 +17,7 @@
         截屏
       </el-button>
     </div>
-    <div id="{{ key }}" style="padding: 15px">
+    <div :id="key" style="padding: 15px">
       <slot />
     </div>
   </div>
