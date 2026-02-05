@@ -47,6 +47,7 @@ public class UndertowWebSocketConfig implements WebServerFactoryCustomizer<Under
     int bufferSize = 1024;
     int maxPoolSize = calculateMaxPoolSize(processorCount);
     int threadLocalCacheSize = calculateThreadLocalCacheSize(processorCount);
+
     factory.addDeploymentInfoCustomizers(deploymentInfo -> {
       WebSocketDeploymentInfo webSocketDeploymentInfo = new WebSocketDeploymentInfo();
       webSocketDeploymentInfo.setBuffers(

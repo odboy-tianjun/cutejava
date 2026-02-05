@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.odboy.util;
 
-package cn.odboy.framework.monitor.service;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.springframework.http.ResponseEntity;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.junit.jupiter.api.Test;
 
-public interface KitHealthCheckPointService {
+public class KitDateUtilTest {
 
-  /**
-   * 就绪检查
-   */
-  ResponseEntity<?> doReadiness();
-
-  /**
-   * 存活检查
-   */
-  ResponseEntity<?> doLiveness();
+  @Test
+  public void testGetWeekDay() {
+    SimpleDateFormat simpleDateformat = new SimpleDateFormat("E");
+    assertEquals(simpleDateformat.format(new Date()), KitDateUtil.getWeekDay());
+  }
 }

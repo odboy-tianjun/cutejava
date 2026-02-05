@@ -50,7 +50,7 @@ public class KitFileLocalUploadHelper {
       if (StrUtil.isBlank(currentUserName)) {
         return PATH_MAC.replace("${appName}", SystemConst.CURRENT_APP_NAME).replace("${username}", "");
       }
-      return PATH_MAC.replace("${appName}", SystemConst.CURRENT_APP_NAME).replace("${username}", currentUserName);
+      return PATH_MAC.replace("${appName}", SystemConst.CURRENT_APP_NAME).replace("${username}", "/" + currentUserName);
     }
     return PATH_LINUX.replace("${appName}", SystemConst.CURRENT_APP_NAME);
   }

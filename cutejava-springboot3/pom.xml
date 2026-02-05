@@ -19,8 +19,8 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <!--        <version>3.3.13</version>-->
-    <version>3.5.9</version>
+<!--    <version>3.3.13</version>-->
+     <version>3.5.10</version>
   </parent>
 
   <properties>
@@ -40,7 +40,6 @@
     <undertow.version>2.3.22.Final</undertow.version>
     <freemarker.version>2.3.34</freemarker.version>
     <p6spy.version>3.9.1</p6spy.version>
-    <knife4j.version>4.5.0</knife4j.version>
     <mysql.version>9.5.0</mysql.version>
     <ip2region.version>3.5.7</ip2region.version>
 <!--    <springaop.version>1.9.7</springaop.version>-->
@@ -189,7 +188,7 @@
     <dependency>
       <groupId>com.github.xiaoymin</groupId>
       <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-      <version>${knife4j.version}</version>
+      <version>4.5.0</version>
     </dependency>
 
     <!-- Mysql依赖包 -->

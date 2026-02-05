@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package cn.odboy.framework.mybatisplus.config;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
@@ -49,12 +50,15 @@ public class RemoveDruidAdConfig {
    */
   @Bean
   public FilterRegistrationBean<Filter> removeDruidAdFilterRegistrationBean(DruidStatProperties properties) {
+
     // 获取web监控页面的参数
     DruidStatProperties.StatViewServlet config = properties.getStatViewServlet();
     // 提取common.js的配置路径
     String pattern = config.getUrlPattern() != null ? config.getUrlPattern() : "/druid/*";
     String commonJsPattern = pattern.replaceAll("\\*", "js/common.js");
+
     final String filePath = "support/http/resources/js/common.js";
+
     //创建filter进行过滤
     Filter filter = new Filter() {
       @Override

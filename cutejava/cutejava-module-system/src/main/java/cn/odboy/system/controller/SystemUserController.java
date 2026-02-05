@@ -17,7 +17,6 @@ package cn.odboy.system.controller;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.base.KitPageResult;
-import cn.odboy.base.KitSelectOptionVo;
 import cn.odboy.system.dal.dataobject.SystemUserTb;
 import cn.odboy.system.dal.model.request.SystemQueryUserArgs;
 import cn.odboy.system.dal.model.request.SystemUpdateUserPasswordArgs;

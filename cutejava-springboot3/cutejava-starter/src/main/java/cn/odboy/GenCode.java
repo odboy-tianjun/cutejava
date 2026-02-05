@@ -25,7 +25,7 @@ import java.util.List;
 public class GenCode {
 
   private static final String ADDR = "127.0.0.1";
-  private static final Integer PORT = 23306;
+  private static final Integer PORT = 3306;
   private static final String DATABASE_NAME = "cutejava";
   private static final String DATABASE_USER = "root";
   private static final String DATABASE_PWD = "kd123456";

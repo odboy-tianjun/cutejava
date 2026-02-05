@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package cn.odboy;
 
 import cn.hutool.core.date.DateTime;
@@ -35,12 +36,15 @@ public class MyBatisMapperTests {
   public void testMapper1() {
     // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:48:18.400+0800');
     systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, new Date()));
+
     // SELECT * FROM system_user WHERE (create_time > '2025-08-18T14:50:16.786+0800');
     systemUserMapper.selectList(
         new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateTime.now()));
+
     // SELECT * FROM system_user WHERE (create_time > '2025-08-18 14:53:46');
     systemUserMapper.selectList(new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime,
         DateUtil.formatDateTime(new Date())));
+
     // SELECT * FROM system_user WHERE (create_time > '2025-08-18');
     systemUserMapper.selectList(
         new LambdaQueryWrapper<SystemUserTb>().gt(SystemUserTb::getCreateTime, DateUtil.formatDate(new Date())));

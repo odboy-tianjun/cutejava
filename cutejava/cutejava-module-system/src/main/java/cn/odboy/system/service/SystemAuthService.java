@@ -65,8 +65,7 @@ public class SystemAuthService {
     KitValidUtil.isNull(loginArgs);
 
     // 密码解密
-    String password =
-        KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginArgs.getPassword());
+    String password = KitRsaEncryptUtil.decryptByPrivateKey(properties.getRsa().getPrivateKey(), loginArgs.getPassword());
     // 校验验证码
     systemCaptchaService.validate(loginArgs.getUuid(), loginArgs.getCode());
     // 查询用户信息

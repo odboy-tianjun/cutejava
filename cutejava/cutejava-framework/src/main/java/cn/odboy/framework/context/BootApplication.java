@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package cn.odboy.framework.context;
 
 import cn.hutool.core.util.StrUtil;
@@ -38,10 +39,13 @@ public class BootApplication {
     String port = env.getProperty("server.port");
     String path = StrUtil.isEmpty(env.getProperty("config.servlet.context-path")) ? ""
         : env.getProperty("config.servlet.context-path");
-    log.info("\n----------------------------------------------------------\n\t" +
-        "Application is running! Access URLs:\n\t" + "Local: \t\thttp://localhost:" + port + path + "/\n\t" +
-        "External: \thttp://" + ip + ":" + port + path + "/\n\t" + "Swagger文档: \thttp://" + ip + ":" + port +
-        path + "/doc.html\n" + "----------------------------------------------------------");
+    log.info(
+        "----------------------------------------------------------\n"+
+        "\tApplication is running! Access URLs:\n"+
+        "\tLocal: \t\thttp://localhost:{}{}\n"+
+        "\tExternal: \thttp://{}:{}{}\n"+
+        "\tSwagger文档: \thttp://{}:{}{}/doc.html\n"+
+        "----------------------------------------------------------", port, path, ip, port, path, ip, port, path);
   }
 
   @Bean
