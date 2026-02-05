@@ -21,6 +21,7 @@
       primary-key="id"
       :page-props="curd.pageProps"
       show-select
+      :custom-height="300"
     >
       <template v-slot:batchArea>
         <cute-button type="primary" @click="refreshData">批量绑定</cute-button>

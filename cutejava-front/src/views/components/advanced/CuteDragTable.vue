@@ -97,6 +97,11 @@ export default {
           total: 0
         }
       }
+    },
+    customHeight: {
+      type: Number,
+      required: false,
+      default: null
     }
   },
   data() {
@@ -119,6 +124,9 @@ export default {
   },
   computed: {
     height() {
+      if (this.customHeight) {
+        return this.customHeight
+      }
       return document.documentElement.clientHeight - 300
     }
   },
