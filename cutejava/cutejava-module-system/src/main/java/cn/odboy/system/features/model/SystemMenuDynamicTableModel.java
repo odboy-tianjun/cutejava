@@ -28,11 +28,11 @@ public class SystemMenuDynamicTableModel extends KitObject {
   private Long id;
   @KitDynamicTableColumn(value = "菜单标题")
   private String title;
-  @KitDynamicTableColumn(value = "菜单组件名称")
+  @KitDynamicTableColumn(value = "菜单组件名称", width = 200)
   private String componentName;
   @KitDynamicTableColumn(value = "排序")
   private Integer menuSort = 999;
-  @KitDynamicTableColumn(value = "组件路径", width = 240)
+  @KitDynamicTableColumn(value = "组件路径", width = 200)
   private String component;
   @KitDynamicTableColumn(value = "路由地址", width = 120)
   private String path;
@@ -48,7 +48,7 @@ public class SystemMenuDynamicTableModel extends KitObject {
   private Boolean hidden;
   @KitDynamicTableColumn(value = "上级菜单")
   private Long pid;
-  @KitDynamicTableColumn(value = "子节点数目", sortable = true)
+  @KitDynamicTableColumn(value = "子节点数目", sortable = true, width = 200)
   private Integer subCount = 0;
   @KitDynamicTableColumn(value = "外链菜单")
   private Boolean iFrame;

@@ -3,7 +3,8 @@
     <h4>何时使用</h4>
     <ul class="description">
       <li>展示结构化数据列表，并支持排序、分页、拖拽排序</li>
-      <li>在使用过程中有任何问题，咨询 @Odboy（前端）</li>
+      <li>由后端统一返回前端所需的字段</li>
+      <li>在使用过程中有任何问题，咨询 @Odboy（前端）@Odboy（后端）</li>
     </ul>
     <h4>基础用法</h4>
     <!-- 表格渲染 -->
@@ -13,11 +14,17 @@
     <!-- showSelect: 是否多选。不传默认false，传true为多选 -->
     <!-- @selection-change: 当且仅当mode为multi时启用 -->
     <!-- @order-change: 当排序字段被单击，el-table-column 需添加 sortable="custom" 属性 -->
+    <cute-search-form :model="form" @search="handleSearch">
+      <template v-slot:suffix>
+        <el-form-item label="菜单标题" prop="blurry">
+          <el-input v-model="form.blurry" clearable />
+        </el-form-item>
+      </template>
+    </cute-search-form>
     <cute-dynamic-table
       ref="instance"
       :fetch="curd.fetch"
       :params-transform="curd.paramsTransform"
-      :page-props="curd.pageProps"
       show-select
     >
       <template v-slot:batchArea>
@@ -57,12 +64,12 @@
 <script>
 import FeatureCuteDynamicTableService from '@/api/features/cute-dynamic-table'
 import CuteButton from '@/views/components/dev/CuteButton.vue'
-import { FormatRowDateTimeStr } from '@/utils/KitUtil'
 import CuteDynamicTable from '@/views/components/advanced/CuteDynamicTable.vue'
+import CuteSearchForm from '@/views/components/advanced/CuteSearchForm.vue'
 
 export default {
   name: 'CuteDynamicTableDemo',
-  components: { CuteDynamicTable, CuteButton },
+  components: { CuteSearchForm, CuteDynamicTable, CuteButton },
   data() {
     return {
       form: {
@@ -81,17 +88,6 @@ export default {
         },
         fetch: async(queryParams) => {
           return FeatureCuteDynamicTableService.searchMenu(queryParams)
-        },
-        columns: [
-          { prop: 'name', label: '名称' },
-          { prop: 'description', label: '描述' },
-          { prop: 'createTime', label: '创建时间', formatter: FormatRowDateTimeStr },
-          { prop: 'createBy', label: '创建人' }
-        ],
-        pageProps: {
-          current: 1,
-          pageSize: 10,
-          total: 0
         }
       },
       apiData: [
@@ -117,8 +113,10 @@ export default {
     this.refreshData()
   },
   methods: {
-    FormatRowDateTimeStr,
     refreshData() {
+      this.$refs.instance.refresh()
+    },
+    handleSearch() {
       this.$refs.instance.refresh()
     },
     onTableEditClick(row) {

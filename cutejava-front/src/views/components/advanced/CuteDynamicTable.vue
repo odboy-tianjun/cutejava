@@ -36,31 +36,45 @@
       @selection-change="onTableSelectionChange"
     >
       <el-table-column v-if="showSelect" type="selection" width="55" />
-      <slot />
-      <el-pagination
-        v-if="paging"
-        :current-page="pageProps.current"
-        :page-sizes="[10, 20, 50]"
-        :page-size="pageProps.pageSize"
-        layout="total, sizes, prev, pager, next"
-        :total="pageProps.total"
-        @size-change="(size) => crud.onPageChange(pageProps.current, size, pageProps.total)"
-        @current-change="(current) => crud.onPageChange(current, pageProps.pageSize, pageProps.total)"
-      />
-    </el-table></div>
+      <el-table-column
+        v-for="column in crud.columns"
+        :key="column.name"
+        :prop="column.name"
+        :label="column.title"
+        :width="column.width ? column.width : null"
+        :sortable="column.sortable === true ? `custom` : false"
+      >
+        <template v-slot="scope">
+          <div v-if="column.cell && column.cell instanceof Function">
+            {{ column.cell(scope.row[column.name], scope.$index, scope.row) }}
+          </div>
+          <div v-else>
+            {{ scope.row[column.name] }}
+          </div>
+        </template>
+      </el-table-column>
+      <!-- 通过  <template v-slot:operation> 插槽后置操作按钮 -->
+      <slot name="operation" />
+    </el-table>
+    <el-pagination
+      v-if="paging"
+      :current-page="pageProps.current"
+      :page-sizes="[10, 20, 50]"
+      :page-size="pageProps.pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="pageProps.total"
+      @size-change="(size) => crud.onPageChange(pageProps.current, size, pageProps.total)"
+      @current-change="(current) => crud.onPageChange(current, pageProps.pageSize, pageProps.total)"
+    />
+  </div>
 </template>
 
 <script>
 import Sortable from 'sortablejs'
 
 export default {
-  name: 'CuteDragTable',
+  name: 'CuteDynamicTable',
   props: {
-    primaryKey: {
-      type: String,
-      required: true,
-      default: 'id'
-    },
     fetch: {
       type: Function,
       required: false,
@@ -102,8 +116,9 @@ export default {
     return {
       crud: {
         loading: false,
-        primaryKey: this.primaryKey ? this.primaryKey : 'id',
+        primaryKey: 'id',
         fetchUrl: null,
+        columns: [],
         dataSource: [],
         onPageChange: (currentPage, pageSize) => {
           this.pageProps.current = currentPage
@@ -126,7 +141,7 @@ export default {
   },
   methods: {
     refresh() {
-      this.crud.orderBy = ''
+      // this.crud.orderBy = null
       this.crud.selection = []
       this.initData()
       this.initDragTable()
@@ -144,21 +159,22 @@ export default {
       if (this.fetch) {
         try {
           this.crud.loading = true
-          // 请求远程数据
-          const response = await this.fetch(params)
-          // console.error('response', response)
-          // { content: [], totalElements: 0 }
+          // 请求远程数据 { primaryKey: 'id', columns: [], totalElements: 0, content: []}
+          let transformData = await this.fetch(params)
           // 转换为表格所需要的数据
           if (this.responseTransform) {
-            return this.responseTransform(response)
+            transformData = this.responseTransform(transformData)
+            if (!transformData.primaryKey) {
+              transformData.primaryKey = 'id'
+            }
           }
-          if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
-            this.pageProps.total = response.totalElements
-            this.crud.dataSource = response.content
-          }
-          return response
+          // if (response && response.hasOwnProperty('totalElements') && response.hasOwnProperty('content')) {
+          this.pageProps.total = transformData.totalElements
+          this.crud.primaryKey = transformData.primaryKey
+          this.crud.columns = transformData.columns
+          this.crud.dataSource = transformData.content
         } catch (e) {
-          console.error('CuteDragTable请求远程数据异常', e)
+          console.error('CuteDynamicable请求远程数据异常', e)
           this.pageProps.total = 0
           this.crud.dataSource = []
         } finally {
