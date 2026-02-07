@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.system.features.util;
+package cn.odboy.feature;
 
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.framework.mybatisplus.core.KitMpQUtil;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
-import cn.odboy.system.dal.model.request.SystemQueryMenuArgs;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.experimental.UtilityClass;

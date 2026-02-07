@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.odboy.system.features.core;
+package cn.odboy.feature;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.odboy.base.KitObject;
 import cn.odboy.base.KitPageArgs;
-import cn.odboy.system.features.model.SystemMenuDynamicTableModel;
-import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.util.KitBeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -27,7 +25,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,11 +168,5 @@ public class KitDynamicTableResponse<E, T> extends KitObject {
      * 是否排序列
      */
     private Boolean sortable = false;
-  }
-
-  public static void main(String[] args) {
-    KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel> response = new KitDynamicTableResponse<>(
-        SystemMenuDynamicTableModel.class, new Page<>(), "id");
-    System.err.println(response);
   }
 }

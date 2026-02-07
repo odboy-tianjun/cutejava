@@ -17,13 +17,12 @@ package cn.odboy.system.features;
 
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
-import cn.odboy.framework.mybatisplus.core.KitMpQUtil;
-import cn.odboy.system.features.core.KitDynamicTableResponse;
+import cn.odboy.feature.KitDynamicTableResponse;
 import cn.odboy.system.features.model.SystemMenuDynamicTableModel;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.request.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
-import cn.odboy.system.features.util.KitDynamicTableUtil;
+import cn.odboy.feature.KitDynamicTableUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

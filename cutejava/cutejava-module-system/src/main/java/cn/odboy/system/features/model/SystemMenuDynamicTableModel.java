@@ -16,7 +16,7 @@
 package cn.odboy.system.features.model;
 
 import cn.odboy.base.KitObject;
-import cn.odboy.system.features.core.KitDynamicTableColumn;
+import cn.odboy.feature.KitDynamicTableColumn;
 import lombok.Getter;
 import lombok.Setter;
 

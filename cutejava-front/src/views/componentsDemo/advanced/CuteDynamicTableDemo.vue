@@ -87,7 +87,7 @@ export default {
           }
         },
         fetch: async(queryParams) => {
-          return FeatureCuteDynamicTableService.searchMenu2(queryParams)
+          return FeatureCuteDynamicTableService.searchMenu3(queryParams)
         }
       },
       apiData: [
