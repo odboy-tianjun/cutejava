@@ -44,7 +44,7 @@
           type="primary"
           icon="el-icon-d-arrow-right"
           size="small"
-          :disabled="leftSelection.length === 0"
+          :disabled="disabled || leftSelection.length === 0"
           @click="onTransferRight"
         />
       </el-row>
@@ -53,7 +53,7 @@
           type="primary"
           icon="el-icon-d-arrow-left"
           size="small"
-          :disabled="rightSelection.length === 0"
+          :disabled="disabled || rightSelection.length === 0"
           @click="onTransferLeft"
         />
       </el-row>
@@ -125,6 +125,14 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    /**
+     * 是否禁用
+     */
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -141,6 +149,14 @@ export default {
   },
   watch: {
     value(newVal) {
+      this.initData(newVal)
+    }
+  },
+  created() {
+    this.initData(this.value)
+  },
+  methods: {
+    initData(newVal) {
       this.rightValues = newVal
       this.leftDataSource = this.dataSource
 
@@ -160,9 +176,7 @@ export default {
       } else {
         this.leftDataSource = leftDataSource
       }
-    }
-  },
-  methods: {
+    },
     onSearchValueChange(value) {
       if (this.searchCacheDS.length === 0) {
         this.searchCacheDS = this.leftDataSource

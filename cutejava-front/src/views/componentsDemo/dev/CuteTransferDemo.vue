@@ -37,22 +37,9 @@ export default {
     return {
       leftDataSource: [
         { id: 1, name: '小明', description: '小明牛P' },
-        { id: 2, name: '小红', description: '小红牛P', disabled: true },
         { id: 3, name: '小蓝', description: '小蓝牛P', disabled: true },
-        { id: 4, name: '小绿', description: '小绿牛P' },
-        { id: 5, name: '小黄', description: '小黄牛P' },
-        { id: 6, name: '小紫', description: '小紫牛P' },
-        { id: 7, name: '小青', description: '小青牛P', disabled: true },
-        { id: 8, name: '小橙', description: '小橙牛P' },
-        { id: 9, name: '小贵', description: '小贵牛P' },
-        { id: 10, name: '小陈', description: '小陈牛P' },
-        { id: 11, name: '小勇', description: '小勇牛P' },
-        { id: 12, name: '小田', description: '小田牛P' },
-        { id: 13, name: '小天', description: '小天牛P', disabled: true },
-        { id: 14, name: '小邓', description: '小邓牛P', disabled: true },
-        { id: 15, name: '小周', description: '小周牛P', disabled: true },
-        { id: 16, name: '小吴', description: '小吴牛P' },
-        { id: 17, name: '小郑', description: '小郑牛P' },
+        { id: 15, name: '小周', description: '小周牛P' },
+        { id: 16, name: '小吴', description: '小吴牛P', disabled: true },
         { id: 18, name: '小王', description: '小王牛P' }
       ],
       apiData: [
