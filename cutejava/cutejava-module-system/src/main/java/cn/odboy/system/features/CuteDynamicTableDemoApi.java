@@ -18,11 +18,12 @@ package cn.odboy.system.features;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.feature.KitDynamicTableResponse;
-import cn.odboy.system.features.model.SystemMenuDynamicTableModel;
+import cn.odboy.feature.KitDynamicTableUtil;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.request.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
-import cn.odboy.feature.KitDynamicTableUtil;
+import cn.odboy.system.features.model.SystemMenuDynamicTableModel;
+import cn.odboy.system.framework.operalog.OperationLog;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,6 +39,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 经过测试，三种查询方式均无太大损耗
+ */
 @RestController
 @Api(tags = "系统组件：CuteDynamicTable演示")
 @RequestMapping("/api/features/CuteDynamicTable")
@@ -46,6 +50,7 @@ public class CuteDynamicTableDemoApi {
   @Autowired
   private SystemMenuMapper systemMenuMapper;
 
+  @OperationLog
   @ApiOperation("写法1：查询动态数据")
   @PostMapping(value = "/searchMenu")
   @PreAuthorize("@el.check()")
@@ -70,6 +75,7 @@ public class CuteDynamicTableDemoApi {
     return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, pageResult, "id"));
   }
 
+  @OperationLog
   @ApiOperation("写法2：查询动态数据")
   @PostMapping(value = "/searchMenu2")
   @PreAuthorize("@el.check()")
@@ -86,6 +92,7 @@ public class CuteDynamicTableDemoApi {
     return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, pageArgs, "id", systemMenuMapper, lambda));
   }
 
+  @OperationLog
   @ApiOperation("写法3：查询动态数据")
   @PostMapping(value = "/searchMenu3")
   @PreAuthorize("@el.check()")
