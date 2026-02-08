@@ -97,6 +97,7 @@
             </el-tab-pane>
             <!--    操作日志    -->
             <el-tab-pane label="操作日志" name="second">
+              <cute-button type="primary" @click="init">刷新</cute-button>
               <el-table v-loading="loading" :data="data" style="width: 100%;">
                 <el-table-column prop="bizName" label="业务名称" />
                 <el-table-column prop="requestIp" label="IP" />
@@ -104,24 +105,12 @@
                 <el-table-column prop="browserInfo" label="浏览器" />
                 <el-table-column prop="executeTime" label="请求耗时" align="center">
                   <template v-slot="scope">
-                    <el-tag v-if="scope.row.executeTime <= 300">{{ scope.row.time || 0 }}ms</el-tag>
+                    <el-tag v-if="scope.row.executeTime <= 300">{{ scope.row.executeTime || 0 }}ms</el-tag>
                     <el-tag v-else-if="scope.row.executeTime <= 1000" type="warning">{{ scope.row.executeTime || 0 }}ms</el-tag>
                     <el-tag v-else type="danger">{{ scope.row.executeTime || 0 }}ms</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  align="right"
-                >
-                  <template slot="header">
-                    <div style="display:inline-block;float: right;cursor: pointer" @click="init">创建日期<i
-                      class="el-icon-refresh"
-                      style="margin-left: 40px"
-                    /></div>
-                  </template>
-                  <template v-slot="scope">
-                    <span>{{ scope.row.createTime }}</span>
-                  </template>
-                </el-table-column>
+                <el-table-column prop="createTime" label="请求耗时" align="center" />
               </el-table>
               <!--分页组件-->
               <el-pagination
@@ -153,10 +142,11 @@ import { IsValidPhone } from '@/utils/KitValidateUtil'
 import crud from '@/mixins/crud'
 import { updateUserCenterInfoById } from '@/api/system/user'
 import Avatar from '@/assets/images/avatar.png'
+import CuteButton from '@/views/components/dev/CuteButton.vue'
 
 export default {
   name: 'Center',
-  components: { updatePass, updateEmail, myUpload },
+  components: { CuteButton, updatePass, updateEmail, myUpload },
   mixins: [crud],
   data() {
     // 自定义验证
@@ -211,6 +201,7 @@ export default {
       }
     },
     beforeInit() {
+      // 自定义查询路径
       this.url = 'api/logs/searchUserLog'
       return true
     },

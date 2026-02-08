@@ -38,6 +38,7 @@ public class SystemOperationLogService {
   public IPage<SystemOperationLogTb> searchUserLog(KitPageArgs<SystemQueryOperationLogArgs> pageArgs) {
     LambdaQueryWrapper<SystemOperationLogTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(SystemOperationLogTb::getUsername, KitSecurityHelper.getCurrentUsername());
+    wrapper.orderByDesc(SystemOperationLogTb::getCreateTime);
     Page<SystemOperationLogTb> page = new Page<>(pageArgs.getPage(), pageArgs.getSize());
     return systemOperationLogMapper.selectPage(page, wrapper);
   }
