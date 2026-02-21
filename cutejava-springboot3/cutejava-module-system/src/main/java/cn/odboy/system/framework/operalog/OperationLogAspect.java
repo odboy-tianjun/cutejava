@@ -52,18 +52,16 @@ public class OperationLogAspect {
   private SystemOperationLogMapper systemOperationLogMapper;
 
   @Around("@annotation(operationLog)")
-  public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog)
-      throws Throwable {
-    return handleLog(joinPoint, operationLog);
+  public Object operationLogCatch(ProceedingJoinPoint joinPoint, OperationLog operationLog) throws Throwable {
+    return this.handleLog(joinPoint, operationLog);
   }
 
-  private Object handleLog(ProceedingJoinPoint joinPoint, OperationLog annotation)
-      throws Throwable {
+  private Object handleLog(ProceedingJoinPoint joinPoint, OperationLog annotation) throws Throwable {
     TimeInterval timeInterval = new TimeInterval();
     try {
       Object result = joinPoint.proceed();
       long interval = timeInterval.interval();
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
+      SystemOperationLogTb record = this.getOperationLogTb(joinPoint, annotation, interval);
       ThreadUtil.execAsync(
           () -> {
             try {
@@ -75,7 +73,7 @@ public class OperationLogAspect {
       return result;
     } catch (Throwable exception) {
       long interval = timeInterval.interval();
-      SystemOperationLogTb record = getOperationLogTb(joinPoint, annotation, interval);
+      SystemOperationLogTb record = this.getOperationLogTb(joinPoint, annotation, interval);
       record.setExceptionDetail(ExceptionUtil.stacktraceToString(exception));
       ThreadUtil.execAsync(
           () -> {
