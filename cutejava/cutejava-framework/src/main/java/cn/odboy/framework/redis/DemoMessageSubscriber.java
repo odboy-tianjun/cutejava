@@ -29,6 +29,6 @@ import org.springframework.stereotype.Component;
 public class DemoMessageSubscriber {
 
   public void onMessage(String message, String channel) {
-    log.info("收到来自redis消息队列的message={}, channel={}", JSON.toJSONString(message), channel);
+    log.info("收到来自redis消息队列的message={}, channel={}", message, channel);
   }
 }
