@@ -106,6 +106,7 @@ public class KitRedisHelper {
    * @param pattern key
    * @return /
    */
+  @SuppressWarnings("all")
   public List<String> scan(String pattern) {
     ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
     RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
@@ -133,6 +134,7 @@ public class KitRedisHelper {
    * @param size       每页数目
    * @return /
    */
+  @SuppressWarnings("all")
   public List<String> findKeysForPage(String patternKey, int page, int size) {
     ScanOptions options = ScanOptions.scanOptions().match(patternKey).build();
     RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
@@ -207,12 +209,12 @@ public class KitRedisHelper {
    *
    * @param pattern /
    */
+  @SuppressWarnings("all")
   public void scanDel(String pattern) {
     ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
     try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(connection -> {
       try {
-        return (Cursor<byte[]>) new ConvertingCursor<>(
-            connection.scan(options), redisTemplate.getKeySerializer()::deserialize);
+        return (Cursor<byte[]>) new ConvertingCursor<>(connection.scan(options), redisTemplate.getKeySerializer()::deserialize);
       } catch (Exception e) {
         throw new RuntimeException("Redis scan operation failed", e);
       }

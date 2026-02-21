@@ -22,6 +22,8 @@ package cn.odboy.framework.websocket;
  */
 public interface KitWsBizCodeConst {
 
-  String AutomaticPush = "100"; // 主动推送
-  String IM = "101"; // 实时聊天
+  // 主动推送
+  String AutomaticPush = "100";
+  // 实时聊天
+  String IM = "101";
 }

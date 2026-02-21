@@ -61,6 +61,14 @@ public class KitWsServer {
    */
   @OnMessage
   public void onMessage(String message, Session session) throws IOException {
+    if ("[{}]".equals(message)){
+      try {
+        KitWsClientManager.removeClient(this.sid);
+      } catch (Exception e) {
+        log.error("WebSocket onClose error, sid={}", this.sid, e);
+      }
+      return;
+    }
     KitWsMessage wsMessage = JSON.parseObject(message, KitWsMessage.class);
 //    String bizCode = wsMessage.getBizCode();
 //    Object data = wsMessage.getData();

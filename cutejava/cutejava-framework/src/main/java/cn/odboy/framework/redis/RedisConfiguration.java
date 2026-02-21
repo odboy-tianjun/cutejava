@@ -126,6 +126,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
   }
 
   @Bean
+  @Override
   public CacheErrorHandler errorHandler() {
     return new SimpleCacheErrorHandler() {
       @Override

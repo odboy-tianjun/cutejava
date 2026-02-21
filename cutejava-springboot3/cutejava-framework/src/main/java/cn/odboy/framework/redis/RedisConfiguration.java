@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -50,7 +49,7 @@ import java.util.Map;
 @Configuration
 @EnableCaching
 @AutoConfigureBefore(RedisAutoConfiguration.class)
-public class RedisConfiguration extends CachingConfigurerSupport {
+public class RedisConfiguration {
 
   @Autowired
   private AppProperties properties;
@@ -103,7 +102,6 @@ public class RedisConfiguration extends CachingConfigurerSupport {
    * 自定义缓存key生成策略
    */
   @Bean
-  @Override
   public KeyGenerator keyGenerator() {
     return (target, method, params) -> {
       Map<String, Object> container = new HashMap<>(8);
