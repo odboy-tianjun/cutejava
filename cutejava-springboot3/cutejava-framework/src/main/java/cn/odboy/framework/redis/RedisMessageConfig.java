@@ -34,16 +34,17 @@ public class RedisMessageConfig {
   /**
    * 消息监听容器
    *
-   * @param connectionFactory /
-   * @param listenerAdapter   /
+   * @param connectionFactory        /
+   * @param listenerWsMessageAdapter /
    * @return /
    */
   @Bean
-  public RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+  public RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerWsMessageAdapter) {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
     // 指定监听的主题
-    container.addMessageListener(listenerAdapter, new ChannelTopic("WebSocketMessage"));
+    container.addMessageListener(listenerWsMessageAdapter, new ChannelTopic("DemoMessage"));
+    container.addMessageListener(listenerWsMessageAdapter, new ChannelTopic("WebSocketMessage"));
     return container;
   }
 
@@ -54,7 +55,12 @@ public class RedisMessageConfig {
    * @return /
    */
   @Bean
-  public MessageListenerAdapter listenerAdapter(WsMessageSubscriber subscriber) {
+  public MessageListenerAdapter listenerDemoMessageAdapter(DemoMessageSubscriber subscriber) {
+    return new MessageListenerAdapter(subscriber, "onMessage");
+  }
+
+  @Bean
+  public MessageListenerAdapter listenerWsMessageAdapter(WsMessageSubscriber subscriber) {
     return new MessageListenerAdapter(subscriber, "onMessage");
   }
 }
