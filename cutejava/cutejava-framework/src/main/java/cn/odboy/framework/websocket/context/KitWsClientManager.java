@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KitWsClientManager {
 
   /**
-   * concurrent包的线程安全Map, 用来存放每个客户端对应的MyWebSocket对象。（分布式必出问题）
+   * concurrent包的线程安全Map, 用来存放每个客户端对应的MyWebSocket对象（已通过redis pub/sub解耦）
    */
   private static final Map<String, KitWsServer> clientMap = new ConcurrentHashMap<>();
 
