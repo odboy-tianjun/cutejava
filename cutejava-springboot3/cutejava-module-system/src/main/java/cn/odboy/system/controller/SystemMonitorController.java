@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@Api(tags = "系统-服务监控管理")
+@Api(tags = "系统：服务监控管理")
 @RequestMapping("/api/monitor")
 public class SystemMonitorController {
 

@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/quartzJob")
-@Api(tags = "系统:定时任务管理")
+@Api(tags = "系统：定时任务管理")
 public class SystemQuartzJobController {
 
   @Autowired
