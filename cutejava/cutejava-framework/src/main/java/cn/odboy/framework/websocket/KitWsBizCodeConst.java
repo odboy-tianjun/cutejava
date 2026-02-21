@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.odboy.framework.websocket;
 
-package cn.odboy.framework.websocket.context;
+/**
+ * WebSocket业务代码常量
+ *
+ * @author odboy
+ */
+public interface KitWsBizCodeConst {
 
-import cn.odboy.base.KitObject;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class KitWsMessage extends KitObject {
-
-  private String bizCode;
-  private Data data;
-
-  @Getter
-  @Setter
-  public static class Data extends KitObject {
-
-    private String formUser;
-    private String toUser;
-    private String message;
-  }
+  String AutomaticPush = "100"; // 主动推送
+  String IM = "101"; // 实时聊天
 }

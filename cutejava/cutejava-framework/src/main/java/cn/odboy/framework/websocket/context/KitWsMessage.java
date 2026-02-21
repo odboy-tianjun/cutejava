@@ -25,10 +25,14 @@ import lombok.Setter;
 public class KitWsMessage extends KitObject {
 
   private String bizCode;
-  private String data;
+  private Data data;
 
-  public KitWsMessage(String bizCode, String data) {
-    this.bizCode = bizCode;
-    this.data = data;
+  @Getter
+  @Setter
+  public static class Data extends KitObject {
+
+    private String formUser;
+    private String toUser;
+    private String message;
   }
 }

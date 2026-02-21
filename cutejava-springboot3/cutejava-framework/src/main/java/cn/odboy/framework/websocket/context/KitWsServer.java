@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.odboy.framework.websocket.context;
 
+import cn.hutool.core.util.StrUtil;
+import cn.odboy.framework.context.KitSpringBeanHolder;
+import cn.odboy.framework.websocket.KitWsMessagePublisher;
 import com.alibaba.fastjson2.JSON;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnError;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.Session;
+import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -51,7 +50,6 @@ public class KitWsServer {
   @OnOpen
   public void onOpen(Session session, @PathParam("sid") String sid) {
     this.session = session;
-    // {username}#{bizCode}#{contextParams}
     this.sid = sid;
     KitWsClientManager.addClient(sid, this);
   }
@@ -64,10 +62,12 @@ public class KitWsServer {
   @OnMessage
   public void onMessage(String message, Session session) throws IOException {
     KitWsMessage wsMessage = JSON.parseObject(message, KitWsMessage.class);
-    String bizCode = wsMessage.getBizCode();
-    Object data = wsMessage.getData();
-    log.info("收到来 sid={} 的信息: message={}, bizCode={}, data={}", sid, message, bizCode, JSON.toJSONString(data));
-    session.getBasicRemote().sendText(message);
+//    String bizCode = wsMessage.getBizCode();
+//    Object data = wsMessage.getData();
+    log.info("收到来 sid={} 的信息: message={}", sid, message);
+//    session.getBasicRemote().sendText(message);
+    KitWsMessagePublisher messagePublisher = KitSpringBeanHolder.getBean(KitWsMessagePublisher.class);
+    messagePublisher.imPush(wsMessage.getData().getFormUser(), wsMessage.getData().getToUser(), wsMessage.getData().getMessage());
   }
 
   /**
@@ -84,7 +84,7 @@ public class KitWsServer {
 
   @OnError
   public void onError(Session session, Throwable error) {
-    //        log.error("WebSocket sid={} 发生错误", this.sid, error);
+    log.error("WebSocket sid={} 发生错误", this.sid, error);
     try {
       KitWsClientManager.removeClient(this.sid);
     } catch (Exception e) {
@@ -102,26 +102,26 @@ public class KitWsServer {
   /**
    * 精准推送消息
    */
-  public void sendMessage(KitWsMessage message, @PathParam("sid") String sid) throws IOException {
-    String body = JSON.toJSONString(message);
-    //        log.info("推送消息到{}, 推送内容:{}", sid, message);
+  public void sendMessage(String message, @PathParam("sid") String sid) {
+    log.info("推送消息到{}, 推送内容:{}", sid, message);
     try {
-      if (sid == null) {
-        sendToAll(body);
+      if (StrUtil.isBlank(sid)) {
+        sendToAll(message);
       } else {
         KitWsServer wsClient = KitWsClientManager.getClientBySid(sid);
         if (wsClient != null) {
-          wsClient.innerSendMessage(body);
+          wsClient.innerSendMessage(message);
         }
       }
-    } catch (Exception ignored) {
+    } catch (IOException e) {
+      log.warn("推送消息到客户端失败", e);
     }
   }
 
   /**
    * 群发消息
    */
-  public void sendToAll(String message) {
+  private void sendToAll(String message) {
     for (KitWsServer item : KitWsClientManager.getAllClient()) {
       try {
         item.innerSendMessage(message);

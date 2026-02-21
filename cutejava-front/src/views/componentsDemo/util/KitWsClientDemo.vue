@@ -63,19 +63,19 @@ export default {
         console.info('=============== KitWsClient:event', event)
       }, function(msgEvent) {
         console.info('=============== KitWsClient:msgEvent', msgEvent)
-        that.responseTxt = that.responseTxt + msgEvent.data + ''
+        that.responseTxt = that.responseTxt + msgEvent.data + '\n'
       })
     },
     onSendClick() {
-      if (this.client) {
-        this.client.sendData({
-          msgType: 'sc',
-          userIds: ['123456'],
-          content: this.sendVal
-        })
-        this.client.sendData({
-          msgType: 'gc',
-          content: this.sendVal
+      const that = this
+      if (that.client) {
+        that.client.sendData({
+          bizCode: '101',
+          data: {
+            fromUsername: that.user.username,
+            toUsername: null,
+            message: that.sendVal
+          }
         })
       }
     },
