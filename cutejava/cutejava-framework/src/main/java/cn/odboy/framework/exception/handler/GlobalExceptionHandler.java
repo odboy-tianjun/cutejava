@@ -40,31 +40,41 @@ public class GlobalExceptionHandler {
    * 处理所有不可知的异常
    */
   @ExceptionHandler(Throwable.class)
-  public ResponseEntity<ApiError> handleException(Throwable e) {
+  public ResponseEntity<ApiError> handleThrowable(Throwable e) {
     // 打印堆栈信息
-    log.error(ExceptionUtil.stacktraceToString(e));
-    return buildResponseEntity(ApiError.error(e.getMessage()));
+    log.error("handleThrowable", e);
+    return this.buildResponseEntity(ApiError.error(e.getMessage()));
+  }
+
+  /**
+   * 处理所有不可知的异常
+   */
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ApiError> handleException(Exception e) {
+    // 打印堆栈信息
+    log.error("handleException", e);
+    return this.buildResponseEntity(ApiError.error(e.getMessage()));
   }
 
   /**
    * BadCredentialsException
    */
   @ExceptionHandler(BadCredentialsException.class)
-  public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException e) {
+  public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException e) {
     // 打印堆栈信息
     String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
     log.error(message);
-    return buildResponseEntity(ApiError.error(message));
+    return this.buildResponseEntity(ApiError.error(message));
   }
 
   /**
    * 处理自定义异常
    */
   @ExceptionHandler(value = BadRequestException.class)
-  public ResponseEntity<ApiError> badRequestException(BadRequestException e) {
+  public ResponseEntity<ApiError> handleBadRequestException(BadRequestException e) {
     // 打印堆栈信息
-    log.error(ExceptionUtil.stacktraceToString(e));
-    return buildResponseEntity(ApiError.error(e.getStatus(), e.getMessage()));
+    log.error("handleBadRequestException", e);
+    return this.buildResponseEntity(ApiError.error(e.getStatus(), e.getMessage()));
   }
 
   /**
@@ -73,13 +83,13 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     // 打印堆栈信息
-    log.error(ExceptionUtil.stacktraceToString(e));
+    log.error("handleMethodArgumentNotValidException", e);
     ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
     String message = objectError.getDefaultMessage();
     if (objectError instanceof FieldError) {
       message = ((FieldError) objectError).getField() + ": " + message;
     }
-    return buildResponseEntity(ApiError.error(message));
+    return this.buildResponseEntity(ApiError.error(message));
   }
 
   /**
