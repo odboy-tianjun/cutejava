@@ -1,10 +1,12 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!--侧边部门数据-->
-      <cute-dept-tree @node-click="handleNodeClick" />
-      <!--用户数据-->
-      <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
+      <!-- 侧边部门数据 -->
+      <el-col :span="4">
+        <cute-dept-tree @node-click="handleNodeClick" />
+      </el-col>
+      <!-- 用户数据 -->
+      <el-col :span="20">
         <!--工具栏-->
         <div class="head-container">
           <div v-if="crud.props.searchToggle">

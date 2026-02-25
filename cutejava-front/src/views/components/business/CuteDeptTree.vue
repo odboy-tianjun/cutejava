@@ -5,7 +5,7 @@
  * @created 2025-07-29
  -->
 <template>
-  <el-col :span="6">
+  <div>
     <div class="head-container">
       <el-input
         v-model="deptName"
@@ -26,7 +26,7 @@
       lazy
       @node-click="handleNodeClick"
     />
-  </el-col>
+  </div>
 </template>
 
 <script>
