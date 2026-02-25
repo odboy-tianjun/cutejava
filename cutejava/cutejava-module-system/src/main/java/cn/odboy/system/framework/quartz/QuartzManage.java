@@ -17,8 +17,10 @@ package cn.odboy.system.framework.quartz;
 
 import cn.odboy.framework.exception.BadRequestException;
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
+
 import java.util.Date;
 import javax.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -34,6 +36,11 @@ import org.quartz.TriggerKey;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Component;
 
+/**
+ * 定时任务管理工具（高耦合版）
+ *
+ * @author odboy
+ */
 @Slf4j
 @Component
 public class QuartzManage {

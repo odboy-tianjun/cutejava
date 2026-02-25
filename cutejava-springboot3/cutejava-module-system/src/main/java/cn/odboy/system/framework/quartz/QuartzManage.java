@@ -32,8 +32,14 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
+/**
+ * 定时任务管理工具（高耦合版）
+ *
+ * @author odboy
+ */
 @Slf4j
 @Component
 public class QuartzManage {

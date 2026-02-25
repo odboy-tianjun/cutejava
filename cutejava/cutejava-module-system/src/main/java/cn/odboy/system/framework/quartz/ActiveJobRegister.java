@@ -17,13 +17,20 @@ package cn.odboy.system.framework.quartz;
 
 import cn.odboy.system.dal.dataobject.SystemQuartzJobTb;
 import cn.odboy.system.service.SystemQuartzJobService;
+
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * 应用初始化完毕后，注册定时任务
+ *
+ * @author odboy
+ */
 @Slf4j
 @Component
 public class ActiveJobRegister implements ApplicationRunner {

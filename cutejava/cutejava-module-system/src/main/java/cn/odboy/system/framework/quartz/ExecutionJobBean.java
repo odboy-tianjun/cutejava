@@ -31,16 +31,23 @@ import cn.odboy.system.dal.mysql.SystemQuartzLogMapper;
 import cn.odboy.system.service.SystemEmailService;
 import cn.odboy.system.service.SystemQuartzJobService;
 import cn.odboy.util.KitBeanUtil;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+/**
+ * 任务定义，继承QuartzJobBean是固定写法
+ *
+ * @author odboy
+ */
 @Slf4j
 public class ExecutionJobBean extends QuartzJobBean {
 

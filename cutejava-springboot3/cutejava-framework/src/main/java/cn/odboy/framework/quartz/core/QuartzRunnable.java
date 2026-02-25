@@ -16,14 +16,18 @@
 package cn.odboy.framework.quartz.core;
 
 import cn.odboy.framework.context.KitSpringBeanHolder;
+
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * 执行定时任务
+ * 带返回值的线程
+ *
+ * @author odboy
  */
 @Slf4j
 public class QuartzRunnable implements Callable<Object> {

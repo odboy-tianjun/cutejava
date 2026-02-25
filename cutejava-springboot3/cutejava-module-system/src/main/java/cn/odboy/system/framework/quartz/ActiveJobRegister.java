@@ -22,8 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+/**
+ * 应用初始化完毕后，注册定时任务
+ *
+ * @author odboy
+ */
 @Slf4j
 @Component
 public class ActiveJobRegister implements ApplicationRunner {
