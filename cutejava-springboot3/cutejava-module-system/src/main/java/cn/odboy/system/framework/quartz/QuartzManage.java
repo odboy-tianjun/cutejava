@@ -87,7 +87,8 @@ public class QuartzManage {
    */
   public void updateJobCron(SystemQuartzJobTb quartzJob) {
     try {
-      TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
+      String uuid = JOB_NAME + quartzJob.getId();
+      TriggerKey triggerKey = TriggerKey.triggerKey(uuid);
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
       // 如果不存在则创建一个定时任务
       if (trigger == null) {
@@ -117,7 +118,8 @@ public class QuartzManage {
    */
   public void deleteJob(SystemQuartzJobTb quartzJob) {
     try {
-      JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
+      String uuid = JOB_NAME + quartzJob.getId();
+      JobKey jobKey = JobKey.jobKey(uuid);
       scheduler.pauseJob(jobKey);
       scheduler.deleteJob(jobKey);
     } catch (Exception e) {
@@ -133,13 +135,14 @@ public class QuartzManage {
    */
   public void resumeJob(SystemQuartzJobTb quartzJob) {
     try {
-      TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
+      String uuid = JOB_NAME + quartzJob.getId();
+      TriggerKey triggerKey = TriggerKey.triggerKey(uuid);
       CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
       // 如果不存在则创建一个定时任务
       if (trigger == null) {
         addJob(quartzJob);
       }
-      JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
+      JobKey jobKey = JobKey.jobKey(uuid);
       scheduler.resumeJob(jobKey);
     } catch (Exception e) {
       log.error("恢复定时任务失败", e);
@@ -178,7 +181,8 @@ public class QuartzManage {
    */
   public void pauseJob(SystemQuartzJobTb quartzJob) {
     try {
-      JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
+      String uuid = JOB_NAME + quartzJob.getId();
+      JobKey jobKey = JobKey.jobKey(uuid);
       scheduler.pauseJob(jobKey);
     } catch (Exception e) {
       log.error("定时任务暂停失败", e);

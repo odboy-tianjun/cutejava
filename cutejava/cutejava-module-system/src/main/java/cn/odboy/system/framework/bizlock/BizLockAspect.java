@@ -42,7 +42,7 @@ public class BizLockAspect {
   @Around("@annotation(bizLock)")
   public Object around(ProceedingJoinPoint joinPoint, BizLock bizLock) throws Throwable {
     // 解析SpEL表达式生成最终的lockKey
-    String lockKey = parseLockKey(joinPoint, bizLock);
+    String lockKey = this.parseLockKey(joinPoint, bizLock);
     boolean success = redisHelper.setIfAbsent(lockKey, lockKey, bizLock.leaseTime(), bizLock.timeUnit());
     if (!success) {
       throw new BadRequestException(bizLock.errorMessage());

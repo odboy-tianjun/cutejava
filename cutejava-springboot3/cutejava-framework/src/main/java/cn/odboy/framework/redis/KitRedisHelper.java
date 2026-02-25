@@ -261,13 +261,11 @@ public class KitRedisHelper {
       return null;
     }
     // 如果 value 不是目标类型, 则尝试将其反序列化为 clazz 类型
-    if (!clazz.isInstance(value)) {
-      return JSON.parseObject(value.toString(), clazz);
-    } else if (clazz.isInstance(value)) {
+    boolean isInstance = clazz.isInstance(value);
+    if (isInstance) {
       return clazz.cast(value);
-    } else {
-      return null;
     }
+    return JSON.parseObject(value.toString(), clazz);
   }
 
   /**
@@ -631,7 +629,7 @@ public class KitRedisHelper {
   public long setRemove(String key, Object... values) {
     try {
       Long count = redisTemplate.opsForSet().remove(key, values);
-      return count;
+      return count == null ? 0 : count;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return 0;

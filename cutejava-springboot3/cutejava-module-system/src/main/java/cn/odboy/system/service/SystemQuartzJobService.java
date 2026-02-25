@@ -37,6 +37,7 @@ import cn.odboy.util.KitValidUtil;
 import cn.odboy.util.xlsx.KitExcelExporter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.jetbrains.annotations.NotNull;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -237,18 +238,24 @@ public class SystemQuartzJobService {
     List<SystemQuartzJobTb> systemQuartzJobTbs = this.queryQuartzJobByArgs(args);
     List<SystemQuartzJobExportRowVo> rowVos = new ArrayList<>();
     for (SystemQuartzJobTb dataObject : systemQuartzJobTbs) {
-      SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();
-      rowVo.setJobName(dataObject.getJobName());
-      rowVo.setBeanName(dataObject.getBeanName());
-      rowVo.setMethodName(dataObject.getMethodName());
-      rowVo.setParams(dataObject.getParams());
-      rowVo.setCronExpression(dataObject.getCronExpression());
-      rowVo.setIsPause(dataObject.getIsPause() ? "暂停中" : "运行中");
-      rowVo.setDescription(dataObject.getDescription());
-      rowVo.setCreateTime(dataObject.getCreateTime());
+      SystemQuartzJobExportRowVo rowVo = this.getExportRowVo(dataObject);
       rowVos.add(rowVo);
     }
     KitExcelExporter.exportSimple(response, "定时任务数据", SystemQuartzJobExportRowVo.class, rowVos);
+  }
+
+  @NotNull
+  private SystemQuartzJobExportRowVo getExportRowVo(SystemQuartzJobTb dataObject) {
+    SystemQuartzJobExportRowVo rowVo = new SystemQuartzJobExportRowVo();
+    rowVo.setJobName(dataObject.getJobName());
+    rowVo.setBeanName(dataObject.getBeanName());
+    rowVo.setMethodName(dataObject.getMethodName());
+    rowVo.setParams(dataObject.getParams());
+    rowVo.setCronExpression(dataObject.getCronExpression());
+    rowVo.setIsPause(dataObject.getIsPause() ? "暂停中" : "运行中");
+    rowVo.setDescription(dataObject.getDescription());
+    rowVo.setCreateTime(dataObject.getCreateTime());
+    return rowVo;
   }
 
   /**

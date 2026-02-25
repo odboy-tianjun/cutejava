@@ -32,11 +32,7 @@ public class MpMetaObjectHandler implements MetaObjectHandler {
     this.strictInsertFill(metaObject, "createTime", Date.class, now);
     this.strictInsertFill(metaObject, "updateTime", Date.class, now);
     /* 操作人 */
-    String username = "System";
-    try {
-      username = KitSecurityHelper.getCurrentUsername();
-    } catch (Exception ignored) {
-    }
+    String username = KitSecurityHelper.safeGetUsername();
     this.strictInsertFill(metaObject, "createBy", String.class, username);
     this.strictInsertFill(metaObject, "updateBy", String.class, username);
   }
@@ -46,11 +42,7 @@ public class MpMetaObjectHandler implements MetaObjectHandler {
     /* 更新时间 */
     this.strictUpdateFill(metaObject, "updateTime", Date.class, DateTime.now());
     /* 操作人 */
-    String username = "System";
-    try {
-      username = KitSecurityHelper.getCurrentUsername();
-    } catch (Exception ignored) {
-    }
+    String username = KitSecurityHelper.safeGetUsername();
     this.strictUpdateFill(metaObject, "updateBy", String.class, username);
   }
 }

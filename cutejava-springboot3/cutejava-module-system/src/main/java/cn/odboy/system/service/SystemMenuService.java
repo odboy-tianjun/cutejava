@@ -573,7 +573,7 @@ public class SystemMenuService {
       menuSet.add(menu);
       List<SystemMenuTb> menus = this.listMenuByPid(menu.getId(), true);
       if (CollUtil.isNotEmpty(menus)) {
-        queryChildMenuByArgs(menus, menuSet);
+        this.queryChildMenuByArgs(menus, menuSet);
       }
     }
     return menuSet;

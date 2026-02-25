@@ -39,9 +39,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 import java.io.File;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +58,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2025-07-15
  */
 @Service
-public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb>
-    implements SystemOssStorageService {
+public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageMapper, SystemOssStorageTb> implements SystemOssStorageService {
 
   @Autowired
   private MinioRepository minioRepository;
@@ -69,10 +70,7 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
   private SystemOssStorageMapper systemOssStorageMapper;
 
   @Override
-  public KitPageResult<SystemOssStorageVo> searchOssStorage(
-      SystemQueryStorageArgs args,
-      Page<SystemOssStorageTb> page
-  ) {
+  public KitPageResult<SystemOssStorageVo> searchOssStorage(SystemQueryStorageArgs args, Page<SystemOssStorageTb> page) {
     IPage<SystemOssStorageVo> ossStorageTbs = this.selectOssStorageByArgs(args, page);
     for (SystemOssStorageVo storageVo : ossStorageTbs.getRecords()) {
       storageVo.setFileSizeDesc(KitFileUtil.getSize(storageVo.getFileSize()));
@@ -85,19 +83,14 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
     LambdaQueryWrapper<SystemOssStorageTb> wrapper = new LambdaQueryWrapper<>();
     wrapper.and(
         StrUtil.isNotBlank(args.getBlurry()),
-        c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or()
-            .like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
-            .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or()
-            .like(SystemOssStorageTb::getFileMd5, args.getBlurry())
+        c -> c.like(SystemOssStorageTb::getFileName, args.getBlurry()).or().like(SystemOssStorageTb::getFilePrefix, args.getBlurry()).or()
+            .like(SystemOssStorageTb::getFileMime, args.getBlurry()).or().like(SystemOssStorageTb::getFileMd5, args.getBlurry())
     );
     if (CollUtil.isNotEmpty(args.getCreateTime()) && args.getCreateTime().size() >= 2) {
-      wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0),
-          args.getCreateTime().get(1)
-      );
+      wrapper.between(SystemOssStorageTb::getUpdateTime, args.getCreateTime().get(0), args.getCreateTime().get(1));
     }
     wrapper.orderByAsc(SystemOssStorageTb::getId);
-    return systemOssStorageMapper.selectPage(page, wrapper)
-        .convert(i -> KitBeanUtil.copyToClass(i, SystemOssStorageVo.class));
+    return systemOssStorageMapper.selectPage(page, wrapper).convert(i -> KitBeanUtil.copyToClass(i, SystemOssStorageVo.class));
   }
 
   @Override
@@ -161,8 +154,7 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
     List<SystemOssStorageVo> systemOssStorageVos = this.queryOssStorage(args);
     //    KitXlsxExportUtil.exportFile(response, "OSS文件上传记录数据", systemOssStorageVos, SystemOssStorageExportRowVo.class,
     //        (dataObject) -> CollUtil.newArrayList(KitBeanUtil.copyProperties(dataObject, SystemOssStorageExportRowVo.class)));
-    List<SystemOssStorageExportRowVo> rowVos =
-        KitBeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
+    List<SystemOssStorageExportRowVo> rowVos = KitBeanUtil.copyToList(systemOssStorageVos, SystemOssStorageExportRowVo.class);
     KitExcelExporter.exportSimple(response, "OSS文件上传记录数据", SystemOssStorageExportRowVo.class, rowVos);
   }
 

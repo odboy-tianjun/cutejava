@@ -104,8 +104,8 @@ public class TokenProvider implements InitializingBean {
    * @param token /
    * @return /
    */
-  Authentication getAuthentication(String token) {
-    Claims claims = getClaims(token);
+  protected Authentication getAuthentication(String token) {
+    Claims claims = this.getClaims(token);
     User principal = new User(claims.getSubject(), "******", new ArrayList<>());
     return new UsernamePasswordAuthenticationToken(principal, token, new ArrayList<>());
   }
@@ -122,7 +122,7 @@ public class TokenProvider implements InitializingBean {
    */
   public void checkRenewal(String token) {
     // 判断是否续期token,计算token的过期时间
-    String loginKey = loginKey(token);
+    String loginKey = this.loginKey(token);
     long time = redisHelper.getExpire(loginKey) * 1000;
     Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
     // 判断当前时间与过期时间的时间差
@@ -149,7 +149,7 @@ public class TokenProvider implements InitializingBean {
    * @return key
    */
   public String loginKey(String token) {
-    Claims claims = getClaims(token);
+    Claims claims = this.getClaims(token);
     return SystemCacheKey.ONLINE_USER + claims.getSubject() + ":" + getId(token);
   }
 
@@ -160,7 +160,7 @@ public class TokenProvider implements InitializingBean {
    * @return /
    */
   public String getId(String token) {
-    Claims claims = getClaims(token);
+    Claims claims = this.getClaims(token);
     return claims.get(AUTHORITIES_UUID_KEY, String.class);
   }
 }

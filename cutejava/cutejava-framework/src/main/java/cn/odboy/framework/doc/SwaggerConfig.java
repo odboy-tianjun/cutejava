@@ -86,6 +86,7 @@ public class SwaggerConfig {
         mappings.addAll(filteredMappings);
       }
 
+      @SuppressWarnings("all")
       private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
         Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
         if (field != null) {

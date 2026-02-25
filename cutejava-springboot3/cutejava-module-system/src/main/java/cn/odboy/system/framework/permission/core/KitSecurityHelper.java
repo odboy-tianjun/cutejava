@@ -26,8 +26,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.Objects;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -104,6 +106,19 @@ public class KitSecurityHelper {
    */
   public static String getCurrentUsername() {
     return getCurrentUsername(getToken());
+  }
+
+  /**
+   * 获取系统用户名称
+   *
+   * @return 系统用户名称
+   */
+  public static String safeGetUsername() {
+    try {
+      return getCurrentUsername(getToken());
+    } catch (Exception e) {
+      return "anonymous";
+    }
   }
 
   /**
