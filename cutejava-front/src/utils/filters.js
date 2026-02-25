@@ -13,7 +13,7 @@ export function FormatDate(value) {
   if (!value) {
     return '-'
   }
-  return dayjs(value).format('YY-MM-DD')
+  return dayjs(value).format('YYYY-MM-DD')
 }
 
 /**
@@ -26,7 +26,7 @@ export function FormatDateTime(value) {
   if (!value) {
     return '-'
   }
-  return dayjs(value).format('YY-MM-DD HH:mm:ss')
+  return dayjs(value).format('YYYY-MM-DD HH:mm:ss')
 }
 
 /**

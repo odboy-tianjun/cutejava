@@ -34,7 +34,7 @@
         <cute-button type="primary">导出</cute-button>
       </template>
       <template v-slot:operation>
-        <el-table-column label="操作" width="150" min-width="150" fixed="right">
+        <el-table-column label="操作" width="150" min-width="150">
           <template v-slot="scope">
             <div>
               <el-button type="text" @click="onTableEditClick(scope.row)">编辑</el-button>

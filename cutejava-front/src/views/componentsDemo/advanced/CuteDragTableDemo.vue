@@ -33,7 +33,7 @@
       <el-table-column prop="description" label="描述" />
       <el-table-column prop="createTime" label="创建时间" sortable="custom" :formatter="FormatRowDateTimeStr" />
       <el-table-column prop="createBy" label="创建人" />
-      <el-table-column label="操作" width="150" min-width="150" fixed="right">
+      <el-table-column label="操作" width="150" min-width="150">
         <template v-slot="scope">
           <div>
             <el-button type="text" @click="onTableEditClick(scope.row)">编辑</el-button>
