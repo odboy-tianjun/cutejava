@@ -130,8 +130,11 @@ public class SystemMinioStorageServiceImpl extends ServiceImpl<SystemOssStorageM
     if (storageTb == null) {
       throw new BadRequestException("文件上传失败");
     }
+    // 生成链接
+    String previewUrl = minioRepository.generatePreviewUrl(storageTb.getObjectName());
+    storageTb.setFileUrl(previewUrl);
     save(storageTb);
-    return minioRepository.generatePreviewUrl(storageTb.getObjectName());
+    return previewUrl;
   }
 
   /**

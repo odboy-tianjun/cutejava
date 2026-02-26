@@ -172,7 +172,7 @@ export default {
         KitMessage.Success('复制成功')
         clipboard.destroy()
       })
-      // //复制失败
+      // 复制失败
       clipboard.on('error', (e) => {
         KitMessage.Error('复制失败')
         clipboard.destroy()

@@ -167,7 +167,7 @@ public class MinioRepository {
 
     String objectName = KitDateUtil.getNowDateStr() + "/" + fileName;
     log.info("上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
-    String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
+//    String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
     SystemOssStorageTb systemOssStorageTb = new SystemOssStorageTb();
     systemOssStorageTb.setServiceType("minio");
     systemOssStorageTb.setEndpoint(ossMinioConfig.getEndpoint());
@@ -178,7 +178,7 @@ public class MinioRepository {
     systemOssStorageTb.setFilePrefix(prefix);
     systemOssStorageTb.setFileSuffix(suffix);
     systemOssStorageTb.setFileMd5(md5);
-    systemOssStorageTb.setFileUrl(fileUrl);
+//    systemOssStorageTb.setFileUrl(fileUrl);
     systemOssStorageTb.setFileCode(fileCode);
     systemOssStorageTb.setObjectName(objectName);
     try (InputStream fileInputStream = KitFileUtil.getInputStream(tempFile)) {
