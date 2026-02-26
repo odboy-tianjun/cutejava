@@ -45,11 +45,13 @@ import io.minio.messages.Bucket;
 import io.minio.messages.Item;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -145,15 +147,25 @@ public class MinioRepository {
    * @param md5              文件md5
    * @return String 上传后的文件名，上传失败返回 null
    */
-  public SystemOssStorageTb upload(File tempFile, String originalFilename, long fileSize, String contentType,
-      String md5) {
+  public SystemOssStorageTb upload(
+      File tempFile, String originalFilename, long fileSize, String contentType,
+      String md5
+  ) {
     StorageOSSModel ossConfig = properties.getOss();
     OSSConfigModel ossMinioConfig = ossConfig.getMinio();
     String type = FileTypeUtil.getType(tempFile);
     String prefix = KitFileUtil.getPrefix(tempFile);
     String suffix = KitFileUtil.getSuffix(tempFile);
     String fileCode = IdUtil.fastSimpleUUID();
-    String fileName = fileCode + FileUtil.getSuffix(originalFilename);
+
+    String fileName;
+    String realSuffix = FileUtil.getSuffix(originalFilename);
+    if (StrUtil.isBlank(realSuffix)) {
+      fileName = fileCode;
+    } else {
+      fileName = fileCode + "." + realSuffix;
+    }
+
     String objectName = KitDateUtil.getNowDateStr() + "/" + fileName;
     log.info("上传文件，原文件名：{}，上传后文件名：{}", originalFilename, fileName);
     String fileUrl = ossMinioConfig.getEndpoint() + "/" + ossMinioConfig.getBucketName() + "/" + objectName;
@@ -279,8 +291,10 @@ public class MinioRepository {
   public void download(String fileName, HttpServletResponse res) {
     GetObjectArgs objectArgs =
         GetObjectArgs.builder().bucket(properties.getOss().getMinio().getBucketName()).object(fileName).build();
-    try (GetObjectResponse response = minioClient.getObject(objectArgs);
-        FastByteArrayOutputStream os = new FastByteArrayOutputStream()) {
+    try (
+        GetObjectResponse response = minioClient.getObject(objectArgs);
+        FastByteArrayOutputStream os = new FastByteArrayOutputStream()
+    ) {
       byte[] buf = new byte[1024];
       int len;
       while ((len = response.read(buf)) != -1) {

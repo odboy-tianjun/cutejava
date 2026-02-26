@@ -187,12 +187,12 @@ app:
     queue-capacity: 50
   # oss
   oss:
-    max-size: 100
+    max-size: 10
     minio:
-      endpoint: http://127.0.0.1:9000
+      endpoint: https://oss.odboy.cn
       bucketName: cutejava
-      accessKey: 8o5oVzqvKby5TzaGcfmx
-      secretKey: 8BiK5UbmvXGJNVQ98CGiohHzT1N1FMRZqHRdJllj
+      accessKey: 74rgxZtiYtOzsY9U8W9F
+      secretKey: 7d1BiBlfFQDBHKfwAWjF18TLUMjbd9VbSgnncsTw
   captcha:
     expireTime: 300
   # 序列化白名单
