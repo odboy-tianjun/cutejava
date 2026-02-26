@@ -1,0 +1,100 @@
+/*
+ * Copyright 2021-2026 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package cn.odboy.system.dal.dataobject;
+
+import cn.odboy.base.KitBaseUserTimeTb;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.Objects;
+
+@Getter
+@Setter
+@TableName("system_user")
+public class SystemUserTb extends KitBaseUserTimeTb {
+
+  @NotNull(groups = Update.class)
+  @TableId(value = "user_id", type = IdType.AUTO)
+  @ApiModelProperty(value = "ID", hidden = true)
+  private Long id;
+  @TableField(value = "dept_id")
+  @ApiModelProperty(hidden = true)
+  private Long deptId;
+  @NotBlank
+  @ApiModelProperty(value = "用户名称")
+  @TableField(value = "username")
+  private String username;
+  @NotBlank
+  @ApiModelProperty(value = "用户昵称")
+  @TableField(value = "nick_name")
+  private String nickName;
+  @Email
+  @NotBlank
+  @ApiModelProperty(value = "邮箱")
+  @TableField(value = "email")
+  private String email;
+  @NotBlank
+  @ApiModelProperty(value = "电话号码")
+  @TableField(value = "phone")
+  private String phone;
+  @ApiModelProperty(value = "用户性别")
+  @TableField(value = "gender")
+  private String gender;
+  @ApiModelProperty(value = "头像真实名称", hidden = true)
+  @TableField(value = "avatar_name")
+  private String avatarName;
+  @ApiModelProperty(value = "头像存储的路径", hidden = true)
+  @TableField(value = "avatar_path")
+  private String avatarPath;
+  @ApiModelProperty(value = "密码")
+  @TableField(value = "password")
+  private String password;
+  @NotNull
+  @ApiModelProperty(value = "是否启用")
+  @TableField(value = "enabled")
+  private Boolean enabled;
+  @ApiModelProperty(value = "是否为admin账号", hidden = true)
+  @TableField(value = "is_admin")
+  private Boolean isAdmin = false;
+  @ApiModelProperty(value = "最后修改密码的时间", hidden = true)
+  @TableField(value = "pwd_reset_time")
+  private Date pwdResetTime;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SystemUserTb user = (SystemUserTb) o;
+    return Objects.equals(id, user.id) && Objects.equals(username, user.username);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, username);
+  }
+}

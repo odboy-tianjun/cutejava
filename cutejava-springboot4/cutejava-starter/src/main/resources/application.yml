@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    # 激活的环境
+    active: dev
+#    active: dev,quartz
+

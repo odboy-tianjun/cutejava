@@ -1,0 +1,120 @@
+/*
+ * Copyright 2021-2026 Odboy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package cn.odboy.framework.mybatisplus.config;
+
+import cn.odboy.framework.exception.BadRequestException;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+@Getter
+@Slf4j
+public enum DataTypeEnum {
+  /**
+   * mysql
+   */
+  MYSQL("mysql", "mysql", "com.mysql.jdbc.Driver", "`", "`", "'", "'"),
+  /**
+   * oracle
+   */
+  ORACLE("oracle", "oracle", "oracle.jdbc.driver.OracleDriver", "\"", "\"", "\"", "\""),
+  /**
+   * sql config
+   */
+  SQLSERVER("sqlserver", "sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "\"", "\"", "\"", "\""),
+  /**
+   * h2
+   */
+  H2("h2", "h2", "org.h2.Driver", "`", "`", "\"", "\""),
+  /**
+   * phoenix
+   */
+  PHOENIX("phoenix", "hbase phoenix", "org.apache.phoenix.jdbc.PhoenixDriver", "", "", "\"", "\""),
+  /**
+   * mongo
+   */
+  MONGODB("mongo", "mongodb", "mongodb.jdbc.MongoDriver", "`", "`", "\"", "\""),
+  /**
+   * sql4es
+   */
+  ELASTICSEARCH("sql4es", "elasticsearch", "nl.anchormen.sql4es.jdbc.ESDriver", "", "", "'", "'"),
+  /**
+   * presto
+   */
+  PRESTO("presto", "presto", "com.facebook.presto.jdbc.PrestoDriver", "", "", "\"", "\""),
+  /**
+   * moonbox
+   */
+  MOONBOX("moonbox", "moonbox", "moonbox.jdbc.MbDriver", "`", "`", "`", "`"),
+  /**
+   * cassandra
+   */
+  CASSANDRA("cassandra", "cassandra", "com.github.adejanovski.cassandra.jdbc.CassandraDriver", "", "", "'", "'"),
+  /**
+   * click house
+   */
+  CLICKHOUSE("clickhouse", "clickhouse", "ru.yandex.clickhouse.ClickHouseDriver", "", "", "\"", "\""),
+  /**
+   * kylin
+   */
+  KYLIN("kylin", "kylin", "org.apache.kylin.jdbc.Driver", "\"", "\"", "\"", "\""),
+  /**
+   * vertica
+   */
+  VERTICA("vertica", "vertica", "com.vertica.jdbc.Driver", "", "", "'", "'"),
+  /**
+   * sap
+   */
+  HANA("sap", "sap hana", "com.sap.db.jdbc.Driver", "", "", "'", "'"),
+  /**
+   * impala
+   */
+  IMPALA("impala", "impala", "com.cloudera.impala.jdbc41.Driver", "", "", "'", "'");
+  private static final String JDBC_URL_PREFIX = "jdbc:";
+  private final String feature;
+  private final String desc;
+  private final String driver;
+  private final String keywordPrefix;
+  private final String keywordSuffix;
+  private final String aliasPrefix;
+  private final String aliasSuffix;
+
+  DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix,
+      String aliasPrefix, String aliasSuffix) {
+    this.feature = feature;
+    this.desc = desc;
+    this.driver = driver;
+    this.keywordPrefix = keywordPrefix;
+    this.keywordSuffix = keywordSuffix;
+    this.aliasPrefix = aliasPrefix;
+    this.aliasSuffix = aliasSuffix;
+  }
+
+  public static DataTypeEnum urlOf(String jdbcUrl) {
+    String url = jdbcUrl.toLowerCase().trim();
+    for (DataTypeEnum dataTypeEnum : values()) {
+      if (url.startsWith(JDBC_URL_PREFIX + dataTypeEnum.feature)) {
+        try {
+          Class.forName(dataTypeEnum.getDriver());
+        } catch (ClassNotFoundException e) {
+          throw new BadRequestException("Unable to get driver instance: " + jdbcUrl);
+        }
+        return dataTypeEnum;
+      }
+    }
+    return null;
+  }
+
+}
