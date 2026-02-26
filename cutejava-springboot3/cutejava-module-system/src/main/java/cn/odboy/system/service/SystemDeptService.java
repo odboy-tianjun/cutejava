@@ -208,7 +208,7 @@ public class SystemDeptService {
           }
         }
         // 编辑部门时不显示自己以及自己下级的数据, 避免出现PID数据环形问题
-        depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
+        depts = depts.stream().filter(i -> !ids.contains(i.getId())).toList();
       }
       deptSet1.addAll(depts);
     }
@@ -216,7 +216,7 @@ public class SystemDeptService {
     // 构建部门树
     Set<SystemDeptVo> trees = new LinkedHashSet<>();
     Set<SystemDeptVo> deptSet = new LinkedHashSet<>();
-    List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).collect(Collectors.toList());
+    List<String> deptNames = deptList.stream().map(SystemDeptTb::getName).toList();
 
     boolean isChild;
     List<SystemDeptVo> systemDeptVos = KitBeanUtil.copyToList(deptList, SystemDeptVo.class);

@@ -16,13 +16,13 @@
 
 package cn.odboy.framework.quartz.config;
 
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.quartz.AdaptableJobFactory;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +47,9 @@ public class QuartzConfig {
       this.autowireCapableBeanFactory = autowireCapableBeanFactory;
     }
 
-    @NonNull
+    @Nonnull
     @Override
-    protected Object createJobInstance(@NonNull TriggerFiredBundle triggerFiredBundle) throws Exception {
+    protected Object createJobInstance(@Nonnull TriggerFiredBundle triggerFiredBundle) throws Exception {
       try {
         // 调用父类的方法, 把Job注入Spring中
         Object jobInstance = super.createJobInstance(triggerFiredBundle);

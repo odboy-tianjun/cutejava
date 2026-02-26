@@ -40,7 +40,7 @@ public final class KitListUtil {
    */
   public static <T, K> List<T> distinctByArgs(List<T> items, Function<? super T, ? extends K> classifier) {
     return items.stream().collect(Collectors.groupingBy(classifier)).values().stream()
-        .map(monitorItem -> monitorItem.iterator().next()).collect(Collectors.toList());
+        .map(List::getFirst).collect(Collectors.toList());
   }
 
   /**
