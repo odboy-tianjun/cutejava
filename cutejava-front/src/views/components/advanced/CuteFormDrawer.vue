@@ -110,7 +110,9 @@ export default {
   overflow-y: scroll; /* 启用滚动 */
   scrollbar-width: none; /* Firefox */
   height: calc(100% - 60px); /* 预留出底部按钮的空间 */
-  padding-right: 20px;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 

@@ -52,9 +52,10 @@ export default {
       model: {},
       schema: [
         { name: 'name', title: '姓名', type: 'input', required: true },
-        { name: 'sex', title: '性别', type: 'select', required: true, dataSource: [{ label: '男', value: 'nn' }, { label: '女', value: 'mm' }] },
+        { name: 'sex', title: '性别', type: 'select', required: true, sOpts: [{ label: '男', value: 'nn' }, { label: '女', value: 'mm' }] },
         { name: 'createDate', title: '创建日期', type: 'date', required: false },
-        { name: 'createTime', title: '创建时间', type: 'datetime', required: false }
+        { name: 'createTime', title: '创建时间', type: 'datetime', required: false },
+        { name: 'price', title: '价格', type: 'number', required: true, nMin: 0, nMax: 100, nStep: 10.5, nPrecision: 1 }
       ],
       apiData: [
         { name: 'title', remark: '弹窗的标题', type: 'string', defaultValue: '默认标题', required: '否' },
@@ -69,9 +70,29 @@ export default {
       schemaData: [
         { name: 'name', remark: '表单项名称', type: 'string', defaultValue: '-', required: '是' },
         { name: 'title', remark: '表单项标题', type: 'string', defaultValue: '-', required: '是' },
-        { name: 'type', remark: '表单项类型。input 输入框 | select 单选框 | date 日期选择框 | datetime 日期时间选择框', type: 'string', defaultValue: '-', required: '是' },
+        {
+          name: 'type',
+          remark: '表单项类型。input 输入框 | number 输入框(仅数字) | select 单选框 | date 日期选择框 | datetime 日期时间选择框 | upload 文件上传',
+          type: 'string',
+          defaultValue: '-',
+          required: '是'
+        },
         { name: 'required', remark: '是否必填', type: 'boolean', defaultValue: 'false', required: '否' },
-        { name: 'dataSource', remark: '数据源，当type=select时必填', type: 'array', defaultValue: '[]', required: '否' }
+        { name: 'disabled', remark: '是否禁用', type: 'boolean', defaultValue: 'false', required: '否' },
+        { name: 'pattern', remark: '正则表达式，用于匹配输入值', type: 'string', defaultValue: '-', required: '否' },
+        {
+          name: 'validator',
+          remark: '自定义验证函数',
+          type: '(rule, value, callback) => { // 验证失败 callback(new Error(\'请输入密码\')); // 验证通过，无错误信息返回 callback() }',
+          defaultValue: '-',
+          required: '否'
+        },
+        { name: 'sOpts', remark: '数据源，当type=select时必填', type: 'array', defaultValue: '[]', required: '否' },
+        { name: 'sMultiple', remark: '是否多选，当type=select时有效', type: 'boolean', defaultValue: 'false', required: '否' },
+        { name: 'nMin', remark: '最小值，当type=number时有效', type: 'number', defaultValue: '-100000000', required: '否' },
+        { name: 'nMax', remark: '最大值，当type=number时有效', type: 'number', defaultValue: '100000000', required: '否' },
+        { name: 'nStep', remark: '步长，当type=number时有效', type: 'number', defaultValue: '10', required: '否' },
+        { name: 'nPrecision', remark: '精度，当type=number时有效', type: 'number', defaultValue: '0', required: '否' }
       ],
       methodData: [
         { name: 'show', remark: '显示对话框', inputArgs: '-', outArgs: '-' },

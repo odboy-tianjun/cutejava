@@ -28,7 +28,7 @@ import { getToken } from '@/utils/auth'
 import KitMessage from '@/utils/elementui/KitMessage'
 
 export default {
-  name: 'CuteFileUpload',
+  name: 'CuteFileDragUpload',
   props: {
     value: {
       type: String,

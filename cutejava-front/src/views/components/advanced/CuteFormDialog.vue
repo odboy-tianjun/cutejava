@@ -110,7 +110,9 @@ export default {
 .container-form {
   overflow-y: scroll; /* 启用滚动 */
   scrollbar-width: none; /* Firefox */
-  padding-right: 20px;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   max-height: calc(100vh - 200px); /* 调整高度以适应页头和底部按钮 */
 }

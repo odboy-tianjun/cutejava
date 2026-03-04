@@ -254,19 +254,22 @@ export function FormatRowEnvStr(row, column, cellValue, index) {
   return ''
 }
 
-export function IsEmpty(obj) {
-  if (obj === undefined) {
-    // console.error('is undefined')
-    return true
-  }
-  if (obj === '') {
-    // console.error('is ""')
-    return true
-  }
-  if (obj === 'undefined') {
-    // console.error('is "undefined"')
-    return true
-  }
-  // console.error('is null')
-  return obj === null
+/**
+ * 判断字符串是否不是空白字符串
+ * 功能等同于 Java Hutool 的 StrUtil.isNotBlank
+ * @param {string} str - 待检查的字符串
+ * @returns {boolean} - 如果字符串不是空白则返回 true，否则返回 false
+ */
+export function IsNotBlank(str) {
+  return str != null && String(str).trim().length > 0
+}
+
+/**
+ * 判断字符串是否是空白字符串
+ * 功能等同于 Java Hutool 的 StrUtil.isBlank
+ * @param {string} str - 待检查的字符串
+ * @returns {boolean} - 如果字符串是空白则返回 true，否则返回 false
+ */
+export function IsBlank(str) {
+  return str == null || String(str).trim().length === 0
 }

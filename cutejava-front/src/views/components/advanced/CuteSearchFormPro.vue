@@ -28,6 +28,8 @@
         v-model="model[item.name]"
         clearable
         :placeholder="`请选择${item.title}`"
+        style="width: 100%"
+        filterable
       >
         <el-option
           v-for="option in (item.dataSource || [])"
@@ -68,7 +70,7 @@
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onFormSubmit('searchForm')">查询</el-button>
+      <el-button v-prevent-re-click type="primary" @click="onFormSubmit('searchForm')">查询</el-button>
       <el-button @click="onFormReset('searchForm')">重置</el-button>
     </el-form-item>
     <!-- 通过  <template v-slot:operation> 插槽后置操作按钮 -->
