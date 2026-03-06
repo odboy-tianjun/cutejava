@@ -390,22 +390,31 @@ export function FormatEnabled(value) {
  */
 export function FormatDuration(value) {
   if (value === null || value === undefined || value === '') {
-    return '-'
+    return ''
   }
-  const seconds = Number(value)
+  const seconds = Number(value / 1000)
   if (isNaN(seconds)) {
-    return '-'
+    return ''
   }
 
-  const hours = Math.floor(seconds / 3600)
+  const years = Math.floor(seconds / (365 * 24 * 3600))
+  const days = Math.floor((seconds % (365 * 24 * 3600)) / (24 * 3600))
+  const hours = Math.floor((seconds % (24 * 3600)) / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
-  const secs = seconds % 60
+  const secs = (seconds % 60).toFixed(0)
 
-  if (hours > 0) {
-    return `${hours}小时${minutes}分${secs}秒`
+  if (years > 0) {
+    return `${years}年${days}天${hours}时${minutes}分${secs}秒`
+  } else if (days > 0) {
+    return `${days}天${hours}时${minutes}分${secs}秒`
+  } else if (hours > 0) {
+    return `${hours}时${minutes}分${secs}秒`
   } else if (minutes > 0) {
     return `${minutes}分${secs}秒`
   } else {
+    if (secs === '0') {
+      return ``
+    }
     return `${secs}秒`
   }
 }

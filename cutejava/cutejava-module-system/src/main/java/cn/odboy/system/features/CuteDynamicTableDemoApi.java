@@ -18,7 +18,7 @@ package cn.odboy.system.features;
 import cn.hutool.core.util.StrUtil;
 import cn.odboy.base.KitPageArgs;
 import cn.odboy.feature.KitDynamicTableResponse;
-import cn.odboy.feature.KitDynamicTableUtil;
+import cn.odboy.feature.KitDynamicTableBuilder;
 import cn.odboy.system.dal.dataobject.SystemMenuTb;
 import cn.odboy.system.dal.model.request.SystemQueryMenuArgs;
 import cn.odboy.system.dal.mysql.SystemMenuMapper;
@@ -81,7 +81,7 @@ public class CuteDynamicTableDemoApi {
   @PreAuthorize("@el.check()")
   public ResponseEntity<KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel>> searchMenu2(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) {
     // 渲染排序（非必须）
-    QueryWrapper<SystemMenuTb> wrapper = KitDynamicTableUtil.renderOrder(pageArgs);
+    QueryWrapper<SystemMenuTb> wrapper = KitDynamicTableBuilder.ofOrder(pageArgs);
     LambdaQueryWrapper<SystemMenuTb> lambda = wrapper.lambda();
     // 查询条件
     SystemQueryMenuArgs args = pageArgs.getArgs();
@@ -98,7 +98,7 @@ public class CuteDynamicTableDemoApi {
   @PreAuthorize("@el.check()")
   public ResponseEntity<KitDynamicTableResponse<SystemMenuTb, SystemMenuDynamicTableModel>> searchMenu3(@Validated @RequestBody KitPageArgs<SystemQueryMenuArgs> pageArgs) {
     // 渲染查询条件
-    LambdaQueryWrapper<SystemMenuTb> wrapper = KitDynamicTableUtil.renderAll(pageArgs);
+    LambdaQueryWrapper<SystemMenuTb> wrapper = KitDynamicTableBuilder.ofAll(pageArgs);
     // 响应结果
     return ResponseEntity.ok(new KitDynamicTableResponse<>(SystemMenuDynamicTableModel.class, pageArgs, "id", systemMenuMapper, wrapper));
   }

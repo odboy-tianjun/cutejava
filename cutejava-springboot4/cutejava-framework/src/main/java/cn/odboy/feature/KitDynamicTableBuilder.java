@@ -27,7 +27,7 @@ import lombok.experimental.UtilityClass;
  * @author odboy
  */
 @UtilityClass
-public class KitDynamicTableUtil {
+public class KitDynamicTableBuilder {
 
   /**
    * 渲染排序规则
@@ -37,7 +37,7 @@ public class KitDynamicTableUtil {
    * @param <T>      渲染对象
    * @return /
    */
-  public static <M, T> QueryWrapper<M> renderOrder(KitPageArgs<T> pageArgs) {
+  public static <M, T> QueryWrapper<M> ofOrder(KitPageArgs<T> pageArgs) {
     QueryWrapper<M> wrapper = new QueryWrapper<>();
     KitPageArgs.OrderBy orderBy = pageArgs.getOrderBy();
     if (orderBy != null) {
@@ -54,7 +54,7 @@ public class KitDynamicTableUtil {
    * @param <T>      渲染对象
    * @return /
    */
-  public static <M, T> LambdaQueryWrapper<M> renderAll(KitPageArgs<T> pageArgs) {
+  public static <M, T> LambdaQueryWrapper<M> ofAll(KitPageArgs<T> pageArgs) {
     QueryWrapper<M> wrapper = KitMpQUtil.build(pageArgs.getArgs());
     KitPageArgs.OrderBy orderBy = pageArgs.getOrderBy();
     if (orderBy != null) {

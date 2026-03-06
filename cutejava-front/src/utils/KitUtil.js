@@ -273,3 +273,11 @@ export function IsNotBlank(str) {
 export function IsBlank(str) {
   return str == null || String(str).trim().length === 0
 }
+
+export function OpenWindowInCurrent(url) {
+  window.location.href = url
+}
+
+export function OpenWindowInNew(url) {
+  window.open(url, '_blank')
+}
