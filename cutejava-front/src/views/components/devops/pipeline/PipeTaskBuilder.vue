@@ -174,7 +174,21 @@
                 </template>
               </el-table-column>
               <el-table-column prop="dataSource" label="参数可选项">
-                <template v-slot="scope" />
+                <template v-slot="scope">
+                  <el-select
+                    placeholder="请输入参数可选项"
+                    clearable
+                    filterable
+                    allow-create
+                  >
+                    <el-option
+                      v-for="(item, index) in scope.row.dataSource"
+                      :key="index"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </template>
               </el-table-column>
             </el-table>
           </el-form-item>
