@@ -1,21 +1,27 @@
 <template>
-  <CutePage>
-    <Pipeline instance-id="instanceId1" :task-nodes="task1Nodes" />
-    <Pipeline instance-id="instanceId2" :task-nodes="task2Nodes" />
-    <Pipeline instance-id="instanceId3" :task-nodes="task3Nodes" />
-    <Pipeline instance-id="instanceId4" :task-nodes="task4Nodes" />
-  </CutePage>
+  <el-tabs v-model="activeName" type="border-card">
+    <el-tab-pane label="使用演示" name="demo">
+      <Pipeline instance-id="instanceId1" :task-nodes="task1Nodes" />
+      <Pipeline instance-id="instanceId2" :task-nodes="task2Nodes" />
+      <Pipeline instance-id="instanceId3" :task-nodes="task3Nodes" />
+      <Pipeline instance-id="instanceId4" :task-nodes="task4Nodes" />
+    </el-tab-pane>
+    <el-tab-pane label="任务节点构建器" name="builder">
+      <PipeTaskBuilder />
+    </el-tab-pane>
+  </el-tabs>
 </template>
 <script>
 
 import Pipeline from '@/views/components/devops/pipeline/Pipeline.vue'
-import CutePage from '@/views/components/dev/CutePage.vue'
+import PipeTaskBuilder from '@/views/components/devops/pipeline/PipeTaskBuilder.vue'
 
 export default {
   name: 'ComponentsDemoPipeline',
-  components: { CutePage, Pipeline },
+  components: { PipeTaskBuilder, Pipeline },
   data() {
     return {
+      activeName: 'builder',
       task1Nodes: [
         {
           click: false,
