@@ -177,6 +177,7 @@
               <el-table-column prop="dataSource" label="参数可选项">
                 <template v-slot="nodeParamScope">
                   <el-select
+                    v-model="nodeParamScope.row.value"
                     placeholder="请输入参数可选项"
                     clearable
                     filterable
