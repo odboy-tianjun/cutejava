@@ -105,14 +105,14 @@
           <el-form-item label="是否可交互(运行态)">
             <el-switch v-model="hasButtonList" />
           </el-form-item>
-          <el-form-item label="按钮组">
+          <el-form-item v-if="hasButtonList" label="按钮组">
             <el-table :data="buttonList">
               <el-table-column prop="text" label="按钮名称" width="180">
                 <template v-slot="scope">
                   <el-input v-model="scope.row.text" />
                 </template>
               </el-table-column>
-              <el-table-column prop="type" label="按钮类型" width="150">
+              <el-table-column prop="type" label="按钮类型" width="160">
                 <template v-slot="scope">
                   <el-select
                     v-model="scope.row.type"
@@ -139,7 +139,7 @@
                     </el-table-column>
                   </el-table>
                   <el-table v-if="scope.row.type === 'execute'" :data="buttonList">
-                    <el-table-column prop="method" label="请求类型" width="120">
+                    <el-table-column prop="method" label="请求类型" width="160">
                       <template v-slot="innerScope">
                         <el-select
                           v-model="innerScope.row.method"
@@ -160,21 +160,22 @@
                 </template>
               </el-table-column>
             </el-table>
+            <el-button style="width: 100%" type="primary" plain @click="buttonList.push({})">添加按钮</el-button>
           </el-form-item>
           <el-form-item label="节点参数">
             <el-table :data="parameterList">
               <el-table-column prop="name" label="参数名称">
-                <template v-slot="scope">
-                  <el-input v-model="scope.row.name" />
+                <template v-slot="nodeParamScope">
+                  <el-input v-model="nodeParamScope.row.name" />
                 </template>
               </el-table-column>
               <el-table-column prop="code" label="参数编码">
-                <template v-slot="scope">
-                  <el-input v-model="scope.row.code" />
+                <template v-slot="nodeParamScope">
+                  <el-input v-model="nodeParamScope.row.code" />
                 </template>
               </el-table-column>
               <el-table-column prop="dataSource" label="参数可选项">
-                <template v-slot="scope">
+                <template v-slot="nodeParamScope">
                   <el-select
                     placeholder="请输入参数可选项"
                     clearable
@@ -182,7 +183,7 @@
                     allow-create
                   >
                     <el-option
-                      v-for="(item, index) in scope.row.dataSource"
+                      v-for="(item, index) in nodeParamScope.row.dataSource"
                       :key="index"
                       :label="item.label"
                       :value="item.value"
@@ -191,6 +192,7 @@
                 </template>
               </el-table-column>
             </el-table>
+            <el-button style="width: 100%" type="primary" plain @click="parameterList.push({})">添加参数</el-button>
           </el-form-item>
         </el-form>
       </CutePage>
