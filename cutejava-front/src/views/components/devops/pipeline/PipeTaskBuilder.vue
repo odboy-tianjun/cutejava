@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="12">
+    <el-col :span="14">
       <CutePage>
         <el-divider content-position="left">节点演示</el-divider>
         <div style="padding-left: 15px">
@@ -69,7 +69,8 @@
           <el-form-item v-if="click" label="点击明细类型">
             <el-select
               v-model="detailType"
-              placeholder="请选择明细类型"
+              style="width: 100%"
+              placeholder="请选择or输入明细类型，支持即时创建新类型"
               clearable
               allow-create
               filterable
@@ -81,7 +82,7 @@
           <el-form-item label="是否支持重试">
             <el-switch v-model="retry" />
           </el-form-item>
-          <el-form-item label="是否可交互(运行态)">
+          <el-form-item label="是否启用按钮组">
             <el-switch v-model="hasButtonList" />
           </el-form-item>
           <el-form-item v-if="hasButtonList" label="按钮组">
@@ -195,7 +196,7 @@
         </el-form>
       </CutePage>
     </el-col>
-    <el-col :span="12">
+    <el-col :span="10">
       <CutePage>
         <el-divider content-position="left">节点选项(预览)</el-divider>
         <el-form ref="form" :model="parameters" label-width="160px">
@@ -298,7 +299,8 @@ export default {
           retry: this.retry,
           detailType: this.detailType,
           buttonList: this.buttonList,
-          parameters: tempParameters
+          parameters: tempParameters,
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
@@ -322,7 +324,7 @@ export default {
           detailType: this.detailType,
           buttonList: this.buttonList,
           parameters: tempParameters,
-          parameterMap: tempParameterMap
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
@@ -346,7 +348,7 @@ export default {
           detailType: this.detailType,
           buttonList: this.buttonList,
           parameters: tempParameters,
-          parameterMap: tempParameterMap
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
@@ -370,7 +372,7 @@ export default {
           detailType: this.detailType,
           buttonList: this.buttonList,
           parameters: tempParameters,
-          parameterMap: tempParameterMap
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
@@ -394,7 +396,7 @@ export default {
           detailType: newVal,
           buttonList: this.buttonList,
           parameters: tempParameters,
-          parameterMap: tempParameterMap
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
@@ -418,7 +420,7 @@ export default {
           detailType: this.detailType,
           buttonList: newVal,
           parameters: tempParameters,
-          parameterMap: tempParameterMap
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
@@ -443,7 +445,7 @@ export default {
           detailType: this.detailType,
           buttonList: this.buttonList,
           parameters: tempParameters,
-          parameterMap: tempParameterMap
+          parameterDsMap: tempParameterMap
         }
         this.taskConfig = JSON.stringify(config, null, 2)
       },
