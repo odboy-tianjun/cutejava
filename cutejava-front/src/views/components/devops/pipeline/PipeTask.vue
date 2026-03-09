@@ -44,8 +44,7 @@
             :key="index"
             v-prevent-re-click
             type="text"
-            :style="`width: ${item.text && item.text.length >= 4 ? '74px': '26px'
-            };color: ${item.color ? item.color : statusColorMap.running};display: ${item.condition ===
+            :style="`color: ${item.color ? item.color : statusColorMap.running};display: ${item.condition ===
               'all' ?
                 'inline-block':
                 (item.condition === status ? 'inline-block': 'none')};overflow: hidden;text-overflow: ellipsis;`"
@@ -101,14 +100,18 @@ export default {
      */
     startTimeMillis: {
       type: Number,
-      required: true
+      required: false,
+      default: function() {
+        return new Date().getTime()
+      }
     },
     /**
      * 持续时间。单位：秒
      */
     durationMillis: {
       type: Number,
-      required: true
+      required: false,
+      default: 0
     },
     /**
      * 状态
@@ -200,8 +203,8 @@ export default {
     taskWindowStyle() {
       const colorHex = this.getColorHexByStatus(this.status)
       return {
-        width: '240px',
-        maxWidth: '240px',
+        width: '260px',
+        maxWidth: '260px',
         height: '100px',
         maxHeight: '100px',
         border: `1px solid ${colorHex}`,

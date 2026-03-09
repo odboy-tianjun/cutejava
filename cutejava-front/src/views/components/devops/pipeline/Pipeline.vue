@@ -54,8 +54,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .pipeline-card {
-  width: 240px;
-  max-width: 240px;
+  width: 260px;
+  max-width: 260px;
 }
 
 .pipeline-link {
