@@ -1,8 +1,8 @@
 package cn.odboy.constool;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.odboy.base.KitBaseUserTimeTb;
 import cn.odboy.framework.exception.BadRequestException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +97,7 @@ public class KitDiffSyncConstTool<T> {
         }
 
         // 构建本地数据的键值映射
-        Map<K, T> localMap = localRecords.stream().collect(Collectors.toMap(keyMapper, i -> i));
+        Map<K, T> localMap = localRecords.stream().collect(Collectors.toMap(keyMapper, i -> i, (oldest, newest) -> oldest));
 
         List<T> insertList = new ArrayList<>();
         List<T> updateCompareList = new ArrayList<>();
@@ -140,29 +140,29 @@ public class KitDiffSyncConstTool<T> {
         }
     }
 
-    /**
-     * 使用示例
-     */
-    public static void main(String[] args) {
-        List<KitBaseUserTimeTb> localList = new ArrayList<>();
-        List<KitBaseUserTimeTb> onlineList = new ArrayList<>();
-
-        KitDiffSyncConstTool<KitBaseUserTimeTb> diffSyncTool = new KitDiffSyncConstTool<>(localList, onlineList);
-        diffSyncTool.sync(KitBaseUserTimeTb::getCreateBy, new SyncCallback<>() {
-            @Override
-            public void doSaveBatch(List<KitBaseUserTimeTb> records) {
-                // 全量保存
-            }
-
-            @Override
-            public void doUpdateBatch(List<KitBaseUserTimeTb> localList, List<KitBaseUserTimeTb> compareList) {
-                // 将 compareList 中的数据，填充到对应的 localList 数据中，更新 localList 数据
-            }
-
-            @Override
-            public void doDeleteBatch(List<KitBaseUserTimeTb> records) {
-                // 条件删除
-            }
-        });
-    }
+//    /**
+//     * 使用示例
+//     */
+//    public static void main(String[] args) {
+//        List<KitBaseUserTimeTb> localList = new ArrayList<>();
+//        List<KitBaseUserTimeTb> onlineList = new ArrayList<>();
+//
+//        KitDiffSyncConstTool<KitBaseUserTimeTb> diffSyncTool = new KitDiffSyncConstTool<>(localList, onlineList);
+//        diffSyncTool.sync(KitBaseUserTimeTb::getCreateBy, new SyncCallback<>() {
+//            @Override
+//            public void doSaveBatch(List<KitBaseUserTimeTb> records) {
+//                // 全量保存
+//            }
+//
+//            @Override
+//            public void doUpdateBatch(List<KitBaseUserTimeTb> localList, List<KitBaseUserTimeTb> compareList) {
+//                // 将 compareList 中的数据，填充到对应的 localList 数据中，更新 localList 数据
+//            }
+//
+//            @Override
+//            public void doDeleteBatch(List<KitBaseUserTimeTb> records) {
+//                // 条件删除
+//            }
+//        });
+//    }
 }
