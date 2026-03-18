@@ -15,12 +15,16 @@
  */
 package cn.odboy.util;
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import lombok.experimental.UtilityClass;
+
 import java.util.Calendar;
 import java.util.Date;
-import lombok.experimental.UtilityClass;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 时间相关工具
@@ -162,5 +166,34 @@ public class KitDateUtil {
       formatDate = DateUtil.format(dateTime, DatePattern.NORM_DATE_PATTERN);
     }
     return formatDate;
+  }
+
+  public static void main(String[] args) {
+    DateTime dateTime = DateTime.now();
+    // 今年 yyyy
+    int year = DateUtil.year(dateTime);
+    // 首日 yyyy-MM-dd
+    DateTime beginOfMonthDate = DateUtil.beginOfMonth(dateTime);
+    String beginOfDay = DateUtil.formatDate(beginOfMonthDate);
+    // 今日 yyyy-MM-dd
+    String thisDay = DateUtil.formatDate(dateTime);
+    // 首月 yyyy-MM
+    String beginOfMonth = year + "-01";
+    // 当月 yyyy-MM
+    String thisMonth = DateUtil.format(dateTime, DatePattern.NORM_MONTH_FORMAT);
+    // 首日 -> 今日 yyyy-MM-dd
+    List<String> rangeDayList = DateUtil.rangeToList(beginOfMonthDate, dateTime, DateField.DAY_OF_MONTH).stream().map(DateUtil::formatDate)
+        .collect(Collectors.toList());
+    // 首月 -> 当月
+    List<String> rangeMonthList = DateUtil.rangeToList(DateUtil.parse(beginOfMonth, DatePattern.NORM_MONTH_FORMAT), dateTime, DateField.MONTH).stream()
+        .map(DateUtil::formatDate)
+        .collect(Collectors.toList());
+    System.err.println(year);
+    System.err.println(beginOfDay);
+    System.err.println(thisDay);
+    System.err.println(beginOfMonth);
+    System.err.println(thisMonth);
+    System.err.println(rangeDayList);
+    System.err.println(rangeMonthList);
   }
 }
