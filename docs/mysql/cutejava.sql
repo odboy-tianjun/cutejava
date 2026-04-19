@@ -1,42 +1,57 @@
-/*
- Navicat Premium Dump SQL
-
- Source Server         : mysql
- Source Server Type    : MySQL
- Source Server Version : 80025 (8.0.25)
- Source Host           : 124.220.107.161:3306
- Source Schema         : cutejava
-
- Target Server Type    : MySQL
- Target Server Version : 80025 (8.0.25)
- File Encoding         : 65001
-
- Date: 06/03/2026 20:33:33
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for demo_time_table
+-- Table structure for demo_create_time_table
 -- ----------------------------
-DROP TABLE IF EXISTS `demo_time_table`;
-CREATE TABLE `demo_time_table`  (
+DROP TABLE IF EXISTS `demo_create_time_table`;
+CREATE TABLE `demo_create_time_table`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of demo_create_time_table
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for demo_full_time_table
+-- ----------------------------
+DROP TABLE IF EXISTS `demo_full_time_table`;
+CREATE TABLE `demo_full_time_table`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of demo_time_table
+-- Records of demo_full_time_table
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for demo_user_time_logic_table
+-- Table structure for demo_user_create_time_table
 -- ----------------------------
-DROP TABLE IF EXISTS `demo_user_time_logic_table`;
-CREATE TABLE `demo_user_time_logic_table`  (
+DROP TABLE IF EXISTS `demo_user_create_time_table`;
+CREATE TABLE `demo_user_create_time_table`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
+  `update_time` datetime NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of demo_user_create_time_table
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for demo_user_full_time_logic_table
+-- ----------------------------
+DROP TABLE IF EXISTS `demo_user_full_time_logic_table`;
+CREATE TABLE `demo_user_full_time_logic_table`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
   `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -44,212 +59,27 @@ CREATE TABLE `demo_user_time_logic_table`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `available` tinyint(1) NOT NULL DEFAULT 1 COMMENT '数据有效性',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of demo_user_time_logic_table
+-- Records of demo_user_full_time_logic_table
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for demo_user_time_table
+-- Table structure for demo_user_full_time_table
 -- ----------------------------
-DROP TABLE IF EXISTS `demo_user_time_table`;
-CREATE TABLE `demo_user_time_table`  (
+DROP TABLE IF EXISTS `demo_user_full_time_table`;
+CREATE TABLE `demo_user_full_time_table`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
   `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of demo_user_time_table
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_host_group
--- ----------------------------
-DROP TABLE IF EXISTS `flow_host_group`;
-CREATE TABLE `flow_host_group`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主机组名称',
-  `group_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主机组ID(uuid)',
-  `group_env` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主机组环境(daily、stage、production)',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '主机组' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_host_group
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_host_instance
--- ----------------------------
-DROP TABLE IF EXISTS `flow_host_instance`;
-CREATE TABLE `flow_host_instance`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `host_group_id` bigint NOT NULL COMMENT '主机组ID',
-  `host_ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主机IP',
-  `host_port` int NOT NULL DEFAULT 22 COMMENT '主机端口，默认22',
-  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
-  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'y' COMMENT '是否启用(y、n)',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '主机实例' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_host_instance
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_instance
--- ----------------------------
-DROP TABLE IF EXISTS `flow_instance`;
-CREATE TABLE `flow_instance`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `flow_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线适用类型(front、backend)',
-  `flow_id` bigint NOT NULL COMMENT '流水线ID',
-  `app_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用名称',
-  `app_env` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用环境(daily、stage、production)',
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '实例状态(pending、running、fail、success)',
-  `current_node_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '当前节点编码',
-  `current_node_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '当前节点状态(pending、running、fail、success)',
-  `runtime_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '运行参数',
-  `flow_template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线模板',
-  `execute_records` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '执行记录',
-  `job_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'QuartzJob的key',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '流水线实例' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_instance
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_kubernetes_cluster
--- ----------------------------
-DROP TABLE IF EXISTS `flow_kubernetes_cluster`;
-CREATE TABLE `flow_kubernetes_cluster`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `cluster_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '集群名称',
-  `cluster_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '集群编码',
-  `cluster_config` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '集群配置文件',
-  `default_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '默认镜像地址',
-  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'y' COMMENT '是否启用(y、n)',
-  `cluster_env` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '集群环境(daily、stage、production)',
-  `app_yaml` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用yaml配置',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'Kubernetes集群' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_kubernetes_cluster
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_role
--- ----------------------------
-DROP TABLE IF EXISTS `flow_role`;
-CREATE TABLE `flow_role`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `role_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色编码',
-  `role_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色名称',
-  `role_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色说明',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_role
--- ----------------------------
-INSERT INTO `flow_role` VALUES (1, 'admin', '2026-02-25 21:12:31', 'admin', '2026-02-25 21:12:31', 'dev', '开发小弟', '就是小弟啦');
-INSERT INTO `flow_role` VALUES (2, 'admin', '2026-02-25 21:12:31', 'admin', '2026-02-25 21:12:31', 'owner', '项目负责人', '就是大哥啦');
-INSERT INTO `flow_role` VALUES (3, 'admin', '2026-02-25 21:12:31', 'admin', '2026-02-25 21:12:31', 'dba', '数据库管理员', '就是经常删库跑路的那个啦');
-INSERT INTO `flow_role` VALUES (4, 'admin', '2026-02-25 21:12:31', 'admin', '2026-02-25 21:12:31', 'deploy_review', '部署审核员', 'Ta没同意就部署不了啦');
-INSERT INTO `flow_role` VALUES (5, 'admin', '2026-02-25 21:12:31', 'admin', '2026-02-25 21:12:31', 'merge_master_review', '合并master审核员', 'Ta没同意就合并不了啦');
-
--- ----------------------------
--- Table structure for flow_role_user
--- ----------------------------
-DROP TABLE IF EXISTS `flow_role_user`;
-CREATE TABLE `flow_role_user`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `role_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色编码',
-  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色用户关联' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_role_user
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_task
--- ----------------------------
-DROP TABLE IF EXISTS `flow_task`;
-CREATE TABLE `flow_task`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '任务名称',
-  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '任务编码',
-  `parameters` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '任务参数',
-  `click` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '是否可以点击(y、n)',
-  `retry` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '是否支持重试(y、n)',
-  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '任务类型(内部服务service、外部请求http_get、外部请求http_post)',
-  `detail_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体调用服务(gitlab、jenkins等)',
-  `buttons` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '功能按钮组。名称name、传递值code、按钮类型type(比如elementui中的primary、danger)',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '流水线任务(最小单元)' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_task
--- ----------------------------
-
--- ----------------------------
--- Table structure for flow_template
--- ----------------------------
-DROP TABLE IF EXISTS `flow_template`;
-CREATE TABLE `flow_template`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `flow_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线名称',
-  `flow_env` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水线环境(daily、stage、production)',
-  `flow_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '适用类型(front、backend)',
-  `flow_language` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '适用语言(java、php、nodejs、go、python、dotnet、cplus、移动端等)',
-  `template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '模板内容',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '流水线模板' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of flow_template
+-- Records of demo_user_full_time_table
 -- ----------------------------
 
 -- ----------------------------
@@ -264,7 +94,7 @@ CREATE TABLE `qrtz_blob_triggers`  (
   PRIMARY KEY (`sched_name`, `trigger_name`, `trigger_group`) USING BTREE,
   INDEX `sched_name`(`sched_name` ASC, `trigger_name` ASC, `trigger_group` ASC) USING BTREE,
   CONSTRAINT `qrtz_blob_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_blob_triggers
@@ -279,7 +109,7 @@ CREATE TABLE `qrtz_calendars`  (
   `calendar_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `calendar` blob NOT NULL,
   PRIMARY KEY (`sched_name`, `calendar_name`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_calendars
@@ -297,7 +127,7 @@ CREATE TABLE `qrtz_cron_triggers`  (
   `time_zone_id` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`sched_name`, `trigger_name`, `trigger_group`) USING BTREE,
   CONSTRAINT `qrtz_cron_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_cron_triggers
@@ -328,7 +158,7 @@ CREATE TABLE `qrtz_fired_triggers`  (
   INDEX `idx_qrtz_ft_jg`(`sched_name` ASC, `job_group` ASC) USING BTREE,
   INDEX `idx_qrtz_ft_t_g`(`sched_name` ASC, `trigger_name` ASC, `trigger_group` ASC) USING BTREE,
   INDEX `idx_qrtz_ft_tg`(`sched_name` ASC, `trigger_group` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_fired_triggers
@@ -352,7 +182,7 @@ CREATE TABLE `qrtz_job_details`  (
   PRIMARY KEY (`sched_name`, `job_name`, `job_group`) USING BTREE,
   INDEX `idx_qrtz_j_req_recovery`(`sched_name` ASC, `requests_recovery` ASC) USING BTREE,
   INDEX `idx_qrtz_j_grp`(`sched_name` ASC, `job_group` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_job_details
@@ -366,7 +196,7 @@ CREATE TABLE `qrtz_locks`  (
   `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `lock_name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`sched_name`, `lock_name`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_locks
@@ -382,7 +212,7 @@ CREATE TABLE `qrtz_paused_trigger_grps`  (
   `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`sched_name`, `trigger_group`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_paused_trigger_grps
@@ -398,7 +228,7 @@ CREATE TABLE `qrtz_scheduler_state`  (
   `last_checkin_time` bigint NOT NULL,
   `checkin_interval` bigint NOT NULL,
   PRIMARY KEY (`sched_name`, `instance_name`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_scheduler_state
@@ -419,7 +249,7 @@ CREATE TABLE `qrtz_simple_triggers`  (
   `times_triggered` bigint NOT NULL,
   PRIMARY KEY (`sched_name`, `trigger_name`, `trigger_group`) USING BTREE,
   CONSTRAINT `qrtz_simple_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_simple_triggers
@@ -446,7 +276,7 @@ CREATE TABLE `qrtz_simprop_triggers`  (
   `bool_prop_2` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`sched_name`, `trigger_name`, `trigger_group`) USING BTREE,
   CONSTRAINT `qrtz_simprop_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_simprop_triggers
@@ -487,7 +317,7 @@ CREATE TABLE `qrtz_triggers`  (
   INDEX `idx_qrtz_t_nft_st_misfire`(`sched_name` ASC, `misfire_instr` ASC, `next_fire_time` ASC, `trigger_state` ASC) USING BTREE,
   INDEX `idx_qrtz_t_nft_st_misfire_grp`(`sched_name` ASC, `misfire_instr` ASC, `next_fire_time` ASC, `trigger_group` ASC, `trigger_state` ASC) USING BTREE,
   CONSTRAINT `qrtz_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `job_name`, `job_group`) REFERENCES `qrtz_job_details` (`sched_name`, `job_name`, `job_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_triggers
@@ -512,7 +342,7 @@ CREATE TABLE `system_dept`  (
   INDEX `idx_pid`(`pid` ASC) USING BTREE,
   INDEX `idx_enabled`(`enabled` ASC) USING BTREE,
   INDEX `idx_sys_dept_dept_id`(`dept_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '部门' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '部门' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_dept
@@ -538,7 +368,7 @@ CREATE TABLE `system_dict`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_dict
@@ -564,7 +394,7 @@ CREATE TABLE `system_dict_detail`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_dict_id`(`dict_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典详情' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '数据字典详情' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_dict_detail
@@ -608,7 +438,7 @@ CREATE TABLE `system_email_config`  (
   `port` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '端口',
   `user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '发件者用户名',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '邮箱配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '邮箱配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_email_config
@@ -630,7 +460,7 @@ CREATE TABLE `system_job`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_name`(`name` ASC) USING BTREE,
   INDEX `idx_enabled`(`enabled` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '岗位' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '岗位' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_job
@@ -658,7 +488,7 @@ CREATE TABLE `system_local_storage`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '本地存储' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_local_storage
@@ -692,7 +522,7 @@ CREATE TABLE `system_menu`  (
   UNIQUE INDEX `uniq_title`(`title` ASC) USING BTREE,
   INDEX `idx_pid`(`pid` ASC) USING BTREE,
   INDEX `idx_sys_menu_menu_id`(`menu_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 165 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 165 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_menu
@@ -765,11 +595,15 @@ CREATE TABLE `system_operation_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '审计日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '审计日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_operation_log
 -- ----------------------------
+INSERT INTO `system_operation_log` VALUES (1, '写法3：查询动态数据', 'cn.odboy.system.features.CuteDynamicTableDemoApi.searchMenu3()', '[{\"args\":{\"blurry\":\"\"},\"page\":1,\"size\":10}]', '61.171.197.67', 198, 'admin', '中国上海上海市', 'Chrome 146', NULL, '2026-04-19 08:15:34');
+INSERT INTO `system_operation_log` VALUES (2, '写法3：查询动态数据', 'cn.odboy.system.features.CuteDynamicTableDemoApi.searchMenu3()', '[{\"args\":{\"blurry\":\"\"},\"page\":1,\"size\":10}]', '61.171.197.67', 162, 'admin', '中国上海上海市', 'Chrome 146', NULL, '2026-04-19 08:15:34');
+INSERT INTO `system_operation_log` VALUES (3, '写法3：查询动态数据', 'cn.odboy.system.features.CuteDynamicTableDemoApi.searchMenu3()', '[{\"args\":{\"blurry\":\"\"},\"page\":1,\"size\":10}]', '61.171.197.67', 43, 'admin', '中国上海上海市', 'Chrome 146', NULL, '2026-04-19 08:15:34');
+INSERT INTO `system_operation_log` VALUES (4, '写法3：查询动态数据', 'cn.odboy.system.features.CuteDynamicTableDemoApi.searchMenu3()', '[{\"args\":{\"blurry\":\"\"},\"page\":1,\"size\":10}]', '61.171.197.67', 46, 'admin', '中国上海上海市', 'Chrome 146', NULL, '2026-04-19 08:15:34');
 
 -- ----------------------------
 -- Table structure for system_oss_storage
@@ -795,7 +629,7 @@ CREATE TABLE `system_oss_storage`  (
   `object_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '对象路径',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `udx_filemd5`(`file_md5` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'OSS存储' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'OSS存储' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_oss_storage
@@ -824,7 +658,7 @@ CREATE TABLE `system_quartz_job`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_is_pause`(`is_pause` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_quartz_job
@@ -848,7 +682,7 @@ CREATE TABLE `system_quartz_log`  (
   `exception_detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常详情',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_quartz_log
@@ -872,7 +706,7 @@ CREATE TABLE `system_role`  (
   UNIQUE INDEX `uniq_name`(`name` ASC) USING BTREE,
   INDEX `idx_level`(`level` ASC) USING BTREE,
   INDEX `idx_sys_role_level`(`level` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_role
@@ -891,7 +725,7 @@ CREATE TABLE `system_roles_depts`  (
   INDEX `idx_role_id`(`role_id` ASC) USING BTREE,
   INDEX `idx_dept_id`(`dept_id` ASC) USING BTREE,
   INDEX `idx_sys_roles_depts_role_dept`(`role_id` ASC, `dept_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色部门关联' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色部门关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_roles_depts
@@ -908,7 +742,7 @@ CREATE TABLE `system_roles_menus`  (
   INDEX `idx_menu_id`(`menu_id` ASC) USING BTREE,
   INDEX `idx_role_id`(`role_id` ASC) USING BTREE,
   INDEX `idx_sys_roles_menus_role_menu`(`role_id` ASC, `menu_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色菜单关联' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色菜单关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_roles_menus
@@ -993,7 +827,7 @@ CREATE TABLE `system_user`  (
   INDEX `idx_dept_id`(`dept_id` ASC) USING BTREE,
   INDEX `idx_enabled`(`enabled` ASC) USING BTREE,
   INDEX `uniq_phone`(`phone` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 105 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统用户' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 105 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_user
@@ -1109,7 +943,7 @@ CREATE TABLE `system_users_jobs`  (
   PRIMARY KEY (`user_id`, `job_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_job_id`(`job_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户与岗位关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户与岗位关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_users_jobs
@@ -1226,7 +1060,7 @@ CREATE TABLE `system_users_roles`  (
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_role_id`(`role_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户角色关联' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户角色关联' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_users_roles
